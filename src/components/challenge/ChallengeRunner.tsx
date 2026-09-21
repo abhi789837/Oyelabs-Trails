@@ -1,4 +1,4 @@
-import type { Topic } from "@/types/curriculum-v1";
+import type { Topic } from "@/types/curriculum";
 import { CodeRunner } from "./CodeRunner";
 import { QuizRunner } from "./QuizRunner";
 
@@ -12,7 +12,7 @@ export function ChallengeRunner({ topic }: { topic: Topic }) {
   }
   return (
     <p className="rounded-md border border-dashed px-4 py-6 text-sm text-muted-foreground">
-      This topic doesn't have a challenge yet. Add one in <code className="font-mono">src/data/tracks/</code>.
+      This topic doesn't have a challenge yet.
     </p>
   );
 }

@@ -3,10 +3,13 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import CertificatePage from "@/pages/CertificatePage";
 import DashboardPage from "@/pages/DashboardPage";
+import ModulePage from "@/pages/ModulePage";
 import NotFoundPage from "@/pages/NotFoundPage";
-import TopicPage from "@/pages/TopicPage";
+import TopicPage, { LegacyTopicRedirect } from "@/pages/TopicPage";
 import TrackPage from "@/pages/TrackPage";
+import { CompletionWatcher } from "./CompletionWatcher";
 import { Sidebar } from "./Sidebar";
+import { Toaster } from "./Toaster";
 import { TopBar } from "./TopBar";
 
 export function AppShell() {
@@ -25,6 +28,8 @@ export function AppShell() {
           <AnimatedRoutes />
         </main>
       </div>
+      <CompletionWatcher />
+      <Toaster />
     </div>
   );
 }
@@ -46,7 +51,10 @@ function AnimatedRoutes() {
         <Routes location={location}>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/track/:trackId" element={<TrackPage />} />
-          <Route path="/track/:trackId/topic/:topicId" element={<TopicPage />} />
+          <Route path="/track/:trackId/module/:moduleId" element={<ModulePage />} />
+          <Route path="/track/:trackId/module/:moduleId/topic/:topicId" element={<TopicPage />} />
+          {/* v1 links: /track/:trackId/topic/:topicId */}
+          <Route path="/track/:trackId/topic/:topicId" element={<LegacyTopicRedirect />} />
           <Route path="/report/:trackId" element={<CertificatePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

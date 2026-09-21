@@ -1,4 +1,4 @@
-import type { CodeChallenge } from "@/types/curriculum-v1";
+import type { CodeChallenge } from "@/types/curriculum";
 
 /*
  * Runs learner code against a challenge's test cases in a throwaway Web Worker

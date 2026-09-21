@@ -1,46 +1,59 @@
 import { useMemo } from "react";
 
+import { trackTopics, type ModuleMeta, type TopicMeta, type TrackMeta } from "@/content";
 import { completionPct, EMPTY_PROGRESS, useProgressStore, type TopicProgress } from "@/store/progressStore";
-import type { Topic, Track } from "@/types/curriculum-v1";
 
-export interface TrackProgressSummary {
+export interface ProgressSummary {
   completed: number;
   total: number;
   pct: number;
   isComplete: boolean;
   /** First topic (in trail order) that isn't completed yet. */
-  nextTopic?: Topic;
-  /** Whether the learner has touched any topic in this track. */
+  nextTopic?: TopicMeta;
+  /** Whether the learner has touched any topic here. */
   started: boolean;
-  /** Most recent completion date across the track, once every topic is done. */
+  /** Most recent completion date, once everything is done. */
   completedAt?: string;
 }
 
-export function summarizeTrack(track: Track, progress: Record<string, TopicProgress>): TrackProgressSummary {
-  const ids = track.topics.map((t) => t.id);
-  const completedTopics = track.topics.filter((t) => progress[t.id]?.status === "completed");
-  const isComplete = completedTopics.length === track.topics.length && track.topics.length > 0;
-  const completedAt = isComplete
-    ? completedTopics
-        .map((t) => progress[t.id]?.completedAt ?? "")
-        .sort()
-        .at(-1)
-    : undefined;
-
+function summarize(topics: TopicMeta[], progress: Record<string, TopicProgress>): ProgressSummary {
+  const done = topics.filter((t) => progress[t.id]?.status === "completed");
+  const isComplete = topics.length > 0 && done.length === topics.length;
   return {
-    completed: completedTopics.length,
-    total: track.topics.length,
-    pct: completionPct(progress, ids),
+    completed: done.length,
+    total: topics.length,
+    pct: completionPct(
+      progress,
+      topics.map((t) => t.id),
+    ),
     isComplete,
-    nextTopic: track.topics.find((t) => progress[t.id]?.status !== "completed"),
-    started: track.topics.some((t) => (progress[t.id]?.status ?? "not-started") !== "not-started"),
-    completedAt,
+    nextTopic: topics.find((t) => progress[t.id]?.status !== "completed"),
+    started: topics.some((t) => (progress[t.id]?.status ?? "not-started") !== "not-started"),
+    completedAt: isComplete
+      ? done
+          .map((t) => progress[t.id]?.completedAt ?? "")
+          .sort()
+          .at(-1)
+      : undefined,
   };
 }
 
-export function useTrackProgress(track: Track): TrackProgressSummary {
+export function summarizeTrack(track: TrackMeta, progress: Record<string, TopicProgress>) {
+  return summarize(trackTopics(track), progress);
+}
+
+export function summarizeModule(module: ModuleMeta, progress: Record<string, TopicProgress>) {
+  return summarize(module.topics, progress);
+}
+
+export function useTrackProgress(track: TrackMeta): ProgressSummary {
   const progress = useProgressStore((s) => s.progress);
   return useMemo(() => summarizeTrack(track, progress), [track, progress]);
+}
+
+export function useModuleProgress(module: ModuleMeta): ProgressSummary {
+  const progress = useProgressStore((s) => s.progress);
+  return useMemo(() => summarizeModule(module, progress), [module, progress]);
 }
 
 export function useTopicProgress(topicId: string): TopicProgress {

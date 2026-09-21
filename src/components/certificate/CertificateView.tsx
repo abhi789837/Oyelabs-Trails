@@ -28,7 +28,7 @@ export function CertificateView({ data }: { data: CertificateData }) {
 
   const stats = [
     { label: "Completed", value: formatDate(data.completedAt) },
-    { label: "Topics", value: `${data.topicsCount}, incl. ${data.milestoneCount} milestones` },
+    { label: "Topics", value: `${data.topicsCount} across ${data.campCount} camps` },
     { label: "Material", value: formatMinutes(data.totalMinutes) },
     { label: "Average best score", value: data.averageScore === null ? "n/a" : `${data.averageScore}%` },
   ];

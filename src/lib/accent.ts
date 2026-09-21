@@ -1,4 +1,4 @@
-import type { AccentToken } from "@/types/curriculum-v1";
+import type { AccentToken } from "@/types/curriculum";
 
 /**
  * Tailwind needs complete class names at build time, so each accent's classes are

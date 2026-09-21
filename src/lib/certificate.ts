@@ -1,8 +1,8 @@
-import { getTrackTotalMinutes } from "@/data/tracks";
+import { trackMinutes, trackTopics, type TrackMeta } from "@/content";
 import { hashString } from "@/lib/shuffle";
 import { trackCodes } from "@/lib/track-meta";
 import type { TopicProgress } from "@/store/progressStore";
-import type { AccentToken, Track, TrackId } from "@/types/curriculum-v1";
+import type { AccentToken, TrackId } from "@/types/curriculum";
 
 /** Brand hexes for places without CSS variables (the PDF). Keep in sync with index.css. */
 export const accentHex: Record<AccentToken, string> = {
@@ -54,6 +54,7 @@ export interface CertificateData {
   trackName: string;
   accentHex: string;
   topicsCount: number;
+  campCount: number;
   milestoneCount: number;
   totalMinutes: number;
   averageScore: number | null;
@@ -62,22 +63,22 @@ export interface CertificateData {
 }
 
 export function buildCertificateData(
-  track: Track,
+  track: TrackMeta,
   progress: Record<string, TopicProgress>,
   name: string,
   completedAt: string,
 ): CertificateData {
-  const scores = track.topics
-    .map((t) => progress[t.id]?.bestScore)
-    .filter((s): s is number => typeof s === "number");
+  const topics = trackTopics(track);
+  const scores = topics.map((t) => progress[t.id]?.bestScore).filter((s): s is number => typeof s === "number");
   return {
     name: normalizeName(name),
     trackId: track.id,
     trackName: track.name,
     accentHex: accentHex[track.accentToken],
-    topicsCount: track.topics.length,
-    milestoneCount: track.topics.filter((t) => t.isMilestone).length,
-    totalMinutes: getTrackTotalMinutes(track),
+    topicsCount: topics.length,
+    campCount: track.modules.length,
+    milestoneCount: topics.filter((t) => t.isMilestone).length,
+    totalMinutes: trackMinutes(track),
     averageScore: scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null,
     completedAt,
     certificateId: certificateId(track.id, name, completedAt),

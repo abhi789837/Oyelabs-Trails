@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { runCodeChallenge, RUN_TIMEOUT_MS, type RunOutcome } from "@/lib/codeRunner";
 import { cn, preferredScrollBehavior } from "@/lib/utils";
 import { useProgressStore } from "@/store/progressStore";
-import type { CodeChallenge, Topic } from "@/types/curriculum-v1";
+import { RichText } from "@/components/content/RichText";
+import type { CodeChallenge, Topic } from "@/types/curriculum";
 import { ChallengeResult } from "./ChallengeResult";
 import { CodeEditor } from "./CodeEditor";
-import { RichText } from "./RichText";
 
 interface CodeRunnerProps {
   topic: Topic;
@@ -74,7 +74,7 @@ export function CodeRunner({ topic, challenge }: CodeRunnerProps) {
 
   return (
     <div>
-      <RichText text={challenge.instructions} />
+      <RichText text={challenge.instructions} className="max-w-prose" />
 
       <div className="mt-6">
         <CodeEditor
@@ -132,7 +132,14 @@ export function CodeRunner({ topic, challenge }: CodeRunnerProps) {
                       )}
                       <span className="sr-only">{r.passed ? "Passed:" : "Failed:"}</span>
                     </span>
-                    <span className="text-sm">{r.description}</span>
+                    <span className="text-sm">
+                      {r.description}
+                      {challenge.testCases[r.index]?.isEdgeCase && (
+                        <span className="ml-2 rounded-sm border border-trailmark/40 px-1.5 py-px font-mono text-[11px] text-trailmark-strong">
+                          Edge case
+                        </span>
+                      )}
+                    </span>
                   </div>
                   {!r.passed && (
                     <dl className="ml-8 mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 overflow-x-auto font-mono text-xs">

@@ -14,8 +14,7 @@
     "content:types": "tsc -p tsconfig.content.json --noEmit",
     "content:manifest": "node scripts/content/build-manifest.mjs",
     "content:embeds": "node scripts/content/check-embeds.mjs",
-    "content:videos": "node scripts/content/check-videos.mjs",
-    "check:content": "node scripts/check-content.mjs"
+    "content:videos": "node scripts/content/check-videos.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

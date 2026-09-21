@@ -1,14 +1,14 @@
+import type { ReactNode } from "react";
 import { Compass } from "lucide-react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { allTracks } from "@/data/tracks";
-import { useTrackProgress } from "@/hooks/useTrackProgress";
+import { modulePath, tracks, type ModuleMeta, type TrackMeta } from "@/content";
+import { useModuleProgress, useTrackProgress } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { trackIcons } from "@/lib/track-meta";
 import { cn } from "@/lib/utils";
-import type { Track } from "@/types/curriculum-v1";
 
 interface TrackNavProps {
   collapsed?: boolean;
@@ -25,7 +25,7 @@ export function TrackNav({ collapsed = false, onNavigate }: TrackNavProps) {
       {!collapsed && <p className="mb-1 mt-5 px-3 text-xs font-medium text-muted-foreground">Trails</p>}
       {collapsed && <div className="my-3 h-px bg-border" />}
 
-      {allTracks.map((track) => (
+      {tracks.map((track) => (
         <TrackNavItem key={track.id} track={track} collapsed={collapsed} onNavigate={onNavigate} />
       ))}
     </nav>
@@ -45,7 +45,7 @@ function NavItemLink({
   label: string;
   collapsed: boolean;
   onNavigate?: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const link = (
     <NavLink
@@ -74,7 +74,7 @@ function NavItemLink({
   );
 }
 
-function TrackNavItem({ track, collapsed, onNavigate }: { track: Track } & TrackNavProps) {
+function TrackNavItem({ track, collapsed, onNavigate }: { track: TrackMeta } & TrackNavProps) {
   const { pathname } = useLocation();
   const { completed, total, pct } = useTrackProgress(track);
   const accent = accentClasses[track.accentToken];
@@ -91,10 +91,7 @@ function TrackNavItem({ track, collapsed, onNavigate }: { track: Track } & Track
             onClick={onNavigate}
             aria-label={`${track.name}, ${progressLabel}`}
             aria-current={isActive ? "page" : undefined}
-            className={cn(
-              "flex flex-col items-center gap-1.5 rounded-md py-2 transition-colors hover:bg-accent",
-              isActive && "bg-accent",
-            )}
+            className={cn("flex flex-col items-center gap-1.5 rounded-md py-2 transition-colors hover:bg-accent", isActive && "bg-accent")}
           >
             <Icon className={cn("h-4 w-4", accent.text)} aria-hidden="true" />
             <Progress value={pct} className="h-1 w-6" indicatorClassName={accent.bg} aria-hidden="true" />
@@ -109,20 +106,72 @@ function TrackNavItem({ track, collapsed, onNavigate }: { track: Track } & Track
   }
 
   return (
-    <Link
-      to={`/track/${track.id}`}
-      onClick={onNavigate}
-      aria-current={isActive ? "page" : undefined}
-      className={cn("group block rounded-md px-3 py-2.5 transition-colors hover:bg-accent", isActive && "bg-accent")}
-    >
-      <span className="flex items-center gap-2.5">
-        <Icon className={cn("h-4 w-4 shrink-0", accent.text)} aria-hidden="true" />
-        <span className="flex-1 text-sm font-medium leading-snug">{track.name}</span>
-        <span className="font-mono text-xs text-muted-foreground tabular">
+    <div>
+      <Link
+        to={`/track/${track.id}`}
+        onClick={onNavigate}
+        aria-current={pathname === `/track/${track.id}` ? "page" : undefined}
+        className={cn("group block rounded-md px-3 py-2.5 transition-colors hover:bg-accent", isActive && "bg-accent")}
+      >
+        <span className="flex items-center gap-2.5">
+          <Icon className={cn("h-4 w-4 shrink-0", accent.text)} aria-hidden="true" />
+          <span className="flex-1 text-sm font-medium leading-snug">{track.name}</span>
+          <span className="font-mono text-xs text-muted-foreground tabular">
+            {completed}/{total}
+          </span>
+        </span>
+        <Progress value={pct} className="mt-2" indicatorClassName={accent.bg} aria-label={`${track.name}: ${progressLabel}`} />
+      </Link>
+      {isActive && (
+        <ul aria-label={`${track.name} camps`} className="mb-2 ml-5 mt-1 border-l pl-2">
+          {track.modules.map((module) => (
+            <ModuleNavItem key={module.id} module={module} track={track} onNavigate={onNavigate} />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function ModuleNavItem({ module, track, onNavigate }: { module: ModuleMeta; track: TrackMeta; onNavigate?: () => void }) {
+  const { pathname } = useLocation();
+  const { completed, total, isComplete } = useModuleProgress(module);
+  const active = pathname.startsWith(modulePath(module));
+  const accent = accentClasses[track.accentToken];
+
+  if (!module.available) {
+    return (
+      <li className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground/70">
+        <span className="h-1.5 w-1.5 shrink-0 rounded-[1px] border border-basalt/60" aria-hidden="true" />
+        <span className="flex-1 truncate">{module.name}</span>
+        <span className="font-mono text-[10px]">soon</span>
+      </li>
+    );
+  }
+
+  return (
+    <li>
+      <Link
+        to={modulePath(module)}
+        onClick={onNavigate}
+        aria-current={active ? "page" : undefined}
+        className={cn(
+          "flex items-center gap-2 rounded-md px-2 py-1 text-xs transition-colors hover:bg-foreground/[0.06]",
+          active ? "font-medium text-foreground" : "text-muted-foreground",
+        )}
+      >
+        <span
+          aria-hidden="true"
+          className={cn(
+            "h-1.5 w-1.5 shrink-0 rounded-[1px]",
+            isComplete ? "bg-summit" : completed > 0 ? accent.bg : "border border-basalt",
+          )}
+        />
+        <span className="flex-1 truncate">{module.name}</span>
+        <span className="font-mono text-[10px] tabular">
           {completed}/{total}
         </span>
-      </span>
-      <Progress value={pct} className="mt-2" indicatorClassName={accent.bg} aria-label={`${track.name}: ${progressLabel}`} />
-    </Link>
+      </Link>
+    </li>
   );
 }

@@ -3,63 +3,44 @@ import { Download, LoaderCircle, Lock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import { CertificateView } from "@/components/certificate/CertificateView";
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { StatusDot } from "@/components/trail/StatusDot";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { getTrackById } from "@/data/tracks";
+import { getTrack, modulePath, topicPath, trackTopics, type TrackMeta } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { summarizeTrack } from "@/hooks/useTrackProgress";
+import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { buildCertificateData, normalizeName } from "@/lib/certificate";
-import { levelLabels } from "@/lib/track-meta";
-import { cn, formatMinutesCompact } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useProfileStore } from "@/store/profileStore";
 import { useProgressStore } from "@/store/progressStore";
-import type { Track } from "@/types/curriculum-v1";
 import NotFoundPage from "./NotFoundPage";
 
 export default function CertificatePage() {
   const { trackId } = useParams();
-  const track = getTrackById(trackId);
+  const track = getTrack(trackId);
   useDocumentTitle(track ? `${track.name} certificate` : "Off trail");
 
   if (!track) return <NotFoundPage />;
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-16 pt-8 sm:px-8">
-      <nav aria-label="Breadcrumb">
-        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-          <li>
-            <Link to="/" className="hover:text-foreground hover:underline">
-              Dashboard
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li>
-            <Link to={`/track/${track.id}`} className="hover:text-foreground hover:underline">
-              {track.name}
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li aria-current="page" className="text-foreground">
-            Certificate
-          </li>
-        </ol>
-      </nav>
+      <Breadcrumbs items={[{ label: "Dashboard", to: "/" }, { label: track.name, to: `/track/${track.id}` }, { label: "Certificate" }]} />
       <CertificateContent track={track} />
     </div>
   );
 }
 
-function CertificateContent({ track }: { track: Track }) {
+function CertificateContent({ track }: { track: TrackMeta }) {
   const progress = useProgressStore((s) => s.progress);
   const summary = summarizeTrack(track, progress);
   const accent = accentClasses[track.accentToken];
 
   if (!summary.isComplete) {
-    const remaining = track.topics.filter((t) => progress[t.id]?.status !== "completed");
+    const remaining = trackTopics(track).filter((t) => progress[t.id]?.status !== "completed");
     return (
       <div className="mt-8">
         <h1 className="text-2xl font-bold sm:text-3xl">{track.name} certificate</h1>
@@ -85,7 +66,7 @@ function CertificateContent({ track }: { track: Track }) {
             <div className="mt-6 flex flex-wrap gap-3">
               {summary.nextTopic && (
                 <Button asChild className={accent.solid}>
-                  <Link to={`/track/${track.id}/topic/${summary.nextTopic.id}`}>
+                  <Link to={topicPath(summary.nextTopic)}>
                     {summary.started ? "Continue trail" : "Start trail"}
                   </Link>
                 </Button>
@@ -97,23 +78,35 @@ function CertificateContent({ track }: { track: Track }) {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold">Still to complete</h2>
+            <h2 className="text-sm font-semibold">Camps still to finish</h2>
             <ul className="mt-2 divide-y border-y">
-              {remaining.map((topic) => (
-                <li key={topic.id}>
-                  <Link
-                    to={`/track/${track.id}/topic/${topic.id}`}
-                    className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-1 py-2.5 transition-colors hover:bg-accent"
-                  >
-                    <StatusDot status={progress[topic.id]?.status ?? "not-started"} />
-                    <span className="text-sm font-medium">{topic.title}</span>
-                    <span className="flex gap-4 font-mono text-xs text-muted-foreground">
-                      <span className="hidden sm:inline">{levelLabels[topic.level]}</span>
-                      <span className="w-14 whitespace-nowrap text-right">{formatMinutesCompact(topic.estMinutes)}</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
+              {track.modules.map((module) => {
+                const s = summarizeModule(module, progress);
+                if (s.isComplete) return null;
+                const status = s.started ? "in-progress" : "not-started";
+                return (
+                  <li key={module.id}>
+                    {module.available ? (
+                      <Link
+                        to={modulePath(module)}
+                        className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-1 py-2.5 transition-colors hover:bg-accent"
+                      >
+                        <StatusDot status={status} className="rounded-[4px]" />
+                        <span className="text-sm font-medium">{module.name}</span>
+                        <span className="font-mono text-xs tabular text-muted-foreground">
+                          {s.completed}/{s.total}
+                        </span>
+                      </Link>
+                    ) : (
+                      <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-1 py-2.5 text-muted-foreground">
+                        <StatusDot status="not-started" className="rounded-[4px] border-dashed" />
+                        <span className="text-sm">{module.name}</span>
+                        <span className="font-mono text-xs">being written</span>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
@@ -124,7 +117,7 @@ function CertificateContent({ track }: { track: Track }) {
   return <UnlockedCertificate track={track} completedAt={summary.completedAt ?? ""} />;
 }
 
-function UnlockedCertificate({ track, completedAt }: { track: Track; completedAt: string }) {
+function UnlockedCertificate({ track, completedAt }: { track: TrackMeta; completedAt: string }) {
   const progress = useProgressStore((s) => s.progress);
   const learnerName = useProfileStore((s) => s.learnerName);
   const setLearnerName = useProfileStore((s) => s.setLearnerName);

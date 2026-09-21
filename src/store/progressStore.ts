@@ -17,6 +17,8 @@ export interface ProgressState {
   resetTopic: (topicId: string) => void;
   resetAll: () => void;
   getTrackCompletionPct: (topicIds: string[]) => number;
+  /** Same calculation scoped to one module; with ~290 topics the module is the unit of "done". */
+  getModuleCompletionPct: (moduleId: string, topicIds: string[]) => number;
   isTrackComplete: (topicIds: string[]) => boolean;
 }
 
@@ -67,6 +69,10 @@ export const useProgressStore = create<ProgressState>()(
       resetAll: () => set({ progress: {} }),
 
       getTrackCompletionPct: (topicIds) => completionPct(get().progress, topicIds),
+
+      // moduleId is part of the brief's signature and keeps call sites self-describing; the
+      // percentage itself only depends on the module's topic ids.
+      getModuleCompletionPct: (_moduleId, topicIds) => completionPct(get().progress, topicIds),
 
       isTrackComplete: (topicIds) =>
         topicIds.length > 0 && topicIds.every((id) => get().progress[id]?.status === "completed"),
