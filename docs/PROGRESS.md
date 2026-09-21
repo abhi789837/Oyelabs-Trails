@@ -49,7 +49,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] ai-prompting: Prompt Engineering (5)
 - [x] ai-context: Context Engineering & AI Pair Programming (5)
 - [x] ai-llm: LLM Fundamentals (5)
-- [~] ai-rag: Retrieval-Augmented Generation (5)
+- [x] ai-rag: Retrieval-Augmented Generation (5)
 - [~] ai-agents: AI Agents (5)
 
 Total planned: 293 topics across 37 modules (the brief estimates ~240; its module lists add up to 293).
