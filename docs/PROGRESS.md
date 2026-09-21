@@ -46,7 +46,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 
 ### AI-Driven Development (6 modules)
 - [x] ai-tools: The AI Coding Tools Landscape (5)
-- [~] ai-prompting: Prompt Engineering (5)
+- [x] ai-prompting: Prompt Engineering (5)
 - [~] ai-context: Context Engineering & AI Pair Programming (5)
 - [~] ai-llm: LLM Fundamentals (5)
 - [~] ai-rag: Retrieval-Augmented Generation (5)
