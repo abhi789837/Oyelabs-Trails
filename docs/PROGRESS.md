@@ -34,7 +34,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [~] be-nestjs: NestJS (9)
 - [~] be-python: Python Backend (8)
 - [x] be-docker: Docker & Containers (8)
-- [~] be-system-design: System Design Fundamentals (8)
+- [x] be-system-design: System Design Fundamentals (8)
 - [x] be-testing-ops: Backend Testing & Ops (4)
 
 ### Full-Stack (5 modules)
