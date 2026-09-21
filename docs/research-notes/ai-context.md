@@ -1,0 +1,26 @@
+# Context Engineering & AI Pair Programming research notes (2026-09-21)
+
+## Videos
+- ctx-context-files: Never Run claude /init (Matt Pocock, 10:37, Feb 2026); argues for minimal, human-written context files and cites the AGENTS.md evaluation paper used in the quiz. Alternates: The CLAUDE.md file (Claude, 3:01, May 2026) and Claude Code Essentials (freeCodeCamp.org, 12:20:10), from "Persistent Context: Claude.md & Rules" at 33312s.
+- ctx-resetting-context: Most devs don’t understand how context windows work (Matt Pocock, 9:33, Oct 2025); context composition, lost-in-the-middle, clear vs compact. Alternates: Context Management in Claude Code (Claude, 3:30, May 2026) and Claude Code Essentials from "Compact, Clear, Rename & Rewind" at 6378s.
+- ctx-reviewing-ai-code: How Developers Secure AI-Generated Code: 5 Security Best Practices (IBM Technology, 11:27, Sep 2026); dependency validation, shift-left, outcome-based verification. Alternate: How I Review AI-Generated Code (Owain Lewis, 14:20, Mar 2026), a layered review workflow.
+- ctx-reusable-skills: The complete guide to Agent Skills (Burke Holland, 16:29, Jan 2026); cross-tool (VS Code/Copilot) and compares prompts vs instructions vs custom agents vs skills. Alternates: Claude Agent Skills Explained (Anthropic, 3:14) and Claude Code Essentials from "Agent Skills: Activation, Scripts & Dynamic Content" at 35787s.
+- ctx-anti-patterns: Vibe coding in prod | Code w/ Claude (Anthropic, 31:17; leaf-node containment, verifiability). Alternate: Context Rot: How Increasing Input Tokens Impacts LLM Performance (Chroma, 7:56).
+- The freeCodeCamp "Claude Code Essentials" course (Mar 2026) is chapter-split across four topics in two modules, always at different start times.
+- No search-URL fallbacks. The watch-page lookup in `yt.mjs` was throttled during the final re-check; oEmbed still confirmed title, channel and embeddability for every video, and durations come from successful `info` runs earlier the same day.
+
+## References
+- Module ref "roadmap.sh Vibe Coding Best Practices" exists at `https://roadmap.sh/vibe-coding/best-practices` (200; a made-up sibling path returns a real 404).
+- `research.trychroma.com/context-rot` redirects to `www.trychroma.com/research/context-rot`; GitHub's custom-instructions page moved to `/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions`; VS Code's `/docs/copilot/customization/prompt-files` redirects to `/docs/agent-customization/prompt-files`; `cursor.com/docs/context/rules` redirects to `/docs/rules`.
+- Iframe previews blocked: code.claude.com, anthropic.com, docs.github.com, code.visualstudio.com, arxiv.org, roadmap.sh. Embeddable: agents.md, genai.owasp.org, trychroma.com, simonwillison.net, cursor.com/docs, google.github.io.
+
+## Facts verified
+- Claude Code memory docs: CLAUDE.md locations and load order (files concatenate, more specific read last), `@` imports up to four hops and still loaded into context, `.claude/rules/` with `paths`, target under 200 lines per file, HTML block comments stripped before injection, CLAUDE.md is context not enforcement, native AGENTS.md reading (v2.1.277+; by default only when no CLAUDE.md exists) or import via `@AGENTS.md`.
+- AGENTS.md site: stewarded by the Agentic AI Foundation (Linux Foundation), 60k+ projects, nearest file takes precedence, chat prompts override.
+- arXiv 2602.11988 (Gloaguen et al., Feb 2026, rev. Jun 2026): context files don't generally improve success, +20% inference cost, holds for LLM-generated and developer-committed files; instructions are followed; repository overviews not helpful.
+- Claude Code best practices: failure patterns (kitchen sink, correcting over and over, over-specified CLAUDE.md, trust-then-verify gap, infinite exploration), clear after two failed corrections, `/btw` side questions never enter history, compaction preserves key decisions but can lose early detail (how-claude-code-works).
+- Chroma Context Rot: 18 models, degradation with length even on simple tasks, distractors compound it. Liu et al. (arXiv 2307.03172): U-shaped recall.
+- Anthropic context engineering post: attention budget, smallest high-signal token set, compaction, structured note-taking, sub-agent summaries.
+- Package hallucination paper (arXiv 2406.10279, USENIX Security 2025): 576k samples, 16 LLMs, ≥5.2% commercial / 21.7% open-source, 205,474 unique names; 43% repeated in all 10 runs (HTML full text §5.3). GitHub's "Review AI-generated code" tutorial names slopsquatting and deleted/skipped tests. OWASP LLM09:2025 covers non-existent code libraries.
+- Claude Code skills docs: descriptions load at start, body on invoke; `disable-model-invocation` hides the description; `user-invocable: false` is model-only; `allowed-tools`; `!` shell injection runs before the model sees the skill; `$ARGUMENTS`/`$0`; custom commands merged into skills; keep SKILL.md under 500 lines; compaction keeps a truncated copy of recent skills. VS Code prompt files: `.github/prompts/*.prompt.md`, run as `/name`. Cursor rules: `.mdc` with `alwaysApply`/`description`/`globs`, under 500 lines.
+- OWASP LLM06:2025 Excessive Agency and LLM01:2025 Prompt Injection mitigations; Simon Willison's lethal trifecta definition.
