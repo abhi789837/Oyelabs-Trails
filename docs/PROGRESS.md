@@ -42,7 +42,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] fs-nextjs: Next.js Full-Stack (5)
 - [x] fs-t3: The T3 Stack & End-to-End Type Safety (4)
 - [x] fs-graphql: GraphQL Full-Stack (3)
-- [~] fs-capstone: Full-Stack Capstone & Deployment (5)
+- [x] fs-capstone: Full-Stack Capstone & Deployment (5)
 
 ### AI-Driven Development (6 modules)
 - [x] ai-tools: The AI Coding Tools Landscape (5)
