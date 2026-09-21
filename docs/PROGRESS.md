@@ -31,7 +31,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] be-nosql: NoSQL & Caching (6)
 - [x] be-auth-security: Authentication & Security (8)
 - [x] be-api-design: API Design (8)
-- [~] be-nestjs: NestJS (9)
+- [x] be-nestjs: NestJS (9)
 - [~] be-python: Python Backend (8)
 - [x] be-docker: Docker & Containers (8)
 - [x] be-system-design: System Design Fundamentals (8)
