@@ -43,7 +43,7 @@ export const ChallengeResult = forwardRef<HTMLDivElement, ChallengeResultProps>(
   const passMessage = trackDone.isComplete
     ? `That finishes the ${track.name} trail. Your certificate is ready.`
     : moduleDone.isComplete
-      ? `That completes the ${module.name} camp.`
+      ? `That completes the ${module.name.replace(/^The /, "")} camp.`
       : "This topic is marked complete on your trail.";
 
   return (
