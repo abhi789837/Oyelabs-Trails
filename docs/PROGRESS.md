@@ -64,8 +64,8 @@ All 37 modules committed: 293 topics, 2,163 quiz questions, 86 code challenges (
 - [x] 8. Topic detail (reference previews with fallback, embedded video, alternate videos)
 - [x] 9. Challenge engine (multi-select, Markdown code blocks, edge-case tags)
 - [x] 10. Certificate + module-complete toasts
-- [~] 11. Polish pass
-- [ ] 12. Deploy prep
+- [x] 11. Polish pass (375/768/1280/1440, dark mode, mobile overflow fix, focus rings, reduced motion)
+- [x] 12. Deploy prep (clean build, vercel.json, README with module/topic authoring and deploy steps)
 
 ## Decisions log
 
@@ -78,4 +78,12 @@ All 37 modules committed: 293 topics, 2,163 quiz questions, 86 code challenges (
 - Reference previews: embeddability is precomputed from response headers
   (`npm run content:embeds` → `src/content/embeds.generated.ts`), because browsers fire `load` even for
   frames blocked by X-Frame-Options, so a runtime timeout alone can't detect blocking.
-- The v1 app runs on `src/types/curriculum-v1.ts` until the v2 app phases replace it.
+- The v1 app ran on `src/types/curriculum-v1.ts` during the migration; both are removed now.
+- Levels skew toward advanced (8 beginner, 84 intermediate, 161 advanced, 40 expert): topics were
+  levelled by the real difficulty of their challenge rather than by the module's nominal range.
+- YouTube throttled watch-page scraping (HTTP 429 / captcha) late in the run. Video existence and
+  embeddability were verified via oEmbed throughout (and re-verified for all 547 videos at the end);
+  durations and chapter starts came from YouTube's player data where the watch page was blocked.
+- Some videos the brief marks as verified have different real durations (e.g. OWASP course 1:27:00,
+  GraphQL course 1:28:59, Redux Toolkit 14:11:42, React Native 4:40:39, Bootstrap/Sass 5:02:23); the
+  content uses YouTube's real values.
