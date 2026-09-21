@@ -21,3 +21,11 @@ export function formatDate(iso: string): string {
     day: "numeric",
   });
 }
+
+/** Compact form for tight columns: 90 -> "1h 30m", 60 -> "1h", 45 -> "45m" */
+export function formatMinutesCompact(total: number): string {
+  const hours = Math.floor(total / 60);
+  const minutes = total % 60;
+  if (hours === 0) return `${minutes}m`;
+  return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;
+}

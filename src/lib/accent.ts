@@ -11,6 +11,8 @@ export interface AccentClasses {
   border: string;
   fg: string;
   decoration: string;
+  /** Filled button in the accent color. */
+  solid: string;
 }
 
 export const accentClasses: Record<AccentToken, AccentClasses> = {
@@ -21,6 +23,7 @@ export const accentClasses: Record<AccentToken, AccentClasses> = {
     border: "border-trailmark",
     fg: "text-trailmark-foreground",
     decoration: "decoration-trailmark",
+    solid: "bg-trailmark text-trailmark-foreground hover:bg-trailmark/85",
   },
   summit: {
     bg: "bg-summit",
@@ -29,6 +32,7 @@ export const accentClasses: Record<AccentToken, AccentClasses> = {
     border: "border-summit",
     fg: "text-summit-foreground",
     decoration: "decoration-summit",
+    solid: "bg-summit text-summit-foreground hover:bg-summit/90",
   },
   ridge: {
     bg: "bg-ridge",
@@ -37,6 +41,7 @@ export const accentClasses: Record<AccentToken, AccentClasses> = {
     border: "border-ridge",
     fg: "text-ridge-foreground",
     decoration: "decoration-ridge",
+    solid: "bg-ridge text-ridge-foreground hover:bg-ridge/90",
   },
   glacier: {
     bg: "bg-glacier",
@@ -45,6 +50,7 @@ export const accentClasses: Record<AccentToken, AccentClasses> = {
     border: "border-glacier",
     fg: "text-glacier-foreground",
     decoration: "decoration-glacier",
+    solid: "bg-glacier text-glacier-foreground hover:bg-glacier/90",
   },
   basalt: {
     bg: "bg-basalt",
@@ -53,6 +59,7 @@ export const accentClasses: Record<AccentToken, AccentClasses> = {
     border: "border-basalt",
     fg: "text-basalt-foreground",
     decoration: "decoration-basalt",
+    solid: "bg-basalt text-basalt-foreground hover:bg-basalt/90",
   },
 };
 
