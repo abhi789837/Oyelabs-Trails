@@ -122,6 +122,12 @@
   ::selection {
     background: rgb(var(--trailmark) / 0.35);
   }
+
+  /* Browsers give fieldsets min-width: min-content, so a wide code block inside a quiz
+     question would push the page wider than the viewport. */
+  fieldset {
+    min-width: 0;
+  }
 }
 
 @layer utilities {
