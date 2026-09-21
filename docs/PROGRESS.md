@@ -38,7 +38,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] be-testing-ops: Backend Testing & Ops (4)
 
 ### Full-Stack (5 modules)
-- [~] fs-mern: MERN End-to-End (5)
+- [x] fs-mern: MERN End-to-End (5)
 - [~] fs-nextjs: Next.js Full-Stack (5)
 - [~] fs-t3: The T3 Stack & End-to-End Type Safety (4)
 - [~] fs-graphql: GraphQL Full-Stack (3)
