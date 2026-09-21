@@ -24,7 +24,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [ ] fe-security-perf: Frontend Security & Performance (5)
 
 ### Backend (12 modules)
-- [~] be-foundations: Web & Backend Foundations (4)
+- [x] be-foundations: Web & Backend Foundations (4)
 - [~] be-node-core: Node.js Core (10)
 - [~] be-express: Express.js (9)
 - [~] be-sql: SQL & Relational Databases (10)
