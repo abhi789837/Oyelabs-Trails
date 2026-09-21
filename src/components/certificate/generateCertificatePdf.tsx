@@ -7,7 +7,7 @@ import plexSans600 from "@/assets/fonts/ibm-plex-sans-latin-600.ttf?url";
 import grotesk500 from "@/assets/fonts/space-grotesk-latin-500.ttf?url";
 import grotesk700 from "@/assets/fonts/space-grotesk-latin-700.ttf?url";
 
-import type { CertificateData } from "@/lib/certificate";
+import { nameScale, type CertificateData } from "@/lib/certificate";
 import { contourPaths } from "@/lib/contours";
 import { formatDate, formatMinutes } from "@/lib/utils";
 import { SEAL_PEAK, SEAL_SIZE, SEAL_SNOW } from "./Seal";
@@ -121,7 +121,7 @@ function CertificateDocument({ data }: { data: CertificateData }) {
 
           <Text style={styles.kicker}>Certificate of completion</Text>
           <Text style={styles.lead}>This certifies that</Text>
-          <Text style={styles.name}>{data.name}</Text>
+          <Text style={[styles.name, { fontSize: 44 * nameScale(data.name) }]}>{data.name}</Text>
           <Text style={styles.body}>
             reached the summit of the <Text style={styles.strong}>{data.trackName}</Text> trail, completing all{" "}
             {data.topicsCount} topics and passing every graded challenge.

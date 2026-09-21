@@ -17,6 +17,13 @@ import type { Track } from "@/types/curriculum";
 export default function DashboardPage() {
   useDocumentTitle();
   const progress = useProgressStore((s) => s.progress);
+  const resetAll = useProgressStore((s) => s.resetAll);
+
+  const handleResetAll = () => {
+    if (window.confirm("Reset progress on every trail? Completed topics, scores and attempts will be cleared from this browser.")) {
+      resetAll();
+    }
+  };
 
   const allTopics = allTracks.flatMap((t) => t.topics);
   const completed = allTopics.filter((t) => progress[t.id]?.status === "completed").length;
@@ -52,6 +59,17 @@ export default function DashboardPage() {
           <TrackSection key={track.id} track={track} progress={progress} />
         ))}
       </div>
+
+      <footer className="border-t">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <p>Progress is saved in this browser only. Clearing site data or switching devices starts you fresh.</p>
+          {completed > 0 || Object.keys(progress).length > 0 ? (
+            <Button variant="link" size="sm" className="h-auto justify-start px-0 text-xs text-muted-foreground" onClick={handleResetAll}>
+              Reset all progress
+            </Button>
+          ) : null}
+        </div>
+      </footer>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { BrandMark } from "@/components/layout/BrandMark";
 import { useElementWidth } from "@/hooks/useElementWidth";
-import type { CertificateData } from "@/lib/certificate";
+import { nameScale, type CertificateData } from "@/lib/certificate";
 import { contourPaths } from "@/lib/contours";
 import { cn, formatDate, formatMinutes } from "@/lib/utils";
 import { Seal } from "./Seal";
@@ -67,9 +67,10 @@ export function CertificateView({ data }: { data: CertificateData }) {
             <p className="mt-8 text-[16px] text-ink/65">This certifies that</p>
             <p
               className={cn(
-                "mt-2 max-w-[760px] truncate font-display text-[54px] font-bold leading-[1.1] tracking-[-0.03em]",
+                "mt-2 max-w-[780px] truncate font-display font-bold leading-[1.1] tracking-[-0.03em]",
                 !hasName && "text-ink/25",
               )}
+              style={{ fontSize: 54 * nameScale(data.name) }}
             >
               {hasName ? data.name : "Your name"}
             </p>

@@ -112,8 +112,10 @@
     text-wrap: pretty;
   }
 
+  /* Focus rings use the trailmark family. The raw accent is only 2.5:1 on light paper,
+     so rings use the stronger shade (>= 3:1 on both themes, per WCAG 1.4.11). */
   :focus-visible {
-    outline: 2px solid rgb(var(--trailmark));
+    outline: 2px solid rgb(var(--trailmark-strong));
     outline-offset: 2px;
   }
 

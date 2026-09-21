@@ -25,6 +25,15 @@ function encode(n: number, length: number): string {
   return out;
 }
 
+/** Scale factor for the name on the certificate so long names fit on one line. */
+export function nameScale(name: string): number {
+  const length = normalizeName(name).length;
+  if (length <= 22) return 1;
+  if (length <= 30) return 0.8;
+  if (length <= 40) return 0.64;
+  return 0.54;
+}
+
 export function normalizeName(name: string): string {
   return name.trim().replace(/\s+/g, " ");
 }

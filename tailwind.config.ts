@@ -57,7 +57,7 @@ export default {
         // shadcn/ui semantic names, mapped onto the trail palette.
         border: token("border"),
         input: token("input"),
-        ring: token("trailmark"),
+        ring: token("trailmark-strong"),
         primary: { DEFAULT: token("trailmark"), foreground: token("trailmark-foreground") },
         secondary: { DEFAULT: token("surface-sunken"), foreground: token("foreground") },
         muted: { DEFAULT: token("surface-sunken"), foreground: token("muted-foreground") },
