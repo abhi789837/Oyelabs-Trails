@@ -1,0 +1,21 @@
+# Meta-Frameworks, Mobile & Bonus research notes (2026-09-21)
+
+3 topics: 2 quizzes (20 questions, 6 edge-case/interview, 4 multi-select) and 1 code challenge (`bonus-pwa`,
+reference solution in `content-tests/solutions/`). Every video was confirmed with
+`node scripts/research/yt.mjs info <id>` (exists, `embeddable: true`, exact title/channel/duration). No search-URL fallbacks.
+
+## Videos
+- bonus-astro-islands: Astro Web Framework Crash Course (freeCodeCamp.org, 1:16:48); brief-given. It's a 2023 build-a-blog course (Astro 3 era), so islands, server islands and prop serialization are covered by the summary and quiz. Alternate: "Islands Architecture, Astro, and You | Nate Moore | ViteConf 2022" (ViteConf, 22:17), a focused talk by an Astro core maintainer.
+- bonus-react-native: React Native Course – Android and iOS App Development (freeCodeCamp.org, 4:40:39); brief-given URL. The brief lists 1:27:01, but the video is 4:40:39; it isn't chapter-split because the fundamentals run through the first ~1.5 hours (What is React Native, Expo, core components, styling, FlatList). It predates the New Architecture default (2023), so alternates add current material: Traversy Media "React Native Crash Course 2026 - Build a Complete Mobile App" (1:38:36; Expo, Expo Router, EAS) and GeekyAnts "Mastering React Native's New Architecture for High-Performance Apps" (19:39).
+- bonus-pwa: Progressive Web Apps in 100 Seconds // Build a PWA from Scratch (Fireship, 8:09; 936k views). Alternates: Microsoft Developer "Introduction to PWAs [1 of 17] | PWA for Beginners" (13:46, 2023) and Chrome for Developers "Introduction to Service Workers" (12:53; lifecycle chapter). No recent freeCodeCamp PWA course exists (the fCC results were 7–9 years old).
+
+## References
+- web.dev, MDN, developer.chrome.com and webkit.org block iframe previews; docs.astro.build, jasonformat.com, patterns.dev, reactnative.dev and docs.expo.dev allow them.
+- MDN `Web/Manifest` redirects to `Web/Progressive_web_apps/Manifest` (not used directly).
+- `docs.astro.build/en/reference/directives-reference/` lists the `client:*` directives; the static HTML omits their prose, so directive semantics were checked against the "Front-end frameworks" guide instead.
+
+## Facts verified
+- Astro: islands concept page (client islands, server islands with `server:defer`, runtime sent once per framework, history: Katie Sylor-Miller / Jason Miller 2020); framework components guide (serializable prop types: plain object, number, string, Array, Map, Set, RegExp, Date, BigInt, URL, typed arrays; functions not supported; `client:only` skips SSR); sharing-state recipe uses Nano Stores. Astro 7.3.3 on npm. Cloudflare's acquisition of The Astro Technology Company announced 2026-01-16; Astro stays open source (Cloudflare press release).
+- React Native: architecture overview (JSI, synchronous layout with `useLayoutEffect`, concurrent features); blog: 0.76 New Architecture by default (Oct 2024), 0.80 legacy frozen, 0.82 "first React Native that runs entirely on the New Architecture" (Oct 2025), 0.84 Hermes V1 default and legacy components removed. RN 0.87.1 and Expo SDK 57 on npm. "Get Started" recommends a framework and names Expo. Text docs: limited style inheritance (only nested `<Text>`).
+- PWA: web.dev install criteria (HTTPS, manifest with name/short_name, 192 and 512 px icons, start_url, display; engagement heuristics; no service worker requirement); MDN "Making PWAs installable" (Chromium requirements, Safari "Add to Dock", Firefox desktop doesn't install). web.dev service worker lifecycle: waiting until zero controlled clients, "clients overlap during a refresh", `skipWaiting`, `clients.claim`, update checks on navigation, byte-different comparison, caching headers ignored for the worker script since Chrome 68. WebKit web push for home-screen web apps (iOS/iPadOS 16.4).
+- The strategy semantics in the challenge follow Workbox: NetworkFirst falls back to cache only on network failure, not on an error status; responses are only cached when status is 200. The solution was also run against wrong variants (caching non-200 responses, stale-while-revalidate returning the fresh response, network-first falling back on a 500); each fails at least one test.
