@@ -18,7 +18,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] fe-react-hooks: React Hooks & Advanced Patterns (16)
 - [~] fe-react-ecosystem: React Ecosystem (9)
 - [x] fe-react-projects: React Practice Projects (3)
-- [~] fe-nextjs: Next.js (11)
+- [x] fe-nextjs: Next.js (11)
 - [~] fe-vue: Vue.js (11)
 - [~] fe-meta-mobile: Meta-Frameworks, Mobile & Bonus (3)
 - [~] fe-security-perf: Frontend Security & Performance (5)
