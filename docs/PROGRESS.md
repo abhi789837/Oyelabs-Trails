@@ -1,0 +1,81 @@
+# v2 build progress
+
+Resume here after an interruption: read CLAUDE.md, this file and `git log`, then continue with the
+first unchecked item. `npm run content:check` lists which registry modules don't exist yet.
+
+## Phase 2: content, module by module
+
+Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <module>`).
+
+### Frontend (14 modules)
+- [ ] fe-tooling: Dev Environment & Tooling (6)
+- [ ] fe-html-css: HTML & CSS Foundations (13)
+- [ ] fe-js-core: JavaScript Core, Namaste JavaScript S1 (19)
+- [ ] fe-js-advanced: JavaScript Advanced & Interview-Level (21)
+- [ ] fe-typescript: TypeScript (16)
+- [ ] fe-tailwind: Tailwind CSS (7)
+- [ ] fe-react-fundamentals: React Fundamentals (9)
+- [ ] fe-react-hooks: React Hooks & Advanced Patterns (16)
+- [ ] fe-react-ecosystem: React Ecosystem (9)
+- [ ] fe-react-projects: React Practice Projects (3)
+- [ ] fe-nextjs: Next.js (11)
+- [ ] fe-vue: Vue.js (11)
+- [ ] fe-meta-mobile: Meta-Frameworks, Mobile & Bonus (3)
+- [ ] fe-security-perf: Frontend Security & Performance (5)
+
+### Backend (12 modules)
+- [ ] be-foundations: Web & Backend Foundations (4)
+- [ ] be-node-core: Node.js Core (10)
+- [ ] be-express: Express.js (9)
+- [ ] be-sql: SQL & Relational Databases (10)
+- [ ] be-nosql: NoSQL & Caching (6)
+- [ ] be-auth-security: Authentication & Security (8)
+- [ ] be-api-design: API Design (8)
+- [ ] be-nestjs: NestJS (9)
+- [ ] be-python: Python Backend (8)
+- [ ] be-docker: Docker & Containers (8)
+- [ ] be-system-design: System Design Fundamentals (8)
+- [ ] be-testing-ops: Backend Testing & Ops (4)
+
+### Full-Stack (5 modules)
+- [ ] fs-mern: MERN End-to-End (5)
+- [ ] fs-nextjs: Next.js Full-Stack (5)
+- [ ] fs-t3: The T3 Stack & End-to-End Type Safety (4)
+- [ ] fs-graphql: GraphQL Full-Stack (3)
+- [ ] fs-capstone: Full-Stack Capstone & Deployment (5)
+
+### AI-Driven Development (6 modules)
+- [ ] ai-tools: The AI Coding Tools Landscape (5)
+- [ ] ai-prompting: Prompt Engineering (5)
+- [ ] ai-context: Context Engineering & AI Pair Programming (5)
+- [ ] ai-llm: LLM Fundamentals (5)
+- [ ] ai-rag: Retrieval-Augmented Generation (5)
+- [ ] ai-agents: AI Agents (5)
+
+Total planned: 293 topics across 37 modules (the brief estimates ~240; its module lists add up to 293).
+
+## Phases 3–12: app
+
+- [ ] 3. App shell & routing (four-level routes, sidebar with track + module progress)
+- [ ] 4. Progress store (`getModuleCompletionPct`)
+- [ ] 5. Dashboard
+- [ ] 6. Track roadmap (module camps)
+- [ ] 7. Module view (waypoint path)
+- [ ] 8. Topic detail (reference previews with fallback, embedded video, alternate videos)
+- [ ] 9. Challenge engine (multi-select, Markdown code blocks, edge-case tags)
+- [ ] 10. Certificate + module-complete toasts
+- [ ] 11. Polish pass
+- [ ] 12. Deploy prep
+
+## Decisions log
+
+- Full-Stack keeps the added `glacier` accent: the brief assigns `ridge` to both Full-Stack and
+  AI-Driven while reserving `ridge` for AI-Driven only.
+- Content lives in `src/content/<trackId>/<moduleId>.ts`; a generated manifest
+  (`src/content/manifest.generated.ts`) holds light metadata and module content is lazy-loaded.
+- Video research uses `scripts/research/yt.mjs`, which reads youtube.com itself (search results,
+  watch page, oEmbed) rather than third-party aggregators; oEmbed success also proves embeddability.
+- Reference previews: embeddability is precomputed from response headers
+  (`npm run content:embeds` → `src/content/embeds.generated.ts`), because browsers fire `load` even for
+  frames blocked by X-Frame-Options, so a runtime timeout alone can't detect blocking.
+- The v1 app runs on `src/types/curriculum-v1.ts` until the v2 app phases replace it.

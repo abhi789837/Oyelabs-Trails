@@ -5,7 +5,7 @@ import { accentColor } from "@/lib/accent";
 import { smoothPath, type Point } from "@/lib/geometry";
 import { levelElevation } from "@/lib/track-meta";
 import type { TopicProgress } from "@/store/progressStore";
-import type { Track } from "@/types/curriculum";
+import type { Track } from "@/types/curriculum-v1";
 
 interface ElevationProfileProps {
   track: Track;

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { runCodeChallenge, RUN_TIMEOUT_MS, type RunOutcome } from "@/lib/codeRunner";
 import { cn, preferredScrollBehavior } from "@/lib/utils";
 import { useProgressStore } from "@/store/progressStore";
-import type { CodeChallenge, Topic } from "@/types/curriculum";
+import type { CodeChallenge, Topic } from "@/types/curriculum-v1";
 import { ChallengeResult } from "./ChallengeResult";
 import { CodeEditor } from "./CodeEditor";
 import { RichText } from "./RichText";

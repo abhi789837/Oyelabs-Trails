@@ -13,7 +13,7 @@ import { accentClasses } from "@/lib/accent";
 import { levelLabels } from "@/lib/track-meta";
 import { cn, formatMinutes } from "@/lib/utils";
 import { QUIZ_PASS_THRESHOLD, useProgressStore } from "@/store/progressStore";
-import type { Topic, Track } from "@/types/curriculum";
+import type { Topic, Track } from "@/types/curriculum-v1";
 import NotFoundPage from "./NotFoundPage";
 
 export default function TopicPage() {

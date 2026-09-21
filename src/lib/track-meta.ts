@@ -1,6 +1,6 @@
 import { Bot, Layers, LayoutTemplate, Server, type LucideIcon } from "lucide-react";
 
-import type { TopicLevel, TrackId } from "@/types/curriculum";
+import type { TopicLevel, TrackId } from "@/types/curriculum-v1";
 
 export const trackIcons: Record<TrackId, LucideIcon> = {
   frontend: LayoutTemplate,

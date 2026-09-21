@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { seededOrder } from "@/lib/shuffle";
 import { cn, preferredScrollBehavior } from "@/lib/utils";
 import { QUIZ_PASS_THRESHOLD, useProgressStore } from "@/store/progressStore";
-import type { QuizQuestion, Topic } from "@/types/curriculum";
+import type { QuizQuestion, Topic } from "@/types/curriculum-v1";
 import { ChallengeResult } from "./ChallengeResult";
 
 interface QuizRunnerProps {

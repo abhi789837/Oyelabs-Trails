@@ -12,7 +12,7 @@ import { accentClasses } from "@/lib/accent";
 import { levelLabels } from "@/lib/track-meta";
 import { cn, formatDate, formatMinutes, formatMinutesCompact } from "@/lib/utils";
 import { useProgressStore, type TopicProgress } from "@/store/progressStore";
-import type { Track } from "@/types/curriculum";
+import type { Track } from "@/types/curriculum-v1";
 
 export default function DashboardPage() {
   useDocumentTitle();

@@ -1,4 +1,4 @@
-import type { Track } from "@/types/curriculum";
+import type { Track } from "@/types/curriculum-v1";
 
 export const backendTrack: Track = {
   id: "backend",

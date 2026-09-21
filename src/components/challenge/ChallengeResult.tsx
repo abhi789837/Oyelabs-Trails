@@ -9,7 +9,7 @@ import { useTrackProgress } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 import { QUIZ_PASS_THRESHOLD } from "@/store/progressStore";
-import type { Topic } from "@/types/curriculum";
+import type { Topic } from "@/types/curriculum-v1";
 
 interface ChallengeResultProps {
   topic: Topic;

@@ -1,4 +1,4 @@
-import type { Topic, Track, TrackId } from "@/types/curriculum";
+import type { Topic, Track, TrackId } from "@/types/curriculum-v1";
 import { aiDrivenTrack } from "./ai-driven";
 import { backendTrack } from "./backend";
 import { frontendTrack } from "./frontend";

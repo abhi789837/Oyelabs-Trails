@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { completionPct, EMPTY_PROGRESS, useProgressStore, type TopicProgress } from "@/store/progressStore";
-import type { Topic, Track } from "@/types/curriculum";
+import type { Topic, Track } from "@/types/curriculum-v1";
 
 export interface TrackProgressSummary {
   completed: number;

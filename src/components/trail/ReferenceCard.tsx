@@ -1,7 +1,7 @@
 import { BookOpen, CirclePlay, ExternalLink } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { TopicResource } from "@/types/curriculum";
+import type { TopicResource } from "@/types/curriculum-v1";
 
 interface ReferenceCardProps {
   kind: "read" | "watch";

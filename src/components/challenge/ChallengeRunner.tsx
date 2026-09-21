@@ -1,4 +1,4 @@
-import type { Topic } from "@/types/curriculum";
+import type { Topic } from "@/types/curriculum-v1";
 import { CodeRunner } from "./CodeRunner";
 import { QuizRunner } from "./QuizRunner";
 

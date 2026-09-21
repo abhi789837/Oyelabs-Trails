@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.content.tsbuildinfo"
+  },
+  "include": ["src/types/curriculum.ts", "src/content"]
+}

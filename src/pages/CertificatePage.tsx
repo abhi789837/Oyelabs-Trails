@@ -17,7 +17,7 @@ import { levelLabels } from "@/lib/track-meta";
 import { cn, formatMinutesCompact } from "@/lib/utils";
 import { useProfileStore } from "@/store/profileStore";
 import { useProgressStore } from "@/store/progressStore";
-import type { Track } from "@/types/curriculum";
+import type { Track } from "@/types/curriculum-v1";
 import NotFoundPage from "./NotFoundPage";
 
 export default function CertificatePage() {

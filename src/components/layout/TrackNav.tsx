@@ -8,7 +8,7 @@ import { useTrackProgress } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { trackIcons } from "@/lib/track-meta";
 import { cn } from "@/lib/utils";
-import type { Track } from "@/types/curriculum";
+import type { Track } from "@/types/curriculum-v1";
 
 interface TrackNavProps {
   collapsed?: boolean;

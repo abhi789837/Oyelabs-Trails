@@ -1,46 +1,92 @@
+// v2 curriculum model: tracks are made of modules ("camps"), modules of topics.
 export type ChallengeType = "code" | "quiz";
-export type TopicLevel = "beginner" | "intermediate" | "advanced";
+export type TopicLevel = "beginner" | "intermediate" | "advanced" | "expert";
 export type TrackId = "frontend" | "backend" | "fullstack" | "ai-driven";
 
 /**
- * `glacier` extends the brief's four tokens: the brief reserves `ridge` for the
- * AI-Driven track only, so Full-Stack needed its own accent to stay distinguishable.
+ * `glacier` extends the brief's tokens: the brief assigns `ridge` to both Full-Stack and
+ * AI-Driven while also reserving it for AI-Driven only, so Full-Stack gets its own accent.
  */
 export type AccentToken = "trailmark" | "summit" | "ridge" | "glacier" | "basalt";
 
+export type ResourceKind = "docs" | "article" | "interview-prep" | "spec" | "repo";
+
 export interface TopicResource {
+  /** e.g. "MDN: Closures" or "javascript.info: Closure" */
   label: string;
   url: string;
+  kind: ResourceKind;
+}
+
+export interface VideoResource {
+  title: string;
+  channel: string;
+  /** Full https://www.youtube.com/watch?v=... URL (or a results URL only as a flagged fallback). */
+  url: string;
+  /** Just the id, used to build the embed URL. Empty string for search-URL fallbacks. */
+  videoId: string;
+  /** Deep-link into a specific chapter of a long video. */
+  startSeconds?: number;
+  /** Chapter name shown when `startSeconds` is set, e.g. "Chapter 7: Flexbox". */
+  chapterLabel?: string;
+  /** e.g. "19:11" or "7:44:20", for display only. */
+  durationLabel?: string;
 }
 
 export interface QuizQuestion {
   id: string;
+  /** Supports the content Markdown subset: `inline code`, fenced ```js blocks, "- " bullets. */
   prompt: string;
   options: string[];
+  /** For multi-select questions this mirrors correctIndices[0]; grading uses correctIndices. */
   correctIndex: number;
+  /** Present only for multi-select questions (two or more correct options). */
+  correctIndices?: number[];
   explanation: string;
+  isEdgeCaseOrInterviewQuestion?: boolean;
+}
+
+export interface CodeTestCase {
+  args: unknown[];
+  expected: unknown;
+  description: string;
+  isEdgeCase?: boolean;
 }
 
 export interface CodeChallenge {
   instructions: string;
   starterCode: string;
   functionName: string;
-  testCases: { args: unknown[]; expected: unknown; description: string }[];
+  testCases: CodeTestCase[];
 }
 
 export interface Topic {
   id: string;
+  moduleId: string;
   trackId: TrackId;
   title: string;
+  /** Senior-level framing: why it exists, tradeoffs, when to use it, a gotcha. Paragraphs split by blank lines. */
   summary: string;
   level: TopicLevel;
   estMinutes: number;
   isMilestone?: boolean;
-  webRef: TopicResource;
-  videoRef: TopicResource;
+  /** 2–4 references; the first is normally the official docs or spec. */
+  webRefs: TopicResource[];
+  video: VideoResource;
+  alternateVideos?: VideoResource[];
   challengeType: ChallengeType;
   quiz?: QuizQuestion[];
   codeChallenge?: CodeChallenge;
+}
+
+export interface Module {
+  id: string;
+  trackId: TrackId;
+  name: string;
+  description: string;
+  /** Module-level reading list from the brief ("Module refs"). */
+  refs?: TopicResource[];
+  topics: Topic[];
 }
 
 export interface Track {
@@ -48,5 +94,5 @@ export interface Track {
   name: string;
   tagline: string;
   accentToken: AccentToken;
-  topics: Topic[];
+  modules: Module[];
 }

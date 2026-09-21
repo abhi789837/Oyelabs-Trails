@@ -2,7 +2,7 @@ import { getTrackTotalMinutes } from "@/data/tracks";
 import { hashString } from "@/lib/shuffle";
 import { trackCodes } from "@/lib/track-meta";
 import type { TopicProgress } from "@/store/progressStore";
-import type { AccentToken, Track, TrackId } from "@/types/curriculum";
+import type { AccentToken, Track, TrackId } from "@/types/curriculum-v1";
 
 /** Brand hexes for places without CSS variables (the PDF). Keep in sync with index.css. */
 export const accentHex: Record<AccentToken, string> = {

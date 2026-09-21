@@ -10,7 +10,7 @@ import type { Point } from "@/lib/geometry";
 import { levelLabels } from "@/lib/track-meta";
 import { cn, formatMinutes, formatMinutesCompact } from "@/lib/utils";
 import type { TopicProgress, TopicStatus } from "@/store/progressStore";
-import type { Topic, Track } from "@/types/curriculum";
+import type { Topic, Track } from "@/types/curriculum-v1";
 
 interface TrailMapProps {
   track: Track;
