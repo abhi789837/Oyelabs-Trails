@@ -40,7 +40,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 ### Full-Stack (5 modules)
 - [x] fs-mern: MERN End-to-End (5)
 - [x] fs-nextjs: Next.js Full-Stack (5)
-- [~] fs-t3: The T3 Stack & End-to-End Type Safety (4)
+- [x] fs-t3: The T3 Stack & End-to-End Type Safety (4)
 - [x] fs-graphql: GraphQL Full-Stack (3)
 - [~] fs-capstone: Full-Stack Capstone & Deployment (5)
 
