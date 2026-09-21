@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { contourPaths } from "@/lib/contours";
 import { cn } from "@/lib/utils";
 
 interface ContoursProps {
@@ -9,29 +10,9 @@ interface ContoursProps {
   rings?: number;
 }
 
-/**
- * Topographic contour lines, drawn as nested wobbly rings around one peak.
- * Purely decorative: sits behind hero areas at low opacity.
- */
+/** Topographic contour lines behind hero areas. Purely decorative, low opacity. */
 export function Contours({ className, seed = 1, rings = 11 }: ContoursProps) {
-  const paths = useMemo(() => {
-    const cx = 760;
-    const cy = 150;
-    return Array.from({ length: rings }, (_, ring) => {
-      const radius = 34 + ring * 38;
-      const wobble = 0.12 + ring * 0.012;
-      const points: string[] = [];
-      const steps = 96;
-      for (let i = 0; i <= steps; i++) {
-        const t = (i / steps) * Math.PI * 2;
-        const noise =
-          Math.sin(3 * t + seed) * 0.5 + Math.sin(5 * t + seed * 1.7 + ring * 0.15) * 0.3 + Math.sin(2 * t + seed * 0.3) * 0.2;
-        const r = radius * (1 + wobble * noise);
-        points.push(`${(cx + r * Math.cos(t) * 1.55).toFixed(1)},${(cy + r * Math.sin(t)).toFixed(1)}`);
-      }
-      return `M${points.join("L")}Z`;
-    });
-  }, [seed, rings]);
+  const paths = useMemo(() => contourPaths({ cx: 760, cy: 150, rings, seed, spacing: 38, firstRadius: 34 }), [seed, rings]);
 
   return (
     <svg
