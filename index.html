@@ -12,7 +12,7 @@
       // Apply the saved theme before first paint so there's no light/dark flash.
       (function () {
         try {
-          var saved = JSON.parse(localStorage.getItem("oyelabs-theme") || "null");
+          var saved = JSON.parse(localStorage.getItem("oyelabs-ui") || "null");
           var theme = saved && saved.state && saved.state.theme;
           if (!theme) theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
           if (theme === "dark") document.documentElement.classList.add("dark");
