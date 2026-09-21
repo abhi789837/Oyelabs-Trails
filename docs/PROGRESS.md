@@ -11,7 +11,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [~] fe-tooling: Dev Environment & Tooling (6)
 - [x] fe-html-css: HTML & CSS Foundations (13)
 - [x] fe-js-core: JavaScript Core, Namaste JavaScript S1 (19)
-- [~] fe-js-advanced: JavaScript Advanced & Interview-Level (21)
+- [x] fe-js-advanced: JavaScript Advanced & Interview-Level (21)
 - [~] fe-typescript: TypeScript (16)
 - [~] fe-tailwind: Tailwind CSS (7)
 - [~] fe-react-fundamentals: React Fundamentals (9)
