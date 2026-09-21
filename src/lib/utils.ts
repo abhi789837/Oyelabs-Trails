@@ -29,3 +29,8 @@ export function formatMinutesCompact(total: number): string {
   if (hours === 0) return `${minutes}m`;
   return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;
 }
+
+/** JS scrolling ignores the CSS reduced-motion rule, so check the preference here. */
+export function preferredScrollBehavior(): ScrollBehavior {
+  return typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+}
