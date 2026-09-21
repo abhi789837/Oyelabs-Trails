@@ -52,19 +52,19 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] ai-rag: Retrieval-Augmented Generation (5)
 - [x] ai-agents: AI Agents (5)
 
-Total planned: 293 topics across 37 modules (the brief estimates ~240; its module lists add up to 293).
+All 37 modules committed: 293 topics, 2,163 quiz questions, 86 code challenges (the brief estimates ~240; its module lists add up to 293). Full check: `npm run content:check` 0 errors/0 warnings; 547 videos re-verified via oEmbed; 1,091 reference URLs checked (0 broken); all 86 reference solutions pass in the in-browser runner.
 
 ## Phases 3–12: app
 
 - [x] 3. App shell & routing (four-level routes, sidebar with track + module progress)
 - [x] 4. Progress store (`getModuleCompletionPct`)
-- [~] 5. Dashboard
+- [x] 5. Dashboard
 - [x] 6. Track roadmap (module camps)
 - [x] 7. Module view (waypoint path)
-- [~] 8. Topic detail (reference previews with fallback, embedded video, alternate videos)
-- [~] 9. Challenge engine (multi-select, Markdown code blocks, edge-case tags)
-- [~] 10. Certificate + module-complete toasts
-- [ ] 11. Polish pass
+- [x] 8. Topic detail (reference previews with fallback, embedded video, alternate videos)
+- [x] 9. Challenge engine (multi-select, Markdown code blocks, edge-case tags)
+- [x] 10. Certificate + module-complete toasts
+- [~] 11. Polish pass
 - [ ] 12. Deploy prep
 
 ## Decisions log

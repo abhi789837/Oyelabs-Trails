@@ -27,7 +27,7 @@ function hostOf(url: string): string {
  */
 export function ReferenceList({ refs }: { refs: TopicResource[] }) {
   // Only open a preview by default when the site is known to allow framing.
-  const firstPreviewable = refs.findIndex((r) => embedVerdicts[r.url]?.embeddable === true);
+  const firstPreviewable = refs.findIndex((r) => embedVerdicts[r.url] === 1);
   return (
     <ul className="divide-y rounded-md border">
       {refs.map((ref, i) => (
@@ -39,7 +39,7 @@ export function ReferenceList({ refs }: { refs: TopicResource[] }) {
 
 function ReferenceItem({ resource, defaultOpen }: { resource: TopicResource; defaultOpen: boolean }) {
   const verdict = embedVerdicts[resource.url];
-  const blocked = verdict?.embeddable === false;
+  const blocked = verdict === 0;
   const unchecked = verdict === undefined;
   const [open, setOpen] = useState(defaultOpen && !blocked);
   const panelId = `preview-${resource.url.replace(/[^a-z0-9]/gi, "").slice(-40)}`;

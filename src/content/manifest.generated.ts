@@ -13,113 +13,1951 @@ export const manifest: TrackMeta[] = [
         "id": "fe-tooling",
         "trackId": "frontend",
         "name": "Dev Environment & Tooling",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The toolchain every frontend engineer leans on daily: an editor configured for leverage, Git as a content-addressed history graph rather than a set of magic commands, GitHub pull requests and least-privilege Actions, npm's lockfile and supply-chain model, Vite 8's dev/build split, and Chrome DevTools for performance and memory work. For engineers who use these tools every day and want to understand them well enough to debug them.",
+        "refs": [
+          {
+            "label": "VS Code: Documentation",
+            "url": "https://code.visualstudio.com/docs",
+            "kind": "docs"
+          },
+          {
+            "label": "Git: Documentation",
+            "url": "https://git-scm.com/doc",
+            "kind": "docs"
+          },
+          {
+            "label": "Vite: Guide",
+            "url": "https://vite.dev/guide/",
+            "kind": "docs"
+          },
+          {
+            "label": "npm Docs",
+            "url": "https://docs.npmjs.com/",
+            "kind": "docs"
+          },
+          {
+            "label": "Chrome DevTools documentation",
+            "url": "https://developer.chrome.com/docs/devtools",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "tooling-vscode-productivity",
+            "moduleId": "fe-tooling",
+            "trackId": "frontend",
+            "title": "VS Code Setup & Productivity",
+            "level": "intermediate",
+            "estMinutes": 120,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "tooling-git-fundamentals",
+            "moduleId": "fe-tooling",
+            "trackId": "frontend",
+            "title": "Git Fundamentals: Commits, Branches, Merges & Rebasing",
+            "level": "advanced",
+            "estMinutes": 100,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "tooling-github-collaboration",
+            "moduleId": "fe-tooling",
+            "trackId": "frontend",
+            "title": "GitHub Collaboration: PRs, Reviews & Actions",
+            "level": "advanced",
+            "estMinutes": 80,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tooling-npm-packages",
+            "moduleId": "fe-tooling",
+            "trackId": "frontend",
+            "title": "npm & Package Management",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tooling-vite",
+            "moduleId": "fe-tooling",
+            "trackId": "frontend",
+            "title": "Vite as a Build Tool",
+            "level": "advanced",
+            "estMinutes": 130,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tooling-devtools",
+            "moduleId": "fe-tooling",
+            "trackId": "frontend",
+            "title": "Browser DevTools Mastery",
+            "level": "advanced",
+            "estMinutes": 120,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "fe-html-css",
         "trackId": "frontend",
         "name": "HTML & CSS Foundations",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The platform layer under every framework: semantic, accessible HTML and the CSS cascade, box model and layout algorithms, taught for engineers who already ship UI and want to know why it behaves the way it does.",
+        "refs": [
+          {
+            "label": "MDN: Learn web development",
+            "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development",
+            "kind": "docs"
+          },
+          {
+            "label": "web.dev: Learn CSS",
+            "url": "https://web.dev/learn/css",
+            "kind": "article"
+          },
+          {
+            "label": "web.dev: Learn Accessibility",
+            "url": "https://web.dev/learn/accessibility",
+            "kind": "article"
+          },
+          {
+            "label": "Kevin Powell: CSS videos (YouTube)",
+            "url": "https://www.youtube.com/@KevinPowell",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "html-semantic-structure",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Semantic HTML & Document Structure",
+            "level": "intermediate",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "html-forms-validation",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Forms & Client-Side Validation",
+            "level": "intermediate",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "html-accessibility-fundamentals",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Accessibility Fundamentals (ARIA, Landmarks, Focus Order)",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "html-tables-media",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Tables & Media Elements",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "css-box-model",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "The CSS Box Model",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "css-selectors-specificity",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Selectors & Specificity",
+            "level": "advanced",
+            "estMinutes": 95,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 24
+          },
+          {
+            "id": "css-flexbox",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Flexbox Deep Dive",
+            "level": "intermediate",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "css-grid",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "CSS Grid Deep Dive",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "css-responsive-media-queries",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Responsive Design & Media Queries",
+            "level": "advanced",
+            "estMinutes": 90,
+            "challengeType": "code",
+            "challengeSize": 26
+          },
+          {
+            "id": "css-custom-properties",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "CSS Custom Properties (Variables)",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "css-transitions-animations",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Transitions & Keyframe Animations",
+            "level": "intermediate",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "css-architecture-bem-utility",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "CSS Architecture: BEM vs Utility-First",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "css-bootstrap-sass",
+            "moduleId": "fe-html-css",
+            "trackId": "frontend",
+            "title": "Bootstrap & Sass Fundamentals",
+            "level": "intermediate",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-js-core",
         "trackId": "frontend",
         "name": "JavaScript Core",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The execution model behind every line of JavaScript, one Namaste JavaScript (Season 1) episode per concept: execution contexts, hoisting, scope, closures, the event loop and V8's compiler pipeline. Aimed at engineers who write JavaScript daily and want to predict exactly what it will do, including the interview gotchas.",
+        "refs": [
+          {
+            "label": "MDN: JavaScript Guide",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+            "kind": "docs"
+          },
+          {
+            "label": "javascript.info: The Modern JavaScript Tutorial",
+            "url": "https://javascript.info/",
+            "kind": "article"
+          },
+          {
+            "label": "Lydia Hallie: JavaScript Questions",
+            "url": "https://github.com/lydiahallie/javascript-questions",
+            "kind": "interview-prep"
+          },
+          {
+            "label": "sudheerj: JavaScript Interview Questions",
+            "url": "https://github.com/sudheerj/javascript-interview-questions",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "js-execution-context",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "How JavaScript Works & Execution Context",
+            "level": "beginner",
+            "estMinutes": 20,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "js-call-stack",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "How JS Code is Executed & the Call Stack",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "code",
+            "challengeSize": 8
+          },
+          {
+            "id": "js-hoisting",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Hoisting (variables & functions)",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-functions-variable-env",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "How Functions Work & the Variable Environment",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "js-window-this",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Shortest JS Program: `window` & the `this` Keyword",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "js-undefined-vs-not-defined",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "`undefined` vs Not Defined",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "js-scope-chain",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "The Scope Chain, Scope & Lexical Environment",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "js-let-const-tdz",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "`let` & `const`: the Temporal Dead Zone",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-block-scope-shadowing",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Block Scope & Shadowing",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "js-closures",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Closures",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-settimeout-closures-interview",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "setTimeout + Closures Interview Question",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "js-closures-crazy-interview",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Crazy JS Interview ft. Closures",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-first-class-functions",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "First-Class Functions ft. Anonymous Functions",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "js-callbacks-event-listeners",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Callback Functions ft. Event Listeners",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-event-loop",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Asynchronous JavaScript & the Event Loop",
+            "level": "expert",
+            "estMinutes": 90,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "js-engine-v8",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "JS Engine Exposed: Google's V8 Architecture",
+            "level": "expert",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "js-settimeout-trust-issues",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Trust Issues with `setTimeout()`",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-higher-order-functions",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "Higher-Order Functions ft. Functional Programming",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 9
+          },
+          {
+            "id": "js-array-methods-map-filter-reduce",
+            "moduleId": "fe-js-core",
+            "trackId": "frontend",
+            "title": "`map`, `filter` & `reduce`",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "code",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-js-advanced",
         "trackId": "frontend",
         "name": "JavaScript Advanced & Interview-Level",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The half of JavaScript that senior interviews and production incidents are made of: promises and the microtask queue, async/await, generators, prototypes and `this`, modules, the browser platform APIs, and the classic implement-it-yourself questions (debounce, throttle, curry, `bind`, an LRU cache, `Promise.all`). Code-heavy: expect to write and test real implementations, not just answer trivia.",
+        "refs": [
+          {
+            "label": "MDN: JavaScript Guide",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide",
+            "kind": "docs"
+          },
+          {
+            "label": "javascript.info: The Modern JavaScript Tutorial",
+            "url": "https://javascript.info/",
+            "kind": "article"
+          },
+          {
+            "label": "Lydia Hallie: JavaScript Questions",
+            "url": "https://github.com/lydiahallie/javascript-questions",
+            "kind": "interview-prep"
+          },
+          {
+            "label": "sudheerj: JavaScript Interview Questions",
+            "url": "https://github.com/sudheerj/javascript-interview-questions",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "js-promises",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Promises Deep Dive: States, Chaining & Error Propagation",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "js-promise-combinators",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Promise.all, allSettled, race & any",
+            "level": "advanced",
+            "estMinutes": 90,
+            "challengeType": "code",
+            "challengeSize": 8
+          },
+          {
+            "id": "js-async-await",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Async/Await & Try-Catch Patterns",
+            "level": "expert",
+            "estMinutes": 100,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "js-generators-iterators",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Generators & Iterators",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 7
+          },
+          {
+            "id": "js-currying",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Currying & Partial Application",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "code",
+            "challengeSize": 7
+          },
+          {
+            "id": "js-debounce-throttle",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Debounce vs Throttle",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "js-prototypes",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Prototypes & Prototypal Inheritance",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-this-call-apply-bind",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "this, call, apply & bind Deep Dive",
+            "level": "advanced",
+            "estMinutes": 95,
+            "challengeType": "code",
+            "challengeSize": 9
+          },
+          {
+            "id": "js-classes-oop",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "ES6 Classes & OOP Patterns in JS",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-modules-cjs-esm",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Modules: CommonJS vs ESM",
+            "level": "expert",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "js-fetch-ajax",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Fetch API & AJAX Patterns",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "js-json",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "JSON Deep Dive",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "code",
+            "challengeSize": 9
+          },
+          {
+            "id": "js-event-delegation",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Event Bubbling, Capturing & Delegation",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "js-web-storage",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Web Storage: localStorage, sessionStorage & Cookies",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "js-error-handling",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Error Handling & Custom Error Classes",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-weakmap-weakset",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "WeakMap & WeakSet",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-symbols",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Symbols",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-regex",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Regular Expressions in JS",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-design-patterns",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Common JS Design Patterns (Module, Singleton, Observer, Factory)",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "js-lru-cache",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Implementing a Simple LRU Cache",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 8
+          },
+          {
+            "id": "js-promise-all-from-scratch",
+            "moduleId": "fe-js-advanced",
+            "trackId": "frontend",
+            "title": "Implementing Promise.all From Scratch",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 8
+          }
+        ]
       },
       {
         "id": "fe-typescript",
         "trackId": "frontend",
         "name": "TypeScript",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "TypeScript's type system from everyday annotations to conditional, mapped and template literal types, plus the tsconfig and module settings that matter in TypeScript 6/7 projects. For engineers who already ship JavaScript and want to reason precisely about what the compiler checks, and what it can't.",
+        "refs": [
+          {
+            "label": "TypeScript Handbook",
+            "url": "https://www.typescriptlang.org/docs/handbook/intro.html",
+            "kind": "docs"
+          },
+          {
+            "label": "TypeScript Deep Dive (basarat)",
+            "url": "https://basarat.gitbook.io/typescript",
+            "kind": "article"
+          },
+          {
+            "label": "TypeScript: Release notes",
+            "url": "https://www.typescriptlang.org/docs/handbook/release-notes/overview.html",
+            "kind": "docs"
+          },
+          {
+            "label": "TypeScript blog: Announcing TypeScript 7.0",
+            "url": "https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "ts-basic-types",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Basic Types & Type Annotations",
+            "level": "beginner",
+            "estMinutes": 80,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-interfaces-vs-type-aliases",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Interfaces vs Type Aliases",
+            "level": "intermediate",
+            "estMinutes": 95,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-functions-inference",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Functions & Type Inference",
+            "level": "intermediate",
+            "estMinutes": 90,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-union-intersection",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Union & Intersection Types",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "ts-narrowing-type-guards",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Narrowing & Type Guards",
+            "level": "advanced",
+            "estMinutes": 90,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 14
+          },
+          {
+            "id": "ts-generics-fundamentals",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Generics Fundamentals",
+            "level": "intermediate",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-generic-constraints-defaults",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Generic Constraints & Defaults",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "ts-utility-types",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Utility Types (Partial, Pick, Omit, Record…)",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-enums-literal-types",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Enums & Literal Types",
+            "level": "intermediate",
+            "estMinutes": 85,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-classes-access-modifiers",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Classes & Access Modifiers in TS",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-modules-namespaces",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Modules & Namespaces",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-conditional-types",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Advanced: Conditional Types",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "ts-mapped-types",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Advanced: Mapped Types",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-template-literal-types",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Advanced: Template Literal Types",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-tsconfig-strictness",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Configuring tsconfig.json for Strictness",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ts-react-components-hooks",
+            "moduleId": "fe-typescript",
+            "trackId": "frontend",
+            "title": "Typing React Components & Hooks",
+            "level": "advanced",
+            "estMinutes": 200,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "fe-tailwind",
         "trackId": "frontend",
         "name": "Tailwind CSS",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Tailwind CSS v4.3 taught the way it works now: CSS-first configuration with `@import \"tailwindcss\"`, `@theme` and `@custom-variant`, automatic source detection, variants from breakpoints and container queries to `group`, `peer`, `has`, `data` and `aria`, dark mode strategies, component extraction and class merging, and plugins. Many popular videos still teach v3's `tailwind.config.js`, so every summary spells out what changed.",
+        "refs": [
+          {
+            "label": "Tailwind CSS: Installation with Vite",
+            "url": "https://tailwindcss.com/docs/installation/using-vite",
+            "kind": "docs"
+          },
+          {
+            "label": "Tailwind CSS: Upgrade guide (v3 to v4)",
+            "url": "https://tailwindcss.com/docs/upgrade-guide",
+            "kind": "docs"
+          },
+          {
+            "label": "Tailwind CSS blog: Tailwind CSS v4.0",
+            "url": "https://tailwindcss.com/blog/tailwindcss-v4",
+            "kind": "article"
+          },
+          {
+            "label": "Tailwind CSS blog: Tailwind CSS v4.3",
+            "url": "https://tailwindcss.com/blog/tailwindcss-v4-3",
+            "kind": "article"
+          },
+          {
+            "label": "tailwind-merge",
+            "url": "https://github.com/dcastil/tailwind-merge",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "tw-utility-first",
+            "moduleId": "fe-tailwind",
+            "trackId": "frontend",
+            "title": "Utility-First Fundamentals",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "tw-responsive-variants",
+            "moduleId": "fe-tailwind",
+            "trackId": "frontend",
+            "title": "Responsive Variants & Container Queries",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "tw-state-variants",
+            "moduleId": "fe-tailwind",
+            "trackId": "frontend",
+            "title": "State Variants: hover, focus, group, peer, has, data & aria",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tw-dark-mode",
+            "moduleId": "fe-tailwind",
+            "trackId": "frontend",
+            "title": "Dark Mode Strategies",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "tw-theme-customization",
+            "moduleId": "fe-tailwind",
+            "trackId": "frontend",
+            "title": "Customizing the Theme: @theme & CSS-First Config",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tw-apply-vs-components",
+            "moduleId": "fe-tailwind",
+            "trackId": "frontend",
+            "title": "Extracting Components: @apply vs Composition",
+            "level": "advanced",
+            "estMinutes": 110,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 16
+          },
+          {
+            "id": "tw-plugins",
+            "moduleId": "fe-tailwind",
+            "trackId": "frontend",
+            "title": "Tailwind Plugins in v4",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
       },
       {
         "id": "fe-react-fundamentals",
         "trackId": "frontend",
         "name": "React Fundamentals",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The mental model behind React 19.3: JSX and rendering, props, state snapshots and batching, events, conditional rendering, keys and reconciliation, forms, lifting state and composition. For engineers who have shipped React (or are arriving from another framework) and want to understand why the classic bugs happen. Some course videos predate Hooks and use class components or Create React App; each topic says what's different today.",
+        "refs": [
+          {
+            "label": "react.dev: Learn React",
+            "url": "https://react.dev/learn",
+            "kind": "docs"
+          },
+          {
+            "label": "React blog: React 19.3",
+            "url": "https://react.dev/blog/2026/09/09/react-19-3",
+            "kind": "article"
+          },
+          {
+            "label": "React blog: Sunsetting Create React App",
+            "url": "https://react.dev/blog/2025/02/14/sunsetting-create-react-app",
+            "kind": "article"
+          },
+          {
+            "label": "sudheerj: React interview questions",
+            "url": "https://github.com/sudheerj/reactjs-interview-questions",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "react-jsx-rendering",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "JSX & How React Renders",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-components-props",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "Components & Props",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-usestate",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "State with useState",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "react-event-handling",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "Event Handling in React",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "react-conditional-rendering",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "Conditional Rendering Patterns",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-lists-keys",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "Lists & Keys",
+            "level": "advanced",
+            "estMinutes": 80,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 17
+          },
+          {
+            "id": "react-controlled-forms",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "Controlled vs Uncontrolled Forms",
+            "level": "advanced",
+            "estMinutes": 95,
+            "challengeType": "code",
+            "challengeSize": 17
+          },
+          {
+            "id": "react-lifting-state-up",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "Lifting State Up",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 14
+          },
+          {
+            "id": "react-composition",
+            "moduleId": "fe-react-fundamentals",
+            "trackId": "frontend",
+            "title": "Composition vs Inheritance in React",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-react-hooks",
         "trackId": "frontend",
         "name": "React Hooks & Advanced Patterns",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The React a senior engineer is expected to reason about, not just use: effects as synchronisation, context and reducers, refs, referential stability and memoisation, custom hooks, error boundaries and portals, composition patterns, Suspense and code splitting, concurrent rendering, Server Components and the reconciler itself. Written against React 19.3, with nasty quizzes and five implement-it-yourself challenges (a reducer, `shallowEqual` + `memo`, a race-safe `useFetch`, `lazy`, and a keyed children diff).",
+        "refs": [
+          {
+            "label": "react.dev: Built-in React Hooks",
+            "url": "https://react.dev/reference/react/hooks",
+            "kind": "docs"
+          },
+          {
+            "label": "sudheerj: React Interview Questions",
+            "url": "https://github.com/sudheerj/reactjs-interview-questions",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "react-adv-use-effect",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "useEffect Deep Dive: Dependencies, Cleanup & Common Bugs",
+            "level": "advanced",
+            "estMinutes": 90,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "react-adv-use-context",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "useContext & Avoiding Prop Drilling",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "react-adv-use-reducer",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "useReducer for Complex State",
+            "level": "intermediate",
+            "estMinutes": 90,
+            "challengeType": "code",
+            "challengeSize": 7
+          },
+          {
+            "id": "react-adv-use-ref",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "useRef & Imperative Escape Hatches",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-adv-memo-callback",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "useMemo & useCallback: When They're Actually Worth It",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "react-adv-custom-hooks",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Building Custom Hooks",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 9
+          },
+          {
+            "id": "react-adv-react-memo",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "React.memo & Render Performance",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "react-adv-error-boundaries",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Error Boundaries",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "react-adv-portals",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Portals",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-adv-ref-forwarding",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Ref Forwarding: `ref` as a Prop, forwardRef & useImperativeHandle",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-adv-compound-components",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Compound Components Pattern",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-adv-render-props-hocs",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Render Props & HOCs (and Why Hooks Mostly Replaced Them)",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-adv-lazy-suspense",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Code Splitting with lazy & Suspense",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "code",
+            "challengeSize": 9
+          },
+          {
+            "id": "react-adv-concurrent",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "Concurrent React: useTransition & useDeferredValue",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "react-adv-server-components",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "React Server Components: The Conceptual Model",
+            "level": "expert",
+            "estMinutes": 80,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "react-adv-reconciliation",
+            "moduleId": "fe-react-hooks",
+            "trackId": "frontend",
+            "title": "React Reconciliation & the Virtual DOM: How Diffing Actually Works",
+            "level": "expert",
+            "estMinutes": 110,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "fe-react-ecosystem",
         "trackId": "frontend",
         "name": "React Ecosystem",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The libraries a production React app is actually built from: React Router v8 (routing, data loaders, actions and auth guards), Redux Toolkit and Zustand for client state, TanStack Query for server state, React Hook Form for forms, and Vitest, React Testing Library, Playwright and Cypress for tests. Every topic focuses on the model underneath the API, the tradeoffs between the options, and the bugs experienced teams still ship.",
+        "refs": [
+          {
+            "label": "React Router: Docs home",
+            "url": "https://reactrouter.com/home",
+            "kind": "docs"
+          },
+          {
+            "label": "Redux Toolkit: Docs",
+            "url": "https://redux-toolkit.js.org/",
+            "kind": "docs"
+          },
+          {
+            "label": "TanStack Query: Docs",
+            "url": "https://tanstack.com/query/latest",
+            "kind": "docs"
+          },
+          {
+            "label": "sudheerj: React Interview Questions",
+            "url": "https://github.com/sudheerj/reactjs-interview-questions",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "react-eco-router-fundamentals",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "React Router Fundamentals: Routes, Params & Nested Routes",
+            "level": "intermediate",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 19
+          },
+          {
+            "id": "react-eco-protected-routes",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "Protected Routes & Auth Guards",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-eco-data-loaders-actions",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "Data Loaders, Actions & Fetchers",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "react-eco-redux-toolkit",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "Redux Toolkit: Slices, Thunks & the Store",
+            "level": "advanced",
+            "estMinutes": 150,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "react-eco-zustand",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "Zustand as a Lightweight Alternative to Redux",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "react-eco-tanstack-query",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "TanStack Query: Caching, Invalidation & Mutations",
+            "level": "advanced",
+            "estMinutes": 120,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "react-eco-forms",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "Form Libraries: React Hook Form vs Formik",
+            "level": "intermediate",
+            "estMinutes": 70,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "react-eco-testing-rtl",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "Unit & Component Testing with Vitest + React Testing Library",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "react-eco-e2e-testing",
+            "moduleId": "fe-react-ecosystem",
+            "trackId": "frontend",
+            "title": "End-to-End Testing with Playwright or Cypress",
+            "level": "advanced",
+            "estMinutes": 90,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-react-projects",
         "trackId": "frontend",
         "name": "React Practice Projects",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Three capstones built from real project walkthroughs: an e-commerce store, a React + TypeScript quiz app and a Todoist clone, each with alternate walkthroughs to choose from. The videos are from 2019–2020, so every capstone spells out what a 2026 build does differently (Vite, React 19 patterns, TanStack Query, server-side payments and auth, Vitest and Playwright) and what counts as done. Each one ends with a code challenge that implements the app's core logic.",
+        "refs": [
+          {
+            "label": "react.dev: Creating a React App",
+            "url": "https://react.dev/learn/creating-a-react-app",
+            "kind": "docs"
+          },
+          {
+            "label": "Vite: Getting Started",
+            "url": "https://vite.dev/guide/",
+            "kind": "docs"
+          },
+          {
+            "label": "Vitest: Getting Started",
+            "url": "https://vitest.dev/guide/",
+            "kind": "docs"
+          },
+          {
+            "label": "Playwright: Installation",
+            "url": "https://playwright.dev/docs/intro",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "react-capstone-ecommerce",
+            "moduleId": "fe-react-projects",
+            "trackId": "frontend",
+            "title": "Capstone: E-commerce Store",
+            "level": "advanced",
+            "estMinutes": 500,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 17
+          },
+          {
+            "id": "react-capstone-quiz-app-ts",
+            "moduleId": "fe-react-projects",
+            "trackId": "frontend",
+            "title": "Capstone: Quiz App with React & TypeScript",
+            "level": "advanced",
+            "estMinutes": 200,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "react-capstone-todoist-clone",
+            "moduleId": "fe-react-projects",
+            "trackId": "frontend",
+            "title": "Capstone: Todoist Clone",
+            "level": "advanced",
+            "estMinutes": 580,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 13
+          }
+        ]
       },
       {
         "id": "fe-nextjs",
         "trackId": "frontend",
         "name": "Next.js",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The App Router as it works in Next.js 16: file-system routing, the Server/Client Component boundary, Cache Components (`use cache`, `cacheLife`, `cacheTag`) and revalidation, Server Actions, Route Handlers, Proxy (the renamed Middleware), rendering from SSG to Partial Prerendering, metadata, image and font optimisation, authentication and deployment. Written for engineers who already know React: the emphasis is on the defaults that changed in 15 and 16 and the security and caching mistakes that reach production.",
+        "refs": [
+          {
+            "label": "Next.js Docs",
+            "url": "https://nextjs.org/docs",
+            "kind": "docs"
+          },
+          {
+            "label": "Next.js Docs: Getting Started (App Router)",
+            "url": "https://nextjs.org/docs/app/getting-started",
+            "kind": "docs"
+          },
+          {
+            "label": "Next.js Blog: Next.js 16",
+            "url": "https://nextjs.org/blog/next-16",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "next-app-router-routing",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "File-Based Routing & the App Router",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 20
+          },
+          {
+            "id": "next-server-client-components",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Server Components vs Client Components",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "next-data-fetching-caching",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Data Fetching & Caching Strategies",
+            "level": "expert",
+            "estMinutes": 90,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "next-server-actions",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Server Actions & Form Mutations",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "next-route-handlers",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Route Handlers as API Endpoints",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "next-proxy-middleware",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Proxy (formerly Middleware) & the Edge",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "next-rendering-strategies",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Rendering Strategies: SSR vs SSG vs ISR (and PPR)",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "next-metadata-seo",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Metadata & SEO in Next.js",
+            "level": "intermediate",
+            "estMinutes": 80,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "next-image-font-optimization",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Image & Font Optimization",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "next-authentication",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Authentication with NextAuth (Auth.js)",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "next-deploy-vercel",
+            "moduleId": "fe-nextjs",
+            "trackId": "frontend",
+            "title": "Deploying to Vercel (and Self-Hosting)",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-vue",
         "trackId": "frontend",
         "name": "Vue.js",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Vue 3.5 with the Composition API, for engineers who already ship React or plain JavaScript: the Proxy-based reactivity system (you'll build one), templates and directives, computed vs watchers, the scheduler behind lifecycle hooks and `nextTick`, component contracts (props, emits, `defineModel`, slots, provide/inject), composables, Vue Router 5, Pinia 4 and typing it all with TypeScript. Four topics are code challenges: a reactivity core, an update scheduler, a router and a store.",
+        "refs": [
+          {
+            "label": "Vue.js Guide: Introduction",
+            "url": "https://vuejs.org/guide/introduction.html",
+            "kind": "docs"
+          },
+          {
+            "label": "Pinia: The intuitive store for Vue.js",
+            "url": "https://pinia.vuejs.org/",
+            "kind": "docs"
+          },
+          {
+            "label": "Vue Router: The official Router for Vue.js",
+            "url": "https://router.vuejs.org/",
+            "kind": "docs"
+          },
+          {
+            "label": "sudheerj: Vue.js Interview Questions",
+            "url": "https://github.com/sudheerj/vuejs-interview-questions",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "vue-reactivity-fundamentals",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Reactivity Fundamentals: ref vs reactive",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "vue-template-directives",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Template Syntax & Directives",
+            "level": "intermediate",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "vue-computed-watchers",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Computed Properties & Watchers",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "vue-lifecycle-hooks",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Component Lifecycle Hooks & the Update Scheduler",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "code",
+            "challengeSize": 14
+          },
+          {
+            "id": "vue-props-emits",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Props, Emits & defineModel",
+            "level": "intermediate",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "vue-slots",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Slots: Default, Named & Scoped",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "vue-provide-inject",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Provide / Inject",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "vue-composables",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Building Composables",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "vue-router",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Vue Router: Matching, Navigation & Guards",
+            "level": "advanced",
+            "estMinutes": 110,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 14
+          },
+          {
+            "id": "vue-pinia",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Pinia State Management",
+            "level": "advanced",
+            "estMinutes": 100,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "vue-typescript",
+            "moduleId": "fe-vue",
+            "trackId": "frontend",
+            "title": "Vue + TypeScript",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-meta-mobile",
         "trackId": "frontend",
         "name": "Meta-Frameworks, Mobile & Bonus",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Three ways to take React-era skills beyond the classic SPA: Astro's islands architecture for content-heavy sites that ship almost no JavaScript, React Native with the New Architecture and Expo for real native apps, and Progressive Web Apps for installable, offline-capable web apps. Each topic is about the architectural tradeoff first, and the API second.",
+        "refs": [
+          {
+            "label": "Astro: Islands architecture",
+            "url": "https://docs.astro.build/en/concepts/islands/",
+            "kind": "docs"
+          },
+          {
+            "label": "React Native: Get Started",
+            "url": "https://reactnative.dev/docs/environment-setup",
+            "kind": "docs"
+          },
+          {
+            "label": "web.dev: Learn PWA",
+            "url": "https://web.dev/learn/pwa",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "bonus-astro-islands",
+            "moduleId": "fe-meta-mobile",
+            "trackId": "frontend",
+            "title": "Astro & the Islands Architecture",
+            "level": "advanced",
+            "estMinutes": 100,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bonus-react-native",
+            "moduleId": "fe-meta-mobile",
+            "trackId": "frontend",
+            "title": "React Native Fundamentals: From Web React to Native Apps",
+            "level": "advanced",
+            "estMinutes": 150,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bonus-pwa",
+            "moduleId": "fe-meta-mobile",
+            "trackId": "frontend",
+            "title": "Progressive Web Apps: Service Workers, Manifest & Offline",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-security-perf",
         "trackId": "frontend",
         "name": "Frontend Security & Performance",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "What separates a working frontend from a production-grade one: XSS, CSRF and Content Security Policy from the browser's side, Core Web Vitals and how field data differs from lab scores, code splitting and bundle analysis, lazy loading that doesn't hurt LCP, and accessibility audits that go beyond the automated score.",
+        "refs": [
+          {
+            "label": "OWASP: Cross Site Scripting Prevention Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+            "kind": "docs"
+          },
+          {
+            "label": "web.dev: Web Vitals",
+            "url": "https://web.dev/articles/vitals",
+            "kind": "docs"
+          },
+          {
+            "label": "web.dev: Learn Performance",
+            "url": "https://web.dev/learn/performance",
+            "kind": "docs"
+          },
+          {
+            "label": "web.dev: Learn Accessibility",
+            "url": "https://web.dev/learn/accessibility",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "feperf-xss-csrf-csp",
+            "moduleId": "fe-security-perf",
+            "trackId": "frontend",
+            "title": "XSS, CSRF & Content Security Policy for Frontend Engineers",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "feperf-core-web-vitals",
+            "moduleId": "fe-security-perf",
+            "trackId": "frontend",
+            "title": "Core Web Vitals (LCP, INP, CLS) & How to Improve Them",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "feperf-code-splitting",
+            "moduleId": "fe-security-perf",
+            "trackId": "frontend",
+            "title": "Code Splitting & Bundle Size Analysis",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 9
+          },
+          {
+            "id": "feperf-lazy-loading",
+            "moduleId": "fe-security-perf",
+            "trackId": "frontend",
+            "title": "Lazy Loading Images & Components",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "feperf-a11y-auditing",
+            "moduleId": "fe-security-perf",
+            "trackId": "frontend",
+            "title": "Accessibility Auditing: axe, Lighthouse & Manual Testing",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       }
     ]
   },
@@ -133,97 +1971,1265 @@ export const manifest: TrackMeta[] = [
         "id": "be-foundations",
         "trackId": "backend",
         "name": "Web & Backend Foundations",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "How a request really travels from a client to your server and back: DNS, TCP and TLS, HTTP semantics and caching, and the API styles built on top. Beginner-friendly, but every topic carries the gotchas that bite in production.",
+        "refs": [
+          {
+            "label": "roadmap.sh: Backend Developer Roadmap",
+            "url": "https://roadmap.sh/backend",
+            "kind": "article"
+          },
+          {
+            "label": "MDN: How the web works",
+            "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works",
+            "kind": "docs"
+          },
+          {
+            "label": "RFC 9110: HTTP Semantics",
+            "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+            "kind": "spec"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "web-how-internet-works",
+            "moduleId": "be-foundations",
+            "trackId": "backend",
+            "title": "How the Internet Works: DNS, TCP/IP & Routing",
+            "level": "beginner",
+            "estMinutes": 135,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "web-http-methods-status-headers",
+            "moduleId": "be-foundations",
+            "trackId": "backend",
+            "title": "HTTP Methods, Status Codes & Headers",
+            "level": "advanced",
+            "estMinutes": 85,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "web-client-server",
+            "moduleId": "be-foundations",
+            "trackId": "backend",
+            "title": "The Client-Server Model",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "web-rest-rpc-graphql",
+            "moduleId": "be-foundations",
+            "trackId": "backend",
+            "title": "REST vs RPC vs GraphQL at a Glance",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
       },
       {
         "id": "be-node-core",
         "trackId": "backend",
         "name": "Node.js Core",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The runtime underneath every Node framework: V8 and libuv, the module systems, the event loop's phases, emitters and streams, raw HTTP, parallelism and debugging. Written against Node 24 LTS for engineers who want to know why Node behaves the way it does.",
+        "refs": [
+          {
+            "label": "Node.js: API documentation",
+            "url": "https://nodejs.org/docs/latest/api/",
+            "kind": "docs"
+          },
+          {
+            "label": "Node.js: Learn",
+            "url": "https://nodejs.org/learn",
+            "kind": "docs"
+          },
+          {
+            "label": "Node.js: Don't Block the Event Loop (or the Worker Pool)",
+            "url": "https://nodejs.org/learn/asynchronous-work/dont-block-the-event-loop",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "node-runtime-libuv",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "The Node.js Runtime & libuv",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "node-modules-cjs-esm",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "CommonJS vs ES Modules in Node",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "node-fs-path-os",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "The fs, path & os Modules",
+            "level": "intermediate",
+            "estMinutes": 80,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "node-npm-semver",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "npm, package.json & Semantic Versioning",
+            "level": "intermediate",
+            "estMinutes": 85,
+            "challengeType": "code",
+            "challengeSize": 20
+          },
+          {
+            "id": "node-event-loop",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "The Node.js Event Loop",
+            "level": "expert",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "node-event-emitter",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "Event Emitters",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 14
+          },
+          {
+            "id": "node-streams-buffers",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "Streams & Buffers",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "node-http-server",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "Building a Basic HTTP Server (No Framework)",
+            "level": "intermediate",
+            "estMinutes": 80,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "node-child-worker",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "Child Processes & Worker Threads",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "node-debugging-inspect",
+            "moduleId": "be-node-core",
+            "trackId": "backend",
+            "title": "Debugging Node with --inspect",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
       },
       {
         "id": "be-express",
         "trackId": "backend",
         "name": "Express.js",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Express 5 from the router outward: how routes and path patterns really match, the middleware pipeline and why its order is your architecture, params versus query strings, HTTP method semantics, centralized async error handling, static files and templates, Multer uploads, and a CRUD API that gets status codes and optimistic concurrency right. Written for Express 5 (the npm `latest`), with the Express 4 habits that now break called out.",
+        "refs": [
+          {
+            "label": "Express: Routing guide",
+            "url": "https://expressjs.com/en/guide/routing/",
+            "kind": "docs"
+          },
+          {
+            "label": "Express: Moving to Express 5",
+            "url": "https://expressjs.com/en/guide/migrating-5/",
+            "kind": "docs"
+          },
+          {
+            "label": "Express: 5.x API reference",
+            "url": "https://expressjs.com/en/5x/api/",
+            "kind": "docs"
+          },
+          {
+            "label": "goldbergyoni: Node.js Best Practices",
+            "url": "https://github.com/goldbergyoni/nodebestpractices",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "express-routing-fundamentals",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "Routing Fundamentals & Express 5 Path Syntax",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "express-middleware-pipeline",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "Middleware & the Request-Response Cycle",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 16
+          },
+          {
+            "id": "express-app-use-ordering",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "`app.use` & Middleware Ordering",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "express-params-query",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "Route Params vs Query Strings",
+            "level": "intermediate",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 17
+          },
+          {
+            "id": "express-http-methods",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "HTTP Methods in Practice: GET, POST, PUT, PATCH, DELETE",
+            "level": "intermediate",
+            "estMinutes": 90,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "express-error-handling",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "Centralized Error-Handling Middleware",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "express-static-templating",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "Serving Static Files & Templating",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "express-file-uploads-multer",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "File Uploads with Multer",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "express-crud-rest-api",
+            "moduleId": "be-express",
+            "trackId": "backend",
+            "title": "Building a Full CRUD REST API",
+            "level": "expert",
+            "estMinutes": 240,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 13
+          }
+        ]
       },
       {
         "id": "be-sql",
         "trackId": "backend",
         "name": "SQL & Relational Databases",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Relational databases for engineers who already write SQL and want to know what the database does with it: modeling and normalization, NULL-correct filtering, join and aggregation semantics, CTEs and window functions, index design and reading `EXPLAIN`, isolation anomalies and MVCC, PostgreSQL 18 features, ORMs, and the N+1 problem. Examples use PostgreSQL 18.",
+        "refs": [
+          {
+            "label": "PostgreSQL: Documentation",
+            "url": "https://www.postgresql.org/docs/",
+            "kind": "docs"
+          },
+          {
+            "label": "Use The Index, Luke: SQL indexing and tuning",
+            "url": "https://use-the-index-luke.com/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "sql-normalization",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "Relational Modeling & Normalization (1NF to BCNF)",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "sql-select-filtering",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "SELECT, Filtering & NULL Semantics",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "sql-joins",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "Joins Deep Dive: Semantics & Algorithms",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "sql-aggregation-group-by",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "Aggregation, GROUP BY & HAVING",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "sql-subqueries-ctes",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "Subqueries, CTEs & Window Functions",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "sql-indexes-explain",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "Indexes & Query Plans: Reading EXPLAIN",
+            "level": "expert",
+            "estMinutes": 80,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "sql-transactions-isolation",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "Transactions, ACID & Isolation Levels",
+            "level": "expert",
+            "estMinutes": 85,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "sql-postgres-features",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "PostgreSQL-Specific Features (PostgreSQL 18)",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "sql-orms",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "ORMs in Practice: Prisma, Drizzle, TypeORM & Sequelize",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "sql-n-plus-one",
+            "moduleId": "be-sql",
+            "trackId": "backend",
+            "title": "The N+1 Query Problem & DataLoader Batching",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "be-nosql",
         "trackId": "backend",
         "name": "NoSQL & Caching",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Document databases and caches as engineering decisions rather than defaults: MongoDB schema design around access patterns, Mongoose, the aggregation pipeline, when a relational database is the better choice, Redis as a cache and session store, and the genuinely hard part, keeping caches correct and the database alive under concurrency. Examples use MongoDB 8 and Redis 8.",
+        "refs": [
+          {
+            "label": "MongoDB: Documentation",
+            "url": "https://www.mongodb.com/docs/",
+            "kind": "docs"
+          },
+          {
+            "label": "Redis: Documentation",
+            "url": "https://redis.io/docs/latest/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "nosql-document-modeling",
+            "moduleId": "be-nosql",
+            "trackId": "backend",
+            "title": "Document Modeling in MongoDB: Embed vs Reference",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nosql-mongoose-schemas",
+            "moduleId": "be-nosql",
+            "trackId": "backend",
+            "title": "Mongoose Schemas, Validation & Middleware",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nosql-aggregation-pipeline",
+            "moduleId": "be-nosql",
+            "trackId": "backend",
+            "title": "The Aggregation Pipeline",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "nosql-sql-vs-nosql",
+            "moduleId": "be-nosql",
+            "trackId": "backend",
+            "title": "SQL vs NoSQL: Making the Architectural Decision",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nosql-redis-caching",
+            "moduleId": "be-nosql",
+            "trackId": "backend",
+            "title": "Redis for Caching & Session Storage",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nosql-cache-invalidation",
+            "moduleId": "be-nosql",
+            "trackId": "backend",
+            "title": "Cache Invalidation, Stampedes & Consistency",
+            "level": "expert",
+            "estMinutes": 80,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "be-auth-security",
         "trackId": "backend",
         "name": "Authentication & Security",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "How backends prove who is calling and decide what they may do: password storage, sessions and JWTs, OAuth 2.0 and OpenID Connect, refresh token rotation, access-control models, CORS, rate limiting and the OWASP API Security Top 10. Written against current guidance (RFC 9700, the OAuth 2.1 draft, NIST SP 800-63B-4, OWASP 2023/2025) for engineers who have shipped auth and want to know where it breaks.",
+        "refs": [
+          {
+            "label": "OWASP: Top Ten project",
+            "url": "https://owasp.org/projects/top-ten",
+            "kind": "docs"
+          },
+          {
+            "label": "OWASP: API Security Top 10 (2023)",
+            "url": "https://api-security.owasp.org/editions/2023/en/0x11-t10/",
+            "kind": "spec"
+          },
+          {
+            "label": "OWASP: Cheat Sheet Series",
+            "url": "https://cheatsheetseries.owasp.org/",
+            "kind": "docs"
+          },
+          {
+            "label": "RFC 9700: Best Current Practice for OAuth 2.0 Security",
+            "url": "https://www.rfc-editor.org/rfc/rfc9700.html",
+            "kind": "spec"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "auth-password-hashing",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "Password Hashing with bcrypt & Argon2",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "auth-sessions-vs-jwt",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "Sessions vs JWTs: The Real Tradeoffs",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 18
+          },
+          {
+            "id": "auth-oauth2-oidc",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "OAuth 2.0 & OpenID Connect Flows",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "auth-refresh-token-rotation",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "Refresh Token Rotation & Reuse Detection",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "auth-rbac-abac",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "Role-Based & Attribute-Based Access Control",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 16
+          },
+          {
+            "id": "auth-cors",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "CORS Deep Dive",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "auth-rate-limiting",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "Rate Limiting & Brute-Force Protection",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "auth-owasp-api-top10",
+            "moduleId": "be-auth-security",
+            "trackId": "backend",
+            "title": "The OWASP API Security Top 10 In Depth",
+            "level": "expert",
+            "estMinutes": 90,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "be-api-design",
         "trackId": "backend",
         "name": "API Design",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Designing APIs that clients can depend on for years: resource modeling, status codes and versioning, pagination, idempotency, GraphQL schemas and execution cost, OpenAPI contracts, webhooks, and choosing between REST and GraphQL. Written against RFC 9110, RFC 9457, OpenAPI 3.2 and the September 2025 GraphQL specification.",
+        "refs": [
+          {
+            "label": "roadmap.sh: API Design",
+            "url": "https://roadmap.sh/api-design",
+            "kind": "docs"
+          },
+          {
+            "label": "GraphQL: Learn",
+            "url": "https://graphql.org/learn/",
+            "kind": "docs"
+          },
+          {
+            "label": "RFC 9110: HTTP Semantics",
+            "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+            "kind": "spec"
+          },
+          {
+            "label": "OpenAPI Specification v3.2.1",
+            "url": "https://spec.openapis.org/oas/v3.2.1.html",
+            "kind": "spec"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "api-rest-resource-design",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "REST Resource Design & Versioning",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "api-pagination-filtering-sorting",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "Pagination, Filtering & Sorting Patterns",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "api-idempotency-safe-methods",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "Idempotency & Safe Methods",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "api-graphql-schema-queries-mutations",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "GraphQL Schemas, Queries & Mutations",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "api-graphql-resolvers-dataloader",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "GraphQL Resolvers & the N+1 Problem (DataLoader)",
+            "level": "expert",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 17
+          },
+          {
+            "id": "api-openapi-swagger",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "API Documentation with OpenAPI/Swagger",
+            "level": "intermediate",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "api-webhooks-event-driven",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "Webhooks & Event-Driven APIs",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "api-rest-vs-graphql",
+            "moduleId": "be-api-design",
+            "trackId": "backend",
+            "title": "REST vs GraphQL: A Real Architectural Decision",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "be-nestjs",
         "trackId": "backend",
         "name": "NestJS",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "NestJS 12 from the container outwards: modules and dependency injection, the request pipeline of guards, interceptors, pipes and filters, persistence with TypeORM or Prisma, and microservices. For engineers who want to know what the framework does on their behalf, and what each abstraction costs.",
+        "refs": [
+          {
+            "label": "NestJS: Documentation",
+            "url": "https://docs.nestjs.com/",
+            "kind": "docs"
+          },
+          {
+            "label": "NestJS: Request lifecycle",
+            "url": "https://docs.nestjs.com/faq/request-lifecycle",
+            "kind": "docs"
+          },
+          {
+            "label": "NestJS: Migration guide (v11 to v12)",
+            "url": "https://docs.nestjs.com/migration-guide",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "nest-modules-di",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "Modules & the Dependency Injection Container",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nest-controllers-routing",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "Controllers & Routing Decorators",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "nest-providers-injectable",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "Providers & @Injectable",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 16
+          },
+          {
+            "id": "nest-dto-validation-pipes",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "DTOs & Validation Pipes",
+            "level": "intermediate",
+            "estMinutes": 70,
+            "challengeType": "code",
+            "challengeSize": 16
+          },
+          {
+            "id": "nest-guards",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "Guards (Auth)",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nest-interceptors",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "Interceptors (Logging/Transform)",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nest-exception-filters",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "Custom Exception Filters",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 17
+          },
+          {
+            "id": "nest-typeorm-prisma",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "NestJS + TypeORM/Prisma Integration",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "nest-microservices",
+            "moduleId": "be-nestjs",
+            "trackId": "backend",
+            "title": "Microservices with NestJS",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "be-python",
         "trackId": "backend",
         "name": "Python Backend",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Python on the server for engineers from any stack: the language mechanics that bite in production (typing, mutability, generators, the GIL, asyncio), FastAPI with Pydantic v2, Django's ORM, views and REST framework, Celery for background work, and how to choose between FastAPI and Django. Written against Python 3.14, current FastAPI and Django 6.1.",
+        "refs": [
+          {
+            "label": "FastAPI: Documentation",
+            "url": "https://fastapi.tiangolo.com/",
+            "kind": "docs"
+          },
+          {
+            "label": "Django: Documentation (6.1)",
+            "url": "https://docs.djangoproject.com/en/6.1/",
+            "kind": "docs"
+          },
+          {
+            "label": "Django REST framework: Documentation",
+            "url": "https://www.django-rest-framework.org/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "py-essentials",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "Python Essentials for Backend Engineers",
+            "level": "intermediate",
+            "estMinutes": 90,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "py-fastapi-pydantic",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "FastAPI Basics & Pydantic Validation",
+            "level": "intermediate",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 19
+          },
+          {
+            "id": "py-fastapi-di-async",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "FastAPI Dependency Injection & Async Routes",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "py-django-orm",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "Django Models & the ORM",
+            "level": "advanced",
+            "estMinutes": 90,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 16
+          },
+          {
+            "id": "py-django-views-templates",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "Django Views & Templates",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "py-drf",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "Django REST Framework for APIs",
+            "level": "intermediate",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "py-celery-redis",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "Background Jobs with Celery & Redis",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "py-fastapi-vs-django",
+            "moduleId": "be-python",
+            "trackId": "backend",
+            "title": "FastAPI vs Django: When to Use Which",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "be-docker",
         "trackId": "backend",
         "name": "Docker & Containers",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Containers from the kernel up: namespaces and cgroups, content-addressed image layers, Dockerfiles that cache well, lean multi-stage production images, Compose for local stacks, storage and networking, images as CI artifacts, and a first serious look at Kubernetes. Written for BuildKit and Compose v2 (`docker compose`, `compose.yaml`).",
+        "refs": [
+          {
+            "label": "Docker Docs: Get started",
+            "url": "https://docs.docker.com/get-started/",
+            "kind": "docs"
+          },
+          {
+            "label": "Docker Docs: Building best practices",
+            "url": "https://docs.docker.com/build/building/best-practices/",
+            "kind": "docs"
+          },
+          {
+            "label": "Kubernetes Docs: Concepts",
+            "url": "https://kubernetes.io/docs/concepts/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "docker-why-containers",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "What Problem Containers Solve",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "docker-images-containers",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "Images vs Containers",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "docker-dockerfiles",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "Writing Dockerfiles",
+            "level": "advanced",
+            "estMinutes": 90,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "docker-multi-stage-builds",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "Multi-Stage Builds",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "docker-compose",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "Docker Compose for Multi-Container Apps",
+            "level": "intermediate",
+            "estMinutes": 90,
+            "challengeType": "code",
+            "challengeSize": 16
+          },
+          {
+            "id": "docker-volumes-networking",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "Volumes & Networking",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "docker-ci-cd",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "Docker in CI/CD Pipelines",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "docker-kubernetes-intro",
+            "moduleId": "be-docker",
+            "trackId": "backend",
+            "title": "Intro to Kubernetes (Pods, Services, Deployments)",
+            "level": "advanced",
+            "estMinutes": 100,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "be-system-design",
         "trackId": "backend",
         "name": "System Design Fundamentals",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Distributed-systems judgement for backend engineers: scaling and statelessness, load balancing and consistent hashing, caching at every layer, replication and sharding with their consistency costs, queues and delivery guarantees, CDNs, and two classic designs built for real, a distributed rate limiter and a URL shortener. Expect back-of-the-envelope math, CAP and PACELC tradeoffs and failure modes, not box diagrams.",
+        "refs": [
+          {
+            "label": "roadmap.sh: System Design",
+            "url": "https://roadmap.sh/system-design",
+            "kind": "article"
+          },
+          {
+            "label": "donnemartin/system-design-primer",
+            "url": "https://github.com/donnemartin/system-design-primer",
+            "kind": "interview-prep"
+          },
+          {
+            "label": "ByteByteGo: System Design 101",
+            "url": "https://github.com/ByteByteGoHq/system-design-101",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "sd-scaling",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "Vertical vs Horizontal Scaling",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "sd-load-balancing",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "Load Balancing Strategies",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "sd-caching",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "Caching Strategies at Scale",
+            "level": "expert",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "sd-replication-sharding",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "Database Replication & Sharding",
+            "level": "expert",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "sd-message-queues",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "Message Queues & Async Processing",
+            "level": "expert",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "sd-cdn-edge",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "CDNs & Edge Caching",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "sd-rate-limiter",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "Designing a Rate Limiter",
+            "level": "expert",
+            "estMinutes": 100,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "sd-url-shortener",
+            "moduleId": "be-system-design",
+            "trackId": "backend",
+            "title": "Designing a URL Shortener",
+            "level": "expert",
+            "estMinutes": 100,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 13
+          }
+        ]
       },
       {
         "id": "be-testing-ops",
         "trackId": "backend",
         "name": "Backend Testing & Ops",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "What keeps a Node backend trustworthy after the first deploy: fast unit tests with honest test doubles (Vitest 5 or Jest), integration tests against real databases, GitHub Actions pipelines that are quick and least-privilege, and the logs, metrics, traces and SLOs that tell you it's actually working in production.",
+        "refs": [
+          {
+            "label": "Vitest: Guide",
+            "url": "https://vitest.dev/guide/",
+            "kind": "docs"
+          },
+          {
+            "label": "GitHub Docs: GitHub Actions",
+            "url": "https://docs.github.com/en/actions",
+            "kind": "docs"
+          },
+          {
+            "label": "Google SRE Book",
+            "url": "https://sre.google/sre-book/table-of-contents/",
+            "kind": "article"
+          },
+          {
+            "label": "goldbergyoni: JavaScript & Node.js Testing Best Practices",
+            "url": "https://github.com/goldbergyoni/javascript-testing-best-practices",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "ops-unit-testing",
+            "moduleId": "be-testing-ops",
+            "trackId": "backend",
+            "title": "Unit Testing Node & Express with Vitest or Jest",
+            "level": "intermediate",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "ops-integration-testing",
+            "moduleId": "be-testing-ops",
+            "trackId": "backend",
+            "title": "Integration Testing REST APIs",
+            "level": "advanced",
+            "estMinutes": 85,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "ops-ci-cd-github-actions",
+            "moduleId": "be-testing-ops",
+            "trackId": "backend",
+            "title": "CI/CD with GitHub Actions",
+            "level": "advanced",
+            "estMinutes": 85,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "ops-logging-monitoring",
+            "moduleId": "be-testing-ops",
+            "trackId": "backend",
+            "title": "Logging & Monitoring Fundamentals",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       }
     ]
   },
@@ -237,41 +3243,371 @@ export const manifest: TrackMeta[] = [
         "id": "fs-mern",
         "trackId": "fullstack",
         "name": "MERN End-to-End",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "How React, Express, Node and MongoDB actually connect once they leave localhost: the HTTP contract between tiers, CORS and cookies across origins and sites, Mongoose inside a real API, JWT access and refresh tokens end to end, and deploying the pieces to separate hosts without breaking auth. It assumes you know each technology; this camp is about the seams between them.",
+        "refs": [
+          {
+            "label": "MongoDB: MERN Stack Explained",
+            "url": "https://www.mongodb.com/resources/languages/mern-stack",
+            "kind": "docs"
+          },
+          {
+            "label": "MongoDB: MERN Stack Tutorial",
+            "url": "https://www.mongodb.com/resources/languages/mern-stack-tutorial",
+            "kind": "article"
+          },
+          {
+            "label": "MDN: Cross-Origin Resource Sharing (CORS)",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS",
+            "kind": "docs"
+          },
+          {
+            "label": "Express: Production best practices, security",
+            "url": "https://expressjs.com/en/advanced/best-practice-security/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "mern-architecture",
+            "moduleId": "fs-mern",
+            "trackId": "fullstack",
+            "title": "MERN Architecture Overview",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "mern-react-express",
+            "moduleId": "fs-mern",
+            "trackId": "fullstack",
+            "title": "Connecting a React Frontend to an Express API",
+            "level": "advanced",
+            "estMinutes": 95,
+            "challengeType": "code",
+            "challengeSize": 18
+          },
+          {
+            "id": "mern-mongoose",
+            "moduleId": "fs-mern",
+            "trackId": "fullstack",
+            "title": "MongoDB + Mongoose in a Full App",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "mern-jwt-auth",
+            "moduleId": "fs-mern",
+            "trackId": "fullstack",
+            "title": "JWT Auth End-to-End",
+            "level": "expert",
+            "estMinutes": 110,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "mern-deploy",
+            "moduleId": "fs-mern",
+            "trackId": "fullstack",
+            "title": "Deploying a MERN App",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "fs-nextjs",
         "trackId": "fullstack",
         "name": "Next.js Full-Stack",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Next.js as the whole stack: Server Actions as the mutation layer, Route Handlers as the public backend, Prisma and the connection math of serverless, Auth.js sessions and where auth checks really belong, and shipping all of it as one Vercel deployment. Written against Next.js 16 for engineers who already know React and want to know where the full-stack model bends and breaks.",
+        "refs": [
+          {
+            "label": "Next.js: Fetching Data",
+            "url": "https://nextjs.org/docs/app/getting-started/fetching-data",
+            "kind": "docs"
+          },
+          {
+            "label": "Next.js: Mutating Data",
+            "url": "https://nextjs.org/docs/app/getting-started/mutating-data",
+            "kind": "docs"
+          },
+          {
+            "label": "Next.js: Backend for Frontend",
+            "url": "https://nextjs.org/docs/app/guides/backend-for-frontend",
+            "kind": "docs"
+          },
+          {
+            "label": "Next.js: Data Security",
+            "url": "https://nextjs.org/docs/app/guides/data-security",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "fsnext-server-actions",
+            "moduleId": "fs-nextjs",
+            "trackId": "fullstack",
+            "title": "Server Actions as the Full-Stack Glue",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 13
+          },
+          {
+            "id": "fsnext-route-handlers",
+            "moduleId": "fs-nextjs",
+            "trackId": "fullstack",
+            "title": "Route Handlers as a Backend Within Next.js",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "fsnext-prisma",
+            "moduleId": "fs-nextjs",
+            "trackId": "fullstack",
+            "title": "Prisma + Next.js Integration",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "fsnext-auth",
+            "moduleId": "fs-nextjs",
+            "trackId": "fullstack",
+            "title": "NextAuth for Full-Stack Auth",
+            "level": "expert",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "fsnext-vercel-deploy",
+            "moduleId": "fs-nextjs",
+            "trackId": "fullstack",
+            "title": "Monolithic Deployment on Vercel",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "fs-t3",
         "trackId": "fullstack",
         "name": "The T3 Stack & End-to-End Type Safety",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "How the T3 stack gets types from the database to the UI without code generation: tRPC procedures, middleware and batching, Prisma schema and migrations (including Prisma 7's breaking changes), the places where compile-time types stop protecting you at runtime, and when a TypeScript-only RPC layer is the wrong call. Written against tRPC 11, Prisma 7 and create-t3-app 7.40, for engineers who already ship TypeScript on both sides of the wire.",
+        "refs": [
+          {
+            "label": "create.t3.gg: Create T3 App",
+            "url": "https://create.t3.gg/",
+            "kind": "docs"
+          },
+          {
+            "label": "tRPC: Documentation",
+            "url": "https://trpc.io/docs",
+            "kind": "docs"
+          },
+          {
+            "label": "Prisma ORM v7: Development and production",
+            "url": "https://www.prisma.io/docs/orm/v7/prisma-migrate/workflows/development-and-production",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "t3-trpc-fundamentals",
+            "moduleId": "fs-t3",
+            "trackId": "fullstack",
+            "title": "tRPC Fundamentals (Why No Code Generation Is Needed)",
+            "level": "advanced",
+            "estMinutes": 120,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "t3-prisma-schema-migrations",
+            "moduleId": "fs-t3",
+            "trackId": "fullstack",
+            "title": "Prisma Schema & Migrations",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "t3-end-to-end-type-safety",
+            "moduleId": "fs-t3",
+            "trackId": "fullstack",
+            "title": "Achieving End-to-End Type Safety (DB → API → UI)",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "t3-when-to-use",
+            "moduleId": "fs-t3",
+            "trackId": "fullstack",
+            "title": "When T3 Is (and Isn't) the Right Choice",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "fs-graphql",
         "trackId": "fullstack",
         "name": "GraphQL Full-Stack",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "GraphQL across the whole stack: designing the schema as the contract between teams, wiring Apollo Server 5 to Apollo Client 4 (auth context, CORS, the normalized cache, mutations and optimistic UI), and deciding honestly where GraphQL beats REST in a real product and where it doesn't. Assumes you can already write queries and resolvers.",
+        "refs": [
+          {
+            "label": "GraphQL: Learn",
+            "url": "https://graphql.org/learn/",
+            "kind": "docs"
+          },
+          {
+            "label": "GraphQL Specification (September 2025)",
+            "url": "https://spec.graphql.org/September2025/",
+            "kind": "spec"
+          },
+          {
+            "label": "Apollo Client documentation",
+            "url": "https://www.apollographql.com/docs/react",
+            "kind": "docs"
+          },
+          {
+            "label": "Apollo Server documentation",
+            "url": "https://www.apollographql.com/docs/apollo-server",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "fsgql-schema-first",
+            "moduleId": "fs-graphql",
+            "trackId": "fullstack",
+            "title": "Schema-First API Design",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "fsgql-apollo",
+            "moduleId": "fs-graphql",
+            "trackId": "fullstack",
+            "title": "Apollo Server + Apollo Client Integration",
+            "level": "expert",
+            "estMinutes": 100,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "fsgql-vs-rest",
+            "moduleId": "fs-graphql",
+            "trackId": "fullstack",
+            "title": "GraphQL vs REST in a Real Full-Stack App",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "fs-capstone",
         "trackId": "fullstack",
         "name": "Full-Stack Capstone & Deployment",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Everything between \"it works on my machine\" and a live, authenticated app that stays up: validated config and secrets that never reach the bundle, pipelines and migrations that keep old and new code compatible, monitoring that pages on symptoms, the scaling limits that arrive first (usually database connections), and a capstone that ships auth, database, API and UI end to end. Expert level, with three code challenges modeled on real production failures.",
+        "refs": [
+          {
+            "label": "The Twelve-Factor App",
+            "url": "https://12factor.net/",
+            "kind": "article"
+          },
+          {
+            "label": "Google SRE Book: Monitoring Distributed Systems",
+            "url": "https://sre.google/sre-book/monitoring-distributed-systems/",
+            "kind": "article"
+          },
+          {
+            "label": "OWASP API Security Top 10 (2023): API1 Broken Object Level Authorization",
+            "url": "https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/",
+            "kind": "spec"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "fscap-env-secrets",
+            "moduleId": "fs-capstone",
+            "trackId": "fullstack",
+            "title": "Environment Config & Secrets Management",
+            "level": "advanced",
+            "estMinutes": 85,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "fscap-cicd",
+            "moduleId": "fs-capstone",
+            "trackId": "fullstack",
+            "title": "CI/CD for a Full-Stack App",
+            "level": "expert",
+            "estMinutes": 110,
+            "challengeType": "code",
+            "challengeSize": 15
+          },
+          {
+            "id": "fscap-monitoring",
+            "moduleId": "fs-capstone",
+            "trackId": "fullstack",
+            "title": "Monitoring a Live Full-Stack App",
+            "level": "expert",
+            "estMinutes": 85,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "fscap-scaling",
+            "moduleId": "fs-capstone",
+            "trackId": "fullstack",
+            "title": "Scaling Considerations as Traffic Grows",
+            "level": "expert",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "fscap-capstone",
+            "moduleId": "fs-capstone",
+            "trackId": "fullstack",
+            "title": "Capstone: Ship a Deployed, Authenticated, Full-Stack App",
+            "level": "expert",
+            "estMinutes": 600,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 14
+          }
+        ]
       }
     ]
   },
@@ -285,49 +3621,495 @@ export const manifest: TrackMeta[] = [
         "id": "ai-tools",
         "trackId": "ai-driven",
         "name": "The AI Coding Tools Landscape",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Map the AI coding tools you actually use, from inline completion to autonomous agents and prompt-to-app builders: which one fits which task, what each costs you in review effort and risk, and where each one fails.",
+        "refs": [
+          {
+            "label": "roadmap.sh: Vibe Coding",
+            "url": "https://roadmap.sh/vibe-coding",
+            "kind": "article"
+          },
+          {
+            "label": "Claude Code Docs: Overview",
+            "url": "https://code.claude.com/docs/en/overview",
+            "kind": "docs"
+          },
+          {
+            "label": "GitHub Docs: GitHub Copilot",
+            "url": "https://docs.github.com/en/copilot",
+            "kind": "docs"
+          },
+          {
+            "label": "Cursor Docs",
+            "url": "https://cursor.com/docs",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "aitools-accelerator-vs-delegator",
+            "moduleId": "ai-tools",
+            "trackId": "ai-driven",
+            "title": "Accelerator Tools vs Delegator Tools",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aitools-copilot-fundamentals",
+            "moduleId": "ai-tools",
+            "trackId": "ai-driven",
+            "title": "GitHub Copilot Fundamentals",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "aitools-cursor-workflow",
+            "moduleId": "ai-tools",
+            "trackId": "ai-driven",
+            "title": "Cursor's Workflow: Tab, Agent and Composer",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "aitools-claude-code-workflow",
+            "moduleId": "ai-tools",
+            "trackId": "ai-driven",
+            "title": "Claude Code's Agentic Workflow",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aitools-app-builders",
+            "moduleId": "ai-tools",
+            "trackId": "ai-driven",
+            "title": "AI App Builders (Lovable, Bolt, v0) and When They Fit",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
       },
       {
         "id": "ai-prompting",
         "trackId": "ai-driven",
         "name": "Prompt Engineering",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Prompting as engineering rather than incantation: zero- and few-shot prompting, chain of thought versus built-in reasoning, roles and system prompts, tightly scoped coding prompts, and the eval-driven loop that turns a flaky prompt into a reliable one.",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Introduction to prompt engineering with GitHub Copilot",
+            "url": "https://learn.microsoft.com/en-us/training/modules/introduction-prompt-engineering-with-github-copilot/",
+            "kind": "docs"
+          },
+          {
+            "label": "Claude Docs: Prompting best practices",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices",
+            "kind": "docs"
+          },
+          {
+            "label": "OpenAI API Docs: Prompt engineering",
+            "url": "https://developers.openai.com/api/docs/guides/prompt-engineering",
+            "kind": "docs"
+          },
+          {
+            "label": "Anthropic: Prompt engineering interactive tutorial",
+            "url": "https://github.com/anthropics/prompt-eng-interactive-tutorial",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "prompt-zero-few-shot",
+            "moduleId": "ai-prompting",
+            "trackId": "ai-driven",
+            "title": "Zero-Shot vs Few-Shot Prompting",
+            "level": "beginner",
+            "estMinutes": 20,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "prompt-chain-of-thought",
+            "moduleId": "ai-prompting",
+            "trackId": "ai-driven",
+            "title": "Chain-of-Thought Prompting and Built-In Reasoning",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "prompt-role-persona",
+            "moduleId": "ai-prompting",
+            "trackId": "ai-driven",
+            "title": "Role and Persona Prompting",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "prompt-scoped-coding",
+            "moduleId": "ai-prompting",
+            "trackId": "ai-driven",
+            "title": "Scoped, Constrained Prompts for Coding Tasks",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "prompt-debugging-bad-prompt",
+            "moduleId": "ai-prompting",
+            "trackId": "ai-driven",
+            "title": "Debugging a Bad Prompt",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "ai-context",
         "trackId": "ai-driven",
         "name": "Context Engineering & AI Pair Programming",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "What separates productive AI pair programming from expensive thrashing: durable context files, deliberate session resets, critical review of AI diffs, reusable prompts and skills, and the anti-patterns (over-trust, context rot, scope creep, excessive agency) behind most failures.",
+        "refs": [
+          {
+            "label": "roadmap.sh: Vibe Coding Best Practices",
+            "url": "https://roadmap.sh/vibe-coding/best-practices",
+            "kind": "article"
+          },
+          {
+            "label": "Anthropic Engineering: Effective context engineering for AI agents",
+            "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+            "kind": "article"
+          },
+          {
+            "label": "AGENTS.md",
+            "url": "https://agents.md/",
+            "kind": "spec"
+          },
+          {
+            "label": "OWASP GenAI: Top 10 for LLM Applications",
+            "url": "https://genai.owasp.org/llm-top-10/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "ctx-context-files",
+            "moduleId": "ai-context",
+            "trackId": "ai-driven",
+            "title": "Context Files: CLAUDE.md, Cursor Rules, AGENTS.md and Copilot Instructions",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ctx-resetting-context",
+            "moduleId": "ai-context",
+            "trackId": "ai-driven",
+            "title": "Resetting Context Between Features",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ctx-reviewing-ai-code",
+            "moduleId": "ai-context",
+            "trackId": "ai-driven",
+            "title": "Reviewing AI-Generated Code Critically",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "ctx-reusable-skills",
+            "moduleId": "ai-context",
+            "trackId": "ai-driven",
+            "title": "Building Reusable Prompts and Skills",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "ctx-anti-patterns",
+            "moduleId": "ai-context",
+            "trackId": "ai-driven",
+            "title": "AI Pair-Programming Anti-Patterns",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "ai-llm",
         "trackId": "ai-driven",
         "name": "LLM Fundamentals",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "How LLMs behave at the API boundary: tokens and context-window economics, structured output and tool calling, sampling, choosing between model families, and calling the Anthropic and OpenAI APIs directly with production-grade streaming, retries and cost control.",
+        "refs": [
+          {
+            "label": "Claude Docs: Home",
+            "url": "https://platform.claude.com/docs/en/home",
+            "kind": "docs"
+          },
+          {
+            "label": "OpenAI API Docs",
+            "url": "https://developers.openai.com/api/docs",
+            "kind": "docs"
+          },
+          {
+            "label": "roadmap.sh: AI Engineer",
+            "url": "https://roadmap.sh/ai-engineer",
+            "kind": "article"
+          },
+          {
+            "label": "Anthropic Engineering: Effective context engineering for AI agents",
+            "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "llm-tokens-context-windows",
+            "moduleId": "ai-llm",
+            "trackId": "ai-driven",
+            "title": "Tokens, Context Windows & Their Economics",
+            "level": "expert",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "llm-structured-output-tool-calling",
+            "moduleId": "ai-llm",
+            "trackId": "ai-driven",
+            "title": "Structured Output & Function/Tool Calling",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "llm-sampling-parameters",
+            "moduleId": "ai-llm",
+            "trackId": "ai-driven",
+            "title": "Temperature & Sampling Parameters",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "code",
+            "challengeSize": 14
+          },
+          {
+            "id": "llm-model-families",
+            "moduleId": "ai-llm",
+            "trackId": "ai-driven",
+            "title": "Comparing Model Families at a High Level",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "llm-calling-api-directly",
+            "moduleId": "ai-llm",
+            "trackId": "ai-driven",
+            "title": "Calling an LLM API Directly (Anthropic & OpenAI)",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "ai-rag",
         "trackId": "ai-driven",
         "name": "Retrieval-Augmented Generation",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Ground LLM answers in your own data: embeddings and similarity, vector indexes in practice, chunking, hybrid retrieval with fusion and reranking, and an end-to-end pipeline with retrieval metrics, faithfulness checks, citations and defences against prompt injection through retrieved documents.",
+        "refs": [
+          {
+            "label": "roadmap.sh: AI Engineer",
+            "url": "https://roadmap.sh/ai-engineer",
+            "kind": "article"
+          },
+          {
+            "label": "Anthropic Engineering: Contextual Retrieval",
+            "url": "https://www.anthropic.com/engineering/contextual-retrieval",
+            "kind": "article"
+          },
+          {
+            "label": "Pinecone: Learning Center",
+            "url": "https://www.pinecone.io/learn/",
+            "kind": "article"
+          },
+          {
+            "label": "pgvector: Open-source vector similarity search for Postgres",
+            "url": "https://github.com/pgvector/pgvector",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "rag-embeddings-similarity",
+            "moduleId": "ai-rag",
+            "trackId": "ai-driven",
+            "title": "Embeddings & Vector Similarity",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "rag-vector-databases",
+            "moduleId": "ai-rag",
+            "trackId": "ai-driven",
+            "title": "Vector Databases in Practice",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "rag-chunking-strategies",
+            "moduleId": "ai-rag",
+            "trackId": "ai-driven",
+            "title": "Chunking Strategies (and Why Naive Chunking Fails)",
+            "level": "advanced",
+            "estMinutes": 90,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "rag-retrieval-reranking",
+            "moduleId": "ai-rag",
+            "trackId": "ai-driven",
+            "title": "Retrieval & Reranking: Hybrid Search, RRF and Cross-Encoders",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "rag-full-pipeline",
+            "moduleId": "ai-rag",
+            "trackId": "ai-driven",
+            "title": "Building a Full RAG Pipeline: Ingestion, Evaluation, Citations & Injection",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "ai-agents",
         "trackId": "ai-driven",
         "name": "AI Agents",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Build agents you can trust: the tool-calling loop and its guard rails, ReAct, when (and when not) to orchestrate multiple agents, the Model Context Protocol as of its 2026-07-28 revision, and how to evaluate, contain and secure agent behaviour.",
+        "refs": [
+          {
+            "label": "roadmap.sh: AI Agents",
+            "url": "https://roadmap.sh/ai-agents",
+            "kind": "article"
+          },
+          {
+            "label": "Anthropic Engineering: Building effective agents",
+            "url": "https://www.anthropic.com/engineering/building-effective-agents",
+            "kind": "article"
+          },
+          {
+            "label": "MCP Specification (2026-07-28)",
+            "url": "https://modelcontextprotocol.io/specification/2026-07-28",
+            "kind": "spec"
+          },
+          {
+            "label": "OWASP GenAI: Top 10 for LLM Applications",
+            "url": "https://genai.owasp.org/llm-top-10/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "agents-tool-calling-fundamentals",
+            "moduleId": "ai-agents",
+            "trackId": "ai-driven",
+            "title": "Tool Calling Fundamentals: The Agent Loop",
+            "level": "advanced",
+            "estMinutes": 95,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "agents-react-pattern",
+            "moduleId": "ai-agents",
+            "trackId": "ai-driven",
+            "title": "The ReAct Pattern",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "agents-multi-agent-orchestration",
+            "moduleId": "ai-agents",
+            "trackId": "ai-driven",
+            "title": "Multi-Agent Orchestration (and When Not to Use It)",
+            "level": "expert",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "agents-mcp",
+            "moduleId": "ai-agents",
+            "trackId": "ai-driven",
+            "title": "The Model Context Protocol (MCP)",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "agents-eval-sandboxing",
+            "moduleId": "ai-agents",
+            "trackId": "ai-driven",
+            "title": "Evaluating & Sandboxing Agent Behaviour",
+            "level": "expert",
+            "estMinutes": 80,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       }
     ]
   }
