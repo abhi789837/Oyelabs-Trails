@@ -28,7 +28,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] be-node-core: Node.js Core (10)
 - [~] be-express: Express.js (9)
 - [x] be-sql: SQL & Relational Databases (10)
-- [~] be-nosql: NoSQL & Caching (6)
+- [x] be-nosql: NoSQL & Caching (6)
 - [~] be-auth-security: Authentication & Security (8)
 - [~] be-api-design: API Design (8)
 - [~] be-nestjs: NestJS (9)
