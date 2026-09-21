@@ -45,7 +45,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [ ] fs-capstone: Full-Stack Capstone & Deployment (5)
 
 ### AI-Driven Development (6 modules)
-- [~] ai-tools: The AI Coding Tools Landscape (5)
+- [x] ai-tools: The AI Coding Tools Landscape (5)
 - [~] ai-prompting: Prompt Engineering (5)
 - [~] ai-context: Context Engineering & AI Pair Programming (5)
 - [~] ai-llm: LLM Fundamentals (5)
