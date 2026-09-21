@@ -21,11 +21,13 @@ function hostOf(url: string): string {
  * X-Frame-Options or CSP frame-ancestors headers that forbid being framed, and browsers still
  * fire `load` for those blocked frames, so we can't detect blocking at runtime. Instead
  * `npm run content:embeds` records each site's headers ahead of time: blocked sites get a link
- * card, and allowed (or unchecked) sites get an inline preview that falls back to the link card
- * if it errors or doesn't load within a few seconds.
+ * card, allowed sites get an inline preview (the first one opens by default), and sites that
+ * haven't been checked can be tried on demand. Any preview falls back to the link card if it
+ * errors or doesn't load within a few seconds.
  */
 export function ReferenceList({ refs }: { refs: TopicResource[] }) {
-  const firstPreviewable = refs.findIndex((r) => embedVerdicts[r.url]?.embeddable !== false);
+  // Only open a preview by default when the site is known to allow framing.
+  const firstPreviewable = refs.findIndex((r) => embedVerdicts[r.url]?.embeddable === true);
   return (
     <ul className="divide-y rounded-md border">
       {refs.map((ref, i) => (
@@ -38,6 +40,7 @@ export function ReferenceList({ refs }: { refs: TopicResource[] }) {
 function ReferenceItem({ resource, defaultOpen }: { resource: TopicResource; defaultOpen: boolean }) {
   const verdict = embedVerdicts[resource.url];
   const blocked = verdict?.embeddable === false;
+  const unchecked = verdict === undefined;
   const [open, setOpen] = useState(defaultOpen && !blocked);
   const panelId = `preview-${resource.url.replace(/[^a-z0-9]/gi, "").slice(-40)}`;
 
@@ -66,7 +69,7 @@ function ReferenceItem({ resource, defaultOpen }: { resource: TopicResource; def
               aria-controls={panelId}
               className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
-              {open ? "Hide preview" : "Show preview"}
+              {open ? "Hide preview" : unchecked ? "Try preview" : "Show preview"}
               <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} aria-hidden="true" />
             </button>
           )}

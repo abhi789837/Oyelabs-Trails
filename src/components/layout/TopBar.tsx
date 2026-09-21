@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import { BrandMark } from "./BrandMark";
 import { MobileNav } from "./MobileNav";
+import { SearchDialog } from "./SearchDialog";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function TopBar() {
@@ -13,7 +14,8 @@ export function TopBar() {
           <BrandMark />
           <span className="font-display text-lg font-semibold tracking-tight">Oyelabs Trails</span>
         </Link>
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-2">
+          <SearchDialog />
           <ThemeToggle />
         </div>
       </div>
