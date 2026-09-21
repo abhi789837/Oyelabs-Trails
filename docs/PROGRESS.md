@@ -35,7 +35,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [~] be-python: Python Backend (8)
 - [~] be-docker: Docker & Containers (8)
 - [~] be-system-design: System Design Fundamentals (8)
-- [~] be-testing-ops: Backend Testing & Ops (4)
+- [x] be-testing-ops: Backend Testing & Ops (4)
 
 ### Full-Stack (5 modules)
 - [~] fs-mern: MERN End-to-End (5)
