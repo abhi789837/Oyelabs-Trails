@@ -117,7 +117,7 @@ function TrackNavItem({ track, collapsed, onNavigate }: { track: Track } & Track
     >
       <span className="flex items-center gap-2.5">
         <Icon className={cn("h-4 w-4 shrink-0", accent.text)} aria-hidden="true" />
-        <span className="flex-1 truncate text-sm font-medium">{track.name}</span>
+        <span className="flex-1 text-sm font-medium leading-snug">{track.name}</span>
         <span className="font-mono text-xs text-muted-foreground tabular">
           {completed}/{total}
         </span>
