@@ -8,7 +8,7 @@ first unchecked item. `npm run content:check` lists which registry modules don't
 Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <module>`).
 
 ### Frontend (14 modules)
-- [~] fe-tooling: Dev Environment & Tooling (6)
+- [x] fe-tooling: Dev Environment & Tooling (6)
 - [x] fe-html-css: HTML & CSS Foundations (13)
 - [x] fe-js-core: JavaScript Core, Namaste JavaScript S1 (19)
 - [x] fe-js-advanced: JavaScript Advanced & Interview-Level (21)
