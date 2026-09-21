@@ -27,7 +27,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] be-foundations: Web & Backend Foundations (4)
 - [x] be-node-core: Node.js Core (10)
 - [~] be-express: Express.js (9)
-- [~] be-sql: SQL & Relational Databases (10)
+- [x] be-sql: SQL & Relational Databases (10)
 - [~] be-nosql: NoSQL & Caching (6)
 - [~] be-auth-security: Authentication & Security (8)
 - [~] be-api-design: API Design (8)
