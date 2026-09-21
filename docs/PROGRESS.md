@@ -21,7 +21,7 @@ Status: `[ ]` not started, `[~]` being written, `[x]` committed (`content: <modu
 - [x] fe-nextjs: Next.js (11)
 - [~] fe-vue: Vue.js (11)
 - [x] fe-meta-mobile: Meta-Frameworks, Mobile & Bonus (3)
-- [~] fe-security-perf: Frontend Security & Performance (5)
+- [x] fe-security-perf: Frontend Security & Performance (5)
 
 ### Backend (12 modules)
 - [x] be-foundations: Web & Backend Foundations (4)
