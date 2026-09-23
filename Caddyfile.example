@@ -20,9 +20,12 @@ oyelearn.example.com {
 	@mediapipe path /mediapipe/*
 	header @mediapipe Cache-Control "public, max-age=604800"
 
-	# The admin's live integrity feed is server-sent events. Without flush_interval -1 Caddy
-	# buffers the response and warnings arrive in a batch, minutes late — which defeats the
-	# purpose of a live view.
+	# The admin's live integrity feed is server-sent events. Caddy already flushes immediately
+	# when the response is Content-Type: text/event-stream — its docs say flush_interval is
+	# *ignored* in that case — and the route does set that header, so this is belt and braces:
+	# it keeps the stream unbuffered if the content type ever changes, and it says out loud that
+	# buffering this route would defeat the point of a live view. Other proxies are less kind;
+	# nginx needs proxy_buffering off here.
 	handle /api/admin/live/stream {
 		reverse_proxy 127.0.0.1:8787 {
 			flush_interval -1

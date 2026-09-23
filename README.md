@@ -267,9 +267,12 @@ sudo $EDITOR /etc/caddy/Caddyfile     # set the domain and the email
 sudo systemctl reload caddy
 ```
 
-Caddy handles certificates automatically. The one setting that is load-bearing is
-`flush_interval -1` on `/api/admin/live/stream`: without it the admin's live integrity feed is
-buffered and warnings arrive in a batch, minutes late.
+Caddy handles certificates automatically. The `flush_interval -1` on
+`/api/admin/live/stream` is deliberate but not strictly required: Caddy ignores `flush_interval`
+and flushes immediately when a response is `Content-Type: text/event-stream`, which that route
+sets. It is there so the stream stays unbuffered if the content type ever changes, and because a
+different proxy in front would need the equivalent — nginx buffers SSE until you set
+`proxy_buffering off`.
 
 ### 5. Check
 
