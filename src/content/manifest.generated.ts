@@ -4139,9 +4139,130 @@ export const manifest: TrackMeta[] = [
         "id": "php-foundations",
         "trackId": "php",
         "name": "PHP Foundations",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The language itself, at the level a Laravel developer needs when the framework stops helping. Types, comparison, arrays, functions and error handling — with the behaviours that catch people who learned PHP inside a framework.",
+        "refs": [
+          {
+            "label": "PHP Manual: Language Reference",
+            "url": "https://www.php.net/manual/en/langref.php",
+            "kind": "docs"
+          },
+          {
+            "label": "PHP: The Right Way",
+            "url": "https://phptherightway.com/",
+            "kind": "article"
+          },
+          {
+            "label": "PHP Watch: version-by-version changes",
+            "url": "https://php.watch/versions/8.4",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "php-syntax-variables",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Syntax, Variables and Data Types",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-operators-comparison",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Operators, Comparison and Type Juggling",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-arrays",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Arrays: PHP's One Data Structure",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-strings-functions",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Strings and the Built-in Function Library",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-functions",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Functions, Arguments and Scope",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-control-flow-match",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Control Flow and `match`",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "php-named-arguments",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Named Arguments, Defaults and the Nullsafe Operator",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "php-type-declarations",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Type Declarations and `strict_types`",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-errors-exceptions",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Errors, Exceptions and Error Handling",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-loops-iteration",
+            "moduleId": "php-foundations",
+            "trackId": "php",
+            "title": "Loops, Iteration and Generators",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
       },
       {
         "id": "php-oop",
