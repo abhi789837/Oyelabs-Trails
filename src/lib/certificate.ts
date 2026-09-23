@@ -11,6 +11,9 @@ export const accentHex: Record<AccentToken, string> = {
   ridge: "#6C5CE7",
   glacier: "#2E7DA8",
   basalt: "#6B7280",
+  canyon: "#C2410C",
+  alpenglow: "#C13567",
+  lichen: "#6B7F1E",
 };
 
 const CROCKFORD = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq, inArray } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 
 import type { PlanResponse, PlanSummary } from "../../../../shared/plans";
@@ -90,5 +90,87 @@ export async function registerAdminPlanRoutes(app: FastifyInstance): Promise<voi
     const user = app.db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.id, id)).get();
     if (!user) throw notFound("No such person.");
     return { progress: getProgress(app.db, id) };
+  });
+
+  /**
+   * Every challenge attempt this person has made (brief §13, the Progress tab).
+   *
+   * Carries the submitted quiz answers and code, not just the score: "they passed on the third
+   * try" is a far weaker signal than what they actually wrote. Capped at 200 because the tab
+   * renders all of them at once, and someone grinding a code challenge can produce a lot of rows.
+   */
+  app.get("/api/admin/users/:id/attempts", async (request) => {
+    const { id } = request.params as { id: string };
+    const user = app.db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.id, id)).get();
+    if (!user) throw notFound("No such person.");
+
+    const rows = app.db
+      .select()
+      .from(schema.topicAttempts)
+      .where(eq(schema.topicAttempts.userId, id))
+      .orderBy(desc(schema.topicAttempts.createdAt))
+      .limit(200)
+      .all();
+
+    return {
+      attempts: rows.map((row) => ({
+        id: row.id,
+        topicId: row.topicId,
+        kind: row.kind,
+        score: row.score,
+        passed: row.passed,
+        answers: row.answers ?? null,
+        code: row.code,
+        createdAt: row.createdAt,
+      })),
+    };
+  });
+
+  /**
+   * The audit log (brief §13, last bullet).
+   *
+   * Newest first and capped, because this is a "what happened recently" screen rather than an
+   * archive. `details` is returned as stored — `writeAudit` is the place that keeps secrets out of
+   * it, so nothing has to be redacted on the way out.
+   */
+  app.get("/api/admin/audit", async () => {
+    const rows = app.db
+      .select()
+      .from(schema.auditLog)
+      .orderBy(desc(schema.auditLog.createdAt))
+      .limit(200)
+      .all();
+
+    const actorIds = [...new Set(rows.map((row) => row.actorId).filter((value): value is string => value !== null))];
+    const actors = actorIds.length
+      ? app.db
+          .select({
+            id: schema.users.id,
+            username: schema.users.username,
+            displayName: schema.users.displayName,
+          })
+          .from(schema.users)
+          .where(inArray(schema.users.id, actorIds))
+          .all()
+      : [];
+    const byId = new Map(actors.map((actor) => [actor.id, actor]));
+
+    return {
+      entries: rows.map((row) => {
+        const actor = row.actorId ? byId.get(row.actorId) : undefined;
+        return {
+          id: row.id,
+          actorId: row.actorId,
+          // Null for a deleted account, so the entry survives the person it was about.
+          actorUsername: actor?.username ?? null,
+          actorName: actor?.displayName ?? null,
+          action: row.action,
+          targetType: row.targetType,
+          targetId: row.targetId,
+          details: row.details ?? null,
+          createdAt: row.createdAt,
+        };
+      }),
+    };
   });
 }

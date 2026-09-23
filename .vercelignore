@@ -1,3 +1,5 @@
-# Reference material that isn't part of the app build.
-*.pdf
-CLAUDE.md
+# v3 is not deployed to Vercel (brief §2 D5): SQLite, proctoring snapshots, a background job
+# worker and an SSE feed all need a persistent disk and a long-running process. See the
+# "Deploying v3 (VPS)" section of the README. This file is kept only so an existing Vercel
+# project, if one is still connected, does not try to build the repository.
+*

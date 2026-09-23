@@ -61,6 +61,33 @@ export const accentClasses: Record<AccentToken, AccentClasses> = {
     decoration: "decoration-basalt",
     solid: "bg-basalt text-basalt-foreground hover:bg-basalt/90",
   },
+  canyon: {
+    bg: "bg-canyon",
+    soft: "bg-canyon/10",
+    text: "text-canyon-strong",
+    border: "border-canyon",
+    fg: "text-canyon-foreground",
+    decoration: "decoration-canyon",
+    solid: "bg-canyon text-canyon-foreground hover:bg-canyon/90",
+  },
+  alpenglow: {
+    bg: "bg-alpenglow",
+    soft: "bg-alpenglow/10",
+    text: "text-alpenglow-strong",
+    border: "border-alpenglow",
+    fg: "text-alpenglow-foreground",
+    decoration: "decoration-alpenglow",
+    solid: "bg-alpenglow text-alpenglow-foreground hover:bg-alpenglow/90",
+  },
+  lichen: {
+    bg: "bg-lichen",
+    soft: "bg-lichen/10",
+    text: "text-lichen-strong",
+    border: "border-lichen",
+    fg: "text-lichen-foreground",
+    decoration: "decoration-lichen",
+    solid: "bg-lichen text-lichen-foreground hover:bg-lichen/90",
+  },
 };
 
 /** CSS color for inline SVG strokes/fills, e.g. accentColor("summit", 0.4). */

@@ -48,6 +48,20 @@
     --basalt-strong: 89 97 112;
     --basalt-foreground: 255 255 255;
 
+    /* v3 track accents. Hues sit clear of the five above: canyon ~18°, alpenglow ~338°,
+       lichen ~75°. Each -strong clears 4.5:1 on its theme's background (checked, not guessed). */
+    --canyon: 194 65 12;
+    --canyon-strong: 154 52 18;
+    --canyon-foreground: 255 255 255;
+
+    --alpenglow: 193 53 103;
+    --alpenglow-strong: 157 42 82;
+    --alpenglow-foreground: 255 255 255;
+
+    --lichen: 107 127 30;
+    --lichen-strong: 85 102 26;
+    --lichen-foreground: 255 255 255;
+
     /* The code editor stays dark in both themes. */
     --editor: 22 26 34;
     --editor-gutter: 31 36 47;
@@ -80,6 +94,10 @@
 
     --basalt: 123 132 150;
     --basalt-strong: 150 158 174;
+
+    --canyon-strong: 240 132 90;
+    --alpenglow-strong: 238 138 174;
+    --lichen-strong: 174 199 92;
 
     --editor: 12 15 21;
     --editor-gutter: 21 25 33;

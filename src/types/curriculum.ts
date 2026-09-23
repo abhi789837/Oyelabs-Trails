@@ -1,13 +1,22 @@
 // v2 curriculum model: tracks are made of modules ("camps"), modules of topics.
 export type ChallengeType = "code" | "quiz";
 export type TopicLevel = "beginner" | "intermediate" | "advanced" | "expert";
-export type TrackId = "frontend" | "backend" | "fullstack" | "ai-driven";
+export type TrackId = "frontend" | "backend" | "fullstack" | "ai-driven" | "php" | "mobile" | "devops";
 
 /**
  * `glacier` extends the brief's tokens: the brief assigns `ridge` to both Full-Stack and
  * AI-Driven while also reserving it for AI-Driven only, so Full-Stack gets its own accent.
  */
-export type AccentToken = "trailmark" | "summit" | "ridge" | "glacier" | "basalt";
+export type AccentToken =
+  | "trailmark"
+  | "summit"
+  | "ridge"
+  | "glacier"
+  | "basalt"
+  /** Added for the v3 tracks. Hues chosen to sit clear of the five above on the colour wheel. */
+  | "canyon"
+  | "alpenglow"
+  | "lichen";
 
 export type ResourceKind = "docs" | "article" | "interview-prep" | "spec" | "repo";
 

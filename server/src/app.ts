@@ -19,6 +19,7 @@ import { HttpError } from "./lib/errors";
 import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminAssessmentRoutes } from "./routes/admin/assessments";
 import { registerAdminLiveRoutes } from "./routes/admin/live";
+import { registerAdminOverviewRoutes } from "./routes/admin/overview";
 import { registerAdminPlanRoutes } from "./routes/admin/plans";
 import { registerAdminUserRoutes } from "./routes/admin/users";
 import { registerAssessmentRoutes } from "./routes/assessment";
@@ -172,6 +173,7 @@ export async function buildApp({
   await app.register(registerAdminAiRoutes);
   await app.register(registerAdminAssessmentRoutes);
   await app.register(registerAdminLiveRoutes);
+  await app.register(registerAdminOverviewRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

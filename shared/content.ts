@@ -18,7 +18,7 @@ import { topicLevelSchema, trackIdSchema, type TopicLevelValue, type TrackIdValu
 export const challengeTypeSchema = z.enum(["quiz", "code"]);
 export type ChallengeTypeValue = z.infer<typeof challengeTypeSchema>;
 
-export const accentTokenSchema = z.enum(["trailmark", "summit", "ridge", "glacier", "basalt"]);
+export const accentTokenSchema = z.enum(["trailmark", "summit", "ridge", "glacier", "basalt", "canyon", "alpenglow", "lichen"]);
 export type AccentTokenValue = z.infer<typeof accentTokenSchema>;
 
 export const resourceKindSchema = z.enum(["docs", "article", "interview-prep", "spec", "repo"]);

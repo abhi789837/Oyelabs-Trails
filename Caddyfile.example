@@ -1,0 +1,49 @@
+# Oyelabs Trails v3 — reverse proxy (brief §16).
+#
+#   sudo cp Caddyfile.example /etc/caddy/Caddyfile
+#   # edit the domain and the email, then:
+#   sudo systemctl reload caddy
+#
+# Caddy obtains and renews the certificate automatically; there is nothing to configure for TLS.
+
+trails.example.com {
+	# For Let's Encrypt expiry notices.
+	tls you@example.com
+
+	encode zstd gzip
+
+	# Long-lived caching for hashed build assets, which never change under a given name.
+	@hashed path_regexp ^/assets/.+\.[0-9a-zA-Z_-]{8,}\.(js|css|woff2?|ttf|svg|png|jpg)$
+	header @hashed Cache-Control "public, max-age=31536000, immutable"
+
+	# The MediaPipe WASM and models are large and versioned by path.
+	@mediapipe path /mediapipe/*
+	header @mediapipe Cache-Control "public, max-age=604800"
+
+	# The admin's live integrity feed is server-sent events. Without flush_interval -1 Caddy
+	# buffers the response and warnings arrive in a batch, minutes late — which defeats the
+	# purpose of a live view.
+	handle /api/admin/live/stream {
+		reverse_proxy 127.0.0.1:8787 {
+			flush_interval -1
+		}
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:8787 {
+			# The app sets trustProxy in production and reads the client IP from here, which the
+			# login rate limiter depends on.
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	# The app sets its own CSP, HSTS and frame options through helmet; Caddy does not add more.
+
+	log {
+		output file /var/log/caddy/trails.log {
+			roll_size 20mb
+			roll_keep 10
+		}
+	}
+}

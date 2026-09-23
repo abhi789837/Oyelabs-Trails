@@ -54,6 +54,9 @@ export default {
         ridge: accent("ridge"),
         glacier: accent("glacier"),
         basalt: accent("basalt"),
+        canyon: accent("canyon"),
+        alpenglow: accent("alpenglow"),
+        lichen: accent("lichen"),
         // shadcn/ui semantic names, mapped onto the trail palette.
         border: token("border"),
         input: token("input"),

@@ -149,3 +149,16 @@ What they do **not** establish: the three results are identical because the mock
 not vary by profile. Whether a blueprint actually reflects *these* notes — whether Priya's
 assessment really does probe async and Sofia's really does start higher — can only be judged with
 a real credential. That is the first thing to check once one is added.
+- **Non-JavaScript topics use quiz challenges** (brief §14.2). The code runner executes JavaScript
+  only — `isolated-vm` is a V8 isolate. PHP, Dart, Kotlin, Swift, Java, Go and C# topics therefore
+  use quizzes, including predict-the-output questions written as quiz items, which test the same
+  reading comprehension a `predict_output` assessment item does. JavaScript and TypeScript topics
+  keep their code challenges. A multi-language runner is a separate project.
+- **Three new accent tokens for the v3 tracks**: `canyon` (PHP, hue ~18°), `alpenglow` (Mobile,
+  ~338°) and `lichen` (DevOps, ~75°). Hues were chosen to sit clear of the existing five on the
+  colour wheel, and every `-strong` variant was checked to clear 4.5:1 against its own theme's
+  background rather than eyeballed — the numbers are in the commit that added them.
+- **Wave 1's registry entries landed before their content.** `content:check` reports a registry
+  module with no file as "not written yet" rather than as an error, and the manifest marks it
+  `available: false`, so the ordering is visible in the codebase while the camps are filled in one
+  at a time.

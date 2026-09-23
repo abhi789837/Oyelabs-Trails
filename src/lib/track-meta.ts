@@ -1,4 +1,4 @@
-import { Bot, Layers, LayoutTemplate, Server, type LucideIcon } from "lucide-react";
+import { Bot, Cloud, Layers, LayoutTemplate, Server, Smartphone, SquareCode, type LucideIcon } from "lucide-react";
 
 import type { TopicLevel, TrackId } from "@/types/curriculum";
 
@@ -7,6 +7,9 @@ export const trackIcons: Record<TrackId, LucideIcon> = {
   backend: Server,
   fullstack: Layers,
   "ai-driven": Bot,
+  php: SquareCode,
+  mobile: Smartphone,
+  devops: Cloud,
 };
 
 /** Short code used in certificate IDs and compact labels. */
@@ -15,6 +18,9 @@ export const trackCodes: Record<TrackId, string> = {
   backend: "BE",
   fullstack: "FS",
   "ai-driven": "AI",
+  php: "PH",
+  mobile: "MO",
+  devops: "DV",
 };
 
 export const levelLabels: Record<TopicLevel, string> = {

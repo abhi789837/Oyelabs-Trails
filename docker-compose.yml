@@ -1,0 +1,45 @@
+# Oyelabs Trails v3 (brief §16).
+#
+#   cp .env.example .env    # then fill in APP_MASTER_KEY and SESSION_SECRET
+#   docker compose up -d --build
+#
+# The app listens on 127.0.0.1:8787 and Caddy terminates TLS in front of it (Caddyfile.example).
+# Nothing is published on a public interface by this file.
+
+services:
+  trails:
+    build:
+      context: .
+      args:
+        # Only needed for the claude-cli / codex-cli AI adapters. An API key needs neither.
+        INSTALL_CLAUDE_CLI: "0"
+        INSTALL_CODEX_CLI: "0"
+    image: oyelabs-trails:latest
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DATA_DIR: /data
+      HOST: 0.0.0.0
+      PORT: "8787"
+    ports:
+      # Bound to loopback on purpose: Caddy is the only thing that should reach it.
+      - "127.0.0.1:8787:8787"
+    volumes:
+      # SQLite, proctoring snapshots and nightly backups. This is the only state that matters.
+      - trails-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8787/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    # A learner's code submission runs in an isolated V8 inside this process; a cap means one
+    # runaway submission cannot take the host down with it.
+    mem_limit: 2g
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  trails-data:
+    driver: local

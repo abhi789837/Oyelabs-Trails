@@ -61,7 +61,7 @@ export type JobType = z.infer<typeof jobTypeSchema>;
  * lists match, so adding a track in one place without the other fails the test run rather than
  * drifting silently. Adding a track means editing both, plus registry.ts and track-meta.ts.
  */
-export const TRACK_IDS = ["frontend", "backend", "fullstack", "ai-driven"] as const;
+export const TRACK_IDS = ["frontend", "backend", "fullstack", "ai-driven", "php", "mobile", "devops"] as const;
 export const trackIdSchema = z.enum(TRACK_IDS);
 export type TrackIdValue = (typeof TRACK_IDS)[number];
 

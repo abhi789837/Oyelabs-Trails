@@ -1820,6 +1820,22 @@ export const manifest: TrackMeta[] = [
         ]
       },
       {
+        "id": "fe-angular",
+        "trackId": "frontend",
+        "name": "Angular",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "fe-svelte",
+        "trackId": "frontend",
+        "name": "Svelte & SvelteKit",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
         "id": "fe-meta-mobile",
         "trackId": "frontend",
         "name": "Meta-Frameworks, Mobile & Bonus",
@@ -4110,6 +4126,254 @@ export const manifest: TrackMeta[] = [
             "challengeSize": 12
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "php",
+    "name": "PHP & Laravel",
+    "tagline": "The stack behind most of what Oyelabs ships, from the language up to a deployed app.",
+    "accentToken": "canyon",
+    "modules": [
+      {
+        "id": "php-foundations",
+        "trackId": "php",
+        "name": "PHP Foundations",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "php-oop",
+        "trackId": "php",
+        "name": "PHP OOP",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "php-modern",
+        "trackId": "php",
+        "name": "Modern PHP 8.x",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "php-composer-psr",
+        "trackId": "php",
+        "name": "Composer & PSR Standards",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "php-web",
+        "trackId": "php",
+        "name": "PHP on the Web",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-foundations",
+        "trackId": "php",
+        "name": "Laravel Foundations",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-eloquent",
+        "trackId": "php",
+        "name": "Eloquent & Migrations",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-auth",
+        "trackId": "php",
+        "name": "Laravel Auth & Authorization",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-apis",
+        "trackId": "php",
+        "name": "Laravel APIs",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-queues-events",
+        "trackId": "php",
+        "name": "Queues, Events & Scheduling",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-testing",
+        "trackId": "php",
+        "name": "Testing with Pest & PHPUnit",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-ecosystem",
+        "trackId": "php",
+        "name": "The Laravel Ecosystem",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "laravel-deploy",
+        "trackId": "php",
+        "name": "Deploying Laravel",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "php-wordpress",
+        "trackId": "php",
+        "name": "WordPress Development",
+        "description": "",
+        "topics": [],
+        "available": false
+      }
+    ]
+  },
+  {
+    "id": "mobile",
+    "name": "Mobile Development",
+    "tagline": "Native and cross-platform, from the language up to a release on both stores.",
+    "accentToken": "alpenglow",
+    "modules": [
+      {
+        "id": "mobile-foundations",
+        "trackId": "mobile",
+        "name": "Mobile Foundations",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "mobile-react-native",
+        "trackId": "mobile",
+        "name": "React Native & Expo",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "mobile-dart",
+        "trackId": "mobile",
+        "name": "The Dart Language",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "mobile-flutter",
+        "trackId": "mobile",
+        "name": "Flutter UI & State",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "mobile-kotlin-compose",
+        "trackId": "mobile",
+        "name": "Kotlin & Jetpack Compose",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "mobile-swift-swiftui",
+        "trackId": "mobile",
+        "name": "Swift & SwiftUI",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "mobile-cross-cutting",
+        "trackId": "mobile",
+        "name": "Mobile Cross-Cutting Concerns",
+        "description": "",
+        "topics": [],
+        "available": false
+      }
+    ]
+  },
+  {
+    "id": "devops",
+    "name": "DevOps & Cloud",
+    "tagline": "Everything between a working build and a system that stays up.",
+    "accentToken": "lichen",
+    "modules": [
+      {
+        "id": "devops-linux-shell",
+        "trackId": "devops",
+        "name": "Linux & the Shell",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "devops-networking-tls",
+        "trackId": "devops",
+        "name": "Networking, DNS & TLS",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "devops-reverse-proxies",
+        "trackId": "devops",
+        "name": "Reverse Proxies",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "devops-aws-core",
+        "trackId": "devops",
+        "name": "AWS Core",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "devops-terraform",
+        "trackId": "devops",
+        "name": "Infrastructure as Code",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "devops-kubernetes",
+        "trackId": "devops",
+        "name": "Kubernetes in Depth",
+        "description": "",
+        "topics": [],
+        "available": false
+      },
+      {
+        "id": "devops-observability",
+        "trackId": "devops",
+        "name": "Observability",
+        "description": "",
+        "topics": [],
+        "available": false
       }
     ]
   }

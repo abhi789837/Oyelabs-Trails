@@ -11,6 +11,7 @@ import { loadEnv } from "./env";
 import { blueprintHandler } from "./assessment/blueprintJob";
 import { evaluateHandler } from "./assessment/evaluateJob";
 import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
+import { startDailyMaintenance } from "./maintenance/retention";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { JobWorker } from "./jobs/worker";
 import { createSandbox } from "./sandbox";
@@ -71,12 +72,21 @@ async function main(): Promise<void> {
   }, 60_000);
   sweeper.unref?.();
 
+  // Snapshot retention and the nightly backup (brief §10.6, §15).
+  const stopMaintenance = startDailyMaintenance({
+    db,
+    sqlite,
+    env,
+    log: (m) => console.log(`[trails] ${m}`),
+  });
+
   const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: useMock });
 
   const shutdown = async (signal: string) => {
     app.log.info({ signal }, "shutting down");
     try {
       clearInterval(sweeper);
+      stopMaintenance();
       await worker.stop();
       await app.close();
       // Checkpoint the WAL so the .db file is complete for a backup or a container restart.
