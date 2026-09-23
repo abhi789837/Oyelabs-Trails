@@ -26,7 +26,7 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 - [x] P1 Auth — users, sessions, seed superadmin, login/change-password, guards, AuthProvider, admin onboarding, audit log
 - [x] P2 Content gating + progress — server content bundle, filtered manifest/content API, server quiz grading, sandboxed code verification, progress API, manual plan editor
 - [x] P3 AI layer — crypto box, credentials CRUD + UI, four adapters, verify, `ai_calls` audit, job queue, model settings
-- [ ] P4 Assessment generation — blueprint → pools → critic → code validation; Issue assessment; admin pool preview
+- [x] P4 Assessment generation — blueprint → pools → critic → code validation; Issue assessment; admin pool preview
 - [ ] P5 Test taking + proctoring — pre-flight, item runner, adaptive selector, detectors, warnings, SSE live view, termination
 - [ ] P6 Evaluation + plans — explain grading, evaluation job, plan validation/publish, learner `/plan`, admin evaluation tab
 - [ ] P7 Admin console polish — overview, people table, learner detail tabs, usage reports, retention job, backups
@@ -168,6 +168,26 @@ _(newest last: step, commit hash, known gaps)_
   verification was otherwise building a real client and making live HTTPS calls during `npm test`.
   **Known gaps:** the `claude` and `codex` CLIs are not installed here, so those two adapters are
   written to the documented interface but have never been executed.
+
+- **P4 done** — `88e220a` "v3 phase 4: assessment generation".
+  Built: `shared/assessment.ts`, the three prompt files (with §9.2's item rules verbatim from one
+  shared constant), the manifest/area digests, `validateGeneratedItem` + `verifyCodeItem`, the
+  `assessment.blueprint` job, admin issue/list/pool/cancel routes, the admin pool preview page and
+  the assessment section on the learner page, three sample learner profiles, `npm run dev:seed`,
+  and `notify.ts`.
+  Verified: 147/147 tests (19 new) · typecheck clean · `content:check` 0 errors · build clean ·
+  `npm run dev:seed -- --issue` generates a ready assessment for all three sample learners.
+  P4 acceptance (§17): all three reach `ready` with **6 areas and 78 kept items** (bar: ≥5 areas,
+  ≥25 items); every kept item's topic tags are real; kept code items' reference solutions are
+  re-run in the sandbox and pass while their starters fail; dropped items all carry a reason, and
+  both rejection paths (unknown topic id, critic disagreement) fire on every run.
+  Decision: the `MockProvider` gained hand-built fixtures for the four pipeline call shapes
+  ("blueprint", "items", "explain_items", "critic" are reserved names). Generic synthesis is
+  shape-valid but not semantically valid, so every item would be dropped and the run would prove
+  nothing. A fixture that no longer matches its schema is a loud error, not a silent fallback.
+  **Known gap:** the three sample results are identical, because the fixture does not vary by
+  profile. Whether a blueprint genuinely reflects a particular set of notes can only be judged
+  with a real credential — that is the first thing to check once one is added.
 
 ## Blocked / needs Abhishek
 
