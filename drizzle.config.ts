@@ -9,7 +9,7 @@ export default defineConfig({
   dialect: "sqlite",
   schema: "./server/src/db/schema.ts",
   out: "./server/drizzle",
-  dbCredentials: { url: "./data/trails.db" },
+  dbCredentials: { url: "./data/oyelearn.db" },
   strict: true,
   verbose: true,
 });

@@ -17,7 +17,7 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="flex flex-col p-0">
         <div className="border-b px-4 py-4">
-          <SheetTitle>Oyelabs Trails</SheetTitle>
+          <SheetTitle>Oyelearn</SheetTitle>
           <SheetDescription className="sr-only">Navigate between the dashboard and the four learning trails.</SheetDescription>
         </div>
         <div className="flex-1 overflow-y-auto px-3 py-4">

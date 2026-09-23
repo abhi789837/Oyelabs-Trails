@@ -47,7 +47,7 @@ function testContent(): ContentStore {
  * session secret there; sharing one would let tests leak state into each other.
  */
 export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}): Promise<TestContext> {
-  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "trails-test-"));
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "oyelearn-test-"));
   const env = loadEnv({
     NODE_ENV: "test",
     DATA_DIR: dataDir,

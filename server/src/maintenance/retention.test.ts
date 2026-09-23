@@ -157,7 +157,7 @@ describe("backups", () => {
     // Pre-fill with more than the limit, named so the sort is chronological.
     fs.mkdirSync(ctx.env.backupsDir, { recursive: true });
     for (let i = 0; i < BACKUPS_TO_KEEP + 5; i++) {
-      fs.writeFileSync(path.join(ctx.env.backupsDir, `trails-2020-01-${String(i + 1).padStart(2, "0")}.db`), "x");
+      fs.writeFileSync(path.join(ctx.env.backupsDir, `oyelearn-2020-01-${String(i + 1).padStart(2, "0")}.db`), "x");
     }
 
     const sqlite = fileBackedSqlite();
@@ -165,10 +165,10 @@ describe("backups", () => {
       const result = runBackup(sqlite, ctx.env);
       expect(result.removed).toBeGreaterThan(0);
 
-      const remaining = fs.readdirSync(ctx.env.backupsDir).filter((n) => n.startsWith("trails-"));
+      const remaining = fs.readdirSync(ctx.env.backupsDir).filter((n) => n.startsWith("oyelearn-"));
       expect(remaining.length).toBe(BACKUPS_TO_KEEP);
       // The oldest are the ones that went.
-      expect(remaining).not.toContain("trails-2020-01-01.db");
+      expect(remaining).not.toContain("oyelearn-2020-01-01.db");
     } finally {
       sqlite.close();
     }

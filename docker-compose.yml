@@ -1,4 +1,4 @@
-# Oyelabs Trails v3 (brief §16).
+# Oyelearn v3 (brief §16).
 #
 #   cp .env.example .env    # then fill in APP_MASTER_KEY and SESSION_SECRET
 #   docker compose up -d --build
@@ -7,14 +7,14 @@
 # Nothing is published on a public interface by this file.
 
 services:
-  trails:
+  oyelearn:
     build:
       context: .
       args:
         # Only needed for the claude-cli / codex-cli AI adapters. An API key needs neither.
         INSTALL_CLAUDE_CLI: "0"
         INSTALL_CODEX_CLI: "0"
-    image: oyelabs-trails:latest
+    image: oyelearn:latest
     restart: unless-stopped
     env_file: .env
     environment:
@@ -27,7 +27,7 @@ services:
       - "127.0.0.1:8787:8787"
     volumes:
       # SQLite, proctoring snapshots and nightly backups. This is the only state that matters.
-      - trails-data:/data
+      - oyelearn-data:/data
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8787/api/health"]
       interval: 30s
@@ -41,5 +41,5 @@ services:
       - no-new-privileges:true
 
 volumes:
-  trails-data:
+  oyelearn-data:
     driver: local

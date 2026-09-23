@@ -30,7 +30,7 @@ export default function DashboardPage() {
       <section className="relative overflow-hidden border-b">
         <Contours className="text-foreground/[0.07]" seed={2} />
         <div className="relative mx-auto max-w-6xl px-4 pb-10 pt-12 sm:px-8 sm:pt-20">
-          <h1 className="text-2xl font-bold sm:text-3xl">Oyelabs Trails</h1>
+          <h1 className="text-2xl font-bold sm:text-3xl">Oyelearn</h1>
           <p className="mt-3 max-w-prose text-lg text-muted-foreground">
             Four long trails through the stack Oyelabs ships with, deep enough for your first year and your tenth. Watch,
             read, then prove it on interview-level challenges, camp by camp.

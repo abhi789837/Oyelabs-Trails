@@ -54,7 +54,7 @@ export const meResponseSchema = z.object({
 });
 export type MeResponse = z.infer<typeof meResponseSchema>;
 
-export const SESSION_COOKIE = "trails_sid";
+export const SESSION_COOKIE = "oyelearn_sid";
 /** 12 h sliding expiry, 7 day absolute cap (brief §6). */
 export const SESSION_SLIDING_MS = 12 * 60 * 60 * 1000;
 export const SESSION_ABSOLUTE_MS = 7 * 24 * 60 * 60 * 1000;

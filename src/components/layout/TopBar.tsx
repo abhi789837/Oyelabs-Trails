@@ -23,7 +23,7 @@ export function TopBar() {
         <MobileNav />
         <Link to="/" className="flex items-center gap-2.5 rounded-md py-1 pr-2">
           <BrandMark />
-          <span className="font-display text-lg font-semibold tracking-tight">Oyelabs Trails</span>
+          <span className="font-display text-lg font-semibold tracking-tight">Oyelearn</span>
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <SearchDialog />

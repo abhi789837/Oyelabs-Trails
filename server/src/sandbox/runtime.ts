@@ -10,7 +10,7 @@
  * crosses the isolate boundary.
  */
 export const RUNTIME_SOURCE = String.raw`
-const MARK = "__trails_raw__";
+const MARK = "__oyelearn_raw__";
 
 function format(value) {
   if (value === undefined) return "undefined";

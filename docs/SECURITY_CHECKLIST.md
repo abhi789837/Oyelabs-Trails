@@ -126,7 +126,7 @@ static root — and served only by `GET /api/admin/snapshots/*`, which is inside
 plugin. The handler resolves the path and confirms the result is still inside the snapshots
 directory before reading, so `../` cannot walk out.
 
-Tests in `server/src/routes/assessment.test.ts`: a learner gets 403; `../../trails.db` is refused.
+Tests in `server/src/routes/assessment.test.ts`: a learner gets 403; `../../oyelearn.db` is refused.
 `server/src/maintenance/retention.test.ts` asserts the same check in the retention job, which
 refuses to delete a path that escapes the directory.
 

@@ -1,4 +1,4 @@
-# Oyelabs Trails — Complete Codebase Context
+# Oyelearn — Complete Codebase Context
 
 > **Purpose of this file.** This is a self-contained briefing on the whole repository, written to be
 > pasted into another AI assistant so it can discuss, review, plan or extend this project without
@@ -22,7 +22,7 @@
 
 ## 1. What this project is
 
-**Oyelabs Trails** is an internal training platform for the Oyelabs dev team. It is deliberately
+**Oyelearn** is an internal training platform for the Oyelabs dev team. It is deliberately
 *not* a beginner bootcamp — it is built so that both a 1-year and a 10-year engineer find real depth,
 and working through one track properly takes months.
 
@@ -153,7 +153,7 @@ learning path/
 │  ├─ hooks/
 │  │  ├─ useModuleContent.ts     Loads + caches one module's full content (code-split).
 │  │  ├─ useTrackProgress.ts     summarizeTrack/summarizeModule + useTrackProgress/useModuleProgress/useTopicProgress.
-│  │  ├─ useDocumentTitle.ts     "<title> | Oyelabs Trails".
+│  │  ├─ useDocumentTitle.ts     "<title> | Oyelearn".
 │  │  └─ useElementWidth.ts      ResizeObserver width, for the responsive SVG trail map.
 │  │
 │  ├─ lib/

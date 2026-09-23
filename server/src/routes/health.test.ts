@@ -21,7 +21,7 @@ test("GET /api/health reports ok and reaches the database", async () => {
   const body = res.json();
   expect(body.ok).toBe(true);
   expect(body.db).toBe("ok");
-  expect(body.name).toBe("oyelabs-trails");
+  expect(body.name).toBe("oyelearn");
   expect(typeof body.uptimeSec).toBe("number");
 });
 

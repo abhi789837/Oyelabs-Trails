@@ -46,7 +46,7 @@ export class CodexCliProvider implements AiProvider {
    * the per-user temp directory is already restricted there.
    */
   private async withCodexHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-    const home = fs.mkdtempSync(path.join(os.tmpdir(), "trails-codex-"));
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), "oyelearn-codex-"));
     try {
       fs.chmodSync(home, 0o700);
       fs.writeFileSync(path.join(home, "auth.json"), this.authJson, { mode: 0o600 });

@@ -1,4 +1,4 @@
-# Oyelabs Trails v3 — reverse proxy (brief §16).
+# Oyelearn v3 — reverse proxy (brief §16).
 #
 #   sudo cp Caddyfile.example /etc/caddy/Caddyfile
 #   # edit the domain and the email, then:
@@ -6,7 +6,7 @@
 #
 # Caddy obtains and renews the certificate automatically; there is nothing to configure for TLS.
 
-trails.example.com {
+oyelearn.example.com {
 	# For Let's Encrypt expiry notices.
 	tls you@example.com
 
@@ -41,7 +41,7 @@ trails.example.com {
 	# The app sets its own CSP, HSTS and frame options through helmet; Caddy does not add more.
 
 	log {
-		output file /var/log/caddy/trails.log {
+		output file /var/log/caddy/oyelearn.log {
 			roll_size 20mb
 			roll_keep 10
 		}

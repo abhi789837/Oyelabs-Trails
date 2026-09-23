@@ -15,7 +15,7 @@ export type ApiError = z.infer<typeof apiErrorSchema>;
 
 export const healthResponseSchema = z.object({
   ok: z.literal(true),
-  name: z.literal("oyelabs-trails"),
+  name: z.literal("oyelearn"),
   version: z.string(),
   uptimeSec: z.number(),
   db: z.literal("ok"),

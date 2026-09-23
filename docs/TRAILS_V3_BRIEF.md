@@ -1,4 +1,4 @@
-# Oyelabs Trails v3 — Build Brief
+# Oyelearn v3 — Build Brief
 
 > Hand this file to Claude Code together with `docs/CODEBASE_CONTEXT.md` (the v2 briefing) and the
 > existing `CLAUDE.md`. v3 turns Trails from a client-only SPA into a small full-stack app with
@@ -110,7 +110,7 @@ Node (Fastify, :8787)                                                         �
         │
         ▼
  /data (persistent volume)
-   trails.db (SQLite, WAL)   snapshots/<assessmentId>/<eventId>.jpg   content/ (built module JSON)
+   oyelearn.db (SQLite, WAL)   snapshots/<assessmentId>/<eventId>.jpg   content/ (built module JSON)
 ```
 
 ---

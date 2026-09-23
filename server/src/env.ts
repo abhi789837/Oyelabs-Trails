@@ -110,6 +110,6 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     serverContentDir: path.resolve(raw.SERVER_CONTENT_DIR),
     snapshotsDir: path.join(dataDir, "snapshots"),
     backupsDir: path.join(dataDir, "backups"),
-    dbPath: path.join(dataDir, "trails.db"),
+    dbPath: path.join(dataDir, "oyelearn.db"),
   };
 }

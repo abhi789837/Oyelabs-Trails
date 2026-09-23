@@ -44,7 +44,7 @@ export function AdminLayout() {
         <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
           <BrandMark className="h-6 w-6" />
           <div className="min-w-0">
-            <p className="truncate font-display text-sm font-bold leading-none">Oyelabs Trails</p>
+            <p className="truncate font-display text-sm font-bold leading-none">Oyelearn</p>
             <p className="mt-0.5 font-mono text-[11px] leading-none text-muted-foreground">Admin console</p>
           </div>
 

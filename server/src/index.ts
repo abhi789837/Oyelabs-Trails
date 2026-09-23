@@ -30,15 +30,15 @@ async function main(): Promise<void> {
   purgeExpiredSessions(db);
 
   const content = ContentStore.load(env.serverContentDir);
-  const sandbox = await createSandbox(env, (message) => console.log(`[trails] ${message}`));
-  console.log(`[trails] curriculum: ${content.manifest.length} tracks, ${content.topicCount} topics`);
+  const sandbox = await createSandbox(env, (message) => console.log(`[oyelearn] ${message}`));
+  console.log(`[oyelearn] curriculum: ${content.manifest.length} tracks, ${content.topicCount} topics`);
 
   /**
    * Development without a credential still needs the AI paths to run end to end, so a
    * deterministic mock stands in. It is only ever built outside production, and the admin UI
    * says so in as many words.
    */
-  const useMock = !env.isProduction && process.env.TRAILS_MOCK_AI !== "0";
+  const useMock = !env.isProduction && process.env.OYELEARN_MOCK_AI !== "0";
   const mock = useMock
     ? new MockProvider({
         topicIds: content.orderedTopicIds,
@@ -46,28 +46,28 @@ async function main(): Promise<void> {
       })
     : null;
   const ai = new AiService(db, env, { mock });
-  if (useMock) console.log("[trails] AI: deterministic mock provider (development only)");
+  if (useMock) console.log("[oyelearn] AI: deterministic mock provider (development only)");
 
   const worker = new JobWorker({
     db,
     handlers: {
       "credential.verify": verifyCredentialHandler(db, ai),
-      "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox, log: (m) => console.log(`[trails] ${m}`) }),
-      "assessment.evaluate": evaluateHandler({ db, ai, content, log: (m) => console.log(`[trails] ${m}`) }),
+      "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "assessment.evaluate": evaluateHandler({ db, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
-    log: (message, detail) => console.log(`[trails] ${message}`, detail ?? ""),
+    log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });
   worker.start();
 
   // Deadlines and missing heartbeats are noticed on a fixed cadence, not through the queue: a
   // backlog must not delay the checks that notice a stuck test.
   const requeued = requeueOrphanedEvaluations(db);
-  if (requeued > 0) console.log(`[trails] requeued ${requeued} orphaned evaluation(s)`);
+  if (requeued > 0) console.log(`[oyelearn] requeued ${requeued} orphaned evaluation(s)`);
   const sweeper = setInterval(() => {
     try {
-      sweepOnce({ db, log: (m) => console.log(`[trails] ${m}`) });
+      sweepOnce({ db, log: (m) => console.log(`[oyelearn] ${m}`) });
     } catch (error) {
-      console.error("[trails] sweeper failed:", error instanceof Error ? error.message : error);
+      console.error("[oyelearn] sweeper failed:", error instanceof Error ? error.message : error);
     }
   }, 60_000);
   sweeper.unref?.();
@@ -77,7 +77,7 @@ async function main(): Promise<void> {
     db,
     sqlite,
     env,
-    log: (m) => console.log(`[trails] ${m}`),
+    log: (m) => console.log(`[oyelearn] ${m}`),
   });
 
   const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: useMock });
@@ -104,6 +104,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error: unknown) => {
-  console.error("[trails] failed to start:", error instanceof Error ? error.message : error);
+  console.error("[oyelearn] failed to start:", error instanceof Error ? error.message : error);
   process.exit(1);
 });

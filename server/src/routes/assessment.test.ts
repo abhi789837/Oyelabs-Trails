@@ -405,7 +405,7 @@ describe("the admin live view", () => {
   test("a snapshot path cannot walk out of the snapshots directory", async () => {
     const res = await ctx.app.inject({
       method: "GET",
-      url: "/api/admin/snapshots/../../trails.db",
+      url: "/api/admin/snapshots/../../oyelearn.db",
       ...as(admin),
     });
     expect([400, 404]).toContain(res.statusCode);

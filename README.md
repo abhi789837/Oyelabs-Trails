@@ -1,4 +1,4 @@
-# Oyelabs Trails
+# Oyelearn
 
 The internal training platform for the Oyelabs dev team.
 
@@ -62,7 +62,7 @@ npm run dev:seed             # three sample learners with realistic profiles
 npm run dev:seed -- --issue  # …and generate a placement assessment for each
 ```
 
-Development runs against a deterministic mock AI provider unless `TRAILS_MOCK_AI=0`. It produces
+Development runs against a deterministic mock AI provider unless `OYELEARN_MOCK_AI=0`. It produces
 structurally valid, semantically meaningless output — enough to exercise the pipeline, never enough
 to judge content quality. The admin console says so while it is in use, and it is never available
 in production.
@@ -252,7 +252,7 @@ docker compose up -d --build
 docker compose logs -f trails     # the generated super-admin password is in here, once
 ```
 
-The image runs as a non-root user, keeps its state on the `trails-data` volume, and binds only to
+The image runs as a non-root user, keeps its state on the `oyelearn-data` volume, and binds only to
 `127.0.0.1:8787` — Caddy is the only thing that reaches it.
 
 To use a CLI AI adapter, build with `--build-arg INSTALL_CLAUDE_CLI=1` or `INSTALL_CODEX_CLI=1`. An
@@ -273,7 +273,7 @@ buffered and warnings arrive in a batch, minutes late.
 ### 5. Check
 
 ```bash
-curl -fsS https://trails.example.com/api/health
+curl -fsS https://oyelearn.example.com/api/health
 docker compose ps       # the healthcheck should read healthy
 ```
 

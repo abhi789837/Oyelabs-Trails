@@ -55,7 +55,7 @@ export default function LoginPage() {
         <div className="flex items-center gap-2.5">
           <BrandMark />
           <div>
-            <p className="font-display text-lg font-bold leading-none">Oyelabs Trails</p>
+            <p className="font-display text-lg font-bold leading-none">Oyelearn</p>
             <p className="mt-1 font-mono text-xs text-muted-foreground">Internal training</p>
           </div>
         </div>

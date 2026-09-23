@@ -97,7 +97,7 @@ export function runBackup(sqlite: { exec: (sql: string) => unknown }, env: Env):
 
   // Sortable name, so pruning is a lexicographic sort rather than a stat of every file.
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const file = path.join(env.backupsDir, `trails-${stamp}.db`);
+  const file = path.join(env.backupsDir, `oyelearn-${stamp}.db`);
 
   try {
     // The path is interpolated into SQL, so quote it the way SQLite expects and reject anything
@@ -112,7 +112,7 @@ export function runBackup(sqlite: { exec: (sql: string) => unknown }, env: Env):
 
   const backups = fs
     .readdirSync(env.backupsDir)
-    .filter((name) => name.startsWith("trails-") && name.endsWith(".db"))
+    .filter((name) => name.startsWith("oyelearn-") && name.endsWith(".db"))
     .sort();
 
   let removed = 0;

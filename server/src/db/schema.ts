@@ -1,5 +1,5 @@
 /**
- * Drizzle schema for Trails v3 (brief §5).
+ * Drizzle schema for Oyelearn v3 (brief §5).
  *
  * Conventions:
  * - Ids are ULID strings (lexicographically sortable, so `order by id` is chronological).

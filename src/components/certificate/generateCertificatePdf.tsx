@@ -69,10 +69,10 @@ function CertificateDocument({ data }: { data: CertificateData }) {
   return (
     <Document
       title={`${data.trackName} certificate: ${data.name}`}
-      author="Oyelabs Trails"
+      author="Oyelearn"
       subject={`Certificate of completion, ${data.trackName} trail`}
-      creator="Oyelabs Trails"
-      producer="Oyelabs Trails"
+      creator="Oyelearn"
+      producer="Oyelearn"
     >
       <Page size="A4" orientation="landscape" style={styles.page}>
         {/* A hair shorter than the page: an SVG as tall as the page gets pushed onto its own page. */}
@@ -116,7 +116,7 @@ function CertificateDocument({ data }: { data: CertificateData }) {
               <Circle cx={9} cy={25} r={3.2} fill="#2F6E5B" />
               <Circle cx={14} cy={6.5} r={3.6} fill="#D98E2B" />
             </Svg>
-            <Text style={styles.brand}>Oyelabs Trails</Text>
+            <Text style={styles.brand}>Oyelearn</Text>
           </View>
 
           <Text style={styles.kicker}>Certificate of completion</Text>
@@ -141,7 +141,7 @@ function CertificateDocument({ data }: { data: CertificateData }) {
             <Text style={styles.mono}>
               Certificate ID <Text style={{ color: INK }}>{data.certificateId}</Text>
             </Text>
-            <Text style={styles.mono}>Issued in the browser by Oyelabs Trails. Not verified by a server.</Text>
+            <Text style={styles.mono}>Issued in the browser by Oyelearn. Not verified by a server.</Text>
           </View>
         </View>
       </Page>

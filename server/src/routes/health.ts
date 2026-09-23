@@ -23,7 +23,7 @@ export async function registerHealthRoutes(app: FastifyInstance): Promise<void> 
     }
     return {
       ok: true,
-      name: "oyelabs-trails",
+      name: "oyelearn",
       version: VERSION,
       uptimeSec: Math.round((Date.now() - startedAt) / 1000),
       db: "ok",

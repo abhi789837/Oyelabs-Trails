@@ -1,4 +1,4 @@
-# Oyelabs Trails v3 (brief §16).
+# Oyelearn v3 (brief §16).
 #
 # Multi-stage: the build stage has the toolchain and the dev dependencies, the runtime stage has
 # neither. The result runs as a non-root user and keeps its state on a mounted volume.

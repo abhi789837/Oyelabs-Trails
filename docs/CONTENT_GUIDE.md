@@ -1,6 +1,6 @@
 # Content Authoring Guide (v2)
 
-How to write a curriculum module for Oyelabs Trails. The audience is Oyelabs engineers with
+How to write a curriculum module for Oyelearn. The audience is Oyelabs engineers with
 **1 to 10 years** of experience: every topic must teach a 10-year engineer something, not just
 recap a tutorial. Read CLAUDE.md Sections 4–6 and the section for your module (Sections 7–10)
 alongside this guide.
