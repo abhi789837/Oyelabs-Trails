@@ -71,16 +71,50 @@ export function extractTitle(html) {
   return m[1].replace(/\s+/g, " ").trim().slice(0, 200) || null;
 }
 
+/**
+ * A `<meta http-equiv="refresh">` in a tiny body: the page 200s, but it is a stub that only a
+ * browser follows. developer.apple.com/app-store/review/ does this, and it looks perfectly healthy
+ * to a checker that stops at the status code.
+ */
+export function metaRefreshTarget(html) {
+  const m = /<meta[^>]+http-equiv=["']?refresh["']?[^>]*content=["'][^"']*url=([^"'>\s]+)/i.exec(html);
+  return m ? m[1] : null;
+}
+
+async function fetchOnce(url, headers) {
+  const res = await fetch(url, { redirect: "follow", headers, signal: AbortSignal.timeout(20000) });
+  const html = res.headers.get("content-type")?.includes("html") ? await readHead(res) : "";
+  if (!html) await res.body?.cancel().catch(() => {});
+  return { res, html };
+}
+
 export async function checkUrl(url) {
+  let attempt;
   try {
-    const res = await fetch(url, { redirect: "follow", headers: HEADERS, signal: AbortSignal.timeout(20000) });
-    const verdict = frameVerdict(res.headers);
-    const html = res.headers.get("content-type")?.includes("html") ? await readHead(res) : "";
-    if (!html) await res.body?.cancel().catch(() => {});
-    return { url, status: res.status, finalUrl: res.url, title: extractTitle(html), bodyLength: html.length, ...verdict };
+    attempt = await fetchOnce(url, HEADERS);
   } catch (err) {
-    return { url, status: 0, finalUrl: null, title: null, bodyLength: 0, embeddable: false, reason: `request failed: ${err.message}` };
+    // Google's devsite (developer.android.com, firebase.google.com) sees a browser User-Agent with
+    // no cookies and bounces it through an auto-signin redirect until the budget runs out. The same
+    // request without a UA is served normally, so that is the retry rather than a cookie jar.
+    const looped = /redirect count exceeded/i.test(err.cause?.message ?? err.cause?.code ?? "");
+    if (!looped) {
+      return { url, status: 0, finalUrl: null, title: null, bodyLength: 0, embeddable: false, reason: `request failed: ${err.message}` };
+    }
+    try {
+      attempt = await fetchOnce(url, {});
+    } catch (retryErr) {
+      return { url, status: 0, finalUrl: null, title: null, bodyLength: 0, embeddable: false, reason: `request failed after a no-UA retry: ${retryErr.message}` };
+    }
   }
+
+  const { res, html } = attempt;
+  const verdict = frameVerdict(res.headers);
+  const base = { url, status: res.status, finalUrl: res.url, title: extractTitle(html), bodyLength: html.length, ...verdict };
+  const refresh = metaRefreshTarget(html);
+  if (refresh) {
+    return { ...base, metaRefreshTo: refresh, reason: `${base.reason} — META-REFRESH STUB: this page only forwards to ${refresh} in a browser; cite that URL instead` };
+  }
+  return base;
 }
 
 /**
@@ -138,6 +172,12 @@ if (args.length) {
       `\n${unverifiable.length} URL(s) returned 200 that could not be verified — these hosts answer any path the same way, so open each in a browser before shipping it:`,
     );
     for (const r of unverifiable) console.error(`  ${r.url}`);
+  }
+  const stubs = results.filter((r) => r.metaRefreshTo);
+  if (stubs.length) {
+    console.error(`
+${stubs.length} URL(s) are meta-refresh stubs — cite the page they forward to:`);
+    for (const r of stubs) console.error(`  ${r.url}  ->  ${r.metaRefreshTo}`);
   }
   const failed = results.filter((r) => r.status === 0 || r.status >= 400);
   if (failed.length) {
