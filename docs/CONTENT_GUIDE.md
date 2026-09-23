@@ -130,6 +130,7 @@ Some hosts still cannot be checked, and these are settled — don't spend time r
 | `docs.nestjs.com`, `angular.dev`, `developer.hashicorp.com` | SPA: 200 for every path | Verify against the project's repo or sitemap, then ship |
 | `hackingwithswift.com/articles/<n>/<slug>` | Serves **by number and ignores the slug** — a wrong number returns 200 with a *different* article | Confirm by the returned `<title>`, never by status |
 | `kt.academy` | Soft-404s: 200 with a generic title for invented slugs | Confirm by `<title>` |
+| `developer.apple.com/support/…` | 200, but redirects to a "Security Verification" interstitial | Use the `developer.apple.com/documentation/…` equivalent |
 
 The `hackingwithswift.com` case is the one the checker cannot help with at all: the response is
 200, the content is real, and it is simply not the page you meant. **Whenever a URL carries an

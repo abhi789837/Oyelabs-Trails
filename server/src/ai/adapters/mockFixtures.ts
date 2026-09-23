@@ -1,4 +1,4 @@
-import type { Blueprint, CriticVerdict, GeneratedItem } from "../../../../shared/assessment";
+import { MAX_AREA_MODULES, type Blueprint, type CriticVerdict, type GeneratedItem } from "../../../../shared/assessment";
 
 /**
  * Coherent fixtures for the assessment pipeline, used by `MockProvider`.
@@ -55,7 +55,9 @@ export function fixtureBlueprint(context: FixtureContext): Blueprint {
 
 function pickModules(moduleIds: string[], index: number, total: number): string[] {
   if (moduleIds.length === 0) return [];
-  const perArea = Math.max(1, Math.floor(moduleIds.length / total));
+  // Spread the catalogue across the areas, but never name more modules than an area may hold --
+  // with 67 modules and 6 areas the unclamped share is 11, which the schema rejects.
+  const perArea = Math.min(MAX_AREA_MODULES, Math.max(1, Math.floor(moduleIds.length / total)));
   const start = (index * perArea) % moduleIds.length;
   const picked = moduleIds.slice(start, start + perArea);
   return picked.length > 0 ? picked : [moduleIds[index % moduleIds.length]];

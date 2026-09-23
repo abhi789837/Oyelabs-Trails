@@ -34,10 +34,17 @@ export const EXPLAIN_BUDGET_MIN = 15;
 export const MIN_ITEM_TARGET = 25;
 export const MAX_ITEM_TARGET = 40;
 
+/**
+ * How many modules one blueprint area may name. Exported because the mock fixture has to respect
+ * it too: it once spread every module across its areas, which silently began failing validation
+ * the moment the curriculum grew past 48 modules.
+ */
+export const MAX_AREA_MODULES = 8;
+
 export const blueprintAreaSchema = z.object({
   name: z.string().trim().min(2).max(60),
   /** Module ids from the digest. Validated server-side; unknown ids are dropped. */
-  moduleIds: z.array(z.string().min(1).max(80)).min(1).max(8),
+  moduleIds: z.array(z.string().min(1).max(80)).min(1).max(MAX_AREA_MODULES),
   /** What the admin's notes suggest this person's level is, before testing. */
   hypothesisLevel: skillLevelSchema,
   rationale: z.string().trim().min(10).max(600),

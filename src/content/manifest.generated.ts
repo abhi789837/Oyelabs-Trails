@@ -1823,17 +1823,370 @@ export const manifest: TrackMeta[] = [
         "id": "fe-angular",
         "trackId": "frontend",
         "name": "Angular",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Angular 22 for engineers who already ship React or Vue: standalone components (NgModules are legacy), the built-in `@if` / `@for` / `@switch` control flow, signals as the reactivity primitive, signal inputs and outputs, dependency injection and `inject()`, the signals/RxJS interop that the ecosystem is mid-migration on, the Router, forms, `HttpClient` and interceptors, change detection with OnPush and zoneless, TestBed, and SSR with hydration. Three topics are code challenges: a signal graph, the functional interceptor chain, and a form validation engine.",
+        "refs": [
+          {
+            "label": "Angular: What is Angular?",
+            "url": "https://angular.dev/overview",
+            "kind": "docs"
+          },
+          {
+            "label": "Angular: Signals overview",
+            "url": "https://angular.dev/guide/signals",
+            "kind": "docs"
+          },
+          {
+            "label": "Angular: NgModules (legacy)",
+            "url": "https://angular.dev/guide/ngmodules/overview",
+            "kind": "docs"
+          },
+          {
+            "label": "sudheerj: Angular Interview Questions",
+            "url": "https://github.com/sudheerj/angular-interview-questions",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "ng-what-is-angular",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "What Angular Is, and How It Differs",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-standalone-components",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Standalone Components (NgModules Are Legacy)",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-templates-control-flow",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Templates and the Built-In Control Flow",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-content-projection",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Content Projection with ng-content",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "ng-signals",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Signals: signal, computed, effect, linkedSignal",
+            "level": "advanced",
+            "estMinutes": 95,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "ng-signal-inputs-outputs",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Signal Inputs, Outputs and model()",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-dependency-injection",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Dependency Injection and inject()",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-services-providers",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Services, Providers and Injection Scopes",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-rxjs-interop",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "RxJS in Angular Today, and the Signals Interop",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-http-interceptors",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "HttpClient and Functional Interceptors",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-router",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "The Router: Lazy Loading, Guards and Resolvers",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-forms",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Forms: Reactive, Template-Driven and Typed",
+            "level": "advanced",
+            "estMinutes": 85,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "ng-change-detection",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Change Detection, OnPush and Zoneless",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-testing",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "Testing with TestBed",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "ng-ssr-hydration",
+            "moduleId": "fe-angular",
+            "trackId": "frontend",
+            "title": "SSR, Hydration and Incremental Hydration",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "fe-svelte",
         "trackId": "frontend",
         "name": "Svelte & SvelteKit",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Svelte 5 and SvelteKit 2 for engineers who already ship React or Vue: why a compiler beats a runtime, the runes (`$state`, `$derived`, `$effect`, `$props`, `$bindable`), the state proxy and where deep reactivity stops, snippets instead of slots, events as plain properties, what's left of stores and context, transitions, and then SvelteKit's filesystem router, load functions, form actions, hooks and adapters. Four topics are code challenges: the state proxy, a push-pull derived graph, the store contract and a load chain. Everything here is Svelte 5 syntax — `export let`, `$:` and `on:click` are legacy and flagged where they appear.",
+        "refs": [
+          {
+            "label": "Svelte: Docs overview",
+            "url": "https://svelte.dev/docs/svelte/overview",
+            "kind": "docs"
+          },
+          {
+            "label": "Svelte: Interactive tutorial",
+            "url": "https://svelte.dev/tutorial/svelte/welcome-to-svelte",
+            "kind": "docs"
+          },
+          {
+            "label": "SvelteKit: Routing",
+            "url": "https://svelte.dev/docs/kit/routing",
+            "kind": "docs"
+          },
+          {
+            "label": "Svelte: v5 migration guide",
+            "url": "https://svelte.dev/docs/svelte/v5-migration-guide",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "svelte-compiler-model",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "A Compiler, Not a Runtime",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-components-markup",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Components, Markup & Scoped Styles",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-state-deep-reactivity",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "$state and the Proxy Model",
+            "level": "advanced",
+            "estMinutes": 80,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-derived",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "$derived and the Dependency Graph",
+            "level": "advanced",
+            "estMinutes": 80,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-effect",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "$effect, and Why It's Usually the Wrong Tool",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-props-bindable",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "$props, $bindable and Two-Way Binding",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-events",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Events Are Just Properties",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-snippets",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Snippets and {@render}",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-stores",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Stores Alongside Runes",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 11
+          },
+          {
+            "id": "svelte-context",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Context and Cross-Request Safety",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-transitions",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Transitions and Animations",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-kit-routing",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "SvelteKit Routing & File Conventions",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-kit-load",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Load Functions: Universal, Server & Streaming",
+            "level": "advanced",
+            "estMinutes": 85,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-kit-form-actions",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Form Actions & Progressive Enhancement",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "svelte-kit-rendering-deploy",
+            "moduleId": "fe-svelte",
+            "trackId": "frontend",
+            "title": "Hooks, Rendering Modes & Deployment",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "fe-meta-mobile",
@@ -2749,8 +3102,8 @@ export const manifest: TrackMeta[] = [
             "kind": "docs"
           },
           {
-            "label": "NestJS: Migration guide (v11 to v12)",
-            "url": "https://docs.nestjs.com/migration-guide",
+            "label": "NestJS: Migration guide",
+            "url": "https://docs.nestjs.com/migration",
             "kind": "docs"
           }
         ],
@@ -4854,73 +5207,1508 @@ export const manifest: TrackMeta[] = [
         "id": "laravel-foundations",
         "trackId": "php",
         "name": "Laravel Foundations",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The framework's core request path, from `public/index.php` to a rendered Blade view. Routing, controllers, validation, middleware, the service container, providers, facades and Blade — written for Laravel 13, where every Kernel file you remember has been replaced by `bootstrap/app.php`.",
+        "refs": [
+          {
+            "label": "Laravel 13: Request Lifecycle",
+            "url": "https://laravel.com/framework/docs/13.x/lifecycle",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel 13: Release Notes",
+            "url": "https://laravel.com/framework/docs/13.x/releases",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel API Reference (13.x)",
+            "url": "https://api.laravel.com/docs/13.x/index.html",
+            "kind": "docs"
+          },
+          {
+            "label": "laravel/framework on GitHub",
+            "url": "https://github.com/laravel/framework",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-request-lifecycle",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Laravel's Shape and the Request Lifecycle",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-project-structure",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Project Structure, Artisan and Tinker",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-configuration",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Configuration, `.env` and Config Caching",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-routing",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Routing and Route Parameters",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-route-groups-binding",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Route Groups, Naming and Model Binding",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-controllers",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Controllers and Resource Controllers",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-requests-responses",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Requests and Responses",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-validation",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Validation and Form Requests",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-middleware",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Middleware and the Pipeline",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-service-container",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "The Service Container and Dependency Injection",
+            "level": "expert",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-service-providers",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Service Providers and Bootstrapping",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-facades-helpers",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Facades and Helpers",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-blade",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Blade Templating",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-blade-components",
+            "moduleId": "laravel-foundations",
+            "trackId": "php",
+            "title": "Blade Components and Layouts",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "laravel-eloquent",
         "trackId": "php",
         "name": "Eloquent & Migrations",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Laravel's data layer, from the schema up: migrations, the query builder, Eloquent models and relationships, and the performance work that separates an app that survives production from one that melts under it. The N+1 camp is the one to linger on.",
+        "refs": [
+          {
+            "label": "Laravel 13: Eloquent ORM",
+            "url": "https://laravel.com/framework/docs/13.x/eloquent",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel 13: Database Migrations",
+            "url": "https://laravel.com/framework/docs/13.x/migrations",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel 13: Query Builder",
+            "url": "https://laravel.com/framework/docs/13.x/queries",
+            "kind": "docs"
+          },
+          {
+            "label": "Martin Fowler: Active Record",
+            "url": "https://martinfowler.com/eaaCatalog/activeRecord.html",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-eloquent-migrations",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Migrations and the Schema Builder",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-query-builder",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "The Query Builder",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-models",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Models, Conventions and Mass Assignment",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-retrieving",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Retrieving and Persisting Models",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-relationships",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Relationships: One-to-One, One-to-Many and Many-to-Many",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-eloquent-polymorphic",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Polymorphic Relationships",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-n-plus-one",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Eager Loading and the N+1 Problem",
+            "level": "expert",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-eloquent-accessors-casts",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Accessors, Mutators and Casts",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-scopes",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Query Scopes: Local and Global",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-collections",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Eloquent Collections",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-factories-seeding",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Factories and Seeding",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eloquent-soft-deletes-events",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Soft Deletes, Model Events and Observers",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-eloquent-transactions",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Transactions and Locking",
+            "level": "expert",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-eloquent-serialization",
+            "moduleId": "laravel-eloquent",
+            "trackId": "php",
+            "title": "Serialising Models for APIs",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "laravel-auth",
         "trackId": "php",
         "name": "Laravel Auth & Authorization",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Who the user is, and what they are allowed to do. Guards and providers, session login, hashing, password reset, Sanctum's two very different products, gates and policies, and the hardening — CSRF, throttling, password confirmation, 2FA — that separates a login form from a login system.",
+        "refs": [
+          {
+            "label": "Laravel 13: Authentication",
+            "url": "https://laravel.com/framework/docs/13.x/authentication",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel 13: Authorization",
+            "url": "https://laravel.com/framework/docs/13.x/authorization",
+            "kind": "docs"
+          },
+          {
+            "label": "OWASP: Authentication Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+            "kind": "article"
+          },
+          {
+            "label": "OWASP Top 10:2025 — A01 Broken Access Control",
+            "url": "https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-auth-guards-providers",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Guards, Providers and config/auth.php",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-auth-session-login",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Session Login: Auth::attempt, Logout and Session Fixation",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-auth-hashing",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "The Hash Facade, Drivers and Rehash-on-Login",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-auth-password-reset",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Password Reset and Email Verification",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-auth-stack-choice",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Choosing an Auth Stack: Starter Kits, Fortify, Sanctum and Passport",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-auth-sanctum-tokens",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Sanctum API Tokens and Abilities",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-auth-sanctum-spa",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Sanctum's SPA Cookie Mode",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-auth-gates",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Authorization Gates",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-auth-policies",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Policies",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-auth-enforcing",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Enforcing Authorization: authorize(), can, @can and #[Authorize]",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-auth-roles-permissions",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Roles and Permissions (and Why Laravel Ships None)",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-auth-csrf",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "CSRF and PreventRequestForgery",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-auth-hardening",
+            "moduleId": "laravel-auth",
+            "trackId": "php",
+            "title": "Login Throttling, Password Confirmation and Two-Factor",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "laravel-apis",
         "trackId": "php",
         "name": "Laravel APIs",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Shipping an HTTP API with Laravel 13: the API routes file you have to ask for, resources and JSON:API serialisation, pagination, versioning, the JSON exception shape, rate limiting, calling other services with the HTTP client, documentation, CORS and signed webhooks. Laravel-specific throughout — the REST theory lives in the Backend track's API Design camp.",
+        "refs": [
+          {
+            "label": "Laravel Docs: Routing",
+            "url": "https://laravel.com/framework/docs/13.x/routing",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel Docs: Eloquent API Resources",
+            "url": "https://laravel.com/framework/docs/13.x/eloquent-resources",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel Docs: Error Handling",
+            "url": "https://laravel.com/framework/docs/13.x/errors",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel Docs: HTTP Client",
+            "url": "https://laravel.com/framework/docs/13.x/http-client",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-api-install",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "API Routes and `install:api`",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-api-resources",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "API Resources and Resource Collections",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-api-conditional-attributes",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "Conditional Attributes and Relationship Inclusion",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-api-jsonapi",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "JSON:API Resources (new in Laravel 13)",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-api-pagination",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "Pagination in API Responses",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-api-versioning",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "API Versioning Strategies",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-api-exceptions",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "Error Handling and the JSON Exception Shape",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-api-validation",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "Validation Errors as 422 Responses",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-api-rate-limiting",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "Rate Limiting with `RateLimiter` and Named Limiters",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-api-http-client",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "The HTTP Client: Calling Other Services",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-api-docs",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "Documenting the API: Scribe, Scramble and OpenAPI",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "lv-api-cors",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "CORS for Laravel APIs",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "lv-api-webhooks-signed-urls",
+            "moduleId": "laravel-apis",
+            "trackId": "php",
+            "title": "Webhooks and Signed URLs",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "laravel-queues-events",
         "trackId": "php",
         "name": "Queues, Events & Scheduling",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Everything a Laravel app does outside the request: jobs and the workers that run them, retries, failures, batches, job middleware, events, listeners, observers, and the scheduler. This camp is deliberately operational — the hard parts here are what happens on deploy, under load, and at 3am, not the syntax.",
+        "refs": [
+          {
+            "label": "Laravel: Queues",
+            "url": "https://laravel.com/framework/docs/13.x/queues",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel: Events",
+            "url": "https://laravel.com/framework/docs/13.x/events",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel: Task Scheduling",
+            "url": "https://laravel.com/framework/docs/13.x/scheduling",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel: Horizon",
+            "url": "https://laravel.com/framework/docs/13.x/horizon",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-queue-why-background-work",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Why Work Moves Off the Request",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "lv-queue-drivers",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Connections, Queues and Choosing a Driver",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-queue-jobs-dispatching",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Writing and Dispatching Jobs",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-queue-serialization",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Serialised Models and Job Payloads",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-queue-transactions-idempotency",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Transactions, Ordering and Idempotency",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-queue-retries-failures",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Attempts, Backoff, Timeouts and Failed Jobs",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-queue-job-middleware",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Job Middleware, Rate Limits and Uniqueness",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-queue-routing",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Queue Routing with Queue::route",
+            "level": "advanced",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "lv-queue-batches-chains",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Batches and Chains",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-queue-workers-production",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Running Workers in Production",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-queue-horizon",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Horizon",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-queue-events-observers",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Events, Listeners and Model Observers",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-queue-queued-listeners-mail",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Queued Listeners, Mail and Notifications",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-queue-scheduling",
+            "moduleId": "laravel-queues-events",
+            "trackId": "php",
+            "title": "Task Scheduling in routes/console.php",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "laravel-testing",
         "trackId": "php",
         "name": "Testing with Pest & PHPUnit",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "How a Laravel application is actually tested: the two syntaxes and the one runner underneath, the test environment, HTTP and database tests, the facade fakes, time control, and the judgement call about what is worth testing at all.",
+        "refs": [
+          {
+            "label": "Laravel: Testing — Getting Started",
+            "url": "https://laravel.com/framework/docs/13.x/testing",
+            "kind": "docs"
+          },
+          {
+            "label": "Pest: Writing Tests",
+            "url": "https://pestphp.com/docs/writing-tests",
+            "kind": "docs"
+          },
+          {
+            "label": "PHPUnit: Writing Tests",
+            "url": "https://docs.phpunit.de/en/12.5/writing-tests-for-phpunit.html",
+            "kind": "docs"
+          },
+          {
+            "label": "Martin Fowler: Mocks Aren't Stubs",
+            "url": "https://martinfowler.com/articles/mocksArentStubs.html",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-test-pest-phpunit",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Pest and PHPUnit: Two Front Ends, One Runner",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-test-environment",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "The Test Environment and `php artisan test`",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-test-unit-vs-feature",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Unit Tests and Feature Tests, Laravel's Sense of the Words",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-test-http",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "HTTP Tests and Response Assertions",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-test-database",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Resetting the Database: Refresh, Transactions, Migrations, Truncation",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-test-factories",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Factories and States in Tests",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-test-validation-authorization",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Testing Validation and Authorization",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-test-fakes",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Mocking, Fakes and the Facade Fakes",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-test-time",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Time Travel and Time-Dependent Tests",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-test-jobs-console",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Testing Jobs, Queues and Console Commands",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-test-browser",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Browser Testing: Dusk and Pest Browser Tests",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-test-speed",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "Coverage, Parallel Testing and Suite Speed",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-test-what-to-test",
+            "moduleId": "laravel-testing",
+            "trackId": "php",
+            "title": "What's Actually Worth Testing",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "laravel-ecosystem",
         "trackId": "php",
         "name": "The Laravel Ecosystem",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The first-party packages that sit around the framework — and, more importantly, when each one is the right call. Livewire or Inertia, Telescope or Pulse, Horizon, Octane, Scout, the AI SDK, Cashier, Reverb, Pint and Sail, judged on what they cost as well as on what they do.",
+        "refs": [
+          {
+            "label": "Laravel: Starter Kits",
+            "url": "https://laravel.com/framework/docs/13.x/starter-kits",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel: Release Notes",
+            "url": "https://laravel.com/framework/docs/13.x/releases",
+            "kind": "docs"
+          },
+          {
+            "label": "Livewire: Quickstart",
+            "url": "https://livewire.laravel.com/docs/4.x/quickstart",
+            "kind": "docs"
+          },
+          {
+            "label": "Inertia: Who Is Inertia.js For?",
+            "url": "https://inertiajs.com/docs/v3/core-concepts/who-is-it-for",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-eco-starter-kits",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Starter Kits: What Laravel Scaffolds Now",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eco-vite",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Laravel Vite and the Asset Pipeline",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eco-livewire",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Livewire and the Server-Driven UI",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-eco-inertia",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Inertia, and Choosing Your Frontend",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-eco-telescope",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Telescope: Seeing Inside a Request",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eco-pulse",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Pulse: Production Health at a Glance",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eco-horizon",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Horizon: Redis Queues You Can See",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-eco-octane",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Octane and the Long-Lived Worker",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-eco-scout",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Scout: Search Without Running a Search Cluster",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eco-ai-sdk",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "The Laravel AI SDK",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-eco-reverb",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Reverb and Broadcasting",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-eco-cashier-socialite",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Cashier and Socialite: Wrapping Someone Else's API",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-eco-pint-sail",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Pint and Sail: the Local Toolchain",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-eco-choosing",
+            "moduleId": "laravel-ecosystem",
+            "trackId": "php",
+            "title": "Which of These Do You Actually Need",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "laravel-deploy",
         "trackId": "php",
         "name": "Deploying Laravel",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Getting a Laravel application into production and keeping it there: the server stack and the document root, the build step, the caches that make it fast and the one that makes it lie to you, migrations, workers, the scheduler, observability, atomic releases and rollback.",
+        "refs": [
+          {
+            "label": "Laravel: Deployment",
+            "url": "https://laravel.com/framework/docs/13.x/deployment",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel: Configuration",
+            "url": "https://laravel.com/framework/docs/13.x/configuration",
+            "kind": "docs"
+          },
+          {
+            "label": "Laravel: Artisan Console",
+            "url": "https://laravel.com/framework/docs/13.x/artisan",
+            "kind": "docs"
+          },
+          {
+            "label": "The Twelve-Factor App: Config",
+            "url": "https://12factor.net/config",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lv-deploy-server-stack",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "The Production Server Stack and the Document Root",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-deploy-composer-production",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Composer in Production",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "lv-deploy-optimize-caches",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "artisan optimize: the Config, Route, View and Event Caches",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-deploy-env-config-cache",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Environment Variables and Why env() Returns Null in Production",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-deploy-storage-permissions",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Storage, the Public Disk and File Permissions",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "lv-deploy-migrations",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Running Migrations on Deploy",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-deploy-queue-workers",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Queue Workers Across a Deploy",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-deploy-scheduler-cron",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "The Scheduler as a Single Cron Entry",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-deploy-cache-redis",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Production Caching: the Application Cache and Redis",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-deploy-logging-monitoring",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Logging, Health Checks and Monitoring",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lv-deploy-zero-downtime",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Zero-Downtime Deploys, Maintenance Mode and Rollback",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lv-deploy-docker",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Containerising Laravel",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lv-deploy-managed-platforms",
+            "moduleId": "laravel-deploy",
+            "trackId": "php",
+            "title": "Forge, Vapor and Cloud: When Managed Wins",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
       },
       {
         "id": "php-wordpress",
         "trackId": "php",
         "name": "WordPress Development",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "WordPress as a professional PHP developer meets it in agency work: how it boots, why the hook system looks the way it does, what its schema costs you, block themes alongside the classic themes you will inherit, and the security and performance habits that separate a maintainable build from a liability.",
+        "refs": [
+          {
+            "label": "WordPress: Developer Resources — Common APIs",
+            "url": "https://developer.wordpress.org/apis/",
+            "kind": "docs"
+          },
+          {
+            "label": "WordPress: Block Editor Handbook",
+            "url": "https://developer.wordpress.org/block-editor/getting-started/",
+            "kind": "docs"
+          },
+          {
+            "label": "10up: Engineering Best Practices",
+            "url": "https://10up.github.io/Engineering-Best-Practices/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "wp-bootstrap-template-hierarchy",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "How WordPress Boots and the Template Hierarchy",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "wp-hooks",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Actions, Filters and the Hook System",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "wp-loop-wp-query",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "The Loop, WP_Query and What Queries Cost",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "wp-content-model",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Custom Post Types, Taxonomies and Post Meta",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "wp-block-themes",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Block Themes, theme.json and the Classic Themes You Will Inherit",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "wp-blocks",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Building a Block for the Block Editor",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "wp-plugins",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Plugins, mu-plugins and Where Code Belongs",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "wp-enqueue",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Enqueuing Scripts and Styles Properly",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "wp-wpdb",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "The Database Schema and $wpdb",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "wp-rest-headless",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "The REST API and Headless WordPress",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "wp-security",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Nonces, Capabilities, Sanitising and Escaping",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "wp-caching-performance",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "Options, Transients and the Caching Layers",
+            "level": "expert",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "wp-woocommerce",
+            "moduleId": "php-wordpress",
+            "trackId": "php",
+            "title": "WooCommerce at a Glance",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
       }
     ]
   },
@@ -4934,57 +6722,1296 @@ export const manifest: TrackMeta[] = [
         "id": "mobile-foundations",
         "trackId": "mobile",
         "name": "Mobile Foundations",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The model every mobile engineer needs before picking a framework: how shipping to a store differs from shipping to a URL, what the two platforms actually guarantee, and how lifecycle, permissions, connectivity and review gates shape the architecture. Written for engineers who know the web and have never shipped an app.",
+        "refs": [
+          {
+            "label": "Android Developers: Application fundamentals",
+            "url": "https://developer.android.com/guide/components/fundamentals",
+            "kind": "docs"
+          },
+          {
+            "label": "Apple HIG: Designing for iOS",
+            "url": "https://developer.apple.com/design/human-interface-guidelines/designing-for-ios",
+            "kind": "docs"
+          },
+          {
+            "label": "Apple: App Store Review Guidelines",
+            "url": "https://developer.apple.com/app-store/review/guidelines/",
+            "kind": "docs"
+          },
+          {
+            "label": "Google Play: Developer Policy Center",
+            "url": "https://play.google/developer-content-policy/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "mob-not-the-web",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Why Mobile Is Not the Web",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-platform-models",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "iOS and Android: Two Different Contracts",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-app-lifecycle",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "The App Lifecycle: Foreground, Background, Suspended, Killed",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-native-vs-cross-platform",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Native vs Cross-Platform vs Web",
+            "level": "expert",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-navigation-patterns",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Navigation Patterns: Stacks, Tabs and Modals",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-touch-and-screen",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Touch, Gestures and the Shape of the Screen",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-permissions",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Permissions and the Runtime Permission Flow",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-offline-storage",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Offline-First and Local Storage",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-networking",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Networking on a Flaky Connection",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-push-notifications",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Push Notifications on Both Platforms",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-store-review",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "App Store Submission and Review",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-performance-constraints",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "App Size, Cold Start and Battery",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-accessibility",
+            "moduleId": "mobile-foundations",
+            "trackId": "mobile",
+            "title": "Accessibility on Mobile",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
       },
       {
         "id": "mobile-react-native",
         "trackId": "mobile",
         "name": "React Native & Expo",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "React Native for engineers who already write React on the web. The React part transfers; the host platform does not. This camp is about what is genuinely different on native — the New Architecture that replaced the bridge, Expo's build and release path, native layout and lists, platform-specific code, animations on the UI thread, and shipping through EAS. Written against React Native 0.87 and Expo SDK 57 (which ships React Native 0.86), on which the legacy bridge no longer exists.",
+        "refs": [
+          {
+            "label": "React Native: Documentation",
+            "url": "https://reactnative.dev/docs/environment-setup",
+            "kind": "docs"
+          },
+          {
+            "label": "React Native: About the New Architecture",
+            "url": "https://reactnative.dev/architecture/landing-page",
+            "kind": "docs"
+          },
+          {
+            "label": "Expo: Documentation",
+            "url": "https://docs.expo.dev/",
+            "kind": "docs"
+          },
+          {
+            "label": "React Native blog: 0.87 release notes",
+            "url": "https://reactnative.dev/blog/2026/08/11/react-native-0.87",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "rn-vs-react-dom",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "React Native vs React on the Web",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "rn-new-architecture",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "The New Architecture: JSI, Fabric & TurboModules",
+            "level": "expert",
+            "estMinutes": 80,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "rn-expo-vs-bare",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Expo vs Bare React Native",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "rn-styling-flexbox",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "StyleSheet & Flexbox on Native",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "rn-navigation",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Navigation: Expo Router & React Navigation",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "rn-lists-performance",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Lists at Scale: FlatList & FlashList",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 7
+          },
+          {
+            "id": "rn-images-assets",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Images, Assets & Caching",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "rn-platform-specific-code",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Platform-Specific Code",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "code",
+            "challengeSize": 8
+          },
+          {
+            "id": "rn-native-modules",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Native Modules & the Expo Modules API",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "rn-animations-gestures",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Reanimated, Gestures & the UI Thread",
+            "level": "advanced",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "rn-forms-keyboard",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Text Input, Forms & Keyboard Handling",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "rn-networking-offline",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Networking & Offline-First Data",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 8
+          },
+          {
+            "id": "rn-debugging-devtools",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Debugging with React Native DevTools",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "rn-eas-build-submit",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "EAS Build & EAS Submit",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "rn-ota-updates",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Over-the-Air Updates with EAS Update",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "code",
+            "challengeSize": 8
+          },
+          {
+            "id": "rn-performance-profiling",
+            "moduleId": "mobile-react-native",
+            "trackId": "mobile",
+            "title": "Performance Profiling",
+            "level": "expert",
+            "estMinutes": 65,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "mobile-dart",
         "trackId": "mobile",
         "name": "The Dart Language",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Dart on its own terms, written for an engineer who already thinks in JavaScript or TypeScript and is about to learn Flutter. The value is in the mismatches: sound null safety is not `strictNullChecks`, `const` does not mean \"cannot reassign\", generics are reified rather than erased, and isolates are not workers with shared memory.",
+        "refs": [
+          {
+            "label": "dart.dev: Language documentation",
+            "url": "https://dart.dev/language",
+            "kind": "docs"
+          },
+          {
+            "label": "dart.dev: Language evolution (what changed in each release)",
+            "url": "https://dart.dev/resources/language/evolution",
+            "kind": "docs"
+          },
+          {
+            "label": "dart.dev: Effective Dart — Usage",
+            "url": "https://dart.dev/effective-dart/usage",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "dart-why-dart",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Why Flutter Runs on Dart: JIT, AOT and Hot Reload",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "dart-variables-types",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Variables, Type Inference, `final` and `const`",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "dart-null-safety",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Sound Null Safety",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "dart-collections",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Lists, Sets, Maps and Collection Literals",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "dart-functions-parameters",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Functions, Named and Optional Parameters",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "dart-classes-constructors",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Classes, Constructors and Initialiser Lists",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "dart-const-constructors",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "`const` Constructors and Canonicalisation",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "dart-inheritance-mixins",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "`extends`, `implements`, `with` and Class Modifiers",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "dart-extension-methods",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Extension Methods",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "dart-generics",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Generics, Bounds and Variance",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "dart-records-patterns",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Records, Patterns and Exhaustive `switch`",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "dart-errors-exceptions",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Errors, Exceptions and `assert`",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "dart-async",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Futures, Streams and the Event Loop",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "dart-isolates",
+            "moduleId": "mobile-dart",
+            "trackId": "mobile",
+            "title": "Isolates and Shared-Nothing Concurrency",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "mobile-flutter",
         "trackId": "mobile",
         "name": "Flutter UI & State",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Flutter from the rendering model up: why it draws its own pixels, the three trees that make a rebuild cheap, the constraint algorithm that decides every size on screen, and the state-management decision nobody makes well the first time. Written for engineers who already know React — the bridges are real, and so is the place each one breaks.",
+        "refs": [
+          {
+            "label": "Flutter: Architectural overview",
+            "url": "https://docs.flutter.dev/resources/architectural-overview",
+            "kind": "docs"
+          },
+          {
+            "label": "Flutter: Understanding constraints",
+            "url": "https://docs.flutter.dev/ui/layout/constraints",
+            "kind": "docs"
+          },
+          {
+            "label": "Flutter API: BuildContext",
+            "url": "https://api.flutter.dev/flutter/widgets/BuildContext-class.html",
+            "kind": "docs"
+          },
+          {
+            "label": "Flutter: Inside Flutter",
+            "url": "https://docs.flutter.dev/resources/inside-flutter",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "flutter-rendering-model",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "How Flutter Renders: Engine, Impeller and One Canvas",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-widgets-and-setstate",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Everything Is a Widget: Stateless, Stateful and setState",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-three-trees",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Widget, Element and RenderObject: Why a Rebuild Is Cheap",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-build-context",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "BuildContext, of(context) and InheritedWidget",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-constraints",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Constraints Go Down, Sizes Go Up, Parent Sets Position",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-layout-widgets",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Row, Column, Stack, Expanded and Flexible",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-keys",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Keys, and When You Actually Need One",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-state-management",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Choosing a State Solution: setState, Provider, Riverpod, BLoC",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-navigation",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Navigation, Declarative Routing and go_router",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-async-ui",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "FutureBuilder, StreamBuilder and Async UI",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-forms",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Forms, Controllers and Validation",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-theming",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Theming, Material 3 and Cupertino",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-animations",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Animations: Implicit, Explicit and AnimatedBuilder",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-platform-channels",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Platform Channels and Native Interop",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-testing",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Widget Tests and Golden Tests",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "flutter-devtools-performance",
+            "moduleId": "mobile-flutter",
+            "trackId": "mobile",
+            "title": "Profiling Performance with DevTools",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "mobile-kotlin-compose",
         "trackId": "mobile",
         "name": "Kotlin & Jetpack Compose",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Kotlin the language and Compose the UI toolkit, for an engineer who already knows a modern language and React. Null safety, lambdas, coroutines and Flow first; then the declarative model, state, recomposition and the Modifier chain — with the places the React analogy stops holding.",
+        "refs": [
+          {
+            "label": "Kotlin docs: Basic syntax overview",
+            "url": "https://kotlinlang.org/docs/basic-syntax.html",
+            "kind": "docs"
+          },
+          {
+            "label": "Android Developers: Jetpack Compose documentation",
+            "url": "https://developer.android.com/develop/ui/compose/documentation",
+            "kind": "docs"
+          },
+          {
+            "label": "Android Developers: Android Basics with Compose",
+            "url": "https://developer.android.com/courses/android-basics-compose/course",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "kt-language-shape",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Kotlin's Shape: Values, Inference and Data Classes",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "kt-null-safety",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Null Safety",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-functions-extensions",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Functions, Named Arguments and Extension Functions",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "kt-lambdas-higher-order",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Lambdas, Higher-Order Functions and Trailing Lambdas",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-scope-functions",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Scope Functions: let, run, apply, also and with",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-sealed-when",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Sealed Classes and when Exhaustiveness",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-coroutines",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Coroutines: suspend, Scopes and Structured Concurrency",
+            "level": "advanced",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "kt-flow",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Flow, StateFlow and SharedFlow",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "kt-delegation",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Delegation and the by Keyword",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-compose-declarative",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "The Declarative Model and Composable Functions",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-compose-state",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "State: remember, mutableStateOf and Hoisting",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "kt-compose-recomposition",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Recomposition, Skipping and Stability",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "kt-compose-effects",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Side Effects: LaunchedEffect, DisposableEffect and rememberCoroutineScope",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "kt-compose-layout",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Row, Column, Box and the Modifier Chain",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-compose-lists",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Lazy Lists, Keys and List Performance",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "kt-compose-theming",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Theming with Material 3",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "kt-compose-navigation-interop",
+            "moduleId": "mobile-kotlin-compose",
+            "trackId": "mobile",
+            "title": "Navigation and Interop with the View System",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "mobile-swift-swiftui",
         "trackId": "mobile",
         "name": "Swift & SwiftUI",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Swift the language and SwiftUI the framework, written for an engineer who already knows another modern language. Value semantics, ARC, protocols, closures and Swift 6's data-race safety; then SwiftUI's declarative model, state, identity, layout and UIKit interop.",
+        "refs": [
+          {
+            "label": "The Swift Programming Language",
+            "url": "https://docs.swift.org/latest/documentation/the-swift-programming-language/",
+            "kind": "docs"
+          },
+          {
+            "label": "Apple: SwiftUI documentation",
+            "url": "https://developer.apple.com/documentation/swiftui",
+            "kind": "docs"
+          },
+          {
+            "label": "Swift.org: Swift 6 migration guide",
+            "url": "https://www.swift.org/migration/documentation/migrationguide/",
+            "kind": "docs"
+          },
+          {
+            "label": "Hacking with Swift: SwiftUI by Example",
+            "url": "https://www.hackingwithswift.com/quick-start/swiftui",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "swift-tour-arc",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Swift's Shape and Automatic Reference Counting",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-optionals",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Optionals, `if let` and `guard let`",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-structs-classes",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Structs vs Classes: Value and Reference Semantics",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-enums-patterns",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Enums, Associated Values and Pattern Matching",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-errors",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Error Handling: `throws`, `try` and Typed Throws",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-protocols",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Protocols and Protocol-Oriented Design",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-generics-opaque",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Generics, Constraints and Opaque Types (`some`)",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-closures-capture",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Closures, Escaping Closures and Capture Lists",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-property-wrappers",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Property Wrappers",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-async-await",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "`async`/`await` and Structured Concurrency",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-actors-data-race",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Actors and Swift 6 Data-Race Safety",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-ui-views",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Views as Values: the Declarative Model and View Identity",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-ui-state",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "State: `@State`, `@Binding`, `@Observable` and `@Environment`",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-ui-layout",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Layout: Stacks, Frames, GeometryReader and Modifier Order",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-ui-lists-navigation",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Lists and `NavigationStack`",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-ui-animation",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "Animation and Transitions",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "swift-ui-uikit-interop",
+            "moduleId": "mobile-swift-swiftui",
+            "trackId": "mobile",
+            "title": "UIKit Interop with `UIViewRepresentable`",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "mobile-cross-cutting",
         "trackId": "mobile",
         "name": "Mobile Cross-Cutting Concerns",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Everything a mobile team needs that is not the UI framework: layering, persistence, sync, transport security, secrets, auth, testing, signing, rollout, observability and privacy. Framework-agnostic on purpose — the decisions here outlive whichever of Compose, SwiftUI, Flutter or React Native you picked.",
+        "refs": [
+          {
+            "label": "Android Developers: Guide to app architecture",
+            "url": "https://developer.android.com/topic/architecture",
+            "kind": "docs"
+          },
+          {
+            "label": "OWASP MASVS: Storage",
+            "url": "https://mas.owasp.org/MASVS/05-MASVS-STORAGE/",
+            "kind": "docs"
+          },
+          {
+            "label": "Apple: User Privacy and Data Use",
+            "url": "https://developer.apple.com/app-store/user-privacy-and-data-use/",
+            "kind": "docs"
+          },
+          {
+            "label": "Play Console Help: Release app updates with staged rollouts",
+            "url": "https://support.google.com/googleplay/android-developer/answer/6346149",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "mob-x-architecture",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Layering a Mobile App: Presentation, Domain, Data",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-dependency-injection",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Dependency Injection and the Composition Root",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-local-persistence",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Choosing Local Persistence: Key-Value, SQLite, Object Store",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-offline-sync",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Offline Sync and Conflict Resolution",
+            "level": "expert",
+            "estMinutes": 90,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 9
+          },
+          {
+            "id": "mob-x-networking-layer",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "The Networking Layer: Retries, Timeouts and Pinning",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-secure-storage",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Secure Storage: Keychain, Keystore and the Rooted Device",
+            "level": "expert",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-auth",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Authentication: Tokens, Biometrics and the System Browser",
+            "level": "advanced",
+            "estMinutes": 70,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-testing",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Testing Strategy: Unit, UI and the Device Farm",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-cicd",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "CI/CD for Mobile: Signing, Profiles and Keystores",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-release-management",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Staged Rollouts, Feature Flags and Kill Switches",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 8
+          },
+          {
+            "id": "mob-x-crash-observability",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Crash Reporting, Symbolication and Mobile Observability",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-analytics-privacy",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Analytics, Consent and What You May Not Collect",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-app-size-startup",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "App Size and Startup as Engineering Budgets",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "mob-x-deep-links",
+            "moduleId": "mobile-cross-cutting",
+            "trackId": "mobile",
+            "title": "Deep Links, Universal Links and App Links",
+            "level": "advanced",
+            "estMinutes": 75,
+            "challengeType": "code",
+            "challengeSize": 12
+          }
+        ]
       }
     ]
   },
@@ -4998,57 +8025,1303 @@ export const manifest: TrackMeta[] = [
         "id": "devops-linux-shell",
         "trackId": "devops",
         "name": "Linux & the Shell",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The Linux an application engineer needs when something is broken on a server at 2am: where files live, who is allowed to touch them, what a process is doing, where the logs went, and why the disk is full of nothing.",
+        "refs": [
+          {
+            "label": "man7.org: Linux man-pages online",
+            "url": "https://man7.org/linux/man-pages/man7/man-pages.7.html",
+            "kind": "docs"
+          },
+          {
+            "label": "GNU Bash Reference Manual",
+            "url": "https://www.gnu.org/software/bash/manual/bash.html",
+            "kind": "docs"
+          },
+          {
+            "label": "Greg's Wiki: BashPitfalls",
+            "url": "https://mywiki.wooledge.org/BashPitfalls",
+            "kind": "article"
+          },
+          {
+            "label": "The Art of Command Line",
+            "url": "https://github.com/jlevy/the-art-of-command-line",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "lin-filesystem-hierarchy",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "The Filesystem Hierarchy and Where Software Lives",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lin-permissions",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Permissions, Ownership and the Special Bits",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lin-users-groups-sudo",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Users, Groups and sudo",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lin-processes-signals",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Processes, Signals and the Process Tree",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lin-streams-redirection",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Standard Streams, Pipes and Redirection",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lin-text-toolkit",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "The Text Toolkit: grep, sed, awk, cut, sort, uniq",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lin-find-xargs",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Finding Things: find, locate and xargs",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lin-shell-scripting",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Shell Scripting: Variables, Quoting and Control Flow",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lin-strict-mode",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Exit Codes, set -euo pipefail and Failing Loudly",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lin-systemd-units",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "systemd: Units, Services and Timers",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lin-logs-journalctl",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Logs: journalctl, /var/log and Rotation",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "lin-disk-inodes",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Disk, Inodes and the Disk That Is Full of Nothing",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lin-memory-oom",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Memory, Load Average and the OOM Killer",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "lin-network-ssh",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "The Network from the Shell: ss, dig, curl and SSH",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "lin-debug-wont-start",
+            "moduleId": "devops-linux-shell",
+            "trackId": "devops",
+            "title": "Debugging a Process That Will Not Start",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "devops-networking-tls",
         "trackId": "devops",
         "name": "Networking, DNS & TLS",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The network as an application engineer meets it at 2am: why a connection hangs instead of failing, what a TTL costs you during a cutover, why curl trusts the certificate and the browser doesn't, and what ten thousand sockets in TIME_WAIT are doing to your connection pool. Protocols and mechanisms, not vendor consoles.",
+        "refs": [
+          {
+            "label": "RFC 9293: Transmission Control Protocol",
+            "url": "https://datatracker.ietf.org/doc/html/rfc9293",
+            "kind": "spec"
+          },
+          {
+            "label": "RFC 1035: Domain Names — Implementation and Specification",
+            "url": "https://datatracker.ietf.org/doc/html/rfc1035",
+            "kind": "spec"
+          },
+          {
+            "label": "RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3",
+            "url": "https://datatracker.ietf.org/doc/html/rfc8446",
+            "kind": "spec"
+          },
+          {
+            "label": "High Performance Browser Networking: Building Blocks of TCP",
+            "url": "https://hpbn.co/building-blocks-of-tcp/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "net-layers-in-practice",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "The Layers You Actually Debug",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "net-ip-cidr",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "IP Addressing, Subnets and CIDR",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "net-ports-sockets",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "Ports, Sockets and Reading `ss`",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "net-tcp-connections",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "TCP: the Handshake, Connection States and TIME_WAIT",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "net-udp",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "UDP and When Losing Packets Is Fine",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "net-http-versions-quic",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "HTTP/1.1 vs HTTP/2 vs HTTP/3 and Head-of-Line Blocking",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "net-nat-private-ranges",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "NAT, Private Ranges and Why Your Container Can't Reach That",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "net-dns-resolution",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "DNS: the Resolution Path, Record Types and TTLs",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "net-dns-caching-dig",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "DNS Caching Layers and Reading `dig`",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "net-tls-handshake",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "TLS: the Handshake and the Chain of Trust",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "net-cert-lifecycle-acme",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "Certificate Lifecycle, ACME and Let's Encrypt",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "net-sni-mtls",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "SNI, Virtual Hosting and Mutual TLS",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "net-firewalls-drop-vs-reject",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "Firewalls, Security Groups and Dropped vs Refused",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "net-load-balancers-l4-l7",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "Load Balancers: L4 vs L7",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "net-debugging-toolkit",
+            "moduleId": "devops-networking-tls",
+            "trackId": "devops",
+            "title": "Debugging \"It Works Locally\" Systematically",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "devops-reverse-proxies",
         "trackId": "devops",
         "name": "Reverse Proxies",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The thing sitting in front of your application: what it does for you, and the handful of rules — location matching, the proxy_pass trailing slash, forwarded headers, buffering and timeouts — that decide whether it helps or silently breaks things. nginx and Caddy side by side, written for whoever inherits a config they did not author.",
+        "refs": [
+          {
+            "label": "nginx: Documentation index",
+            "url": "https://nginx.org/en/docs/",
+            "kind": "docs"
+          },
+          {
+            "label": "Caddy: Documentation",
+            "url": "https://caddyserver.com/docs/",
+            "kind": "docs"
+          },
+          {
+            "label": "nginx Admin's Handbook",
+            "url": "https://github.com/trimstray/nginx-admins-handbook",
+            "kind": "repo"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "proxy-what-and-why",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "What a Reverse Proxy Is For",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-nginx-config-structure",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "nginx Configuration Structure: Contexts and Inheritance",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-location-matching",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "How nginx Chooses a `location`",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "proxy-pass-uri-rewrite",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "`proxy_pass` and the Trailing-Slash Rule",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "proxy-forwarded-headers",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "Forwarded Headers and the Real Client IP",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-caddy-automatic-https",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "Caddy and Automatic HTTPS",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-tls-config",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "TLS Termination and Security Headers",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "proxy-buffering-timeouts",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "Buffering, Timeouts and Why Requests Die at 60 Seconds",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-websockets-sse",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "WebSockets and SSE Through a Proxy",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-static-compression-cache",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "Static Files, Compression and Cache Headers",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "proxy-rate-limiting",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "Rate Limiting and Connection Limits at the Edge",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-load-balancing",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "Load Balancing and Upstream Health",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-observability-logs",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "Access Logs and Debugging at the Edge",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "proxy-choosing",
+            "moduleId": "devops-reverse-proxies",
+            "trackId": "devops",
+            "title": "nginx vs Caddy vs Traefik vs a Cloud Load Balancer",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
       },
       {
         "id": "devops-aws-core",
         "trackId": "devops",
         "name": "AWS Core",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The AWS an application team actually uses: identity, networking, compute, storage, data and the bill. Written for the engineer who has just been handed an account and asked to deploy something — so the emphasis is on the traps, not the service catalogue.",
+        "refs": [
+          {
+            "label": "AWS Documentation",
+            "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/welcome.html",
+            "kind": "docs"
+          },
+          {
+            "label": "AWS: Shared Responsibility Model",
+            "url": "https://aws.amazon.com/compliance/shared-responsibility-model/",
+            "kind": "docs"
+          },
+          {
+            "label": "The Open Guide to AWS",
+            "url": "https://github.com/open-guides/og-aws",
+            "kind": "repo"
+          },
+          {
+            "label": "devops-exercises: AWS questions",
+            "url": "https://github.com/bregman-arie/devops-exercises/tree/master/topics/aws",
+            "kind": "interview-prep"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "aws-mental-model",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "Regions, Availability Zones and What Managed Buys You",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aws-iam-policies",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "IAM: Principals, Policies and Policy Evaluation",
+            "level": "expert",
+            "estMinutes": 70,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "aws-iam-roles",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "Roles, Trust Policies and IAM Identity Center",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aws-vpc-subnets",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "VPCs, Subnets and Route Tables",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "aws-security-groups-nacls",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "Security Groups vs Network ACLs",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aws-ec2",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "EC2: AMIs, Instance Families, IMDSv2 and EBS",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aws-s3",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "S3: Buckets, Storage Classes and Lifecycle",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aws-s3-access",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "S3 Access: Bucket Policies, Block Public Access and Presigned URLs",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "aws-rds-aurora",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "RDS, Aurora and ElastiCache",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "aws-lambda",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "Lambda: Cold Starts, Concurrency and the VPC Trap",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "aws-ecs-fargate",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "ECS and Fargate: the Container Path",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aws-front-door",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "The Front Door: Route 53, CloudFront, ALB and API Gateway",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "aws-cloudwatch",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "CloudWatch: Logs, Metrics and Alarms",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "aws-sqs-sns",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "SQS and SNS: Decoupling with Queues and Topics",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "aws-secrets",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "Secrets Manager and Parameter Store",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "aws-cost",
+            "moduleId": "devops-aws-core",
+            "trackId": "devops",
+            "title": "Cost: Where the Surprise Bill Comes From",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "devops-terraform",
         "trackId": "devops",
         "name": "Infrastructure as Code",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Terraform as the vehicle for infrastructure as code, written for the engineer who inherits someone else's configuration: reading a plan you did not write, working out why a change wants to destroy a database, and repairing state that stopped matching reality.",
+        "refs": [
+          {
+            "label": "Terraform: Configuration Language",
+            "url": "https://developer.hashicorp.com/terraform/language",
+            "kind": "docs"
+          },
+          {
+            "label": "Terraform: What is Terraform",
+            "url": "https://developer.hashicorp.com/terraform/intro",
+            "kind": "docs"
+          },
+          {
+            "label": "Terraform Best Practices",
+            "url": "https://www.terraform-best-practices.com/",
+            "kind": "article"
+          },
+          {
+            "label": "OpenTofu: Getting started",
+            "url": "https://opentofu.org/docs/intro/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "tf-why-iac",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Why Infrastructure as Code, and What Declarative Costs You",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "tf-hcl-language",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "HCL: Resources, Variables, Outputs, Locals and Expressions",
+            "level": "intermediate",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tf-providers-versions",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Providers, Version Constraints and the Lock File",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "tf-state",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "State: What It Is and Why It Is the Whole Ballgame",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tf-remote-state-locking",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Remote State, Locking, and a Lost State File",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tf-plan-apply",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "The Plan/Apply Cycle: Reading a Plan Properly",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tf-dependencies",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Dependencies: Implicit, Explicit and the Graph",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tf-modules",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Modules: Writing, Composing and Versioning",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tf-count-for-each",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "count vs for_each and the Index-Shift Trap",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tf-data-sources-provisioners",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Data Sources, and Provisioners as a Last Resort",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tf-environments",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Environments: Workspaces, Directories and Terragrunt",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tf-import-drift",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Importing Existing Infrastructure and Handling Drift",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tf-secrets",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Secrets, and Why State Holds Them in Plaintext",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "tf-testing-policy",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Testing and Policy as Code",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "tf-cicd",
+            "moduleId": "devops-terraform",
+            "trackId": "devops",
+            "title": "Terraform in CI/CD: Plan on PR, Apply on Merge",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "devops-kubernetes",
         "trackId": "devops",
         "name": "Kubernetes in Depth",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Kubernetes for the engineer who carries the pager for it. Starts where the Backend track's Kubernetes introduction stops: the reconciliation loop everything else follows from, then workloads, traffic, config, storage, scheduling, access control and autoscaling — each one framed around the way it actually fails in production. Written against Kubernetes 1.37 (containerd runtime, Gateway API 1.6).",
+        "refs": [
+          {
+            "label": "Kubernetes: Concepts",
+            "url": "https://kubernetes.io/docs/concepts/",
+            "kind": "docs"
+          },
+          {
+            "label": "Kubernetes: Cluster Architecture",
+            "url": "https://kubernetes.io/docs/concepts/architecture/",
+            "kind": "docs"
+          },
+          {
+            "label": "Kubernetes: API Reference",
+            "url": "https://kubernetes.io/docs/reference/kubernetes-api/",
+            "kind": "docs"
+          },
+          {
+            "label": "Kubernetes: kubectl Quick Reference",
+            "url": "https://kubernetes.io/docs/reference/kubectl/quick-reference/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "k8s-control-plane",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "The Control Plane & the Reconciliation Loop",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "k8s-pods",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Pods, and Why You Rarely Create One",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-deployments-rollouts",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Deployments, ReplicaSets & Rollout Strategy",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "k8s-services",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Services and the Four Types",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "k8s-ingress-gateway",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Ingress and the Gateway API",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-config-secrets",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "ConfigMaps and Secrets",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-resources-qos",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Requests, Limits & QoS Classes",
+            "level": "expert",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "k8s-probes",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Liveness, Readiness & Startup Probes",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "k8s-statefulsets-storage",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "StatefulSets, PersistentVolumes & Storage Classes",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-daemonsets-jobs",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "DaemonSets, Jobs & CronJobs",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-namespaces-labels",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Namespaces, Labels & Selectors",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-rbac",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "RBAC & Service Accounts",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "k8s-scheduling",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "The Scheduler: Taints, Tolerations & Affinity",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "k8s-autoscaling",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Autoscaling: HPA, VPA & the Cluster Autoscaler",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-helm-kustomize",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Helm and Kustomize",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-network-policies",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Network Policies",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "k8s-debugging",
+            "moduleId": "devops-kubernetes",
+            "trackId": "devops",
+            "title": "Debugging a Failing Pod Systematically",
+            "level": "expert",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          }
+        ]
       },
       {
         "id": "devops-observability",
         "trackId": "devops",
         "name": "Observability",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "Knowing what your system is doing, and finding out why it broke. Logs, metrics and traces; Prometheus, Grafana and OpenTelemetry; and the judgement that turns all of it into SLOs, alerts worth waking someone for, and incidents you actually learn from.",
+        "refs": [
+          {
+            "label": "Google SRE Book",
+            "url": "https://sre.google/sre-book/table-of-contents/",
+            "kind": "docs"
+          },
+          {
+            "label": "Google SRE Workbook: Alerting on SLOs",
+            "url": "https://sre.google/workbook/alerting-on-slos/",
+            "kind": "docs"
+          },
+          {
+            "label": "Prometheus: Documentation",
+            "url": "https://prometheus.io/docs/introduction/overview/",
+            "kind": "docs"
+          },
+          {
+            "label": "OpenTelemetry: Documentation",
+            "url": "https://opentelemetry.io/docs/",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "obs-monitoring-vs-observability",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Monitoring vs Observability",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-three-signals",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "The Three Signals: Logs, Metrics and Traces",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-structured-logging",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Structured Logging, Levels and Correlation IDs",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-log-aggregation",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Log Aggregation and the Cost of Cardinality",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-metrics-and-percentiles",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Counters, Gauges, Histograms — and Why Averages Lie",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-prometheus",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Prometheus: the Pull Model and the Data Model",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-promql-rules",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "PromQL, Recording Rules and Alerting Rules",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-grafana-dashboards",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Grafana and Dashboards Worth Having",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "obs-opentelemetry",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "OpenTelemetry: SDK, Collector and Semantic Conventions",
+            "level": "advanced",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-distributed-tracing",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Distributed Tracing: Spans, Context Propagation and Sampling",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "code",
+            "challengeSize": 12
+          },
+          {
+            "id": "obs-slo-error-budgets",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "SLIs, SLOs and Error Budgets",
+            "level": "expert",
+            "estMinutes": 65,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "obs-alerting",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Alerting That Doesn't Burn People Out",
+            "level": "advanced",
+            "estMinutes": 60,
+            "challengeType": "code",
+            "challengeSize": 7
+          },
+          {
+            "id": "obs-oncall-incident-response",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "On-Call, Runbooks and Incident Response",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-postmortems",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Postmortems and What Blameless Actually Means",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "obs-profiling",
+            "moduleId": "devops-observability",
+            "trackId": "devops",
+            "title": "Profiling in Production",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       }
     ]
   }
