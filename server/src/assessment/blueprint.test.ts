@@ -92,12 +92,15 @@ describe("issuing", () => {
 
 describe("generation, for each sample profile", () => {
   for (const [index, sample] of SAMPLE_LEARNERS.entries()) {
-    test(`${sample.displayName} gets a ready assessment meeting the P4 bar`, async () => {
+    test(`${sample.displayName} gets an assessment meeting the P4 bar, held for approval`, async () => {
       const userId = await onboardSample(index);
       const assessmentId = await issueAndGenerate(userId);
 
       const row = ctx.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get()!;
-      expect(row.status, `status was ${row.status}: ${row.terminatedReason ?? ""}`).toBe("ready");
+      // Generation stops at the gate: `ready` is now something a person (or the deadline) grants.
+      expect(row.status, `status was ${row.status}: ${row.terminatedReason ?? ""}`).toBe("awaiting_approval");
+      expect(row.awaitingApprovalSince).toBeGreaterThan(0);
+      expect(row.approvedAt).toBeNull();
 
       const blueprint = row.blueprint as { areas: { name: string; moduleIds: string[] }[] };
       // Brief §17 P4: at least 25 validated items across at least 5 areas.
@@ -309,7 +312,7 @@ describe("the admin pool preview", () => {
     expect(res.statusCode).toBe(200);
 
     const body = res.json();
-    expect(body.assessment.status).toBe("ready");
+    expect(body.assessment.status).toBe("awaiting_approval");
     expect(body.pool.length).toBeGreaterThan(body.assessment.itemCounts.pool);
 
     const kept = body.pool.find((i: { status: string }) => i.status === "pool");

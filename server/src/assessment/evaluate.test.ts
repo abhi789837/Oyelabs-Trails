@@ -4,7 +4,15 @@ import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import type { EvaluationResult, ItemKey } from "../../../shared/assessment";
 import { schema } from "../db";
 import { SAMPLE_LEARNERS } from "../dev/sampleProfiles";
-import { activeLearner, adminSession, as, createTestApp, type Session, type TestContext } from "../test/harness";
+import {
+  activeLearner,
+  adminSession,
+  approveAssessment,
+  as,
+  createTestApp,
+  type Session,
+  type TestContext,
+} from "../test/harness";
 import { fallbackPlan, validatePlan } from "./planValidation";
 
 let ctx: TestContext;
@@ -31,6 +39,8 @@ beforeEach(async () => {
   });
   assessmentId = issued.json().assessmentId;
   await ctx.drainJobs();
+  // Generation stops at the approval gate; these tests are about what happens after it.
+  await approveAssessment(ctx, admin, assessmentId);
 });
 
 afterEach(async () => {

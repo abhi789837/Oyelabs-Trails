@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { Check, ChevronDown, LoaderCircle, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, ChevronDown, LoaderCircle, Terminal, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import type { AssessmentSummary, ItemKey, ItemPayload } from "@shared/assessment";
+import { AUTO_APPROVE_AFTER_MS, type AssessmentSummary, type ItemKey, type ItemPayload } from "@shared/assessment";
 import type { ItemKind } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
@@ -11,6 +11,8 @@ import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { ApprovalBanner, approvalNote } from "../ApprovalGate";
+import { GenerationLog } from "../GenerationLog";
 import { AdaptivePath, type AdaptiveStep } from "./AdaptivePath";
 
 /** One served item, as `/api/admin/assessments/:id/answers` returns it. */
@@ -41,7 +43,8 @@ interface AnswersResponse {
   selector: SelectorState | null;
 }
 
-const LIVE_STATUSES = ["generating", "ready", "in_progress", "submitted", "evaluating"];
+/** Statuses that mean an attempt is still in flight, so re-issuing would double-book the learner. */
+const LIVE_STATUSES = ["generating", "awaiting_approval", "ready", "in_progress", "submitted", "evaluating"];
 
 /**
  * The assessment tab (brief §13): every attempt, and for each one every item the learner was
@@ -53,16 +56,30 @@ const LIVE_STATUSES = ["generating", "ready", "in_progress", "submitted", "evalu
 export function AssessmentTab({
   userId,
   assessments,
-  onIssued,
+  onChanged,
 }: {
   userId: string;
   assessments: AssessmentSummary[];
-  onIssued: () => Promise<void>;
+  onChanged: () => Promise<void>;
 }) {
   const [issuing, setIssuing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
+  const [logId, setLogId] = useState<string | null>(null);
+  const autoOpened = useRef(new Set<string>());
+
+  /**
+   * A run that is generating right now is the one log worth opening by itself: the admin clicked
+   * "Issue assessment" seconds ago and would otherwise watch a status badge for several minutes.
+   * Remembered per assessment, so closing it does not immediately reopen it on the next refresh.
+   */
+  const generatingId = assessments.find((a) => a.status === "generating")?.id ?? null;
+  useEffect(() => {
+    if (!generatingId || autoOpened.current.has(generatingId)) return;
+    autoOpened.current.add(generatingId);
+    setLogId(generatingId);
+  }, [generatingId]);
 
   const handleIssue = async () => {
     setIssuing(true);
@@ -70,8 +87,12 @@ export function AssessmentTab({
     setNotice(null);
     try {
       await api.post(`/api/admin/users/${userId}/assessments`, {});
-      await onIssued();
-      setNotice("Assessment queued. Generation runs in the background and usually takes a few minutes.");
+      await onChanged();
+      setNotice(
+        `Assessment queued. Generation runs in the background and usually takes a few minutes, then it waits ${Math.round(
+          AUTO_APPROVE_AFTER_MS / 60_000,
+        )} minutes for your approval before going out on its own.`,
+      );
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "Could not issue an assessment.");
     } finally {
@@ -124,11 +145,20 @@ export function AssessmentTab({
               (assessment.itemCounts.answered ?? 0) +
               (assessment.itemCounts.skipped ?? 0);
             const open = openId === assessment.id;
+            const logOpen = logId === assessment.id;
 
             return (
               <li key={assessment.id} className="rounded-md border">
                 <div className="flex flex-wrap items-center gap-3 px-4 py-3">
-                  <Badge variant={assessment.status === "ready" ? "success" : "outline"}>
+                  <Badge
+                    variant={
+                      assessment.status === "ready"
+                        ? "success"
+                        : assessment.status === "awaiting_approval"
+                          ? "progress"
+                          : "outline"
+                    }
+                  >
                     {assessment.status.replace("_", " ")}
                   </Badge>
                   <span className="font-mono text-xs text-muted-foreground">
@@ -141,8 +171,28 @@ export function AssessmentTab({
                   {assessment.terminatedReason && (
                     <span className="w-full text-sm text-destructive">{assessment.terminatedReason}</span>
                   )}
+                  {approvalNote(assessment) && (
+                    <span
+                      className={cn(
+                        "w-full font-mono text-xs",
+                        assessment.approvedBy === null ? "text-trailmark-strong" : "text-muted-foreground",
+                      )}
+                    >
+                      {approvalNote(assessment)}
+                      {assessment.approvedAt !== null && ` · ${formatTimestamp(assessment.approvedAt)}`}
+                    </span>
+                  )}
 
                   <div className="ml-auto flex flex-wrap gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setLogId(logOpen ? null : assessment.id)}
+                      aria-expanded={logOpen}
+                    >
+                      <Terminal aria-hidden="true" />
+                      {logOpen ? "Hide log" : "Generation log"}
+                    </Button>
                     {generated + dropped > 0 && (
                       <Button asChild variant="ghost" size="sm">
                         <Link to={`/admin/assessments/${assessment.id}`}>View pool</Link>
@@ -160,7 +210,19 @@ export function AssessmentTab({
                       </Button>
                     )}
                   </div>
+
+                  <ApprovalBanner
+                    assessment={assessment}
+                    onApproved={onChanged}
+                    poolHref={`/admin/assessments/${assessment.id}`}
+                  />
                 </div>
+
+                {logOpen && (
+                  <div className="border-t px-4 py-5">
+                    <GenerationLog assessmentId={assessment.id} onFinished={() => void onChanged()} />
+                  </div>
+                )}
 
                 {open && (
                   <div className="border-t px-4 py-5">

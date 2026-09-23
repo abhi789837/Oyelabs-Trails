@@ -101,7 +101,10 @@ export default function PlanPage() {
   }
 
   // Still in the funnel: send them to the assessment rather than an empty plan.
-  if (assessment && ["ready", "in_progress", "generating", "submitted", "evaluating"].includes(assessment.status)) {
+  if (
+    assessment &&
+    ["ready", "in_progress", "generating", "awaiting_approval", "submitted", "evaluating"].includes(assessment.status)
+  ) {
     return (
       <EmptyState
         title={assessment.status === "ready" ? "Your placement assessment is ready" : "We're still working on your plan"}

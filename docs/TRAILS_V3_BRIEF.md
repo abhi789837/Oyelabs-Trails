@@ -186,10 +186,16 @@ ai_calls  (audit + attribution)
 
 assessments
   id, user_id, attempt_no, status
-    ('generating'|'ready'|'in_progress'|'submitted'|'evaluating'|'completed'|'terminated'|'failed'),
+    ('generating'|'awaiting_approval'|'ready'|'in_progress'|'submitted'|'evaluating'
+     |'completed'|'terminated'|'failed'),
   blueprint json, config json (time limit, warning limits, areas),
   started_at, deadline_at, submitted_at, terminated_reason, hard_warnings, soft_warnings,
-  consent_at, created_by, created_at
+  consent_at, created_by, created_at,
+  awaiting_approval_since, approved_at, approved_by
+  -- awaiting_approval was added after the original spec, at Abhishek's request: generation lands
+  -- there rather than in ready, the superadmin approves, and the sweeper releases it anyway five
+  -- minutes later. approved_by is null on an automatic release, which is how "nobody reviewed
+  -- this" stays distinguishable from "someone approved it".
 
 assessment_items
   id, assessment_id, area, difficulty (1..5), kind

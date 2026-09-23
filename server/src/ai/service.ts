@@ -9,6 +9,7 @@ import { ClaudeCliProvider } from "./adapters/claudeCli";
 import { CodexCliProvider } from "./adapters/codexCli";
 import { MockProvider } from "./adapters/mock";
 import { OpenAiApiProvider } from "./adapters/openaiApi";
+import { redact } from "./adapters/spawnJson";
 import { getSettings, revealSecret, type StoredCredential } from "./credentials";
 import { AiOutputError, AiProviderError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "./types";
 
@@ -109,6 +110,28 @@ export class AiService {
     }
   }
 
+  /**
+   * Scrubs a string of the active credential before it is stored or shown.
+   *
+   * This exists so the generation log has somewhere honest to send a provider error: an error can
+   * quote a command line, and a command line can carry the token. The plaintext is decrypted here
+   * and dropped on the next line, so no caller ever holds it — which is the whole point of putting
+   * the function here rather than handing the secret out. `redact` is the only scrubber in this
+   * codebase; nothing may hand-roll a second one.
+   */
+  redactSecrets(text: string): string {
+    let secrets: string[] = [];
+    try {
+      const activeId = getSettings(this.db).activeCredentialId;
+      const secret = activeId ? revealSecret(this.db, this.env, activeId) : null;
+      if (secret) secrets = [secret];
+    } catch {
+      // Falling through with no secret still strips anything API-key shaped, which is better than
+      // refusing to redact at all.
+    }
+    return redact(text, secrets);
+  }
+
   private activeProvider(): { provider: AiProvider; credentialId: string | null } {
     if (this.options.mock) return { provider: this.options.mock, credentialId: null };
 
@@ -184,7 +207,13 @@ export class AiService {
           });
 
           const retryable = error instanceof AiProviderError && error.retryable;
-          if (!retryable || attempt === maxAttempts) break;
+          const willRetry = retryable && attempt < maxAttempts;
+          try {
+            request.onAttemptFailed?.({ attempt, maxAttempts, message: errorMessage(error), willRetry });
+          } catch {
+            // A watcher is not allowed to change what the call does.
+          }
+          if (!willRetry) break;
 
           // Exponential backoff with full jitter, so two workers that fail together do not
           // retry together.

@@ -252,7 +252,7 @@ export default function AdminLearnerPage() {
               <ProfileTab userId={userId} profile={detail.profile} onSaved={handleProfileSaved} />
             )}
             {tab.id === "assessment" && (
-              <AssessmentTab userId={userId} assessments={assessments} onIssued={reloadAssessments} />
+              <AssessmentTab userId={userId} assessments={assessments} onChanged={reloadAssessments} />
             )}
             {tab.id === "integrity" && <IntegrityTab assessments={assessments} />}
             {tab.id === "evaluation" && <EvaluationTab userId={userId} assessments={assessments} />}

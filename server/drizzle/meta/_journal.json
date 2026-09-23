@@ -8,6 +8,20 @@
       "when": 1790141342396,
       "tag": "0000_steady_oracle",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790163658172,
+      "tag": "0001_luxuriant_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790164179003,
+      "tag": "0002_bored_ben_urich",
+      "breakpoints": true
     }
   ]
 }

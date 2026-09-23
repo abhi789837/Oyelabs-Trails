@@ -19,8 +19,15 @@ export type CredentialStatus = z.infer<typeof credentialStatusSchema>;
 export const aiPurposeSchema = z.enum(["blueprint", "item_critic", "evaluation", "verify"]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 
+/**
+ * The assessment lifecycle, in order. `awaiting_approval` is the review gate: generation lands
+ * there rather than in `ready`, and the assessment only reaches the learner once the superadmin
+ * approves it or the auto-approval deadline passes (`AUTO_APPROVE_AFTER_MS` in shared/assessment).
+ * Anything that enumerates "live" statuses must include it, or a waiting assessment reads as absent.
+ */
 export const assessmentStatusSchema = z.enum([
   "generating",
+  "awaiting_approval",
   "ready",
   "in_progress",
   "submitted",

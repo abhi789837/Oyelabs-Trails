@@ -162,3 +162,14 @@ a real credential. That is the first thing to check once one is added.
   module with no file as "not written yet" rather than as an error, and the manifest marks it
   `available: false`, so the ordering is visible in the codebase while the camps are filled in one
   at a time.
+- **An approval gate between generation and the learner** (requested after v3 shipped). A
+  generated assessment now lands in `awaiting_approval` rather than `ready`. The superadmin
+  approves it, or the existing sweeper releases it automatically after
+  `AUTO_APPROVE_AFTER_MS` (5 minutes, in `shared/assessment.ts`). Auto-release writes a
+  *different* audit action from a human one — `assessment.auto_approved` with a null actor, not a
+  flag on the same action — because "nobody looked at this" and "someone reviewed it" are
+  different facts and a shared action name would blur them. `docs/TRAILS_V3_BRIEF.md`'s data model
+  was amended to match.
+- **The AI call timeout was 120s and is now 15 minutes** (`AI_TIMEOUT_MS`). One generation is a
+  dozen-plus provider calls, and a CLI provider spawns a process per call, so two minutes failed
+  on ordinary work rather than on a hang.

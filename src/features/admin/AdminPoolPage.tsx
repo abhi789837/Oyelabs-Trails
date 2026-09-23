@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Check, LoaderCircle, X } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { cn } from "@/lib/utils";
+import { ApprovalBanner, approvalNote } from "./ApprovalGate";
+import { GenerationLog } from "./GenerationLog";
 
 interface PoolResponse {
   assessment: AssessmentSummary;
@@ -33,6 +35,14 @@ export default function AdminPoolPage() {
   const [showDropped, setShowDropped] = useState(true);
 
   useDocumentTitle("Assessment pool");
+
+  const reload = useCallback(async () => {
+    try {
+      setData(await api.get<PoolResponse>(`/api/admin/assessments/${assessmentId}/pool`));
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Could not load the pool.");
+    }
+  }, [assessmentId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,9 +102,24 @@ export default function AdminPoolPage() {
       <header className="mt-4">
         <h1 className="text-2xl font-bold">Assessment pool</h1>
         <p className="mt-1 font-mono text-sm text-muted-foreground">
-          Attempt {data.assessment.attemptNo} · {data.assessment.status} · {kept} kept, {dropped} dropped
+          Attempt {data.assessment.attemptNo} · {data.assessment.status.replace("_", " ")} · {kept} kept, {dropped}{" "}
+          dropped
+          {approvalNote(data.assessment) && ` · ${approvalNote(data.assessment)}`}
         </p>
       </header>
+
+      {/* This page is where the gate belongs: approving should follow reading, not precede it. */}
+      {data.assessment.status === "awaiting_approval" && (
+        <div className="mt-4">
+          <ApprovalBanner assessment={data.assessment} onApproved={reload} />
+        </div>
+      )}
+
+      {/* Above the pool on purpose: how the pool was built is context for reading it, and while
+          a run is still generating it is the only thing on this page worth watching. */}
+      <section className="mt-8">
+        <GenerationLog assessmentId={assessmentId} onFinished={reload} />
+      </section>
 
       {data.assessment.blueprint && (
         <section className="mt-8" aria-labelledby="blueprint-heading">

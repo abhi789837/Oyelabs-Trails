@@ -31,6 +31,15 @@ export const TIME_LIMIT_SEC: Record<z.infer<typeof itemKindSchema>, number> = {
 export const DEFAULT_TIME_LIMIT_MIN = 60;
 /** Explain items get their own budget at the end of the test (§9.4). */
 export const EXPLAIN_BUDGET_MIN = 15;
+/**
+ * How long a generated assessment waits for the superadmin before it is released anyway.
+ *
+ * Review is a gate, not a bottleneck: if nobody looks within this window the sweeper approves it
+ * so a learner is never blocked by an admin who is on leave. Auto-approval is recorded distinctly
+ * from a human one — "nobody looked at this" is a different fact from "someone read it and said
+ * yes". Change it here; nothing else hard-codes five minutes.
+ */
+export const AUTO_APPROVE_AFTER_MS = 5 * 60_000;
 export const MIN_ITEM_TARGET = 25;
 export const MAX_ITEM_TARGET = 40;
 
@@ -185,6 +194,14 @@ export const assessmentSummarySchema = z.object({
   terminatedReason: z.string().nullable(),
   hardWarnings: z.number(),
   softWarnings: z.number(),
+  /** When generation finished and the approval clock started. */
+  awaitingApprovalSince: z.number().nullable(),
+  approvedAt: z.number().nullable(),
+  /**
+   * The superadmin who approved it. Null *with* `approvedAt` set means nobody did: the deadline
+   * released it. The UI says which, because they are not the same assurance.
+   */
+  approvedBy: z.string().nullable(),
   blueprint: z.custom<Blueprint | null>(),
   /** Counts by item status, so the admin can see a pool at a glance. */
   itemCounts: z.record(z.string(), z.number()),
@@ -358,3 +375,42 @@ export interface MyEvaluation {
 }
 
 type SkillLevelValue = z.infer<typeof skillLevelSchema>;
+
+// ---------------------------------------------------------------------------
+// Watching a generation run (brief §13)
+// ---------------------------------------------------------------------------
+
+/** Which part of the `assessment.blueprint` job a line came from. */
+export const generationStageSchema = z.enum(["start", "blueprint", "items", "critic", "explain", "verify", "finish"]);
+export type GenerationStage = z.infer<typeof generationStageSchema>;
+
+export const generationLevelSchema = z.enum(["info", "warn", "error"]);
+export type GenerationLevel = z.infer<typeof generationLevelSchema>;
+
+/**
+ * One line of the generation log.
+ *
+ * `message` is the only free text here, and it is built from fixed phrases and redacted before it
+ * is stored — never from an item's options, key, rationale or solution. See
+ * `server/src/assessment/generationLog.ts` for what is allowed into one and why.
+ */
+export interface GenerationLogLine {
+  assessmentId: string;
+  /** Per assessment, from 1. The ordering key: several lines can share a millisecond. */
+  seq: number;
+  stage: GenerationStage;
+  level: GenerationLevel;
+  message: string;
+  /** Present on a line that reports a finished provider call. */
+  inputTokens: number | null;
+  outputTokens: number | null;
+  elapsedMs: number | null;
+  at: number;
+}
+
+export interface GenerationLogResponse {
+  status: z.infer<typeof assessmentStatusSchema>;
+  /** True when the oldest lines were dropped to keep one run bounded. */
+  truncated: boolean;
+  lines: GenerationLogLine[];
+}

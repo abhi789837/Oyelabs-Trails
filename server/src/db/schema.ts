@@ -12,6 +12,7 @@
 import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 import type { AiPurpose, AssessmentStatus, CredentialStatus, ItemKind, ItemStatus, JobStatus, JobType, PlanSource, ProviderId, Role, Severity, TopicStatus, UserStatus, AttemptKind } from "../../../shared/enums";
+import type { GenerationLevel, GenerationStage } from "../../../shared/assessment";
 import type { ClaimedSkill } from "../../../shared/profile";
 
 // ---------------------------------------------------------------------------
@@ -158,6 +159,12 @@ export const assessments = sqliteTable(
     hardWarnings: integer("hard_warnings").notNull().default(0),
     softWarnings: integer("soft_warnings").notNull().default(0),
     consentAt: integer("consent_at"),
+    /** When generation finished and the assessment began waiting for review; the auto-approval
+     * deadline is measured from here, not from `created_at`. */
+    awaitingApprovalSince: integer("awaiting_approval_since"),
+    approvedAt: integer("approved_at"),
+    /** The superadmin who approved it, or null when the deadline did — see AUTO_APPROVE_AFTER_MS. */
+    approvedBy: text("approved_by"),
     /** Set when the last heartbeat arrived, so the server can raise a "heartbeat missing" event. */
     lastHeartbeatAt: integer("last_heartbeat_at"),
     createdBy: text("created_by"),
@@ -374,4 +381,39 @@ export const auditLog = sqliteTable(
     createdAt: integer("created_at").notNull(),
   },
   (t) => [index("audit_log_created_idx").on(t.createdAt), index("audit_log_target_idx").on(t.targetType, t.targetId)],
+);
+
+// ---------------------------------------------------------------------------
+// Generation log
+// ---------------------------------------------------------------------------
+
+/**
+ * What the blueprint job did, line by line (brief §13).
+ *
+ * Stored rather than only streamed: a generation takes several minutes and a dozen or more
+ * provider calls, so the admin who started it will reload the page, and the reason an assessment
+ * came out thin is worth reading long afterwards. Kept bounded per assessment — see
+ * MAX_GENERATION_LOG_LINES — so a run that keeps failing and retrying cannot grow the table.
+ *
+ * Every line is redacted and assembled from fixed phrases. Nothing an item says goes in here.
+ */
+export const generationLog = sqliteTable(
+  "generation_log",
+  {
+    id: text("id").primaryKey(),
+    assessmentId: text("assessment_id")
+      .notNull()
+      .references(() => assessments.id, { onDelete: "cascade" }),
+    /** Per assessment, from 1. Ordering key: several lines can land in the same millisecond. */
+    seq: integer("seq").notNull(),
+    stage: text("stage").$type<GenerationStage>().notNull(),
+    level: text("level").$type<GenerationLevel>().notNull().default("info"),
+    message: text("message").notNull(),
+    /** Only on a line that reports a finished provider call, from the same numbers as `ai_calls`. */
+    inputTokens: integer("input_tokens"),
+    outputTokens: integer("output_tokens"),
+    elapsedMs: integer("elapsed_ms"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("generation_log_assessment_idx").on(t.assessmentId, t.seq)],
 );

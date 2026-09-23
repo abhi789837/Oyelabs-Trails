@@ -5,7 +5,15 @@ import type { ItemKey, ItemPayload } from "../../../shared/assessment";
 import { HARD_LIMIT, HARD_COOLDOWN_MS, SOFT_ESCALATION_COUNT } from "../assessment/integrity";
 import { schema } from "../db";
 import { SAMPLE_LEARNERS } from "../dev/sampleProfiles";
-import { activeLearner, adminSession, as, createTestApp, type Session, type TestContext } from "../test/harness";
+import {
+  activeLearner,
+  adminSession,
+  approveAssessment,
+  as,
+  createTestApp,
+  type Session,
+  type TestContext,
+} from "../test/harness";
 
 let ctx: TestContext;
 let admin: Session;
@@ -39,6 +47,8 @@ beforeEach(async () => {
   });
   assessmentId = issued.json().assessmentId;
   await ctx.drainJobs();
+  // Generation stops at the approval gate; these tests are about what happens after it.
+  await approveAssessment(ctx, admin, assessmentId);
 });
 
 afterEach(async () => {

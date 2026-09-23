@@ -10,14 +10,53 @@ import type { CodeSandbox } from "../sandbox";
  * is dropped with a reason the admin can read, rather than silently reaching a real assessment.
  */
 
-export type ValidationResult =
-  | { ok: true; payload: ItemPayload; key: ItemKey; topicIds: string[] }
-  | { ok: false; reason: string };
+/**
+ * Why an item was rejected, as a fixed tag.
+ *
+ * The prose `reason` beside it is written for the pool preview, which already shows answer keys,
+ * so it is free to quote the expected output or the critic's own answer. Anywhere a key must not
+ * go — the generation log the admin watches — carries this tag instead. A closed union, not a
+ * string, so a new rejection has to be named deliberately rather than smuggling content along.
+ */
+export type RejectionCode =
+  | "unknown-topics"
+  | "too-few-options"
+  | "duplicate-options"
+  | "no-correct-option"
+  | "correct-index-out-of-range"
+  | "every-option-correct"
+  | "multi-needs-two-correct"
+  | "needs-one-correct-option"
+  | "prompt-names-option-positions"
+  | "missing-expected-output"
+  | "empty-expected-output"
+  | "rubric-too-short"
+  | "rubric-weights"
+  | "bad-function-name"
+  | "starter-missing-function"
+  | "missing-reference-solution"
+  | "too-few-visible-tests"
+  | "too-few-hidden-tests"
+  | "tests-not-plain-data"
+  | "reference-does-not-run"
+  | "reference-timed-out"
+  | "reference-fails-tests"
+  | "starter-already-passes";
+
+export interface Rejection {
+  ok: false;
+  code: RejectionCode;
+  reason: string;
+}
+
+export type ValidationResult = { ok: true; payload: ItemPayload; key: ItemKey; topicIds: string[] } | Rejection;
+
+const reject = (code: RejectionCode, reason: string): Rejection => ({ ok: false, code, reason });
 
 export function validateGeneratedItem(item: GeneratedItem, knownTopicIds: ReadonlySet<string>): ValidationResult {
   const topicIds = item.topicIds.filter((id) => knownTopicIds.has(id));
   if (topicIds.length === 0) {
-    return { ok: false, reason: `Tagged with topic ids that are not in the curriculum: ${item.topicIds.join(", ")}` };
+    return reject("unknown-topics", `Tagged with topic ids that are not in the curriculum: ${item.topicIds.join(", ")}`);
   }
 
   const timeLimitSec = TIME_LIMIT_SEC[item.kind];
@@ -26,24 +65,26 @@ export function validateGeneratedItem(item: GeneratedItem, knownTopicIds: Readon
     case "mcq":
     case "multi":
     case "find_bug": {
-      if (!item.options || item.options.length < 3) return { ok: false, reason: "Needs at least three options." };
+      if (!item.options || item.options.length < 3) return reject("too-few-options", "Needs at least three options.");
       if (new Set(item.options.map((o) => o.trim().toLowerCase())).size !== item.options.length) {
-        return { ok: false, reason: "Has duplicate options." };
+        return reject("duplicate-options", "Has duplicate options.");
       }
       const correct = [...new Set(item.correctIndices ?? [])].sort((a, b) => a - b);
-      if (correct.length === 0) return { ok: false, reason: "No correct option was marked." };
-      if (correct.some((i) => i >= item.options!.length)) return { ok: false, reason: "A correct index is out of range." };
-      if (correct.length >= item.options.length) return { ok: false, reason: "Every option is marked correct." };
+      if (correct.length === 0) return reject("no-correct-option", "No correct option was marked.");
+      if (correct.some((i) => i >= item.options!.length)) {
+        return reject("correct-index-out-of-range", "A correct index is out of range.");
+      }
+      if (correct.length >= item.options.length) return reject("every-option-correct", "Every option is marked correct.");
 
       if (item.kind === "multi" && correct.length < 2) {
-        return { ok: false, reason: "A multi-select item needs two or more correct options." };
+        return reject("multi-needs-two-correct", "A multi-select item needs two or more correct options.");
       }
       if (item.kind !== "multi" && correct.length !== 1) {
-        return { ok: false, reason: `A ${item.kind} item needs exactly one correct option.` };
+        return reject("needs-one-correct-option", `A ${item.kind} item needs exactly one correct option.`);
       }
       // Options are shuffled before display, so a prompt that names a position is unanswerable.
       if (/\b(option|answer)s?\s+[A-D]\b|\bthe (first|second|third|fourth|last) option\b/i.test(item.prompt)) {
-        return { ok: false, reason: "The prompt refers to option positions, but options are shuffled." };
+        return reject("prompt-names-option-positions", "The prompt refers to option positions, but options are shuffled.");
       }
 
       return {
@@ -55,8 +96,8 @@ export function validateGeneratedItem(item: GeneratedItem, knownTopicIds: Readon
     }
 
     case "predict_output": {
-      if (item.expectedOutput === undefined) return { ok: false, reason: "No expected output was given." };
-      if (item.expectedOutput.trim().length === 0) return { ok: false, reason: "The expected output is empty." };
+      if (item.expectedOutput === undefined) return reject("missing-expected-output", "No expected output was given.");
+      if (item.expectedOutput.trim().length === 0) return reject("empty-expected-output", "The expected output is empty.");
       return {
         ok: true,
         topicIds,
@@ -66,9 +107,13 @@ export function validateGeneratedItem(item: GeneratedItem, knownTopicIds: Readon
     }
 
     case "explain": {
-      if (!item.rubric || item.rubric.length < 2) return { ok: false, reason: "An explain item needs a rubric of at least two points." };
+      if (!item.rubric || item.rubric.length < 2) {
+        return reject("rubric-too-short", "An explain item needs a rubric of at least two points.");
+      }
       const weight = item.rubric.reduce((sum, point) => sum + point.weight, 0);
-      if (weight < 0.5 || weight > 2) return { ok: false, reason: `Rubric weights sum to ${weight.toFixed(2)}; they should sum to about 1.` };
+      if (weight < 0.5 || weight > 2) {
+        return reject("rubric-weights", `Rubric weights sum to ${weight.toFixed(2)}; they should sum to about 1.`);
+      }
       return {
         ok: true,
         topicIds,
@@ -79,18 +124,18 @@ export function validateGeneratedItem(item: GeneratedItem, knownTopicIds: Readon
 
     case "code": {
       if (!item.functionName || !/^[A-Za-z_$][\w$]*$/.test(item.functionName)) {
-        return { ok: false, reason: "The function name is missing or is not a valid identifier." };
+        return reject("bad-function-name", "The function name is missing or is not a valid identifier.");
       }
       if (!item.starterCode?.includes(item.functionName)) {
-        return { ok: false, reason: `The starter code does not declare ${item.functionName}.` };
+        return reject("starter-missing-function", `The starter code does not declare ${item.functionName}.`);
       }
-      if (!item.referenceSolution) return { ok: false, reason: "No reference solution was given." };
+      if (!item.referenceSolution) return reject("missing-reference-solution", "No reference solution was given.");
       const visible = item.visibleTests ?? [];
       const hidden = item.hiddenTests ?? [];
-      if (visible.length < 2) return { ok: false, reason: "Needs at least two visible tests." };
-      if (hidden.length < 2) return { ok: false, reason: "Needs at least two hidden tests." };
+      if (visible.length < 2) return reject("too-few-visible-tests", "Needs at least two visible tests.");
+      if (hidden.length < 2) return reject("too-few-hidden-tests", "Needs at least two hidden tests.");
       if (!isPlainData([...visible, ...hidden])) {
-        return { ok: false, reason: "Test arguments or expected values are not plain JSON data." };
+        return reject("tests-not-plain-data", "Test arguments or expected values are not plain JSON data.");
       }
 
       return {
@@ -145,27 +190,31 @@ export async function verifyCodeItem(
   payload: ItemPayload,
   key: ItemKey,
   sandbox: CodeSandbox,
-): Promise<{ ok: true } | { ok: false; reason: string }> {
+): Promise<{ ok: true } | Rejection> {
   const testCases = [...(payload.visibleTests ?? []), ...(key.hiddenTests ?? [])];
-  if (!key.referenceSolution || !payload.functionName) return { ok: false, reason: "Missing reference solution." };
+  if (!key.referenceSolution || !payload.functionName) {
+    return reject("missing-reference-solution", "Missing reference solution.");
+  }
 
   const solution = await sandbox.run({ code: key.referenceSolution, functionName: payload.functionName, testCases });
-  if (solution.compileError) return { ok: false, reason: `The reference solution does not run: ${solution.compileError}` };
-  if (solution.timedOut) return { ok: false, reason: "The reference solution timed out." };
+  if (solution.compileError) {
+    return reject("reference-does-not-run", `The reference solution does not run: ${solution.compileError}`);
+  }
+  if (solution.timedOut) return reject("reference-timed-out", "The reference solution timed out.");
   if (solution.passedCount !== testCases.length) {
     const failed = solution.outcomes.filter((o) => !o.passed);
     const first = failed[0];
-    return {
-      ok: false,
-      reason: `The reference solution fails ${failed.length} of ${testCases.length} tests${
+    return reject(
+      "reference-fails-tests",
+      `The reference solution fails ${failed.length} of ${testCases.length} tests${
         first ? ` (expected ${first.expected}, got ${first.actual ?? first.error})` : ""
       }.`,
-    };
+    );
   }
 
   const starter = await sandbox.run({ code: payload.starterCode ?? "", functionName: payload.functionName, testCases });
   if (!starter.compileError && !starter.timedOut && starter.passedCount === testCases.length) {
-    return { ok: false, reason: "The starter code already passes every test, so the item asks for nothing." };
+    return reject("starter-already-passes", "The starter code already passes every test, so the item asks for nothing.");
   }
 
   return { ok: true };

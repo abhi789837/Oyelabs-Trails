@@ -1,3 +1,4 @@
+import type { AssessmentSummary } from "@shared/assessment";
 import type {
   LearnerDetail,
   ListUsersResponse,
@@ -28,4 +29,8 @@ export const adminApi = {
     api.post<{ user: UserSummary }>(`/api/admin/users/${id}/status`, { status }),
 
   revokeSessions: (id: string) => api.post<{ removed: number }>(`/api/admin/users/${id}/revoke-sessions`),
+
+  /** Releases a generated assessment to the learner before its auto-approval deadline. */
+  approveAssessment: (assessmentId: string) =>
+    api.post<{ assessment: AssessmentSummary }>(`/api/admin/assessments/${assessmentId}/approve`),
 };

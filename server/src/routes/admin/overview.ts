@@ -56,6 +56,8 @@ export async function registerAdminOverviewRoutes(app: FastifyInstance): Promise
       assessments: {
         inProgress: assessments.filter((a) => a.status === "in_progress").length,
         generating: assessments.filter((a) => a.status === "generating").length,
+        // The only count here that is waiting on the admin personally, so the page leads with it.
+        awaitingApproval: assessments.filter((a) => a.status === "awaiting_approval").length,
         awaitingEvaluation: assessments.filter((a) => ["submitted", "evaluating"].includes(a.status)).length,
         completed: assessments.filter((a) => a.status === "completed").length,
         // Anything a human should look at: terminated, failed, or carrying warnings.

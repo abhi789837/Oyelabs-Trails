@@ -75,6 +75,9 @@ export default function AssessmentPage() {
           setPhase("taking");
           break;
         case "generating":
+        // Written but not released. The learner waits exactly as they do during generation —
+        // whether a person is reading it or a deadline is running out is not their business.
+        case "awaiting_approval":
         case "submitted":
         case "evaluating":
           setPhase("waiting");
@@ -326,6 +329,7 @@ export default function AssessmentPage() {
  */
 function WaitingScreen({ assessment, onDone }: { assessment: MyAssessment; onDone: () => void }) {
   const generating = assessment.status === "generating";
+  const awaitingApproval = assessment.status === "awaiting_approval";
 
   useEffect(() => {
     if (assessment.status === "completed") onDone();
@@ -335,12 +339,18 @@ function WaitingScreen({ assessment, onDone }: { assessment: MyAssessment; onDon
     <Shell>
       <LoaderCircle className="h-6 w-6 animate-spin text-muted-foreground" aria-hidden="true" />
       <h1 className="mt-6 text-2xl font-bold">
-        {generating ? "Building your assessment" : "Evaluating your assessment"}
+        {generating
+          ? "Building your assessment"
+          : awaitingApproval
+            ? "Almost ready"
+            : "Evaluating your assessment"}
       </h1>
       <p className="mt-3 max-w-prose text-muted-foreground">
         {generating
           ? "We are writing questions based on what your manager told us about you. This usually takes a few minutes."
-          : "Your answers are being read and turned into a learning plan. This can take up to ten minutes. You can close this page — the plan will be waiting for you."}
+          : awaitingApproval
+            ? "Your questions are written and are being checked over. This page will open the assessment as soon as they are released — there is nothing you need to chase."
+            : "Your answers are being read and turned into a learning plan. This can take up to ten minutes. You can close this page — the plan will be waiting for you."}
       </p>
       <p className="mt-6 font-mono text-xs text-muted-foreground">This page checks again every few seconds.</p>
     </Shell>

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { expect, test } from "vitest";
 
-import { TOPIC_LEVELS, TRACK_IDS } from "./enums";
+import { assessmentStatusSchema, TOPIC_LEVELS, TRACK_IDS } from "./enums";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -31,6 +31,18 @@ test("TRACK_IDS matches TrackId in src/types/curriculum.ts", () => {
 
 test("TOPIC_LEVELS matches TopicLevel in src/types/curriculum.ts", () => {
   expect([...TOPIC_LEVELS].sort()).toEqual(unionMembers(curriculumSource, "TopicLevel").sort());
+});
+
+/**
+ * The approval gate sits between generation and the learner. Several places enumerate "live"
+ * statuses by hand; this pins the shape they are enumerating, so removing the gate or reordering
+ * the lifecycle is a decision someone has to make here rather than something that drifts.
+ */
+test("a generated assessment waits for approval before it can be ready", () => {
+  const statuses = assessmentStatusSchema.options as readonly string[];
+  expect(statuses).toContain("awaiting_approval");
+  expect(statuses.indexOf("generating")).toBeLessThan(statuses.indexOf("awaiting_approval"));
+  expect(statuses.indexOf("awaiting_approval")).toBeLessThan(statuses.indexOf("ready"));
 });
 
 test("TRACK_IDS matches the tracks the generated manifest actually contains", async () => {

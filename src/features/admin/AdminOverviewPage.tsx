@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AlertTriangle, Check, LoaderCircle, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { AUTO_APPROVE_AFTER_MS } from "@shared/assessment";
 import type { AiPurpose, Severity } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
@@ -13,7 +14,14 @@ import { cn, formatTimestamp } from "@/lib/utils";
 
 interface Overview {
   people: { learners: number; active: number; awaitingFirstSignIn: number; disabled: number };
-  assessments: { inProgress: number; generating: number; awaitingEvaluation: number; completed: number; flagged: number };
+  assessments: {
+    inProgress: number;
+    generating: number;
+    awaitingApproval: number;
+    awaitingEvaluation: number;
+    completed: number;
+    flagged: number;
+  };
   plans: { published: number; learnersWithoutPlan: number };
   ai: {
     configured: boolean;
@@ -45,6 +53,8 @@ interface Overview {
  * flagged come first, and a number that is zero is shown as zero rather than hidden, so "nothing
  * needs me" is a state you can read at a glance.
  */
+const autoApproveMinutes = Math.round(AUTO_APPROVE_AFTER_MS / 60_000);
+
 export default function AdminOverviewPage() {
   useDocumentTitle("Overview");
 
@@ -87,6 +97,7 @@ export default function AdminOverviewPage() {
   }
 
   const needsAttention =
+    data.assessments.awaitingApproval > 0 ||
     data.assessments.flagged > 0 ||
     data.jobs.failed > 0 ||
     data.plans.learnersWithoutPlan > 0 ||
@@ -108,6 +119,17 @@ export default function AdminOverviewPage() {
           )}
           {data.ai.status === "failed" && (
             <Attention to="/admin/ai" label={`The active AI credential failed: ${data.ai.lastError ?? "unknown error"}`} />
+          )}
+          {/* First, because it is the only line here with a deadline attached to it. */}
+          {data.assessments.awaitingApproval > 0 && (
+            <Attention
+              to="/admin/people"
+              label={`${data.assessments.awaitingApproval} generated assessment${
+                data.assessments.awaitingApproval === 1 ? " is" : "s are"
+              } waiting for your approval. Unapproved, ${
+                data.assessments.awaitingApproval === 1 ? "it goes" : "they go"
+              } out on ${data.assessments.awaitingApproval === 1 ? "its" : "their"} own after ${autoApproveMinutes} minutes.`}
+            />
           )}
           {data.jobs.failed > 0 && (
             <Attention to="/admin/audit" label={`${data.jobs.failed} background job${data.jobs.failed === 1 ? "" : "s"} failed.`} />
@@ -145,8 +167,16 @@ export default function AdminOverviewPage() {
           <Stat label="Learners" value={data.people.learners} hint={`${data.people.active} active`} />
           <Stat label="Awaiting first sign-in" value={data.people.awaitingFirstSignIn} />
           <Stat label="Assessments in progress" value={data.assessments.inProgress} to="/admin/live" />
+          {/* Generation folded in as a hint rather than its own tile: it is the same funnel, and
+              the number that needs a person is the one above it. */}
+          <Stat
+            label="Awaiting your approval"
+            value={data.assessments.awaitingApproval}
+            hint={data.assessments.generating > 0 ? `${data.assessments.generating} still generating` : undefined}
+            to="/admin/people"
+            tone={data.assessments.awaitingApproval > 0 ? "warn" : undefined}
+          />
           <Stat label="Awaiting evaluation" value={data.assessments.awaitingEvaluation} />
-          <Stat label="Being generated" value={data.assessments.generating} />
           <Stat label="Completed" value={data.assessments.completed} />
           <Stat label="Flagged" value={data.assessments.flagged} tone={data.assessments.flagged > 0 ? "warn" : undefined} />
           <Stat label="Plans published" value={data.plans.published} />

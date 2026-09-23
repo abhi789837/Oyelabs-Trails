@@ -14,6 +14,7 @@ import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { JobWorker } from "./jobs/worker";
+import { publishGenerationLine } from "./routes/admin/live";
 import { createSandbox } from "./sandbox";
 
 async function main(): Promise<void> {
@@ -48,11 +49,22 @@ async function main(): Promise<void> {
   const ai = new AiService(db, env, { mock });
   if (useMock) console.log("[oyelearn] AI: deterministic mock provider (development only)");
 
+  // Built before the worker so the blueprint job can push its progress to whoever is watching
+  // the admin live feed. Nothing is served until `listen` below.
+  const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: useMock });
+
   const worker = new JobWorker({
     db,
     handlers: {
       "credential.verify": verifyCredentialHandler(db, ai),
-      "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "assessment.blueprint": blueprintHandler({
+        db,
+        ai,
+        content,
+        sandbox,
+        log: (m) => console.log(`[oyelearn] ${m}`),
+        publish: (line) => publishGenerationLine(app, line),
+      }),
       "assessment.evaluate": evaluateHandler({ db, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
@@ -79,8 +91,6 @@ async function main(): Promise<void> {
     env,
     log: (m) => console.log(`[oyelearn] ${m}`),
   });
-
-  const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: useMock });
 
   const shutdown = async (signal: string) => {
     app.log.info({ signal }, "shutting down");

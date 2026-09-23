@@ -5,6 +5,7 @@ import { desc, eq, inArray } from "drizzle-orm";
 import type { FastifyInstance, FastifyReply } from "fastify";
 import { z } from "zod";
 
+import type { GenerationLogLine } from "../../../../shared/assessment";
 import type { Severity } from "../../../../shared/enums";
 import { requireSuperadmin, superadminOnly } from "../../auth/guards";
 import { integrityEventsFor, integritySummary } from "../../assessment/integrity";
@@ -55,6 +56,32 @@ export function publishIntegrityEvent(app: FastifyInstance, event: LiveIntegrity
   }
 }
 
+/**
+ * Called from the blueprint job as each generation log line is stored.
+ *
+ * Same stream, a second event name: the admin console already holds one connection open, and a
+ * second one per watched assessment would be a connection per open tab for no gain. Never throws
+ * — a failing feed must not fail a generation — and the line is already redacted by the time it
+ * gets here.
+ */
+export function publishGenerationLine(app: FastifyInstance, line: GenerationLogLine): void {
+  try {
+    const set = subscribers.get(app);
+    if (!set || set.size === 0) return;
+
+    const frame = `event: generation\ndata: ${JSON.stringify(line)}\n\n`;
+    for (const subscriber of [...set]) {
+      try {
+        subscriber.reply.raw.write(frame);
+      } catch {
+        set.delete(subscriber);
+      }
+    }
+  } catch {
+    /* the feed is best-effort */
+  }
+}
+
 const assessmentParams = z.object({ assessmentId: z.string().min(1).max(64) });
 
 export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<void> {
@@ -72,7 +99,15 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
     const rows = app.db
       .select()
       .from(schema.assessments)
-      .where(inArray(schema.assessments.status, ["in_progress", "submitted", "evaluating", "generating"]))
+      .where(
+        inArray(schema.assessments.status, [
+          "in_progress",
+          "submitted",
+          "evaluating",
+          "generating",
+          "awaiting_approval",
+        ]),
+      )
       .orderBy(desc(schema.assessments.startedAt))
       .all();
 

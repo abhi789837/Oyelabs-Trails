@@ -17,6 +17,7 @@ import { blueprintHandler } from "../assessment/blueprintJob";
 import { evaluateHandler } from "../assessment/evaluateJob";
 import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
 import { JobWorker } from "../jobs/worker";
+import { publishGenerationLine } from "../routes/admin/live";
 import { WorkerSandbox } from "../sandbox/workerSandbox";
 
 export interface TestContext {
@@ -67,18 +68,27 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
   });
   const ai = new AiService(db, env, { mock });
   const sandbox = new WorkerSandbox();
+
+  // The app is built before the worker so the blueprint job can publish to the admin live feed,
+  // exactly as boot wires it.
+  const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: true, logger: false });
+  await app.ready();
+
   const worker = new JobWorker({
     db,
     tickMs: 60_000,
     handlers: {
       "credential.verify": verifyCredentialHandler(db, ai),
-      "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox }),
+      "assessment.blueprint": blueprintHandler({
+        db,
+        ai,
+        content,
+        sandbox,
+        publish: (line) => publishGenerationLine(app, line),
+      }),
       "assessment.evaluate": evaluateHandler({ db, ai, content }),
     },
   });
-
-  const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: true, logger: false });
-  await app.ready();
 
   return {
     app,
@@ -168,6 +178,22 @@ export async function adminSession(ctx: TestContext): Promise<Session> {
   const cookie = res.cookies.find((c) => c.name === SESSION_COOKIE)?.value;
   if (!cookie) throw new Error("password change did not rotate the session cookie");
   return { cookie, user: res.json().user };
+}
+
+/**
+ * Walks a generated assessment through the approval gate, the way the admin console does.
+ *
+ * Tests about taking the test should not also be testing the gate, but they do have to pass
+ * through it — generation now lands in `awaiting_approval`, not `ready`.
+ */
+export async function approveAssessment(ctx: TestContext, admin: Session, assessmentId: string): Promise<void> {
+  const res = await ctx.app.inject({
+    method: "POST",
+    url: `/api/admin/assessments/${assessmentId}/approve`,
+    ...as(admin),
+    payload: {},
+  });
+  if (res.statusCode !== 200) throw new Error(`approving failed: ${res.statusCode} ${res.body}`);
 }
 
 /** Publishes a manual plan for a learner, the way the admin plan editor does. */

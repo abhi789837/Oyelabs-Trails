@@ -386,6 +386,12 @@ function load(app: FastifyInstance, request: Parameters<typeof requireActiveUser
   }
 
   if (expect !== "any" && assessment.status !== expect) {
+    // Called out rather than left to the generic message: "this assessment is awaiting approval"
+    // reads like an error on the learner's side, and consent/start are exactly the calls the gate
+    // exists to hold back.
+    if (assessment.status === "awaiting_approval") {
+      throw conflict("This assessment has not been released yet. Your administrator is reviewing it.");
+    }
     throw conflict(`This assessment is ${assessment.status.replace("_", " ")}.`);
   }
 
@@ -515,6 +521,9 @@ function statusMessage(status: string): string | null {
   switch (status) {
     case "generating":
       return "Building your assessment. This usually takes a few minutes.";
+    case "awaiting_approval":
+      // Truthful without being an invitation to chase anyone: it is released either way.
+      return "Your assessment is written and is being checked over. It will open shortly.";
     case "ready":
       return "Your assessment is ready.";
     case "evaluating":

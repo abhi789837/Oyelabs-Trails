@@ -177,7 +177,7 @@ export default function AdminPeoplePage() {
                   <Td>
                     <StatusCell user={user} />
                   </Td>
-                  <Td className="text-muted-foreground">{user.assessmentStatus ?? "—"}</Td>
+                  <Td className="text-muted-foreground">{user.assessmentStatus?.replace("_", " ") ?? "—"}</Td>
                   <Td className="text-right tabular">
                     {user.planTopicCount === 0 ? (
                       <span className="text-muted-foreground">—</span>

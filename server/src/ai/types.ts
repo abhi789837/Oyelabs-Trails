@@ -23,6 +23,15 @@ export interface GenerateJsonRequest<T> {
   /** Default 120 s. Evaluation is allowed up to 480 s (brief §8.2). */
   timeoutMs?: number;
   meta: { subjectUserId?: string | undefined; assessmentId?: string | undefined };
+  /**
+   * Called after each failed attempt, before the backoff.
+   *
+   * The retry policy lives inside `AiService`, so without this a caller only ever learns that a
+   * call gave up — never that it is on its second try. The generation log wants the difference:
+   * a four-minute gap with nothing in it reads as a hang. A watcher may not change what the call
+   * does, so anything it throws is swallowed.
+   */
+  onAttemptFailed?: (attempt: { attempt: number; maxAttempts: number; message: string; willRetry: boolean }) => void;
 }
 
 export interface GenerateJsonResult<T> {
