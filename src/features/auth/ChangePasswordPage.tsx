@@ -6,7 +6,7 @@ import { PASSWORD_MIN_LENGTH } from "@shared/auth";
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert, TextField } from "@/components/form/Field";
-import { BrandMark } from "@/components/layout/BrandMark";
+import { Logo } from "@/components/layout/Logo";
 import { Contours } from "@/components/trail/Contours";
 import { Button } from "@/components/ui/button";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -56,12 +56,9 @@ export default function ChangePasswordPage() {
       <Contours className="text-basalt/[0.14] dark:text-basalt/[0.10]" seed={5} rings={14} />
 
       <div className="relative w-full max-w-sm">
-        <div className="flex items-center gap-2.5">
-          <BrandMark />
-          <div>
-            <p className="font-display text-lg font-bold leading-none">Oyelearn</p>
-            <p className="mt-1 font-mono text-xs text-muted-foreground">{user.username}</p>
-          </div>
+        <div className="flex flex-col items-start">
+          <Logo variant="stacked" height={72} />
+          <p className="mt-3 font-mono text-xs text-muted-foreground">{user.username}</p>
         </div>
 
         <h1 className="mt-8 text-2xl font-bold">{forced ? "Set your password" : "Change your password"}</h1>

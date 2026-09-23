@@ -14,6 +14,28 @@
   :root {
     --radius: 0.375rem;
 
+    /* Oyelabs brand blue. brand-600 is #2067D3 (HSL 216 74% 48%), the primary; the rest of the
+       ramp holds hue 216 and varies lightness. brand-400 is #5F93E3, the dark-mode primary.
+       Contrast, measured not assumed: brand-600 on paper 4.91:1, white on brand-600 5.33:1,
+       brand-700 on paper 6.39:1, brand-400 on the dark background 5.89:1. */
+    --brand-50: 240 246 254;
+    --brand-100: 226 237 253;
+    --brand-200: 194 216 250;
+    --brand-300: 148 187 244;
+    --brand-400: 95 147 227;
+    --brand-500: 58 126 228;
+    --brand-600: 32 103 211;
+    --brand-700: 24 86 180;
+    --brand-800: 22 72 146;
+    --brand-900: 21 57 111;
+    --brand-950: 12 35 69;
+
+    /* The brand blue as it is actually consumed. `strong` is the text- and border-safe shade. */
+    --primary: var(--brand-600);
+    --primary-strong: var(--brand-700);
+    --primary-foreground: 255 255 255;
+    --ring: var(--brand-600);
+
     --paper: 245 246 242;
     --ink: 27 31 39;
 
@@ -71,6 +93,12 @@
   }
 
   .dark {
+    /* On dark the primary lifts to brand-400 so it clears 4.5:1; its foreground goes back to ink. */
+    --primary: var(--brand-400);
+    --primary-strong: var(--brand-300);
+    --primary-foreground: 18 21 28;
+    --ring: var(--brand-400);
+
     --background: 18 21 28;
     --foreground: 237 239 243;
     --surface: 25 29 38;
@@ -122,7 +150,7 @@
   h2,
   h3,
   h4 {
-    @apply font-display;
+    @apply font-brand;
     text-wrap: balance;
   }
 
@@ -130,15 +158,15 @@
     text-wrap: pretty;
   }
 
-  /* Focus rings use the trailmark family. The raw accent is only 2.5:1 on light paper,
-     so rings use the stronger shade (>= 3:1 on both themes, per WCAG 1.4.11). */
+  /* Focus rings are the brand blue. Both shades clear 3:1 against their own background
+     (4.91:1 light, 5.89:1 dark), which is what WCAG 1.4.11 asks of a focus indicator. */
   :focus-visible {
-    outline: 2px solid rgb(var(--trailmark-strong));
+    outline: 2px solid rgb(var(--ring));
     outline-offset: 2px;
   }
 
   ::selection {
-    background: rgb(var(--trailmark) / 0.35);
+    background: rgb(var(--brand-500) / 0.3);
   }
 
   /* Browsers give fieldsets min-width: min-content, so a wide code block inside a quiz

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-import { BrandMark } from "@/components/layout/BrandMark";
+import { Logo } from "@/components/layout/Logo";
 import { useElementWidth } from "@/hooks/useElementWidth";
 import { nameScale, type CertificateData } from "@/lib/certificate";
 import { contourPaths } from "@/lib/contours";
@@ -49,9 +49,8 @@ export function CertificateView({ data }: { data: CertificateData }) {
           <div className="absolute inset-[24px] border border-ink/25" />
 
           <div className="relative flex h-full flex-col px-[72px] pb-[52px] pt-[64px]">
-            <div className="flex items-center gap-3">
-              <BrandMark className="h-8 w-8" onPaper />
-              <span className="font-display text-[20px] font-semibold tracking-tight">Oyelearn</span>
+            <div className="flex items-center">
+              <Logo variant="stacked" height={56} onPaper />
             </div>
 
             <motion.div
@@ -79,7 +78,7 @@ export function CertificateView({ data }: { data: CertificateData }) {
               {data.topicsCount} topics and passing every graded challenge.
             </p>
 
-            <dl className="mt-auto grid grid-cols-4 gap-6 border-t border-ink/20 pt-5">
+            <dl className="mt-auto grid grid-cols-4 gap-6 border-t-2 border-brand-600 pt-5">
               {stats.map((s) => (
                 <div key={s.label}>
                   <dt className="font-mono text-[11px] text-ink/60">{s.label}</dt>
@@ -91,7 +90,7 @@ export function CertificateView({ data }: { data: CertificateData }) {
               <span>
                 Certificate ID <span className="text-ink">{data.certificateId}</span>
               </span>
-              <span className="text-right">Issued in the browser by Oyelearn. Not verified by a server.</span>
+              <span className="text-right">Issued in the browser by Oyelearn &middot; by Oyelabs. Not verified by a server.</span>
             </div>
           </div>
         </div>

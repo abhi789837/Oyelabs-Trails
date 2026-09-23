@@ -20,3 +20,6 @@ npm-debug.log*
 
 # MediaPipe assets are large binaries fetched by scripts/fetch-mediapipe.mjs
 /public/mediapipe
+
+# The brand kit is kept in the repo; its zip is not.
+/Oyelearn-Logo-Kit.zip

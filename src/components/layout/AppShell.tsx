@@ -9,6 +9,7 @@ import PlanPage from "@/pages/PlanPage";
 import TopicPage, { LegacyTopicRedirect } from "@/pages/TopicPage";
 import TrackPage from "@/pages/TrackPage";
 import { CompletionWatcher } from "./CompletionWatcher";
+import { Logo } from "./Logo";
 import { Sidebar } from "./Sidebar";
 import { Toaster } from "./Toaster";
 import { TopBar } from "./TopBar";
@@ -29,9 +30,24 @@ export function AppShell() {
           <AnimatedRoutes />
         </main>
       </div>
+      <SiteFooter />
       <CompletionWatcher />
       <Toaster />
     </div>
+  );
+}
+
+/** Attribution, quietly. Oyelearn is an Oyelabs product and the footer is where that is said. */
+function SiteFooter() {
+  return (
+    <footer className="mt-auto border-t">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-4 py-4 sm:px-6">
+        <Logo variant="mark" height={18} decorative />
+        <p className="font-mono text-xs text-muted-foreground">
+          Oyelearn <span aria-hidden="true">&middot;</span> by Oyelabs
+        </p>
+      </div>
+    </footer>
   );
 }
 

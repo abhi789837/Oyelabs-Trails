@@ -20,7 +20,10 @@ export default {
       padding: "1rem",
     },
     fontFamily: {
-      display: ['"Space Grotesk"', "ui-sans-serif", "system-ui", "sans-serif"],
+      // Sora is the brand face: headings, the wordmark, anything that speaks as Oyelearn.
+      brand: ["Sora", "ui-sans-serif", "system-ui", "sans-serif"],
+      display: ["Sora", "ui-sans-serif", "system-ui", "sans-serif"],
+      // Body stays IBM Plex Sans: it reads better at paragraph length than Sora does.
       sans: ['"IBM Plex Sans"', "ui-sans-serif", "system-ui", "sans-serif"],
       mono: ['"IBM Plex Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
     },
@@ -49,6 +52,19 @@ export default {
           gutter: token("editor-gutter"),
           foreground: token("editor-foreground"),
         },
+        brand: {
+          50: token("brand-50"),
+          100: token("brand-100"),
+          200: token("brand-200"),
+          300: token("brand-300"),
+          400: token("brand-400"),
+          500: token("brand-500"),
+          600: token("brand-600"),
+          700: token("brand-700"),
+          800: token("brand-800"),
+          900: token("brand-900"),
+          950: token("brand-950"),
+        },
         trailmark: accent("trailmark"),
         summit: accent("summit"),
         ridge: accent("ridge"),
@@ -57,11 +73,20 @@ export default {
         canyon: accent("canyon"),
         alpenglow: accent("alpenglow"),
         lichen: accent("lichen"),
-        // shadcn/ui semantic names, mapped onto the trail palette.
+        // shadcn/ui semantic names. `primary` and `ring` are the Oyelabs blue; the trail accents
+        // below stay what they are, because they identify tracks and progress states rather than
+        // the brand. `success` is the summit green, `warning` the trailmark amber, so a passed or
+        // flagged answer reads the same as a completed or in-progress waypoint.
         border: token("border"),
         input: token("input"),
-        ring: token("trailmark-strong"),
-        primary: { DEFAULT: token("trailmark"), foreground: token("trailmark-foreground") },
+        ring: token("ring"),
+        primary: {
+          DEFAULT: token("primary"),
+          strong: token("primary-strong"),
+          foreground: token("primary-foreground"),
+        },
+        success: accent("summit"),
+        warning: accent("trailmark"),
         secondary: { DEFAULT: token("surface-sunken"), foreground: token("foreground") },
         muted: { DEFAULT: token("surface-sunken"), foreground: token("muted-foreground") },
         accent: { DEFAULT: token("surface-sunken"), foreground: token("foreground") },

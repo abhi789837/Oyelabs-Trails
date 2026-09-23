@@ -13,7 +13,7 @@ export function Seal({ color, className }: { color: string; className?: string }
       <circle cx={c} cy={c} r={50} fill="none" stroke="#FFFFFF" strokeOpacity={0.8} strokeWidth={2.2} strokeDasharray="0.1 5.2" strokeLinecap="round" />
       <path d={SEAL_PEAK} fill="#FFFFFF" />
       <path d={SEAL_SNOW} fill={color} fillOpacity={0.35} />
-      <text x={c} y={100} textAnchor="middle" fill="#FFFFFF" fontFamily="Space Grotesk, sans-serif" fontSize={12} fontWeight={600}>
+      <text x={c} y={100} textAnchor="middle" fill="#FFFFFF" fontFamily="Sora, sans-serif" fontSize={12} fontWeight={600}>
         Summit
       </text>
     </svg>

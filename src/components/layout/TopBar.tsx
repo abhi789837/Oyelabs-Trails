@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/AuthProvider";
-import { BrandMark } from "./BrandMark";
+import { Logo } from "./Logo";
 import { MobileNav } from "./MobileNav";
 import { SearchDialog } from "./SearchDialog";
 import { ThemeToggle } from "./ThemeToggle";
@@ -21,9 +21,9 @@ export function TopBar() {
     <header className="sticky top-0 z-40 h-14 border-b bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="flex h-full items-center gap-2 px-3 sm:px-4">
         <MobileNav />
-        <Link to="/" className="flex items-center gap-2.5 rounded-md py-1 pr-2">
-          <BrandMark />
-          <span className="font-display text-lg font-semibold tracking-tight">Oyelearn</span>
+        <Link to="/" aria-label="Oyelearn home" className="flex items-center rounded-md py-1 pr-2">
+          <Logo variant="mark" height={28} decorative className="sm:hidden" />
+          <Logo variant="horizontal" height={26} decorative className="hidden sm:block" />
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <SearchDialog />

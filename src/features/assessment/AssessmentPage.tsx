@@ -6,7 +6,7 @@ import type { AnswerRequest, MyAssessment, NextItemResponse, ServedItem } from "
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
-import { BrandMark } from "@/components/layout/BrandMark";
+import { Logo } from "@/components/layout/Logo";
 import { Contours } from "@/components/trail/Contours";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -352,7 +352,7 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-12 text-center">
       <Contours className="text-basalt/[0.12]" seed={7} rings={14} />
       <div className="relative flex flex-col items-center">
-        <BrandMark className="mb-8 h-8 w-8" />
+        <Logo variant="stacked" height={64} className="mb-8" />
         {children}
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { Cpu, LayoutDashboard, LogOut, Radio, ScrollText, Users, UserPlus } from "lucide-react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
-import { BrandMark } from "@/components/layout/BrandMark";
+import { Logo } from "@/components/layout/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -42,11 +42,11 @@ export function AdminLayout() {
 
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
         <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
-          <BrandMark className="h-6 w-6" />
-          <div className="min-w-0">
-            <p className="truncate font-display text-sm font-bold leading-none">Oyelearn</p>
-            <p className="mt-0.5 font-mono text-[11px] leading-none text-muted-foreground">Admin console</p>
-          </div>
+          <Logo variant="mark" height={24} decorative className="sm:hidden" />
+          <Logo variant="horizontal" height={22} decorative className="hidden sm:block" />
+          <span className="truncate border-l pl-3 font-mono text-[11px] leading-none text-muted-foreground">
+            Admin console
+          </span>
 
           <div className="ml-auto flex items-center gap-1.5">
             <span className="hidden font-mono text-xs text-muted-foreground sm:inline">{user?.username}</span>

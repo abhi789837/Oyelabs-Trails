@@ -4,8 +4,8 @@ import { Circle, Document, Font, Page, Path, pdf, Rect, StyleSheet, Svg, Text, V
 import plexMono400 from "@/assets/fonts/ibm-plex-mono-latin-400.ttf?url";
 import plexSans400 from "@/assets/fonts/ibm-plex-sans-latin-400.ttf?url";
 import plexSans600 from "@/assets/fonts/ibm-plex-sans-latin-600.ttf?url";
-import grotesk500 from "@/assets/fonts/space-grotesk-latin-500.ttf?url";
-import grotesk700 from "@/assets/fonts/space-grotesk-latin-700.ttf?url";
+import sora600 from "@/assets/fonts/sora-latin-600.ttf?url";
+import sora700 from "@/assets/fonts/sora-latin-700.ttf?url";
 
 import { nameScale, type CertificateData } from "@/lib/certificate";
 import { contourPaths } from "@/lib/contours";
@@ -13,10 +13,11 @@ import { formatDate, formatMinutes } from "@/lib/utils";
 import { SEAL_PEAK, SEAL_SIZE, SEAL_SNOW } from "./Seal";
 
 Font.register({
-  family: "Space Grotesk",
+  family: "Sora",
   fonts: [
-    { src: grotesk500, fontWeight: 500 },
-    { src: grotesk700, fontWeight: 700 },
+    { src: sora600, fontWeight: 500 },
+    { src: sora600, fontWeight: 600 },
+    { src: sora700, fontWeight: 700 },
   ],
 });
 Font.register({
@@ -33,6 +34,8 @@ Font.registerHyphenationCallback((word) => [word]);
 const INK = "#1B1F27";
 const MUTED = "#5E6573";
 const PAPER = "#FBFBF8";
+// brand-600. @react-pdf has no CSS variables, so the brand hex is named once here.
+const BRAND = "#2067D3";
 // A4 landscape in points.
 const W = 841.89;
 const H = 595.28;
@@ -41,17 +44,17 @@ const styles = StyleSheet.create({
   page: { backgroundColor: PAPER, color: INK, fontFamily: "IBM Plex Sans" },
   content: { position: "absolute", top: 54, left: 60, right: 60, bottom: 44 },
   brandRow: { flexDirection: "row", alignItems: "center" },
-  brand: { fontFamily: "Space Grotesk", fontWeight: 700, fontSize: 16, marginLeft: 8 },
-  kicker: { fontFamily: "Space Grotesk", fontWeight: 500, fontSize: 18, marginTop: 38 },
+  brand: { fontFamily: "Sora", fontWeight: 700, fontSize: 16, marginLeft: 8 },
+  kicker: { fontFamily: "Sora", fontWeight: 500, fontSize: 18, marginTop: 38 },
   lead: { fontSize: 13, color: MUTED, marginTop: 24 },
-  name: { fontFamily: "Space Grotesk", fontWeight: 700, fontSize: 44, marginTop: 4, letterSpacing: -1 },
+  name: { fontFamily: "Sora", fontWeight: 700, fontSize: 44, marginTop: 4, letterSpacing: -1 },
   body: { fontSize: 14, lineHeight: 1.55, marginTop: 10, maxWidth: 540 },
   strong: { fontWeight: 600 },
   spacer: { flexGrow: 1 },
-  stats: { flexDirection: "row", borderTopWidth: 0.8, borderTopColor: "#C9CBC5", paddingTop: 12 },
+  stats: { flexDirection: "row", borderTopWidth: 1.6, borderTopColor: BRAND, paddingTop: 12 },
   stat: { flex: 1, paddingRight: 12 },
   statLabel: { fontFamily: "IBM Plex Mono", fontSize: 8.5, color: MUTED },
-  statValue: { fontFamily: "Space Grotesk", fontWeight: 500, fontSize: 13.5, marginTop: 3 },
+  statValue: { fontFamily: "Sora", fontWeight: 500, fontSize: 13.5, marginTop: 3 },
   footer: { flexDirection: "row", justifyContent: "space-between", marginTop: 16 },
   mono: { fontFamily: "IBM Plex Mono", fontSize: 8.5, color: MUTED },
 });
@@ -99,7 +102,7 @@ function CertificateDocument({ data }: { data: CertificateData }) {
             right: 54,
             width: 104,
             textAlign: "center",
-            fontFamily: "Space Grotesk",
+            fontFamily: "Sora",
             fontWeight: 500,
             fontSize: 9.5,
             color: "#FFFFFF",
@@ -141,7 +144,7 @@ function CertificateDocument({ data }: { data: CertificateData }) {
             <Text style={styles.mono}>
               Certificate ID <Text style={{ color: INK }}>{data.certificateId}</Text>
             </Text>
-            <Text style={styles.mono}>Issued in the browser by Oyelearn. Not verified by a server.</Text>
+            <Text style={styles.mono}>Issued in the browser by Oyelearn · by Oyelabs. Not verified by a server.</Text>
           </View>
         </View>
       </Page>
