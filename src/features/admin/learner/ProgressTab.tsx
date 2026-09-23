@@ -360,13 +360,21 @@ function QuizAnswers({
       {questions.map((question) => {
         const chosen = new Set(answers[question.id] ?? []);
         const correct = new Set(question.correctIndices ?? []);
-        const right =
-          chosen.size === correct.size && [...chosen].every((i) => correct.has(i)) && correct.size > 0;
+        // The key is only absent if the content served without it, which would make a "wrong"
+        // label a guess rather than a fact.
+        const right = question.correctIndices
+          ? chosen.size === correct.size && [...chosen].every((i) => correct.has(i))
+          : null;
         return (
           <li key={question.id}>
             <p className="flex items-baseline gap-2">
-              <span className={cn("font-mono text-xs", right ? "text-summit-strong" : "text-destructive")}>
-                {right ? "correct" : "wrong"}
+              <span
+                className={cn(
+                  "font-mono text-xs",
+                  right === null ? "text-muted-foreground" : right ? "text-summit-strong" : "text-destructive",
+                )}
+              >
+                {right === null ? "not graded here" : right ? "correct" : "wrong"}
               </span>
               {question.multi && <span className="font-mono text-xs text-muted-foreground">multi-select</span>}
             </p>

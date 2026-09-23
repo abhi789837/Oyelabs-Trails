@@ -243,6 +243,70 @@ Use these instead of older assumptions, and verify anything you rely on that isn
   `/docs/app/getting-started/fetching-data`. `docs.claude.com` redirects to `platform.claude.com/docs`.
 - `https://reactrouter.com/en/main` ends in a 404; use `https://reactrouter.com/home` or a deep page.
 
+## 10b. Current-facts sheet for the v3 tracks (verified 2026-09-23)
+
+Checked against each project's own release endpoint, not from memory. The command used is given
+where it is not obvious, so any of these can be re-checked in one line.
+
+### PHP & Laravel
+
+- **PHP 8.5** is the current stable release (8.5.9 as of this check); **8.4** is also actively
+  supported; **8.3** is in security-only maintenance; **8.2 and earlier are end of life.** Write
+  for 8.4/8.5 and say so when a feature is newer than 8.3.
+  `curl -s https://www.php.net/releases/index.php` lists the current patch per branch.
+- PHP 8.4 brought property hooks, asymmetric visibility, `new` in initialisers without parentheses,
+  and lazy objects. PHP 8.3 brought typed class constants, `json_validate()`, and `#[\Override]`.
+  PHP 8.1's enums, readonly properties, fibers and `never` are now baseline, not "new".
+- **Laravel 13** is current (`v13.33.0`), and the docs live at `https://laravel.com/docs/13.x/…`.
+  Note the redirect: `laravel.com/docs/…` resolves to `laravel.com/framework/docs/…`, and
+  `check-urls.mjs` reports the final URL — use that one.
+  `curl -s https://repo.packagist.org/p2/laravel/framework.json` lists every released version.
+- Laravel's first-party testing framework in current docs is **Pest**, with PHPUnit still
+  supported. Starter kits replaced Breeze/Jetstream as the scaffolding story. Sanctum is for API
+  tokens and SPA auth; Passport is for full OAuth2.
+- **WordPress**: block themes and `theme.json` are the current path; classic themes still work and
+  are still common in client work, so cover both and say which is which.
+
+### Mobile
+
+- **React Native 0.87** with the New Architecture (Fabric + TurboModules) as the default; the old
+  bridge is gone. **Expo SDK 57**. Expo Router is the file-based navigation story, and EAS Build /
+  EAS Submit is the managed release path.
+- **Dart 3.13**, **Flutter 3.47** (`curl -s https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json`
+  and read `current_release.stable`). Sound null safety and records/patterns are baseline. Impeller
+  is the default renderer on both platforms.
+- **Kotlin 2.4** (K2 compiler is the only compiler now). Jetpack Compose is the recommended Android
+  UI toolkit; Views are legacy but still ubiquitous in existing apps.
+- **Swift 6.4** with strict concurrency checking. SwiftUI is the recommended UI framework; UIKit
+  interop still matters for anything that predates it. Observation (`@Observable`) replaced
+  `ObservableObject` for new code.
+
+### Frontend additions
+
+- **Angular 22**. Standalone components are the default (NgModules are legacy), signals are the
+  recommended reactivity primitive, and the new control-flow syntax (`@if`, `@for`, `@switch`)
+  replaces `*ngIf` / `*ngFor` in current docs.
+- **Svelte 5** (5.57) with runes: `$state`, `$derived`, `$effect`, `$props`. The Svelte 4
+  `export let` / `$:` style is legacy and reads very differently, so be explicit about which
+  version a snippet is for. **SvelteKit 2.70**.
+
+### DevOps & Cloud
+
+- **Kubernetes 1.37** (`curl -s https://dl.k8s.io/release/stable.txt`). Dockershim is long gone;
+  containerd is the runtime. Gateway API is the successor to Ingress for new work, though Ingress
+  is still what most clusters run.
+- **Terraform 1.16**. Note the licence change at 1.6 (BUSL) and **OpenTofu** as the MPL fork —
+  worth one honest sentence, because it affects what a team can adopt.
+- **AWS**: IAM Identity Center replaced IAM users for human access; IMDSv2 is required on new
+  instances; `gp3` is the default EBS type. Say "as of this writing" for anything pricing-related
+  rather than quoting numbers.
+- **Caddy 2** and **nginx 1.29** for the reverse-proxy camp. Caddy's automatic HTTPS is the
+  headline difference and is worth teaching directly.
+
+**Re-check before writing.** These were true on 2026-09-23. A quiz answer that depends on a version
+is a quiz answer that goes stale, so prefer questions about mechanisms over questions about
+version-specific syntax, and where a version genuinely matters, say which one in the prompt.
+
 ## 11. Validate before you finish
 
 ```bash

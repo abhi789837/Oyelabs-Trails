@@ -112,9 +112,17 @@ export function AssessmentTab({
       {assessments.length > 0 && (
         <ul className="mt-6 space-y-3">
           {assessments.map((assessment) => {
-            const kept = assessment.itemCounts.pool ?? 0;
             const dropped = assessment.itemCounts.dropped ?? 0;
-            const answered = (assessment.itemCounts.answered ?? 0) + (assessment.itemCounts.skipped ?? 0);
+            // Items leave "pool" as they are served, so the generated total is everything but the
+            // rejects — otherwise the count appears to shrink as someone works through the test.
+            const generated = Object.entries(assessment.itemCounts).reduce(
+              (total, [status, count]) => (status === "dropped" ? total : total + count),
+              0,
+            );
+            const served =
+              (assessment.itemCounts.served ?? 0) +
+              (assessment.itemCounts.answered ?? 0) +
+              (assessment.itemCounts.skipped ?? 0);
             const open = openId === assessment.id;
 
             return (
@@ -125,9 +133,9 @@ export function AssessmentTab({
                   </Badge>
                   <span className="font-mono text-xs text-muted-foreground">
                     Attempt {assessment.attemptNo} · {formatTimestamp(assessment.createdAt)}
-                    {kept > 0 ? ` · ${kept} in pool` : ""}
+                    {generated > 0 ? ` · ${generated} items` : ""}
                     {dropped > 0 ? `, ${dropped} dropped` : ""}
-                    {answered > 0 ? ` · ${answered} served` : ""}
+                    {served > 0 ? ` · ${served} served` : ""}
                     {assessment.blueprint ? ` · ${assessment.blueprint.areas.length} areas` : ""}
                   </span>
                   {assessment.terminatedReason && (
@@ -135,12 +143,12 @@ export function AssessmentTab({
                   )}
 
                   <div className="ml-auto flex flex-wrap gap-1">
-                    {(kept > 0 || dropped > 0) && (
+                    {generated + dropped > 0 && (
                       <Button asChild variant="ghost" size="sm">
                         <Link to={`/admin/assessments/${assessment.id}`}>View pool</Link>
                       </Button>
                     )}
-                    {answered > 0 && (
+                    {served > 0 && (
                       <Button
                         variant="ghost"
                         size="sm"

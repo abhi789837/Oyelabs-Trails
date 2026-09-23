@@ -84,7 +84,7 @@ export default function AdminOnboardPage() {
         setDisplayName("");
         setProfile(emptyProfile);
       } else {
-        navigate("/admin");
+        navigate("/admin/people");
       }
     } catch (err) {
       if (err instanceof ApiRequestError) {
@@ -113,7 +113,7 @@ export default function AdminOnboardPage() {
           password={created.password}
           onDismiss={() => {
             setCreated(null);
-            navigate("/admin");
+            navigate("/admin/people");
           }}
         />
       )}
@@ -340,7 +340,7 @@ export default function AdminOnboardPage() {
               {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
               {submitting ? "Creating…" : "Create account"}
             </Button>
-            <Button type="button" variant="ghost" onClick={() => navigate("/admin")}>
+            <Button type="button" variant="ghost" onClick={() => navigate("/admin/people")}>
               Cancel
             </Button>
           </div>

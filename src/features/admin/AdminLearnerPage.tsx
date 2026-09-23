@@ -159,7 +159,7 @@ export default function AdminLearnerPage() {
   return (
     <div className="px-4 py-8 sm:px-6">
       <Button asChild variant="ghost" size="sm" className="-ml-2">
-        <Link to="/admin">
+        <Link to="/admin/people">
           <ArrowLeft aria-hidden="true" />
           People
         </Link>

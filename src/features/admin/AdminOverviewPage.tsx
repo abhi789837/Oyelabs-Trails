@@ -114,13 +114,13 @@ export default function AdminOverviewPage() {
           )}
           {data.assessments.flagged > 0 && (
             <Attention
-              to="/admin"
+              to="/admin/people"
               label={`${data.assessments.flagged} assessment${data.assessments.flagged === 1 ? "" : "s"} ended early or carried warnings.`}
             />
           )}
           {data.plans.learnersWithoutPlan > 0 && (
             <Attention
-              to="/admin"
+              to="/admin/people"
               label={`${data.plans.learnersWithoutPlan} learner${data.plans.learnersWithoutPlan === 1 ? " has" : "s have"} no plan yet, so they see nothing.`}
             />
           )}

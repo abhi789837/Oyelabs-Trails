@@ -6,9 +6,11 @@ import { AppShell } from "@/components/layout/AppShell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminLayout } from "@/features/admin/AdminLayout";
 import AdminAiPage from "@/features/admin/AdminAiPage";
+import AdminAuditPage from "@/features/admin/AdminAuditPage";
 import AdminIntegrityPage from "@/features/admin/AdminIntegrityPage";
 import AdminLivePage from "@/features/admin/AdminLivePage";
 import AdminOnboardPage from "@/features/admin/AdminOnboardPage";
+import AdminOverviewPage from "@/features/admin/AdminOverviewPage";
 import AdminPeoplePage from "@/features/admin/AdminPeoplePage";
 import AdminPoolPage from "@/features/admin/AdminPoolPage";
 import { AuthProvider } from "@/features/auth/AuthProvider";
@@ -47,11 +49,13 @@ export default function App() {
                   </RequireSuperadmin>
                 }
               >
-                <Route index element={<AdminPeoplePage />} />
+                <Route index element={<AdminOverviewPage />} />
+                <Route path="people" element={<AdminPeoplePage />} />
                 <Route path="onboard" element={<AdminOnboardPage />} />
                 <Route path="people/:userId" element={<AdminLearnerPage />} />
                 <Route path="ai" element={<AdminAiPage />} />
                 <Route path="live" element={<AdminLivePage />} />
+                <Route path="audit" element={<AdminAuditPage />} />
                 <Route path="assessments/:assessmentId" element={<AdminPoolPage />} />
                 <Route path="assessments/:assessmentId/integrity" element={<AdminIntegrityPage />} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />

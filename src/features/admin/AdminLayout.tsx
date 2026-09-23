@@ -1,4 +1,4 @@
-import { Cpu, LogOut, Radio, Users, UserPlus } from "lucide-react";
+import { Cpu, LayoutDashboard, LogOut, Radio, ScrollText, Users, UserPlus } from "lucide-react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 import { BrandMark } from "@/components/layout/BrandMark";
@@ -14,10 +14,12 @@ import { useAuth } from "@/features/auth/AuthProvider";
  * Sections land as their phases do; this list grows with them.
  */
 const sections = [
-  { to: "/admin", end: true, label: "People", icon: Users },
+  { to: "/admin", end: true, label: "Overview", icon: LayoutDashboard },
+  { to: "/admin/people", end: false, label: "People", icon: Users },
   { to: "/admin/onboard", end: false, label: "Onboard learner", icon: UserPlus },
   { to: "/admin/live", end: false, label: "Live", icon: Radio },
   { to: "/admin/ai", end: false, label: "AI connection", icon: Cpu },
+  { to: "/admin/audit", end: false, label: "Audit log", icon: ScrollText },
 ];
 
 export function AdminLayout() {
