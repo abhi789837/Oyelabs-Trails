@@ -24,7 +24,7 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 
 - [x] P0 Foundations — `server/` + `shared/` scaffold, Fastify, Drizzle + migrations, dev script, `/api/health`, Vite proxy
 - [x] P1 Auth — users, sessions, seed superadmin, login/change-password, guards, AuthProvider, admin onboarding, audit log
-- [ ] P2 Content gating + progress — server content bundle, filtered manifest/content API, server quiz grading, sandboxed code verification, progress API, manual plan editor
+- [x] P2 Content gating + progress — server content bundle, filtered manifest/content API, server quiz grading, sandboxed code verification, progress API, manual plan editor
 - [ ] P3 AI layer — crypto box, credentials CRUD + UI, four adapters, verify, `ai_calls` audit, job queue, model settings
 - [ ] P4 Assessment generation — blueprint → pools → critic → code validation; Issue assessment; admin pool preview
 - [ ] P5 Test taking + proctoring — pre-flight, item runner, adaptive selector, detectors, warnings, SSE live view, termination
@@ -121,6 +121,35 @@ _(newest last: step, commit hash, known gaps)_
   malformed body rather than 400, so the endpoint cannot be used as a username validator.
   **Known gap:** `issueAssessment` from the onboarding form is accepted and audited but not acted
   on until P4 wires the blueprint job.
+
+- **P2 done** — `d822436` "v3 phase 2: gated content and server progress".
+  Built (server): `build-server-content.mjs` (+ `registry.json`), `ContentStore`, `filter.ts`
+  (the single choke point for what a caller may see), `grade.ts`, the `isolated-vm` sandbox with a
+  `worker_threads` development fallback, `/api/content/modules/:track/:module`, `/api/me/manifest`,
+  `/api/me/progress`, `/api/me/plan`, `/api/topics/:id/attempt`, admin plan publish/read and admin
+  progress read, plans and progress repositories.
+  Built (client): `curriculumStore` (manifest + module fetching), rewritten `src/content/index.ts`
+  with the same helper signatures, API-backed `progressStore`, `CurriculumProvider`,
+  server-graded `QuizRunner`, two-step `CodeRunner` (visible tests locally, verdict from the
+  server), and the admin learner page with a manual plan editor.
+  Verified: 102/102 tests (27 new in `content.test.ts`, 23 in `sandbox.test.ts`) · typecheck clean ·
+  `content:check` 0 errors · the 37 content chunks and the 4,116-line manifest are gone from the
+  SPA build (7 JS chunks left; a grep for a manifest-only string finds nothing) · HTTP run against
+  the production bundle confirmed empty-manifest-without-a-plan, 3-of-19 topics with a plan,
+  `id/prompt/options/multi` only on a learner's quiz question, 404 on an unassigned module, full
+  keys for the admin, and working grading.
+  Verified from installed sources: `isolated-vm` 7.0.1 **builds and runs on Windows** from
+  prebuilt binaries — no blocker, and production does not need the `worker_threads` fallback. A
+  test asserts `require`, `process`, `fetch`, `Buffer` and `setTimeout` are all undefined inside
+  the isolate.
+  Decisions: learner-initiated progress reset was removed (progress is now a record the admin
+  reviews, and letting a learner wipe their attempt history would undermine that); visible tests
+  are the first half with a minimum of three; a hidden test reports only pass/fail, not even its
+  description, because descriptions name the edge case; the certificate id still hashes an ISO
+  timestamp, so the epoch milliseconds the server sends are converted at that one boundary.
+  **Known gaps:** certificates still unlock per *track* rather than per *plan*, and the
+  `/verify/:certificateId` page is not built — both are carried into P6, where plans become real.
+  The README has a v3 banner and corrected sections but its full rewrite is P8.
 
 ## Blocked / needs Abhishek
 
