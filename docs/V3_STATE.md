@@ -40,7 +40,7 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 - [x] php-modern — 12 topics, 120 questions
 - [x] php-composer-psr — 12 topics, 124 questions
 - [x] php-web — 12 topics, 129 questions
-- [ ] laravel-foundations
+- [x] laravel-foundations — 14 topics, 150 questions
 - [ ] laravel-eloquent
 - [ ] laravel-auth
 - [ ] laravel-apis
@@ -216,6 +216,28 @@ _(newest last: step, commit hash, known gaps)_
   assessment still produces a flagged plan (§18 answer 2).
   **Known gap:** every AI judgement in P4-P6 is the mock's. Whether a real model writes a good
   blueprint or a sensible plan is untested.
+
+## Out-of-band work (not in the original phase list)
+
+- **Renamed the platform to Oyelearn** (`64538e0`), then applied the supplied logo kit and the
+  Oyelabs blue colour system (`e4d8912`). `primary`/`ring` are now `brand-600` #2067D3
+  (`brand-400` #5F93E3 on dark); the trail accents stay, because they identify tracks and progress
+  states rather than the brand. Sora replaced Space Grotesk, self-hosted via @fontsource.
+  `scripts/woff2ttf.mjs` converts it for the certificate PDF.
+  The GitHub remote is still named `Oyelabs-Trails`; renaming it is Abhishek's call.
+  `docs/TRAILS_V3_BRIEF.md` keeps its filename on purpose — the build instructions point at it.
+- **Deployment verified for real** (`4e40142`). Built the production image and ran it: 286 MB,
+  isolated-vm loads, 350 topics, /api/health green, login works, CSP applied, the
+  must-change-password gate holds. Two bugs fixed in the process:
+  - **`.dockerignore` was missing**, so `COPY . .` overwrote the Linux `node_modules` with the
+    host's. On a Windows or macOS checkout that produces an image whose native binaries cannot
+    load. It also copied `data/` (database + dev keys) into the build stage.
+  - `.vercelignore` was `*`, so a still-connected Vercel project failed with
+    "vite: command not found". `vercel.json` now fails with a message explaining that v3 needs a
+    persistent disk and a long-running process. **Vercel cannot host v3** — tell Abhishek to
+    disconnect the project.
+- **`npm run dev:password -- <username>`** added (`45671da`): the first-boot superadmin password is
+  printed once and stored nowhere, so a dev database that outlives its terminal had no way back in.
 
 ## Blocked / needs Abhishek
 
