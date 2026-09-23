@@ -1,5 +1,8 @@
 # Oyelabs Learning Platform — Project Brief & Build Instructions (v2, exhaustive)
 
+> **v3 is in progress. The spec is `docs/TRAILS_V3_BRIEF.md`. It overrides anything in this file
+> that it contradicts.** Build state and the resume point live in `docs/V3_STATE.md`.
+
 You are building this entire project, end to end, across as many sessions as it takes. This file is your complete spec. Read it fully before writing code. This is v2 — the curriculum is now deliberately exhaustive and hard, aimed at engineers anywhere from 1 to 10 years of experience, not a beginner bootcamp. Expect this to take a long time; that's intentional.
 
 > Resuming? Also read `docs/PROGRESS.md` (the module-by-module todo list and decisions log) and `git log`, then continue from the next unfinished item. Don't restart.

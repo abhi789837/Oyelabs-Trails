@@ -7,6 +7,20 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@shared": fileURLToPath(new URL("./shared", import.meta.url)),
+    },
+  },
+  server: {
+    port: 5173,
+    // Same-origin in production (one Node process serves both). In dev, Vite proxies to the API
+    // so the session cookie is first-party here too and there is no CORS anywhere.
+    proxy: {
+      "/api": {
+        target: `http://127.0.0.1:${process.env.PORT ?? 8787}`,
+        changeOrigin: false,
+        // Server-sent events for the admin live feed must not be buffered.
+        ws: false,
+      },
     },
   },
   build: {

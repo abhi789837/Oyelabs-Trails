@@ -87,3 +87,16 @@ All 37 modules committed: 293 topics, 2,163 quiz questions, 86 code challenges (
 - Some videos the brief marks as verified have different real durations (e.g. OWASP course 1:27:00,
   GraphQL course 1:28:59, Redux Toolkit 14:11:42, React Native 4:40:39, Bootstrap/Sass 5:02:23); the
   content uses YouTube's real values.
+
+## v3 decisions
+
+Decisions the v3 brief (`docs/TRAILS_V3_BRIEF.md`) does not settle, made during the build.
+Answers to the brief's §18 open questions were supplied by Abhishek up front and are recorded in
+`docs/V3_STATE.md`.
+
+- **Docs layout.** `TRAILS_V3_BRIEF.md` and `CLAUDE_CODE_PROMPTS.md` moved into `docs/`, and the v2
+  codebase briefing was renamed `docs/CODEBASE_CONTEXT.md`, because every prompt references those
+  paths.
+- **No AI credential in the build environment.** `ANTHROPIC_API_KEY` is unset, so a deterministic
+  `MockProvider` backs P3–P6. It is registered only when `NODE_ENV !== "production"` and is never
+  selectable in production. Real-AI verification is pending (tracked in `docs/V3_STATE.md`).
