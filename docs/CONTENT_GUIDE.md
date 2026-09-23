@@ -359,7 +359,9 @@ where it is not obvious, so any of these can be re-checked in one line.
 - **AWS**: IAM Identity Center replaced IAM users for human access; IMDSv2 is required on new
   instances; `gp3` is the default EBS type. Say "as of this writing" for anything pricing-related
   rather than quoting numbers.
-- **Caddy 2** and **nginx 1.29** for the reverse-proxy camp. Caddy's automatic HTTPS is the
+- **Caddy 2** (2.11.x) and **nginx** — mainline 1.31.x, stable 1.30.x — for the reverse-proxy camp.
+  `curl -s https://nginx.org/en/docs/download.html` lists both branches; nginx ships often, so cite
+  a branch rather than a patch. Caddy's automatic HTTPS is the
   headline difference and is worth teaching directly.
 
 **Re-check before writing.** These were true on 2026-09-23. A quiz answer that depends on a version
