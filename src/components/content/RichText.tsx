@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 /*
  * The curriculum's deliberately small Markdown subset:
  *   paragraphs (blank-line separated), "- " bullet lists, "1. " numbered lists,
- *   `inline code`, **bold**, and fenced ```lang code blocks (highlighted for JS/TS/JSX).
+ *   `inline code`, **bold**, *emphasis*, and fenced ```lang code blocks (highlighted for JS/TS/JSX).
  */
 
 type Block =
@@ -43,9 +43,23 @@ export function parseBlocks(text: string): Block[] {
   return blocks;
 }
 
-/** Inline formatting: `code` and **bold**. */
+/**
+ * Inline formatting: `code`, **bold** and *emphasis*.
+ *
+ * Emphasis follows CommonMark's rule -- the opening `*` must be followed by a non-space and the
+ * closing `*` preceded by one -- so a literal asterisk with a space after it (`SELECT * FROM`,
+ * a `* @param` line) is left alone. `**bold**` is matched first in the same alternation, so it
+ * never decomposes into two emphasis runs.
+ */
+const INLINE = /(`[^`]+`|\*\*[^*]+\*\*|(?<!\*)\*(?!\s)[^*\n]+?(?<!\s)\*(?!\*))/g;
+
+/** The tokenising step, split out so it can be tested without a DOM. */
+export function splitInline(text: string): string[] {
+  return text.split(INLINE);
+}
+
 export function InlineText({ text }: { text: string }) {
-  const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
+  const parts = splitInline(text);
   return (
     <>
       {parts.map((part, i) => {
@@ -58,6 +72,9 @@ export function InlineText({ text }: { text: string }) {
         }
         if (part.length > 4 && part.startsWith("**") && part.endsWith("**")) {
           return <strong key={i}>{part.slice(2, -2)}</strong>;
+        }
+        if (part.length > 2 && part.startsWith("*") && part.endsWith("*")) {
+          return <em key={i}>{part.slice(1, -1)}</em>;
         }
         return <Fragment key={i}>{part}</Fragment>;
       })}

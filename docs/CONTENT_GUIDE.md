@@ -116,8 +116,15 @@ video: {
 2. **Tradeoffs** and **when you'd reach for it vs. an alternative**.
 3. **A gotcha or performance implication** that catches experienced people.
 
-No tutorial tone ("In this lesson we'll…"), no filler. `inline code` in backticks is supported.
-State versions only when you verified them (§10).
+No tutorial tone ("In this lesson we'll…"), no filler. State versions only when you verified
+them (§10).
+
+**The supported Markdown subset** (`src/components/content/RichText.tsx`, tested in
+`richText.test.ts`) is: blank-line-separated paragraphs, `- ` / `* ` bullet lists, `1. ` numbered
+lists, `` `inline code` ``, `**bold**`, `*emphasis*`, and fenced ```lang code blocks (highlighted
+for the JS family). Anything else renders literally -- there are no links, headings or tables.
+Emphasis follows CommonMark's spacing rule, so a literal asterisk with a space after it
+(`SELECT * FROM`) is safe.
 
 ## 6. Quizzes
 
