@@ -172,7 +172,7 @@ export class CodexCliProvider implements AiProvider {
         args: ["exec", "--json", "--model", this.defaultModel("verify"), "--sandbox", "read-only", "--skip-git-repo-check", "-"],
         env: { CODEX_HOME: home },
         input: 'Reply with exactly {"ok": true} and nothing else.',
-        timeoutMs: 90_000,
+        timeoutMs: 120_000,
       });
       if (result.code !== 0) {
         throw new AiProviderError(redact(result.stderr || result.stdout || `codex exited with code ${result.code}`, [this.authJson]).trim());

@@ -65,7 +65,20 @@ export class AiProviderError extends Error {
   }
 }
 
-export const DEFAULT_TIMEOUT_MS = 120_000;
+/**
+ * How long one AI call may take before it is abandoned.
+ *
+ * Two minutes was far too short. A single assessment generation is not one call: it is a blueprint,
+ * then one item batch per area (eight areas is normal), then an explain batch, then critic passes —
+ * a dozen or more round trips. The CLI providers are slower still, because each call starts a
+ * process and waits for a model to think, so a batch that an API answers in ninety seconds can take
+ * a CLI several minutes.
+ *
+ * This is a safety net against a hung process, not a service-level target: it should sit well above
+ * how long the work actually takes, so that hitting it means something is wrong rather than merely
+ * slow. Override with AI_TIMEOUT_MS when a provider or a machine is unusually slow.
+ */
+export const DEFAULT_TIMEOUT_MS = Number(process.env.AI_TIMEOUT_MS ?? 900_000);
 export const EVALUATION_TIMEOUT_MS = 480_000;
 export const DEFAULT_MAX_OUTPUT_TOKENS = 16_000;
 

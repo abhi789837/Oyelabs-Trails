@@ -142,7 +142,7 @@ export class ClaudeCliProvider implements AiProvider {
       args: ["-p", "--output-format", "json", "--model", this.defaultModel("verify")],
       env: { CLAUDE_CODE_OAUTH_TOKEN: this.token },
       input: 'Reply with exactly {"ok": true} and nothing else.',
-      timeoutMs: 60_000,
+      timeoutMs: 120_000,
     });
 
     if (result.code !== 0) {
