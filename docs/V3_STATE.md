@@ -25,7 +25,7 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 - [x] P0 Foundations — `server/` + `shared/` scaffold, Fastify, Drizzle + migrations, dev script, `/api/health`, Vite proxy
 - [x] P1 Auth — users, sessions, seed superadmin, login/change-password, guards, AuthProvider, admin onboarding, audit log
 - [x] P2 Content gating + progress — server content bundle, filtered manifest/content API, server quiz grading, sandboxed code verification, progress API, manual plan editor
-- [ ] P3 AI layer — crypto box, credentials CRUD + UI, four adapters, verify, `ai_calls` audit, job queue, model settings
+- [x] P3 AI layer — crypto box, credentials CRUD + UI, four adapters, verify, `ai_calls` audit, job queue, model settings
 - [ ] P4 Assessment generation — blueprint → pools → critic → code validation; Issue assessment; admin pool preview
 - [ ] P5 Test taking + proctoring — pre-flight, item runner, adaptive selector, detectors, warnings, SSE live view, termination
 - [ ] P6 Evaluation + plans — explain grading, evaluation job, plan validation/publish, learner `/plan`, admin evaluation tab
@@ -151,8 +151,34 @@ _(newest last: step, commit hash, known gaps)_
   `/verify/:certificateId` page is not built — both are carried into P6, where plans become real.
   The README has a v3 banner and corrected sections but its full rewrite is P8.
 
+- **P3 done** — `a1a31e2` "v3 phase 3: AI provider layer and job queue".
+  Built: AES-256-GCM secret box, credentials repository + CRUD routes, four adapters
+  (`anthropic-api`, `openai-api`, `claude-cli`, `codex-cli`) plus the deterministic
+  `MockProvider`, `AiService` (concurrency cap of 2, jittered retries, `ai_calls` audit on every
+  attempt), SQLite job queue + `JobWorker`, the `credential.verify` handler, model settings, and
+  the Admin → AI connection page with the §8.1 policy warnings and the acknowledgement gate.
+  Verified: 128/128 tests (26 new) · typecheck clean · `content:check` 0 errors · build clean.
+  Security tests that matter: the secret appears in no response body, no database row and no audit
+  entry; a tampered ciphertext fails to open; a subscription credential is refused without the
+  acknowledgement even by a hand-crafted request; `provider: "mock"` is rejected by the API.
+  Verified from installed sources (full notes in `docs/PROGRESS.md`): Anthropic
+  `output_config.format`, OpenAI `response_format.json_schema`, `z.toJSONSchema`, the real
+  `Model` union used for the suggested defaults.
+  Decision: `providerFor` returns the mock when one is configured — a test caught that
+  verification was otherwise building a real client and making live HTTPS calls during `npm test`.
+  **Known gaps:** the `claude` and `codex` CLIs are not installed here, so those two adapters are
+  written to the documented interface but have never been executed.
+
 ## Blocked / needs Abhishek
 
 - **Real AI credential.** No `ANTHROPIC_API_KEY` in the build environment, so every AI path was
   built and tested against the deterministic `MockProvider`. Add a real credential in
-  Admin → AI connection and re-run the P4/P6 verification before trusting live output.
+  Admin → AI connection and re-run the P4/P6 verification before trusting live output. The mock
+  is only ever constructed outside production, and the admin page shows a banner while it is in
+  use.
+- **CLI adapters never executed.** Neither the `claude` nor the `codex` CLI is installed in this
+  environment. `server/src/ai/adapters/claudeCli.ts` and `codexCli.ts` are written to the
+  documented interfaces and their error handling and redaction are covered, but the actual
+  invocation, the JSON envelope shapes and the token-usage fields need one live run each on a
+  machine that has the CLIs. The Anthropic and OpenAI API adapters are the recommended path and do
+  not have this caveat.
