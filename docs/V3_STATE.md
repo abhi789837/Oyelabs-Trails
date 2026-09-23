@@ -27,8 +27,8 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 - [x] P2 Content gating + progress — server content bundle, filtered manifest/content API, server quiz grading, sandboxed code verification, progress API, manual plan editor
 - [x] P3 AI layer — crypto box, credentials CRUD + UI, four adapters, verify, `ai_calls` audit, job queue, model settings
 - [x] P4 Assessment generation — blueprint → pools → critic → code validation; Issue assessment; admin pool preview
-- [ ] P5 Test taking + proctoring — pre-flight, item runner, adaptive selector, detectors, warnings, SSE live view, termination
-- [ ] P6 Evaluation + plans — explain grading, evaluation job, plan validation/publish, learner `/plan`, admin evaluation tab
+- [x] P5 Test taking + proctoring — pre-flight, item runner, adaptive selector, detectors, warnings, SSE live view, termination
+- [x] P6 Evaluation + plans — explain grading, evaluation job, plan validation/publish, learner `/plan`, admin evaluation tab
 - [ ] P7 Admin console polish — overview, people table, learner detail tabs, usage reports, retention job, backups
 - [ ] P8 Deploy artifacts — Dockerfile, compose, Caddyfile.example, `.env.example`, README (artifacts only, no deploy)
 
@@ -188,6 +188,34 @@ _(newest last: step, commit hash, known gaps)_
   **Known gap:** the three sample results are identical, because the fixture does not vary by
   profile. Whether a blueprint genuinely reflects a particular set of notes can only be judged
   with a real credential — that is the first thing to check once one is added.
+
+- **P5 done** — `f741112` "v3 phase 5: proctored assessment".
+  Built (server): the adaptive selector, server-authoritative timing, the integrity rules
+  (cooldown, soft→hard escalation, termination), the test-taking API, snapshot storage behind an
+  authenticated route with a path-traversal check, the SSE live feed, and the minute sweeper.
+  Built (client, proctor engine delegated to a subagent and integrated here): `types.ts`,
+  `browserSignals.ts`, `cameraDetectors.ts`, `useProctor.ts`, `warnings.tsx`, `PreFlight.tsx`,
+  plus `ItemRunner`, `AssessmentPage` and `docs/PROCTORING_TEST.md`.
+  Verified: 208/208 tests (61 new) · typecheck clean · `content:check` 0 errors · build clean.
+  Subagent's verified MediaPipe facts: `detectForVideo` is synchronous and needs strictly
+  increasing timestamps; `Matrix.data` is a flat **column-major** array, so yaw/pitch come from a
+  YXZ decomposition with a runtime layout check (a transposed rotation would silently swap them).
+  Decisions made by the subagent and kept: copy and cut share one signal type so a Ctrl+C/Ctrl+X
+  pair is one strike; right-click and text-selection are *split* because `selectstart` is noisy
+  and would otherwise escalate on ordinary reading; sustained rules fire once per episode; a
+  rAF-gap guard stops a backgrounded tab returning as an 8-second "no face".
+  **Known gap:** the camera signals themselves have never been run against a real camera and a
+  real person. `docs/PROCTORING_TEST.md` is the checklist for that.
+- **P6 done** — `a3e9176` "v3 phase 6: evaluation, learning plans and the admin views".
+  Built: the evaluation prompt and job, rubric grading of written answers, `planValidation.ts`
+  (drop unknown, dedupe, curriculum order within AI module order, prerequisite fill, minimum size,
+  starter-plan fallback), `/api/me/evaluation`, the learner `/plan` page, the admin evaluation
+  view, plan diff against the AI version, integrity timeline with snapshots, and the live board.
+  Verified: 14 new tests including a full round trip — generate → take → submit → evaluate →
+  publish → the learner's filtered manifest matches the published plan exactly. A terminated
+  assessment still produces a flagged plan (§18 answer 2).
+  **Known gap:** every AI judgement in P4-P6 is the mock's. Whether a real model writes a good
+  blueprint or a sensible plan is untested.
 
 ## Blocked / needs Abhishek
 
