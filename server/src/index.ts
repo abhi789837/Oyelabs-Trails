@@ -3,8 +3,10 @@ import fs from "node:fs";
 import { buildApp } from "./app";
 import { announceSeed, seedSuperadmin } from "./auth/seed";
 import { purgeExpiredSessions } from "./auth/sessions";
+import { ContentStore } from "./content/store";
 import { openDb } from "./db";
 import { loadEnv } from "./env";
+import { createSandbox } from "./sandbox";
 
 async function main(): Promise<void> {
   const env = loadEnv();
@@ -19,7 +21,11 @@ async function main(): Promise<void> {
   announceSeed(await seedSuperadmin(db, env), (message) => console.log(message));
   purgeExpiredSessions(db);
 
-  const app = await buildApp({ env, db });
+  const content = ContentStore.load(env.serverContentDir);
+  const sandbox = await createSandbox(env, (message) => console.log(`[trails] ${message}`));
+  console.log(`[trails] curriculum: ${content.manifest.length} tracks, ${content.topicCount} topics`);
+
+  const app = await buildApp({ env, db, content, sandbox });
 
   const shutdown = async (signal: string) => {
     app.log.info({ signal }, "shutting down");
@@ -28,6 +34,7 @@ async function main(): Promise<void> {
       // Checkpoint the WAL so the .db file is complete for a backup or a container restart.
       sqlite.pragma("wal_checkpoint(TRUNCATE)");
       sqlite.close();
+      await sandbox.dispose?.();
     } finally {
       process.exit(0);
     }

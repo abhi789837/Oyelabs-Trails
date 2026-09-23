@@ -14,6 +14,11 @@ export function formatMinutes(total: number): string {
   return `${hours} h ${minutes} min`;
 }
 
+/** Epoch milliseconds, which is how the server sends every time. */
+export function formatTimestamp(epochMs: number): string {
+  return formatDate(new Date(epochMs).toISOString());
+}
+
 export function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, {
     year: "numeric",

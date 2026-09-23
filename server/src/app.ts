@@ -9,13 +9,19 @@ import Fastify, { type FastifyInstance } from "fastify";
 
 import { BODY_LIMIT_JSON, ERROR_CODES } from "../../shared/api";
 import { registerAuthContext } from "./auth/guards";
+import type { ContentStore } from "./content/store";
 import type { Db } from "./db";
 import type { Env } from "./env";
 import { buildCsp } from "./lib/csp";
 import { HttpError } from "./lib/errors";
+import { registerAdminPlanRoutes } from "./routes/admin/plans";
 import { registerAdminUserRoutes } from "./routes/admin/users";
 import { registerAuthRoutes } from "./routes/auth";
+import { registerContentRoutes } from "./routes/content";
 import { registerHealthRoutes } from "./routes/health";
+import { registerMeRoutes } from "./routes/me";
+import { registerTopicRoutes } from "./routes/topics";
+import type { CodeSandbox } from "./sandbox";
 
 export interface RouteRecord {
   method: string;
@@ -26,6 +32,10 @@ declare module "fastify" {
   interface FastifyInstance {
     env: Env;
     db: Db;
+    /** The curriculum, and the only place the server reads content from. */
+    content: ContentStore;
+    /** Runs learner-submitted JavaScript. See server/src/sandbox for what it guarantees. */
+    sandbox: CodeSandbox;
     /**
      * Every route this app registered. Security tests walk it to assert that no route under
      * /api/admin is reachable by a learner, so adding an admin route is covered automatically
@@ -38,11 +48,13 @@ declare module "fastify" {
 export interface BuildAppOptions {
   env: Env;
   db: Db;
+  content: ContentStore;
+  sandbox: CodeSandbox;
   /** Off in tests so the output stays readable. */
   logger?: boolean;
 }
 
-export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOptions): Promise<FastifyInstance> {
+export async function buildApp({ env, db, content, sandbox, logger = !env.isTest }: BuildAppOptions): Promise<FastifyInstance> {
   const app = Fastify({
     logger: logger
       ? {
@@ -72,6 +84,8 @@ export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOption
 
   app.decorate("env", env);
   app.decorate("db", db);
+  app.decorate("content", content);
+  app.decorate("sandbox", sandbox);
 
   const routeTable: RouteRecord[] = [];
   app.decorate("routeTable", routeTable);
@@ -121,8 +135,12 @@ export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOption
 
   await registerHealthRoutes(app);
   await registerAuthRoutes(app);
-  // Registered as a plugin so its superadmin preHandler is encapsulated to these routes only.
+  await registerMeRoutes(app);
+  await registerContentRoutes(app);
+  await registerTopicRoutes(app);
+  // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
+  await app.register(registerAdminPlanRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

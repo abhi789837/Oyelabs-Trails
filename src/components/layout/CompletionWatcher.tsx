@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { modulePath, tracks } from "@/content";
+import { getTracks, modulePath } from "@/content";
 import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { useProgressStore, type TopicProgress } from "@/store/progressStore";
 import { useToastStore } from "@/store/toastStore";
@@ -8,7 +8,7 @@ import { useToastStore } from "@/store/toastStore";
 function completedSets(progress: Record<string, TopicProgress>) {
   const modules = new Set<string>();
   const trackIds = new Set<string>();
-  for (const track of tracks) {
+  for (const track of getTracks()) {
     if (summarizeTrack(track, progress).isComplete) trackIds.add(track.id);
     for (const module of track.modules) {
       if (module.available && summarizeModule(module, progress).isComplete) modules.add(module.id);
@@ -28,7 +28,7 @@ export function CompletionWatcher() {
     let previous = completedSets(useProgressStore.getState().progress);
     return useProgressStore.subscribe((state) => {
       const current = completedSets(state.progress);
-      for (const track of tracks) {
+      for (const track of getTracks()) {
         if (current.trackIds.has(track.id) && !previous.trackIds.has(track.id)) {
           push({
             tone: "summit",

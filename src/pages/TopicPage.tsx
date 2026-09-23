@@ -18,7 +18,7 @@ import { accentClasses } from "@/lib/accent";
 import { levelLabels } from "@/lib/track-meta";
 import { cn, formatMinutes } from "@/lib/utils";
 import { QUIZ_PASS_THRESHOLD, useProgressStore } from "@/store/progressStore";
-import type { Topic } from "@/types/curriculum";
+import type { ServedTopic } from "@shared/content";
 import NotFoundPage from "./NotFoundPage";
 
 export default function TopicPage() {
@@ -44,7 +44,6 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
   const content = useModuleContent(track.id, module.id);
   const progress = useTopicProgress(meta.id);
   const markInProgress = useProgressStore((s) => s.markInProgress);
-  const resetTopic = useProgressStore((s) => s.resetTopic);
   const { prev, next } = topicNeighbors(meta.id);
   const index = module.topics.findIndex((t) => t.id === meta.id);
   const accent = accentClasses[track.accentToken];
@@ -55,11 +54,6 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
 
   const topic = content.status === "ready" ? content.module.topics.find((t) => t.id === meta.id) : undefined;
 
-  const handleReset = () => {
-    if (window.confirm(`Reset your progress on "${meta.title}"? Your attempts and best score will be cleared.`)) {
-      resetTopic(meta.id);
-    }
-  };
 
   return (
     <article className="mx-auto max-w-4xl px-4 pb-16 pt-8 sm:px-8">
@@ -121,16 +115,11 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
           <p className="mt-1 text-sm text-muted-foreground">
             {topic.challengeType === "quiz"
               ? `${topic.quiz?.length ?? 0} questions. Score ${QUIZ_PASS_THRESHOLD}% or more to complete this topic.`
-              : `${topic.codeChallenge?.testCases.length ?? 0} tests, including edge cases. Every test must pass to complete this topic.`}
+              : `${(topic.codeChallenge?.visibleTests.length ?? 0) + (topic.codeChallenge?.hiddenTestCount ?? 0)} tests, including hidden ones. Every test must pass to complete this topic.`}
           </p>
           <div className="mt-6">
             <ChallengeRunner topic={topic} />
           </div>
-          {progress.attempts > 0 && (
-            <Button variant="link" size="sm" className="mt-4 px-0 text-muted-foreground" onClick={handleReset}>
-              Reset progress for this topic
-            </Button>
-          )}
         </section>
       )}
 
@@ -159,7 +148,7 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
   );
 }
 
-function TopicBody({ topic }: { topic: Topic }) {
+function TopicBody({ topic }: { topic: ServedTopic }) {
   return (
     <>
       <section aria-label="Video" className="mt-8">

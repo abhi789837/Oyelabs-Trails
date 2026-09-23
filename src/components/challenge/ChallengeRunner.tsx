@@ -1,9 +1,9 @@
-import type { Topic } from "@/types/curriculum";
+import type { ServedTopic } from "@shared/content";
 import { CodeRunner } from "./CodeRunner";
 import { QuizRunner } from "./QuizRunner";
 
 /** Picks the right challenge for a topic. Both paths grade and write through recordAttempt. */
-export function ChallengeRunner({ topic }: { topic: Topic }) {
+export function ChallengeRunner({ topic }: { topic: ServedTopic }) {
   if (topic.challengeType === "quiz" && topic.quiz?.length) {
     return <QuizRunner topic={topic} questions={topic.quiz} />;
   }

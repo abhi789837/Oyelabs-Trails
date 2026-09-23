@@ -1,39 +1,37 @@
 import { useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { Check, Minus, X } from "lucide-react";
+import { Check, LoaderCircle, Minus, X } from "lucide-react";
 
+import type { QuizAttemptResult, QuizQuestionResult, ServedQuizQuestion, ServedTopic } from "@shared/content";
+
+import { ApiRequestError } from "@/api/client";
+import { FormAlert } from "@/components/form/Field";
 import { InlineText, RichText } from "@/components/content/RichText";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { submitAttempt } from "@/features/challenge/api";
 import { seededOrder } from "@/lib/shuffle";
 import { cn, preferredScrollBehavior } from "@/lib/utils";
-import { QUIZ_PASS_THRESHOLD, useProgressStore } from "@/store/progressStore";
-import type { QuizQuestion, Topic } from "@/types/curriculum";
+import { useProgressStore } from "@/store/progressStore";
 import { ChallengeResult } from "./ChallengeResult";
 
-type Answer = number | number[];
+type Answer = number[];
 
-const isMulti = (q: QuizQuestion) => Array.isArray(q.correctIndices) && q.correctIndices.length > 1;
-
-/** Single-select: the chosen option. Multi-select: exactly the set of correct options (all-or-nothing). */
-export function isCorrect(q: QuizQuestion, answer: Answer | undefined): boolean {
-  if (answer === undefined) return false;
-  if (isMulti(q)) {
-    const chosen = new Set(answer as number[]);
-    const correct = q.correctIndices!;
-    return chosen.size === correct.length && correct.every((i) => chosen.has(i));
-  }
-  return answer === q.correctIndex;
-}
-
-function isAnswered(q: QuizQuestion, answer: Answer | undefined): boolean {
-  return isMulti(q) ? Array.isArray(answer) && answer.length > 0 : answer !== undefined;
-}
-
-export function QuizRunner({ topic, questions }: { topic: Topic; questions: QuizQuestion[] }) {
-  const recordAttempt = useProgressStore((s) => s.recordAttempt);
+/**
+ * The quiz.
+ *
+ * From v3 the answer key is never in the browser: options arrive without it, the learner's
+ * choices go to the server as *original* option indices, and the server returns the score plus
+ * the per-question key so the explanations can be shown afterwards (brief §7.4).
+ *
+ * The seeded shuffle stays client-side. It only affects display order, and reshuffling on every
+ * retry is what stops answers being memorised by position.
+ */
+export function QuizRunner({ topic, questions }: { topic: ServedTopic; questions: ServedQuizQuestion[] }) {
+  const applyAttempt = useProgressStore((s) => s.applyAttempt);
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
-  const [submitted, setSubmitted] = useState(false);
-  // Each retry reshuffles the options so answers aren't remembered by position.
+  const [result, setResult] = useState<QuizAttemptResult | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [round, setRound] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -43,33 +41,49 @@ export function QuizRunner({ topic, questions }: { topic: Topic; questions: Quiz
     [questions, round],
   );
 
-  const answeredCount = questions.filter((q) => isAnswered(q, answers[q.id])).length;
-  const correctCount = questions.filter((q) => isCorrect(q, answers[q.id])).length;
-  const score = Math.round((correctCount / questions.length) * 100);
-  const passed = score >= QUIZ_PASS_THRESHOLD;
+  const resultsById = useMemo(() => {
+    const map = new Map<string, QuizQuestionResult>();
+    for (const entry of result?.perQuestion ?? []) map.set(entry.id, entry);
+    return map;
+  }, [result]);
 
-  const toggle = (q: QuizQuestion, optionIndex: number) =>
-    setAnswers((a) => {
-      const current = new Set((a[q.id] as number[] | undefined) ?? []);
-      if (current.has(optionIndex)) current.delete(optionIndex);
-      else current.add(optionIndex);
-      return { ...a, [q.id]: [...current] };
+  const answeredCount = questions.filter((q) => (answers[q.id]?.length ?? 0) > 0).length;
+  const submitted = result !== null;
+
+  const toggle = (question: ServedQuizQuestion, optionIndex: number) =>
+    setAnswers((current) => {
+      if (!question.multi) return { ...current, [question.id]: [optionIndex] };
+      const chosen = new Set(current[question.id] ?? []);
+      if (chosen.has(optionIndex)) chosen.delete(optionIndex);
+      else chosen.add(optionIndex);
+      return { ...current, [question.id]: [...chosen] };
     });
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (answeredCount < questions.length || submitted) return;
-    setSubmitted(true);
-    recordAttempt(topic.id, passed, score);
-    requestAnimationFrame(() => {
-      resultRef.current?.scrollIntoView({ behavior: preferredScrollBehavior(), block: "center" });
-      resultRef.current?.focus({ preventScroll: true });
-    });
+    if (submitting || submitted || answeredCount < questions.length) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const graded = await submitAttempt(topic.id, { kind: "quiz", answers });
+      if (graded.kind !== "quiz") throw new Error("The server graded this as a coding challenge.");
+      setResult(graded);
+      applyAttempt(topic.id, graded);
+      requestAnimationFrame(() => {
+        resultRef.current?.scrollIntoView({ behavior: preferredScrollBehavior(), block: "center" });
+        resultRef.current?.focus({ preventScroll: true });
+      });
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Your answers couldn't be submitted. Try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleRetry = () => {
     setAnswers({});
-    setSubmitted(false);
+    setResult(null);
+    setError(null);
     setRound((r) => r + 1);
     requestAnimationFrame(() => {
       formRef.current?.scrollIntoView({ behavior: preferredScrollBehavior(), block: "start" });
@@ -81,168 +95,158 @@ export function QuizRunner({ topic, questions }: { topic: Topic; questions: Quiz
     <div>
       <form ref={formRef} onSubmit={handleSubmit} className="scroll-mt-24" noValidate>
         <ol className="space-y-10">
-          {questions.map((q, qi) => {
-            const multi = isMulti(q);
-            const answer = answers[q.id];
-            const correct = isCorrect(q, answer);
-            const correctSet = new Set(multi ? q.correctIndices : [q.correctIndex]);
-            const chosenSet = new Set(multi ? ((answer as number[] | undefined) ?? []) : answer === undefined ? [] : [answer as number]);
-            const legendId = `${q.id}-legend`;
-            return (
-              <li key={q.id}>
-                <fieldset disabled={submitted} aria-labelledby={legendId}>
-                  <div id={legendId} className="flex gap-3">
-                    <span className="pt-px font-mono text-sm text-muted-foreground tabular">{qi + 1}.</span>
-                    <div className="min-w-0 flex-1">
-                      {(multi || q.isEdgeCaseOrInterviewQuestion) && (
-                        <div className="mb-2 flex flex-wrap gap-2">
-                          {multi && <span className="rounded-sm bg-foreground/10 px-1.5 py-0.5 font-mono text-[11px]">Select all that apply</span>}
-                          {q.isEdgeCaseOrInterviewQuestion && (
-                            <span className="rounded-sm border border-trailmark/40 px-1.5 py-0.5 font-mono text-[11px] text-trailmark-strong">
-                              Interview-level
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      <RichText text={q.prompt} size="base" className="font-medium" />
-                    </div>
-                  </div>
+          {questions.map((question, questionIndex) => {
+            const answer = answers[question.id] ?? [];
+            const graded = resultsById.get(question.id);
+            const correctSet = new Set(graded?.correctIndices ?? []);
+            const chosenSet = new Set(answer);
+            const legendId = `${question.id}-legend`;
+            const order = orders[question.id] ?? question.options.map((_, i) => i);
 
-                  <div className="mt-3 sm:pl-7">
-                    {multi ? (
-                      <div className="grid gap-2" role="group" aria-labelledby={legendId}>
-                        {orders[q.id].map((optionIndex) => (
+            return (
+              <li key={question.id} className="scroll-mt-24">
+                <fieldset>
+                  <legend id={legendId} className="w-full">
+                    <span className="flex items-baseline gap-2 font-mono text-xs text-muted-foreground">
+                      <span>
+                        Question {questionIndex + 1} of {questions.length}
+                      </span>
+                      {question.multi && <span className="text-trailmark-strong">Select all that apply</span>}
+                      {graded && (
+                        <span className={graded.correct ? "text-summit-strong" : "text-destructive"}>
+                          {graded.correct ? "Correct" : "Incorrect"}
+                        </span>
+                      )}
+                    </span>
+                    <RichText text={question.prompt} className="mt-2 font-medium" />
+                  </legend>
+
+                  <div className="mt-4">
+                    {question.multi ? (
+                      <div className="space-y-2" role="group" aria-labelledby={legendId}>
+                        {order.map((optionIndex) => (
                           <OptionRow
                             key={optionIndex}
-                            id={`${q.id}-opt-${optionIndex}`}
-                            text={q.options[optionIndex]}
-                            selected={chosenSet.has(optionIndex)}
                             submitted={submitted}
-                            isCorrectOption={correctSet.has(optionIndex)}
-                            control={
-                              <input
-                                type="checkbox"
-                                id={`${q.id}-opt-${optionIndex}`}
-                                checked={chosenSet.has(optionIndex)}
-                                onChange={() => toggle(q, optionIndex)}
-                                className="mt-[3px] h-4 w-4 shrink-0 accent-trailmark"
-                              />
-                            }
-                          />
+                            chosen={chosenSet.has(optionIndex)}
+                            correct={correctSet.has(optionIndex)}
+                          >
+                            <input
+                              type="checkbox"
+                              className="mt-0.5 h-4 w-4 shrink-0 accent-[rgb(var(--trailmark))]"
+                              checked={chosenSet.has(optionIndex)}
+                              disabled={submitted}
+                              onChange={() => toggle(question, optionIndex)}
+                            />
+                            <span className="min-w-0">
+                              <InlineText text={question.options[optionIndex]} />
+                            </span>
+                          </OptionRow>
                         ))}
                       </div>
                     ) : (
                       <RadioGroup
-                        value={answer === undefined ? "" : String(answer)}
-                        onValueChange={(v) => setAnswers((a) => ({ ...a, [q.id]: Number(v) }))}
-                        className="gap-2"
                         aria-labelledby={legendId}
+                        value={answer[0] === undefined ? "" : String(answer[0])}
+                        onValueChange={(value) => toggle(question, Number(value))}
+                        disabled={submitted}
+                        className="space-y-2"
                       >
-                        {orders[q.id].map((optionIndex) => (
+                        {order.map((optionIndex) => (
                           <OptionRow
                             key={optionIndex}
-                            id={`${q.id}-opt-${optionIndex}`}
-                            text={q.options[optionIndex]}
-                            selected={chosenSet.has(optionIndex)}
                             submitted={submitted}
-                            isCorrectOption={correctSet.has(optionIndex)}
-                            control={<RadioGroupItem value={String(optionIndex)} id={`${q.id}-opt-${optionIndex}`} className="mt-[3px]" />}
-                          />
+                            chosen={chosenSet.has(optionIndex)}
+                            correct={correctSet.has(optionIndex)}
+                          >
+                            <RadioGroupItem value={String(optionIndex)} id={`${question.id}-${optionIndex}`} className="mt-0.5 shrink-0" />
+                            <span className="min-w-0">
+                              <InlineText text={question.options[optionIndex]} />
+                            </span>
+                          </OptionRow>
                         ))}
                       </RadioGroup>
                     )}
-
-                    {submitted && (
-                      <div className={cn("mt-3 flex gap-2 text-sm", correct ? "text-summit-strong" : "text-foreground")}>
-                        <span className="shrink-0 font-medium">{correct ? "Correct." : "Incorrect."}</span>
-                        <span className="text-muted-foreground">
-                          <InlineText text={q.explanation} />
-                        </span>
-                      </div>
-                    )}
                   </div>
+
+                  {graded && (
+                    <div className="mt-3 rounded-md border-l-2 border-basalt/40 bg-surface-sunken/40 px-3 py-2">
+                      <RichText text={graded.explanation} className="text-sm text-muted-foreground" />
+                    </div>
+                  )}
                 </fieldset>
               </li>
             );
           })}
         </ol>
 
+        {error && <div className="mt-8"><FormAlert>{error}</FormAlert></div>}
+
         {!submitted && (
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Button type="submit" disabled={answeredCount < questions.length}>
-              Submit answers
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <Button type="submit" disabled={submitting || answeredCount < questions.length}>
+              {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+              {submitting ? "Checking…" : "Submit answers"}
             </Button>
-            <span className="text-sm text-muted-foreground" aria-live="polite">
-              {answeredCount < questions.length
-                ? `${answeredCount} of ${questions.length} answered. Answer every question to submit.`
-                : "All questions answered."}
-            </span>
+            <p className="font-mono text-xs text-muted-foreground" aria-live="polite">
+              {answeredCount} of {questions.length} answered
+            </p>
           </div>
         )}
       </form>
 
-      {submitted && (
-        <div className="mt-8">
-          <ChallengeResult
-            ref={resultRef}
-            topic={topic}
-            passed={passed}
-            score={score}
-            detail={`${correctCount} of ${questions.length} correct`}
-            retryLabel="Retake the quiz"
-            onRetry={handleRetry}
-          />
-        </div>
+      {result && (
+        <ChallengeResult
+          ref={resultRef}
+          className="mt-10"
+          topic={topic}
+          passed={result.passed}
+          score={result.score}
+          detail={`${result.correctCount} of ${result.total} correct`}
+          onRetry={handleRetry}
+          retryLabel="Try again"
+        />
       )}
     </div>
   );
 }
 
 function OptionRow({
-  id,
-  text,
-  selected,
   submitted,
-  isCorrectOption,
-  control,
+  chosen,
+  correct,
+  children,
 }: {
-  id: string;
-  text: string;
-  selected: boolean;
   submitted: boolean;
-  isCorrectOption: boolean;
-  control: ReactNode;
+  chosen: boolean;
+  correct: boolean;
+  children: ReactNode;
 }) {
-  const markCorrect = submitted && isCorrectOption;
-  const markWrong = submitted && selected && !isCorrectOption;
-  const missed = markCorrect && !selected;
+  const state = !submitted ? "open" : correct ? "correct" : chosen ? "wrong" : "neutral";
+
   return (
-    <div
+    <label
       className={cn(
-        "relative flex items-start gap-3 rounded-md border px-3 py-2.5 transition-colors",
-        !submitted && "hover:border-foreground/30 hover:bg-surface",
-        !submitted && selected && "border-foreground/50 bg-surface",
-        markCorrect && (missed ? "border-trailmark/60 bg-trailmark/10" : "border-summit/60 bg-summit/10"),
-        markWrong && "border-destructive/60 bg-destructive/10",
+        "flex cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 text-sm transition-colors",
+        state === "open" && "hover:bg-surface-sunken/60",
+        state === "correct" && "border-summit/60 bg-summit/[0.08]",
+        state === "wrong" && "border-destructive/60 bg-destructive/[0.06]",
+        state === "neutral" && "opacity-70",
+        submitted && "cursor-default",
       )}
     >
-      {control}
-      {/* The label's ::after stretches over the whole row, so the row is the click target. */}
-      <label htmlFor={id} className={cn("flex-1 text-sm leading-snug after:absolute after:inset-0", !submitted && "cursor-pointer")}>
-        <InlineText text={text} />
-      </label>
-      {markCorrect && (
-        <span className={cn("flex shrink-0 items-center gap-1 text-xs font-medium", missed ? "text-trailmark-strong" : "text-summit-strong")}>
-          {missed ? <Minus className="h-3.5 w-3.5" aria-hidden="true" /> : <Check className="h-3.5 w-3.5" aria-hidden="true" />}
-          {missed ? "Missed: this one was correct" : selected ? "Your answer, correct" : "Correct answer"}
+      {children}
+      {submitted && (
+        <span className="ml-auto shrink-0 pl-2">
+          {correct ? (
+            <Check className="h-4 w-4 text-summit-strong" aria-label="Correct answer" />
+          ) : chosen ? (
+            <X className="h-4 w-4 text-destructive" aria-label="Your answer, incorrect" />
+          ) : (
+            <Minus className="h-4 w-4 text-transparent" aria-hidden="true" />
+          )}
         </span>
       )}
-      {markWrong && (
-        <span className="flex shrink-0 items-center gap-1 text-xs font-medium text-destructive">
-          <X className="h-3.5 w-3.5" aria-hidden="true" />
-          Your answer
-        </span>
-      )}
-    </div>
+    </label>
   );
 }

@@ -155,7 +155,16 @@ export default function AdminPeoplePage() {
               {filtered.map((user) => (
                 <tr key={user.id} className="border-b last:border-0 hover:bg-surface-sunken/30">
                   <Td>
-                    <span className="font-medium">{user.displayName}</span>
+                    {user.role === "superadmin" ? (
+                      <span className="font-medium">{user.displayName}</span>
+                    ) : (
+                      <Link
+                        to={`/admin/people/${user.id}`}
+                        className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+                      >
+                        {user.displayName}
+                      </Link>
+                    )}
                     <span className="mt-0.5 block font-mono text-xs text-muted-foreground">{user.username}</span>
                   </Td>
                   <Td>

@@ -9,7 +9,7 @@ import { ApiRequestError } from "@/api/client";
 import { Field, FormAlert, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { tracks } from "@/content";
+import { useTracks } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
@@ -38,6 +38,8 @@ const emptyProfile: LearnerProfile = {
 export default function AdminOnboardPage() {
   useDocumentTitle("Onboard a learner");
   const navigate = useNavigate();
+  // A superadmin's manifest is unfiltered, so this is the whole curriculum.
+  const tracks = useTracks();
 
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -51,7 +53,7 @@ export default function AdminOnboardPage() {
   // The superadmin sees the full curriculum, so the module list is a fine source of skill areas.
   const areaOptions = useMemo(
     () => tracks.flatMap((track) => track.modules.filter((m) => m.available).map((m) => m.name)).sort(),
-    [],
+    [tracks],
   );
 
   const update = (patch: Partial<LearnerProfile>) => setProfile((p) => ({ ...p, ...patch }));

@@ -4,7 +4,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { modulePath, tracks, type ModuleMeta, type TrackMeta } from "@/content";
+import { modulePath, useTracks, type ModuleMeta, type TrackMeta } from "@/content";
 import { useModuleProgress, useTrackProgress } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { trackIcons } from "@/lib/track-meta";
@@ -16,6 +16,7 @@ interface TrackNavProps {
 }
 
 export function TrackNav({ collapsed = false, onNavigate }: TrackNavProps) {
+  const tracks = useTracks();
   return (
     <nav aria-label="Tracks" className="flex flex-col gap-1">
       <NavItemLink to="/" end label="Dashboard" collapsed={collapsed} onNavigate={onNavigate}>

@@ -35,8 +35,9 @@ export default defineConfig({
             { name: "react", test: /node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom|cookie|set-cookie-parser)[\\/]/ },
             { name: "motion", test: /node_modules[\\/](framer-motion|motion-dom|motion-utils)[\\/]/ },
             { name: "ui", test: /node_modules[\\/](@radix-ui|@floating-ui|lucide-react|class-variance-authority|clsx|tailwind-merge|zustand)[\\/]/ },
-            // The always-loaded table of contents; each module's full content is its own lazy chunk.
-            { name: "curriculum-index", test: /src[\\/]content[\\/](manifest|embeds)\.generated\.ts$/ },
+            // The reference-embeddability map. From v3 the manifest and every module's content
+            // come from the API, so this is the only generated curriculum data left in the bundle.
+            { name: "embeds", test: /src[\\/]content[\\/]embeds\.generated\.ts$/ },
           ],
         },
       },

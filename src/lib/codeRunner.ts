@@ -1,15 +1,13 @@
-import type { CodeChallenge } from "@/types/curriculum";
+import type { ServedCodeChallenge } from "@shared/content";
 
 /*
- * Runs learner code against a challenge's test cases in a throwaway Web Worker
- * created from an inline Blob URL.
+ * Runs a learner's own code against the challenge's VISIBLE tests, in a throwaway Web Worker
+ * built from a Blob URL. This is a fast feedback loop while they iterate, nothing more.
  *
- * SECURITY NOTE: this sandboxing is appropriate for an internal tool used by a trusted
- * team, NOT for executing untrusted public input. A worker has no access to the DOM,
- * cookies or localStorage and is terminated after the timeout, but the code inside it can
- * still make network requests and burn CPU until it is killed. Running arbitrary code from
- * the public would need a real isolation boundary (a sandboxed cross-origin iframe with a
- * strict CSP, or server-side containers).
+ * It decides nothing. From v3 the verdict comes from the server, which runs the hidden tests too
+ * inside an isolated V8 (brief §7.5). That matters twice over: the hidden tests never reach the
+ * browser, and this worker runs the learner's own code in their own tab, so it is not a place
+ * where a score could be forged.
  */
 
 export const RUN_TIMEOUT_MS = 3000;
@@ -24,7 +22,7 @@ export interface TestResult {
   timedOut?: boolean;
 }
 
-export interface RunOutcome {
+export interface LocalRunOutcome {
   results: TestResult[];
   passedCount: number;
   total: number;
@@ -109,16 +107,16 @@ type WorkerMessage =
   | { type: "result"; index: number; passed: boolean; actual?: string; expected: string; error?: string }
   | { type: "done" };
 
-export function runCodeChallenge(
+export function runVisibleTests(
   code: string,
-  challenge: CodeChallenge,
+  challenge: ServedCodeChallenge,
   timeoutMs: number = RUN_TIMEOUT_MS,
-): Promise<RunOutcome> {
+): Promise<LocalRunOutcome> {
   if (!/^[A-Za-z_$][\w$]*$/.test(challenge.functionName)) {
     throw new Error(`Invalid function name in challenge data: ${challenge.functionName}`);
   }
 
-  return new Promise((resolve) => {
+  return new Promise<LocalRunOutcome>((resolve) => {
     const url = URL.createObjectURL(new Blob([WORKER_SOURCE], { type: "text/javascript" }));
     const worker = new Worker(url);
     const received = new Map<number, TestResult>();
@@ -131,7 +129,7 @@ export function runCodeChallenge(
       worker.terminate();
       URL.revokeObjectURL(url);
 
-      const results: TestResult[] = challenge.testCases.map((tc, index) => {
+      const results: TestResult[] = challenge.visibleTests.map((tc, index) => {
         const got = received.get(index);
         if (got) return got;
         return {
@@ -166,7 +164,7 @@ export function runCodeChallenge(
       else if (msg.type === "result") {
         received.set(msg.index, {
           index: msg.index,
-          description: challenge.testCases[msg.index]?.description ?? `Test ${msg.index + 1}`,
+          description: challenge.visibleTests[msg.index]?.description ?? `Test ${msg.index + 1}`,
           passed: msg.passed,
           expected: msg.expected,
           actual: msg.actual,
@@ -180,6 +178,6 @@ export function runCodeChallenge(
       finish({ compileError: event.message || "The code couldn't be run." });
     };
 
-    worker.postMessage({ code, functionName: challenge.functionName, testCases: challenge.testCases });
+    worker.postMessage({ code, functionName: challenge.functionName, testCases: challenge.visibleTests });
   });
 }

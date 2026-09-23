@@ -4,7 +4,7 @@ import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { StatusDot } from "@/components/trail/StatusDot";
-import { modulePath, topicPath, tracks } from "@/content";
+import { getTracks, modulePath, topicPath } from "@/content";
 import { accentClasses } from "@/lib/accent";
 import { levelLabels } from "@/lib/track-meta";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ interface Entry {
 
 function buildIndex(): Entry[] {
   const entries: Entry[] = [];
-  for (const track of tracks) {
+  for (const track of getTracks()) {
     const accentBg = accentClasses[track.accentToken].bg;
     for (const module of track.modules) {
       if (!module.available) continue;

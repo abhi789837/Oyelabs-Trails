@@ -114,7 +114,14 @@ function CertificateContent({ track }: { track: TrackMeta }) {
     );
   }
 
-  return <UnlockedCertificate track={track} completedAt={summary.completedAt ?? ""} />;
+  // The certificate id is derived from an ISO timestamp, so the epoch milliseconds the server
+  // sends are converted here rather than changing the id derivation.
+  return (
+    <UnlockedCertificate
+      track={track}
+      completedAt={summary.completedAt ? new Date(summary.completedAt).toISOString() : ""}
+    />
+  );
 }
 
 function UnlockedCertificate({ track, completedAt }: { track: TrackMeta; completedAt: string }) {

@@ -8,14 +8,27 @@ import { SESSION_COOKIE } from "../../../shared/auth";
 import type { LearnerProfile } from "../../../shared/profile";
 import { buildApp } from "../app";
 import { seedSuperadmin } from "../auth/seed";
+import { ContentStore } from "../content/store";
 import { openDb, type Db } from "../db";
 import { loadEnv, type Env } from "../env";
+import { WorkerSandbox } from "../sandbox/workerSandbox";
 
 export interface TestContext {
   app: FastifyInstance;
   db: Db;
   env: Env;
+  content: ContentStore;
   close: () => Promise<void>;
+}
+
+/**
+ * The curriculum is read once for the whole test run. Parsing 24 MB of module JSON per test file
+ * would dominate the run time, and the store is read-only.
+ */
+let sharedContent: ContentStore | null = null;
+function testContent(): ContentStore {
+  sharedContent ??= ContentStore.load(path.resolve(process.cwd(), "server/content"));
+  return sharedContent;
 }
 
 /**
@@ -35,13 +48,18 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
   } as NodeJS.ProcessEnv);
 
   const { db, sqlite } = openDb(env, { file: ":memory:" });
-  const app = await buildApp({ env, db, logger: false });
+  const content = testContent();
+  // Tests use the worker sandbox: it grades identically (one shared runtime source) and starting
+  // a V8 isolate per case would slow the suite down for no extra coverage. sandbox.test.ts runs
+  // the same suite against isolated-vm.
+  const app = await buildApp({ env, db, content, sandbox: new WorkerSandbox(), logger: false });
   await app.ready();
 
   return {
     app,
     db,
     env,
+    content,
     close: async () => {
       await app.close();
       sqlite.close();
@@ -123,4 +141,39 @@ export async function adminSession(ctx: TestContext): Promise<Session> {
   const cookie = res.cookies.find((c) => c.name === SESSION_COOKIE)?.value;
   if (!cookie) throw new Error("password change did not rotate the session cookie");
   return { cookie, user: res.json().user };
+}
+
+/** Publishes a manual plan for a learner, the way the admin plan editor does. */
+export async function publishPlanFor(
+  ctx: TestContext,
+  admin: Session,
+  userId: string,
+  topicIds: string[],
+): Promise<void> {
+  const res = await ctx.app.inject({
+    method: "PUT",
+    url: `/api/admin/users/${userId}/plan`,
+    ...as(admin),
+    payload: { topicIds },
+  });
+  if (res.statusCode !== 200) throw new Error(`publishing a plan failed: ${res.statusCode} ${res.body}`);
+}
+
+/** A learner who has changed their password and is ready to study. */
+export async function activeLearner(
+  ctx: TestContext,
+  admin: Session,
+  username = "learner.one",
+): Promise<{ id: string; username: string; session: Session }> {
+  const learner = await onboardLearner(ctx, admin, username);
+  const first = await login(ctx, learner.username, learner.temporaryPassword);
+  const res = await ctx.app.inject({
+    method: "POST",
+    url: "/api/auth/change-password",
+    ...as(first),
+    payload: { currentPassword: learner.temporaryPassword, newPassword: "waypoint-basalt-2291" },
+  });
+  if (res.statusCode !== 200) throw new Error(`learner password change failed: ${res.statusCode} ${res.body}`);
+  const cookie = res.cookies.find((c) => c.name === SESSION_COOKIE)!.value;
+  return { id: learner.id, username: learner.username, session: { cookie, user: res.json().user } };
 }

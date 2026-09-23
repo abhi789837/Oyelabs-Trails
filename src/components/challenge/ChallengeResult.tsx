@@ -9,23 +9,24 @@ import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { cn } from "@/lib/utils";
 import { QUIZ_PASS_THRESHOLD, useProgressStore } from "@/store/progressStore";
-import type { Topic } from "@/types/curriculum";
+import type { ServedTopic } from "@shared/content";
 
 interface ChallengeResultProps {
-  topic: Topic;
+  topic: ServedTopic;
   passed: boolean;
   score: number;
   /** One line explaining the score, e.g. "4 of 5 correct". */
   detail: string;
   retryLabel: string;
   onRetry: () => void;
+  className?: string;
 }
 
 const wrap = "h-auto min-h-10 whitespace-normal py-2 text-left";
 
 /** Shared pass/fail panel for quizzes and code challenges. */
 export const ChallengeResult = forwardRef<HTMLDivElement, ChallengeResultProps>(function ChallengeResult(
-  { topic, passed, score, detail, retryLabel, onRetry },
+  { topic, passed, score, detail, retryLabel, onRetry, className },
   ref,
 ) {
   const reduceMotion = useReducedMotion();
@@ -55,6 +56,7 @@ export const ChallengeResult = forwardRef<HTMLDivElement, ChallengeResultProps>(
       className={cn(
         "flex flex-col gap-5 rounded-md border px-5 py-5 outline-none sm:flex-row sm:items-start",
         passed ? "border-summit/40 bg-summit/[0.07]" : "border-trailmark/50 bg-trailmark/[0.07]",
+        className,
       )}
     >
       {passed ? (

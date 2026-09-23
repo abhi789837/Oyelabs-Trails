@@ -1,85 +1,98 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-export type TopicStatus = "not-started" | "in-progress" | "completed";
+import type { AttemptResult, ProgressResponse, TopicProgressValue } from "@shared/content";
+import { QUIZ_PASS_THRESHOLD } from "@shared/content";
 
-export type TopicProgress = {
-  status: TopicStatus;
-  bestScore?: number;
-  completedAt?: string;
-  attempts: number;
-};
+import { api, ApiRequestError } from "@/api/client";
+
+export type TopicStatus = TopicProgressValue["status"];
+export type TopicProgress = TopicProgressValue;
+
+export { QUIZ_PASS_THRESHOLD };
 
 export interface ProgressState {
   progress: Record<string, TopicProgress>;
+  status: "idle" | "loading" | "ready" | "error";
+  error: string | null;
+
+  load: () => Promise<void>;
+  reset: () => void;
+
   markInProgress: (topicId: string) => void;
-  recordAttempt: (topicId: string, passed: boolean, score?: number) => void;
-  resetTopic: (topicId: string) => void;
-  resetAll: () => void;
+  /** Applies a graded result from the server. Grading itself never happens in the browser. */
+  applyAttempt: (topicId: string, result: AttemptResult) => void;
+
   getTrackCompletionPct: (topicIds: string[]) => number;
-  /** Same calculation scoped to one module; with ~290 topics the module is the unit of "done". */
+  /** Same calculation scoped to one module; the module is the meaningful unit of "done". */
   getModuleCompletionPct: (moduleId: string, topicIds: string[]) => number;
   isTrackComplete: (topicIds: string[]) => boolean;
 }
 
-export const EMPTY_PROGRESS: TopicProgress = { status: "not-started", attempts: 0 };
+export const EMPTY_PROGRESS: TopicProgress = { status: "not-started", bestScore: null, attempts: 0, completedAt: null };
 
-/** Quizzes pass at 80%; code challenges only pass when every test passes. */
-export const QUIZ_PASS_THRESHOLD = 80;
+/**
+ * Progress lives on the server from v3 (brief §7.6), so it follows a person rather than a
+ * browser, and the "a later failed retry never un-completes a topic" rule is enforced where it
+ * cannot be edited.
+ *
+ * The store keeps the action surface it had in v2 — components call `markInProgress` and read
+ * `progress[topicId]` exactly as before — and swaps `persist` for API calls. Writes are applied
+ * optimistically so the UI stays responsive, then reconciled with what the server returns.
+ */
+export const useProgressStore = create<ProgressState>()((set, get) => ({
+  progress: {},
+  status: "idle",
+  error: null,
 
-export const useProgressStore = create<ProgressState>()(
-  persist(
-    (set, get) => ({
-      progress: {},
+  load: async () => {
+    if (get().status === "loading") return;
+    set({ status: "loading", error: null });
+    try {
+      const result = await api.get<ProgressResponse>("/api/me/progress");
+      set({ progress: result.progress, status: "ready", error: null });
+    } catch (error) {
+      set({ status: "error", error: error instanceof ApiRequestError ? error.message : "Could not load your progress." });
+    }
+  },
 
-      markInProgress: (topicId) => {
-        const current = get().progress[topicId];
-        if (current && current.status !== "not-started") return;
-        set((s) => ({
-          progress: { ...s.progress, [topicId]: { ...EMPTY_PROGRESS, ...current, status: "in-progress" } },
-        }));
-      },
+  reset: () => set({ progress: {}, status: "idle", error: null }),
 
-      recordAttempt: (topicId, passed, score) =>
-        set((s) => {
-          const current = s.progress[topicId] ?? EMPTY_PROGRESS;
-          const bestScore =
-            score === undefined ? current.bestScore : Math.max(current.bestScore ?? 0, Math.round(score));
-          // Once a topic is completed, a later failed retry never takes that away.
-          const completed = passed || current.status === "completed";
-          return {
-            progress: {
-              ...s.progress,
-              [topicId]: {
-                status: completed ? "completed" : "in-progress",
-                attempts: current.attempts + 1,
-                bestScore,
-                completedAt: completed ? (current.completedAt ?? new Date().toISOString()) : undefined,
-              },
-            },
-          };
-        }),
+  markInProgress: (topicId) => {
+    const current = get().progress[topicId];
+    if (current && current.status !== "not-started") return;
 
-      resetTopic: (topicId) =>
-        set((s) => {
-          const { [topicId]: _removed, ...rest } = s.progress;
-          return { progress: rest };
-        }),
+    set((s) => ({ progress: { ...s.progress, [topicId]: { ...EMPTY_PROGRESS, ...current, status: "in-progress" } } }));
 
-      resetAll: () => set({ progress: {} }),
+    // Fire and forget: the next load reconciles, and failing to record "started" is not worth
+    // interrupting someone who is about to read a topic.
+    void api.post("/api/me/progress/start", { topicId }).catch(() => undefined);
+  },
 
-      getTrackCompletionPct: (topicIds) => completionPct(get().progress, topicIds),
-
-      // moduleId is part of the brief's signature and keeps call sites self-describing; the
-      // percentage itself only depends on the module's topic ids.
-      getModuleCompletionPct: (_moduleId, topicIds) => completionPct(get().progress, topicIds),
-
-      isTrackComplete: (topicIds) =>
-        topicIds.length > 0 && topicIds.every((id) => get().progress[id]?.status === "completed"),
+  applyAttempt: (topicId, result) =>
+    set((s) => {
+      const current = s.progress[topicId] ?? EMPTY_PROGRESS;
+      const completed = result.passed || current.status === "completed";
+      return {
+        progress: {
+          ...s.progress,
+          [topicId]: {
+            status: completed ? "completed" : "in-progress",
+            bestScore: Math.max(current.bestScore ?? 0, Math.round(result.score)),
+            attempts: current.attempts + 1,
+            completedAt: completed ? (current.completedAt ?? Date.now()) : null,
+          },
+        },
+      };
     }),
-    { name: "oyelabs-progress", version: 1 },
-  ),
-);
+
+  getTrackCompletionPct: (topicIds) => completionPct(get().progress, topicIds),
+
+  // moduleId keeps call sites self-describing; the percentage only depends on the topic ids.
+  getModuleCompletionPct: (_moduleId, topicIds) => completionPct(get().progress, topicIds),
+
+  isTrackComplete: (topicIds) =>
+    topicIds.length > 0 && topicIds.every((id) => get().progress[id]?.status === "completed"),
+}));
 
 export function completionPct(progress: Record<string, TopicProgress>, topicIds: string[]): number {
   if (topicIds.length === 0) return 0;

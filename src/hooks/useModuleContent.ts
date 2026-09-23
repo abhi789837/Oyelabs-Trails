@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 
+import type { ServedModule } from "@shared/content";
+
 import { getCachedModule, loadModule } from "@/content";
-import type { Module } from "@/types/curriculum";
 
-type State = { status: "loading" } | { status: "ready"; module: Module } | { status: "error"; error: Error };
+type State = { status: "loading" } | { status: "ready"; module: ServedModule } | { status: "error"; error: Error };
 
-/** Loads a module's full content (code-split per module) and caches it for the session. */
+/**
+ * Loads a camp's full content from the server, filtered to this person's plan and stripped of
+ * answer keys, and caches it for the session.
+ */
 export function useModuleContent(trackId: string, moduleId: string): State {
   const [state, setState] = useState<State>(() => {
     const cached = getCachedModule(trackId, moduleId);

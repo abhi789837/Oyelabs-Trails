@@ -12,8 +12,8 @@ export interface ProgressSummary {
   nextTopic?: TopicMeta;
   /** Whether the learner has touched any topic here. */
   started: boolean;
-  /** Most recent completion date, once everything is done. */
-  completedAt?: string;
+  /** Most recent completion time (epoch ms), once everything is done. */
+  completedAt?: number;
 }
 
 function summarize(topics: TopicMeta[], progress: Record<string, TopicProgress>): ProgressSummary {
@@ -30,10 +30,7 @@ function summarize(topics: TopicMeta[], progress: Record<string, TopicProgress>)
     nextTopic: topics.find((t) => progress[t.id]?.status !== "completed"),
     started: topics.some((t) => (progress[t.id]?.status ?? "not-started") !== "not-started"),
     completedAt: isComplete
-      ? done
-          .map((t) => progress[t.id]?.completedAt ?? "")
-          .sort()
-          .at(-1)
+      ? done.reduce((latest, t) => Math.max(latest, progress[t.id]?.completedAt ?? 0), 0)
       : undefined,
   };
 }

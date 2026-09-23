@@ -1,5 +1,11 @@
 # Oyelabs Trails
 
+> **v3 is in progress.** The app now has a server: accounts, server-side grading, per-person
+> learning plans and an admin console. Parts of this README still describe v2 — the sections on
+> running it and on the content pipeline are current, the ones on progress storage and on
+> deploying to Vercel are not. `docs/TRAILS_V3_BRIEF.md` is the spec, `docs/V3_STATE.md` is the
+> build state, and this file gets its full rewrite in phase P8.
+
 The internal training platform for the Oyelabs dev team: four long **trails** (Frontend, Backend, Full-Stack, AI-Driven Development), each made of **camps** (modules) along the way, each camp made of **topics** (waypoints). It's built to be deep enough for an engineer's first year and their tenth. Working through a whole trail properly takes months.
 
 Every topic has:
@@ -20,7 +26,9 @@ Challenges come in two kinds. A **quiz** has 8–12 questions, including intervi
 
 That's 2,163 quiz questions and 86 coding challenges in all. Every video was verified with YouTube's embed API, every reference URL was checked, and every challenge's reference solution runs in CI-style checks and in the browser runner.
 
-Everything runs in the browser. There's no backend yet, so progress lives in each person's browser (see [Adding a backend later](#adding-a-backend-later)).
+From v3 there is a server (Fastify + SQLite). Learners sign in, see only the topics assigned to
+them, and their progress and grades are stored server-side. Answer keys and hidden tests never
+reach the browser.
 
 ## Stack
 
@@ -100,19 +108,17 @@ node scripts/research/yt.mjs info <videoId> --chapters
 ## How the app works
 
 - **Routes:** `/` dashboard, `/track/:trackId` trail of camps, `/track/:trackId/module/:moduleId` a camp's trail of topics, `/track/:trackId/module/:moduleId/topic/:topicId` topic, `/report/:trackId` certificate. Old v1 links (`/track/:trackId/topic/:topicId`) redirect.
-- **Quizzes:** single-select questions are graded on the chosen option. Multi-select questions (`correctIndices`) are all-or-nothing. Options reshuffle on every retry. Explanations appear after submitting.
-- **Code challenges:** these run in a throwaway Web Worker built from a Blob URL. Results are compared with deep equality, there's a 3-second limit, and failures show expected vs received. This sandbox suits an internal tool used by a trusted team; it is not safe for untrusted public code.
+- **Quizzes:** graded on the server, which is the only place the answer key exists. Single-select questions are graded on the chosen option; multi-select questions are all-or-nothing. Options reshuffle on every retry (client-side, display only — answers are sent as original option indices). Explanations come back with the grade.
+- **Code challenges:** the learner can run the *visible* tests in a Web Worker in their own browser for fast feedback. Submitting sends the code to the server, which runs every test — visible and hidden — in an isolated V8 (`isolated-vm`) with a memory cap and a timeout, and decides pass or fail. Hidden tests never reach the browser, so passing the visible ones is not enough.
 - **Reference previews:**
   - **Blocked sites:** many docs sites (MDN, GitHub, javascript.info, roadmap.sh…) forbid being shown inside other sites with `X-Frame-Options` or CSP `frame-ancestors`. Browsers still fire `load` for those blocked frames, so the app can't detect this at runtime. Instead, `npm run content:embeds` records each site's headers ahead of time, and blocked sites get a link card.
   - **Allowed sites:** these get an inline preview. The first one opens by default, and any preview falls back to the link card if it errors or doesn't load within 8 seconds.
-- **Progress:** stored in `localStorage` under the keys below. Opening a topic marks it in progress; passing marks it complete with the date and best score, and a later failed retry never un-completes it.
+- **Progress:** stored on the server, per account, so it follows a person between devices. Opening a topic marks it in progress; passing marks it complete with the time and best score, and a later failed retry never un-completes it. Only two things still live in `localStorage`:
 
   | Key | Contents |
   | --- | --- |
-  | `oyelabs-progress` | `{ [topicId]: { status, bestScore, completedAt, attempts } }` |
   | `oyelabs-ui` | theme and sidebar state |
-  | `oyelabs-profile` | the name printed on certificates |
-  | `oyelabs-draft:<topicId>` | unsaved code for a code challenge |
+  | `oyelabs-draft:<userId>:<topicId>` | unsaved code for a code challenge |
 - **Certificates:** unlock when every topic in a trail is complete. You get an on-screen certificate and a PDF (lazy-loaded) with a deterministic ID made from the track, the name and the completion time. Nothing is verified by a server, and the page says so.
 
 ## Design notes

@@ -5,18 +5,18 @@ import { ElevationProfile } from "@/components/trail/ElevationProfile";
 import { StatusDot } from "@/components/trail/StatusDot";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { allTopics, findTopic, modulePath, topicPath, trackMinutes, trackTopics, tracks, type TrackMeta } from "@/content";
+import { allTopics, findTopic, modulePath, topicPath, trackMinutes, trackTopics, useTracks, type TrackMeta } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { levelLabels } from "@/lib/track-meta";
-import { cn, formatDate, formatMinutes, formatMinutesCompact } from "@/lib/utils";
+import { cn, formatMinutes, formatMinutesCompact, formatTimestamp } from "@/lib/utils";
 import { useProgressStore, type TopicProgress } from "@/store/progressStore";
 
 export default function DashboardPage() {
   useDocumentTitle();
   const progress = useProgressStore((s) => s.progress);
-  const resetAll = useProgressStore((s) => s.resetAll);
+  const tracks = useTracks();
 
   const topics = allTopics();
   const completed = topics.filter((t) => progress[t.id]?.status === "completed").length;
@@ -24,11 +24,6 @@ export default function DashboardPage() {
   const camps = tracks.reduce((n, t) => n + t.modules.length, 0);
   const totalMinutes = tracks.reduce((n, t) => n + trackMinutes(t), 0);
 
-  const handleResetAll = () => {
-    if (window.confirm("Reset progress on every trail? Completed topics, scores and attempts will be cleared from this browser.")) {
-      resetAll();
-    }
-  };
 
   return (
     <div>
@@ -61,12 +56,10 @@ export default function DashboardPage() {
 
       <footer className="border-t">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8">
-          <p>Progress is saved in this browser only. Clearing site data or switching devices starts you fresh.</p>
-          {Object.keys(progress).length > 0 && (
-            <Button variant="link" size="sm" className="h-auto justify-start px-0 text-xs text-muted-foreground" onClick={handleResetAll}>
-              Reset all progress
-            </Button>
-          )}
+          <p>
+            Your progress is saved to your account, so it follows you between devices. Ask your administrator if you
+            need a topic reset.
+          </p>
         </div>
       </footer>
     </div>
@@ -171,7 +164,7 @@ function TrackSection({ track, progress }: { track: TrackMeta; progress: Record<
 
         {summary.isComplete ? (
           <p className="mt-6 rounded-md border border-summit/40 bg-summit/10 px-4 py-3 text-sm">
-            Summit reached{summary.completedAt ? ` on ${formatDate(summary.completedAt)}` : ""}. Every camp on this trail is
+            Summit reached{summary.completedAt ? ` on ${formatTimestamp(summary.completedAt)}` : ""}. Every camp on this trail is
             complete, and your certificate is ready.
           </p>
         ) : topics.length === 0 ? (
