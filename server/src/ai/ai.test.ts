@@ -1,4 +1,6 @@
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
 
 import { eq } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
@@ -385,5 +387,39 @@ describe("job queue", () => {
 
     expect(requeueAllRunning(ctx.db)).toBe(1);
     expect(ctx.db.select().from(schema.jobs).get()!.status).toBe("queued");
+  });
+});
+
+/**
+ * The plaintext secret must not be *reachable* from the code that talks to the browser, rather
+ * than merely absent from today's responses. TypeScript cannot express "exported, but only for one
+ * importer", so this is the enforceable form: a static check that nothing under `routes/` pulls in
+ * the one function that returns the real value.
+ *
+ * If this fails, the fix is not to edit the test. It is that a route now has the secret in scope,
+ * and one `reply.send` away from shipping it.
+ */
+describe("the secret is unreachable from the request path", () => {
+  const routesDir = path.join(import.meta.dirname, "..", "routes");
+
+  const walk = (dir: string): string[] =>
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) return walk(full);
+      return e.name.endsWith(".ts") && !e.name.endsWith(".test.ts") ? [full] : [];
+    });
+
+  test("no route module imports revealSecret", () => {
+    const offenders = walk(routesDir).filter((f) => /\brevealSecret\b/.test(fs.readFileSync(f, "utf8")));
+    expect(offenders.map((f) => path.relative(routesDir, f))).toEqual([]);
+  });
+
+  test("revealSecret has exactly one caller in the whole server", () => {
+    const srcDir = path.join(import.meta.dirname, "..");
+    const callers = walk(srcDir).filter(
+      (f) => !f.endsWith(path.join("ai", "credentials.ts")) && /\brevealSecret\b/.test(fs.readFileSync(f, "utf8")),
+    );
+    // The AI service builds the provider; nothing else has any business decrypting.
+    expect(callers.map((f) => path.relative(srcDir, f).split(path.sep).join("/"))).toEqual(["ai/service.ts"]);
   });
 });
