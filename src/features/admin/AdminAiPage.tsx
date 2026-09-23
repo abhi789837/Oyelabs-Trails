@@ -115,7 +115,12 @@ export default function AdminAiPage() {
                         </p>
                         <p className="mt-1 font-mono text-xs text-muted-foreground">
                           {copy?.name ?? credential.provider} · {credential.secretHint}
-                          {credential.lastVerifiedAt ? ` · verified ${formatTimestamp(credential.lastVerifiedAt)}` : ""}
+                          {/* "verified <date>" beside a Failed badge reads as a success. The
+                              timestamp is when it was last *checked*, so say that unless the
+                              check actually passed. */}
+                          {credential.lastVerifiedAt
+                            ? ` · ${credential.status === "verified" ? "verified" : "last checked"} ${formatTimestamp(credential.lastVerifiedAt)}`
+                            : ""}
                         </p>
                         {credential.lastError && (
                           <p className="mt-1.5 max-w-prose text-xs text-destructive">{credential.lastError}</p>

@@ -11,9 +11,12 @@ services:
     build:
       context: .
       args:
-        # Only needed for the claude-cli / codex-cli AI adapters. An API key needs neither.
-        INSTALL_CLAUDE_CLI: "0"
-        INSTALL_CODEX_CLI: "0"
+        # Only needed for the claude-cli / codex-cli AI adapters; an API key needs neither.
+        # Read from the environment (.env) rather than pinned here, because a literal "0" meant
+        # every `docker compose up -d --build` quietly rebuilt without the CLI and undid an
+        # install done with `--build-arg`. Set INSTALL_CLAUDE_CLI=1 in .env to make it stick.
+        INSTALL_CLAUDE_CLI: "${INSTALL_CLAUDE_CLI:-0}"
+        INSTALL_CODEX_CLI: "${INSTALL_CODEX_CLI:-0}"
     image: oyelearn:latest
     restart: unless-stopped
     env_file: .env
