@@ -5,6 +5,7 @@ import CertificatePage from "@/pages/CertificatePage";
 import DashboardPage from "@/pages/DashboardPage";
 import ModulePage from "@/pages/ModulePage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import PlanPage from "@/pages/PlanPage";
 import TopicPage, { LegacyTopicRedirect } from "@/pages/TopicPage";
 import TrackPage from "@/pages/TrackPage";
 import { CompletionWatcher } from "./CompletionWatcher";
@@ -51,6 +52,7 @@ function AnimatedRoutes() {
         {/* Descendant routes: paths are relative to the `/*` this shell is mounted under. */}
         <Routes location={location}>
           <Route index element={<DashboardPage />} />
+          <Route path="plan" element={<PlanPage />} />
           <Route path="track/:trackId" element={<TrackPage />} />
           <Route path="track/:trackId/module/:moduleId" element={<ModulePage />} />
           <Route path="track/:trackId/module/:moduleId/topic/:topicId" element={<TopicPage />} />

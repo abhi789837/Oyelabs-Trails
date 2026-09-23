@@ -17,3 +17,6 @@ npm-debug.log*
 /server/content
 .env
 .env.local
+
+# MediaPipe assets are large binaries fetched by scripts/fetch-mediapipe.mjs
+/public/mediapipe

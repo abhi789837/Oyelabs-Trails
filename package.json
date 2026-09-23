@@ -24,17 +24,21 @@
     "content:videos": "node scripts/content/check-videos.mjs",
     "pretest": "node scripts/content/build-server-content.mjs",
     "content:server": "node scripts/content/build-server-content.mjs",
-    "dev:seed": "tsx server/src/dev/seed.ts"
+    "dev:seed": "tsx server/src/dev/seed.ts",
+    "mediapipe": "node scripts/fetch-mediapipe.mjs",
+    "postinstall": "node scripts/fetch-mediapipe.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
     "@fastify/cookie": "^11.1.2",
     "@fastify/helmet": "^13.1.1",
+    "@fastify/multipart": "^10.1.2",
     "@fastify/rate-limit": "^11.2.0",
     "@fastify/static": "^10.1.4",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/ibm-plex-sans": "^5.3.0",
     "@fontsource/space-grotesk": "^5.3.0",
+    "@mediapipe/tasks-vision": "^1.0.1",
     "@node-rs/argon2": "^2.2.1",
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-label": "^2.1.15",

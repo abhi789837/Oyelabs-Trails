@@ -198,3 +198,156 @@ export const assessmentStatusResponseSchema = z.object({
   failureReason: z.string().nullable(),
 });
 export type AssessmentStatusResponse = z.infer<typeof assessmentStatusResponseSchema>;
+
+// ---------------------------------------------------------------------------
+// Taking the test (brief §9.5)
+// ---------------------------------------------------------------------------
+
+export const consentRequestSchema = z.object({
+  agreed: z.literal(true, { error: "Consent is required before the assessment can start." }),
+});
+
+export const startResponseSchema = z.object({
+  deadlineAt: z.number(),
+  config: z.object({
+    timeLimitMinutes: z.number(),
+    hardLimit: z.number(),
+    areas: z.array(z.string()),
+  }),
+});
+export type StartResponse = z.infer<typeof startResponseSchema>;
+
+/** One item as the learner sees it. Nothing here reveals the answer. */
+export interface ServedItem {
+  id: string;
+  kind: z.infer<typeof itemKindSchema>;
+  payload: ItemPayload;
+  /** Absolute epoch ms by which this item must be answered, including its grace period. */
+  expiresAt: number;
+}
+
+export interface NextItemResponse {
+  item: ServedItem | null;
+  done: boolean;
+  /** Where they are, for a progress strip. Never their score. */
+  progress: { answered: number; target: number; section: "adaptive" | "written" };
+  deadlineAt: number;
+  hardWarnings: number;
+}
+
+export const answerRequestSchema = z.object({
+  /** mcq, multi, find_bug: original option indices, not shuffled positions. */
+  selected: z.array(z.number().int().min(0).max(10)).max(10).optional(),
+  /** predict_output and explain. */
+  text: z.string().max(8000).optional(),
+  /** code */
+  code: z.string().max(40_000).optional(),
+});
+export type AnswerRequest = z.infer<typeof answerRequestSchema>;
+
+export const heartbeatRequestSchema = z.object({
+  visible: z.boolean(),
+  fullscreen: z.boolean(),
+  faceState: z.enum(["one", "none", "multiple", "unknown"]),
+  cameraLive: z.boolean(),
+});
+export type HeartbeatRequest = z.infer<typeof heartbeatRequestSchema>;
+
+export const integrityEventRequestSchema = z.object({
+  type: z.string().trim().min(2).max(60),
+  severity: z.enum(["soft", "hard"]),
+  clientTs: z.number().int().optional(),
+  details: z.record(z.string(), z.unknown()).optional(),
+});
+export type IntegrityEventRequest = z.infer<typeof integrityEventRequestSchema>;
+
+export const integrityEventResponseSchema = z.object({
+  counted: z.boolean(),
+  escalated: z.boolean(),
+  hardWarnings: z.number(),
+  hardLimit: z.number(),
+  terminated: z.boolean(),
+  /** How long the client may pause the item timer for this warning. */
+  pauseMs: z.number(),
+});
+export type IntegrityEventResponse = z.infer<typeof integrityEventResponseSchema>;
+
+/** The learner's own view of an assessment, for the funnel in §12. */
+export interface MyAssessment {
+  id: string;
+  status: z.infer<typeof assessmentStatusSchema>;
+  attemptNo: number;
+  consentAt: number | null;
+  deadlineAt: number | null;
+  hardWarnings: number;
+  hardLimit: number;
+  timeLimitMinutes: number;
+}
+
+// ---------------------------------------------------------------------------
+// Evaluation (brief §11.1)
+// ---------------------------------------------------------------------------
+
+export const confidenceSchema = z.enum(["low", "medium", "high"]);
+
+export const evaluationAreaSchema = z.object({
+  area: z.string().trim().min(2).max(80),
+  level: skillLevelSchema,
+  confidence: confidenceSchema,
+  /** Item ids, so a claim can be traced back to what they actually answered. */
+  evidence: z.array(z.string().max(64)).max(12),
+  strengths: z.array(z.string().trim().min(3).max(300)).max(6),
+  gaps: z.array(z.string().trim().min(3).max(300)).max(6),
+});
+export type EvaluationArea = z.infer<typeof evaluationAreaSchema>;
+
+export const evaluationPlanSchema = z.object({
+  /** Ordered. Validated server-side: unknown ids are dropped and the rest sorted into trail order. */
+  topicIds: z.array(z.string().min(1).max(120)).min(1).max(400),
+  skipRationale: z.array(z.object({ moduleId: z.string().max(80), reason: z.string().trim().min(5).max(400) })).max(40),
+  milestones: z.array(z.string().min(1).max(120)).max(40),
+  estimatedHours: z.number().min(1).max(2000),
+  rationale: z.string().trim().min(20).max(4000),
+});
+
+export const evaluationResultSchema = z.object({
+  /** For the admin, not the learner. */
+  summary: z.string().trim().min(50).max(4000),
+  overallLevel: skillLevelSchema,
+  areas: z.array(evaluationAreaSchema).min(1).max(12),
+  notesVsReality: z.string().trim().min(20).max(3000),
+  integrity: z.object({
+    assessment: z.enum(["clean", "minor_concerns", "serious_concerns"]),
+    explanation: z.string().trim().min(10).max(2000),
+  }),
+  plan: evaluationPlanSchema,
+  /** Written for the learner: strengths and focus areas, no integrity detail, no admin notes. */
+  learnerSummary: z.string().trim().min(50).max(2500),
+});
+export type EvaluationResult = z.infer<typeof evaluationResultSchema>;
+
+export const explainGradeSchema = z.object({
+  grades: z
+    .array(
+      z.object({
+        itemId: z.string().min(1).max(64),
+        /** Which rubric points the answer hit, by index. */
+        pointsHit: z.array(z.number().int().min(0).max(10)).max(10),
+        score: z.number().min(0).max(1),
+        feedback: z.string().trim().min(5).max(600),
+      }),
+    )
+    .min(1)
+    .max(12),
+});
+export type ExplainGrades = z.infer<typeof explainGradeSchema>;
+
+/** The learner's own view of their evaluation, stripped of everything §12 says to withhold. */
+export interface MyEvaluation {
+  overallLevel: SkillLevelValue;
+  learnerSummary: string;
+  areas: { area: string; level: SkillLevelValue; strengths: string[]; gaps: string[] }[];
+  estimatedHours: number;
+}
+
+type SkillLevelValue = z.infer<typeof skillLevelSchema>;

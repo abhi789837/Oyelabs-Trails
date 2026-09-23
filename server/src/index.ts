@@ -9,6 +9,8 @@ import { ContentStore } from "./content/store";
 import { openDb } from "./db";
 import { loadEnv } from "./env";
 import { blueprintHandler } from "./assessment/blueprintJob";
+import { evaluateHandler } from "./assessment/evaluateJob";
+import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { JobWorker } from "./jobs/worker";
 import { createSandbox } from "./sandbox";
@@ -50,16 +52,31 @@ async function main(): Promise<void> {
     handlers: {
       "credential.verify": verifyCredentialHandler(db, ai),
       "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox, log: (m) => console.log(`[trails] ${m}`) }),
+      "assessment.evaluate": evaluateHandler({ db, ai, content, log: (m) => console.log(`[trails] ${m}`) }),
     },
     log: (message, detail) => console.log(`[trails] ${message}`, detail ?? ""),
   });
   worker.start();
+
+  // Deadlines and missing heartbeats are noticed on a fixed cadence, not through the queue: a
+  // backlog must not delay the checks that notice a stuck test.
+  const requeued = requeueOrphanedEvaluations(db);
+  if (requeued > 0) console.log(`[trails] requeued ${requeued} orphaned evaluation(s)`);
+  const sweeper = setInterval(() => {
+    try {
+      sweepOnce({ db, log: (m) => console.log(`[trails] ${m}`) });
+    } catch (error) {
+      console.error("[trails] sweeper failed:", error instanceof Error ? error.message : error);
+    }
+  }, 60_000);
+  sweeper.unref?.();
 
   const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: useMock });
 
   const shutdown = async (signal: string) => {
     app.log.info({ signal }, "shutting down");
     try {
+      clearInterval(sweeper);
       await worker.stop();
       await app.close();
       // Checkpoint the WAL so the .db file is complete for a backup or a container restart.

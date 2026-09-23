@@ -6,14 +6,14 @@ import type { SessionUser } from "@shared/auth";
  * The learner flow is a funnel: change the temporary password, then take the placement
  * assessment, then live on the plan.
  *
- * Learners land on the dashboard for now. Once `/assessment` and `/plan` exist, this becomes
- * "assessment if there is no completed one, otherwise /plan" — the one place that decision is
- * made, so the change is local to this function.
+ * Learners land on `/plan`, which is also where the funnel is resolved: it sends them to the
+ * assessment when one is waiting, and shows the plan once there is one. Keeping that decision in
+ * one page rather than here means it can read state this function does not have.
  */
 export function landingPathFor(user: SessionUser): string {
   if (user.mustChangePassword) return "/change-password";
   if (user.role === "superadmin") return "/admin";
-  return "/";
+  return "/plan";
 }
 
 /** Routes a person with a temporary password may still reach. */

@@ -14,6 +14,7 @@ import { ContentStore } from "../content/store";
 import { openDb, type Db } from "../db";
 import { loadEnv, type Env } from "../env";
 import { blueprintHandler } from "../assessment/blueprintJob";
+import { evaluateHandler } from "../assessment/evaluateJob";
 import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
 import { JobWorker } from "../jobs/worker";
 import { WorkerSandbox } from "../sandbox/workerSandbox";
@@ -72,6 +73,7 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
     handlers: {
       "credential.verify": verifyCredentialHandler(db, ai),
       "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox }),
+      "assessment.evaluate": evaluateHandler({ db, ai, content }),
     },
   });
 

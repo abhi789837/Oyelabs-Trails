@@ -1,9 +1,13 @@
 import type { FastifyInstance } from "fastify";
 
+import { desc, eq } from "drizzle-orm";
+
+import type { EvaluationResult, MyEvaluation } from "../../../shared/assessment";
 import type { ManifestResponse, ProgressResponse } from "../../../shared/content";
 import { markInProgressRequestSchema } from "../../../shared/content";
 import { requireActiveUser } from "../auth/guards";
 import { filterManifest } from "../content/filter";
+import { schema } from "../db";
 import { notFound, parseOrThrow } from "../lib/errors";
 import { allowedTopicIdsFor, latestPublishedPlan } from "../plans/repo";
 import { getProgress, markInProgress } from "../progress/repo";
@@ -45,6 +49,47 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
 
     markInProgress(app.db, user.id, topicId);
     return { ok: true };
+  });
+
+  /**
+   * The learner's own view of their evaluation (brief §12).
+   *
+   * Deliberately narrow: strengths, focus areas and the summary written *for them*. It carries no
+   * integrity detail and never quotes the manager's notes — both are in the admin's view only.
+   */
+  app.get("/api/me/evaluation", async (request): Promise<{ evaluation: MyEvaluation | null }> => {
+    const user = requireActiveUser(request);
+
+    const assessment = app.db
+      .select()
+      .from(schema.assessments)
+      .where(eq(schema.assessments.userId, user.id))
+      .orderBy(desc(schema.assessments.attemptNo))
+      .get();
+    if (!assessment) return { evaluation: null };
+
+    const row = app.db
+      .select()
+      .from(schema.evaluations)
+      .where(eq(schema.evaluations.assessmentId, assessment.id))
+      .orderBy(desc(schema.evaluations.createdAt))
+      .get();
+    if (!row) return { evaluation: null };
+
+    const result = row.result as EvaluationResult;
+    return {
+      evaluation: {
+        overallLevel: result.overallLevel,
+        learnerSummary: result.learnerSummary,
+        areas: result.areas.map((area) => ({
+          area: area.area,
+          level: area.level,
+          strengths: area.strengths,
+          gaps: area.gaps,
+        })),
+        estimatedHours: result.plan.estimatedHours,
+      },
+    };
   });
 
   /** The learner's own plan. The admin's view of someone else's plan lives under /api/admin. */

@@ -13,6 +13,7 @@ import { AuthProvider } from "@/features/auth/AuthProvider";
 import ChangePasswordPage from "@/features/auth/ChangePasswordPage";
 import { RequireAuth, RequireSuperadmin } from "@/features/auth/guards";
 import LoginPage from "@/features/auth/LoginPage";
+import AssessmentPage from "@/features/assessment/AssessmentPage";
 import { CurriculumProvider } from "@/features/curriculum/CurriculumProvider";
 import AdminLearnerPage from "@/features/admin/AdminLearnerPage";
 import { useUiStore } from "@/store/uiStore";
@@ -51,6 +52,18 @@ export default function App() {
                 <Route path="assessments/:assessmentId" element={<AdminPoolPage />} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />
               </Route>
+
+              {/* The assessment is fullscreen and proctored: no sidebar, no top bar, no way out. */}
+              <Route
+                path="/assessment"
+                element={
+                  <RequireAuth>
+                    <CurriculumProvider>
+                      <AssessmentPage />
+                    </CurriculumProvider>
+                  </RequireAuth>
+                }
+              />
 
               {/* Everything else is the learner-facing app, which brings its own shell. */}
               <Route

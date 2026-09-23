@@ -3,11 +3,12 @@ import path from "node:path";
 
 import fastifyCookie from "@fastify/cookie";
 import fastifyHelmet from "@fastify/helmet";
+import fastifyMultipart from "@fastify/multipart";
 import fastifyRateLimit from "@fastify/rate-limit";
 import fastifyStatic from "@fastify/static";
 import Fastify, { type FastifyInstance } from "fastify";
 
-import { BODY_LIMIT_JSON, ERROR_CODES } from "../../shared/api";
+import { BODY_LIMIT_JSON, BODY_LIMIT_SNAPSHOT, ERROR_CODES } from "../../shared/api";
 import type { AiService } from "./ai/service";
 import { registerAuthContext } from "./auth/guards";
 import type { ContentStore } from "./content/store";
@@ -17,8 +18,10 @@ import { buildCsp } from "./lib/csp";
 import { HttpError } from "./lib/errors";
 import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminAssessmentRoutes } from "./routes/admin/assessments";
+import { registerAdminLiveRoutes } from "./routes/admin/live";
 import { registerAdminPlanRoutes } from "./routes/admin/plans";
 import { registerAdminUserRoutes } from "./routes/admin/users";
+import { registerAssessmentRoutes } from "./routes/assessment";
 import { registerAuthRoutes } from "./routes/auth";
 import { registerContentRoutes } from "./routes/content";
 import { registerHealthRoutes } from "./routes/health";
@@ -128,6 +131,11 @@ export async function buildApp({
 
   await app.register(fastifyCookie, { secret: env.sessionSecret });
 
+  // Only the proctoring snapshot route uses multipart, so the limits are sized for one JPEG.
+  await app.register(fastifyMultipart, {
+    limits: { fileSize: BODY_LIMIT_SNAPSHOT, files: 1, fields: 4, fieldSize: 16 * 1024 },
+  });
+
   // Opt-in per route: `config: { rateLimit: { ... } }`. A global limit would throttle the
   // assessment heartbeat and the admin live feed.
   await app.register(fastifyRateLimit, { global: false });
@@ -157,11 +165,13 @@ export async function buildApp({
   await registerMeRoutes(app);
   await registerContentRoutes(app);
   await registerTopicRoutes(app);
+  await registerAssessmentRoutes(app);
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
   await app.register(registerAdminAiRoutes);
   await app.register(registerAdminAssessmentRoutes);
+  await app.register(registerAdminLiveRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 
