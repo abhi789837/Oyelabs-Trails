@@ -1,5 +1,9 @@
 # v3 is not deployed to Vercel (brief §2 D5): SQLite, proctoring snapshots, a background job
 # worker and an SSE feed all need a persistent disk and a long-running process. See the
-# "Deploying v3 (VPS)" section of the README. This file is kept only so an existing Vercel
-# project, if one is still connected, does not try to build the repository.
+# "Deploying v3 (VPS)" section of the README.
+#
+# Everything is excluded so a still-connected Vercel project uploads nothing. vercel.json is the
+# one exception: without it the build dies on "vite: command not found", because package.json
+# never arrived. With it, the build says why it stopped.
 *
+!vercel.json

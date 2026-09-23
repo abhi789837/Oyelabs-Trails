@@ -1,0 +1,54 @@
+# Keep the build context to the sources the image is built from.
+#
+# This file is load-bearing, not an optimisation. Without it `COPY . .` in the Dockerfile lands
+# the *host's* node_modules on top of the Linux ones `npm ci` just installed — and better-sqlite3
+# and isolated-vm are native modules, so a Windows or macOS host produces an image whose binaries
+# cannot load. It also keeps the database, the dev encryption keys and the git history out of the
+# build stage.
+
+# Installed per-platform inside the image.
+node_modules
+
+# Runtime state: SQLite, proctoring snapshots, nightly backups, and the development
+# APP_MASTER_KEY / SESSION_SECRET. None of it belongs in an image.
+data
+
+# Build outputs, produced inside the image by `npm run build`.
+dist
+dist-server
+server/content
+src/content/manifest.generated.ts
+*.tsbuildinfo
+
+# Fetched inside the image by scripts/fetch-mediapipe.mjs (~46 MB).
+public/mediapipe
+
+# Source assets that the image does not need.
+Oyelearn-Logo-Kit
+Oyelearn-Logo-Kit.zip
+
+# Repository and editor metadata.
+.git
+.github
+.gitignore
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Local environment. The image reads configuration from the process environment.
+.env
+.env.local
+.env.*.local
+
+# Deployment and docs, not inputs to the build.
+Dockerfile
+.dockerignore
+docker-compose.yml
+Caddyfile.example
+vercel.json
+.vercelignore
+docs
+README.md
+*.log
+npm-debug.log*

@@ -2,8 +2,9 @@
 
 The internal training platform for the Oyelabs dev team.
 
-Four long **trails** (Frontend, Backend, Full-Stack, AI-Driven Development), each made of **camps**
-(modules) along the way, each camp made of **topics** (waypoints). It is built to be deep enough
+Seven long **trails** (Frontend, Backend, Full-Stack, AI-Driven Development, PHP & Laravel, Mobile,
+DevOps & Cloud), each made of **camps** (modules) along the way, each camp made of **topics**
+(waypoints). It is built to be deep enough
 for an engineer's first year and their tenth; working through a whole trail properly takes months.
 
 From v3 it is a small full-stack app. The super admin creates accounts, writes down what they know
@@ -233,7 +234,7 @@ sudo apt update && sudo apt install -y docker.io docker-compose-plugin caddy
 ### 2. Configure
 
 ```bash
-git clone <your-remote> trails && cd trails
+git clone <your-remote> oyelearn && cd oyelearn
 cp .env.example .env
 openssl rand -base64 32     # → APP_MASTER_KEY
 openssl rand -base64 32     # → SESSION_SECRET
@@ -249,7 +250,7 @@ Leave `SUPERADMIN_PASSWORD` empty to have one generated and printed once at firs
 
 ```bash
 docker compose up -d --build
-docker compose logs -f trails     # the generated super-admin password is in here, once
+docker compose logs -f oyelearn   # the generated super-admin password is in here, once
 ```
 
 The image runs as a non-root user, keeps its state on the `oyelearn-data` volume, and binds only to
@@ -282,14 +283,14 @@ then onboard a learner.
 
 ### Backups
 
-A nightly job writes `VACUUM INTO /data/backups/trails-<timestamp>.db` and keeps the newest 14.
+A nightly job writes `VACUUM INTO /data/backups/oyelearn-<timestamp>.db` and keeps the newest 14.
 `VACUUM INTO` produces a consistent copy without stopping writes, which a file copy of a WAL
 database cannot promise. Copy `/data/backups` off the host on your own schedule — a backup on the
 same disk is not a backup.
 
 ```bash
-docker compose exec trails ls -lh /data/backups
-docker compose cp trails:/data/backups ./backups
+docker compose exec oyelearn ls -lh /data/backups
+docker compose cp oyelearn:/data/backups ./backups
 ```
 
 ### Upgrading

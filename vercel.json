@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "echo 'skipped'",
+  "buildCommand": "printf '\\n%s\\n' 'Oyelearn v3 cannot be deployed to Vercel.' '' 'It is a stateful server, not a static site with functions. It needs:' '  - SQLite in WAL mode on a disk that survives restarts' '  - proctoring snapshot files on that same disk' '  - a background job worker running between requests' '  - a long-lived SSE stream for the admin live view' '  - nightly VACUUM INTO backups on a timer' '  - isolated-vm, a native module, in a long-running process' '' 'Serverless has none of those. Deploy to a small VPS instead: Dockerfile,' 'docker-compose.yml and Caddyfile.example are in the repository root, and the' 'README covers it under \"Deploying v3 (VPS)\".' '' 'To stop this build failing, disconnect this project in the Vercel dashboard.' '' && exit 1"
+}
