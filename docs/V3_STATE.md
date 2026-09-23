@@ -22,7 +22,7 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 
 ## Phases
 
-- [ ] P0 Foundations — `server/` + `shared/` scaffold, Fastify, Drizzle + migrations, dev script, `/api/health`, Vite proxy
+- [x] P0 Foundations — `server/` + `shared/` scaffold, Fastify, Drizzle + migrations, dev script, `/api/health`, Vite proxy
 - [ ] P1 Auth — users, sessions, seed superadmin, login/change-password, guards, AuthProvider, admin onboarding, audit log
 - [ ] P2 Content gating + progress — server content bundle, filtered manifest/content API, server quiz grading, sandboxed code verification, progress API, manual plan editor
 - [ ] P3 AI layer — crypto box, credentials CRUD + UI, four adapters, verify, `ai_calls` audit, job queue, model settings
@@ -78,7 +78,26 @@ _(newest last: step, commit hash, known gaps)_
 
 - **Session start.** Moved `TRAILS_V3_BRIEF.md` and `CLAUDE_CODE_PROMPTS.md` into `docs/`;
   renamed `docs/AI_CONTEXT.md` (written this session) to `docs/CODEBASE_CONTEXT.md` to match the
-  paths the prompts reference. Created this file.
+  paths the prompts reference. Created this file. Added the v3 pointer to the top of `CLAUDE.md`
+  and a `## v3 decisions` section to `docs/PROGRESS.md`.
+
+- **P0 done** — `17f087e` "v3 phase 0: server foundation".
+  Built: `shared/` (enums, api, auth, profile zod schemas), `server/` (Fastify 5 app, `/api/health`,
+  JSON error envelope, SPA static + deep-link fallback), the full §5 Drizzle schema (17 tables) with
+  its generated migration, `env.ts`, `scripts/build-server.mjs` (esbuild), `vitest.config.ts` and a
+  test harness using an in-memory DB + `fastify.inject`.
+  Verified: `tsc -b` clean · 7/7 tests pass · `content:check` 37 modules / 293 topics / 0 errors /
+  0 warnings · `npm run dev` serves the SPA and proxies `/api` · the production bundle serves both
+  from one process (`/api/health` 200, deep link `/track/frontend/module/fe-js-core` 200 text/html).
+  Verified from installed sources, not memory: Fastify 5.12.5 (`disableRequestLogging` is
+  deprecated — dropped it), Drizzle 0.45.3 (`sqliteTable(name, cols, t => [...])` array form,
+  `text({mode:'json'})`, `integer({mode:'boolean'})`), better-sqlite3 13.0.3 (loads natively on
+  Windows/Node 24, no build step), zod 4.6.5 (has built-in `z.toJSONSchema()` — no
+  `zod-to-json-schema` dependency needed for the P3 AI layer), drizzle-kit 0.31.11 `defineConfig`.
+  Decisions: server code uses relative imports (not `@shared`) so tsx and esbuild need no alias
+  plumbing; the server is bundled with esbuild rather than `tsc`-emitted, so `shared/` needs no
+  `.js` extensions; tests are excluded from `tsconfig.app.json` (they need node types).
+  Known gaps: none for P0. Vite picks 5174 when 5173 is already taken — expected.
 
 ## Blocked / needs Abhishek
 
