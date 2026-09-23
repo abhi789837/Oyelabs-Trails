@@ -273,6 +273,12 @@ where it is not obvious, so any of these can be re-checked in one line.
   Note the redirect: `laravel.com/docs/…` resolves to `laravel.com/framework/docs/…`, and
   `check-urls.mjs` reports the final URL — use that one.
   `curl -s https://repo.packagist.org/p2/laravel/framework.json` lists every released version.
+- **Laravel 13's docs lead with PHP attributes for Eloquent configuration**, not the old
+  properties: `#[Fillable]`, `#[Guarded]`, `#[Unguarded]`, `#[Hidden]`, `#[Visible]`,
+  `#[Appends]`, `#[Scope]`, `#[ScopedBy]`, `#[ObservedBy]`, `#[CollectedBy]`, `#[UseFactory]`.
+  `$fillable` and `scopeFoo()` still work, but content that shows only them reads as dated.
+  Also new in 13: migration `->instant()` / `->lock(...)`, the `AsVector` cast alongside
+  `whereVectorSimilarTo`, pivot `…OrFail` variants, and `getPrevious()`.
 - Laravel's first-party testing framework in current docs is **Pest**, with PHPUnit still
   supported. Starter kits replaced Breeze/Jetstream as the scaffolding story. Sanctum is for API
   tokens and SPA auth; Passport is for full OAuth2.
