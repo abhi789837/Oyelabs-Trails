@@ -29,13 +29,13 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 - [x] P4 Assessment generation — blueprint → pools → critic → code validation; Issue assessment; admin pool preview
 - [x] P5 Test taking + proctoring — pre-flight, item runner, adaptive selector, detectors, warnings, SSE live view, termination
 - [x] P6 Evaluation + plans — explain grading, evaluation job, plan validation/publish, learner `/plan`, admin evaluation tab
-- [ ] P7 Admin console polish — overview, people table, learner detail tabs, usage reports, retention job, backups
-- [ ] P8 Deploy artifacts — Dockerfile, compose, Caddyfile.example, `.env.example`, README (artifacts only, no deploy)
+- [x] P7 Admin console polish — overview, people table, learner detail tabs, usage reports, retention job, backups (`0487585`)
+- [x] P8 Deploy artifacts — Dockerfile, compose, Caddyfile.example, `.env.example`, README (artifacts only, no deploy) (`f732c5c`)
 
 ## Curriculum Wave 1
 
 ### PHP & Laravel (`php`)
-- [ ] php-foundations
+- [x] php-foundations — 10 topics, 94 questions (`4dd3a47`)
 - [ ] php-oop
 - [ ] php-modern
 - [ ] php-composer-psr
