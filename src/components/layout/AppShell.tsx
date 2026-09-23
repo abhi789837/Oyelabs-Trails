@@ -48,14 +48,15 @@ function AnimatedRoutes() {
         exit={{ opacity: 0 }}
         transition={{ duration: reduceMotion ? 0 : 0.15, ease: "easeOut" }}
       >
+        {/* Descendant routes: paths are relative to the `/*` this shell is mounted under. */}
         <Routes location={location}>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/track/:trackId" element={<TrackPage />} />
-          <Route path="/track/:trackId/module/:moduleId" element={<ModulePage />} />
-          <Route path="/track/:trackId/module/:moduleId/topic/:topicId" element={<TopicPage />} />
+          <Route index element={<DashboardPage />} />
+          <Route path="track/:trackId" element={<TrackPage />} />
+          <Route path="track/:trackId/module/:moduleId" element={<ModulePage />} />
+          <Route path="track/:trackId/module/:moduleId/topic/:topicId" element={<TopicPage />} />
           {/* v1 links: /track/:trackId/topic/:topicId */}
-          <Route path="/track/:trackId/topic/:topicId" element={<LegacyTopicRedirect />} />
-          <Route path="/report/:trackId" element={<CertificatePage />} />
+          <Route path="track/:trackId/topic/:topicId" element={<LegacyTopicRedirect />} />
+          <Route path="report/:trackId" element={<CertificatePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </motion.div>

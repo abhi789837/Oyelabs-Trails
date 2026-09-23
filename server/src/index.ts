@@ -1,6 +1,8 @@
 import fs from "node:fs";
 
 import { buildApp } from "./app";
+import { announceSeed, seedSuperadmin } from "./auth/seed";
+import { purgeExpiredSessions } from "./auth/sessions";
 import { openDb } from "./db";
 import { loadEnv } from "./env";
 
@@ -11,6 +13,12 @@ async function main(): Promise<void> {
   fs.mkdirSync(env.backupsDir, { recursive: true });
 
   const { db, sqlite } = openDb(env);
+
+  // Printed with console.log rather than the app logger: a generated password shown once should
+  // not be shaped like a structured log line that a shipper might forward somewhere.
+  announceSeed(await seedSuperadmin(db, env), (message) => console.log(message));
+  purgeExpiredSessions(db);
+
   const app = await buildApp({ env, db });
 
   const shutdown = async (signal: string) => {

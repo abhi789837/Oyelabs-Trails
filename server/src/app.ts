@@ -1,19 +1,37 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import fastifyCookie from "@fastify/cookie";
+import fastifyHelmet from "@fastify/helmet";
+import fastifyRateLimit from "@fastify/rate-limit";
 import fastifyStatic from "@fastify/static";
 import Fastify, { type FastifyInstance } from "fastify";
 
 import { BODY_LIMIT_JSON, ERROR_CODES } from "../../shared/api";
+import { registerAuthContext } from "./auth/guards";
 import type { Db } from "./db";
 import type { Env } from "./env";
+import { buildCsp } from "./lib/csp";
 import { HttpError } from "./lib/errors";
+import { registerAdminUserRoutes } from "./routes/admin/users";
+import { registerAuthRoutes } from "./routes/auth";
 import { registerHealthRoutes } from "./routes/health";
+
+export interface RouteRecord {
+  method: string;
+  url: string;
+}
 
 declare module "fastify" {
   interface FastifyInstance {
     env: Env;
     db: Db;
+    /**
+     * Every route this app registered. Security tests walk it to assert that no route under
+     * /api/admin is reachable by a learner, so adding an admin route is covered automatically
+     * rather than only when someone remembers to extend a hand-written list.
+     */
+    routeTable: RouteRecord[];
   }
 }
 
@@ -32,8 +50,8 @@ export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOption
           // Never let a secret or a session cookie reach the log.
           redact: {
             paths: [
-              'req.headers.cookie',
-              'req.headers.authorization',
+              "req.headers.cookie",
+              "req.headers.authorization",
               'res.headers["set-cookie"]',
               "req.body.password",
               "req.body.newPassword",
@@ -42,7 +60,9 @@ export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOption
             ],
             censor: "[redacted]",
           },
-          transport: env.isProduction ? undefined : { target: "pino-pretty", options: { translateTime: "HH:MM:ss", ignore: "pid,hostname" } },
+          transport: env.isProduction
+            ? undefined
+            : { target: "pino-pretty", options: { translateTime: "HH:MM:ss", ignore: "pid,hostname" } },
         }
       : false,
     bodyLimit: BODY_LIMIT_JSON,
@@ -52,6 +72,34 @@ export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOption
 
   app.decorate("env", env);
   app.decorate("db", db);
+
+  const routeTable: RouteRecord[] = [];
+  app.decorate("routeTable", routeTable);
+  app.addHook("onRoute", (route) => {
+    const methods = Array.isArray(route.method) ? route.method : [route.method];
+    for (const method of methods) {
+      if (method === "HEAD" || method === "OPTIONS") continue;
+      routeTable.push({ method, url: route.url });
+    }
+  });
+
+  const indexHtml = path.join(env.clientDist, "index.html");
+  const hasBuild = fs.existsSync(indexHtml);
+
+  await app.register(fastifyHelmet, {
+    contentSecurityPolicy: { directives: buildCsp({ indexHtmlPath: hasBuild ? indexHtml : undefined }) },
+    // Needed so the YouTube embed iframe and the MediaPipe WASM can load cross-origin.
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "same-site" },
+  });
+
+  await app.register(fastifyCookie, { secret: env.sessionSecret });
+
+  // Opt-in per route: `config: { rateLimit: { ... } }`. A global limit would throttle the
+  // assessment heartbeat and the admin live feed.
+  await app.register(fastifyRateLimit, { global: false });
+
+  registerAuthContext(app);
 
   app.setErrorHandler((error: unknown, request, reply) => {
     if (error instanceof HttpError) {
@@ -72,8 +120,11 @@ export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOption
   });
 
   await registerHealthRoutes(app);
+  await registerAuthRoutes(app);
+  // Registered as a plugin so its superadmin preHandler is encapsulated to these routes only.
+  await app.register(registerAdminUserRoutes);
 
-  await registerSpa(app, env);
+  await registerSpa(app, env, indexHtml, hasBuild);
 
   return app;
 }
@@ -83,10 +134,7 @@ export async function buildApp({ env, db, logger = !env.isTest }: BuildAppOption
  * session cookie is first-party. In development Vite serves the SPA and proxies /api here, so
  * only the JSON 404 handler is installed.
  */
-async function registerSpa(app: FastifyInstance, env: Env): Promise<void> {
-  const indexHtml = path.join(env.clientDist, "index.html");
-  const hasBuild = fs.existsSync(indexHtml);
-
+async function registerSpa(app: FastifyInstance, env: Env, indexHtml: string, hasBuild: boolean): Promise<void> {
   if (hasBuild) {
     await app.register(fastifyStatic, { root: env.clientDist, prefix: "/", index: false, wildcard: false });
   } else if (!env.isTest) {
