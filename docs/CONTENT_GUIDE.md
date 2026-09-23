@@ -113,6 +113,26 @@ video: {
 - Whether a site allows iframe previews doesn't affect your choice (the app handles fallback), but the
   checker output tells you, and you should mention notable ones in your notes.
 
+### Hosts the URL checker cannot verify
+
+`scripts/research/check-urls.mjs` catches three failure shapes beyond a plain 404: `unverifiable`
+(the host answers *every* path identically, so only a browser can confirm the page exists),
+`metaRefreshTo` (a 200 stub that only a browser follows), and a redirect loop caused by sending a
+browser User-Agent without cookies (retried automatically without one).
+
+Some hosts still cannot be checked, and these are settled — don't spend time re-testing them:
+
+| Host | Behaviour | What to do |
+| --- | --- | --- |
+| `www.cloudflare.com/learning/…` | **403 to any scripted client**, with or without a User-Agent | Use `blog.cloudflare.com`, which is 200 and frameable |
+| `www.w3.org` | 403 to the checker and to curl, fine in a browser | Cite the spec elsewhere, or use a secondary source |
+| `freedesktop.org` | **418** to scripted clients | Use man7.org's systemd mirror |
+| `docs.nestjs.com`, `angular.dev`, `developer.hashicorp.com` | SPA: 200 for every path | Verify against the project's repo or sitemap, then ship |
+
+**Embeddability is per video, not per channel.** Most PowerCert videos frame fine but
+`s_Ntt6eTn94` does not; **every** Vandad Nahavandipoor video returns oEmbed 401. Always run
+`yt.mjs info` on the exact id.
+
 ## 5. Summaries (senior-level framing)
 
 120–300 words, 2–4 short paragraphs separated by a blank line (`\n\n`). Cover:
