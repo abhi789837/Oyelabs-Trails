@@ -137,8 +137,10 @@ opaque id, check the title the checker prints against the page you intended.**
 
 
 **Embeddability is per video, not per channel.** Most PowerCert videos frame fine but
-`s_Ntt6eTn94` does not; **every** Vandad Nahavandipoor video returns oEmbed 401, and **Stanford's
-CS193p 2025 lectures are not embeddable** either. Always run `yt.mjs info` on the exact id.
+`s_Ntt6eTn94` does not. Three sources are known to be **entirely** unusable, and all three rank
+highly in search, so check before planning around them: **Vandad Nahavandipoor** (oEmbed 401),
+**Abhishek.Veeramalla** (AWS/DevOps, several 100k+ view videos, all 401) and **Stanford CS193p
+2025**. Always run `yt.mjs info` on the exact id.
 
 ## 5. Summaries (senior-level framing)
 
