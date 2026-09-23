@@ -1,5 +1,9 @@
 # v3 build state
 
+> **The v3 build is complete.** All phases P0–P8 and all 30 Wave 1 camps are committed, and
+> `docs/V3_REPORT.md` is the final report: what was built, every gate result, the security
+> checklist with evidence, what is still blocked, and how to run and deploy it.
+
 My memory across sessions. Resume from the first unchecked item. Update after every completed step.
 
 Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUDE_CODE_PROMPTS.md`,
@@ -41,36 +45,36 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 - [x] php-composer-psr — 12 topics, 124 questions
 - [x] php-web — 12 topics, 129 questions
 - [x] laravel-foundations — 14 topics, 150 questions
-- [ ] laravel-eloquent
-- [ ] laravel-auth
-- [ ] laravel-apis
-- [ ] laravel-queues-events
-- [ ] laravel-testing
-- [ ] laravel-ecosystem
-- [ ] laravel-deploy
-- [ ] php-wordpress
+- [x] laravel-eloquent
+- [x] laravel-auth
+- [x] laravel-apis
+- [x] laravel-queues-events
+- [x] laravel-testing
+- [x] laravel-ecosystem
+- [x] laravel-deploy
+- [x] php-wordpress
 
 ### Mobile (`mobile`)
-- [ ] mobile-foundations
-- [ ] mobile-react-native
-- [ ] mobile-dart
-- [ ] mobile-flutter
-- [ ] mobile-kotlin-compose
-- [ ] mobile-swift-swiftui
-- [ ] mobile-cross-cutting
+- [x] mobile-foundations
+- [x] mobile-react-native
+- [x] mobile-dart
+- [x] mobile-flutter
+- [x] mobile-kotlin-compose
+- [x] mobile-swift-swiftui
+- [x] mobile-cross-cutting
 
 ### Frontend additions
-- [ ] fe-angular
-- [ ] fe-svelte
+- [x] fe-angular
+- [x] fe-svelte
 
 ### DevOps & Cloud (`devops`)
-- [ ] devops-linux-shell
-- [ ] devops-networking-tls
-- [ ] devops-reverse-proxies
-- [ ] devops-aws-core
-- [ ] devops-terraform
-- [ ] devops-kubernetes
-- [ ] devops-observability
+- [x] devops-linux-shell
+- [x] devops-networking-tls
+- [x] devops-reverse-proxies
+- [x] devops-aws-core
+- [x] devops-terraform
+- [x] devops-kubernetes
+- [x] devops-observability
 
 ## Log
 
