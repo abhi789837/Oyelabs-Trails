@@ -23,7 +23,8 @@
     "content:embeds": "node scripts/content/check-embeds.mjs",
     "content:videos": "node scripts/content/check-videos.mjs",
     "pretest": "node scripts/content/build-server-content.mjs",
-    "content:server": "node scripts/content/build-server-content.mjs"
+    "content:server": "node scripts/content/build-server-content.mjs",
+    "dev:seed": "tsx server/src/dev/seed.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",

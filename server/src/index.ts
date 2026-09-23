@@ -8,6 +8,7 @@ import { purgeExpiredSessions } from "./auth/sessions";
 import { ContentStore } from "./content/store";
 import { openDb } from "./db";
 import { loadEnv } from "./env";
+import { blueprintHandler } from "./assessment/blueprintJob";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { JobWorker } from "./jobs/worker";
 import { createSandbox } from "./sandbox";
@@ -35,13 +36,21 @@ async function main(): Promise<void> {
    * says so in as many words.
    */
   const useMock = !env.isProduction && process.env.TRAILS_MOCK_AI !== "0";
-  const mock = useMock ? new MockProvider({ topicIds: content.orderedTopicIds.slice(0, 60) }) : null;
+  const mock = useMock
+    ? new MockProvider({
+        topicIds: content.orderedTopicIds,
+        moduleIds: content.manifest.flatMap((t) => t.modules.filter((m) => m.available).map((m) => m.id)),
+      })
+    : null;
   const ai = new AiService(db, env, { mock });
   if (useMock) console.log("[trails] AI: deterministic mock provider (development only)");
 
   const worker = new JobWorker({
     db,
-    handlers: { "credential.verify": verifyCredentialHandler(db, ai) },
+    handlers: {
+      "credential.verify": verifyCredentialHandler(db, ai),
+      "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox, log: (m) => console.log(`[trails] ${m}`) }),
+    },
     log: (message, detail) => console.log(`[trails] ${message}`, detail ?? ""),
   });
   worker.start();

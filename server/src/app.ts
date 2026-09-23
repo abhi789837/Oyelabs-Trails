@@ -16,6 +16,7 @@ import type { Env } from "./env";
 import { buildCsp } from "./lib/csp";
 import { HttpError } from "./lib/errors";
 import { registerAdminAiRoutes } from "./routes/admin/ai";
+import { registerAdminAssessmentRoutes } from "./routes/admin/assessments";
 import { registerAdminPlanRoutes } from "./routes/admin/plans";
 import { registerAdminUserRoutes } from "./routes/admin/users";
 import { registerAuthRoutes } from "./routes/auth";
@@ -160,6 +161,7 @@ export async function buildApp({
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
   await app.register(registerAdminAiRoutes);
+  await app.register(registerAdminAssessmentRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

@@ -8,6 +8,7 @@ import { AdminLayout } from "@/features/admin/AdminLayout";
 import AdminAiPage from "@/features/admin/AdminAiPage";
 import AdminOnboardPage from "@/features/admin/AdminOnboardPage";
 import AdminPeoplePage from "@/features/admin/AdminPeoplePage";
+import AdminPoolPage from "@/features/admin/AdminPoolPage";
 import { AuthProvider } from "@/features/auth/AuthProvider";
 import ChangePasswordPage from "@/features/auth/ChangePasswordPage";
 import { RequireAuth, RequireSuperadmin } from "@/features/auth/guards";
@@ -47,6 +48,7 @@ export default function App() {
                 <Route path="onboard" element={<AdminOnboardPage />} />
                 <Route path="people/:userId" element={<AdminLearnerPage />} />
                 <Route path="ai" element={<AdminAiPage />} />
+                <Route path="assessments/:assessmentId" element={<AdminPoolPage />} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />
               </Route>
 

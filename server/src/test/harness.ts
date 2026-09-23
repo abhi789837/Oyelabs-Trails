@@ -13,6 +13,7 @@ import { seedSuperadmin } from "../auth/seed";
 import { ContentStore } from "../content/store";
 import { openDb, type Db } from "../db";
 import { loadEnv, type Env } from "../env";
+import { blueprintHandler } from "../assessment/blueprintJob";
 import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
 import { JobWorker } from "../jobs/worker";
 import { WorkerSandbox } from "../sandbox/workerSandbox";
@@ -59,11 +60,22 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
   // Tests use the worker sandbox: it grades identically (one shared runtime source) and starting
   // a V8 isolate per case would slow the suite down for no extra coverage. sandbox.test.ts runs
   // the same suite against isolated-vm.
-  const mock = new MockProvider({ topicIds: content.orderedTopicIds.slice(0, 60) });
+  const mock = new MockProvider({
+    topicIds: content.orderedTopicIds,
+    moduleIds: content.manifest.flatMap((t) => t.modules.filter((m) => m.available).map((m) => m.id)),
+  });
   const ai = new AiService(db, env, { mock });
-  const worker = new JobWorker({ db, handlers: { "credential.verify": verifyCredentialHandler(db, ai) }, tickMs: 60_000 });
+  const sandbox = new WorkerSandbox();
+  const worker = new JobWorker({
+    db,
+    tickMs: 60_000,
+    handlers: {
+      "credential.verify": verifyCredentialHandler(db, ai),
+      "assessment.blueprint": blueprintHandler({ db, ai, content, sandbox }),
+    },
+  });
 
-  const app = await buildApp({ env, db, content, sandbox: new WorkerSandbox(), ai, usingMockProvider: true, logger: false });
+  const app = await buildApp({ env, db, content, sandbox, ai, usingMockProvider: true, logger: false });
   await app.ready();
 
   return {

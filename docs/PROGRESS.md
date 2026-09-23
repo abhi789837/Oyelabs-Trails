@@ -122,3 +122,30 @@ Answers to the brief's §18 open questions were supplied by Abhishek up front an
 - **`AiService.providerFor` returns the mock when one is configured.** Verification has to behave
   like every other call; building a real client there made the test suite issue live HTTPS
   requests with placeholder keys, which a test caught.
+
+### P4 sample-profile runs
+
+Three sample learner profiles live in `server/src/dev/sampleProfiles.ts` and are used by both the
+dev seed (`npm run dev:seed -- --issue`) and `server/src/assessment/blueprint.test.ts`:
+
+| Learner | Profile | Result |
+| --- | --- | --- |
+| Priya Sharma | Junior frontend, 1.5 yrs, strong UI, shaky async, no backend | `ready` · 6 areas · 78 items kept, 16 dropped |
+| Arjun Mehta | Mid PHP/Laravel, 4 yrs, deep in one framework, unclear breadth | `ready` · 6 areas · 78 items kept, 16 dropped |
+| Sofia Reyes | Senior Node/NestJS, 8 yrs, strong systems thinking, self-deprecating on frontend | `ready` · 6 areas · 78 items kept, 16 dropped |
+
+**These runs used the deterministic `MockProvider`, so read them as a check of the pipeline, not
+of content quality.** What they establish:
+
+- the blueprint → per-area pool → critic → code-verification sequence completes,
+- every kept item's topic tags are real ids from the manifest,
+- kept code items' reference solutions genuinely pass in the sandbox and their starters genuinely
+  fail (asserted by running both),
+- the rejection paths fire on every run: an item tagged with a non-existent topic is dropped, and
+  an item the critic disagrees with is dropped, each with a readable reason stored on the row,
+- the per-assessment cap of three code items holds.
+
+What they do **not** establish: the three results are identical because the mock's fixture does
+not vary by profile. Whether a blueprint actually reflects *these* notes — whether Priya's
+assessment really does probe async and Sofia's really does start higher — can only be judged with
+a real credential. That is the first thing to check once one is added.

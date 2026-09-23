@@ -3,6 +3,7 @@ import { ArrowLeft, Check, LoaderCircle, Minus, Plus } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import type { LearnerDetail } from "@shared/admin";
+import type { AssessmentSummary } from "@shared/assessment";
 import type { TopicProgressValue } from "@shared/content";
 import type { PlanResponse } from "@shared/plans";
 
@@ -32,6 +33,8 @@ export default function AdminLearnerPage() {
   const [detail, setDetail] = useState<LearnerDetail | null>(null);
   const [plan, setPlan] = useState<PlanResponse | null>(null);
   const [progress, setProgress] = useState<Record<string, TopicProgressValue>>({});
+  const [assessments, setAssessments] = useState<AssessmentSummary[]>([]);
+  const [issuing, setIssuing] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,15 +47,17 @@ export default function AdminLearnerPage() {
     let cancelled = false;
     const load = async () => {
       try {
-        const [d, p, pr] = await Promise.all([
+        const [d, p, pr, a] = await Promise.all([
           adminApi.getUser(userId),
           api.get<PlanResponse>(`/api/admin/users/${userId}/plan`),
           api.get<{ progress: Record<string, TopicProgressValue> }>(`/api/admin/users/${userId}/progress`),
+          api.get<{ assessments: AssessmentSummary[] }>(`/api/admin/users/${userId}/assessments`),
         ]);
         if (cancelled) return;
         setDetail(d);
         setPlan(p);
         setProgress(pr.progress);
+        setAssessments(a.assessments);
         setSelected(new Set(p.plan?.topicIds ?? []));
       } catch (err) {
         if (!cancelled) setError(err instanceof ApiRequestError ? err.message : "Could not load this person.");
@@ -101,6 +106,22 @@ export default function AdminLearnerPage() {
       }
       return next;
     });
+
+  const handleIssueAssessment = async () => {
+    setIssuing(true);
+    setError(null);
+    setNotice(null);
+    try {
+      await api.post(`/api/admin/users/${userId}/assessments`, {});
+      const refreshed = await api.get<{ assessments: AssessmentSummary[] }>(`/api/admin/users/${userId}/assessments`);
+      setAssessments(refreshed.assessments);
+      setNotice("Assessment queued. Generation runs in the background and usually takes a few minutes.");
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Could not issue an assessment.");
+    } finally {
+      setIssuing(false);
+    }
+  };
 
   const handlePublish = async () => {
     setSaving(true);
@@ -187,6 +208,57 @@ export default function AdminLearnerPage() {
           </ul>
         </section>
       )}
+
+      <section className="mt-10" aria-labelledby="assessment-heading">
+        <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-4">
+          <div>
+            <h2 id="assessment-heading" className="text-lg font-semibold">
+              Placement assessment
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {assessments.length === 0
+                ? "None issued yet. Generating one reads the notes above, so make sure they say what you know."
+                : `${assessments.length} attempt${assessments.length === 1 ? "" : "s"}.`}
+            </p>
+          </div>
+          {!assessments.some((a) => ["generating", "ready", "in_progress", "submitted", "evaluating"].includes(a.status)) && (
+            <Button variant="outline" onClick={() => void handleIssueAssessment()} disabled={issuing}>
+              {issuing && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+              {assessments.length === 0 ? "Issue assessment" : "Re-issue assessment"}
+            </Button>
+          )}
+        </div>
+
+        {assessments.length > 0 && (
+          <ul className="mt-4 space-y-2">
+            {assessments.map((assessment) => {
+              const kept = assessment.itemCounts.pool ?? 0;
+              const dropped = assessment.itemCounts.dropped ?? 0;
+              return (
+                <li key={assessment.id} className="flex flex-wrap items-center gap-3 rounded-md border px-4 py-3">
+                  <Badge variant={assessment.status === "ready" ? "success" : "outline"}>
+                    {assessment.status.replace("_", " ")}
+                  </Badge>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    Attempt {assessment.attemptNo} · {formatTimestamp(assessment.createdAt)}
+                    {kept > 0 ? ` · ${kept} items` : ""}
+                    {dropped > 0 ? `, ${dropped} dropped` : ""}
+                    {assessment.blueprint ? ` · ${assessment.blueprint.areas.length} areas` : ""}
+                  </span>
+                  {assessment.terminatedReason && (
+                    <span className="w-full text-sm text-destructive">{assessment.terminatedReason}</span>
+                  )}
+                  {kept > 0 && (
+                    <Button asChild variant="ghost" size="sm" className="ml-auto">
+                      <Link to={`/admin/assessments/${assessment.id}`}>View pool</Link>
+                    </Button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
 
       <section className="mt-10" aria-labelledby="plan-heading">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-4">

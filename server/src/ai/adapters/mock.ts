@@ -1,6 +1,7 @@
 import type { ProviderId } from "../../../../shared/enums";
 import { toProviderJsonSchema } from "../jsonSchema";
 import { AiOutputError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "../types";
+import { fixtureBlueprint, fixtureCritic, fixtureExplainItems, fixtureItems } from "./mockFixtures";
 
 /**
  * A deterministic stand-in for a real provider, for development and tests only.
@@ -17,6 +18,8 @@ import { AiOutputError, type AiProvider, type GenerateJsonRequest, type Generate
 export interface MockHints {
   /** Real topic ids, so generated plans and item tags survive server-side validation. */
   topicIds?: string[];
+  /** Real module ids, so a fixture blueprint's areas are not discarded. */
+  moduleIds?: string[];
   /** Area names the blueprint should use. */
   areas?: string[];
 }
@@ -37,6 +40,20 @@ export class MockProvider implements AiProvider {
 
   async generateJson<T>(request: GenerateJsonRequest<T>): Promise<GenerateJsonResult<T>> {
     if (this.failWith) throw this.failWith;
+
+    // The assessment pipeline needs *semantically* coherent output, not merely schema-valid
+    // output, or every item would be dropped by validation and the pipeline would prove nothing.
+    const fixture = this.fixtureFor(request);
+    if (fixture !== undefined) {
+      const checked = request.schema.safeParse(fixture);
+      if (!checked.success) {
+        throw new AiOutputError(
+          `MockProvider's fixture for "${request.schemaName}" no longer matches its schema. Update server/src/ai/adapters/mockFixtures.ts.`,
+          checked.error.issues.map((i) => `${i.path.map(String).join(".")}: ${i.message}`),
+        );
+      }
+      return { data: checked.data, usage: { input: Math.round(request.user.length / 4), output: 512 }, latencyMs: 5, model: "mock-1" };
+    }
 
     const schema = toProviderJsonSchema(request.schema);
     const seed = hashString(`${request.purpose}:${request.schemaName ?? ""}:${this.calls++}:${request.user.length}`);
@@ -62,6 +79,39 @@ export class MockProvider implements AiProvider {
 
   async verify(): Promise<void> {
     if (this.failWith) throw this.failWith;
+  }
+
+  /**
+   * Hand-built output for the pipeline's known call shapes; undefined means "synthesise".
+   *
+   * The names "blueprint", "items", "explain_items" and "critic" are reserved: any call using one
+   * gets the matching fixture, and a mismatch is a loud error rather than a silent fallback, so
+   * fixture drift is caught the moment a schema changes. Other callers should use another name.
+   */
+  private fixtureFor(request: GenerateJsonRequest<unknown>): unknown {
+    const context = {
+      moduleIds: this.hints.moduleIds ?? [],
+      topicIds: this.hints.topicIds ?? [],
+      seed: this.calls++,
+    };
+
+    switch (request.schemaName) {
+      case "blueprint":
+        return fixtureBlueprint(context);
+      case "items": {
+        // The area name is in the prompt; using it keeps each batch distinguishable.
+        const area = /Name: (.+)/.exec(request.user)?.[1]?.trim() ?? "General";
+        return { items: fixtureItems(context, area) };
+      }
+      case "explain_items":
+        return { items: fixtureExplainItems(context, 4) };
+      case "critic": {
+        const count = (request.user.match(/^### Item \d+$/gm) ?? []).length;
+        return { verdicts: fixtureCritic({ length: Math.max(1, count) }) };
+      }
+      default:
+        return undefined;
+    }
   }
 }
 

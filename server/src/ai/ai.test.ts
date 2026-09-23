@@ -234,7 +234,8 @@ describe("structured calls and the audit trail", () => {
       system: "You build assessment blueprints.",
       user: "Build one for a mid-level React developer.",
       schema: schemaUnderTest,
-      schemaName: "blueprint",
+      // Not "blueprint": that name is reserved by the mock for the real pipeline fixture.
+      schemaName: "test_shape",
       meta: { subjectUserId: admin.user.id, assessmentId: "assessment-1" },
     });
 
