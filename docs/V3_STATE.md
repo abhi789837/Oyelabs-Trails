@@ -23,7 +23,7 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 ## Phases
 
 - [x] P0 Foundations — `server/` + `shared/` scaffold, Fastify, Drizzle + migrations, dev script, `/api/health`, Vite proxy
-- [ ] P1 Auth — users, sessions, seed superadmin, login/change-password, guards, AuthProvider, admin onboarding, audit log
+- [x] P1 Auth — users, sessions, seed superadmin, login/change-password, guards, AuthProvider, admin onboarding, audit log
 - [ ] P2 Content gating + progress — server content bundle, filtered manifest/content API, server quiz grading, sandboxed code verification, progress API, manual plan editor
 - [ ] P3 AI layer — crypto box, credentials CRUD + UI, four adapters, verify, `ai_calls` audit, job queue, model settings
 - [ ] P4 Assessment generation — blueprint → pools → critic → code validation; Issue assessment; admin pool preview
@@ -98,6 +98,29 @@ _(newest last: step, commit hash, known gaps)_
   plumbing; the server is bundled with esbuild rather than `tsc`-emitted, so `shared/` needs no
   `.js` extensions; tests are excluded from `tsconfig.app.json` (they need node types).
   Known gaps: none for P0. Vite picks 5174 when 5173 is already taken — expected.
+
+- **P1 done** — `85462c5` "v3 phase 1: auth and onboarding".
+  Built (server): argon2id hashing, password policy with a generated 1,572-entry common-password
+  list, opaque SHA-256-stored sessions in an httpOnly cookie, login with per-account lockout and
+  per-IP rate limit, forced password change, `requireUser`/`requireActiveUser`/`requireSuperadmin`,
+  admin user CRUD (onboard, profile, reset password, disable, revoke sessions), audit log, Helmet
+  CSP, and `app.routeTable`.
+  Built (client): `AuthProvider`, `/login`, `/change-password`, `RequireAuth`/`RequireSuperadmin`,
+  `/admin` console with People and Onboard, sign-out and an Admin link in the learner TopBar, and
+  the existing app remounted behind the auth guard with relative routes.
+  Verified: 52/52 tests · typecheck clean · `content:check` 0 errors · full HTTP run against the
+  production bundle (seed prints the 20-char password once → admin blocked with
+  `password_change_required` → change → admin allowed → onboard learner → learner logs in with the
+  temporary password → learner gets 403 on every `/api/admin` route).
+  Security tests that matter: a learner gets 403 on **every route in `app.routeTable`** starting
+  `/api/admin` (self-extending), the audit row contains neither the password nor the notes, the
+  people list contains no `$argon2id$` string, and unknown-username vs wrong-password responses are
+  byte-identical.
+  Decisions: the "password contains the username" rule only applies to usernames of 4+ characters
+  (a 3-character username would reject too many good passphrases); login returns 401 for a
+  malformed body rather than 400, so the endpoint cannot be used as a username validator.
+  **Known gap:** `issueAssessment` from the onboarding form is accepted and audited but not acted
+  on until P4 wires the blueprint job.
 
 ## Blocked / needs Abhishek
 
