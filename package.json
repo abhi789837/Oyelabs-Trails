@@ -25,6 +25,7 @@
     "pretest": "node scripts/content/build-server-content.mjs",
     "content:server": "node scripts/content/build-server-content.mjs",
     "dev:seed": "tsx server/src/dev/seed.ts",
+    "dev:password": "tsx server/src/dev/resetPassword.ts",
     "mediapipe": "node scripts/fetch-mediapipe.mjs",
     "postinstall": "node scripts/fetch-mediapipe.mjs"
   },
