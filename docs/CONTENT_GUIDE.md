@@ -13,6 +13,11 @@ alongside this guide.
 | `content-tests/solutions/<topicId>.js` | A reference solution for every **code** topic (see §7) |
 | `docs/research-notes/<moduleId>.md` | Research notes (see §9) |
 
+**If several camps are being written in parallel**, the scratchpad directory is *shared* between
+them. Namespace every scratch file you create with your module id (`scratch/<moduleId>/part1.ts`,
+not `part1.ts`) — two agents picking the same obvious filename has already caused one silent
+overwrite mid-run. Your two output files are yours alone; the scratchpad is not.
+
 Module ids, names and track ids come from `src/content/registry.ts`. Don't edit the registry,
 app code, or other modules' files. Don't commit (the orchestrator commits per module).
 
