@@ -4268,33 +4268,587 @@ export const manifest: TrackMeta[] = [
         "id": "php-oop",
         "trackId": "php",
         "name": "PHP OOP",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "The object model a Laravel codebase is built on. Classes, visibility, inheritance, interfaces, traits, enums, magic methods and cloning — taught around the decisions and the gotchas that show up in real application code rather than in a shapes-and-animals tutorial.",
+        "refs": [
+          {
+            "label": "PHP Manual: Classes and Objects",
+            "url": "https://www.php.net/manual/en/language.oop5.basic.php",
+            "kind": "docs"
+          },
+          {
+            "label": "PHP Manual: Enumerations",
+            "url": "https://www.php.net/manual/en/language.enumerations.php",
+            "kind": "docs"
+          },
+          {
+            "label": "PHP: The Right Way",
+            "url": "https://phptherightway.com/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "php-oop-classes-objects",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Classes, Objects and Typed Properties",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "php-oop-visibility-encapsulation",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Visibility, Encapsulation and Asymmetric Visibility",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-oop-constructors-promotion",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Constructors, Property Promotion and readonly",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-oop-static-late-binding",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Static Members and Late Static Binding",
+            "level": "expert",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-oop-inheritance-abstract",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Inheritance, Abstract Classes and final",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-oop-interfaces-polymorphism",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Interfaces, instanceof and Polymorphism",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-oop-traits",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Traits and Conflict Resolution",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-oop-enums",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Enums: Pure, Backed and Behavioural",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "php-oop-magic-methods",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Magic Methods and Property Overloading",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-oop-cloning",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Object Cloning, __clone and Deep Copies",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "php-oop-composition-solid",
+            "moduleId": "php-oop",
+            "trackId": "php",
+            "title": "Composition over Inheritance and SOLID in Practice",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "php-modern",
         "trackId": "php",
         "name": "Modern PHP 8.x",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "What actually changed between PHP 7.x and 8.5, and why it matters. Attributes, first-class callables, property hooks, lazy objects, fibers, the pipe operator — plus the unglamorous half: the support cycle, deprecations, opcache and the JIT.",
+        "refs": [
+          {
+            "label": "PHP Manual: Appendices — Migration guides",
+            "url": "https://www.php.net/manual/en/migration85.php",
+            "kind": "docs"
+          },
+          {
+            "label": "PHP: Supported Versions",
+            "url": "https://www.php.net/supported-versions.php",
+            "kind": "docs"
+          },
+          {
+            "label": "PHP.Watch: version-by-version changes",
+            "url": "https://php.watch/versions",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "php-modern-release-cycle",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "The PHP Release and Support Cycle",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "php-modern-attributes",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "Attributes and Reflection",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-modern-first-class-callables",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "First-Class Callables and the Pipe Operator",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-modern-readonly-dnf",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "readonly Classes and DNF Types (PHP 8.2)",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-modern-builtin-attributes",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "#[\\Override], #[\\Deprecated] and #[\\NoDiscard]",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "php-modern-property-hooks",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "Property Hooks (PHP 8.4)",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-modern-write-control",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "Asymmetric Visibility and Clone-With",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-modern-lazy-objects",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "Lazy Objects (PHP 8.4)",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-modern-array-functions",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "array_find, array_any, array_all and Friends",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "php-modern-fibers",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "Fibers and the State of Async PHP",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-modern-opcache-jit",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "Opcache, Preloading and the JIT",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "php-modern-upgrading",
+            "moduleId": "php-modern",
+            "trackId": "php",
+            "title": "Upgrading a Codebase Across PHP Versions",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
       },
       {
         "id": "php-composer-psr",
         "trackId": "php",
         "name": "Composer & PSR Standards",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "How PHP code is organised, shared and depended on. Namespaces and PSR-4 autoloading, Composer's resolution and lock model, publishing to Packagist, and the FIG interop standards — PSR-3, PSR-7/15, PSR-11 — that let one project's code talk to another's without adapters.",
+        "refs": [
+          {
+            "label": "Composer: Documentation",
+            "url": "https://getcomposer.org/doc/",
+            "kind": "docs"
+          },
+          {
+            "label": "PHP-FIG: PHP Standards Recommendations",
+            "url": "https://www.php-fig.org/psr/",
+            "kind": "spec"
+          },
+          {
+            "label": "PHP Manual: Namespaces",
+            "url": "https://www.php.net/manual/en/language.namespaces.rationale.php",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "php-psr-namespaces",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "Namespaces, `use` and Aliasing",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-autoloading",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "PSR-4 Autoloading and How Composer's Autoloader Works",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-composer-json",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "`composer.json`, `composer.lock` and Reproducible Installs",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-versioning",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "Semantic Versioning and Version Constraints",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-psr-dev-dependencies",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "Dev Dependencies, Scripts and Project Automation",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-optimised-autoload",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "Optimised Autoloading and Production Installs",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-psr-packagist",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "Publishing a Package to Packagist",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-coding-style",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "PSR-1, PSR-12 and PER Coding Style",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-fig-process",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "The FIG Process and the PSR Landscape",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-psr3-logging",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "PSR-3: The Logger Interface",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-psr-http-messages",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "PSR-7 and PSR-15: HTTP Messages and Middleware",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-psr-container",
+            "moduleId": "php-composer-psr",
+            "trackId": "php",
+            "title": "PSR-11 Containers and Dependency Injection",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "php-web",
         "trackId": "php",
         "name": "PHP on the Web",
-        "description": "",
-        "topics": [],
-        "available": false
+        "description": "PHP as it actually runs behind a web server: the shared-nothing request lifecycle, FPM workers, untrusted input, sessions and cookies, uploads, PDO, and the production settings a Laravel app inherits without ever showing you. Plain PHP only — the framework layer comes later.",
+        "refs": [
+          {
+            "label": "PHP Manual: Features",
+            "url": "https://www.php.net/manual/en/features.php",
+            "kind": "docs"
+          },
+          {
+            "label": "OWASP: Session Management Cheat Sheet",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+            "kind": "article"
+          },
+          {
+            "label": "PHP Delusions: the PDO tutorial",
+            "url": "https://phpdelusions.net/pdo",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "php-web-request-lifecycle",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "The Request Lifecycle and Shared-Nothing Execution",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-web-fpm",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "PHP-FPM, mod_php and the Process Model",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-web-superglobals",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Superglobals and Untrusted Input",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "php-web-headers-output",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Headers, Status Codes, Redirects and Output Buffering",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-web-cookies",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Cookies and Their Security Attributes",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-web-sessions",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Sessions: Storage, Locking and Fixation",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "php-web-file-uploads",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Handling File Uploads Safely",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-web-pdo-prepared-statements",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "PDO and Prepared Statements",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 12
+          },
+          {
+            "id": "php-web-pdo-transactions",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Transactions and Connection Handling with PDO",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-web-password-hashing",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Password Hashing with password_hash",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "php-web-xss-csrf",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "XSS and CSRF in Plain PHP",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "php-web-production-config",
+            "moduleId": "php-web",
+            "trackId": "php",
+            "title": "Production php.ini, OPcache and Error Logging",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
       },
       {
         "id": "laravel-foundations",

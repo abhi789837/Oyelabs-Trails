@@ -250,14 +250,26 @@ where it is not obvious, so any of these can be re-checked in one line.
 
 ### PHP & Laravel
 
-- **PHP 8.5** is the current stable release (8.5.9 as of this check); **8.4** is also actively
-  supported; **8.3** is in security-only maintenance; **8.2 and earlier are end of life.** Write
-  for 8.4/8.5 and say so when a feature is newer than 8.3.
-  `curl -s https://www.php.net/releases/index.php` lists the current patch per branch.
+- **PHP 8.5** is the current stable release; **8.4** is in active support until 31 Dec 2026;
+  **8.3 and 8.2** are in security-only maintenance (8.2 until 31 Dec 2026); **8.1 and earlier are
+  end of life.** Write for 8.4/8.5 and say so when a feature is newer than 8.3.
+  `curl -s "https://www.php.net/releases/index.php?json"` lists the current patch per branch --
+  **do not quote a patch number in content**: php.net's feed and php.watch disagree by a patch at
+  any given moment, and the number is stale within weeks either way.
 - PHP 8.4 brought property hooks, asymmetric visibility, `new` in initialisers without parentheses,
   and lazy objects. PHP 8.3 brought typed class constants, `json_validate()`, and `#[\Override]`.
   PHP 8.1's enums, readonly properties, fibers and `never` are now baseline, not "new".
-- **Laravel 13** is current (`v13.33.0`), and the docs live at `https://laravel.com/docs/13.x/…`.
+- **Laravel 13** is current: released 17 Mar 2026, requires **PHP 8.3-8.5**, bug fixes to Q3 2027
+  and security fixes to 17 Mar 2028. Laravel 12 (PHP 8.2-8.5) is still supported; **Laravel 11 went
+  end of life on 12 Mar 2026.** Docs live at `https://laravel.com/docs/13.x/…`, which redirects to
+  `https://laravel.com/framework/docs/13.x/…` -- use the final URL in `webRefs`.
+  Laravel 13 headline additions: the first-party **AI SDK**, **JSON:API resources**,
+  `PreventRequestForgery` (replacing `VerifyCsrfToken` in the `web` group), queue routing via
+  `Queue::route(...)`, expanded attributes (`#[Middleware]`, `#[Authorize]`, `#[Tries]`,
+  `#[Backoff]`, `#[Timeout]`), `Cache::touch(...)`, and vector search via `whereVectorSimilarTo`.
+  Since Laravel 11 there is no `app/Http/Kernel.php`: middleware, routing and exception handling
+  are configured in `bootstrap/app.php` through `->withMiddleware()`, `->withRouting()` and
+  `->withExceptions()`. Content that shows a Kernel file is out of date.
   Note the redirect: `laravel.com/docs/…` resolves to `laravel.com/framework/docs/…`, and
   `check-urls.mjs` reports the final URL — use that one.
   `curl -s https://repo.packagist.org/p2/laravel/framework.json` lists every released version.

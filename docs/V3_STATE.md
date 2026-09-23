@@ -36,10 +36,10 @@ Sources of truth: `docs/TRAILS_V3_BRIEF.md` (overrides `CLAUDE.md`), `docs/CLAUD
 
 ### PHP & Laravel (`php`)
 - [x] php-foundations — 10 topics, 94 questions (`4dd3a47`)
-- [ ] php-oop
-- [ ] php-modern
-- [ ] php-composer-psr
-- [ ] php-web
+- [x] php-oop — 11 topics, 114 questions
+- [x] php-modern — 12 topics, 120 questions
+- [x] php-composer-psr — 12 topics, 124 questions
+- [x] php-web — 12 topics, 129 questions
 - [ ] laravel-foundations
 - [ ] laravel-eloquent
 - [ ] laravel-auth
