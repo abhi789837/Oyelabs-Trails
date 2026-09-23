@@ -6,6 +6,8 @@ import { AppShell } from "@/components/layout/AppShell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminLayout } from "@/features/admin/AdminLayout";
 import AdminAiPage from "@/features/admin/AdminAiPage";
+import AdminIntegrityPage from "@/features/admin/AdminIntegrityPage";
+import AdminLivePage from "@/features/admin/AdminLivePage";
 import AdminOnboardPage from "@/features/admin/AdminOnboardPage";
 import AdminPeoplePage from "@/features/admin/AdminPeoplePage";
 import AdminPoolPage from "@/features/admin/AdminPoolPage";
@@ -49,7 +51,9 @@ export default function App() {
                 <Route path="onboard" element={<AdminOnboardPage />} />
                 <Route path="people/:userId" element={<AdminLearnerPage />} />
                 <Route path="ai" element={<AdminAiPage />} />
+                <Route path="live" element={<AdminLivePage />} />
                 <Route path="assessments/:assessmentId" element={<AdminPoolPage />} />
+                <Route path="assessments/:assessmentId/integrity" element={<AdminIntegrityPage />} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />
               </Route>
 

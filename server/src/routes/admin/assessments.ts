@@ -160,6 +160,73 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
     return { assessment: summarise(assessment, countItems(app, assessmentId)), pool };
   });
 
+  /**
+   * The full evaluation, for the admin (brief §13).
+   *
+   * This is the unabridged version: the summary written for the manager, the evidence behind each
+   * area judgement, where the onboarding notes turned out to be wrong, the integrity assessment,
+   * and any warnings the server raised while validating the proposed plan. The learner's own view
+   * (`/api/me/evaluation`) is a strict subset.
+   */
+  app.get("/api/admin/assessments/:assessmentId/evaluation", async (request) => {
+    const { assessmentId } = parseOrThrow(assessmentParams, request.params);
+
+    const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
+    if (!assessment) throw notFound("No such assessment.");
+
+    const row = app.db
+      .select()
+      .from(schema.evaluations)
+      .where(eq(schema.evaluations.assessmentId, assessmentId))
+      .orderBy(desc(schema.evaluations.createdAt))
+      .get();
+
+    return {
+      evaluation: row ? { result: row.result, model: row.model, createdAt: row.createdAt } : null,
+      assessment: summarise(assessment, countItems(app, assessmentId)),
+    };
+  });
+
+  /**
+   * Every item the learner was actually served, with their answer and the key.
+   *
+   * Separate from the pool preview: that one shows what was generated, this one shows what
+   * happened, including the adaptive path through each area.
+   */
+  app.get("/api/admin/assessments/:assessmentId/answers", async (request) => {
+    const { assessmentId } = parseOrThrow(assessmentParams, request.params);
+    const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
+    if (!assessment) throw notFound("No such assessment.");
+
+    const served = app.db
+      .select()
+      .from(schema.assessmentItems)
+      .where(eq(schema.assessmentItems.assessmentId, assessmentId))
+      .all()
+      .filter((item) => item.status !== "pool" && item.status !== "dropped")
+      .sort((a, b) => (a.servedAt ?? 0) - (b.servedAt ?? 0));
+
+    return {
+      items: served.map((item) => ({
+        id: item.id,
+        area: item.area,
+        kind: item.kind,
+        difficulty: item.difficulty,
+        status: item.status,
+        topicIds: item.topicIds,
+        payload: item.payload,
+        key: item.key,
+        response: item.response,
+        autoScore: item.autoScore,
+        aiScore: item.aiScore,
+        aiFeedback: item.aiFeedback,
+        timeMs: item.timeMs,
+      })),
+      /** The staircase per area, for the level-over-items chart in §13. */
+      selector: (assessment.config as { selector?: unknown } | null)?.selector ?? null,
+    };
+  });
+
   /** Cancels a generating or ready assessment, so a bad profile can be corrected and re-issued. */
   app.delete("/api/admin/assessments/:assessmentId", async (request) => {
     const actor = requireSuperadmin(request);

@@ -17,6 +17,7 @@ import { useTracks, type ModuleMeta } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { levelLabels } from "@/lib/track-meta";
 import { cn, formatMinutes, formatTimestamp } from "@/lib/utils";
+import { AdminEvaluationView } from "./AdminEvaluationView";
 import { adminApi } from "./api";
 
 /**
@@ -260,6 +261,21 @@ export default function AdminLearnerPage() {
         )}
       </section>
 
+      {(() => {
+        const evaluated = assessments.find((a) => ["completed", "terminated", "evaluating"].includes(a.status));
+        if (!evaluated) return null;
+        return (
+          <section className="mt-10" aria-labelledby="evaluation-heading">
+            <h2 id="evaluation-heading" className="border-b pb-4 text-lg font-semibold">
+              Evaluation
+            </h2>
+            <div className="mt-6">
+              <AdminEvaluationView assessmentId={evaluated.id} userId={userId} />
+            </div>
+          </section>
+        );
+      })()}
+
       <section className="mt-10" aria-labelledby="plan-heading">
         <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-4">
           <div>
@@ -283,6 +299,23 @@ export default function AdminLearnerPage() {
             )}
           </div>
         </div>
+
+        {(() => {
+          const aiVersion = plan?.history.find((p) => p.source === "ai");
+          if (!aiVersion || !plan?.plan || plan.plan.id === aiVersion.id) return null;
+          const aiSet = new Set(aiVersion.topicIds);
+          const addedSinceAi = plan.plan.topicIds.filter((id) => !aiSet.has(id));
+          const removedSinceAi = aiVersion.topicIds.filter((id) => !plan.plan!.topicIds.includes(id));
+          if (addedSinceAi.length === 0 && removedSinceAi.length === 0) return null;
+          return (
+            <p className="mt-3 font-mono text-xs text-muted-foreground">
+              Against the AI's version {aiVersion.version}:{" "}
+              {addedSinceAi.length > 0 && <span className="text-summit-strong">+{addedSinceAi.length} added</span>}
+              {addedSinceAi.length > 0 && removedSinceAi.length > 0 && " · "}
+              {removedSinceAi.length > 0 && <span className="text-destructive">−{removedSinceAi.length} removed</span>}
+            </p>
+          );
+        })()}
 
         {plan?.plan && selected.size > 0 && (
           <Progress
