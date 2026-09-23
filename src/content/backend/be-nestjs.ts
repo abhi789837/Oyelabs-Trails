@@ -43,7 +43,7 @@ export default {
   refs: [
     { label: "NestJS: Documentation", url: "https://docs.nestjs.com/", kind: "docs" },
     { label: "NestJS: Request lifecycle", url: "https://docs.nestjs.com/faq/request-lifecycle", kind: "docs" },
-    { label: "NestJS: Migration guide (v11 to v12)", url: "https://docs.nestjs.com/migration-guide", kind: "docs" },
+    { label: "NestJS: Migration guide", url: "https://docs.nestjs.com/migration", kind: "docs" },
   ],
   topics: [
     {
@@ -393,9 +393,9 @@ export default {
       estMinutes: 75,
       isMilestone: true,
       webRefs: [
-        { label: "NestJS: Custom providers", url: "https://docs.nestjs.com/fundamentals/custom-providers", kind: "docs" },
-        { label: "NestJS: Injection scopes", url: "https://docs.nestjs.com/fundamentals/injection-scopes", kind: "docs" },
-        { label: "NestJS: Asynchronous providers", url: "https://docs.nestjs.com/fundamentals/async-providers", kind: "docs" },
+        { label: "NestJS: Dependency injection (custom providers)", url: "https://docs.nestjs.com/fundamentals/dependency-injection", kind: "docs" },
+        { label: "NestJS: Provider scopes", url: "https://docs.nestjs.com/fundamentals/provider-scopes", kind: "docs" },
+        { label: "NestJS: Asynchronous components", url: "https://docs.nestjs.com/fundamentals/async-components", kind: "docs" },
         { label: "Trilon: NestJS Metadata Deep Dive", url: "https://trilon.io/blog/nestjs-metadata-deep-dive", kind: "article" },
       ],
       video: {
@@ -627,7 +627,7 @@ export default {
       level: "intermediate",
       estMinutes: 70,
       webRefs: [
-        { label: "NestJS: Validation", url: "https://docs.nestjs.com/techniques/validation", kind: "docs" },
+        { label: "NestJS: Validation", url: "https://docs.nestjs.com/application/validation", kind: "docs" },
         { label: "NestJS: Pipes", url: "https://docs.nestjs.com/pipes", kind: "docs" },
         { label: "class-validator (GitHub)", url: "https://github.com/typestack/class-validator", kind: "repo" },
       ],
@@ -1007,7 +1007,7 @@ export default {
       estMinutes: 55,
       webRefs: [
         { label: "NestJS: Interceptors", url: "https://docs.nestjs.com/interceptors", kind: "docs" },
-        { label: "NestJS: Serialization", url: "https://docs.nestjs.com/techniques/serialization", kind: "docs" },
+        { label: "NestJS: Serialization", url: "https://docs.nestjs.com/application/serialization", kind: "docs" },
         { label: "RxJS: timeout operator", url: "https://rxjs.dev/api/operators/timeout", kind: "docs" },
         { label: "RxJS: Observable guide", url: "https://rxjs.dev/guide/observable", kind: "article" },
       ],
@@ -1462,8 +1462,8 @@ export default {
       level: "advanced",
       estMinutes: 60,
       webRefs: [
-        { label: "NestJS: Database (TypeORM)", url: "https://docs.nestjs.com/techniques/database", kind: "docs" },
-        { label: "NestJS: Prisma recipe", url: "https://docs.nestjs.com/recipes/prisma", kind: "docs" },
+        { label: "NestJS: Database overview", url: "https://docs.nestjs.com/data/overview", kind: "docs" },
+        { label: "NestJS: Prisma", url: "https://docs.nestjs.com/data/prisma", kind: "docs" },
         { label: "TypeORM: Transactions", url: "https://typeorm.io/docs/advanced-topics/transactions/", kind: "docs" },
         { label: "Prisma: Transactions in Prisma ORM", url: "https://www.prisma.io/docs/orm/fundamentals/transactions", kind: "article" },
       ],
