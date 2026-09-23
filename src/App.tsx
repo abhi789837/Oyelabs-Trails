@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminLayout } from "@/features/admin/AdminLayout";
+import AdminAiPage from "@/features/admin/AdminAiPage";
 import AdminOnboardPage from "@/features/admin/AdminOnboardPage";
 import AdminPeoplePage from "@/features/admin/AdminPeoplePage";
 import { AuthProvider } from "@/features/auth/AuthProvider";
@@ -45,6 +46,7 @@ export default function App() {
                 <Route index element={<AdminPeoplePage />} />
                 <Route path="onboard" element={<AdminOnboardPage />} />
                 <Route path="people/:userId" element={<AdminLearnerPage />} />
+                <Route path="ai" element={<AdminAiPage />} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />
               </Route>
 

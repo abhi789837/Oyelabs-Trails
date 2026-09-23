@@ -100,3 +100,25 @@ Answers to the brief's §18 open questions were supplied by Abhishek up front an
 - **No AI credential in the build environment.** `ANTHROPIC_API_KEY` is unset, so a deterministic
   `MockProvider` backs P3–P6. It is registered only when `NODE_ENV !== "production"` and is never
   selectable in production. Real-AI verification is pending (tracked in `docs/V3_STATE.md`).
+- **P3: AI library APIs verified from the installed packages, not from memory.**
+  - `@anthropic-ai/sdk` 0.128.0 — structured output is `messages.create({ output_config: { format:
+    { type: "json_schema", schema } } })`; `JSONOutputFormat` takes a bare JSON Schema object.
+    Usage is `response.usage.input_tokens/output_tokens`. The `Model` union includes
+    `claude-sonnet-5`, `claude-opus-5`, `claude-opus-5-5` and `claude-haiku-4-5`, which is where
+    the suggested defaults come from.
+  - `openai` 7.22.0 — `chat.completions.create({ response_format: { type: "json_schema",
+    json_schema: { name, schema, strict } } })`. `strict: false` is used for generation because a
+    zod-derived schema marks optional fields non-required, which strict mode rejects; validation
+    and the repair turn cover the difference, and `verify()` uses `strict: true` on a schema
+    written by hand.
+  - `zod` 4.6.5 has `z.toJSONSchema`, so no separate converter dependency is needed. `$schema` is
+    stripped because both providers reject unknown top-level keys.
+  - `isolated-vm` 7.0.1 installs from prebuilt binaries and runs on Windows/Node 24 — the brief
+    anticipated a native-build problem here and there isn't one.
+  - The `claude` and `codex` CLIs are **not installed in this environment**, so those two adapters
+    are written to the documented interface (`claude -p --output-format json` with
+    `CLAUDE_CODE_OAUTH_TOKEN`; `codex exec --json` with a private `CODEX_HOME`) but could not be
+    executed. Recorded in `docs/V3_STATE.md` as needing a live check.
+- **`AiService.providerFor` returns the mock when one is configured.** Verification has to behave
+  like every other call; building a real client there made the test suite issue live HTTPS
+  requests with placeholder keys, which a test caught.

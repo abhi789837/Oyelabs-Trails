@@ -6,11 +6,15 @@ import type { FastifyInstance, InjectOptions } from "fastify";
 
 import { SESSION_COOKIE } from "../../../shared/auth";
 import type { LearnerProfile } from "../../../shared/profile";
+import { MockProvider } from "../ai/adapters/mock";
+import { AiService } from "../ai/service";
 import { buildApp } from "../app";
 import { seedSuperadmin } from "../auth/seed";
 import { ContentStore } from "../content/store";
 import { openDb, type Db } from "../db";
 import { loadEnv, type Env } from "../env";
+import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
+import { JobWorker } from "../jobs/worker";
 import { WorkerSandbox } from "../sandbox/workerSandbox";
 
 export interface TestContext {
@@ -18,6 +22,9 @@ export interface TestContext {
   db: Db;
   env: Env;
   content: ContentStore;
+  ai: AiService;
+  /** Runs queued jobs to completion. Tests drive the worker rather than waiting on a timer. */
+  drainJobs: () => Promise<number>;
   close: () => Promise<void>;
 }
 
@@ -52,7 +59,11 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
   // Tests use the worker sandbox: it grades identically (one shared runtime source) and starting
   // a V8 isolate per case would slow the suite down for no extra coverage. sandbox.test.ts runs
   // the same suite against isolated-vm.
-  const app = await buildApp({ env, db, content, sandbox: new WorkerSandbox(), logger: false });
+  const mock = new MockProvider({ topicIds: content.orderedTopicIds.slice(0, 60) });
+  const ai = new AiService(db, env, { mock });
+  const worker = new JobWorker({ db, handlers: { "credential.verify": verifyCredentialHandler(db, ai) }, tickMs: 60_000 });
+
+  const app = await buildApp({ env, db, content, sandbox: new WorkerSandbox(), ai, usingMockProvider: true, logger: false });
   await app.ready();
 
   return {
@@ -60,6 +71,8 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
     db,
     env,
     content,
+    ai,
+    drainJobs: () => worker.drain(),
     close: async () => {
       await app.close();
       sqlite.close();

@@ -8,12 +8,14 @@ import fastifyStatic from "@fastify/static";
 import Fastify, { type FastifyInstance } from "fastify";
 
 import { BODY_LIMIT_JSON, ERROR_CODES } from "../../shared/api";
+import type { AiService } from "./ai/service";
 import { registerAuthContext } from "./auth/guards";
 import type { ContentStore } from "./content/store";
 import type { Db } from "./db";
 import type { Env } from "./env";
 import { buildCsp } from "./lib/csp";
 import { HttpError } from "./lib/errors";
+import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminPlanRoutes } from "./routes/admin/plans";
 import { registerAdminUserRoutes } from "./routes/admin/users";
 import { registerAuthRoutes } from "./routes/auth";
@@ -36,6 +38,10 @@ declare module "fastify" {
     content: ContentStore;
     /** Runs learner-submitted JavaScript. See server/src/sandbox for what it guarantees. */
     sandbox: CodeSandbox;
+    /** The only way the server talks to an AI provider. */
+    ai: AiService;
+    /** True when a dev-only mock provider is standing in. Surfaced in the admin UI. */
+    usingMockProvider: boolean;
     /**
      * Every route this app registered. Security tests walk it to assert that no route under
      * /api/admin is reachable by a learner, so adding an admin route is covered automatically
@@ -50,11 +56,21 @@ export interface BuildAppOptions {
   db: Db;
   content: ContentStore;
   sandbox: CodeSandbox;
+  ai: AiService;
+  usingMockProvider?: boolean;
   /** Off in tests so the output stays readable. */
   logger?: boolean;
 }
 
-export async function buildApp({ env, db, content, sandbox, logger = !env.isTest }: BuildAppOptions): Promise<FastifyInstance> {
+export async function buildApp({
+  env,
+  db,
+  content,
+  sandbox,
+  ai,
+  usingMockProvider = false,
+  logger = !env.isTest,
+}: BuildAppOptions): Promise<FastifyInstance> {
   const app = Fastify({
     logger: logger
       ? {
@@ -86,6 +102,8 @@ export async function buildApp({ env, db, content, sandbox, logger = !env.isTest
   app.decorate("db", db);
   app.decorate("content", content);
   app.decorate("sandbox", sandbox);
+  app.decorate("ai", ai);
+  app.decorate("usingMockProvider", usingMockProvider);
 
   const routeTable: RouteRecord[] = [];
   app.decorate("routeTable", routeTable);
@@ -141,6 +159,7 @@ export async function buildApp({ env, db, content, sandbox, logger = !env.isTest
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
+  await app.register(registerAdminAiRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

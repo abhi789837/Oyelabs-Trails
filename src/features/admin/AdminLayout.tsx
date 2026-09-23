@@ -1,4 +1,4 @@
-import { LogOut, Users, UserPlus } from "lucide-react";
+import { Cpu, LogOut, Users, UserPlus } from "lucide-react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 import { BrandMark } from "@/components/layout/BrandMark";
@@ -16,6 +16,7 @@ import { useAuth } from "@/features/auth/AuthProvider";
 const sections = [
   { to: "/admin", end: true, label: "People", icon: Users },
   { to: "/admin/onboard", end: false, label: "Onboard learner", icon: UserPlus },
+  { to: "/admin/ai", end: false, label: "AI connection", icon: Cpu },
 ];
 
 export function AdminLayout() {
