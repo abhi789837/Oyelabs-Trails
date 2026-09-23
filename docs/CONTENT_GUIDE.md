@@ -128,10 +128,17 @@ Some hosts still cannot be checked, and these are settled — don't spend time r
 | `www.w3.org` | 403 to the checker and to curl, fine in a browser | Cite the spec elsewhere, or use a secondary source |
 | `freedesktop.org` | **418** to scripted clients | Use man7.org's systemd mirror |
 | `docs.nestjs.com`, `angular.dev`, `developer.hashicorp.com` | SPA: 200 for every path | Verify against the project's repo or sitemap, then ship |
+| `hackingwithswift.com/articles/<n>/<slug>` | Serves **by number and ignores the slug** — a wrong number returns 200 with a *different* article | Confirm by the returned `<title>`, never by status |
+| `kt.academy` | Soft-404s: 200 with a generic title for invented slugs | Confirm by `<title>` |
+
+The `hackingwithswift.com` case is the one the checker cannot help with at all: the response is
+200, the content is real, and it is simply not the page you meant. **Whenever a URL carries an
+opaque id, check the title the checker prints against the page you intended.**
+
 
 **Embeddability is per video, not per channel.** Most PowerCert videos frame fine but
-`s_Ntt6eTn94` does not; **every** Vandad Nahavandipoor video returns oEmbed 401. Always run
-`yt.mjs info` on the exact id.
+`s_Ntt6eTn94` does not; **every** Vandad Nahavandipoor video returns oEmbed 401, and **Stanford's
+CS193p 2025 lectures are not embeddable** either. Always run `yt.mjs info` on the exact id.
 
 ## 5. Summaries (senior-level framing)
 
