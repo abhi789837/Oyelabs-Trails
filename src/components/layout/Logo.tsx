@@ -1,15 +1,16 @@
 import { cn } from "@/lib/utils";
+import { useUiStore } from "@/store/uiStore";
 
 type Variant = "horizontal" | "mark" | "stacked";
 
 /**
  * The Oyelearn logo, from `public/brand/`.
  *
- * Two files per variant, one per theme, toggled by the `.dark` class rather than by
- * `prefers-color-scheme`: the app has its own theme switch, so a media query would show the wrong
- * lockup whenever a viewer has overridden the system setting. Both files are in the markup and CSS
- * picks one, which costs a second (small) request but means the swap happens with the theme
- * instead of a paint later.
+ * Two files per variant, one per theme. The theme is read from the store rather than expressed as
+ * `dark:` classes on two stacked images: callers also pass responsive visibility (`hidden sm:block`
+ * for the phone/desktop lockup swap), and Tailwind merges both sets onto one element, where
+ * `sm:block` overrides the base `hidden` in *either* theme — which rendered both lockups at once.
+ * One image, one source, and a caller's `className` now means exactly what it says.
  *
  * The SVGs already contain the wordmark, so nothing should set text beside `horizontal` or
  * `stacked`. They are never recoloured — `onPrimary` selects the supplied mono-white file rather
@@ -68,6 +69,9 @@ export function Logo({
   className,
   decorative = false,
 }: LogoProps) {
+  // `onPaper` surfaces are printed light whatever the app's theme, so they ignore it.
+  const theme = useUiStore((s) => s.theme);
+  const dark = theme === "dark" && !onPaper;
   // The mono-white file is only supplied as a mark, so `onPrimary` always measures as one.
   const ratio = onPrimary ? RATIO.mark : RATIO[variant];
   const width = Math.round((ratio.w / ratio.h) * height);
@@ -75,56 +79,17 @@ export function Logo({
   const shared = cn("block h-[var(--logo-h)] w-auto", className);
   const style = { "--logo-h": `${height}px` } as React.CSSProperties;
 
-  if (onPrimary) {
-    return (
-      <img
-        src="/brand/oyelearn-mark-mono-white.svg"
-        alt={alt}
-        aria-hidden={decorative || undefined}
-        width={width}
-        height={height}
-        style={style}
-        className={shared}
-      />
-    );
-  }
-
-  const file = FILES[variant];
-
-  if (onPaper) {
-    return (
-      <img
-        src={file.light}
-        alt={alt}
-        aria-hidden={decorative || undefined}
-        width={width}
-        height={height}
-        style={style}
-        className={shared}
-      />
-    );
-  }
+  const src = onPrimary ? "/brand/oyelearn-mark-mono-white.svg" : dark ? FILES[variant].dark : FILES[variant].light;
 
   return (
-    <>
-      <img
-        src={file.light}
-        alt={alt}
-        aria-hidden={decorative || undefined}
-        width={width}
-        height={height}
-        style={style}
-        className={cn(shared, "dark:hidden")}
-      />
-      <img
-        src={file.dark}
-        alt={alt}
-        aria-hidden={decorative || undefined}
-        width={width}
-        height={height}
-        style={style}
-        className={cn(shared, "hidden dark:block")}
-      />
-    </>
+    <img
+      src={src}
+      alt={alt}
+      aria-hidden={decorative || undefined}
+      width={width}
+      height={height}
+      style={style}
+      className={shared}
+    />
   );
 }
