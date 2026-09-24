@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useState } from "react";
-import { Check, LoaderCircle, Minus, Plus } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, Check, ChevronDown, ChevronRight, LoaderCircle, Minus, Plus } from "lucide-react";
 
 import type { TopicProgressValue } from "@shared/content";
 import type { PlanResponse } from "@shared/plans";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { useTracks, type ModuleMeta } from "@/content";
-import { levelLabels } from "@/lib/track-meta";
-import { cn, formatMinutes, formatTimestamp } from "@/lib/utils";
+import { useTracks, type ModuleMeta, type TopicMeta, type TrackMeta } from "@/content";
+import { accentClasses, type AccentClasses } from "@/lib/accent";
+import { levelLabels, trackIcons } from "@/lib/track-meta";
+import { cn, formatMinutes, formatMinutesCompact, formatTimestamp } from "@/lib/utils";
 
 /**
  * The plan editor (brief §11.2).
@@ -20,6 +24,13 @@ import { cn, formatMinutes, formatTimestamp } from "@/lib/utils";
  * one, so the AI's original proposal stays on the record and the diff against it below stays
  * meaningful. The server rejects unknown topic ids and that message is surfaced verbatim —
  * silently dropping them would publish a plan the admin did not assemble.
+ *
+ * The picker is a two-level drill-down rather than one list. At 7 trails, 67 camps and 715
+ * topics, a flat list ran to thousands of pixels and a full-width row per topic wasted the
+ * screen. Level one is a trailhead board: one card per trail, carrying the number that actually
+ * matters when you are assembling a plan — how much weight this trail already has in it. Level
+ * two is that trail's camps, each a grid of compact waypoints four across, so a camp's worth of
+ * choices fits in one glance instead of one scroll.
  */
 export function PlanTab({
   userId,
@@ -35,12 +46,17 @@ export function PlanTab({
   onPublished: () => Promise<void>;
 }) {
   const tracks = useTracks();
+  const reduceMotion = useReducedMotion();
 
   const [selected, setSelected] = useState<Set<string>>(() => new Set(plan?.plan?.topicIds ?? []));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
+  const [openTrackId, setOpenTrackId] = useState<string | null>(null);
+  // Remembered past the Back, so the board can hand focus to the card you came out of.
+  const [lastOpenedId, setLastOpenedId] = useState<string | null>(null);
+  const [collapsedCamps, setCollapsedCamps] = useState<Set<string>>(() => new Set());
 
   const published = useMemo(() => new Set(plan?.plan?.topicIds ?? []), [plan]);
 
@@ -76,11 +92,16 @@ export function PlanTab({
       return next;
     });
 
-  const toggleModule = (module: ModuleMeta) =>
+  /**
+   * Add-all / remove-all for a camp. It works on the topics currently on screen, so with a filter
+   * running it never silently changes something the admin cannot see; with no filter that is the
+   * whole camp, exactly as before.
+   */
+  const toggleMany = (topics: TopicMeta[]) =>
     setSelected((current) => {
       const next = new Set(current);
-      const all = module.topics.every((t) => next.has(t.id));
-      for (const topic of module.topics) {
+      const all = topics.every((t) => next.has(t.id));
+      for (const topic of topics) {
         if (all) next.delete(topic.id);
         else next.add(topic.id);
       }
@@ -107,6 +128,27 @@ export function PlanTab({
 
   const query = filter.trim().toLowerCase();
   const completedInPlan = [...selected].filter((id) => progress[id]?.status === "completed").length;
+
+  const trackViews = useMemo(() => buildTrackViews(tracks, selected, query), [tracks, selected, query]);
+  const openView = trackViews.find((view) => view.track.id === openTrackId) ?? null;
+
+  // The manifest can arrive (or change) after a track was opened. Falling back to the trailhead
+  // board beats stranding the admin on a panel with nothing in it.
+  useEffect(() => {
+    if (openTrackId && !trackViews.some((view) => view.track.id === openTrackId)) setOpenTrackId(null);
+  }, [openTrackId, trackViews]);
+
+  const matchesHere = openView
+    ? openView.matchCount
+    : trackViews.reduce((n, view) => n + view.matchCount, 0);
+
+  const toggleCamp = (moduleId: string) =>
+    setCollapsedCamps((current) => {
+      const next = new Set(current);
+      if (next.has(moduleId)) next.delete(moduleId);
+      else next.add(moduleId);
+      return next;
+    });
 
   return (
     <section aria-labelledby="plan-heading">
@@ -173,8 +215,8 @@ export function PlanTab({
           type="search"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="Filter topics"
-          aria-label="Filter topics"
+          placeholder={openView ? `Filter ${openView.track.name} topics` : "Filter topics"}
+          aria-label={openView ? `Filter topics in ${openView.track.name}` : "Filter topics across every track"}
           className="max-w-xs"
         />
         <Button onClick={() => void handlePublish()} disabled={!dirty || saving || selected.size === 0}>
@@ -193,110 +235,522 @@ export function PlanTab({
             </Button>
           </>
         )}
+        {query && (
+          <span className="font-mono text-xs text-muted-foreground tabular" role="status">
+            {matchesHere} match{matchesHere === 1 ? "" : "es"}
+            {openView ? ` in ${openView.track.name}` : " across all trails"}
+          </span>
+        )}
       </div>
 
-      <div className="mt-6 space-y-8">
-        {tracks.map((track) => {
-          const modules = track.modules
-            .filter((m) => m.available)
-            .map((module) => ({
-              module,
-              topics: query
-                ? module.topics.filter(
-                    (t) =>
-                      t.title.toLowerCase().includes(query) ||
-                      t.id.includes(query) ||
-                      module.name.toLowerCase().includes(query),
-                  )
-                : module.topics,
-            }))
-            .filter((entry) => entry.topics.length > 0);
-          if (modules.length === 0) return null;
+      {/* The tab's one deliberate motion moment: the board hands over to the trail and back. It
+          lifts rather than slides — a horizontal offset would flash a scrollbar on the way in. */}
+      <AnimatePresence mode="wait" initial={false}>
+        {openView ? (
+          <motion.div
+            key={openView.track.id}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+          >
+            <TrackPanel
+              view={openView}
+              selected={selected}
+              published={published}
+              progress={progress}
+              query={query}
+              collapsedCamps={collapsedCamps}
+              onToggleCamp={toggleCamp}
+              onToggleTopic={toggleTopic}
+              onToggleMany={toggleMany}
+              onBack={() => setOpenTrackId(null)}
+              onClearFilter={() => setFilter("")}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="trailhead"
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+          >
+            <TrackBoard
+              views={trackViews}
+              query={query}
+              totalMatches={matchesHere}
+              lastOpenedId={lastOpenedId}
+              onOpen={(trackId) => {
+                setLastOpenedId(trackId);
+                setOpenTrackId(trackId);
+              }}
+              onClearFilter={() => setFilter("")}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
 
-          const trackSelected = track.modules.reduce(
-            (n, m) => n + m.topics.filter((t) => selected.has(t.id)).length,
-            0,
-          );
+// ---------------------------------------------------------------------------
+// Views
+// ---------------------------------------------------------------------------
 
-          return (
-            <section key={track.id} aria-label={track.name}>
-              <h3 className="flex items-baseline gap-2 text-base font-semibold">
-                {track.name}
-                <span className="font-mono text-xs font-normal text-muted-foreground tabular">
-                  {trackSelected} selected
-                </span>
-              </h3>
+interface CampView {
+  module: ModuleMeta;
+  /** The camp's topics that survive the filter; all of them when the filter is empty. */
+  visible: TopicMeta[];
+  selectedCount: number;
+}
 
-              <div className="mt-3 space-y-3">
-                {modules.map(({ module, topics }) => {
-                  const allSelected = module.topics.every((t) => selected.has(t.id));
-                  const someSelected = module.topics.some((t) => selected.has(t.id));
-                  return (
-                    <div key={module.id} className="rounded-md border">
-                      <div className="flex items-center gap-2 border-b bg-surface-sunken/40 px-3 py-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => toggleModule(module)}
-                          title={allSelected ? "Remove the whole camp" : "Add the whole camp"}
-                        >
-                          {allSelected ? <Minus aria-hidden="true" /> : <Plus aria-hidden="true" />}
-                          <span className="sr-only">
-                            {allSelected ? "Remove" : "Add"} every topic in {module.name}
-                          </span>
-                        </Button>
-                        <span className="text-sm font-medium">{module.name}</span>
-                        <span className="ml-auto font-mono text-xs text-muted-foreground tabular">
-                          {module.topics.filter((t) => selected.has(t.id)).length}/{module.topics.length}
-                        </span>
-                        {someSelected && !allSelected && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-trailmark" aria-hidden="true" />
-                        )}
-                      </div>
+interface TrackView {
+  track: TrackMeta;
+  /** Only camps with at least one visible topic. */
+  camps: CampView[];
+  campCount: number;
+  topicCount: number;
+  selectedCount: number;
+  /** Minutes of this track's selected topics, so a card says what it costs the learner. */
+  selectedMinutes: number;
+  matchCount: number;
+}
 
-                      <ul className="divide-y">
-                        {topics.map((topic) => {
-                          const isSelected = selected.has(topic.id);
-                          const done = progress[topic.id]?.status === "completed";
-                          return (
-                            <li key={topic.id}>
-                              <label
-                                className={cn(
-                                  "flex cursor-pointer items-center gap-3 px-3 py-2 text-sm transition-colors hover:bg-surface-sunken/40",
-                                  isSelected && "bg-trailmark/[0.06]",
-                                )}
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={isSelected}
-                                  onChange={() => toggleTopic(topic.id)}
-                                  className="h-4 w-4 shrink-0 accent-[rgb(var(--trailmark))]"
-                                />
-                                <span className="min-w-0 flex-1">
-                                  <span className="block truncate">{topic.title}</span>
-                                  <span className="mt-0.5 block font-mono text-[11px] text-muted-foreground">
-                                    {topic.id} · {levelLabels[topic.level]} · {formatMinutes(topic.estMinutes)}
-                                  </span>
-                                </span>
-                                {done && (
-                                  <span className="flex shrink-0 items-center gap-1 font-mono text-[11px] text-summit-strong">
-                                    <Check className="h-3 w-3" aria-hidden="true" />
-                                    done
-                                  </span>
-                                )}
-                              </label>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
+/** Same match rule as the old flat list: topic title, topic id, or the camp it sits in. */
+function matchesQuery(topic: TopicMeta, moduleName: string, query: string): boolean {
+  if (!query) return true;
+  return (
+    topic.title.toLowerCase().includes(query) ||
+    topic.id.includes(query) ||
+    moduleName.toLowerCase().includes(query)
+  );
+}
+
+function buildTrackViews(tracks: TrackMeta[], selected: Set<string>, query: string): TrackView[] {
+  return tracks.map((track) => {
+    const available = track.modules.filter((m) => m.available);
+    const camps: CampView[] = [];
+    let topicCount = 0;
+    let selectedCount = 0;
+    let selectedMinutes = 0;
+    let matchCount = 0;
+
+    for (const module of available) {
+      const visible: TopicMeta[] = [];
+      let campSelected = 0;
+      for (const topic of module.topics) {
+        topicCount += 1;
+        if (selected.has(topic.id)) {
+          selectedCount += 1;
+          campSelected += 1;
+          selectedMinutes += topic.estMinutes;
+        }
+        if (matchesQuery(topic, module.name, query)) {
+          visible.push(topic);
+          matchCount += 1;
+        }
+      }
+      if (visible.length > 0) camps.push({ module, visible, selectedCount: campSelected });
+    }
+
+    return { track, camps, campCount: available.length, topicCount, selectedCount, selectedMinutes, matchCount };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Level 1 — the trailhead board
+// ---------------------------------------------------------------------------
+
+function TrackBoard({
+  views,
+  query,
+  totalMatches,
+  lastOpenedId,
+  onOpen,
+  onClearFilter,
+}: {
+  views: TrackView[];
+  query: string;
+  totalMatches: number;
+  lastOpenedId: string | null;
+  onOpen: (trackId: string) => void;
+  onClearFilter: () => void;
+}) {
+  const boardRef = useRef<HTMLDivElement>(null);
+
+  // Coming back from a trail, focus lands on the card you came out of rather than at the top of
+  // the tab. The list only ever mounts after a Back, so this runs once, on mount.
+  useEffect(() => {
+    if (!lastOpenedId) return;
+    boardRef.current?.querySelector<HTMLButtonElement>(`[data-track-card="${lastOpenedId}"]`)?.focus();
+  }, []);
+
+  return (
+    <div ref={boardRef} className="mt-6">
+      <h3 className="text-sm font-medium">Pick a trail</h3>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {query
+          ? `Counts below are for “${query}”. Open a trail to add its matching topics.`
+          : "Open one to add its topics. The plan can draw on as many trails as you like."}
+      </p>
+
+      <ul className="mt-4 grid list-none grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {views.map((view) => (
+          <li key={view.track.id} className="min-w-0">
+            <TrackCard view={view} query={query} onOpen={() => onOpen(view.track.id)} />
+          </li>
+        ))}
+      </ul>
+
+      {query && totalMatches === 0 && (
+        <p className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          Nothing matches “{query}” on any trail.
+          <Button variant="outline" size="sm" onClick={onClearFilter}>
+            Clear filter
+          </Button>
+        </p>
+      )}
+    </div>
+  );
+}
+
+function TrackCard({ view, query, onOpen }: { view: TrackView; query: string; onOpen: () => void }) {
+  const accent = accentClasses[view.track.accentToken];
+  const Icon = trackIcons[view.track.id];
+  const pct = view.topicCount === 0 ? 0 : Math.round((view.selectedCount / view.topicCount) * 100);
+  const blocked = query !== "" && view.matchCount === 0;
+
+  return (
+    /* Surface and border classes go on Card, not on the button: Slot joins the two class strings
+       without running them through twMerge, so a conflicting pair would be decided by stylesheet
+       order instead of by intent. */
+    <Card
+      asChild
+      className={cn(
+        "h-full transition-colors",
+        blocked ? "opacity-50" : "hover:border-foreground/20 hover:bg-surface-sunken/50",
+      )}
+    >
+      <button
+        type="button"
+        data-track-card={view.track.id}
+        disabled={blocked}
+        onClick={onOpen}
+        className="group flex h-full w-full flex-col gap-3 p-4 text-left"
+      >
+        <span className="flex items-center gap-2.5">
+          {/* A trail blaze: the painted mark that tells hikers which trail they're on. */}
+          <span aria-hidden="true" className={cn("h-7 w-1.5 shrink-0 rounded-[2px]", accent.bg)} />
+          <Icon className={cn("h-4 w-4 shrink-0", accent.text)} aria-hidden="true" />
+          <span className="min-w-0 flex-1 truncate font-brand text-base font-semibold">{view.track.name}</span>
+          <ChevronRight
+            aria-hidden="true"
+            className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5"
+          />
+        </span>
+
+        <span className="block font-mono text-xs text-muted-foreground tabular">
+          {view.campCount} camps, {view.topicCount} topics
+        </span>
+
+        <span className="mt-auto block">
+          <span className="flex flex-wrap items-baseline justify-between gap-x-2">
+            <span
+              className={cn(
+                "font-mono text-sm font-medium tabular",
+                view.selectedCount > 0 ? accent.text : "text-muted-foreground",
+              )}
+            >
+              {view.selectedCount} in plan
+            </span>
+            {view.selectedCount > 0 && (
+              <span className="font-mono text-xs text-muted-foreground tabular">
+                {formatMinutesCompact(view.selectedMinutes)}
+              </span>
+            )}
+          </span>
+          {/* A plain span bar rather than <Progress>: a <div> is not valid inside a <button>. */}
+          <span aria-hidden="true" className="mt-2 block h-1 w-full overflow-hidden rounded-full bg-foreground/10">
+            <span className={cn("block h-full rounded-full transition-[width] duration-500", accent.bg)} style={{ width: `${pct}%` }} />
+          </span>
+        </span>
+
+        {query !== "" && (
+          <span className="block font-mono text-xs tabular">
+            {blocked ? (
+              <span className="text-muted-foreground">No matches for “{query}”</span>
+            ) : (
+              <span className={accent.text}>
+                {view.matchCount} match{view.matchCount === 1 ? "" : "es"} for “{query}”
+              </span>
+            )}
+          </span>
+        )}
+      </button>
+    </Card>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Level 2 — one trail's camps
+// ---------------------------------------------------------------------------
+
+function TrackPanel({
+  view,
+  selected,
+  published,
+  progress,
+  query,
+  collapsedCamps,
+  onToggleCamp,
+  onToggleTopic,
+  onToggleMany,
+  onBack,
+  onClearFilter,
+}: {
+  view: TrackView;
+  selected: Set<string>;
+  published: Set<string>;
+  progress: Record<string, TopicProgressValue>;
+  query: string;
+  collapsedCamps: Set<string>;
+  onToggleCamp: (moduleId: string) => void;
+  onToggleTopic: (topicId: string) => void;
+  onToggleMany: (topics: TopicMeta[]) => void;
+  onBack: () => void;
+  onClearFilter: () => void;
+}) {
+  const accent = accentClasses[view.track.accentToken];
+  const Icon = trackIcons[view.track.id];
+  const backRef = useRef<HTMLButtonElement>(null);
+
+  // Drilling in is a navigation, so focus goes with it — to the way out.
+  useEffect(() => {
+    backRef.current?.focus();
+  }, []);
+
+  return (
+    <div className="mt-6">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <Button ref={backRef} variant="outline" size="sm" onClick={onBack}>
+          <ArrowLeft aria-hidden="true" />
+          All trails
+        </Button>
+        <span aria-hidden="true" className={cn("h-6 w-1.5 shrink-0 rounded-[2px]", accent.bg)} />
+        <Icon className={cn("h-4 w-4 shrink-0", accent.text)} aria-hidden="true" />
+        <h3 className="font-brand text-base font-semibold">{view.track.name}</h3>
+        <span className="font-mono text-xs text-muted-foreground tabular">
+          {view.selectedCount} of {view.topicCount} in plan
+        </span>
+      </div>
+
+      {view.camps.length === 0 ? (
+        <p className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          No topic on this trail matches “{query}”.
+          <Button variant="outline" size="sm" onClick={onClearFilter}>
+            Clear filter
+          </Button>
+        </p>
+      ) : (
+        <div className="mt-5 space-y-6">
+          {view.camps.map((camp) => (
+            <Camp
+              key={camp.module.id}
+              camp={camp}
+              accent={accent}
+              selected={selected}
+              published={published}
+              progress={progress}
+              filtering={query !== ""}
+              /* A filter has to show what it found, so a hit re-opens a camp the admin closed. */
+              open={query !== "" || !collapsedCamps.has(camp.module.id)}
+              onToggleOpen={() => onToggleCamp(camp.module.id)}
+              onToggleTopic={onToggleTopic}
+              onToggleMany={onToggleMany}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Camp({
+  camp,
+  accent,
+  selected,
+  published,
+  progress,
+  filtering,
+  open,
+  onToggleOpen,
+  onToggleTopic,
+  onToggleMany,
+}: {
+  camp: CampView;
+  accent: AccentClasses;
+  selected: Set<string>;
+  published: Set<string>;
+  progress: Record<string, TopicProgressValue>;
+  filtering: boolean;
+  open: boolean;
+  onToggleOpen: () => void;
+  onToggleTopic: (topicId: string) => void;
+  onToggleMany: (topics: TopicMeta[]) => void;
+}) {
+  const { module, visible, selectedCount } = camp;
+  const allVisibleSelected = visible.every((t) => selected.has(t.id));
+  const headingId = `plan-camp-${module.id}`;
+  const panelId = `plan-camp-topics-${module.id}`;
+
+  return (
+    <section aria-labelledby={headingId}>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b pb-2">
+        {/* Collapsing is off while a filter runs: the filter decides what shows, and a camp the
+            admin closed earlier must not swallow a hit. So there is no control to mislead them. */}
+        {filtering ? (
+          <span id={headingId} className="min-w-0 truncate text-sm font-medium">
+            {module.name}
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={onToggleOpen}
+            aria-expanded={open}
+            aria-controls={panelId}
+            className="flex min-w-0 items-center gap-2 rounded-sm text-left"
+          >
+            <ChevronDown
+              aria-hidden="true"
+              className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", !open && "-rotate-90")}
+            />
+            <span id={headingId} className="truncate text-sm font-medium">
+              {module.name}
+            </span>
+          </button>
+        )}
+        <span className="font-mono text-xs text-muted-foreground tabular">
+          {selectedCount}/{module.topics.length} selected
+        </span>
+        {selectedCount > 0 && selectedCount < module.topics.length && (
+          <span aria-hidden="true" className={cn("h-1.5 w-1.5 rounded-full", accent.bg)} />
+        )}
+        <Button variant="ghost" size="sm" className="ml-auto" onClick={() => onToggleMany(visible)}>
+          {allVisibleSelected ? <Minus aria-hidden="true" /> : <Plus aria-hidden="true" />}
+          {allVisibleSelected
+            ? filtering
+              ? `Remove ${visible.length} shown`
+              : "Remove camp"
+            : filtering
+              ? `Add ${visible.length} shown`
+              : "Add camp"}
+          <span className="sr-only"> in {module.name}</span>
+        </Button>
+      </div>
+
+      <div id={panelId}>
+        {open && (
+          <ul className="mt-3 grid list-none grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {visible.map((topic) => (
+              <li key={topic.id} className="min-w-0">
+                <TopicCell
+                  topic={topic}
+                  accent={accent}
+                  isSelected={selected.has(topic.id)}
+                  wasPublished={published.has(topic.id)}
+                  progressValue={progress[topic.id]}
+                  onToggle={() => onToggleTopic(topic.id)}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </section>
+  );
+}
+
+function TopicCell({
+  topic,
+  accent,
+  isSelected,
+  wasPublished,
+  progressValue,
+  onToggle,
+}: {
+  topic: TopicMeta;
+  accent: AccentClasses;
+  isSelected: boolean;
+  wasPublished: boolean;
+  progressValue: TopicProgressValue | undefined;
+  onToggle: () => void;
+}) {
+  const status = progressValue?.status;
+  const touched = status === "completed" || status === "in-progress";
+  /** Published, now unticked: this topic leaves the learner's plan on the next publish. */
+  const dropping = wasPublished && !isSelected;
+
+  return (
+    <Card
+      asChild
+      className={cn(
+        "h-full transition-colors",
+        isSelected ? cn(accent.border, accent.soft) : "hover:bg-surface-sunken/50",
+        dropping && "border-destructive/60 bg-destructive/[0.06]",
+      )}
+    >
+      <button
+        type="button"
+        aria-pressed={isSelected}
+        onClick={onToggle}
+        className="flex h-full w-full flex-col gap-1.5 p-3 text-left"
+      >
+        <span className="flex items-start gap-2">
+          <span className="min-w-0 flex-1 text-sm font-medium leading-snug">{topic.title}</span>
+          <span
+            aria-hidden="true"
+            className={cn(
+              "mt-px flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border",
+              isSelected ? cn(accent.bg, accent.border, accent.fg) : "border-input",
+            )}
+          >
+            {isSelected && <Check className="h-3 w-3" strokeWidth={3} />}
+          </span>
+        </span>
+
+        <span className="block truncate font-mono text-[11px] text-muted-foreground">{topic.id}</span>
+
+        <span className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-1 font-mono text-[11px] text-muted-foreground tabular">
+          <span>{levelLabels[topic.level]}</span>
+          <span>{formatMinutesCompact(topic.estMinutes)}</span>
+        </span>
+
+        {(touched || dropping) && (
+          <span className="flex flex-wrap items-center gap-1.5">
+            {status === "completed" && (
+              <Badge variant="success">
+                done<span className="sr-only"> — the learner has completed this topic</span>
+              </Badge>
+            )}
+            {status === "in-progress" && (
+              <Badge variant="progress">
+                started<span className="sr-only"> — the learner has work in progress here</span>
+              </Badge>
+            )}
+            {dropping && (
+              <Badge className="border-destructive/40 bg-destructive/10 text-destructive">
+                removing
+                <span className="sr-only">
+                  {touched
+                    ? " — this topic leaves the plan on publish, and the learner has already worked on it"
+                    : " — this topic leaves the plan on publish"}
+                </span>
+              </Badge>
+            )}
+          </span>
+        )}
+      </button>
+    </Card>
   );
 }
