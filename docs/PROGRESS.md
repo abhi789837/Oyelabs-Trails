@@ -173,3 +173,18 @@ a real credential. That is the first thing to check once one is added.
 - **The AI call timeout was 120s and is now 15 minutes** (`AI_TIMEOUT_MS`). One generation is a
   dozen-plus provider calls, and a CLI provider spawns a process per call, so two minutes failed
   on ordinary work rather than on a hang.
+
+## UI overhaul decisions
+
+- **Branch `ui-overhaul`, cut from `main` at `2e402f6`.** `main` is what the live deployment runs,
+  so nothing reaches it until the branch is merged deliberately.
+- **The `no-alert` lint rule must exempt `src/content/**`.** A grep for `alert(`/`confirm(`/
+  `prompt(` finds 18 hits, but **9 are inside curriculum content** — code snippets in quiz
+  questions where `alert("…")` is the subject being taught. Only 9 are app code. Rewriting the
+  others would corrupt content that the quality gate and 289 tests exist to protect.
+- **The trail visuals and the topic page do not get restyled.** They were built to the brief's
+  design language and are the two screens the owner singled out as good. Only the shared primitives
+  underneath them change, and the before/after screenshots exist to prove they did not move.
+- **The assessment runner and proctoring screen stay calm.** Functional transitions only — no
+  background effects, no confetti, no decorative motion. MediaPipe needs the CPU and the learner
+  needs to concentrate.
