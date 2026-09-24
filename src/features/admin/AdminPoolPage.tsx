@@ -109,6 +109,11 @@ export default function AdminPoolPage() {
 
   const kept = data.pool.filter((i) => i.status !== "dropped").length;
   const dropped = data.pool.length - kept;
+  // Items leave "pool" as the selector reaches for them, so anything not still sitting in the
+  // pool is something the learner was actually put in front of.
+  const servedSoFar = data.pool.filter(
+    (i) => i.status === "served" || i.status === "answered" || i.status === "skipped",
+  ).length;
   const emptyAreas = areaStats.filter((area) => area.kept === 0);
   const target = data.assessment.blueprint?.targetItemCount ?? 0;
   const thin = emptyAreas.length > 0 || (target > 0 && kept < target);
@@ -128,6 +133,28 @@ export default function AdminPoolPage() {
           Attempt {data.assessment.attemptNo} · {data.assessment.status.replace("_", " ")} · {kept} kept, {dropped}{" "}
           dropped
           {approvalNote(data.assessment) && ` · ${approvalNote(data.assessment)}`}
+        </p>
+
+        {/*
+         * The single most misread thing on this page. An admin who has just released an
+         * assessment comes here to see "what was sent" and reasonably reads a list of questions
+         * as the paper. It is not one, and saying so is cheaper than the confusion.
+         */}
+        <p className="mt-3 max-w-prose text-sm text-muted-foreground">
+          This is the <span className="font-medium text-foreground">pool</span>: everything the
+          generator wrote and the critic kept, which is what is <em>available</em> to serve — not a
+          fixed paper. Items are chosen adaptively as the learner answers, so they see a subset of
+          this. Each area climbs or drops in difficulty with their answers and stops once it has a
+          reading, so two people given this same pool are asked different questions.
+          {servedSoFar > 0 && (
+            <>
+              {" "}
+              <span className="font-medium text-foreground">
+                {servedSoFar} of the {kept} have been served so far
+              </span>
+              {" — the answers themselves are on the learner's assessment tab."}
+            </>
+          )}
         </p>
       </header>
 

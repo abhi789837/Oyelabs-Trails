@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, LoaderCircle, Terminal, X } from "lucide-react";
+import { Check, ChevronDown, Eye, LoaderCircle, Terminal, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { AUTO_APPROVE_AFTER_MS, type AssessmentSummary, type ItemKey, type ItemPayload } from "@shared/assessment";
@@ -146,6 +146,9 @@ export function AssessmentTab({
               (assessment.itemCounts.skipped ?? 0);
             const open = openId === assessment.id;
             const logOpen = logId === assessment.id;
+            // Past the approval gate: the learner can see it, so the admin should be able to see
+            // what the learner sees without hunting for it.
+            const released = assessment.approvedAt !== null || assessment.status === "ready";
 
             return (
               <li key={assessment.id} className="rounded-md border">
@@ -182,6 +185,14 @@ export function AssessmentTab({
                       {assessment.approvedAt !== null && ` · ${formatTimestamp(assessment.approvedAt)}`}
                     </span>
                   )}
+                  {/* Where it is, in one line. Released is not the same as taken, and the gap
+                      between the two is where "did it even reach them?" comes from. */}
+                  {assessment.status === "ready" && (
+                    <span className="w-full text-sm text-muted-foreground">
+                      With the learner now — they are shown it on every page of their app until they
+                      start. Review the pool to see what they can be asked.
+                    </span>
+                  )}
 
                   <div className="ml-auto flex flex-wrap gap-1">
                     <Button
@@ -193,11 +204,23 @@ export function AssessmentTab({
                       <Terminal aria-hidden="true" />
                       {logOpen ? "Hide log" : "Generation log"}
                     </Button>
-                    {generated + dropped > 0 && (
-                      <Button asChild variant="ghost" size="sm">
-                        <Link to={`/admin/assessments/${assessment.id}`}>View pool</Link>
-                      </Button>
-                    )}
+                    {generated + dropped > 0 &&
+                      (released ? (
+                        // Once it is with the learner, "what did I actually send?" is the first
+                        // question an admin has — and "View pool" did not read as its answer.
+                        <Button asChild variant="outline" size="sm">
+                          <Link to={`/admin/assessments/${assessment.id}`}>
+                            <Eye aria-hidden="true" />
+                            {assessment.status === "ready"
+                              ? "Review what they'll be asked"
+                              : "Review what they were asked"}
+                          </Link>
+                        </Button>
+                      ) : (
+                        <Button asChild variant="ghost" size="sm">
+                          <Link to={`/admin/assessments/${assessment.id}`}>View pool</Link>
+                        </Button>
+                      ))}
                     {served > 0 && (
                       <Button
                         variant="ghost"

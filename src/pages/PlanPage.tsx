@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Clock, LoaderCircle, Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
-import type { MyAssessment, MyEvaluation } from "@shared/assessment";
+import type { MyEvaluation } from "@shared/assessment";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
@@ -12,11 +12,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { findTopic, modulePath, topicPath, useTracks } from "@/content";
+import { isPendingAssessment } from "@/features/assessment/funnel";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { summarizeModule } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
 import { levelLabels } from "@/lib/track-meta";
 import { cn, formatMinutes } from "@/lib/utils";
+import { useMyAssessmentStore } from "@/store/assessmentStore";
 import { useCurriculumStore } from "@/store/curriculumStore";
 import { useProgressStore } from "@/store/progressStore";
 
@@ -41,7 +43,12 @@ export default function PlanPage() {
   const planTopicIds = useCurriculumStore((s) => s.planTopicIds);
   const progress = useProgressStore((s) => s.progress);
 
-  const [assessment, setAssessment] = useState<MyAssessment | null>(null);
+  // The assessment is fetched once by the shell, for the banner that now carries this same
+  // message everywhere else. Re-fetching it here would be a second request for one answer.
+  const assessment = useMyAssessmentStore((s) => s.assessment);
+  const assessmentStatus = useMyAssessmentStore((s) => s.status);
+  const assessmentError = useMyAssessmentStore((s) => s.error);
+
   const [evaluation, setEvaluation] = useState<MyEvaluation | null>(null);
   const [rationale, setRationale] = useState<PlanRationale | null>(null);
   const [loading, setLoading] = useState(true);
@@ -51,13 +58,11 @@ export default function PlanPage() {
     let cancelled = false;
     const load = async () => {
       try {
-        const [mine, evaluationResult, plan] = await Promise.all([
-          api.get<{ assessment: MyAssessment | null }>("/api/me/assessment"),
+        const [evaluationResult, plan] = await Promise.all([
           api.get<{ evaluation: MyEvaluation | null }>("/api/me/evaluation"),
           api.get<{ plan: { rationale: PlanRationale | null } | null }>("/api/me/plan"),
         ]);
         if (cancelled) return;
-        setAssessment(mine.assessment);
         setEvaluation(evaluationResult.evaluation);
         setRationale(plan.plan?.rationale ?? null);
       } catch (err) {
@@ -71,6 +76,10 @@ export default function PlanPage() {
       cancelled = true;
     };
   }, []);
+
+  // The assessment fetch used to be one of this page's own three, so its failure was reported
+  // here. It still is, even though the request now belongs to the shell.
+  const pageError = error ?? assessmentError;
 
   const completed = planTopicIds.filter((id) => progress[id]?.status === "completed").length;
   const pct = planTopicIds.length ? Math.round((completed / planTopicIds.length) * 100) : 0;
@@ -91,7 +100,9 @@ export default function PlanPage() {
     [tracks],
   );
 
-  if (loading) {
+  // Wait for the shared assessment too: rendering the plan before it has settled would flash the
+  // trail at someone whose funnel branch is about to replace it.
+  if (loading || assessmentStatus === "idle" || assessmentStatus === "loading") {
     return (
       <div className="flex min-h-[50vh] items-center justify-center" role="status">
         <LoaderCircle className="h-5 w-5 animate-spin text-muted-foreground" aria-hidden="true" />
@@ -101,10 +112,7 @@ export default function PlanPage() {
   }
 
   // Still in the funnel: send them to the assessment rather than an empty plan.
-  if (
-    assessment &&
-    ["ready", "in_progress", "generating", "awaiting_approval", "submitted", "evaluating"].includes(assessment.status)
-  ) {
+  if (assessment && isPendingAssessment(assessment)) {
     return (
       <EmptyState
         title={assessment.status === "ready" ? "Your placement assessment is ready" : "We're still working on your plan"}
@@ -163,7 +171,7 @@ export default function PlanPage() {
             </div>
           )}
 
-          {error && <div className="mt-6 max-w-prose"><FormAlert>{error}</FormAlert></div>}
+          {pageError && <div className="mt-6 max-w-prose"><FormAlert>{pageError}</FormAlert></div>}
         </div>
       </section>
 
