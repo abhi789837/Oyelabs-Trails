@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, LoaderCircle } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 

@@ -55,4 +55,16 @@ before the commit. Commit message: `ui: <step>`.
 
 ## Blocked / needs Abhishek
 
-_(nothing yet)_
+- **Before-screenshots not captured.** The harness (`scripts/ui/screens.mjs`) and Playwright are
+  installed and ready, but this machine had **1.3 GB free of 16.9 GB (8%)** when U0 finished, and
+  two dev servers had already been reaped for memory pressure. Chromium plus Vite plus the API
+  would not survive. Run it when the machine is quiet:
+
+  ```
+  npm run dev                       # one terminal
+  npm run dev:seed                  # note a learner's username and password
+  UI_ADMIN_PASSWORD=... UI_LEARNER_USERNAME=... UI_LEARNER_PASSWORD=...     node scripts/ui/screens.mjs before
+  ```
+
+  **Do this before U2 changes primitives**, or the baseline that proves the trail visuals did not
+  regress is gone. Until then, "did the trail page move?" is unanswerable.

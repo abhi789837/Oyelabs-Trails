@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type RefObject } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { Maximize, ShieldAlert, TriangleAlert, Video, VideoOff, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

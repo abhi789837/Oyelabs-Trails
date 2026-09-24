@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 

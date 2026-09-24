@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { Check, RotateCcw } from "lucide-react";
 import { Link } from "react-router-dom";
 

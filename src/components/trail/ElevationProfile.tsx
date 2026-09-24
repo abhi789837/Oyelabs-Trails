@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 
 import type { TrackMeta } from "@/content";
 import { useElementWidth } from "@/hooks/useElementWidth";

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { Check, Maximize, Monitor, ScanFace, ShieldAlert, Volume2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

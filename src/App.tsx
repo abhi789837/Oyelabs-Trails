@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { MotionConfig } from "framer-motion";
+import { MotionConfig } from "motion/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { AppShell } from "@/components/layout/AppShell";

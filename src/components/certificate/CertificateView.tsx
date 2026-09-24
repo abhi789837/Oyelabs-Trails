@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 
 import { Logo } from "@/components/layout/Logo";
 import { useElementWidth } from "@/hooks/useElementWidth";
