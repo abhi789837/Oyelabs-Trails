@@ -6,17 +6,22 @@ import {
   blueprintSchema,
   criticBatchSchema,
   itemBatchSchema,
+  looseItemBatchSchema,
+  TIME_LIMIT_SEC,
   type Blueprint,
   type CriticVerdict,
   type GeneratedItem,
   type GenerationLogLine,
   type GenerationStage,
+  type LooseItemBatch,
 } from "../../../shared/assessment";
+import { itemKindSchema, type ItemKind } from "../../../shared/enums";
 import { learnerProfileSchema, type LearnerProfile } from "../../../shared/profile";
 import { buildBlueprintUser, BLUEPRINT_SYSTEM } from "../ai/prompts/blueprint";
 import { buildCriticUser, CRITIC_SYSTEM } from "../ai/prompts/critic";
 import { buildExplainUser, buildItemsUser, EXPLAIN_SYSTEM, ITEMS_SYSTEM } from "../ai/prompts/items";
 import type { AiService } from "../ai/service";
+import type { GenerateJsonRequest } from "../ai/types";
 import type { ContentStore } from "../content/store";
 import { schema, type Db } from "../db";
 import type { Job } from "../jobs/queue";
@@ -25,7 +30,13 @@ import { notify } from "../lib/notify";
 import type { CodeSandbox } from "../sandbox";
 import { buildAreaDigest, buildManifestDigest, knownModuleIds } from "./digest";
 import { GenerationLog } from "./generationLog";
-import { validateGeneratedItem, verifyCodeItem, type RejectionCode } from "./validateItem";
+import {
+  splitItemBatch,
+  validateGeneratedItem,
+  verifyCodeItem,
+  type MalformedItem,
+  type RejectionCode,
+} from "./validateItem";
 
 const payloadSchema = z.object({ assessmentId: z.string() });
 
@@ -33,6 +44,35 @@ const EXPLAIN_ITEM_COUNT = 4;
 /** Roughly 2-3 per difficulty level per area (brief §9.2 step 3). */
 const ITEMS_PER_LEVEL = 3;
 const MAX_CODE_ITEMS = 3;
+
+/**
+ * Below this many usable items, a batch is treated as a call that failed rather than a batch with
+ * a bad item in it, and asked for once more.
+ *
+ * This is the line the whole per-item parse turns on. One item in twenty missing its `rationale`
+ * is a dropped item — it is not worth another provider call, and it certainly is not worth
+ * failing a generation over, which is exactly what it used to do. A batch nothing survives is a
+ * different thing: the model has misunderstood the request, and asking again is the right move.
+ */
+const MIN_USABLE_BATCH_ITEMS = 3;
+
+/** How many times one batch may be asked for before the area is left out of the assessment. */
+const MAX_BATCH_ATTEMPTS = 2;
+
+/** How many field paths one malformed item names in its log line before the rest are counted. */
+const MAX_REPORTED_PATHS = 4;
+
+/**
+ * The fewest items an assessment can be released with at all.
+ *
+ * Generation does not fail for being thin. An admin who issues an assessment gets one, and how
+ * good it is, area by area, is on the pool preview and in the log — visible enough that re-issuing
+ * is an informed choice rather than the only option. It fails only when there would be nothing to
+ * serve: below this the learner would answer a handful of questions and be placed on them, which
+ * is worse than being told to try again. A healthy run keeps twenty-five or more, so one ruined
+ * batch — or three — never reaches this floor.
+ */
+const MIN_SERVABLE_ITEMS = 6;
 
 export interface BlueprintDeps {
   db: Db;
@@ -118,8 +158,17 @@ export function blueprintHandler(deps: BlueprintDeps) {
       });
 
       const blueprint = sanitiseBlueprint(blueprintResult.data, knownModuleIds(content));
-      if (blueprint.areas.length < 3) {
-        throw new Error("The blueprint's areas referenced modules that do not exist, leaving too few to test.");
+      if (blueprint.areas.length === 0) {
+        throw new Error("Every area the blueprint proposed referenced modules that do not exist, so there is nothing to test.");
+      }
+      const proposedAreas = blueprintResult.data.areas.length;
+      if (blueprint.areas.length < proposedAreas) {
+        // Not fatal: a narrower assessment is still an assessment. Said out loud so the admin can
+        // see that the plan shrank before the items were even asked for.
+        log.warn(
+          "blueprint",
+          `${proposedAreas - blueprint.areas.length} of ${proposedAreas} proposed areas named modules that do not exist and were dropped.`,
+        );
       }
 
       const configured = (assessment.config as { timeLimitMinutes?: number } | null) ?? {};
@@ -139,32 +188,49 @@ export function blueprintHandler(deps: BlueprintDeps) {
       // ---- AI call 2: one pool per area, sequentially (the concurrency cap is 2) ----
       let codeItemsSoFar = 0;
       const dropped: { area: string; reason: string }[] = [];
+      /** Areas the assessment will not cover, so the finish line can say how thin it came out. */
+      const emptyAreas: string[] = [];
       let kept = 0;
 
       for (const area of blueprint.areas) {
         const areaDigest = buildAreaDigest(content, area.moduleIds);
         if (areaDigest.topics.length === 0) {
-          dropped.push({ area: area.name, reason: "No topics were found for this area's modules." });
+          emptyAreas.push(area.name);
           log.warn("items", `Area "${area.name}" skipped: none of its modules have topics.`);
           continue;
         }
 
         log.info("items", `Area "${area.name}": asking for items over ${areaDigest.topics.length} topics.`);
-        const batch = await ai.generateJson({
-          purpose: "blueprint",
-          system: ITEMS_SYSTEM,
-          user: buildItemsUser(area, areaDigest, ITEMS_PER_LEVEL),
-          schema: itemBatchSchema,
-          schemaName: "items",
-          meta: { subjectUserId: assessment.userId, assessmentId },
-          onAttemptFailed: watchRetries("items", `Area "${area.name}"`),
+        const batch = await requestItemBatch({
+          ai,
+          log,
+          stage: "items",
+          what: `Area "${area.name}"`,
+          request: {
+            purpose: "blueprint",
+            system: ITEMS_SYSTEM,
+            user: buildItemsUser(area, areaDigest, ITEMS_PER_LEVEL),
+            schema: looseItemBatchSchema,
+            contractSchema: itemBatchSchema,
+            schemaName: "items",
+            meta: { subjectUserId: assessment.userId, assessmentId },
+            onAttemptFailed: watchRetries("items", `Area "${area.name}"`),
+          },
         });
-        log.info("items", `Area "${area.name}": ${batch.data.items.length} items returned.`, usageOf(batch));
 
-        const verdicts = await critique(ai, batch.data.items, assessment.userId, assessmentId, log);
+        // Malformed items are dropped like any other unusable item, rather than above the drop
+        // path: storing them is what puts "we asked for twenty and kept nineteen" in front of an
+        // admin instead of quietly shipping a thinner area.
+        for (const bad of batch.malformed) {
+          const itemId = storeMalformedItem(db, assessmentId, area.name, bad);
+          dropped.push({ area: area.name, reason: bad.detail });
+          log.warn("items", describeMalformedDrop(area.name, itemId, bad));
+        }
+
+        const verdicts = await critique(ai, batch.items, assessment.userId, assessmentId, log);
 
         let areaKept = 0;
-        for (const [index, item] of batch.data.items.entries()) {
+        for (const [index, item] of batch.items.entries()) {
           const verdict = verdicts.get(index) ?? null;
           const outcome = await storeItem({
             db,
@@ -190,27 +256,47 @@ export function blueprintHandler(deps: BlueprintDeps) {
 
         log.info(
           "items",
-          `Area "${area.name}": ${areaKept} kept, ${batch.data.items.length - areaKept} dropped (${kept} kept so far).`,
+          `Area "${area.name}": ${batch.returned} returned, ${areaKept} kept, ${batch.returned - areaKept} dropped (${kept} kept so far).`,
         );
+        if (areaKept === 0) {
+          // An area nothing survived is not a failed generation: the other areas still describe
+          // this person. It is a hole in the assessment, so it is named as one.
+          emptyAreas.push(area.name);
+          log.warn("items", `Area "${area.name}" came back with nothing usable, so the assessment will not cover it.`);
+        }
         deps.log?.(`area "${area.name}": ${kept} items kept so far`);
       }
 
       // ---- The written-answer items, for the whole assessment ----
       log.info("explain", `Asking for ${EXPLAIN_ITEM_COUNT} written-answer items.`);
-      const explainBatch = await ai.generateJson({
-        purpose: "blueprint",
-        system: EXPLAIN_SYSTEM,
-        user: buildExplainUser(blueprint.areas, [...digest.topicIds].slice(0, 120), EXPLAIN_ITEM_COUNT),
-        schema: itemBatchSchema,
-        schemaName: "explain_items",
-        meta: { subjectUserId: assessment.userId, assessmentId },
-        onAttemptFailed: watchRetries("explain", "Written answers"),
+      const explainBatch = await requestItemBatch({
+        ai,
+        log,
+        stage: "explain",
+        what: "Written answers",
+        // Four items is the whole batch, so a single usable one is still worth keeping.
+        minUsable: 1,
+        request: {
+          purpose: "blueprint",
+          system: EXPLAIN_SYSTEM,
+          user: buildExplainUser(blueprint.areas, [...digest.topicIds].slice(0, 120), EXPLAIN_ITEM_COUNT),
+          schema: looseItemBatchSchema,
+          contractSchema: itemBatchSchema,
+          schemaName: "explain_items",
+          meta: { subjectUserId: assessment.userId, assessmentId },
+          onAttemptFailed: watchRetries("explain", "Written answers"),
+        },
       });
-      log.info("explain", `${explainBatch.data.items.length} written-answer items returned.`, usageOf(explainBatch));
 
-      const explainVerdicts = await critique(ai, explainBatch.data.items, assessment.userId, assessmentId, log);
+      for (const bad of explainBatch.malformed) {
+        const itemId = storeMalformedItem(db, assessmentId, "Written answers", bad);
+        dropped.push({ area: "Written answers", reason: bad.detail });
+        log.warn("explain", describeMalformedDrop("Written answers", itemId, bad));
+      }
+
+      const explainVerdicts = await critique(ai, explainBatch.items, assessment.userId, assessmentId, log);
       let explainKept = 0;
-      for (const [index, item] of explainBatch.data.items.entries()) {
+      for (const [index, item] of explainBatch.items.entries()) {
         const explainItem: GeneratedItem = { ...item, kind: "explain" };
         const outcome = await storeItem({
           db,
@@ -232,14 +318,25 @@ export function blueprintHandler(deps: BlueprintDeps) {
           log.warn("explain", describeDrop("Written answers", explainItem, outcome.itemId, outcome.code));
         }
       }
-      log.info(
-        "explain",
-        `Written answers: ${explainKept} kept, ${explainBatch.data.items.length - explainKept} dropped.`,
-      );
+      log.info("explain", `Written answers: ${explainKept} kept, ${explainBatch.returned - explainKept} dropped.`);
 
-      if (kept < 10) {
+      if (kept < MIN_SERVABLE_ITEMS) {
         throw new Error(
-          `Only ${kept} items survived validation, which is not enough for a meaningful assessment. ${dropped.length} were dropped; the reasons are on each item.`,
+          `Only ${kept} items survived validation, which is not enough to serve an assessment at all. ${dropped.length} were dropped; the reasons are on each item.`,
+        );
+      }
+
+      // How thin it came out, said plainly and at warn level, because a releasable assessment that
+      // covers five areas instead of eight looks identical to a good one unless someone says so.
+      const thin = emptyAreas.length > 0 || kept < blueprint.targetItemCount;
+      if (thin) {
+        log.warn(
+          "finish",
+          `This pool came out thinner than planned: ${kept} items kept of ${blueprint.targetItemCount} asked for` +
+            (emptyAreas.length > 0
+              ? `, and ${emptyAreas.length} of ${blueprint.areas.length} areas produced nothing (${emptyAreas.join(", ")})`
+              : "") +
+            `. It can still be approved and released — re-issue if you want a fuller one.`,
         );
       }
 
@@ -254,13 +351,16 @@ export function blueprintHandler(deps: BlueprintDeps) {
       notifyAdmins(db, {
         kind: "assessment.awaiting_approval",
         title: `Assessment ready to review for ${displayName}`,
-        body: `${kept} items across ${blueprint.areas.length} areas. ${dropped.length} were dropped in review. It goes to ${displayName} automatically in ${graceMinutes} minutes unless you approve it first.`,
+        body:
+          `${kept} items across ${blueprint.areas.length - emptyAreas.length} areas. ${dropped.length} were dropped in review.` +
+          (emptyAreas.length > 0 ? ` ${emptyAreas.length} areas produced nothing and are not covered.` : "") +
+          ` It goes to ${displayName} automatically in ${graceMinutes} minutes unless you approve it first.`,
         link: `/admin/assessments/${assessmentId}`,
       });
 
       log.info(
         "finish",
-        `Done: ${kept} items kept and ${dropped.length} dropped across ${blueprint.areas.length} areas. Awaiting your approval.`,
+        `Done: ${kept} items kept and ${dropped.length} dropped across ${blueprint.areas.length - emptyAreas.length} of ${blueprint.areas.length} areas. Awaiting your approval.`,
       );
       deps.log?.(`assessment ${assessmentId} awaiting approval: ${kept} items kept, ${dropped.length} dropped`);
     } catch (error) {
@@ -352,6 +452,125 @@ async function critique(
   }
 
   return verdicts;
+}
+
+interface BatchOutcome {
+  items: GeneratedItem[];
+  malformed: MalformedItem[];
+  /** How many elements the model returned, usable or not, so a count can be honest about both. */
+  returned: number;
+}
+
+/**
+ * Asks for one batch of items and splits it into what can be used and what cannot.
+ *
+ * The provider call is only made again when the batch is unusable *as a whole*. A batch that came
+ * back with one bad item in twenty is not a failed call — that item is dropped and the other
+ * nineteen are kept, which is what this pipeline has always done with items it cannot use. The
+ * distinction is the whole point: a single missing `rationale` used to fail the parse, fail the
+ * retry on another single bad item, and end a generation that already had a good blueprint and
+ * nineteen good items in hand.
+ *
+ * Nothing here throws. An area that comes back with nothing is a hole in the assessment, not the
+ * end of it.
+ */
+async function requestItemBatch(input: {
+  ai: AiService;
+  log: GenerationLog;
+  stage: GenerationStage;
+  /** Names what is being generated, in each line it writes: `Area "Async"`, or `Written answers`. */
+  what: string;
+  request: GenerateJsonRequest<LooseItemBatch>;
+  /** Overrides the batch floor where a whole batch is only a handful of items. */
+  minUsable?: number;
+}): Promise<BatchOutcome> {
+  const { ai, log, stage, what, request } = input;
+  const floor = input.minUsable ?? MIN_USABLE_BATCH_ITEMS;
+  let best: BatchOutcome = { items: [], malformed: [], returned: 0 };
+
+  for (let attempt = 1; attempt <= MAX_BATCH_ATTEMPTS; attempt++) {
+    const again = attempt < MAX_BATCH_ATTEMPTS;
+    try {
+      const result = await ai.generateJson(request);
+      const split = splitItemBatch(result.data.items);
+      log.info(stage, `${what}: ${result.data.items.length} items returned, ${split.items.length} usable.`, usageOf(result));
+
+      // The better of the attempts is what gets used: a second try that comes back worse should
+      // not cost the items the first one produced.
+      if (split.items.length >= best.items.length) {
+        best = { items: split.items, malformed: split.malformed, returned: result.data.items.length };
+      }
+      if (split.items.length >= floor) return best;
+
+      log.warn(
+        stage,
+        `${what}: only ${split.items.length} of ${result.data.items.length} items were usable${again ? ", asking again" : ""}.`,
+      );
+    } catch (error) {
+      log.warn(
+        stage,
+        `${what}: the request failed${again ? ", asking again" : ""} — ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  return best;
+}
+
+/**
+ * Writes a row for an item that never parsed, so it is counted and readable like any other drop.
+ *
+ * The row has to name a kind and a difficulty, and when those are the fields that were malformed
+ * there is nothing true to put in them — the drop reason says so, nothing ever selects a dropped
+ * row, and an admin only meets these placeholders next to the explanation. Zod's full account goes
+ * on `dropReason`, which the pool preview shows to someone already allowed to see answer keys. It
+ * never goes to the generation log.
+ */
+function storeMalformedItem(db: Db, assessmentId: string, area: string, bad: MalformedItem): string {
+  const itemId = newId();
+  const salvagedKind = itemKindSchema.safeParse(bad.raw.kind);
+  const kind: ItemKind = salvagedKind.success ? salvagedKind.data : "mcq";
+  const difficulty =
+    typeof bad.raw.difficulty === "number" && bad.raw.difficulty >= 1 && bad.raw.difficulty <= 5
+      ? Math.round(bad.raw.difficulty)
+      : 1;
+  const text = (value: unknown, missing: string) =>
+    typeof value === "string" && value.trim().length > 0 ? value.slice(0, 4000) : missing;
+
+  db.insert(schema.assessmentItems)
+    .values({
+      id: itemId,
+      assessmentId,
+      area,
+      difficulty,
+      kind,
+      topicIds: Array.isArray(bad.raw.topicIds)
+        ? bad.raw.topicIds.filter((id): id is string => typeof id === "string").slice(0, 3)
+        : [],
+      payload: { prompt: text(bad.raw.prompt, "(this item arrived without a usable prompt)"), timeLimitSec: TIME_LIMIT_SEC[kind] },
+      key: { rationale: text(bad.raw.rationale, "(this item arrived without a rationale)") },
+      criticVerdict: null,
+      status: "dropped",
+      dropReason: bad.detail.slice(0, 1000),
+    })
+    .run();
+
+  return itemId;
+}
+
+/**
+ * One line about an item that never parsed.
+ *
+ * Field paths and the fixed code, and nothing else. Zod's messages are deliberately left behind:
+ * they can quote the value they received, and the values in an item are its correct answers, its
+ * rationale and its reference solution. Same reason `describeDrop` carries a tag rather than the
+ * prose reason — this log is not an answer key.
+ */
+function describeMalformedDrop(area: string, itemId: string, bad: MalformedItem): string {
+  const code: DropCode = "schema-invalid";
+  const shown = bad.paths.slice(0, MAX_REPORTED_PATHS);
+  const rest = bad.paths.length - shown.length;
+  return `Dropped a malformed item ${itemId} in "${area}" — ${code} (${shown.join(", ")}${rest > 0 ? `, and ${rest} more` : ""}).`;
 }
 
 /** Token and latency numbers from a finished provider call, for the line that reports it. */

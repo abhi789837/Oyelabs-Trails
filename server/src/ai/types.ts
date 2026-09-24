@@ -16,6 +16,17 @@ export interface GenerateJsonRequest<T> {
   user: string;
   /** Converted to JSON Schema for the provider, and used to validate what comes back. */
   schema: ZodType<T>;
+  /**
+   * What the model is *asked* for, when that is stricter than what the caller will accept.
+   *
+   * Item batches are why this exists. The reply is validated element by element so that one
+   * malformed item costs that item rather than the whole batch — but the schema sent to the
+   * provider must still be the strict one, because it is the only thing that tells the model an
+   * item needs a `rationale`. Sending the lenient shape would make the very failure this guards
+   * against far more likely. Only the provider's JSON Schema comes from here; validation is
+   * always `schema`.
+   */
+  contractSchema?: ZodType<unknown>;
   /** A short name for the schema. Some providers require one. */
   schemaName?: string;
   model?: string;

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Check, LoaderCircle, X } from "lucide-react";
+import { ArrowLeft, Check, LoaderCircle, TriangleAlert, X } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import type { AssessmentSummary, PoolItem } from "@shared/assessment";
@@ -55,6 +55,26 @@ export default function AdminPoolPage() {
     };
   }, [assessmentId]);
 
+  /**
+   * What each planned area actually produced.
+   *
+   * Driven by the blueprint rather than by the items, so an area that came back with nothing
+   * still appears — generation no longer fails over a bad batch, which only stays safe if
+   * "this area is missing" is as visible as the items that did survive.
+   */
+  const areaStats = useMemo(() => {
+    const counts = new Map<string, { kept: number; dropped: number }>();
+    for (const item of data?.pool ?? []) {
+      const entry = counts.get(item.area) ?? { kept: 0, dropped: 0 };
+      entry[item.status === "dropped" ? "dropped" : "kept"] += 1;
+      counts.set(item.area, entry);
+    }
+    return (data?.assessment.blueprint?.areas ?? []).map((area) => ({
+      name: area.name,
+      ...(counts.get(area.name) ?? { kept: 0, dropped: 0 }),
+    }));
+  }, [data]);
+
   const byArea = useMemo(() => {
     if (!data) return [];
     const groups = new Map<string, PoolItem[]>();
@@ -89,6 +109,9 @@ export default function AdminPoolPage() {
 
   const kept = data.pool.filter((i) => i.status !== "dropped").length;
   const dropped = data.pool.length - kept;
+  const emptyAreas = areaStats.filter((area) => area.kept === 0);
+  const target = data.assessment.blueprint?.targetItemCount ?? 0;
+  const thin = emptyAreas.length > 0 || (target > 0 && kept < target);
 
   return (
     <div className="px-4 py-8 sm:px-6">
@@ -107,6 +130,29 @@ export default function AdminPoolPage() {
           {approvalNote(data.assessment) && ` · ${approvalNote(data.assessment)}`}
         </p>
       </header>
+
+      {/* Said before the gate, not after it: whether to approve a thinner assessment or re-issue
+          is the decision being made on this page. */}
+      {thin && (
+        <div className="mt-4 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3">
+          <p className="flex items-start gap-3 text-sm">
+            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+            <span>
+              <span className="font-medium">This pool came out thinner than planned.</span>{" "}
+              <span className="text-muted-foreground">
+                {kept} items kept of {target} asked for
+                {emptyAreas.length > 0 && (
+                  <>
+                    , and {emptyAreas.length} of {areaStats.length} areas produced nothing (
+                    {emptyAreas.map((area) => area.name).join(", ")})
+                  </>
+                )}
+                . It can still be approved and released — re-issue if you want a fuller one.
+              </span>
+            </span>
+          </p>
+        </div>
+      )}
 
       {/* This page is where the gate belongs: approving should follow reading, not precede it. */}
       {data.assessment.status === "awaiting_approval" && (
@@ -128,16 +174,28 @@ export default function AdminPoolPage() {
           </h2>
           <p className="mt-2 max-w-prose text-sm text-muted-foreground">{data.assessment.blueprint.summary}</p>
           <ul className="mt-4 space-y-2">
-            {data.assessment.blueprint.areas.map((area) => (
-              <li key={area.name} className="rounded-md border px-4 py-3">
-                <p className="flex flex-wrap items-center gap-2 font-medium">
-                  {area.name}
-                  <Badge variant="outline">Expected level {area.hypothesisLevel}/5</Badge>
-                </p>
-                <p className="mt-1 max-w-prose text-sm text-muted-foreground">{area.rationale}</p>
-                <p className="mt-1.5 font-mono text-xs text-muted-foreground">{area.moduleIds.join(" · ")}</p>
-              </li>
-            ))}
+            {data.assessment.blueprint.areas.map((area) => {
+              const stat = areaStats.find((s) => s.name === area.name) ?? { kept: 0, dropped: 0 };
+              return (
+                <li key={area.name} className="rounded-md border px-4 py-3">
+                  <p className="flex flex-wrap items-center gap-2 font-medium">
+                    {area.name}
+                    <Badge variant="outline">Expected level {area.hypothesisLevel}/5</Badge>
+                    {stat.kept === 0 ? (
+                      <Badge variant="outline" className="border-destructive/50 text-destructive">
+                        Nothing usable — not covered
+                      </Badge>
+                    ) : (
+                      <span className="font-mono text-xs font-normal text-muted-foreground">
+                        {stat.kept + stat.dropped} generated · {stat.kept} kept · {stat.dropped} dropped
+                      </span>
+                    )}
+                  </p>
+                  <p className="mt-1 max-w-prose text-sm text-muted-foreground">{area.rationale}</p>
+                  <p className="mt-1.5 font-mono text-xs text-muted-foreground">{area.moduleIds.join(" · ")}</p>
+                </li>
+              );
+            })}
           </ul>
         </section>
       )}

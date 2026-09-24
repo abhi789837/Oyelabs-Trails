@@ -1,10 +1,17 @@
-import { TIME_LIMIT_SEC, type GeneratedItem, type ItemKey, type ItemPayload } from "../../../shared/assessment";
+import {
+  generatedItemSchema,
+  TIME_LIMIT_SEC,
+  type GeneratedItem,
+  type ItemKey,
+  type ItemPayload,
+} from "../../../shared/assessment";
 import type { CodeSandbox } from "../sandbox";
 
 /**
  * Server-side validation of a generated item (brief §9.2 steps 4-5).
  *
- * The zod schema only proves the shape. These are the semantic rules: does the item's kind match
+ * `splitItemBatch` handles the shape, one element at a time, so that a batch with a bad item in it
+ * loses the item rather than the batch. Everything after it is the semantic rules: does the kind match
  * the fields it carries, are its topic tags real, and — for code items — does the reference
  * solution actually pass while the starter code actually fails. An item that fails any of these
  * is dropped with a reason the admin can read, rather than silently reaching a real assessment.
@@ -19,6 +26,7 @@ import type { CodeSandbox } from "../sandbox";
  * string, so a new rejection has to be named deliberately rather than smuggling content along.
  */
 export type RejectionCode =
+  | "schema-invalid"
   | "unknown-topics"
   | "too-few-options"
   | "duplicate-options"
@@ -47,6 +55,63 @@ export interface Rejection {
   ok: false;
   code: RejectionCode;
   reason: string;
+}
+
+/** One element of a batch that did not match `generatedItemSchema`, kept for the drop path. */
+export interface MalformedItem {
+  /** Where it sat in the batch, so a log line points at the same item the model numbered. */
+  index: number;
+  /**
+   * Which fields were wrong — `items.14.rationale` — and nothing else.
+   *
+   * This is the part that may reach the generation log. A zod message can quote the value it
+   * received, and the values here are correct answers, rationales and reference solutions.
+   */
+  paths: string[];
+  /** Zod's own account, for the stored row the pool preview shows to an admin who may see keys. */
+  detail: string;
+  /** Whatever of the shape survived, for a row that has to name a kind and a difficulty. */
+  raw: Record<string, unknown>;
+}
+
+/**
+ * Splits a leniently-parsed batch into the items that match the schema and the ones that do not.
+ *
+ * A batch is parsed with `looseItemBatchSchema` and then comes here, rather than being parsed
+ * strictly in one go, because a strict array parse is all-or-nothing: one item missing its
+ * `rationale` used to discard the nineteen good items beside it, fail the retry on another single
+ * bad item, and take the whole generation down with it. Everything downstream of this function
+ * already knows how to drop an item it cannot use and carry on — this is what lets a malformed
+ * item reach that machinery instead of dying in the parse.
+ */
+export function splitItemBatch(elements: readonly unknown[]): { items: GeneratedItem[]; malformed: MalformedItem[] } {
+  const items: GeneratedItem[] = [];
+  const malformed: MalformedItem[] = [];
+
+  for (const [index, element] of elements.entries()) {
+    const parsed = generatedItemSchema.safeParse(element);
+    if (parsed.success) {
+      items.push(parsed.data);
+      continue;
+    }
+
+    malformed.push({
+      index,
+      paths: [
+        ...new Set(
+          parsed.error.issues.map(
+            (issue) => `items.${index}${issue.path.length ? `.${issue.path.map(String).join(".")}` : ""}`,
+          ),
+        ),
+      ],
+      detail: `The model's item did not match the schema: ${parsed.error.issues
+        .map((issue) => `${issue.path.map(String).join(".") || "(item)"}: ${issue.message}`)
+        .join("; ")}`,
+      raw: element !== null && typeof element === "object" ? (element as Record<string, unknown>) : {},
+    });
+  }
+
+  return { items, malformed };
 }
 
 export type ValidationResult = { ok: true; payload: ItemPayload; key: ItemKey; topicIds: string[] } | Rejection;

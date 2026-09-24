@@ -119,6 +119,22 @@ export type GeneratedItem = z.infer<typeof generatedItemSchema>;
 export const itemBatchSchema = z.object({ items: z.array(generatedItemSchema).min(1).max(30) });
 export type ItemBatch = z.infer<typeof itemBatchSchema>;
 
+/**
+ * The same batch, accepted element by element.
+ *
+ * `z.array(generatedItemSchema)` is all-or-nothing: one item missing its `rationale` fails the
+ * parse and throws away the nineteen good ones beside it. That is what it did on a live
+ * deployment — a whole generation lost to a single field — even though this pipeline is built
+ * around dropping the items it cannot use and keeping the rest.
+ *
+ * So the envelope is parsed with this, and each element is then checked against
+ * `generatedItemSchema` on its own (`splitItemBatch`). `itemBatchSchema` remains the contract:
+ * it is what the model is *asked* for, and nothing but the prose in the prompt would otherwise
+ * tell it that a `rationale` is required at all. This is only what we are willing to receive.
+ */
+export const looseItemBatchSchema = z.object({ items: z.array(z.unknown()).min(1).max(30) });
+export type LooseItemBatch = z.infer<typeof looseItemBatchSchema>;
+
 // ---------------------------------------------------------------------------
 // Critic
 // ---------------------------------------------------------------------------

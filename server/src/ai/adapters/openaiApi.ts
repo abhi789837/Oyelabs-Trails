@@ -42,7 +42,7 @@ export class OpenAiApiProvider implements AiProvider {
 
   async generateJson<T>(request: GenerateJsonRequest<T>): Promise<GenerateJsonResult<T>> {
     const model = request.model ?? this.defaultModel(request.purpose);
-    const schema = toProviderJsonSchema(request.schema);
+    const schema = toProviderJsonSchema(request.contractSchema ?? request.schema);
     const started = Date.now();
 
     let usageIn = 0;

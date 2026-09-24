@@ -40,7 +40,7 @@ export class ClaudeCliProvider implements AiProvider {
 
   async generateJson<T>(request: GenerateJsonRequest<T>): Promise<GenerateJsonResult<T>> {
     const model = request.model ?? this.defaultModel(request.purpose);
-    const schema = toProviderJsonSchema(request.schema);
+    const schema = toProviderJsonSchema(request.contractSchema ?? request.schema);
     const started = Date.now();
 
     // The CLI has no structured-output flag, so the schema goes in the prompt. That is weaker

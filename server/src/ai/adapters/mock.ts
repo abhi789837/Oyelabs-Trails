@@ -45,17 +45,26 @@ export class MockProvider implements AiProvider {
     // output, or every item would be dropped by validation and the pipeline would prove nothing.
     const fixture = this.fixtureFor(request);
     if (fixture !== undefined) {
-      const checked = request.schema.safeParse(fixture);
-      if (!checked.success) {
+      // Checked against the *contract*, not against what the caller will tolerate. An item batch
+      // is now validated element by element, so a drifted fixture would quietly be dropped item
+      // by item instead of saying out loud that this file needs updating.
+      const contract = (request.contractSchema ?? request.schema).safeParse(fixture);
+      if (!contract.success) {
         throw new AiOutputError(
           `MockProvider's fixture for "${request.schemaName}" no longer matches its schema. Update server/src/ai/adapters/mockFixtures.ts.`,
-          checked.error.issues.map((i) => `${i.path.map(String).join(".")}: ${i.message}`),
+          contract.error.issues.map((i) => `${i.path.map(String).join(".")}: ${i.message}`),
         );
       }
-      return { data: checked.data, usage: { input: Math.round(request.user.length / 4), output: 512 }, latencyMs: 5, model: "mock-1" };
+      return {
+        // The contract is the stricter of the two, so this cannot fail once that one passed.
+        data: request.schema.parse(fixture),
+        usage: { input: Math.round(request.user.length / 4), output: 512 },
+        latencyMs: 5,
+        model: "mock-1",
+      };
     }
 
-    const schema = toProviderJsonSchema(request.schema);
+    const schema = toProviderJsonSchema(request.contractSchema ?? request.schema);
     const seed = hashString(`${request.purpose}:${request.schemaName ?? ""}:${this.calls++}:${request.user.length}`);
     const value = synthesise(schema, schema, new Rng(seed), this.hints, "");
 
