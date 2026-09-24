@@ -6,6 +6,7 @@ import type { AnswerRequest, MyAssessment, NextItemResponse, ServedItem } from "
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { useConfirm } from "@/components/overlays";
 import { Logo } from "@/components/layout/Logo";
 import { Contours } from "@/components/trail/Contours";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ export default function AssessmentPage() {
   useDocumentTitle("Placement assessment");
   const { user } = useAuth();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const [assessment, setAssessment] = useState<MyAssessment | null>(null);
   const [phase, setPhase] = useState<Phase>("loading");
@@ -167,7 +169,16 @@ export default function AssessmentPage() {
 
   const handleSubmitAll = async () => {
     if (!assessment) return;
-    if (!window.confirm("Finish the assessment now? You cannot return to it.")) return;
+    // `calm`: fade only, no spring, no flourish. Someone is walking away from an hour of work and
+    // needs a plain stop — this is the one dialog in the app that must not perform.
+    const ok = await confirm({
+      calm: true,
+      title: "Finish the assessment now?",
+      body: "Your answers are submitted as they stand and the assessment closes. Anything you have not reached is left unanswered, and you cannot come back to it.",
+      confirmLabel: "Finish and submit",
+      cancelLabel: "Keep going",
+    });
+    if (!ok) return;
     await assessmentApi.submit(assessment.id);
     setPhase("waiting");
     void load();

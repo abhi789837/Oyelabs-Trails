@@ -71,7 +71,7 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
       <div className="flex flex-wrap items-center gap-3">
         <Badge variant="success">Overall level {result.overallLevel}/5</Badge>
         {result.terminated && (
-          <Badge variant="outline" className="border-destructive/50 text-destructive">
+          <Badge variant="danger">
             The assessment was terminated — review before relying on this
           </Badge>
         )}

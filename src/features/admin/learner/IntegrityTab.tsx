@@ -7,6 +7,7 @@ import type { Severity } from "@shared/enums";
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge, statusMeta } from "@/components/ui/status-badge";
 import { cn, formatTimestamp } from "@/lib/utils";
 
 interface IntegrityEvent {
@@ -95,12 +96,7 @@ export function IntegrityTimeline({ assessmentId }: { assessmentId: string }) {
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-mono text-sm">{event.type}</span>
-                <Badge
-                  variant="outline"
-                  className={event.severity === "hard" ? "border-destructive/50 text-destructive" : ""}
-                >
-                  {event.severity}
-                </Badge>
+                <StatusBadge kind="severity" status={event.severity} />
                 {event.counted ? (
                   <Badge variant="outline">counted</Badge>
                 ) : (
@@ -172,7 +168,7 @@ export function IntegrityTab({ assessments }: { assessments: AssessmentSummary[]
         <div>
           <h2 className="text-lg font-semibold">Integrity</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Attempt {current.attemptNo}, {current.status.replace("_", " ")} ·{" "}
+            Attempt {current.attemptNo}, {statusMeta("assessment", current.status).label.toLowerCase()} ·{" "}
             {formatTimestamp(current.startedAt ?? current.createdAt)}
           </p>
         </div>

@@ -9,6 +9,7 @@ import { RichText } from "@/components/content/RichText";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatusBadge, statusMeta } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { cn } from "@/lib/utils";
 import { ApprovalBanner, approvalNote } from "./ApprovalGate";
@@ -130,7 +131,8 @@ export default function AdminPoolPage() {
       <header className="mt-4">
         <h1 className="text-2xl font-bold">Assessment pool</h1>
         <p className="mt-1 font-mono text-sm text-muted-foreground">
-          Attempt {data.assessment.attemptNo} · {data.assessment.status.replace("_", " ")} · {kept} kept, {dropped}{" "}
+          Attempt {data.assessment.attemptNo} · {statusMeta("assessment", data.assessment.status).label} · {kept} kept,{" "}
+          {dropped}{" "}
           dropped
           {approvalNote(data.assessment) && ` · ${approvalNote(data.assessment)}`}
         </p>
@@ -209,7 +211,7 @@ export default function AdminPoolPage() {
                     {area.name}
                     <Badge variant="outline">Expected level {area.hypothesisLevel}/5</Badge>
                     {stat.kept === 0 ? (
-                      <Badge variant="outline" className="border-destructive/50 text-destructive">
+                      <Badge variant="danger">
                         Nothing usable — not covered
                       </Badge>
                     ) : (
@@ -270,7 +272,7 @@ function ItemCard({ item }: { item: PoolItem }) {
         <span>difficulty {item.difficulty}/5</span>
         <span>·</span>
         <span>{item.topicIds.join(", ")}</span>
-        {droppedItem && <Badge variant="outline" className="border-destructive/50 text-destructive">Dropped</Badge>}
+        {droppedItem && <StatusBadge kind="item" status="dropped" />}
       </div>
 
       {droppedItem && item.dropReason && (

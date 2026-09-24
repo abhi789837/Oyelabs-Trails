@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { Check, LoaderCircle, Minus, X } from "lucide-react";
+import { Check, Minus, X } from "lucide-react";
 
 import type { QuizAttemptResult, QuizQuestionResult, ServedQuizQuestion, ServedTopic } from "@shared/content";
 
@@ -184,9 +184,8 @@ export function QuizRunner({ topic, questions }: { topic: ServedTopic; questions
 
         {!submitted && (
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Button type="submit" disabled={submitting || answeredCount < questions.length}>
-              {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-              {submitting ? "Checking…" : "Submit answers"}
+            <Button type="submit" loading={submitting} disabled={answeredCount < questions.length}>
+              Submit answers
             </Button>
             <p className="font-mono text-xs text-muted-foreground" aria-live="polite">
               {answeredCount} of {questions.length} answered

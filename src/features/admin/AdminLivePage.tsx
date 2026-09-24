@@ -2,13 +2,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Clock, LoaderCircle, Radio, ShieldAlert, TimerReset } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import type { Severity } from "@shared/enums";
+import type { AssessmentStatus, Severity } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { useConfirm } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
 interface LiveRow {
@@ -16,7 +19,7 @@ interface LiveRow {
   userId: string;
   displayName: string;
   username: string;
-  status: string;
+  status: AssessmentStatus;
   answered: number;
   startedAt: number | null;
   deadlineAt: number | null;
@@ -25,6 +28,14 @@ interface LiveRow {
   softWarnings: number;
   lastHeartbeatAt: number | null;
   recentEvents: { id: string; type: string; severity: Severity; counted: boolean; createdAt: number; snapshotPath: string | null }[];
+}
+
+/** "about 12 minutes" / "under a minute" — for confirmation copy, not for the timer. */
+function minutesLeftLabel(msLeft: number | null): string {
+  if (msLeft === null) return "an unknown amount of time";
+  const minutes = Math.round(msLeft / 60_000);
+  if (minutes <= 0) return "under a minute";
+  return `about ${minutes} minute${minutes === 1 ? "" : "s"}`;
 }
 
 /**
@@ -37,6 +48,7 @@ interface LiveRow {
  */
 export default function AdminLivePage() {
   useDocumentTitle("Live");
+  const confirm = useConfirm();
 
   const [rows, setRows] = useState<LiveRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -85,16 +97,36 @@ export default function AdminLivePage() {
     };
   }, [load]);
 
-  const act = async (assessmentId: string, action: "terminate" | "extend") => {
-    const confirmText =
+  const act = async (row: LiveRow, action: "terminate" | "extend") => {
+    // Ending a live assessment is destructive to the *learner*, not to the admin: it takes away the
+    // rest of an hour they are sitting through right now. The wording says that rather than asking
+    // an abstract "are you sure".
+    const ok = await confirm(
       action === "terminate"
-        ? "End this assessment now? Their answers are kept and still evaluated."
-        : "Add ten minutes to this assessment?";
-    if (!window.confirm(confirmText)) return;
+        ? {
+            title: `End ${row.displayName}'s assessment now?`,
+            body: `They are mid-question with ${minutesLeftLabel(row.msLeft)} left and ${row.answered} answer${
+              row.answered === 1 ? "" : "s"
+            } in. The test closes on them immediately, they cannot resume it, and everything still unanswered stays unanswered. What they have already answered is kept and still evaluated. Re-issuing the assessment is the only way back.`,
+            confirmLabel: "End the assessment",
+            variant: "destructive",
+          }
+        : {
+            title: `Give ${row.displayName} ten more minutes?`,
+            body: "The clock moves out by ten minutes for this attempt. They are not interrupted and are not told — the time left simply grows.",
+            confirmLabel: "Add ten minutes",
+          },
+    );
+    if (!ok) return;
 
-    setBusy(assessmentId);
+    setBusy(row.assessmentId);
     try {
-      await api.post(`/api/admin/assessments/${assessmentId}/${action}`);
+      await api.post(`/api/admin/assessments/${row.assessmentId}/${action}`);
+      notify.success(
+        action === "terminate"
+          ? `Ended ${row.displayName}'s assessment.`
+          : `Added ten minutes for ${row.displayName}.`,
+      );
       await load();
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "That didn't work.");
@@ -156,7 +188,7 @@ export default function AdminLivePage() {
                   {row.displayName}
                 </Link>
                 <span className="font-mono text-xs text-muted-foreground">{row.username}</span>
-                <Badge variant="outline">{row.status.replace("_", " ")}</Badge>
+                <StatusBadge kind="assessment" status={row.status} />
 
                 <span className="font-mono text-xs text-muted-foreground tabular">{row.answered} answered</span>
 
@@ -178,7 +210,7 @@ export default function AdminLivePage() {
                 </span>
 
                 {heartbeatStale && (
-                  <Badge variant="outline" className="border-destructive/50 text-destructive">
+                  <Badge variant="danger">
                     no heartbeat
                   </Badge>
                 )}
@@ -186,11 +218,11 @@ export default function AdminLivePage() {
                 <div className="ml-auto flex gap-1.5">
                   {row.status === "in_progress" && (
                     <>
-                      <Button variant="ghost" size="sm" disabled={busy !== null} onClick={() => void act(row.assessmentId, "extend")}>
+                      <Button variant="ghost" size="sm" disabled={busy !== null} onClick={() => void act(row, "extend")}>
                         <TimerReset aria-hidden="true" />
                         +10 min
                       </Button>
-                      <Button variant="ghost" size="sm" disabled={busy !== null} onClick={() => void act(row.assessmentId, "terminate")}>
+                      <Button variant="ghost" size="sm" disabled={busy !== null} onClick={() => void act(row, "terminate")}>
                         End
                       </Button>
                     </>
@@ -206,10 +238,7 @@ export default function AdminLivePage() {
                   {row.recentEvents.map((event) => (
                     <li
                       key={event.id}
-                      className={cn(
-                        "flex items-center gap-2 rounded-md border px-2 py-1 font-mono text-[11px]",
-                        event.severity === "hard" ? "border-destructive/40 text-destructive" : "text-muted-foreground",
-                      )}
+                      className="flex items-center gap-2 rounded-md border px-2 py-1 font-mono text-[11px] text-muted-foreground"
                     >
                       {event.snapshotPath && (
                         <img
@@ -219,6 +248,9 @@ export default function AdminLivePage() {
                           loading="lazy"
                         />
                       )}
+                      {/* This feed is live, so a hard warning is allowed to pulse here. The
+                          historical list on the integrity tab passes no `live` and stays still. */}
+                      <StatusBadge kind="severity" status={event.severity} live={row.status === "in_progress"} />
                       <span>
                         {event.type}
                         {!event.counted && " (not counted)"}

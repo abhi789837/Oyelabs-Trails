@@ -9,6 +9,7 @@ import { api, ApiRequestError } from "@/api/client";
 import { RichText } from "@/components/content/RichText";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { getCachedModule, loadModule, useTracks } from "@/content";
 import { levelLabels } from "@/lib/track-meta";
 import { cn, formatTimestamp } from "@/lib/utils";
@@ -241,13 +242,7 @@ function ProgressRow({
           )}
         </Td>
         <Td>
-          {status === "completed" ? (
-            <span className="text-summit-strong">Completed</span>
-          ) : status === "in-progress" ? (
-            <span className="text-trailmark-strong">In progress</span>
-          ) : (
-            <span className="text-muted-foreground">Not started</span>
-          )}
+          <StatusBadge kind="topic" status={status} />
         </Td>
         <Td className="text-right tabular">{row.progress?.attempts ?? 0}</Td>
         <Td className="text-right tabular">

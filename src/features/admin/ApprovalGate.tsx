@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LoaderCircle, ShieldCheck, Timer } from "lucide-react";
+import { ShieldCheck, Timer } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { AUTO_APPROVE_AFTER_MS, type AssessmentSummary } from "@shared/assessment";
@@ -75,12 +75,8 @@ export function ApprovalBanner({
               <Link to={poolHref}>Review the pool</Link>
             </Button>
           )}
-          <Button size="sm" onClick={() => void approve()} disabled={busy}>
-            {busy ? (
-              <LoaderCircle className="animate-spin" aria-hidden="true" />
-            ) : (
-              <ShieldCheck aria-hidden="true" />
-            )}
+          <Button size="sm" loading={busy} onClick={() => void approve()}>
+            <ShieldCheck aria-hidden="true" />
             Approve and release
           </Button>
         </div>

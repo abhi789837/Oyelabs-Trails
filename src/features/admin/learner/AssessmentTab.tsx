@@ -10,6 +10,7 @@ import { RichText } from "@/components/content/RichText";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { cn, formatTimestamp } from "@/lib/utils";
 import { ApprovalBanner, approvalNote } from "../ApprovalGate";
 import { GenerationLog } from "../GenerationLog";
@@ -112,8 +113,7 @@ export function AssessmentTab({
           </p>
         </div>
         {!assessments.some((a) => LIVE_STATUSES.includes(a.status)) && (
-          <Button variant="outline" onClick={() => void handleIssue()} disabled={issuing}>
-            {issuing && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+          <Button variant="outline" loading={issuing} onClick={() => void handleIssue()}>
             {assessments.length === 0 ? "Issue assessment" : "Re-issue assessment"}
           </Button>
         )}
@@ -153,17 +153,7 @@ export function AssessmentTab({
             return (
               <li key={assessment.id} className="rounded-md border">
                 <div className="flex flex-wrap items-center gap-3 px-4 py-3">
-                  <Badge
-                    variant={
-                      assessment.status === "ready"
-                        ? "success"
-                        : assessment.status === "awaiting_approval"
-                          ? "progress"
-                          : "outline"
-                    }
-                  >
-                    {assessment.status.replace("_", " ")}
-                  </Badge>
+                  <StatusBadge kind="assessment" status={assessment.status} />
                   <span className="font-mono text-xs text-muted-foreground">
                     Attempt {assessment.attemptNo} · {formatTimestamp(assessment.createdAt)}
                     {generated > 0 ? ` · ${generated} items` : ""}
@@ -350,11 +340,7 @@ function ServedItemCard({ item, index }: { item: AnsweredItem; index: number }) 
         <span>{item.area}</span>
         <span>difficulty {item.difficulty}/5</span>
         {item.timeMs !== null && <span>{Math.round(item.timeMs / 1000)}s</span>}
-        {skipped && (
-          <Badge variant="outline" className="border-destructive/50 text-destructive">
-            Skipped
-          </Badge>
-        )}
+        {skipped && <StatusBadge kind="item" status="skipped" />}
         <span className="ml-auto">
           {score === null ? (
             "not scored yet"

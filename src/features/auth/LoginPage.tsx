@@ -1,5 +1,4 @@
 import { useState, type FormEvent } from "react";
-import { LoaderCircle } from "lucide-react";
 import { Navigate, useLocation } from "react-router-dom";
 
 import { ApiRequestError } from "@/api/client";
@@ -89,9 +88,8 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button type="submit" className="w-full" disabled={submitting || !username || !password}>
-            {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-            {submitting ? "Signing in…" : "Sign in"}
+          <Button type="submit" className="w-full" loading={submitting} disabled={!username || !password}>
+            Sign in
           </Button>
         </form>
 

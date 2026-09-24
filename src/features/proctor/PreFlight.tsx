@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from "motion/react";
 import { Check, Maximize, Monitor, ScanFace, ShieldAlert, Volume2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { cardVariants } from "@/components/ui/card";
+import { fadeUp } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 import { onScreenChange, screenIsExtended } from "./browserSignals";
@@ -156,10 +158,10 @@ export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
       {/* The one motion moment on this screen: the panel cross-fades as the sequence advances. */}
       <motion.div
         key={step}
-        initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.18, ease: "easeOut" }}
-        className="rounded-lg border bg-surface p-6 sm:p-8"
+        variants={fadeUp}
+        initial={reduceMotion ? false : "hidden"}
+        animate="visible"
+        className={cn(cardVariants({ density: "roomy" }), "sm:p-8")}
       >
         {step === "consent" && (
           <ConsentStep

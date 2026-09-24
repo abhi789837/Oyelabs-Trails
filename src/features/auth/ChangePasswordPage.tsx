@@ -1,11 +1,8 @@
 import { useState, type FormEvent } from "react";
-import { LoaderCircle } from "lucide-react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-import { PASSWORD_MIN_LENGTH } from "@shared/auth";
-
 import { ApiRequestError } from "@/api/client";
-import { FormAlert, TextField } from "@/components/form/Field";
+import { FormAlert, PasswordField } from "@/components/form/Field";
 import { Logo } from "@/components/layout/Logo";
 import { Contours } from "@/components/trail/Contours";
 import { Button } from "@/components/ui/button";
@@ -71,10 +68,9 @@ export default function ChangePasswordPage() {
         <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
           {error && <FormAlert>{error}</FormAlert>}
 
-          <TextField
+          <PasswordField
             label={forced ? "Temporary password" : "Current password"}
             name="currentPassword"
-            type="password"
             autoComplete="current-password"
             required
             autoFocus
@@ -83,22 +79,22 @@ export default function ChangePasswordPage() {
             onChange={(e) => setCurrentPassword(e.target.value)}
           />
 
-          <TextField
+          <PasswordField
             label="New password"
             name="newPassword"
-            type="password"
             autoComplete="new-password"
             required
+            meter
+            username={user.username}
             value={newPassword}
             error={fields.newPassword}
-            hint={`At least ${PASSWORD_MIN_LENGTH} characters. Not your username, and not a commonly used password.`}
+            hint="The server also rejects commonly used passwords, even with digits tacked on the end."
             onChange={(e) => setNewPassword(e.target.value)}
           />
 
-          <TextField
+          <PasswordField
             label="Confirm new password"
             name="confirmPassword"
-            type="password"
             autoComplete="new-password"
             required
             value={confirmPassword}
@@ -109,10 +105,10 @@ export default function ChangePasswordPage() {
           <Button
             type="submit"
             className="w-full"
-            disabled={submitting || mismatch || !currentPassword || !newPassword || !confirmPassword}
+            loading={submitting}
+            disabled={mismatch || !currentPassword || !newPassword || !confirmPassword}
           >
-            {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-            {submitting ? "Saving…" : "Save password"}
+            Save password
           </Button>
         </form>
       </div>

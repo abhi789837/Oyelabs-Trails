@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, Check, LoaderCircle, X } from "lucide-react";
+import { AlertTriangle, LoaderCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { AUTO_APPROVE_AFTER_MS } from "@shared/assessment";
-import type { AiPurpose, Severity } from "@shared/enums";
+import type { AiPurpose, CredentialStatus, Severity } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { cn, formatTimestamp } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ interface Overview {
     configured: boolean;
     provider: string | null;
     label: string | null;
-    status: string | null;
+    status: CredentialStatus | null;
     lastError: string | null;
     usingMock: boolean;
     usage7d: { purpose: AiPurpose; calls: number; inputTokens: number; outputTokens: number; failures: number }[];
@@ -214,7 +214,8 @@ export default function AdminOverviewPage() {
                   >
                     {event.displayName}
                   </Link>
-                  <span className={cn("font-mono text-xs", event.severity === "hard" ? "text-destructive" : "text-muted-foreground")}>
+                  <StatusBadge kind="severity" status={event.severity} />
+                  <span className="truncate font-mono text-xs text-muted-foreground">
                     {event.type}
                     {!event.counted && " (not counted)"}
                   </span>
@@ -240,14 +241,7 @@ export default function AdminOverviewPage() {
           <p className="mt-3 flex flex-wrap items-center gap-2 text-sm">
             {data.ai.configured ? (
               <>
-                <Badge variant={data.ai.status === "verified" ? "success" : "outline"}>
-                  {data.ai.status === "verified" ? (
-                    <Check className="mr-1 h-3 w-3" aria-hidden="true" />
-                  ) : data.ai.status === "failed" ? (
-                    <X className="mr-1 h-3 w-3" aria-hidden="true" />
-                  ) : null}
-                  {data.ai.status ?? "unverified"}
-                </Badge>
+                <StatusBadge kind="credential" status={data.ai.status ?? "unverified"} />
                 <span className="font-mono text-xs text-muted-foreground">
                   {data.ai.label} · {data.ai.provider}
                 </span>

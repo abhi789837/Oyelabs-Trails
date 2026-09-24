@@ -6,10 +6,13 @@ import type { UserSummary } from "@shared/admin";
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { useConfirm } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { notify } from "@/lib/toast";
 import { formatDate } from "@/lib/utils";
 import { adminApi } from "./api";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
@@ -21,6 +24,7 @@ import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
  */
 export default function AdminPeoplePage() {
   useDocumentTitle("People");
+  const confirm = useConfirm();
 
   const [users, setUsers] = useState<UserSummary[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +62,13 @@ export default function AdminPeoplePage() {
   }, [users, query]);
 
   const handleReset = async (user: UserSummary) => {
-    if (!window.confirm(`Reset ${user.displayName}'s password? Their current password stops working immediately.`)) return;
+    const ok = await confirm({
+      title: `Reset ${user.displayName}'s password?`,
+      body: "Their current password stops working the moment you confirm, and a temporary one is shown to you once — you have to pass it on yourself. They choose a new password at their next sign-in.",
+      confirmLabel: "Reset password",
+      variant: "destructive",
+    });
+    if (!ok) return;
     setBusyId(user.id);
     try {
       const result = await adminApi.resetPassword(user.id);
@@ -73,10 +83,24 @@ export default function AdminPeoplePage() {
 
   const handleStatus = async (user: UserSummary) => {
     const next = user.status === "active" ? "disabled" : "active";
-    if (next === "disabled" && !window.confirm(`Disable ${user.displayName}? They will be signed out everywhere.`)) return;
+    if (next === "disabled") {
+      // Typed confirmation: from this table the rows look alike, and disabling the wrong person
+      // signs them out of a machine they are working on right now.
+      const ok = await confirm({
+        title: `Disable ${user.displayName}?`,
+        body: "They are signed out of every device immediately and cannot sign in again until you re-enable the account. Their progress, plan and assessment history are kept.",
+        confirmLabel: "Disable account",
+        variant: "destructive",
+        confirmPhrase: user.username,
+      });
+      if (!ok) return;
+    }
     setBusyId(user.id);
     try {
       await adminApi.setStatus(user.id, next);
+      notify.success(
+        next === "disabled" ? `${user.displayName} is disabled and signed out.` : `${user.displayName} can sign in again.`,
+      );
       await load();
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "Could not change that account.");
@@ -113,17 +137,16 @@ export default function AdminPeoplePage() {
 
       {error && <div className="mt-6"><FormAlert>{error}</FormAlert></div>}
 
-      <div className="relative mt-6 max-w-xs">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-        <Input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search name, username or role"
-          aria-label="Search people"
-          className="pl-9"
-        />
-      </div>
+      <Input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onClear={() => setQuery("")}
+        leading={<Search />}
+        placeholder="Search name, username or role"
+        aria-label="Search people"
+        containerClassName="mt-6 max-w-xs"
+      />
 
       {!filtered ? (
         <div className="mt-10 flex items-center gap-2 text-sm text-muted-foreground" role="status">
@@ -169,7 +192,7 @@ export default function AdminPeoplePage() {
                   </Td>
                   <Td>
                     {user.role === "superadmin" ? (
-                      <Badge variant="outline">Super admin</Badge>
+                      <StatusBadge kind="role" status="superadmin" />
                     ) : (
                       <span className="text-muted-foreground">{user.roleTitle ?? "Learner"}</span>
                     )}
@@ -177,7 +200,13 @@ export default function AdminPeoplePage() {
                   <Td>
                     <StatusCell user={user} />
                   </Td>
-                  <Td className="text-muted-foreground">{user.assessmentStatus?.replace("_", " ") ?? "—"}</Td>
+                  <Td>
+                    {user.assessmentStatus ? (
+                      <StatusBadge kind="assessment" status={user.assessmentStatus} />
+                    ) : (
+                      <span className="text-muted-foreground">—</span>
+                    )}
+                  </Td>
                   <Td className="text-right tabular">
                     {user.planTopicCount === 0 ? (
                       <span className="text-muted-foreground">—</span>
@@ -233,10 +262,12 @@ export default function AdminPeoplePage() {
   );
 }
 
+/* "Awaiting first sign-in" is not a `UserStatus` — it is `active` plus an unused temporary
+   password — so it borrows the in-progress tone rather than inventing one. */
 function StatusCell({ user }: { user: UserSummary }) {
-  if (user.status === "disabled") return <Badge variant="outline">Disabled</Badge>;
-  if (user.mustChangePassword) return <span className="text-trailmark-strong">Awaiting first sign-in</span>;
-  return <span className="text-summit-strong">Active</span>;
+  if (user.status === "disabled") return <StatusBadge kind="user" status="disabled" />;
+  if (user.mustChangePassword) return <Badge variant="progress">Awaiting first sign-in</Badge>;
+  return <StatusBadge kind="user" status="active" />;
 }
 
 // Sentence case, not the usual ALL-CAPS table header: the design system rules that out.

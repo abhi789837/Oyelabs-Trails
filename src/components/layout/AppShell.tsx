@@ -16,7 +16,6 @@ import { AssessmentBanner } from "./AssessmentBanner";
 import { CompletionWatcher } from "./CompletionWatcher";
 import { Logo } from "./Logo";
 import { Sidebar } from "./Sidebar";
-import { Toaster } from "./Toaster";
 import { TopBar } from "./TopBar";
 
 /** How often to re-check an assessment the server is still working on. */
@@ -45,7 +44,6 @@ export function AppShell() {
       </div>
       <SiteFooter />
       <CompletionWatcher />
-      <Toaster />
     </div>
   );
 }

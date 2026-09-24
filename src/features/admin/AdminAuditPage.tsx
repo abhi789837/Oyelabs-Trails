@@ -74,20 +74,16 @@ export default function AdminAuditPage() {
         </div>
       )}
 
-      <div className="relative mt-6 max-w-xs">
-        <Search
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <Input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search action, actor or target"
-          aria-label="Search the audit log"
-          className="pl-9"
-        />
-      </div>
+      <Input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onClear={() => setQuery("")}
+        leading={<Search />}
+        placeholder="Search action, actor or target"
+        aria-label="Search the audit log"
+        containerClassName="mt-6 max-w-xs"
+      />
 
       {!filtered ? (
         <div className="mt-10 flex items-center gap-2 text-sm text-muted-foreground" role="status">

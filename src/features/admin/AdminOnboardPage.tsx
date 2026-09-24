@@ -1,12 +1,12 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { LoaderCircle, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import type { ClaimedSkill, LearnerProfile } from "@shared/profile";
 import type { SkillLevel, TrackIdValue } from "@shared/enums";
 
 import { ApiRequestError } from "@/api/client";
-import { Field, FormAlert, TextField } from "@/components/form/Field";
+import { Field, FormAlert, NumberField, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTracks } from "@/content";
@@ -168,15 +168,14 @@ export default function AdminOnboardPage() {
               placeholder="Frontend Engineer"
               onChange={(e) => update({ roleTitle: e.target.value || null })}
             />
-            <TextField
+            <NumberField
               label="Years of experience"
-              type="number"
               min={0}
               max={60}
               step={0.5}
-              value={profile.yearsExperience ?? ""}
+              value={profile.yearsExperience}
               error={fields["profile.yearsExperience"]}
-              onChange={(e) => update({ yearsExperience: e.target.value === "" ? null : Number(e.target.value) })}
+              onChange={(years) => update({ yearsExperience: years })}
             />
           </div>
 
@@ -336,9 +335,8 @@ export default function AdminOnboardPage() {
           </label>
 
           <div className="flex gap-3 pt-2">
-            <Button type="submit" disabled={submitting || !username || !displayName}>
-              {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-              {submitting ? "Creating…" : "Create account"}
+            <Button type="submit" loading={submitting} disabled={!username || !displayName}>
+              Create account
             </Button>
             <Button type="button" variant="ghost" onClick={() => navigate("/admin/people")}>
               Cancel

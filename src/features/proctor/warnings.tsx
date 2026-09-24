@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { Maximize, ShieldAlert, TriangleAlert, Video, VideoOff, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { transition } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 import { HARD_LIMIT, type ProctorState } from "./types";
@@ -115,7 +116,7 @@ export function HardWarningModal({
           <motion.div
             initial={reduceMotion ? false : { opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            transition={transition.base}
             className="w-full max-w-lg rounded-lg border border-destructive/40 bg-background p-6 shadow-2xl sm:p-8"
           >
             <span

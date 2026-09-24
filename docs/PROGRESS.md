@@ -196,3 +196,106 @@ a real credential. That is the first thing to check once one is added.
 - **The assessment runner and proctoring screen stay calm.** Functional transitions only — no
   background effects, no confetti, no decorative motion. MediaPipe needs the CPU and the learner
   needs to concentrate.
+
+### U2 — tokens and primitives
+
+- **`src/lib/motion.ts` is the only place a duration is written.** Three durations (120/200/320ms),
+  three easings, one spring (`stiffness: 380, damping: 30`), and the `fadeUp` / `scaleIn` /
+  `fieldMessage` / `stagger()` variants. Every variant animates **transform and opacity only** —
+  the two properties the compositor handles without a layout or paint pass, which is what keeps a
+  long admin list smooth while it animates in. The one number written twice is the 120ms CSS
+  transition on buttons and inputs, because CSS cannot import from TypeScript; it is commented as
+  such at both ends.
+- **One `StatusBadge`, keyed by enum, replaces a dozen ad-hoc pills.** The same enum was being
+  drawn four different ways: `AssessmentStatus` appeared as a toned pill on the assessment tab, an
+  untoned pill on the live page, raw `in_progress` text on the learner header and plain muted text
+  in the people table. The registry in `ui/status-badge.tsx` is typed
+  `Record<StatusKinds[K], Entry>`, so adding a value to `shared/enums.ts` without giving it a label
+  and a tone **fails the build**, and `status-badge.test.ts` catches the reverse (a registry entry
+  for a value that no longer exists).
+- **Tones are the trail vocabulary, not new colours**: trailmark = in flight, summit = arrived,
+  basalt/outline = quiet, destructive = went wrong. One addition — `brand` — carries `role`,
+  because a role is an identity, not a state, and colouring "Super admin" as "in progress" would be
+  a lie. `badgeVariants` gained `danger` and `brand`; `danger` alone collapsed eight copies of
+  `className="border-destructive/50 text-destructive"`.
+- **A hard-severity badge pulses only when the caller passes `live`.** The live integrity feed
+  passes it while the assessment is `in_progress`; the integrity *tab*, which is a record of
+  finished incidents, does not. A page of past events that blinks is noise, not a warning. The
+  animation is `--animate-status-pulse` in `index.css` — opacity only, flattened by the global
+  `prefers-reduced-motion` block, since CSS keyframes are outside Motion's reach.
+- **A loading button must not change width.** The old pattern swapped the label ("Save credential"
+  → "Saving…") and prepended a spinner, so every button resized mid-action and the row reflowed.
+  `loading` now keeps the label in the DOM at `opacity-0` — the width is unchanged and the
+  accessible name survives — and overlays a spinner absolutely. It also disables the button but
+  cancels the disabled fade (via twMerge, which resolves the override deterministically where
+  stylesheet order would not), because a 50%-opacity spinner reads as broken rather than busy.
+- **Press feedback is `whileTap` on `motion.button`, except under `asChild`.** Slot takes exactly
+  one child and forwards props to it, so there is no element of ours to hang `whileTap` on and
+  nowhere to overlay a spinner; that path falls back to `active:scale-[0.97]`, which the global
+  reduced-motion rule already flattens. `loading` is not supported with `asChild`.
+- **Every variant carries a 1px border, transparent where a fill draws the edge.** An outline
+  button and a filled button are now the same size to the pixel, so swapping one for the other in a
+  toolbar cannot shift the row.
+- **Cards get two elevations and no more.** The brief calls out "identical shadowed cards
+  everywhere" as the generic-AI-app look, so separation comes from `density`, the border and a
+  semantic `tone` tint; `elevation` is `flat` (default) or `raised`, and there is deliberately no
+  third step to reach for.
+- **`density` has no default.** Several cards wrap a button or a link that owns its own padding —
+  `PlanTab` does exactly this — and a default padding would double it.
+- **The password meter is an estimate and says so.** The server owns the decision: length, not the
+  username, and a 1500-entry common-password list with trailing digits and punctuation stripped.
+  Shipping that list to the browser costs more than it is worth, so `lib/password-strength.ts`
+  checks the two rules the client can verify exactly plus a variety heuristic, clamps obvious
+  patterns (`aaaaaaaaaa`, `abcdefghij`, `9876543210`) to weak, and the hint text names the server's
+  extra check rather than pretending it does not exist. It returns the *rules*, not just a score,
+  so the screen can say which requirement is outstanding.
+- **`TagInput` ships without a call site, on purpose.** The one plausible target — the target-trails
+  picker in onboarding — shows seven chips with their names visible, and hiding them behind a
+  filtered dropdown would be a downgrade. It waits for U4's table filters and U7's onboarding form.
+- **`TopicStatusBadge` now renders `StatusBadge` with `dot={false}`.** The topic page is one of the
+  two surfaces that must not move, and it predates the dot; the class output is identical to before.
+  `ChallengeResult`'s spring (`380/22`) was left alone for the same reason — the checkmark's small
+  overshoot *is* the topic page's one deliberate motion moment, and the house spring (`380/30`)
+  would damp it out.
+
+### U3 — overlays
+
+- **`useConfirm()` is promise-based and lives at the app root, not per-screen.** A confirmation has
+  to outlive the component that asked for it — a table row that disappears when the list reloads
+  must not take its own "are you sure" with it — and the admin console, the learner app and the
+  proctored assessment all need the same one rather than three that could stack.
+- **`AnimatePresence` wraps Radix's `Root`; `forceMount` is not used.** The usual
+  `forceMount` + `AnimatePresence` recipe keeps Radix's `FocusScope` mounted with
+  `trapped: true` after close, so focus stays trapped in an invisible dialog. Wrapping the root
+  instead lets Radix mount and unmount normally — which is what restores focus to the trigger —
+  while the exit animation still runs, because Motion's exit feature registers through the
+  presence context across the portal boundary.
+- **Overlay motion comes from `src/lib/motion.ts`** (`transition.fast` for the backdrop and the
+  calm variant, `spring` for the panel). It was written inline first, because U2 was creating that
+  module concurrently, and reconciled to the real tokens once it landed.
+- **Buttons in both dialogs use U2's `loading` prop** rather than their own spinner, so the confirm
+  button does not change width the moment it is pressed.
+- **The confirm dialog can run the action itself (`onConfirm`).** It shows a spinner, keeps focus,
+  and on failure shows the message *inside the dialog* rather than behind it. Used for the three
+  irreversible admin actions; everywhere else `confirm()` just resolves a boolean and the page
+  keeps its own busy and error state.
+- **Typed confirmation for three actions only**: delete an AI credential (type the label), disable
+  a learner and revoke their sessions (type the username). The test is exact-match after trimming.
+  Terminating a live assessment is destructive to the *learner*, so it says what it costs them —
+  time left, answers in, no resume — rather than asking for a username the admin would type without
+  reading.
+- **The assessment's finish-now confirmation gets `calm: true`**: fade only, no spring, no slide. It
+  is the one dialog in the app that must not perform.
+- **sonner replaces the hand-rolled toast stack; the camp/summit logic was not touched.**
+  `CompletionWatcher`'s detection — the two `Set`s diffed against the state it started with, so
+  loading saved progress never fires a toast — is unchanged. `src/store/toastStore.ts` kept the
+  payload shape and became the single entry point `pushCompletionToast`, which renders the same
+  card through `toast.custom`. `src/components/layout/Toaster.tsx` was deleted.
+- **Every toast is `unstyled`.** sonner injects its stylesheet into `<head>` at runtime, after the
+  app's CSS, so its own `[data-sonner-toast][data-styled=true]` rules would win over Tailwind
+  utilities of equal specificity. Switching styling off entirely and supplying `classNames` keeps
+  the tokens authoritative — and keeps the inverted `popover` pair the completion toasts always had.
+- **`eslint.config.js` runs two rules, not a ruleset.** A recommended config would bury the one
+  signal this step added under hundreds of pre-existing warnings. `@typescript-eslint/eslint-plugin`
+  is registered but switched off, purely so the `eslint-disable` comments already in `server/`
+  resolve to a real rule name instead of erroring as unknown.

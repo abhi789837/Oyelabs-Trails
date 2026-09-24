@@ -1,7 +1,11 @@
 import { useId, type ReactNode } from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { NumberInput, type NumberInputProps } from "@/components/ui/number-input";
+import { PasswordInput, type PasswordInputProps } from "@/components/ui/password-input";
+import { fieldMessage } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -40,11 +44,23 @@ export function Field({ label, error, hint, required, className, children }: Fie
           {hint}
         </p>
       )}
-      {error && (
-        <p id={errorId} className="text-xs font-medium text-destructive">
-          {error}
-        </p>
-      )}
+      {/* The message rises into place rather than appearing, so the eye is drawn to the field that
+          moved. Transform and opacity only — animating height here would reflow the whole form. */}
+      <AnimatePresence initial={false}>
+        {error && (
+          <motion.p
+            key="error"
+            id={errorId}
+            variants={fieldMessage}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="text-xs font-medium text-destructive"
+          >
+            {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -62,6 +78,56 @@ export function TextField({ label, error, hint, containerClassName, className, r
     <Field label={label} error={error} hint={hint} required={required} className={containerClassName}>
       {({ id, describedBy, invalid }) => (
         <Input
+          id={id}
+          aria-describedby={describedBy}
+          aria-invalid={invalid || undefined}
+          required={required}
+          className={cn(invalid && "border-destructive", className)}
+          {...inputProps}
+        />
+      )}
+    </Field>
+  );
+}
+
+type PasswordFieldProps = Omit<PasswordInputProps, "id"> & {
+  label: string;
+  error?: string | undefined;
+  hint?: ReactNode;
+  containerClassName?: string;
+};
+
+/** A password with a show/hide toggle, and — with `meter` — a strength bar and rule checklist. */
+export function PasswordField({ label, error, hint, containerClassName, className, required, ...inputProps }: PasswordFieldProps) {
+  return (
+    <Field label={label} error={error} hint={hint} required={required} className={containerClassName}>
+      {({ id, describedBy, invalid }) => (
+        <PasswordInput
+          id={id}
+          aria-describedby={describedBy}
+          aria-invalid={invalid || undefined}
+          required={required}
+          className={cn(invalid && "border-destructive", className)}
+          {...inputProps}
+        />
+      )}
+    </Field>
+  );
+}
+
+type NumberFieldProps = Omit<NumberInputProps, "id"> & {
+  label: string;
+  error?: string | undefined;
+  hint?: ReactNode;
+  containerClassName?: string;
+};
+
+/** A number with steppers. `value` is `number | null`, so an empty field stays distinct from 0. */
+export function NumberField({ label, error, hint, containerClassName, className, required, ...inputProps }: NumberFieldProps) {
+  return (
+    <Field label={label} error={error} hint={hint} required={required} className={containerClassName}>
+      {({ id, describedBy, invalid }) => (
+        <NumberInput
           id={id}
           aria-describedby={describedBy}
           aria-invalid={invalid || undefined}

@@ -13,7 +13,9 @@ import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
 import { AccountTab } from "./learner/AccountTab";
@@ -175,14 +177,18 @@ export default function AdminLearnerPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {detail.user.status === "disabled" && <Badge variant="outline">Disabled</Badge>}
-          {detail.user.mustChangePassword && <Badge variant="outline">Awaiting first sign-in</Badge>}
+          {detail.user.status === "disabled" && <StatusBadge kind="user" status="disabled" />}
+          {detail.user.mustChangePassword && <Badge variant="progress">Awaiting first sign-in</Badge>}
           {detail.user.hardWarnings > 0 && (
-            <Badge variant="outline" className="border-destructive/50 text-destructive">
+            <Badge variant="danger">
               {detail.user.hardWarnings} hard warning{detail.user.hardWarnings === 1 ? "" : "s"}
             </Badge>
           )}
-          <Badge variant="outline">{detail.user.assessmentStatus ?? "No assessment yet"}</Badge>
+          {detail.user.assessmentStatus ? (
+            <StatusBadge kind="assessment" status={detail.user.assessmentStatus} />
+          ) : (
+            <Badge variant="outline">No assessment yet</Badge>
+          )}
         </div>
       </header>
 
@@ -227,7 +233,7 @@ export default function AdminLearnerPage() {
                   <motion.span
                     layoutId="learner-tab-marker"
                     className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-trailmark"
-                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    transition={spring}
                   />
                 ))}
             </button>

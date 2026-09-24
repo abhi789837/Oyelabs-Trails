@@ -35,10 +35,23 @@ Not yet installed: `@tanstack/react-table`, `@dnd-kit/*`, `cmdk`, `sonner`, `rec
       **Before-screenshots not yet captured** — they need the dev server plus seeded learners, and
       the two local dev servers were reaped for low memory earlier in the session. Capture them
       before U2 starts changing primitives, or the baseline is lost.
+      **This did not happen — U2 ran without them.** The U12 after-shots therefore have no
+      before-shot to compare against; capture a set from `main` if a true diff is ever needed.
 - [x] U1 Foundation — done in three commits: `0d03d33` motion, `1f5a3cb` React 19, Tailwind v4.
       Registries still to add to components.json when U2 first needs one.
-- [ ] U2 Tokens and primitives — buttons, inputs, badges, cards, `src/lib/motion.ts`
-- [ ] U3 Overlays — `useConfirm`, `useFormDialog`, `DetailSheet`, sonner, no-alert lint rule
+- [x] U2 Tokens and primitives — `src/lib/motion.ts` (durations, easings, one spring, `fadeUp` /
+      `scaleIn` / `fieldMessage` / `stagger`); `Button` gained `loading` (fixed width), a press
+      scale, two icon sizes and `-strong` focus rings; `Badge` gained `danger` and `brand`; **one
+      `StatusBadge`** covering all eight status enums replaced a dozen ad-hoc pills across 10
+      files; `Card` gained two elevations, tones and density; `Input` gained addons and a clear
+      button, plus new `PasswordInput` (strength meter + toggle), `NumberInput` and `TagInput`.
+      Gates green: typecheck, **300 tests** (289 + 11 new), build, content:check.
+      Known gaps: **no before-screenshots existed**, so "the trail did not move" is argued from the
+      diff rather than proven — `components/trail/` has one changed file (`TopicStatusBadge`, whose
+      class output is byte-identical) plus a `StatusDot` label dedupe, and `src/pages/` is
+      untouched. `TagInput` has no call site yet, and `ChallengeResult`'s spring was deliberately
+      left un-migrated so the topic page's checkmark keeps its overshoot (see PROGRESS.md).
+- [x] U3 Overlays — `useConfirm`/`useFormDialog`/`DetailSheet`, sonner, eslint `no-alert`. All nine native dialogs gone; zero `window.confirm` left in app code.
 - [ ] U4 DataTable kit + server query layer, with tests
 - [ ] U5 Shell — top bar, notification centre, user menu, command palette, sidebar
 - [ ] U6 Auth screens

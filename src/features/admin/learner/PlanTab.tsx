@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowLeft, Check, ChevronDown, ChevronRight, LoaderCircle, Minus, Plus } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, ChevronRight, Minus, Plus, Search } from "lucide-react";
 
 import type { TopicProgressValue } from "@shared/content";
 import type { PlanResponse } from "@shared/plans";
@@ -10,11 +10,13 @@ import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useTracks, type ModuleMeta, type TopicMeta, type TrackMeta } from "@/content";
 import { accentClasses, type AccentClasses } from "@/lib/accent";
 import { levelLabels, trackIcons } from "@/lib/track-meta";
+import { transition } from "@/lib/motion";
 import { cn, formatMinutes, formatMinutesCompact, formatTimestamp } from "@/lib/utils";
 
 /**
@@ -215,13 +217,14 @@ export function PlanTab({
           type="search"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
+          onClear={() => setFilter("")}
+          leading={<Search />}
           placeholder={openView ? `Filter ${openView.track.name} topics` : "Filter topics"}
           aria-label={openView ? `Filter topics in ${openView.track.name}` : "Filter topics across every track"}
-          className="max-w-xs"
+          containerClassName="max-w-xs"
         />
-        <Button onClick={() => void handlePublish()} disabled={!dirty || saving || selected.size === 0}>
-          {saving && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-          {saving ? "Publishing…" : "Publish plan"}
+        <Button loading={saving} onClick={() => void handlePublish()} disabled={!dirty || selected.size === 0}>
+          Publish plan
         </Button>
         {dirty && (
           <>
@@ -252,7 +255,7 @@ export function PlanTab({
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            transition={transition.base}
           >
             <TrackPanel
               view={openView}
@@ -274,7 +277,7 @@ export function PlanTab({
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            transition={transition.base}
           >
             <TrackBoard
               views={trackViews}
@@ -729,17 +732,17 @@ function TopicCell({
         {(touched || dropping) && (
           <span className="flex flex-wrap items-center gap-1.5">
             {status === "completed" && (
-              <Badge variant="success">
-                done<span className="sr-only"> — the learner has completed this topic</span>
-              </Badge>
+              <StatusBadge kind="topic" status="completed">
+                <span className="sr-only"> — the learner has completed this topic</span>
+              </StatusBadge>
             )}
             {status === "in-progress" && (
-              <Badge variant="progress">
-                started<span className="sr-only"> — the learner has work in progress here</span>
-              </Badge>
+              <StatusBadge kind="topic" status="in-progress">
+                <span className="sr-only"> — the learner has work in progress here</span>
+              </StatusBadge>
             )}
             {dropping && (
-              <Badge className="border-destructive/40 bg-destructive/10 text-destructive">
+              <Badge variant="danger">
                 removing
                 <span className="sr-only">
                   {touched

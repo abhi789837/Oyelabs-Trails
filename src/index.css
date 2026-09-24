@@ -134,6 +134,21 @@
   --animate-waypoint-pulse: waypoint-pulse 2.4s cubic-bezier(0.2, 0.6, 0.3, 1)
     infinite;
 
+  /* StatusBadge's live dot. Opacity only — a pulsing scale next to text is hard to read past.
+     The `prefers-reduced-motion` block at the end of this file flattens it, and StatusBadge
+     only applies it when the caller passes `live`, so a log of past events stays still. */
+  --animate-status-pulse: status-pulse 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes status-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+
   @keyframes waypoint-pulse {
     0% {
       transform: scale(1);

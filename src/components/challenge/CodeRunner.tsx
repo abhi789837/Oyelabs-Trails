@@ -6,6 +6,7 @@ import type { CodeAttemptResult, ServedCodeChallenge, ServedTopic } from "@share
 import { ApiRequestError } from "@/api/client";
 import { RichText } from "@/components/content/RichText";
 import { FormAlert } from "@/components/form/Field";
+import { useConfirm } from "@/components/overlays";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/AuthProvider";
 import { submitAttempt } from "@/features/challenge/api";
@@ -51,6 +52,7 @@ function writeDraft(key: string, value: string | null) {
  */
 export function CodeRunner({ topic, challenge }: CodeRunnerProps) {
   const { user } = useAuth();
+  const confirm = useConfirm();
   const applyAttempt = useProgressStore((s) => s.applyAttempt);
 
   // Keyed by user: a shared machine must not show one person's draft to the next.
@@ -104,8 +106,18 @@ export function CodeRunner({ topic, challenge }: CodeRunnerProps) {
     }
   };
 
-  const handleResetCode = () => {
-    if (code !== challenge.starterCode && !window.confirm("Replace your code with the original starter code?")) return;
+  const handleResetCode = async () => {
+    if (
+      code !== challenge.starterCode &&
+      !(await confirm({
+        title: "Start again from the starter code?",
+        body: "Everything you have written for this challenge is replaced. The draft saved in this browser goes with it, and there is no way back to it.",
+        confirmLabel: "Replace my code",
+        variant: "destructive",
+      }))
+    ) {
+      return;
+    }
     setCode(challenge.starterCode);
     setLocalRun(null);
     setResult(null);
@@ -145,7 +157,7 @@ export function CodeRunner({ topic, challenge }: CodeRunnerProps) {
           {submitting ? <LoaderCircle className="animate-spin" /> : <CloudUpload />}
           {submitting ? "Submitting" : "Submit for grading"}
         </Button>
-        <Button variant="ghost" onClick={handleResetCode} disabled={busy || code === challenge.starterCode}>
+        <Button variant="ghost" onClick={() => void handleResetCode()} disabled={busy || code === challenge.starterCode}>
           Reset to starter code
         </Button>
       </div>
