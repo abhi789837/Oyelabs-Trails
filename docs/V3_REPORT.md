@@ -92,12 +92,12 @@ That discipline caught things worth knowing:
 
 ## 4. Quality gates
 
-All run on 2026-09-23 at `2f8daec`.
+All re-run on 2026-09-24 at `4e48860`, after the post-v3 work in §10.
 
 | Gate | Command | Result |
 | --- | --- | --- |
 | Types | `npm run typecheck` | clean |
-| Tests | `npx vitest run` | **229 passed**, 14 files |
+| Tests | `npx vitest run` | **263 passed**, 16 files |
 | Content standards | `npm run content:check` | 67 modules, 715 topics, **0 errors, 0 warnings** |
 | Reference solutions | (part of `content:check`) | **103 of 103 execute and pass** |
 | Content types | `npm run content:types` | clean |
@@ -273,3 +273,73 @@ must-change-password gate correctly locks a freshly seeded superadmin out of eve
 4. `npm run content:check -- --module <moduleId>` until it is 0 errors.
 
 Topic ids are URL slugs and progress keys. **Never rename one.**
+
+
+## 10. After v3: what changed once it was running
+
+Everything below was requested after the build shipped and the app was live at
+`learn.oyegen.com`. Each is committed and pushed; none is covered by the §4 figures above except
+the test count, which rose from 229 to 263.
+
+### The AI call timeout was far too short (`25c9ac3`)
+
+Generation failed with `claude timed out after 120s`. Two minutes was never enough: one generation
+is not one call but a blueprint, an item batch **per area** (eight is normal), an explain batch and
+critic passes — a dozen or more round trips. The CLI providers are slower again, because each call
+starts a process and waits for a model to think.
+
+Default is now **15 minutes per call**, overridable with `AI_TIMEOUT_MS`. It is a safety net
+against a hung process, not a service target: it should sit well above the real work, so hitting it
+means something is wrong rather than merely slow.
+
+### An approval gate before release (`aadd36c`)
+
+A generated assessment now lands in **`awaiting_approval`** rather than `ready`. The superadmin
+reviews the pool and approves, or the existing sweeper releases it automatically after
+`AUTO_APPROVE_AFTER_MS` (5 minutes, named once in `shared/assessment.ts`).
+
+**Automatic release writes a different audit action from a human one** — `assessment.auto_approved`
+with a null actor, not a flag on a shared action — because "nobody looked at this" and "someone
+reviewed it" are different facts, and one action name would blur them. The admin UI says so in
+amber. Ten places enumerate assessment status; all ten were updated, since a missed one silently
+treats the new state as absent.
+
+**Five minutes is short for a real quality review.** Reading ~30 generated items properly takes
+longer. As a catch for obviously-broken output it is about right; as a genuine gate it is not.
+It is one constant if that judgement changes.
+
+### A live generation log (`aadd36c`)
+
+The blueprint job records a line per stage, streamed to the admin over the SSE feed the live board
+already holds open, and kept readable after the run. Capped at 400 lines per assessment.
+
+Two leaks were designed out rather than guarded against:
+
+- **The credential** — one write path through `AiService.redactSecrets`, which drops the plaintext
+  on the next line, so the "`revealSecret` has exactly one caller" guard still holds.
+- **Answer keys** — the drop reason in the log is a **closed union of codes**, never the prose.
+  `verifyCodeItem` returns `(expected X, got Y)` and the critic quotes the answer, so free-form
+  prose there would have leaked keys into a log whose whole purpose is being watched. The prose
+  stays on the item row, where the pool preview already shows keys to an admin who may see them.
+
+**Not covered by a test:** SSE delivery itself. `fastify.inject` cannot hold a stream open — the
+same gap the existing integrity feed has. The stored-and-read-back path, which is what survives a
+reload, is tested.
+
+### Deployment fixes found by running it (`4e40142`, `4e48860`, `2ef374f`)
+
+- **`.dockerignore` was missing.** `COPY . .` overwrote the Linux `node_modules` with the build
+  host's, and `better-sqlite3`/`isolated-vm` are native — so an image built from a Windows or macOS
+  checkout would have crashed at runtime with an opaque ELF error. It also copied `data/` (the
+  database and dev keys) into the build stage.
+- **`docker-compose.yml` pinned `INSTALL_CLAUDE_CLI: "0"`,** so a `--build-arg` install of the CLI
+  was silently undone by the next `docker compose up -d --build`, with nothing in the output to say
+  why. The args now interpolate from `.env`.
+- **`Logo` rendered two lockups.** It stacked a light and a dark image toggled by `dark:hidden`,
+  while callers also passed `hidden sm:block` for the responsive swap; Tailwind merges both onto
+  one element and `sm:block` beat the base `hidden` in *either* theme. The theme now picks the
+  source.
+- **The Caddyfile and README overstated the SSE flush.** Both claimed `flush_interval -1` was
+  required or the live feed would lag. Caddy's docs say `flush_interval` is *ignored* for
+  `Content-Type: text/event-stream`, which that route sets. The directive stays as defensive
+  config; the claim was corrected.

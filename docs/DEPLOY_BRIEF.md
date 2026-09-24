@@ -75,6 +75,17 @@ project, run `docker compose build` separately from `up -d` and do it at a quiet
 `NODE_ENV=production`, `DATA_DIR=/data`, `HOST=0.0.0.0` and `PORT=8787` are already correct in the
 example and are also set by compose.
 
+Two optional settings worth knowing about:
+
+- **`AI_TIMEOUT_MS`** (default 900000, 15 minutes) — how long one AI call may take. One assessment
+  generation is a dozen or more calls, and the CLI providers start a process per call, so this is
+  generous on purpose. It is a safety net against a hung process, not a target.
+- **`INSTALL_CLAUDE_CLI=1` / `INSTALL_CODEX_CLI=1`** — build the image with those CLIs, for the CLI
+  credential providers. An API key needs neither and is the recommended path. These are read at
+  **build** time: set them in `.env` and rebuild. They are read from `.env` rather than pinned in
+  `docker-compose.yml` precisely so a later `docker compose up -d --build` does not silently
+  uninstall them.
+
 The server **refuses to boot in production** without `APP_MASTER_KEY` and `SESSION_SECRET`, and
 rejects a key that does not decode to exactly 32 bytes.
 
@@ -188,6 +199,18 @@ docker compose logs -f oyelearn
 Then configure the reverse proxy per §5.2 and verify.
 
 ---
+
+## 6b. What an admin sees after deploying
+
+Two behaviours are worth knowing before you test the flow, because otherwise they look like faults:
+
+- **A generated assessment does not go straight to the learner.** It lands in `awaiting_approval`,
+  where the superadmin reviews the generated pool and approves it. If nobody approves within five
+  minutes, it releases automatically — and is marked as released *unreviewed*, which is a different
+  audit action from a human approval, not the same one with a flag.
+- **Generation streams a live log** to the admin while it runs, on the same SSE connection the live
+  board uses. It opens on its own for an attempt that is still generating, and stays readable
+  afterwards.
 
 ## 7. Verification
 
