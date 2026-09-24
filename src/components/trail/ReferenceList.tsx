@@ -97,7 +97,7 @@ function ReferenceItem({ resource, defaultOpen }: { resource: TopicResource; def
 
 function PreviewFrame({ id, resource }: { id: string; resource: TopicResource }) {
   const [state, setState] = useState<"loading" | "loaded" | "failed">("loading");
-  const timer = useRef<number>();
+  const timer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     timer.current = window.setTimeout(() => setState((s) => (s === "loading" ? "failed" : s)), PREVIEW_TIMEOUT_MS);

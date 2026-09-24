@@ -289,7 +289,7 @@ function CameraStep({
   onContinue,
   onCancel,
 }: {
-  videoRef: React.RefObject<HTMLVideoElement>;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
   sample: CalibrationSample | null;
   ready: boolean;
   onContinue: () => void;

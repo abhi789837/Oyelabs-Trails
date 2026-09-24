@@ -222,7 +222,7 @@ function SoftWarningToast({ warning, onDismiss }: { warning: SoftWarning; onDism
 // ---------------------------------------------------------------------------
 
 interface StatusStripProps {
-  videoRef: RefObject<HTMLVideoElement>;
+  videoRef: RefObject<HTMLVideoElement | null>;
   state: ProctorState;
   limit?: number;
   className?: string;
