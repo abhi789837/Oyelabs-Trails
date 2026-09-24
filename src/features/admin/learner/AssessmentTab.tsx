@@ -378,7 +378,7 @@ function ServedItemCard({ item, index }: { item: AnsweredItem; index: number }) 
                   "flex items-start gap-2 rounded-sm px-1.5 py-0.5",
                   isCorrect && "font-medium text-summit-strong",
                   picked && !isCorrect && "bg-destructive/[0.07] text-destructive",
-                  picked && isCorrect && "bg-summit/[0.08]",
+                  picked && isCorrect && "bg-summit/8",
                 )}
               >
                 {isCorrect ? (
@@ -434,7 +434,7 @@ function ServedItemCard({ item, index }: { item: AnsweredItem; index: number }) 
       )}
 
       {item.aiFeedback && (
-        <p className="mt-3 rounded-md border border-ridge/40 bg-ridge/[0.06] px-3 py-2 text-sm">
+        <p className="mt-3 rounded-md border border-ridge/40 bg-ridge/6 px-3 py-2 text-sm">
           <span className="font-medium">Rubric grader: </span>
           <span className="text-muted-foreground">{item.aiFeedback}</span>
         </p>

@@ -161,7 +161,7 @@ export function GenerationLog({
               {lines.map((line) => (
                 <li key={line.seq} className="flex gap-2 whitespace-pre-wrap py-0.5">
                   <span className="shrink-0 opacity-50 tabular">{clockOf(line.at)}</span>
-                  <span className={cn("w-[4.5rem] shrink-0 opacity-70", levelClass(line.level))}>{line.stage}</span>
+                  <span className={cn("w-18 shrink-0 opacity-70", levelClass(line.level))}>{line.stage}</span>
                   <span className={cn("min-w-0", levelClass(line.level))}>
                     {line.message}
                     {line.inputTokens !== null && (

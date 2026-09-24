@@ -321,7 +321,7 @@ function Attention({ to, label }: { to: string; label: string }) {
     <li>
       <Link
         to={to}
-        className="flex items-start gap-3 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3 text-sm transition-colors hover:bg-trailmark/[0.1]"
+        className="flex items-start gap-3 rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3 text-sm transition-colors hover:bg-trailmark/10"
       >
         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
         {label}

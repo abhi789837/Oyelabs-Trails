@@ -246,7 +246,7 @@ export default function AdminLearnerPage() {
             aria-labelledby={`learner-tab-${tab.id}`}
             tabIndex={0}
             hidden={!selected}
-            className={cn("mt-8 focus:outline-none", !selected && "hidden")}
+            className={cn("mt-8 focus:outline-hidden", !selected && "hidden")}
           >
             {tab.id === "profile" && (
               <ProfileTab userId={userId} profile={detail.profile} onSaved={handleProfileSaved} />

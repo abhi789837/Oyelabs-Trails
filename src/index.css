@@ -1,6 +1,172 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@theme {
+  --font-*: initial;
+  --font-brand: Sora, ui-sans-serif, system-ui, sans-serif;
+  --font-display: Sora, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-*: initial;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.375rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.625rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.5rem;
+  --text-xl--line-height: 2rem;
+  --text-xl--letter-spacing: -0.01em;
+  --text-2xl: 2rem;
+  --text-2xl--line-height: 2.5rem;
+  --text-2xl--letter-spacing: -0.02em;
+  --text-3xl: 3rem;
+  --text-3xl--line-height: 3.25rem;
+  --text-3xl--letter-spacing: -0.03em;
+
+  --color-paper: rgb(var(--paper));
+  --color-ink: rgb(var(--ink));
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+
+  --color-surface: rgb(var(--surface));
+  --color-surface-sunken: rgb(var(--surface-sunken));
+
+  --color-editor: rgb(var(--editor));
+  --color-editor-gutter: rgb(var(--editor-gutter));
+  --color-editor-foreground: rgb(var(--editor-foreground));
+
+  --color-brand-50: rgb(var(--brand-50));
+  --color-brand-100: rgb(var(--brand-100));
+  --color-brand-200: rgb(var(--brand-200));
+  --color-brand-300: rgb(var(--brand-300));
+  --color-brand-400: rgb(var(--brand-400));
+  --color-brand-500: rgb(var(--brand-500));
+  --color-brand-600: rgb(var(--brand-600));
+  --color-brand-700: rgb(var(--brand-700));
+  --color-brand-800: rgb(var(--brand-800));
+  --color-brand-900: rgb(var(--brand-900));
+  --color-brand-950: rgb(var(--brand-950));
+
+  --color-trailmark: rgb(var(--trailmark));
+  --color-trailmark-strong: rgb(var(--trailmark-strong));
+  --color-trailmark-foreground: rgb(var(--trailmark-foreground));
+
+  --color-summit: rgb(var(--summit));
+  --color-summit-strong: rgb(var(--summit-strong));
+  --color-summit-foreground: rgb(var(--summit-foreground));
+
+  --color-ridge: rgb(var(--ridge));
+  --color-ridge-strong: rgb(var(--ridge-strong));
+  --color-ridge-foreground: rgb(var(--ridge-foreground));
+
+  --color-glacier: rgb(var(--glacier));
+  --color-glacier-strong: rgb(var(--glacier-strong));
+  --color-glacier-foreground: rgb(var(--glacier-foreground));
+
+  --color-basalt: rgb(var(--basalt));
+  --color-basalt-strong: rgb(var(--basalt-strong));
+  --color-basalt-foreground: rgb(var(--basalt-foreground));
+
+  --color-canyon: rgb(var(--canyon));
+  --color-canyon-strong: rgb(var(--canyon-strong));
+  --color-canyon-foreground: rgb(var(--canyon-foreground));
+
+  --color-alpenglow: rgb(var(--alpenglow));
+  --color-alpenglow-strong: rgb(var(--alpenglow-strong));
+  --color-alpenglow-foreground: rgb(var(--alpenglow-foreground));
+
+  --color-lichen: rgb(var(--lichen));
+  --color-lichen-strong: rgb(var(--lichen-strong));
+  --color-lichen-foreground: rgb(var(--lichen-foreground));
+
+  --color-border: rgb(var(--border));
+  --color-input: rgb(var(--input));
+  --color-ring: rgb(var(--ring));
+
+  --color-primary: rgb(var(--primary));
+  --color-primary-strong: rgb(var(--primary-strong));
+  --color-primary-foreground: rgb(var(--primary-foreground));
+
+  --color-success: rgb(var(--summit));
+  --color-success-strong: rgb(var(--summit-strong));
+  --color-success-foreground: rgb(var(--summit-foreground));
+
+  --color-warning: rgb(var(--trailmark));
+  --color-warning-strong: rgb(var(--trailmark-strong));
+  --color-warning-foreground: rgb(var(--trailmark-foreground));
+
+  --color-secondary: rgb(var(--surface-sunken));
+  --color-secondary-foreground: rgb(var(--foreground));
+
+  --color-muted: rgb(var(--surface-sunken));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+
+  --color-accent: rgb(var(--surface-sunken));
+  --color-accent-foreground: rgb(var(--foreground));
+
+  --color-destructive: rgb(var(--destructive));
+  --color-destructive-foreground: rgb(var(--paper));
+
+  --color-card: rgb(var(--surface));
+  --color-card-foreground: rgb(var(--foreground));
+
+  --color-popover: rgb(var(--popover));
+  --color-popover-foreground: rgb(var(--popover-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --container-prose: 68ch;
+
+  --animate-waypoint-pulse: waypoint-pulse 2.4s cubic-bezier(0.2, 0.6, 0.3, 1)
+    infinite;
+
+  @keyframes waypoint-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(2.1);
+      opacity: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
 
 /*
  * Design tokens. Values are RGB channels so Tailwind opacity modifiers work.
@@ -173,12 +339,6 @@
      question would push the page wider than the viewport. */
   fieldset {
     min-width: 0;
-  }
-}
-
-@layer utilities {
-  .tabular {
-    font-variant-numeric: tabular-nums;
   }
 }
 

@@ -54,7 +54,7 @@ export function AssessmentBanner() {
           transition={{ duration: reduceMotion ? 0 : 0.3, ease: "easeOut" }}
           className={cn(
             "border-b",
-            copy.tone === "quiet" ? "bg-surface-sunken/50" : "border-trailmark/45 bg-trailmark/[0.08]",
+            copy.tone === "quiet" ? "bg-surface-sunken/50" : "border-trailmark/45 bg-trailmark/8",
           )}
         >
           <div className="mx-auto flex max-w-6xl flex-wrap items-start gap-x-4 gap-y-3 px-4 py-3.5 sm:px-8">

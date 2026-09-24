@@ -145,7 +145,7 @@ export default function AdminLivePage() {
               key={row.assessmentId}
               className={cn(
                 "rounded-md border px-4 py-3 transition-colors",
-                recentlyFlagged && "border-destructive/60 bg-destructive/[0.05]",
+                recentlyFlagged && "border-destructive/60 bg-destructive/5",
               )}
             >
               <div className="flex flex-wrap items-center gap-3">

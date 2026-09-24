@@ -40,7 +40,7 @@ export function AdminLayout() {
         Skip to content
       </a>
 
-      <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-sm">
         <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
           <Logo variant="mark" height={24} decorative className="sm:hidden" />
           <Logo variant="horizontal" height={22} decorative className="hidden sm:block" />
@@ -102,7 +102,7 @@ export function AdminLayout() {
             ))}
           </nav>
 
-          <main id="admin-main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-none">
+          <main id="admin-main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-hidden">
             <Outlet />
           </main>
         </div>

@@ -161,7 +161,7 @@ export default function AdminPoolPage() {
       {/* Said before the gate, not after it: whether to approve a thinner assessment or re-issue
           is the decision being made on this page. */}
       {thin && (
-        <div className="mt-4 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3">
+        <div className="mt-4 rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3">
           <p className="flex items-start gap-3 text-sm">
             <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
             <span>

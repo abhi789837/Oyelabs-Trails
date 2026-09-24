@@ -157,7 +157,7 @@ function ModuleNavItem({ module, track, onNavigate }: { module: ModuleMeta; trac
         onClick={onNavigate}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "flex items-center gap-2 rounded-md px-2 py-1 text-xs transition-colors hover:bg-foreground/[0.06]",
+          "flex items-center gap-2 rounded-md px-2 py-1 text-xs transition-colors hover:bg-foreground/6",
           active ? "font-medium text-foreground" : "text-muted-foreground",
         )}
       >

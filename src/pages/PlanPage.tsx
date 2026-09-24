@@ -142,7 +142,7 @@ export default function PlanPage() {
   return (
     <div>
       <section className="relative overflow-hidden border-b">
-        <Contours className="text-foreground/[0.06]" seed={4} />
+        <Contours className="text-foreground/6" seed={4} />
         <div className="relative mx-auto max-w-5xl px-4 pb-10 pt-12 sm:px-8">
           <h1 className="text-2xl font-bold sm:text-3xl">My plan</h1>
 

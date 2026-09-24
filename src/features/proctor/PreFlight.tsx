@@ -261,7 +261,7 @@ function ConsentStep({
       </div>
 
       {error && (
-        <p role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/[0.06] px-3 py-2 text-sm text-destructive">
+        <p role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/6 px-3 py-2 text-sm text-destructive">
           {error}
         </p>
       )}
@@ -463,7 +463,7 @@ function EnvironmentStep({
       </h2>
 
       {blocked ? (
-        <div role="alert" className="mt-4 max-w-prose space-y-3 rounded-md border border-destructive/40 bg-destructive/[0.06] px-4 py-3 text-sm text-destructive">
+        <div role="alert" className="mt-4 max-w-prose space-y-3 rounded-md border border-destructive/40 bg-destructive/6 px-4 py-3 text-sm text-destructive">
           {environment.coarsePointer && (
             <p>
               This assessment needs a desktop or laptop with a keyboard and mouse. The coding items

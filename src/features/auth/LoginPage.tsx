@@ -49,7 +49,7 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex min-h-dvh items-center justify-center overflow-hidden px-4 py-12">
-      <Contours className="text-basalt/[0.14] dark:text-basalt/[0.10]" seed={3} rings={14} />
+      <Contours className="text-basalt/[0.14] dark:text-basalt/10" seed={3} rings={14} />
 
       <div className="relative w-full max-w-sm">
         <div className="flex flex-col items-start">

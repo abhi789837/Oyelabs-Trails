@@ -104,7 +104,7 @@ export default function AdminAiPage() {
                 return (
                   <li
                     key={credential.id}
-                    className={cn("rounded-md border px-4 py-3", active && "border-summit/60 bg-summit/[0.05]")}
+                    className={cn("rounded-md border px-4 py-3", active && "border-summit/60 bg-summit/5")}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -325,7 +325,7 @@ function AddCredentialForm({ onAdded }: { onAdded: () => Promise<void> }) {
         </Field>
 
         {copy.policyWarning && (
-          <div className="flex gap-3 rounded-md border border-destructive/40 bg-destructive/[0.05] px-4 py-3 text-sm">
+          <div className="flex gap-3 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
             <p className="max-w-prose">{copy.policyWarning}</p>
           </div>

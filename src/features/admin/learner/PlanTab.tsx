@@ -210,7 +210,7 @@ export function PlanTab({
         </div>
       )}
 
-      <div className="sticky top-14 z-10 -mx-4 mt-4 flex flex-wrap items-center gap-3 border-b bg-background/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
+      <div className="sticky top-14 z-10 -mx-4 mt-4 flex flex-wrap items-center gap-3 border-b bg-background/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6">
         <Input
           type="search"
           value={filter}
@@ -697,7 +697,7 @@ function TopicCell({
       className={cn(
         "h-full transition-colors",
         isSelected ? cn(accent.border, accent.soft) : "hover:bg-surface-sunken/50",
-        dropping && "border-destructive/60 bg-destructive/[0.06]",
+        dropping && "border-destructive/60 bg-destructive/6",
       )}
     >
       <button

@@ -36,7 +36,7 @@ export function AppShell() {
       <TopBar />
       <div className="flex flex-1">
         <Sidebar />
-        <main id="main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-none">
+        <main id="main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-hidden">
           {/* Above the routed content, and outside the route transition, so it neither re-animates
               nor re-announces every time the learner moves around. */}
           <AssessmentBanner />

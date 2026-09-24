@@ -263,7 +263,7 @@ export default function AssessmentPage() {
         {error && <div className="mt-6"><FormAlert>{error}</FormAlert></div>}
 
         {proctor.cameraError && (
-          <div className="mt-6 flex gap-3 rounded-md border border-destructive/40 bg-destructive/[0.06] px-4 py-3 text-sm">
+          <div className="mt-6 flex gap-3 rounded-md border border-destructive/40 bg-destructive/6 px-4 py-3 text-sm">
             <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
             <p>{proctor.cameraError}</p>
           </div>
@@ -360,7 +360,7 @@ function WaitingScreen({ assessment, onDone }: { assessment: MyAssessment; onDon
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-4 py-12 text-center">
-      <Contours className="text-basalt/[0.12]" seed={7} rings={14} />
+      <Contours className="text-basalt/12" seed={7} rings={14} />
       <div className="relative flex flex-col items-center">
         <Logo variant="stacked" height={64} className="mb-8" />
         {children}

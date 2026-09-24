@@ -100,7 +100,7 @@ export default function AdminAuditPage() {
         </p>
       ) : (
         <div className="mt-6 overflow-x-auto rounded-md border">
-          <table className="w-full min-w-[60rem] border-collapse text-sm">
+          <table className="w-full min-w-240 border-collapse text-sm">
             <thead>
               <tr className="border-b bg-surface-sunken/50 text-left">
                 <Th className="w-44">Time</Th>

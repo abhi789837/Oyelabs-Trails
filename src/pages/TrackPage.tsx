@@ -66,7 +66,7 @@ export default function TrackPage() {
   return (
     <div>
       <header className="relative overflow-hidden border-b">
-        <Contours className="text-foreground/[0.06]" seed={track.modules.length} />
+        <Contours className="text-foreground/6" seed={track.modules.length} />
         <div className="relative mx-auto max-w-5xl px-4 pb-10 pt-8 sm:px-8">
           <Breadcrumbs items={[{ label: "Dashboard", to: "/" }, { label: track.name }]} />
 

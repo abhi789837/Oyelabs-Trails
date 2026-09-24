@@ -90,7 +90,7 @@ export function IntegrityTimeline({ assessmentId }: { assessmentId: string }) {
               key={event.id}
               className={cn(
                 "rounded-md border px-4 py-3",
-                event.counted && event.severity === "hard" && "border-destructive/50 bg-destructive/[0.04]",
+                event.counted && event.severity === "hard" && "border-destructive/50 bg-destructive/4",
               )}
             >
               <div className="flex flex-wrap items-center gap-2">

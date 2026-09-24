@@ -61,10 +61,10 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
   const { result, model, createdAt } = data.evaluation;
   const integrityTone =
     result.integrity.assessment === "clean"
-      ? "border-summit/40 bg-summit/[0.06]"
+      ? "border-summit/40 bg-summit/6"
       : result.integrity.assessment === "minor_concerns"
         ? "border-trailmark/50 bg-trailmark/[0.07]"
-        : "border-destructive/50 bg-destructive/[0.06]";
+        : "border-destructive/50 bg-destructive/6";
 
   return (
     <div className="space-y-8">
@@ -81,7 +81,7 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
       </div>
 
       {result.serverWarnings && result.serverWarnings.length > 0 && (
-        <div className="rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3">
+        <div className="rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3">
           <p className="flex items-center gap-2 text-sm font-medium">
             <AlertTriangle className="h-4 w-4 text-trailmark-strong" aria-hidden="true" />
             The server changed the proposed plan

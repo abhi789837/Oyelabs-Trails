@@ -50,7 +50,7 @@ export function ApprovalBanner({
   };
 
   return (
-    <div className="w-full rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3">
+    <div className="w-full rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Timer className="h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
         <p className="text-sm">

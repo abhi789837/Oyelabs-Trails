@@ -78,7 +78,7 @@ export function TextField({ label, error, hint, containerClassName, className, r
 export function FormAlert({ children }: { children: ReactNode }) {
   if (!children) return null;
   return (
-    <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/[0.06] px-3 py-2 text-sm text-destructive">
+    <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/6 px-3 py-2 text-sm text-destructive">
       {children}
     </p>
   );

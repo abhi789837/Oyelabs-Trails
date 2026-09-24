@@ -104,9 +104,9 @@ export function HardWarningModal({
   return (
     <Dialog.Root open modal>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[70] bg-ink/70 backdrop-blur-sm" />
+        <Dialog.Overlay className="fixed inset-0 z-70 bg-ink/70 backdrop-blur-xs" />
         <Dialog.Content
-          className="fixed inset-0 z-[70] flex items-center justify-center p-4 outline-none"
+          className="fixed inset-0 z-70 flex items-center justify-center p-4 outline-hidden"
           // A warning you can dismiss with Escape or a stray click is not a warning.
           onEscapeKeyDown={(event) => event.preventDefault()}
           onPointerDownOutside={(event) => event.preventDefault()}
@@ -119,7 +119,7 @@ export function HardWarningModal({
             className="w-full max-w-lg rounded-lg border border-destructive/40 bg-background p-6 shadow-2xl sm:p-8"
           >
             <span
-              className="mb-5 flex h-11 w-11 items-center justify-center rounded-md bg-destructive/[0.12] text-destructive"
+              className="mb-5 flex h-11 w-11 items-center justify-center rounded-md bg-destructive/12 text-destructive"
               aria-hidden="true"
             >
               <ShieldAlert className="h-5 w-5" />
@@ -179,7 +179,7 @@ export function SoftWarningToasts({ warnings, onDismiss }: SoftWarningToastsProp
     <div
       aria-live="polite"
       aria-atomic="false"
-      className="pointer-events-none fixed inset-x-3 bottom-3 z-[60] flex flex-col items-end gap-2 sm:inset-x-auto sm:right-5 sm:bottom-5"
+      className="pointer-events-none fixed inset-x-3 bottom-3 z-60 flex flex-col items-end gap-2 sm:inset-x-auto sm:right-5 sm:bottom-5"
     >
       {warnings.map((warning) => (
         <SoftWarningToast key={warning.id} warning={warning} onDismiss={onDismiss} />
@@ -319,11 +319,11 @@ export function Watermark({ name, username, assessmentId, className }: Watermark
       aria-hidden="true"
       className={cn("pointer-events-none absolute inset-0 select-none overflow-hidden", className)}
     >
-      <div className="absolute left-1/2 top-1/2 w-[190%] -translate-x-1/2 -translate-y-1/2 -rotate-[24deg] space-y-10">
+      <div className="absolute left-1/2 top-1/2 w-[190%] -translate-x-1/2 -translate-y-1/2 rotate-[-24deg] space-y-10">
         {rows.map((row) => (
           <p
             key={row}
-            className="whitespace-nowrap font-mono text-[11px] tracking-wide text-foreground/[0.055]"
+            className="whitespace-nowrap font-mono text-[11px] tracking-wide text-foreground/5.5"
           >
             {`${label} `.repeat(6)}
           </p>

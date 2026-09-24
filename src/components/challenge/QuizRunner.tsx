@@ -229,8 +229,8 @@ function OptionRow({
       className={cn(
         "flex cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 text-sm transition-colors",
         state === "open" && "hover:bg-surface-sunken/60",
-        state === "correct" && "border-summit/60 bg-summit/[0.08]",
-        state === "wrong" && "border-destructive/60 bg-destructive/[0.06]",
+        state === "correct" && "border-summit/60 bg-summit/8",
+        state === "wrong" && "border-destructive/60 bg-destructive/6",
         state === "neutral" && "opacity-70",
         submitted && "cursor-default",
       )}

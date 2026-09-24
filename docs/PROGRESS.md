@@ -176,6 +176,14 @@ a real credential. That is the first thing to check once one is added.
 
 ## UI overhaul decisions
 
+- **The Tailwind v4 upgrade tool corrupted curriculum content, and was reverted there.** It
+  renames the `shadow` utility to `shadow-sm` and applied that to every occurrence of the *word*
+  in 19 content files: "a temporary shadow database" became "a temporary shadow-sm database", in
+  summaries and quiz options. It made the same class of mistake in app code, rewriting Badge's
+  `variant="outline"` prop to `"outline-solid"` in three places. Both are blind token replacement
+  in strings that are not class names. `src/content/` was reverted wholesale and the three props
+  restored by hand; only class strings were kept. **Never run a codemod across `src/content/`.**
+
 - **Branch `ui-overhaul`, cut from `main` at `2e402f6`.** `main` is what the live deployment runs,
   so nothing reaches it until the branch is merged deliberately.
 - **The `no-alert` lint rule must exempt `src/content/**`.** A grep for `alert(`/`confirm(`/

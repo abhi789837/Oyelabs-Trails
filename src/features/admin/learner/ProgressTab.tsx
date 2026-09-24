@@ -147,7 +147,7 @@ export function ProgressTab({
         </p>
       ) : (
         <div className="mt-6 overflow-x-auto rounded-md border">
-          <table className="w-full min-w-[52rem] border-collapse text-sm">
+          <table className="w-full min-w-208 border-collapse text-sm">
             <thead>
               <tr className="border-b bg-surface-sunken/50 text-left">
                 <Th>Topic</Th>

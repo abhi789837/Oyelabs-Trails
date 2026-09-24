@@ -35,7 +35,8 @@ Not yet installed: `@tanstack/react-table`, `@dnd-kit/*`, `cmdk`, `sonner`, `rec
       **Before-screenshots not yet captured** — they need the dev server plus seeded learners, and
       the two local dev servers were reaped for low memory earlier in the session. Capture them
       before U2 starts changing primitives, or the baseline is lost.
-- [ ] U1 Foundation — framer-motion → motion, React 19, Tailwind v4, registries in components.json
+- [x] U1 Foundation — done in three commits: `0d03d33` motion, `1f5a3cb` React 19, Tailwind v4.
+      Registries still to add to components.json when U2 first needs one.
 - [ ] U2 Tokens and primitives — buttons, inputs, badges, cards, `src/lib/motion.ts`
 - [ ] U3 Overlays — `useConfirm`, `useFormDialog`, `DetailSheet`, sonner, no-alert lint rule
 - [ ] U4 DataTable kit + server query layer, with tests

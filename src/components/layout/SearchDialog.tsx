@@ -144,7 +144,7 @@ export function SearchDialog() {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onInputKey}
               placeholder="Search topics and camps, e.g. closures, indexes, RAG"
-              className="h-12 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              className="h-12 flex-1 bg-transparent text-sm outline-hidden placeholder:text-muted-foreground"
               role="combobox"
               aria-expanded={results.length > 0}
               aria-controls="search-results"
