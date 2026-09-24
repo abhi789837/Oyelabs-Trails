@@ -21,7 +21,8 @@ export function MobileNav() {
           <SheetDescription className="sr-only">Navigate between the dashboard and the four learning trails.</SheetDescription>
         </div>
         <div className="flex-1 overflow-y-auto px-3 py-4">
-          <TrackNav onNavigate={() => setOpen(false)} />
+          {/* Its own marker group: the desktop sidebar can be mounted at the same time. */}
+          <TrackNav group="mobile-nav" onNavigate={() => setOpen(false)} />
         </div>
       </SheetContent>
     </Sheet>

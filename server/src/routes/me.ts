@@ -1,14 +1,17 @@
 import type { FastifyInstance } from "fastify";
 
 import { desc, eq } from "drizzle-orm";
+import { z } from "zod";
 
 import type { EvaluationResult, MyEvaluation } from "../../../shared/assessment";
 import type { ManifestResponse, ProgressResponse } from "../../../shared/content";
 import { markInProgressRequestSchema } from "../../../shared/content";
+import type { NotificationsResponse } from "../../../shared/notifications";
 import { requireActiveUser } from "../auth/guards";
 import { filterManifest } from "../content/filter";
 import { schema } from "../db";
 import { notFound, parseOrThrow } from "../lib/errors";
+import { listNotifications, markAllRead, unreadCount } from "../lib/notify";
 import { allowedTopicIdsFor, latestPublishedPlan } from "../plans/repo";
 import { getProgress, markInProgress } from "../progress/repo";
 
@@ -90,6 +93,30 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
         estimatedHours: result.plan.estimatedHours,
       },
     };
+  });
+
+  /**
+   * My notifications, for the bell in the app shell.
+   *
+   * `notify()` already writes rows addressed to learners — "your placement assessment is ready",
+   * "your learning plan is ready", "your assessment was ended" — but until now the only way to
+   * read a notification was `/api/admin/notifications`, which a learner cannot call. So the shell
+   * reads this instead, for both roles: it is the same table, scoped to whoever is asking, which
+   * keeps one notification centre in one place rather than one per role.
+   */
+  app.get("/api/me/notifications", async (request): Promise<NotificationsResponse> => {
+    const user = requireActiveUser(request);
+    const { limit } = parseOrThrow(
+      z.object({ limit: z.coerce.number().int().min(1).max(100).default(30) }),
+      request.query,
+    );
+    return { notifications: listNotifications(app.db, user.id, limit), unread: unreadCount(app.db, user.id) };
+  });
+
+  app.post("/api/me/notifications/read", async (request) => {
+    const user = requireActiveUser(request);
+    markAllRead(app.db, user.id);
+    return { ok: true };
   });
 
   /** The learner's own plan. The admin's view of someone else's plan lives under /api/admin. */

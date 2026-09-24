@@ -52,13 +52,13 @@ Not yet installed: `@tanstack/react-table`, `@dnd-kit/*`, `cmdk`, `sonner`, `rec
       untouched. `TagInput` has no call site yet, and `ChallengeResult`'s spring was deliberately
       left un-migrated so the topic page's checkmark keeps its overshoot (see PROGRESS.md).
 - [x] U3 Overlays — `useConfirm`/`useFormDialog`/`DetailSheet`, sonner, eslint `no-alert`. All nine native dialogs gone; zero `window.confirm` left in app code.
-- [ ] U4 DataTable kit + server query layer, with tests
-- [ ] U5 Shell — top bar, notification centre, user menu, command palette, sidebar
-- [ ] U6 Auth screens
+- [x] U4 DataTable kit + server query layer — 6 table specs, 46 SQL tests against real SQLite
+- [x] U5 Shell — notification centre (incl. the missing learner route), command palette, sidebar
+- [x] U6 Auth screens — and two real fixes: the leaky error path and the client/server rule mismatch
 - [ ] U7 Admin — overview, people, onboarding
 - [ ] U8 Admin — learner detail tabs, assessments, live
 - [ ] U9 Admin — AI connection, integrity, audit, curriculum browser
-- [ ] U10 Learner — pre-flight, runner, evaluating, plan filters, dashboard, certificate
+- [x] U10 Learner — pre-flight, runner, evaluating, plan filters, certificate. Trail and topic untouched
 - [ ] U11 Quality — accessibility, responsive, dark mode, performance, Lighthouse, delete superseded components
 - [ ] U12 After screenshots + `docs/UI_REPORT.md`
 

@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Download, LoaderCircle, Lock } from "lucide-react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { useReducedMotion } from "motion/react";
+import { Download, Lock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import { CertificateView } from "@/components/certificate/CertificateView";
@@ -17,7 +18,46 @@ import { buildCertificateData, normalizeName } from "@/lib/certificate";
 import { cn } from "@/lib/utils";
 import { useProfileStore } from "@/store/profileStore";
 import { useProgressStore } from "@/store/progressStore";
+
+import { SectionHeading } from "./parts/Stats";
 import NotFoundPage from "./NotFoundPage";
+
+/**
+ * Loaded only once someone has actually reached a summit. Everyone else never fetches the chunk.
+ */
+const Confetti = lazy(() => import("@/components/certificate/Confetti"));
+
+const CELEBRATED_KEY = "oyelearn.certificate.celebrated";
+
+/**
+ * Which summits this browser has already celebrated, keyed by track and completion time.
+ *
+ * Keyed by the completion timestamp as well as the track so a re-issued plan that is finished
+ * again is a new event, and a reload of the same one is not. It lives in `localStorage` because
+ * "have I already seen this animation in this browser" is exactly the kind of per-viewer
+ * convenience that does not belong on a server — and it has to survive that storage being blocked
+ * or cleared, in which case the worst outcome is confetti twice.
+ */
+function alreadyCelebrated(key: string): boolean {
+  try {
+    const raw = window.localStorage.getItem(CELEBRATED_KEY);
+    return raw ? (JSON.parse(raw) as string[]).includes(key) : false;
+  } catch {
+    return false;
+  }
+}
+
+function markCelebrated(key: string): void {
+  try {
+    const raw = window.localStorage.getItem(CELEBRATED_KEY);
+    const seen = raw ? (JSON.parse(raw) as string[]) : [];
+    if (seen.includes(key)) return;
+    // Bounded: one entry per track per completion, and nobody finishes twenty trails twice.
+    window.localStorage.setItem(CELEBRATED_KEY, JSON.stringify([...seen, key].slice(-40)));
+  } catch {
+    // Private window or blocked site data. The burst simply plays again next time.
+  }
+}
 
 export default function CertificatePage() {
   const { trackId } = useParams();
@@ -78,8 +118,10 @@ function CertificateContent({ track }: { track: TrackMeta }) {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold">Camps still to finish</h2>
-            <ul className="mt-2 divide-y border-y">
+            <SectionHeading as="h3">
+              Camps still to finish
+            </SectionHeading>
+            <ul className="mt-3 divide-y border-y">
               {track.modules.map((module) => {
                 const s = summarizeModule(module, progress);
                 if (s.isComplete) return null;
@@ -128,10 +170,20 @@ function UnlockedCertificate({ track, completedAt }: { track: TrackMeta; complet
   const progress = useProgressStore((s) => s.progress);
   const learnerName = useProfileStore((s) => s.learnerName);
   const setLearnerName = useProfileStore((s) => s.setLearnerName);
+  const reduceMotion = useReducedMotion();
   const [status, setStatus] = useState<"idle" | "working" | "error">("idle");
+  const [celebrating, setCelebrating] = useState(false);
   const accent = accentClasses[track.accentToken];
   const data = buildCertificateData(track, progress, learnerName, completedAt);
   const hasName = normalizeName(learnerName).length > 0;
+
+  // Once per unlock, and never on a revisit: the first time is a moment, the fifth is noise.
+  const celebrationKey = `${track.id}:${completedAt}`;
+  useEffect(() => {
+    if (alreadyCelebrated(celebrationKey)) return;
+    markCelebrated(celebrationKey);
+    if (!reduceMotion) setCelebrating(true);
+  }, [celebrationKey, reduceMotion]);
 
   const handleDownload = async () => {
     setStatus("working");
@@ -147,11 +199,19 @@ function UnlockedCertificate({ track, completedAt }: { track: TrackMeta; complet
 
   return (
     <div className="mt-8">
+      {celebrating && (
+        <Suspense fallback={null}>
+          <Confetti accentToken={track.accentToken} onDone={() => setCelebrating(false)} />
+        </Suspense>
+      )}
+
       <h1 className="text-2xl font-bold sm:text-3xl">{track.name} certificate</h1>
       <p className="mt-3 max-w-prose text-muted-foreground">
         Summit reached. Add the name you'd like printed, check the preview, then download the PDF.
       </p>
 
+      {/* The download is the only thing anyone came here to do, so it is the only filled button on
+          the page and the largest control on it. Everything else is a field or a note. */}
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-end">
         <div className="w-full max-w-sm">
           <Label htmlFor="learner-name">Name on the certificate</Label>
@@ -166,8 +226,14 @@ function UnlockedCertificate({ track, completedAt }: { track: TrackMeta; complet
             aria-describedby="learner-name-note"
           />
         </div>
-        <Button onClick={handleDownload} disabled={!hasName || status === "working"} className={cn(accent.solid)}>
-          {status === "working" ? <LoaderCircle className="animate-spin" /> : <Download />}
+        <Button
+          size="lg"
+          onClick={handleDownload}
+          disabled={!hasName}
+          loading={status === "working"}
+          className={cn(accent.solid)}
+        >
+          <Download aria-hidden="true" />
           {status === "working" ? "Preparing PDF" : "Download PDF"}
         </Button>
       </div>

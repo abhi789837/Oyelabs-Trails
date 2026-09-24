@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { LoaderCircle, Play } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Play } from "lucide-react";
 
 import type { AnswerRequest, ServedItem } from "@shared/assessment";
 
@@ -11,6 +11,8 @@ import { runVisibleTests, type LocalRunOutcome } from "@/lib/codeRunner";
 import { seededOrder } from "@/lib/shuffle";
 import { cn } from "@/lib/utils";
 
+import { TimerRing } from "./TimerRing";
+
 /**
  * One assessment item, for every kind in §9.3.
  *
@@ -21,6 +23,11 @@ import { cn } from "@/lib/utils";
  * - **No going back.** There is one item on screen and one button.
  * - **No paste, anywhere.** Including code items — brief §18 answer 3. The handler is here as
  *   well as in the proctor engine so the field itself refuses it even if the engine is starting up.
+ *
+ * The options are cards with a whole-row hit area and a number key each. Over an hour of
+ * questions, moving a mouse to a 16px radio and back is most of the physical work of the test;
+ * pressing 1 to 6 removes it. The shortcut is shown on the card rather than explained in a
+ * footnote, because a shortcut nobody can see is a shortcut nobody uses.
  */
 export interface ItemRunnerProps {
   item: ServedItem;
@@ -29,6 +36,9 @@ export interface ItemRunnerProps {
   submitting: boolean;
   onSubmit: (answer: AnswerRequest) => void;
 }
+
+/** Number keys are offered for the first six options; nothing in the pool serves more than that. */
+const MAX_SHORTCUTS = 6;
 
 export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunnerProps) {
   const [selected, setSelected] = useState<number[]>([]);
@@ -51,6 +61,51 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
   // Shuffled for display; the original indices are what gets sent, so the server never needs to
   // know about the shuffle.
   const order = useMemo(() => seededOrder(options.length, item.id), [options.length, item.id]);
+
+  /**
+   * The ring needs a denominator, and the server sends an absolute `expiresAt` rather than a
+   * budget. The first tick after this item is served is that budget — it is what the learner
+   * actually has from the moment they first see the question, which is the only honest thing to
+   * measure the ring against. (After a mid-question refresh it is the time that was left then,
+   * so the ring starts full again; the number beside it stays the truth either way.)
+   */
+  const budgetRef = useRef(0);
+  if (budgetRef.current === 0 && secondsLeft > 0) budgetRef.current = secondsLeft;
+
+  const toggle = (index: number) => {
+    if (multi) {
+      setSelected((current) => (current.includes(index) ? current.filter((i) => i !== index) : [...current, index]));
+    } else {
+      setSelected([index]);
+    }
+  };
+
+  // 1–6 pick the option with that number on it. Ignored while a field has focus, so typing "3"
+  // into a written answer does not silently change a multiple-choice selection somewhere above it.
+  useEffect(() => {
+    if (options.length === 0) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.isContentEditable) return;
+      const tag = target?.tagName;
+      if (tag === "TEXTAREA" || tag === "SELECT") return;
+      // Only *text-entry* fields swallow the key. A focused checkbox or radio is one of these very
+      // options — after picking the first one with the mouse, "2" must still pick the second.
+      if (tag === "INPUT") {
+        const type = (target as HTMLInputElement).type;
+        if (type !== "checkbox" && type !== "radio") return;
+      }
+
+      const position = Number(event.key) - 1;
+      if (!Number.isInteger(position) || position < 0 || position >= Math.min(order.length, MAX_SHORTCUTS)) return;
+      event.preventDefault();
+      toggle(order[position]);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+    // `toggle` closes over `multi` only, which cannot change for a given item.
+  }, [order, options.length, multi]);
 
   const blockPaste = (event: React.ClipboardEvent) => {
     event.preventDefault();
@@ -95,22 +150,21 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
       {options.length > 0 && (
         <fieldset className="mt-6">
           <legend className="sr-only">Answer</legend>
+          <p className="mb-3 font-mono text-xs text-muted-foreground">
+            {multi ? "Choose every option that applies." : "Choose one."} Press its number to pick it.
+          </p>
           {multi ? (
             <div className="space-y-2" role="group">
-              {order.map((index) => (
-                <OptionRow key={index} checked={selected.includes(index)}>
+              {order.map((index, position) => (
+                <OptionCard key={index} checked={selected.includes(index)} position={position}>
                   <input
                     type="checkbox"
                     className="mt-0.5 h-4 w-4 shrink-0 accent-[rgb(var(--trailmark))]"
                     checked={selected.includes(index)}
-                    onChange={() =>
-                      setSelected((current) =>
-                        current.includes(index) ? current.filter((i) => i !== index) : [...current, index],
-                      )
-                    }
+                    onChange={() => toggle(index)}
                   />
                   <InlineText text={options[index]} />
-                </OptionRow>
+                </OptionCard>
               ))}
             </div>
           ) : (
@@ -119,11 +173,11 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
               onValueChange={(value) => setSelected([Number(value)])}
               className="space-y-2"
             >
-              {order.map((index) => (
-                <OptionRow key={index} checked={selected[0] === index}>
+              {order.map((index, position) => (
+                <OptionCard key={index} checked={selected[0] === index} position={position}>
                   <RadioGroupItem value={String(index)} id={`${item.id}-${index}`} className="mt-0.5 shrink-0" />
                   <InlineText text={options[index]} />
-                </OptionRow>
+                </OptionCard>
               ))}
             </RadioGroup>
           )}
@@ -174,8 +228,8 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
         <div className="mt-6" onPaste={blockPaste}>
           <CodeEditor value={code} onChange={setCode} fileName={`${item.payload.functionName}.js`} />
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <Button variant="outline" size="sm" onClick={() => void handleRunTests()} disabled={running}>
-              {running ? <LoaderCircle className="animate-spin" aria-hidden="true" /> : <Play aria-hidden="true" />}
+            <Button variant="outline" size="sm" onClick={() => void handleRunTests()} loading={running}>
+              <Play aria-hidden="true" />
               Run the example tests
             </Button>
             <span className="font-mono text-xs text-muted-foreground">
@@ -201,14 +255,18 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
         </div>
       )}
 
-      <div className="mt-8 flex flex-wrap items-center gap-4 border-t pt-6">
-        <Button onClick={handleSubmit} disabled={submitting}>
-          {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-          {submitting ? "Saving…" : answered ? "Submit and continue" : "Skip this question"}
+      <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4 border-t pt-6">
+        <Button onClick={handleSubmit} loading={submitting} size="lg">
+          {answered ? "Submit and continue" : "Skip this question"}
         </Button>
-        <p className="font-mono text-xs text-muted-foreground" aria-live="off">
-          {secondsLeft > 0 ? `${Math.floor(secondsLeft / 60)}:${String(secondsLeft % 60).padStart(2, "0")} on this question` : "Time is up"}
-        </p>
+
+        <div className="flex items-center gap-3">
+          <TimerRing secondsLeft={secondsLeft} totalSeconds={budgetRef.current} />
+          <p className="font-mono text-xs text-muted-foreground" aria-live="off">
+            {secondsLeft > 0 ? "left on this question" : "Time is up"}
+          </p>
+        </div>
+
         <p className="w-full text-xs text-muted-foreground">
           You cannot come back to a question once you move on, and you will not be told whether you were right.
         </p>
@@ -217,14 +275,44 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
   );
 }
 
-function OptionRow({ checked, children }: { checked: boolean; children: React.ReactNode }) {
+/**
+ * One option.
+ *
+ * The whole card is the label, so the hit area is the row rather than the control — the single
+ * biggest usability difference on a page someone sits with for an hour. Selection is carried by
+ * the border, a tint and the numbered key going solid, so it survives both themes and does not
+ * depend on colour alone.
+ */
+function OptionCard({
+  checked,
+  position,
+  children,
+}: {
+  checked: boolean;
+  position: number;
+  children: React.ReactNode;
+}) {
   return (
     <label
       className={cn(
-        "flex cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 text-sm transition-colors",
-        checked ? "border-trailmark bg-trailmark/[0.07]" : "hover:bg-surface-sunken/60",
+        "flex cursor-pointer items-start gap-3 rounded-md border px-4 py-3.5 text-sm transition-colors duration-[120ms]",
+        "focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary-strong",
+        checked ? "border-trailmark bg-trailmark/[0.09]" : "border-border hover:border-basalt/60 hover:bg-surface-sunken/60",
       )}
     >
+      {position < MAX_SHORTCUTS && (
+        <span
+          aria-hidden="true"
+          className={cn(
+            "mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded border font-mono text-[11px] tabular",
+            checked
+              ? "border-trailmark bg-trailmark text-trailmark-foreground"
+              : "border-border bg-surface text-muted-foreground",
+          )}
+        >
+          {position + 1}
+        </span>
+      )}
       {children}
     </label>
   );

@@ -1,4 +1,4 @@
-import { Award } from "lucide-react";
+import { Award, Clock } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
@@ -14,6 +14,8 @@ import { accentClasses } from "@/lib/accent";
 import { levelRange } from "@/lib/track-meta";
 import { cn, formatMinutes, formatMinutesCompact } from "@/lib/utils";
 import { useProgressStore } from "@/store/progressStore";
+
+import { AnimatedNumber, StatChip } from "./parts/Stats";
 import NotFoundPage from "./NotFoundPage";
 
 export default function TrackPage() {
@@ -77,25 +79,18 @@ export default function TrackPage() {
                 <h1 className="text-2xl font-bold sm:text-3xl">{track.name}</h1>
               </div>
               <p className="mt-3 max-w-prose text-muted-foreground">{track.tagline}</p>
-              <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs text-muted-foreground">
-                <div>
-                  <dt className="sr-only">Camps</dt>
-                  <dd>{track.modules.length} camps</dd>
-                </div>
-                <div>
-                  <dt className="sr-only">Topics</dt>
-                  <dd>{topicCount} topics</dd>
-                </div>
-                <div>
-                  <dt className="sr-only">Estimated time</dt>
-                  <dd>{formatMinutes(trackMinutes(track))}</dd>
-                </div>
-              </dl>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <StatChip label="Camps" value={track.modules.length} />
+                <StatChip label="Topics" value={topicCount} />
+                <StatChip label="Time" value={formatMinutes(trackMinutes(track))} icon={<Clock />} />
+              </div>
             </div>
 
-            <div className="w-full md:w-80">
+            <div className="w-full rounded-lg border bg-surface p-4 md:w-80">
               <div className="flex items-baseline justify-between">
-                <span className="font-display text-2xl font-semibold tabular">{summary.pct}%</span>
+                <span className="font-display text-2xl font-semibold">
+                  <AnimatedNumber value={summary.pct} format={(n) => `${n}%`} />
+                </span>
                 <span className="text-sm text-muted-foreground">
                   {summary.completed} of {summary.total} topics complete
                 </span>

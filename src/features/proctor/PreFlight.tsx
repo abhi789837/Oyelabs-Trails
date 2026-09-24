@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { Check, Maximize, Monitor, ScanFace, ShieldAlert, Volume2 } from "lucide-react";
+import { Check, CircleDashed, Maximize, Monitor, ScanFace, ShieldAlert, TriangleAlert, Volume2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cardVariants } from "@/components/ui/card";
@@ -22,6 +22,12 @@ import { playWarningTone } from "./warnings";
  *
  * Nothing here talks to the server. It hands the caller a live stream and a calibration pose; the
  * caller posts consent and calls `start`.
+ *
+ * **Every check states its own verdict.** Someone about to sit an hour-long monitored test should
+ * never have to infer from a greyed-out button which of five things is wrong: each check says
+ * passed, failed or not yet, in those words, with the reason next to it. The screen stays calm
+ * while it does that — one cross-fade as the sequence advances, and no other motion anywhere. A
+ * confident screen is a legible one, not a lively one.
  */
 
 type Step = "consent" | "camera" | "sound" | "environment" | "fullscreen";
@@ -118,6 +124,7 @@ export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
   }, [calibration, onReady, stream]);
 
   const blocked = environment.coarsePointer || environment.narrowViewport;
+  const index = STEPS.findIndex((s) => s.id === step);
 
   return (
     <div className="mx-auto w-full max-w-2xl px-4 py-10">
@@ -128,32 +135,7 @@ export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
         </p>
       </header>
 
-      <ol className="mb-8 flex flex-wrap gap-x-5 gap-y-2" aria-label="Pre-flight checks">
-        {STEPS.map((entry, index) => {
-          const current = entry.id === step;
-          const done = STEPS.findIndex((s) => s.id === step) > index;
-          return (
-            <li
-              key={entry.id}
-              aria-current={current ? "step" : undefined}
-              className={cn(
-                "flex items-center gap-1.5 font-mono text-xs",
-                current ? "text-foreground" : done ? "text-summit-strong" : "text-basalt",
-              )}
-            >
-              {done ? (
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-              ) : (
-                <span
-                  className={cn("inline-block h-2 w-2 rounded-full", current ? "bg-trailmark" : "bg-basalt/50")}
-                  aria-hidden="true"
-                />
-              )}
-              {entry.label}
-            </li>
-          );
-        })}
-      </ol>
+      <Stepper current={index} />
 
       {/* The one motion moment on this screen: the panel cross-fades as the sequence advances. */}
       <motion.div
@@ -161,7 +143,7 @@ export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
         variants={fadeUp}
         initial={reduceMotion ? false : "hidden"}
         animate="visible"
-        className={cn(cardVariants({ density: "roomy" }), "sm:p-8")}
+        className={cn(cardVariants({ density: "roomy" }), "mt-6 sm:p-8")}
       >
         {step === "consent" && (
           <ConsentStep
@@ -212,6 +194,132 @@ export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
 }
 
 // ---------------------------------------------------------------------------
+// Chrome: the stepper and the check rows
+// ---------------------------------------------------------------------------
+
+/**
+ * Where they are in the sequence.
+ *
+ * A numbered rail rather than a progress bar: five named checks that each either passed or did
+ * not is more useful than one bar at 60%, and it lets a finished step keep saying "passed"
+ * instead of disappearing into a fill.
+ */
+function Stepper({ current }: { current: number }) {
+  return (
+    <ol className="flex flex-wrap items-center gap-x-2 gap-y-3" aria-label="Pre-flight checks">
+      {STEPS.map((entry, index) => {
+        const isCurrent = index === current;
+        const isDone = index < current;
+        return (
+          <li key={entry.id} className="flex items-center gap-2">
+            <span
+              aria-current={isCurrent ? "step" : undefined}
+              className={cn(
+                "flex items-center gap-2 rounded-full border py-1 pl-1 pr-3",
+                isDone && "border-summit/40 bg-summit/[0.08]",
+                isCurrent && "border-trailmark bg-trailmark/[0.09]",
+                !isDone && !isCurrent && "border-border bg-surface",
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[11px] tabular",
+                  isDone && "bg-summit text-summit-foreground",
+                  isCurrent && "bg-trailmark text-trailmark-foreground",
+                  !isDone && !isCurrent && "bg-surface-sunken text-muted-foreground",
+                )}
+              >
+                {isDone ? <Check className="h-3.5 w-3.5" /> : index + 1}
+              </span>
+              <span
+                className={cn(
+                  "text-xs font-medium",
+                  isCurrent ? "text-foreground" : isDone ? "text-summit-strong" : "text-muted-foreground",
+                )}
+              >
+                {entry.label}
+              </span>
+              <span className="sr-only">
+                {isDone ? " — passed" : isCurrent ? " — in progress" : " — not started"}
+              </span>
+            </span>
+            {index < STEPS.length - 1 && (
+              <span aria-hidden="true" className={cn("hidden h-px w-4 sm:block", isDone ? "bg-summit/50" : "bg-border")} />
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+type CheckState = "pass" | "fail" | "pending" | "note";
+
+/**
+ * One check, with its verdict in words as well as in colour.
+ *
+ * Colour alone would fail anyone who cannot separate the green from the red, so every row carries
+ * a distinct glyph and a screen-reader-only verdict. "Not yet" is its own state, deliberately
+ * distinct from "failed": a check that has not run is not a problem to fix.
+ */
+function CheckRow({ state, label, detail }: { state: CheckState; label: ReactNode; detail?: ReactNode }) {
+  const Icon = state === "pass" ? Check : state === "fail" ? X : state === "note" ? TriangleAlert : CircleDashed;
+  const verdict = state === "pass" ? "Passed" : state === "fail" ? "Failed" : state === "note" ? "Note" : "Not yet";
+
+  return (
+    <li className="flex items-start gap-2.5 py-1.5">
+      <span
+        aria-hidden="true"
+        className={cn(
+          "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full",
+          state === "pass" && "bg-summit/15 text-summit-strong",
+          state === "fail" && "bg-destructive/12 text-destructive",
+          state === "note" && "bg-trailmark/15 text-trailmark-strong",
+          state === "pending" && "bg-surface-sunken text-muted-foreground",
+        )}
+      >
+        <Icon className="h-3.5 w-3.5" />
+      </span>
+      <span className="min-w-0 text-sm">
+        <span className="sr-only">{verdict}: </span>
+        <span className={cn(state === "fail" && "text-destructive", state === "pending" && "text-muted-foreground")}>
+          {label}
+        </span>
+        {detail && <span className="mt-0.5 block text-xs text-muted-foreground">{detail}</span>}
+      </span>
+    </li>
+  );
+}
+
+function StepIcon({ children }: { children: ReactNode }) {
+  return (
+    <span
+      className="mb-5 flex h-10 w-10 items-center justify-center rounded-md bg-trailmark/15 text-trailmark-strong [&_svg]:h-5 [&_svg]:w-5"
+      aria-hidden="true"
+    >
+      {children}
+    </span>
+  );
+}
+
+/** The same two buttons, in the same order, on every step. Predictability is the whole point. */
+function StepActions({
+  primary,
+  secondary,
+}: {
+  primary: ReactNode;
+  secondary: ReactNode;
+}) {
+  return (
+    <div className="mt-7 flex flex-col gap-2 border-t pt-5 sm:flex-row-reverse sm:justify-start">
+      {primary}
+      {secondary}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Step 1 — consent
 // ---------------------------------------------------------------------------
 
@@ -228,9 +336,9 @@ function ConsentStep({
 }) {
   return (
     <section aria-labelledby="preflight-consent">
-      <span className="mb-5 flex h-10 w-10 items-center justify-center rounded-md bg-trailmark/15 text-trailmark-strong" aria-hidden="true">
-        <ShieldAlert className="h-5 w-5" />
-      </span>
+      <StepIcon>
+        <ShieldAlert />
+      </StepIcon>
       <h2 id="preflight-consent" className="font-display text-xl font-semibold">
         What this assessment monitors
       </h2>
@@ -268,14 +376,20 @@ function ConsentStep({
         </p>
       )}
 
-      <div className="mt-7 flex flex-col gap-2 sm:flex-row-reverse sm:justify-start">
-        <Button onClick={onAgree} disabled={busy}>
-          {busy ? "Asking for the camera…" : "I agree, check my camera"}
-        </Button>
-        <Button variant="ghost" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
+      {/* The label does not change under `loading` — the spinner already says "working", and a
+          label that swaps would resize the button while someone is reaching for it. */}
+      <StepActions
+        primary={
+          <Button onClick={onAgree} loading={busy}>
+            I agree, check my camera
+          </Button>
+        }
+        secondary={
+          <Button variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        }
+      />
     </section>
   );
 }
@@ -312,11 +426,18 @@ function CameraStep({
             ? "Move so your face is in the middle of the frame, about an arm's length away."
             : "Hold still, looking at the screen…";
 
+  // Each of the four conditions the calibrator is actually waiting on, reported separately: "it
+  // will not continue" is far less useful than "it cannot see your face".
+  const faceState: CheckState = sample === null ? "pending" : sample.faceCount >= 1 ? "pass" : "fail";
+  const aloneState: CheckState = sample === null ? "pending" : sample.faceCount > 1 ? "fail" : sample.faceCount === 1 ? "pass" : "pending";
+  const centredState: CheckState = sample === null || sample.faceCount !== 1 ? "pending" : sample.centred ? "pass" : "fail";
+  const holdState: CheckState = ready ? "pass" : "pending";
+
   return (
     <section aria-labelledby="preflight-camera">
-      <span className="mb-5 flex h-10 w-10 items-center justify-center rounded-md bg-trailmark/15 text-trailmark-strong" aria-hidden="true">
-        <ScanFace className="h-5 w-5" />
-      </span>
+      <StepIcon>
+        <ScanFace />
+      </StepIcon>
       <h2 id="preflight-camera" className="font-display text-xl font-semibold">
         Camera check
       </h2>
@@ -326,8 +447,21 @@ function CameraStep({
         fixed idea of it.
       </p>
 
-      <div className="mt-5 overflow-hidden rounded-md border bg-editor">
-        <video ref={videoRef} muted playsInline autoPlay aria-label="Your camera preview" className="h-64 w-full scale-x-[-1] object-cover" />
+      <div className="mt-5 grid gap-5 sm:grid-cols-[minmax(0,1fr)_minmax(0,17rem)]">
+        <div className="overflow-hidden rounded-md border bg-editor">
+          <video ref={videoRef} muted playsInline autoPlay aria-label="Your camera preview" className="h-64 w-full scale-x-[-1] object-cover" />
+        </div>
+
+        <ul className="text-sm">
+          <CheckRow state={faceState} label="A face is visible" />
+          <CheckRow state={aloneState} label="Only you in frame" />
+          <CheckRow state={centredState} label="Centred and close enough" />
+          <CheckRow
+            state={holdState}
+            label="Resting position recorded"
+            detail={ready ? undefined : `Holding steady — ${percent}%`}
+          />
+        </ul>
       </div>
 
       <p role="status" className="mt-4 text-sm">
@@ -347,14 +481,18 @@ function CameraStep({
         />
       </div>
 
-      <div className="mt-7 flex flex-col gap-2 sm:flex-row-reverse sm:justify-start">
-        <Button onClick={onContinue} disabled={!ready}>
-          Continue
-        </Button>
-        <Button variant="ghost" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
+      <StepActions
+        primary={
+          <Button onClick={onContinue} disabled={!ready}>
+            Continue
+          </Button>
+        }
+        secondary={
+          <Button variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        }
+      />
     </section>
   );
 }
@@ -376,9 +514,9 @@ function SoundStep({
 }) {
   return (
     <section aria-labelledby="preflight-sound">
-      <span className="mb-5 flex h-10 w-10 items-center justify-center rounded-md bg-trailmark/15 text-trailmark-strong" aria-hidden="true">
-        <Volume2 className="h-5 w-5" />
-      </span>
+      <StepIcon>
+        <Volume2 />
+      </StepIcon>
       <h2 id="preflight-sound" className="font-display text-xl font-semibold">
         Sound check
       </h2>
@@ -395,14 +533,26 @@ function SoundStep({
         {played && <span className="text-sm text-muted-foreground">Two beeps, high then low.</span>}
       </div>
 
-      <div className="mt-7 flex flex-col gap-2 sm:flex-row-reverse sm:justify-start">
-        <Button onClick={onConfirm} disabled={!played}>
-          I heard it
-        </Button>
-        <Button variant="ghost" onClick={onBack}>
-          Back
-        </Button>
-      </div>
+      <ul className="mt-5 text-sm">
+        <CheckRow
+          state={played ? "pass" : "pending"}
+          label={played ? "Tone played" : "Play the tone to continue"}
+          detail={played ? "If you did not hear it, turn the volume up and play it again." : undefined}
+        />
+      </ul>
+
+      <StepActions
+        primary={
+          <Button onClick={onConfirm} disabled={!played}>
+            I heard it
+          </Button>
+        }
+        secondary={
+          <Button variant="ghost" onClick={onBack}>
+            Back
+          </Button>
+        }
+      />
     </section>
   );
 }
@@ -457,50 +607,69 @@ function EnvironmentStep({
 }) {
   return (
     <section aria-labelledby="preflight-environment">
-      <span className="mb-5 flex h-10 w-10 items-center justify-center rounded-md bg-trailmark/15 text-trailmark-strong" aria-hidden="true">
-        <Monitor className="h-5 w-5" />
-      </span>
+      <StepIcon>
+        <Monitor />
+      </StepIcon>
       <h2 id="preflight-environment" className="font-display text-xl font-semibold">
         Your setup
       </h2>
+      <p className="mt-2 max-w-prose text-sm text-muted-foreground">
+        These are checked live. Fixing one clears it here without going back a step.
+      </p>
 
-      {blocked ? (
-        <div role="alert" className="mt-4 max-w-prose space-y-3 rounded-md border border-destructive/40 bg-destructive/6 px-4 py-3 text-sm text-destructive">
-          {environment.coarsePointer && (
-            <p>
-              This assessment needs a desktop or laptop with a keyboard and mouse. The coding items
-              are not usable on a touch device.
-            </p>
-          )}
-          {environment.narrowViewport && (
-            <p>
-              The window is {environment.width} px wide; the assessment needs at least{" "}
-              {MIN_VIEWPORT_PX} px. Maximise the window, or move to a larger screen, and this will
-              clear on its own.
-            </p>
-          )}
-        </div>
-      ) : (
-        <p className="mt-2 max-w-prose text-sm text-muted-foreground">
-          Screen size and pointer look fine.
+      {/* `role="status"` rather than `alert`: it updates as the window is resized, and an alert
+          that fires on every drag would be unusable with a screen reader. */}
+      <ul className="mt-5" role="status">
+        <CheckRow
+          state={environment.coarsePointer ? "fail" : "pass"}
+          label={environment.coarsePointer ? "A keyboard and mouse are needed" : "Keyboard and pointer"}
+          detail={
+            environment.coarsePointer
+              ? "This is a touch device. The coding items are not usable without a real keyboard — move to a desktop or laptop."
+              : undefined
+          }
+        />
+        <CheckRow
+          state={environment.narrowViewport ? "fail" : "pass"}
+          label={
+            environment.narrowViewport
+              ? `Window is too narrow — ${environment.width} px of ${MIN_VIEWPORT_PX} px`
+              : `Window is wide enough — ${environment.width} px`
+          }
+          detail={
+            environment.narrowViewport
+              ? "Maximise the window or move to a larger screen. This clears on its own the moment it is wide enough."
+              : undefined
+          }
+        />
+        <CheckRow
+          state={environment.extendedDisplay ? "note" : "pass"}
+          label={environment.extendedDisplay ? "A second display is connected" : "One display"}
+          detail={
+            environment.extendedDisplay
+              ? "Allowed, but logged as a note on your attempt, and the camera only sees the screen you are facing. Disconnect it if you can."
+              : undefined
+          }
+        />
+      </ul>
+
+      <StepActions
+        primary={
+          <Button onClick={onContinue} disabled={blocked}>
+            Continue
+          </Button>
+        }
+        secondary={
+          <Button variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        }
+      />
+      {blocked && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          Continue unlocks once the failed checks above are green.
         </p>
       )}
-
-      {environment.extendedDisplay && (
-        <p className="mt-4 max-w-prose rounded-md border border-trailmark/40 bg-trailmark/[0.07] px-4 py-3 text-sm">
-          A second display is connected. That is allowed, but it is logged as a note on your
-          attempt, and the camera only sees the screen you are facing. If you can, disconnect it.
-        </p>
-      )}
-
-      <div className="mt-7 flex flex-col gap-2 sm:flex-row-reverse sm:justify-start">
-        <Button onClick={onContinue} disabled={blocked}>
-          Continue
-        </Button>
-        <Button variant="ghost" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
     </section>
   );
 }
@@ -520,9 +689,9 @@ function FullscreenStep({
 }) {
   return (
     <section aria-labelledby="preflight-fullscreen">
-      <span className="mb-5 flex h-10 w-10 items-center justify-center rounded-md bg-trailmark/15 text-trailmark-strong" aria-hidden="true">
-        <Maximize className="h-5 w-5" />
-      </span>
+      <StepIcon>
+        <Maximize />
+      </StepIcon>
       <h2 id="preflight-fullscreen" className="font-display text-xl font-semibold">
         Ready to start
       </h2>
@@ -531,17 +700,30 @@ function FullscreenStep({
         is a warning, so close anything that might pull focus — chat apps, calendar reminders,
         update prompts — before you begin.
       </p>
-      <p className="mt-3 font-mono text-xs text-muted-foreground">Attempt {assessmentId}</p>
 
-      <div className="mt-7 flex flex-col gap-2 sm:flex-row-reverse sm:justify-start">
-        <Button onClick={onStart}>
-          <Maximize aria-hidden="true" />
-          Enter fullscreen and start
-        </Button>
-        <Button variant="ghost" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
+      <ul className="mt-5 text-sm">
+        <CheckRow state="pass" label="Consent recorded" />
+        <CheckRow state="pass" label="Camera and resting position" />
+        <CheckRow state="pass" label="Warning sound" />
+        <CheckRow state="pass" label="Screen and pointer" />
+        <CheckRow state="pending" label="Fullscreen" detail="Entered when you press start." />
+      </ul>
+
+      <p className="mt-5 font-mono text-xs text-muted-foreground">Attempt {assessmentId}</p>
+
+      <StepActions
+        primary={
+          <Button onClick={onStart}>
+            <Maximize aria-hidden="true" />
+            Enter fullscreen and start
+          </Button>
+        }
+        secondary={
+          <Button variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        }
+      />
     </section>
   );
 }

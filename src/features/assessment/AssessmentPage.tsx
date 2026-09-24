@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { LoaderCircle, Maximize, ShieldAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import type { AnswerRequest, MyAssessment, NextItemResponse, ServedItem } from "@shared/assessment";
+import type { AnswerRequest, AssessmentStatusResponse, MyAssessment, NextItemResponse, ServedItem } from "@shared/assessment";
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
@@ -17,8 +17,12 @@ import { HardWarningModal, SoftWarningToasts, StatusStrip, Watermark } from "@/f
 import { useProctor } from "@/features/proctor/useProctor";
 import type { CalibrationPose } from "@/features/proctor/types";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { cn } from "@/lib/utils";
 import { assessmentApi } from "./api";
 import { ItemRunner } from "./ItemRunner";
+import { JobStages } from "./JobStages";
+import { waitHeading, waitStages } from "./stages";
+import { formatClock } from "./TimerRing";
 
 type Phase = "loading" | "preflight" | "taking" | "waiting" | "finished" | "error";
 
@@ -100,12 +104,9 @@ export default function AssessmentPage() {
     void load();
   }, [load]);
 
-  // ---- Poll while the server is working ----
-  useEffect(() => {
-    if (phase !== "waiting" || !assessment) return;
-    const timer = setInterval(() => void load(), 5000);
-    return () => clearInterval(timer);
-  }, [phase, assessment, load]);
+  // The waiting screen owns its own polling now: it needs the status route for the stage and the
+  // server's own message anyway, so polling `/api/me/assessment` alongside it would be a second
+  // request for an answer the first one already gave.
 
   // ---- Fetch the next item ----
   const fetchNext = useCallback(async () => {
@@ -222,7 +223,7 @@ export default function AssessmentPage() {
   }
 
   if (phase === "waiting") {
-    return <WaitingScreen assessment={assessment} onDone={() => navigate("/plan")} />;
+    return <WaitingScreen assessment={assessment} onRefresh={load} onDone={() => navigate("/plan")} />;
   }
 
   if (phase === "finished") {
@@ -244,31 +245,48 @@ export default function AssessmentPage() {
   }
 
   // ---- Taking the test ----
+  const answered = next?.progress.answered ?? 0;
+  const target = next?.progress.target ?? 0;
+  const progressPct = target > 0 ? Math.min(100, (answered / target) * 100) : 0;
+  // Five minutes is when the clock stops being background information.
+  const timeIsShort = totalSecondsLeft > 0 && totalSecondsLeft <= 300;
+
   return (
     <div className="relative min-h-dvh bg-background">
-      <StatusStrip videoRef={proctor.videoRef} state={proctor.state} />
+      {/* Kept in view for the whole hour rather than scrolled away at the top. Someone who is
+          being watched should be able to see that they are being watched without hunting for it —
+          and a camera that drops out is the one thing on this page worth noticing immediately.
+          Solid, not translucent: no blur, nothing for the compositor to redo on every scroll. */}
+      <div className="sticky top-0 z-30 border-b bg-background">
+        <div className="mx-auto max-w-3xl px-4 py-2.5 sm:px-8">
+          <StatusStrip videoRef={proctor.videoRef} state={proctor.state} />
+        </div>
+      </div>
 
       <div className="mx-auto max-w-3xl px-4 pb-24 pt-6 sm:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b pb-4">
+        <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-b pb-4">
           <div>
             <p className="font-mono text-xs text-muted-foreground">
               {next?.progress.section === "written" ? "Written answers" : "Placement assessment"}
             </p>
             <p className="mt-1 font-display text-lg font-semibold">
-              Question {(next?.progress.answered ?? 0) + 1}
-              {next?.progress.section === "adaptive" && next.progress.target > 0 ? ` of about ${next.progress.target}` : ""}
+              Question {answered + 1}
+              {next?.progress.section === "adaptive" && target > 0 ? ` of about ${target}` : ""}
             </p>
           </div>
           <div className="text-right">
-            <p className="font-mono text-sm tabular">{formatClock(totalSecondsLeft)}</p>
+            <p className={cn("font-mono text-xl tabular", timeIsShort && "text-destructive")}>
+              {formatClock(totalSecondsLeft)}
+            </p>
             <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">time remaining</p>
           </div>
         </header>
 
         <Progress
-          value={next?.progress.target ? Math.min(100, ((next.progress.answered ?? 0) / next.progress.target) * 100) : 0}
-          className="mt-3 h-1"
-          aria-label="Assessment progress"
+          value={progressPct}
+          className="mt-3 h-1.5"
+          indicatorClassName="bg-summit"
+          aria-label={`Assessment progress: ${answered} of about ${target} questions answered`}
         />
 
         {error && <div className="mt-6"><FormAlert>{error}</FormAlert></div>}
@@ -335,35 +353,91 @@ export default function AssessmentPage() {
 }
 
 /**
- * Shown while the server is generating or evaluating. It polls and says what is happening —
- * there is no artificial delay here or on the server (§11.1 step 6).
+ * Shown while the server is generating or evaluating.
+ *
+ * It polls `/api/assessment/:id/status`, which is the only place a learner can be told what a job
+ * is doing, and shows exactly what comes back: the stage list from `stages.ts` and the server's
+ * own message. There is no artificial delay here or on the server (§11.1 step 6) — and, just as
+ * deliberately, no artificial progress. Nothing on this screen moves faster than the job does.
+ *
+ * When the status changes it asks the page to reload the assessment, which is what moves the
+ * funnel on. One request every five seconds does both jobs.
  */
-function WaitingScreen({ assessment, onDone }: { assessment: MyAssessment; onDone: () => void }) {
-  const generating = assessment.status === "generating";
-  const awaitingApproval = assessment.status === "awaiting_approval";
+function WaitingScreen({
+  assessment,
+  onRefresh,
+  onDone,
+}: {
+  assessment: MyAssessment;
+  onRefresh: () => Promise<void> | void;
+  onDone: () => void;
+}) {
+  const [detail, setDetail] = useState<AssessmentStatusResponse | null>(null);
+  const statusRef = useRef(assessment.status);
+  statusRef.current = assessment.status;
+  const refreshRef = useRef(onRefresh);
+  refreshRef.current = onRefresh;
 
   useEffect(() => {
     if (assessment.status === "completed") onDone();
   }, [assessment.status, onDone]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const poll = async () => {
+      try {
+        const next = await assessmentApi.status(assessment.id);
+        if (cancelled) return;
+        setDetail(next);
+        // The status the page is holding is stale — let it re-route.
+        if (next.status !== statusRef.current) void refreshRef.current();
+      } catch {
+        // A failed status check must not strand the learner here: fall back to reloading the
+        // assessment itself, which is the request that actually decides what screen they see.
+        if (!cancelled) void refreshRef.current();
+      }
+    };
+
+    void poll();
+    const timer = setInterval(() => void poll(), 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [assessment.id]);
+
+  const status = detail?.status ?? assessment.status;
+  const stages = waitStages(status);
+  const failed = status === "failed";
+
   return (
     <Shell>
-      <LoaderCircle className="h-6 w-6 animate-spin text-muted-foreground" aria-hidden="true" />
-      <h1 className="mt-6 text-2xl font-bold">
-        {generating
-          ? "Building your assessment"
-          : awaitingApproval
-            ? "Almost ready"
-            : "Evaluating your assessment"}
-      </h1>
+      <h1 className="text-2xl font-bold">{waitHeading(status)}</h1>
       <p className="mt-3 max-w-prose text-muted-foreground">
-        {generating
-          ? "We are writing questions based on what your manager told us about you. This usually takes a few minutes."
-          : awaitingApproval
-            ? "Your questions are written and are being checked over. This page will open the assessment as soon as they are released — there is nothing you need to chase."
-            : "Your answers are being read and turned into a learning plan. This can take up to ten minutes. You can close this page — the plan will be waiting for you."}
+        {detail?.failureReason ??
+          detail?.message ??
+          (status === "generating"
+            ? "We are writing questions based on what your manager told us about you."
+            : status === "awaiting_approval"
+              ? "Your questions are written and are being checked over."
+              : "Your answers are being read and turned into a learning plan.")}
       </p>
-      <p className="mt-6 font-mono text-xs text-muted-foreground">This page checks again every few seconds.</p>
+
+      {stages && (
+        <div className="mt-8 flex justify-center">
+          <JobStages stages={stages} />
+        </div>
+      )}
+
+      {!failed && (
+        <p className="mt-8 max-w-prose text-sm text-muted-foreground">
+          {status === "evaluating" || status === "submitted"
+            ? "You can close this page — your plan will be waiting for you."
+            : "There is nothing you need to chase. This page opens the assessment as soon as it is released."}
+        </p>
+      )}
+      <p className="mt-2 font-mono text-xs text-muted-foreground">This page checks again every few seconds.</p>
     </Shell>
   );
 }
@@ -389,11 +463,3 @@ function Centered({ children }: { children: React.ReactNode }) {
   );
 }
 
-function formatClock(seconds: number): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-  return h > 0
-    ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
-    : `${m}:${String(s).padStart(2, "0")}`;
-}

@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState, type RefObject } from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
 import { Maximize, ShieldAlert, TriangleAlert, Video, VideoOff, X } from "lucide-react";
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { transition } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 import { HARD_LIMIT, type ProctorState } from "./types";
@@ -82,6 +87,25 @@ interface HardWarningModalProps {
   onReenterFullscreen?: () => void;
 }
 
+/**
+ * A hard warning, on the shared `AlertDialog` from U3.
+ *
+ * Three things this takes from the shared overlay and one it refuses:
+ *
+ * - `alertdialog` semantics, which is what this has always been: a message that interrupts, with
+ *   one way out.
+ * - The house backdrop and focus handling, so it looks and behaves like every other blocking
+ *   dialog rather than like a bespoke one.
+ * - `calm` — fade only. A warning that springs into view is performing at someone who has just
+ *   been interrupted mid-question. The severity is carried by the destructive border and the
+ *   icon, not by the way it arrives.
+ *
+ * What it refuses is `useConfirm`. That helper always offers a cancel, and resolves `false` on
+ * Escape — both correct for an admin action, both wrong here. **This dialog has no dismissal
+ * path at all**: Radix's alert dialog already refuses an outside click and any other interaction
+ * from outside, Escape is prevented here, and the only control acknowledges. A warning you can
+ * press Escape on is not a warning (§10.3).
+ */
 export function HardWarningModal({
   warning,
   limit = HARD_LIMIT,
@@ -89,8 +113,6 @@ export function HardWarningModal({
   onAcknowledge,
   onReenterFullscreen,
 }: HardWarningModalProps) {
-  const reduceMotion = useReducedMotion();
-
   useEffect(() => {
     playWarningTone();
   }, [warning.id]);
@@ -103,61 +125,49 @@ export function HardWarningModal({
       : `${remaining} more warnings end the assessment.`;
 
   return (
-    <Dialog.Root open modal>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-70 bg-ink/70 backdrop-blur-xs" />
-        <Dialog.Content
-          className="fixed inset-0 z-70 flex items-center justify-center p-4 outline-hidden"
-          // A warning you can dismiss with Escape or a stray click is not a warning.
-          onEscapeKeyDown={(event) => event.preventDefault()}
-          onPointerDownOutside={(event) => event.preventDefault()}
-          onInteractOutside={(event) => event.preventDefault()}
+    <AlertDialog open onOpenChange={() => undefined}>
+      <AlertDialogContent
+        calm
+        className="max-w-lg border-destructive/45 sm:p-8"
+        onEscapeKeyDown={(event) => event.preventDefault()}
+      >
+        <span
+          className="mb-5 flex h-11 w-11 items-center justify-center rounded-md bg-destructive/12 text-destructive"
+          aria-hidden="true"
         >
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={transition.base}
-            className="w-full max-w-lg rounded-lg border border-destructive/40 bg-background p-6 shadow-2xl sm:p-8"
-          >
-            <span
-              className="mb-5 flex h-11 w-11 items-center justify-center rounded-md bg-destructive/12 text-destructive"
-              aria-hidden="true"
-            >
-              <ShieldAlert className="h-5 w-5" />
-            </span>
-            <Dialog.Title className="font-display text-xl font-semibold">
-              {warning.terminal ? "Assessment ended" : `Warning ${warning.count} of ${limit}`}
-            </Dialog.Title>
-            <Dialog.Description className="mt-2 max-w-prose text-base text-foreground">
-              {capitalise(warning.reason)}. {consequence}
-            </Dialog.Description>
-            <p className="mt-4 max-w-prose text-sm text-muted-foreground">
-              A person reviews every warning before it affects anything. If this was a mistake — a
-              reflection, someone walking past, a flaky camera — say so when you get your result.
-            </p>
+          <ShieldAlert className="h-5 w-5" />
+        </span>
+        <AlertDialogTitle className="text-xl">
+          {warning.terminal ? "Assessment ended" : `Warning ${warning.count} of ${limit}`}
+        </AlertDialogTitle>
+        <AlertDialogDescription className="max-w-prose text-base text-foreground">
+          {capitalise(warning.reason)}. {consequence}
+        </AlertDialogDescription>
+        <p className="mt-4 max-w-prose text-sm text-muted-foreground">
+          A person reviews every warning before it affects anything. If this was a mistake — a
+          reflection, someone walking past, a flaky camera — say so when you get your result.
+        </p>
 
-            <div className="mt-7 flex flex-col gap-2 sm:flex-row-reverse sm:justify-start">
-              {needsFullscreen && onReenterFullscreen ? (
-                <Button
-                  autoFocus
-                  onClick={() => {
-                    onReenterFullscreen();
-                    onAcknowledge();
-                  }}
-                >
-                  <Maximize aria-hidden="true" />
-                  Return to fullscreen
-                </Button>
-              ) : (
-                <Button autoFocus onClick={onAcknowledge}>
-                  I understand
-                </Button>
-              )}
-            </div>
-          </motion.div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+        <AlertDialogFooter className="sm:flex-row-reverse sm:justify-start">
+          {needsFullscreen && onReenterFullscreen ? (
+            <Button
+              autoFocus
+              onClick={() => {
+                onReenterFullscreen();
+                onAcknowledge();
+              }}
+            >
+              <Maximize aria-hidden="true" />
+              Return to fullscreen
+            </Button>
+          ) : (
+            <Button autoFocus onClick={onAcknowledge}>
+              I understand
+            </Button>
+          )}
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
@@ -174,13 +184,20 @@ interface SoftWarningToastsProps {
   onDismiss: (id: number) => void;
 }
 
-/** Corner toasts with a short chime and no count, because soft warnings do not count (§10.3). */
+/**
+ * Corner toasts with a short chime and no count, because soft warnings do not count (§10.3).
+ *
+ * Deliberately **under** the hard-warning dialog's scrim rather than over it. A soft notice that
+ * floated above a blocking warning would be the less important message sitting on top of the more
+ * important one, and it would still be clickable through a modal that is supposed to hold
+ * everything.
+ */
 export function SoftWarningToasts({ warnings, onDismiss }: SoftWarningToastsProps) {
   return (
     <div
       aria-live="polite"
       aria-atomic="false"
-      className="pointer-events-none fixed inset-x-3 bottom-3 z-60 flex flex-col items-end gap-2 sm:inset-x-auto sm:right-5 sm:bottom-5"
+      className="pointer-events-none fixed inset-x-3 bottom-3 z-40 flex flex-col items-end gap-2 sm:inset-x-auto sm:right-5 sm:bottom-5"
     >
       {warnings.map((warning) => (
         <SoftWarningToast key={warning.id} warning={warning} onDismiss={onDismiss} />

@@ -10,6 +10,11 @@ export interface PasswordInputProps extends Omit<InputProps, "type" | "trailing"
   meter?: boolean;
   /** The account's username, so "abhishek-2026" cannot quietly pass the username rule. */
   username?: string;
+  /**
+   * A password this one must not equal — on the change-password screen, the current one. Adds the
+   * server's reuse rule to the checklist instead of finding out about it from a 400.
+   */
+  differentFrom?: string;
 }
 
 /** score -> the bar fill and the word next to it. Four steps, so "Fair" is visibly not "Good". */
@@ -22,10 +27,10 @@ const TONES = [
 ] as const;
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ meter = false, username = "", className, value, ...props }, ref) => {
+  ({ meter = false, username = "", differentFrom, className, value, ...props }, ref) => {
     const [visible, setVisible] = React.useState(false);
     const password = String(value ?? "");
-    const strength: PasswordStrength | null = meter ? passwordStrength(password, username) : null;
+    const strength: PasswordStrength | null = meter ? passwordStrength(password, username, { differentFrom }) : null;
 
     return (
       <div>
