@@ -46,9 +46,18 @@ export default function AdminPeoplePage() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [issued, setIssued] = useState<{ username: string; password: string } | null>(null);
 
-  // A bulk action reloads when it finishes, by which time the component may be gone.
+  /* A bulk action reloads when it finishes, by which time the component may be gone.
+     `alive` is re-armed on every run, not just initialised once: React's StrictMode mounts, cleans
+     up and mounts again on the same instance, so a flag only set in the cleanup stays false for
+     the whole life of the second mount and every load returns early into a permanently empty
+     table. */
   const alive = useRef(true);
-  useEffect(() => () => void (alive.current = false), []);
+  useEffect(() => {
+    alive.current = true;
+    return () => {
+      alive.current = false;
+    };
+  }, []);
 
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -128,6 +137,7 @@ export default function AdminPeoplePage() {
       {
         id: "displayName",
         header: "Person",
+        size: 200,
         cell: ({ row }) => <PersonCell user={row.original} />,
       },
       {
@@ -391,12 +401,31 @@ function Dash() {
   return <span className="text-muted-foreground">—</span>;
 }
 
+/**
+ * The person cell, with the name as a direct link to the full profile.
+ *
+ * The row itself opens the detail sheet, which is the right default — most of the time the question
+ * is "who is this?" and a sheet answers it without losing the filtered list. But going straight to
+ * the profile was a single click before the table was rebuilt, and taking that away to gain a
+ * preview would be a trade, not an improvement. So both: the name navigates, the rest of the row
+ * previews. A superadmin has no profile page, so their name is not a link.
+ */
 function PersonCell({ user }: { user: UserSummary }) {
   return (
     <div className="flex items-center gap-2.5">
       <Avatar name={user.displayName} size="sm" elevated={user.role === "superadmin"} />
       <div className="min-w-0">
-        <span className="block truncate font-medium">{user.displayName}</span>
+        {user.role === "superadmin" ? (
+          <span className="block truncate font-medium">{user.displayName}</span>
+        ) : (
+          <Link
+            to={`/admin/people/${user.id}`}
+            onClick={(event) => event.stopPropagation()}
+            className="block truncate font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+          >
+            {user.displayName}
+          </Link>
+        )}
         <span className="block truncate font-mono text-xs text-muted-foreground">{user.username}</span>
       </div>
     </div>
@@ -490,7 +519,10 @@ function PersonCard({ user }: { user: UserSummary }) {
         )}
       </div>
       <dl className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
-        <Fact label="Role">{user.roleTitle ?? "Learner"}</Fact>
+        {/* A superadmin has no role title, and defaulting to "Learner" told the card's reader the
+            opposite of the truth. The desktop column shows a badge instead of a title here for the
+            same reason. */}
+        <Fact label="Role">{user.roleTitle ?? (user.role === "superadmin" ? "Super admin" : "Learner")}</Fact>
         <Fact label="Level">{user.overallLevel ?? "—"}</Fact>
         <Fact label="Plan">{pct === null ? "—" : `${user.planCompletedCount}/${user.planTopicCount}`}</Fact>
         <Fact label="Last seen">{user.lastLoginAt === null ? "Never" : relativeTime(user.lastLoginAt)}</Fact>
@@ -532,7 +564,7 @@ function PersonDetail({ user }: { user: UserSummary }) {
       )}
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-        <Fact label="Role">{user.roleTitle ?? "Learner"}</Fact>
+        <Fact label="Role">{user.roleTitle ?? (user.role === "superadmin" ? "Super admin" : "Learner")}</Fact>
         <Fact label="Experience">{user.yearsExperience === null ? "—" : `${user.yearsExperience} yrs`}</Fact>
         <Fact label="Overall level">{user.overallLevel === null ? "Not evaluated" : `${user.overallLevel} of 5`}</Fact>
         <Fact label="Hard warnings">

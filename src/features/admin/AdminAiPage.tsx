@@ -136,7 +136,15 @@ export default function AdminAiPage() {
                   <Shell
                     key={credential.id}
                     {...(active
-                      ? { className: "rounded-md", innerClassName: "rounded-md bg-summit/5 px-4 py-3" }
+                      ? {
+                          className: "rounded-md",
+                          /* Padding only. The inner surface is what masks the conic gradient down
+                             to the 1px ring, and `ShineBorder` gives it an opaque `bg-surface` for
+                             exactly that reason — passing a translucent tint here replaces that
+                             background and the whole gradient shows through, turning the card into
+                             a block of orange. The "Active" badge already carries the state. */
+                          innerClassName: "px-4 py-3",
+                        }
                       : { className: "rounded-md border px-4 py-3" })}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">

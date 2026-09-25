@@ -44,6 +44,8 @@ const ADMIN_ROUTES = [
   ["admin-live", "/admin/live"],
   ["admin-ai", "/admin/ai"],
   ["admin-audit", "/admin/audit"],
+  ["admin-integrity", "/admin/integrity"],
+  ["admin-curriculum", "/admin/curriculum"],
 ];
 
 /** The two that must not regress, plus the learner chrome around them. */
@@ -55,14 +57,37 @@ const LEARNER_ROUTES = [
 const ok = (s) => `\u001b[32m${s}\u001b[0m`;
 const bad = (s) => `\u001b[31m${s}\u001b[0m`;
 
+/**
+ * Signs in, and completes the forced password change when it is asked for.
+ *
+ * Every freshly seeded account has `must_change_password` set, which is correct behaviour and also
+ * exactly the state a development database is in the first time this harness meets it. Refusing to
+ * proceed made the harness unusable on a fresh database — which is why it went uncaptured through
+ * U0 and U2. So it changes the password rather than complaining about it, and reports the new one
+ * so the caller can reuse it. Nothing here bypasses the gate: it goes through the same form a
+ * person would, and the server applies its own rules to what is typed.
+ */
 async function signIn(page, who) {
   await page.goto(`${BASE}/login`, { waitUntil: "networkidle" });
   await page.getByLabel(/username/i).fill(who.username);
   await page.getByLabel(/password/i).fill(who.password);
   await page.getByRole("button", { name: /sign in/i }).click();
   await page.waitForURL((u) => !u.pathname.startsWith("/login"), { timeout: 15_000 });
+
   if (page.url().includes("/change-password")) {
-    throw new Error(`${who.username} must change its password first — do that once by hand, then re-run.`);
+    // Derived from the temporary one so a re-run against the same database still has a way in,
+    // and long enough to clear the server's own strength rules rather than guessing at them.
+    const next = `${who.password}-ui-audit`;
+    /* `Field` appends a "*" to a required label, so the accessible name is "New password*" and an
+       anchored /^new password$/ never matches. Anchoring still matters, though: an unanchored
+       /new password/ also matches "Confirm new password". Hence the optional trailing marker. */
+    await page.getByLabel(/^(temporary|current) password\*?$/i).fill(who.password);
+    await page.getByLabel(/^new password\*?$/i).fill(next);
+    await page.getByLabel(/^confirm new password\*?$/i).fill(next);
+    await page.getByRole("button", { name: /save password/i }).click();
+    await page.waitForURL((u) => !u.pathname.startsWith("/change-password"), { timeout: 15_000 });
+    console.log(`  ${ok("i")} ${who.username}: password changed to "${next}" — reuse that on the next run`);
+    who.password = next;
   }
 }
 

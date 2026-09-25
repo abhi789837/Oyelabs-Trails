@@ -73,8 +73,16 @@ Not yet installed: `@tanstack/react-table`, `@dnd-kit/*`, `cmdk`, `sonner`, `rec
       715 topics at `/admin/curriculum`. No credential secret is rendered anywhere and the Claude
       Code CLI terms warning is untouched.
 - [x] U10 Learner — pre-flight, runner, evaluating, plan filters, certificate. Trail and topic untouched
-- [ ] U11 Quality — accessibility, responsive, dark mode, performance, Lighthouse, delete superseded components
-- [ ] U12 After screenshots + `docs/UI_REPORT.md`
+- [x] U11 Quality — the pass that actually found things, because it was the first time the app was
+      run rather than reasoned about. Deleted the one genuinely unused component (`ui/separator`);
+      confirmed no palette leaks and no raw hexes outside the PDF generator (which cannot resolve
+      CSS variables); every `<img>` has an alt and every icon button a name. Six defects fixed —
+      see `docs/UI_REPORT.md` §4. Lighthouse not run: it needs a production server and a browser at
+      once, and this machine had 3.3 GB free of 15.7 GB.
+- [x] U12 After screenshots + `docs/UI_REPORT.md` — captured at 1440 and 375, light and dark, as
+      both roles, into `docs/ui-audit/after/`. The harness needed two fixes first (it refused any
+      account with `must_change_password`, and its anchored label regex could not match a required
+      field's `*`), which is why no baseline existed.
 
 ## Gates after every step
 
@@ -83,16 +91,14 @@ before the commit. Commit message: `ui: <step>`.
 
 ## Blocked / needs Abhishek
 
-- **Before-screenshots not captured.** The harness (`scripts/ui/screens.mjs`) and Playwright are
-  installed and ready, but this machine had **1.3 GB free of 16.9 GB (8%)** when U0 finished, and
-  two dev servers had already been reaped for memory pressure. Chromium plus Vite plus the API
-  would not survive. Run it when the machine is quiet:
+- **Nothing blocking.** All thirteen steps are done and the branch is ready to review.
 
-  ```
-  npm run dev                       # one terminal
-  npm run dev:seed                  # note a learner's username and password
-  UI_ADMIN_PASSWORD=... UI_LEARNER_USERNAME=... UI_LEARNER_PASSWORD=...     node scripts/ui/screens.mjs before
-  ```
+- **There is still no before-set**, and there cannot be a meaningful one now: the harness only
+  became usable on a fresh database at U11, by which point the primitives had changed. "The trail
+  visuals did not move" is therefore argued from `git diff --stat` on the four protected paths —
+  `src/content`, `src/components/trail`, `src/components/challenge` and `src/pages/TopicPage.tsx`,
+  zero lines at every commit on this branch — rather than from pixels. If a pixel comparison is ever
+  wanted, check out `main` and run `node scripts/ui/screens.mjs before`.
 
-  **Do this before U2 changes primitives**, or the baseline that proves the trail visuals did not
-  regress is gone. Until then, "did the trail page move?" is unanswerable.
+- **Lighthouse was not run**, for memory. See `docs/UI_REPORT.md` §6 for what is known about bundle
+  shape without it.

@@ -129,6 +129,17 @@ export interface DataTableProps<TRow> {
   className?: string;
 }
 
+/**
+ * A width style, but only when the column declared one.
+ *
+ * TanStack fills `columnDef.size` in with a default of 150 as soon as a column is built, so
+ * `column.getSize()` can never answer "did anyone ask for a width?". The raw `columnDef.size` can:
+ * it is `undefined` until a screen sets it.
+ */
+function declaredWidth(size: number | undefined): { width: number } | undefined {
+  return typeof size === "number" ? { width: size } : undefined;
+}
+
 const SELECT_COLUMN_ID = "__select";
 
 /** Past this many rows on screen, the body fades in as one block instead of row by row. */
@@ -484,7 +495,13 @@ export function DataTable<TRow>({
                         return (
                           <TableHead
                             key={header.id}
-                            style={{ width: header.getSize() }}
+                            /* Only a width the screen actually asked for. `getSize()` falls back to
+                               TanStack's default of 150px, and applying that as a hard width made
+                               every column in every table 150px wide — which, with the `truncate`
+                               on each cell, silently clipped any title longer than about 30
+                               characters. No declared size means the browser sizes the column from
+                               its content, which is what a non-`table-fixed` table is for. */
+                            style={declaredWidth(header.column.columnDef.size)}
                             aria-sort={sort ? (sort.dir === "asc" ? "ascending" : "descending") : undefined}
                             className={cn(columnMeta?.align === "right" && "text-right", columnMeta?.headerClassName)}
                           >
@@ -551,9 +568,14 @@ export function DataTable<TRow>({
                           return (
                             <TableCell
                               key={cell.id}
-                              style={{ width: cell.column.getSize() }}
+                              style={declaredWidth(cell.column.columnDef.size)}
+                              /* No blanket `truncate` here. `overflow: hidden` on every cell means
+                                 no column can ever ask for the width its content needs, so the
+                                 browser squeezes them all equally and a long title is cut off even
+                                 with the table half empty. Truncation is the cell's decision — the
+                                 screens that want it put `truncate` on the span inside, where it
+                                 can be paired with the `shrink-0` that keeps a badge beside it. */
                               className={cn(
-                                "truncate",
                                 columnMeta?.align === "right" && "text-right",
                                 columnMeta?.cellClassName,
                               )}
@@ -598,6 +620,7 @@ export function DataTable<TRow>({
 
       <DataTablePagination
         meta={meta}
+        loading={loading}
         selectedCount={selectedRows.length}
         onPageChange={(page) => onQueryChange({ ...query, page })}
         onPageSizeChange={(pageSize) => onQueryChange({ ...query, pageSize, page: 1 })}

@@ -176,6 +176,45 @@ a real credential. That is the first thing to check once one is added.
 
 ## UI overhaul decisions
 
+- **A dev server can outlive the session that started it, and lie about the current build.** The
+  U12 screenshot run failed with every page blank and Vite returning 500 for `src/index.css`:
+  `@layer base is used but no matching @tailwind base directive is present`, pointing at a v3
+  Tailwind PostCSS plugin. The whole dependency tree was v4, the string was nowhere in
+  `node_modules`, and `npm run build` was green — because the process holding port 5173 had been
+  started **two days earlier**, before the v3 → v4 migration, and every `npm run dev` since had
+  silently failed to bind and left the zombie answering. Nothing was wrong with the migration.
+  Check `Get-NetTCPConnection -LocalPort 5173` and compare `StartTime` against the migration before
+  debugging a dev-only failure that the production build does not reproduce.
+
+- **The screenshot harness now completes the forced password change instead of refusing.** Every
+  seeded account has `must_change_password` set — correct behaviour, and the exact state a fresh
+  development database is in the first time the harness meets it. Refusing made the harness
+  unusable on a fresh database, which is why the baseline went uncaptured through U0 and U2. It now
+  goes through the same form a person would (the server still applies its own rules) and prints the
+  new password so a re-run has a way in.
+
+- **Sparklines are bucketed on the server from real timestamp columns, on local midnights.** The
+  overview asked for seven-day trends the API did not expose. Rather than smooth or synthesise a
+  series, `/api/admin/overview` gained `trend7d`, counted from `created_at` columns that already
+  existed. Local midnight via `Date.setHours(0,0,0,0)` rather than subtracting 86,400,000, which
+  drifts by an hour twice a year and files two events under the wrong day. An empty bucket is `0`,
+  never absent: a gap in a sparkline reads as missing data, and a quiet Sunday is not missing data.
+
+- **Faceted filters are only for closed sets.** The audit log's action vocabulary grows whenever
+  new code calls `writeAudit`, so a hardcoded facet list would quietly stop showing new actions.
+  The chips filter by *family* — `startsWith "assessment."` — which is the stable part. Same rule as
+  the notification-kind fallback in U5: map what you know, fall back by family, never drop.
+
+- **Two admin pages answer different questions about the same table, so they are two pages.** The
+  per-assessment integrity timeline answers "what happened during this sitting" and needs sequence
+  and spacing, so it is a timeline with gap labels. The global feed answers "is this happening" and
+  needs counts across time, so it is a paged table. Merging them would have made one of the two
+  questions harder to ask.
+
+- **The live board is not a camera feed, and says so.** Thumbnails are snapshots already captured
+  *with* an integrity event, each labelled with its event and time. A grid that refreshed itself
+  would read as surveillance-in-progress and imply a freshness the data does not have.
+
 - **The Tailwind v4 upgrade tool corrupted curriculum content, and was reverted there.** It
   renames the `shadow` utility to `shadow-sm` and applied that to every occurrence of the *word*
   in 19 content files: "a temporary shadow database" became "a temporary shadow-sm database", in

@@ -119,11 +119,12 @@ export default function AdminCurriculumPage() {
       {
         id: "title",
         header: "Topic",
+        size: 340,
         cell: ({ row }) => (
           <div className="min-w-0">
             <span className="flex items-center gap-2">
-              <span className="font-medium">{row.original.title}</span>
-              {row.original.isMilestone && <Badge variant="brand">milestone</Badge>}
+              <span className="truncate font-medium">{row.original.title}</span>
+              {row.original.isMilestone && <Badge variant="brand" className="shrink-0">milestone</Badge>}
             </span>
             <span className="mt-0.5 block font-mono text-[11px] text-muted-foreground">{row.original.id}</span>
           </div>
@@ -168,6 +169,8 @@ export default function AdminCurriculumPage() {
     [],
   );
 
+  /* 42,905 minutes over 715 topics happens to be 715 hours. It is a coincidence, checked against
+     the manifest, not a variable used twice — leave both numbers alone. */
   const minutes = rows.reduce((total, row) => total + row.estMinutes, 0);
 
   return (

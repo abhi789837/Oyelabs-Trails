@@ -23,6 +23,8 @@ export interface DataTablePaginationProps {
   onPageSizeChange: (pageSize: number) => void;
   /** Number of rows ticked, announced alongside the range. */
   selectedCount?: number;
+  /** While true the count says "Loading…" rather than "No results" — see below. */
+  loading?: boolean;
   className?: string;
 }
 
@@ -31,6 +33,7 @@ export function DataTablePagination({
   onPageChange,
   onPageSizeChange,
   selectedCount = 0,
+  loading = false,
   className,
 }: DataTablePaginationProps) {
   const range = pageRange(meta);
@@ -52,11 +55,17 @@ export function DataTablePagination({
       <div className="flex items-center gap-4">
         {/* The one live region on the table. It announces the result count on every filter change,
             which is the feedback a screen-reader user otherwise has no way to get. */}
+        {/* "No results" while a request is still in flight is a claim the table cannot make yet —
+            an empty `meta` before the first response is indistinguishable from a genuinely empty
+            one, and announcing the wrong one to a screen reader is worse than announcing nothing.
+            So an in-flight table says it is loading and corrects itself when the count arrives. */}
         <p aria-live="polite" className="text-sm text-muted-foreground">
-          {meta.total === 0
-            ? "No results"
-            : `${meta.total} result${meta.total === 1 ? "" : "s"}`}
-          {range && meta.pageCount > 1 && (
+          {loading
+            ? "Loading…"
+            : meta.total === 0
+              ? "No results"
+              : `${meta.total} result${meta.total === 1 ? "" : "s"}`}
+          {!loading && range && meta.pageCount > 1 && (
             <span className="hidden sm:inline">
               {" · "}
               Showing {range.from}–{range.to}
