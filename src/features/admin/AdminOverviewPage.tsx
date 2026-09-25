@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { AlertTriangle, LoaderCircle } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { motion } from "motion/react";
+import { AlertTriangle, ArrowRight, LoaderCircle, Radio } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { AUTO_APPROVE_AFTER_MS } from "@shared/assessment";
@@ -7,10 +8,15 @@ import type { AiPurpose, CredentialStatus, Severity } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { relativeTime } from "@/components/layout/notifications";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { fadeUp, stagger, transition } from "@/lib/motion";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { AnimatedNumber } from "@/pages/parts/Stats";
+import { MiniBar, Sparkline } from "./parts/Sparkline";
 
 interface Overview {
   people: { learners: number; active: number; awaitingFirstSignIn: number; disabled: number };
@@ -33,6 +39,15 @@ interface Overview {
     usage7d: { purpose: AiPurpose; calls: number; inputTokens: number; outputTokens: number; failures: number }[];
   };
   jobs: { queued: number; running: number; failed: number };
+  /** Seven daily buckets, oldest first, each counted from a real timestamp column. */
+  trend7d: {
+    days: number[];
+    onboarded: number[];
+    submitted: number[];
+    events: number[];
+    aiCalls: number[];
+    aiFailures: number[];
+  };
   recentEvents: {
     id: string;
     assessmentId: string;
@@ -52,6 +67,14 @@ interface Overview {
  * Built around what needs attention rather than what looks impressive: things that are stuck or
  * flagged come first, and a number that is zero is shown as zero rather than hidden, so "nothing
  * needs me" is a state you can read at a glance.
+ *
+ * The layout is a bento grid — tiles of deliberately different weights — rather than a row of
+ * identical cards, because the numbers here are not of equal importance and a uniform grid says
+ * they are. "Awaiting your approval" is the only figure on the page with a deadline attached, and
+ * it gets the space to say so.
+ *
+ * Every sparkline is bucketed server-side from real rows (`trend7d`). There is no smoothing and no
+ * synthetic series; a quiet week draws a flat line, which is the honest picture of a quiet week.
  */
 const autoApproveMinutes = Math.round(AUTO_APPROVE_AFTER_MS / 60_000);
 
@@ -159,155 +182,301 @@ export default function AdminOverviewPage() {
         </div>
       )}
 
-      <section aria-labelledby="counts-heading" className="mt-8">
-        <h2 id="counts-heading" className="sr-only">
-          Counts
-        </h2>
-        <dl className="grid gap-px overflow-hidden rounded-md border bg-border sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label="Learners" value={data.people.learners} hint={`${data.people.active} active`} />
-          <Stat label="Awaiting first sign-in" value={data.people.awaitingFirstSignIn} />
-          <Stat label="Assessments in progress" value={data.assessments.inProgress} to="/admin/live" />
-          {/* Generation folded in as a hint rather than its own tile: it is the same funnel, and
-              the number that needs a person is the one above it. */}
-          <Stat
+      {/* One entrance for the whole grid, staggered by tile — not a fade per element. */}
+      <motion.div
+        variants={stagger(0.04)}
+        initial="hidden"
+        animate="visible"
+        className="mt-8 grid auto-rows-min gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        <Tile span="lg:col-span-2" to="/admin/people" ariaLabel="Learners">
+          <TileHead label="Learners" hint={`${data.people.active} active · ${data.people.disabled} disabled`} />
+          <div className="mt-2 flex items-end justify-between gap-4">
+            <BigNumber value={data.people.learners} />
+            <div className="w-32 text-primary sm:w-40">
+              <Sparkline values={data.trend7d.onboarded} noun="onboarded" label="Learners onboarded" />
+            </div>
+          </div>
+          {data.people.awaitingFirstSignIn > 0 && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              {data.people.awaitingFirstSignIn} {data.people.awaitingFirstSignIn === 1 ? "has" : "have"} not signed in yet.
+            </p>
+          )}
+        </Tile>
+
+        <Tile
+          span="lg:col-span-2"
+          to="/admin/people"
+          tone={data.assessments.awaitingApproval > 0 ? "warn" : undefined}
+          ariaLabel="Assessments awaiting your approval"
+        >
+          <TileHead
             label="Awaiting your approval"
-            value={data.assessments.awaitingApproval}
-            hint={data.assessments.generating > 0 ? `${data.assessments.generating} still generating` : undefined}
-            to="/admin/people"
-            tone={data.assessments.awaitingApproval > 0 ? "warn" : undefined}
+            hint={
+              data.assessments.generating > 0
+                ? `${data.assessments.generating} still generating`
+                : `released on their own after ${autoApproveMinutes} min`
+            }
           />
-          <Stat label="Awaiting evaluation" value={data.assessments.awaitingEvaluation} />
-          <Stat label="Completed" value={data.assessments.completed} />
-          <Stat label="Flagged" value={data.assessments.flagged} tone={data.assessments.flagged > 0 ? "warn" : undefined} />
-          <Stat label="Plans published" value={data.plans.published} />
-        </dl>
-      </section>
-
-      <div className="mt-10 grid gap-10 lg:grid-cols-2">
-        <section aria-labelledby="events-heading">
-          <div className="flex items-center justify-between gap-4">
-            <h2 id="events-heading" className="text-lg font-semibold">
-              Recent integrity events
-            </h2>
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/admin/live">Live view</Link>
-            </Button>
+          <div className="mt-2 flex items-end justify-between gap-4">
+            <BigNumber value={data.assessments.awaitingApproval} tone={data.assessments.awaitingApproval > 0 ? "warn" : undefined} />
+            <div className="w-32 text-summit sm:w-40">
+              <Sparkline values={data.trend7d.submitted} noun="submitted" label="Assessments submitted" />
+            </div>
           </div>
+        </Tile>
 
-          {data.recentEvents.length === 0 ? (
-            <p className="mt-3 text-sm text-muted-foreground">Nothing in the last seven days.</p>
-          ) : (
-            <ul className="mt-3 divide-y rounded-md border">
-              {data.recentEvents.map((event) => (
-                <li key={event.id} className="flex items-center gap-3 px-3 py-2 text-sm">
-                  {event.snapshotPath && (
-                    <img
-                      src={`/api/admin/snapshots/${event.snapshotPath}`}
-                      alt=""
-                      className="h-8 w-10 shrink-0 rounded-sm border object-cover"
-                      loading="lazy"
-                    />
-                  )}
-                  <Link
-                    to={`/admin/people/${event.userId}`}
-                    className="shrink-0 underline decoration-trailmark decoration-2 underline-offset-4"
-                  >
-                    {event.displayName}
-                  </Link>
-                  <StatusBadge kind="severity" status={event.severity} />
-                  <span className="truncate font-mono text-xs text-muted-foreground">
-                    {event.type}
-                    {!event.counted && " (not counted)"}
-                  </span>
-                  <span className="ml-auto shrink-0 font-mono text-[11px] text-muted-foreground">
-                    {formatTimestamp(event.createdAt)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-        <section aria-labelledby="ai-heading">
-          <div className="flex items-center justify-between gap-4">
-            <h2 id="ai-heading" className="text-lg font-semibold">
-              AI
-            </h2>
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/admin/ai">Settings</Link>
-            </Button>
-          </div>
-
-          <p className="mt-3 flex flex-wrap items-center gap-2 text-sm">
-            {data.ai.configured ? (
-              <>
-                <StatusBadge kind="credential" status={data.ai.status ?? "unverified"} />
-                <span className="font-mono text-xs text-muted-foreground">
-                  {data.ai.label} · {data.ai.provider}
-                </span>
-              </>
-            ) : (
-              <span className="text-muted-foreground">Not configured.</span>
+        <Tile to="/admin/live" ariaLabel="Assessments in progress">
+          <TileHead label="In progress" />
+          <div className="mt-2 flex items-center gap-2">
+            <BigNumber value={data.assessments.inProgress} />
+            {data.assessments.inProgress > 0 && (
+              <span className="flex items-center gap-1.5 text-xs text-summit-strong">
+                <Radio className="h-3 w-3 animate-status-pulse" aria-hidden="true" />
+                live
+              </span>
             )}
-          </p>
+          </div>
+        </Tile>
 
-          {data.ai.usage7d.length > 0 && (
-            <table className="mt-4 w-full border-collapse text-sm">
-              <caption className="pb-2 text-left text-xs text-muted-foreground">Last seven days</caption>
-              <thead>
-                <tr className="border-b text-left">
-                  <th scope="col" className="py-1.5 text-xs font-semibold text-muted-foreground">Purpose</th>
-                  <th scope="col" className="py-1.5 text-right text-xs font-semibold text-muted-foreground">Calls</th>
-                  <th scope="col" className="py-1.5 text-right text-xs font-semibold text-muted-foreground">Tokens</th>
-                  <th scope="col" className="py-1.5 text-right text-xs font-semibold text-muted-foreground">Failures</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.ai.usage7d.map((row) => (
-                  <tr key={row.purpose} className="border-b last:border-0">
-                    <td className="py-1.5">{row.purpose}</td>
-                    <td className="py-1.5 text-right tabular">{row.calls}</td>
-                    <td className="py-1.5 text-right tabular">{(row.inputTokens + row.outputTokens).toLocaleString()}</td>
-                    <td className={cn("py-1.5 text-right tabular", row.failures > 0 && "text-destructive")}>{row.failures}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+        <Tile ariaLabel="Assessments awaiting evaluation">
+          <TileHead label="Awaiting evaluation" />
+          <BigNumber className="mt-2" value={data.assessments.awaitingEvaluation} />
+        </Tile>
 
-          <p className="mt-4 font-mono text-xs text-muted-foreground">
+        <Tile ariaLabel="Completed assessments">
+          <TileHead label="Completed" />
+          <BigNumber className="mt-2" value={data.assessments.completed} />
+        </Tile>
+
+        <Tile to="/admin/people" tone={data.assessments.flagged > 0 ? "warn" : undefined} ariaLabel="Flagged assessments">
+          <TileHead label="Flagged" />
+          <BigNumber className="mt-2" value={data.assessments.flagged} tone={data.assessments.flagged > 0 ? "warn" : undefined} />
+        </Tile>
+
+        {/* The plan funnel, as one tile rather than two competing numbers. */}
+        <Tile span="sm:col-span-2 lg:col-span-2" ariaLabel="Learning plans">
+          <TileHead label="Plans published" hint={`of ${data.people.learners} learner${data.people.learners === 1 ? "" : "s"}`} />
+          <div className="mt-2 flex items-end gap-4">
+            <BigNumber value={data.plans.published} />
+            {data.plans.learnersWithoutPlan > 0 && (
+              <Badge variant="progress" className="mb-1.5">
+                {data.plans.learnersWithoutPlan} without a plan
+              </Badge>
+            )}
+          </div>
+          <MiniBar
+            className="mt-3"
+            tone="summit"
+            value={data.plans.published}
+            max={Math.max(data.people.learners, data.plans.published)}
+          />
+        </Tile>
+
+        <Tile span="sm:col-span-2 lg:col-span-2" to="/admin/ai" ariaLabel="AI provider">
+          <TileHead
+            label="AI"
+            hint={
+              data.ai.configured
+                ? `${data.ai.label ?? "credential"} · ${data.ai.provider ?? ""}`.trim()
+                : "no credential configured"
+            }
+          />
+          <div className="mt-2 flex items-end justify-between gap-4">
+            <div className="flex items-center gap-2">
+              {data.ai.configured ? (
+                <StatusBadge kind="credential" status={data.ai.status ?? "unverified"} />
+              ) : (
+                <Badge variant="outline">Not configured</Badge>
+              )}
+              <span className="tabular text-sm text-muted-foreground">
+                <AnimatedNumber value={data.trend7d.aiCalls.reduce((a, b) => a + b, 0)} /> calls / 7d
+              </span>
+            </div>
+            <div
+              className={cn(
+                "w-32 sm:w-40",
+                data.trend7d.aiFailures.some((n) => n > 0) ? "text-destructive" : "text-primary",
+              )}
+            >
+              <Sparkline values={data.trend7d.aiCalls} noun="calls" label="AI calls" />
+            </div>
+          </div>
+          <p className="mt-3 font-mono text-xs text-muted-foreground">
             Jobs: {data.jobs.queued} queued · {data.jobs.running} running
             {data.jobs.failed > 0 && <span className="text-destructive"> · {data.jobs.failed} failed</span>}
           </p>
-        </section>
+        </Tile>
+      </motion.div>
+
+      <div className="mt-10 grid gap-10 lg:grid-cols-2">
+        <IntegritySection data={data} />
+        <UsageSection data={data} />
       </div>
     </div>
   );
 }
 
-function Stat({
-  label,
-  value,
-  hint,
+function IntegritySection({ data }: { data: Overview }) {
+  const total = data.trend7d.events.reduce((a, b) => a + b, 0);
+  return (
+    <section aria-labelledby="events-heading">
+      <div className="flex items-center justify-between gap-4">
+        <h2 id="events-heading" className="font-display text-lg font-semibold">
+          Recent integrity events
+        </h2>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/admin/integrity">All events</Link>
+        </Button>
+      </div>
+
+      {total > 0 && (
+        <div className="mt-3 w-full text-trailmark">
+          <Sparkline values={data.trend7d.events} noun="events" label="Integrity events" height={24} />
+        </div>
+      )}
+
+      {data.recentEvents.length === 0 ? (
+        <p className="mt-3 text-sm text-muted-foreground">Nothing in the last seven days.</p>
+      ) : (
+        <motion.ul variants={stagger(0.03)} initial="hidden" animate="visible" className="mt-3 divide-y rounded-md border">
+          {data.recentEvents.map((event) => (
+            <motion.li
+              key={event.id}
+              variants={fadeUp}
+              transition={transition.fast}
+              className="flex items-center gap-3 px-3 py-2 text-sm"
+            >
+              {event.snapshotPath && (
+                <img
+                  src={`/api/admin/snapshots/${event.snapshotPath}`}
+                  alt=""
+                  className="h-8 w-10 shrink-0 rounded-sm border object-cover"
+                  loading="lazy"
+                />
+              )}
+              <Link
+                to={`/admin/people/${event.userId}`}
+                className="shrink-0 underline decoration-trailmark decoration-2 underline-offset-4"
+              >
+                {event.displayName}
+              </Link>
+              <StatusBadge kind="severity" status={event.severity} />
+              <span className="truncate font-mono text-xs text-muted-foreground">
+                {event.type}
+                {!event.counted && " (not counted)"}
+              </span>
+              <span
+                className="ml-auto shrink-0 font-mono text-[11px] text-muted-foreground"
+                title={formatTimestamp(event.createdAt)}
+              >
+                {relativeTime(event.createdAt)}
+              </span>
+            </motion.li>
+          ))}
+        </motion.ul>
+      )}
+    </section>
+  );
+}
+
+function UsageSection({ data }: { data: Overview }) {
+  const rows = data.ai.usage7d;
+  // One shared scale across the rows, or the bars would compare each row against itself.
+  const maxCalls = useMemo(() => Math.max(1, ...rows.map((r) => r.calls)), [rows]);
+
+  return (
+    <section aria-labelledby="ai-heading">
+      <div className="flex items-center justify-between gap-4">
+        <h2 id="ai-heading" className="font-display text-lg font-semibold">
+          AI usage
+        </h2>
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/admin/ai">Settings</Link>
+        </Button>
+      </div>
+
+      {rows.length === 0 ? (
+        <p className="mt-3 text-sm text-muted-foreground">No provider calls in the last seven days.</p>
+      ) : (
+        <ul className="mt-3 space-y-3">
+          {rows.map((row) => (
+            <li key={row.purpose}>
+              <div className="flex items-baseline justify-between gap-3 text-sm">
+                <span className="font-medium">{row.purpose.replace(/_/g, " ")}</span>
+                <span className="tabular text-xs text-muted-foreground">
+                  {row.calls} call{row.calls === 1 ? "" : "s"} · {(row.inputTokens + row.outputTokens).toLocaleString()} tokens
+                  {row.failures > 0 && <span className="text-destructive"> · {row.failures} failed</span>}
+                </span>
+              </div>
+              <MiniBar className="mt-1.5" value={row.calls} max={maxCalls} tone={row.failures > 0 ? "danger" : "brand"} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+/**
+ * One bento tile.
+ *
+ * `to` makes the whole tile a link; without it the tile is inert. The tile is a `motion.div` and the
+ * link is inside it rather than the other way round, because animating a link's transform fights
+ * the hover transition on the same element.
+ */
+function Tile({
+  children,
+  span,
   to,
   tone,
+  ariaLabel,
 }: {
-  label: string;
-  value: number;
-  hint?: string;
+  children: React.ReactNode;
+  span?: string;
   to?: string;
   tone?: "warn";
+  ariaLabel: string;
 }) {
-  const body = (
-    <div className={cn("bg-background px-4 py-4", to && "transition-colors hover:bg-surface-sunken/50")}>
-      <dd className={cn("font-display text-2xl font-semibold tabular", tone === "warn" && value > 0 && "text-destructive")}>
-        {value}
-      </dd>
-      <dt className="mt-1 text-sm text-muted-foreground">{label}</dt>
-      {hint && <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">{hint}</p>}
+  const shell = cn(
+    "relative flex h-full flex-col rounded-lg border bg-background p-4",
+    tone === "warn" ? "border-trailmark/50 bg-trailmark/[0.04]" : "border-border",
+    to && "transition-colors hover:bg-surface-sunken/60",
+  );
+
+  return (
+    <motion.div variants={fadeUp} transition={transition.base} className={span}>
+      {to ? (
+        <Link to={to} aria-label={ariaLabel} className={cn(shell, "group")}>
+          {children}
+          <ArrowRight
+            className="absolute right-3 top-3 h-3.5 w-3.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+            aria-hidden="true"
+          />
+        </Link>
+      ) : (
+        <div className={shell}>{children}</div>
+      )}
+    </motion.div>
+  );
+}
+
+function TileHead({ label, hint }: { label: string; hint?: string }) {
+  return (
+    <div className="min-w-0 pr-6">
+      <p className="text-sm text-muted-foreground">{label}</p>
+      {hint && <p className="mt-0.5 truncate font-mono text-[11px] text-muted-foreground/80">{hint}</p>}
     </div>
   );
-  return to ? <Link to={to}>{body}</Link> : body;
+}
+
+function BigNumber({ value, tone, className }: { value: number; tone?: "warn"; className?: string }) {
+  return (
+    <AnimatedNumber
+      value={value}
+      className={cn("font-display text-3xl leading-none font-semibold", tone === "warn" && value > 0 && "text-destructive", className)}
+    />
+  );
 }
 
 function Attention({ to, label }: { to: string; label: string }) {

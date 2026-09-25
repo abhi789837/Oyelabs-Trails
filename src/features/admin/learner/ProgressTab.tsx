@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronRight, LoaderCircle } from "lucide-react";
+import type { ColumnDef } from "@tanstack/react-table";
+import { LoaderCircle } from "lucide-react";
 
 import type { ServedModule, ServedTopic, TopicProgressValue } from "@shared/content";
 import type { AttemptKind } from "@shared/enums";
@@ -7,6 +8,7 @@ import type { PlanResponse } from "@shared/plans";
 
 import { api, ApiRequestError } from "@/api/client";
 import { RichText } from "@/components/content/RichText";
+import { DataTable, useTableQueryState, type TableFieldDef } from "@/components/data-table";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -36,14 +38,29 @@ interface Row {
   level: string;
   inPlan: boolean;
   progress: TopicProgressValue | undefined;
+  /** Flattened off `progress` so the catalogue can filter and sort on them directly. */
+  status: TopicProgressValue["status"];
+  attempts: number;
+  bestScore: number | null;
+  completedAt: number | null;
+  attemptCount: number;
 }
 
 /**
  * Per-topic progress with the submitted work behind it (brief §13).
  *
- * A score on its own says whether they passed; it does not say whether they understood. Expanding
- * a row fetches that camp's content — which for a superadmin comes back with the answer keys — so
- * a wrong answer can be read next to the right one and a code submission can simply be read.
+ * A score on its own says whether they passed; it does not say whether they understood. Opening a
+ * row fetches that camp's content — which for a superadmin comes back with the answer keys — so a
+ * wrong answer can be read next to the right one and a code submission can simply be read.
+ *
+ * On the DataTable kit in `mode="client"`: the rows are assembled here from the curriculum manifest
+ * and one progress record, so every row is already in hand and client mode can count facets. The
+ * `topicAttemptsTableSpec` on the server is for a paged view of the raw attempts, which is a
+ * different question from this one.
+ *
+ * The submitted work moved from an inline expanding row into the kit's detail panel. An attempt with
+ * a dozen quiz questions in it is taller than the table, and expanding one used to push every row
+ * below it off the screen — the thing being compared against.
  */
 export function ProgressTab({
   userId,
@@ -55,10 +72,9 @@ export function ProgressTab({
   plan: PlanResponse | null;
 }) {
   const tracks = useTracks();
+  const { query, setQuery } = useTableQueryState();
   const [attempts, setAttempts] = useState<TopicAttempt[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [open, setOpen] = useState<string | null>(null);
-  const [onlyStarted, setOnlyStarted] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -74,6 +90,16 @@ export function ProgressTab({
   }, [userId]);
 
   const planIds = useMemo(() => new Set(plan?.plan?.topicIds ?? []), [plan]);
+
+  const byTopic = useMemo(() => {
+    const map = new Map<string, TopicAttempt[]>();
+    for (const attempt of attempts ?? []) {
+      const list = map.get(attempt.topicId) ?? [];
+      list.push(attempt);
+      map.set(attempt.topicId, list);
+    }
+    return map;
+  }, [attempts]);
 
   const rows = useMemo<Row[]>(() => {
     const out: Row[] = [];
@@ -95,45 +121,113 @@ export function ProgressTab({
             level: levelLabels[topic.level],
             inPlan,
             progress: value,
+            status: value?.status ?? "not-started",
+            attempts: value?.attempts ?? 0,
+            bestScore: value?.bestScore ?? null,
+            completedAt: value?.completedAt ?? null,
+            attemptCount: byTopic.get(topic.id)?.length ?? 0,
           });
         }
       }
     }
     return out;
-  }, [tracks, planIds, progress]);
+  }, [tracks, planIds, progress, byTopic]);
 
-  const visible = onlyStarted ? rows.filter((row) => row.progress && row.progress.status !== "not-started") : rows;
-  const byTopic = useMemo(() => {
-    const map = new Map<string, TopicAttempt[]>();
-    for (const attempt of attempts ?? []) {
-      const list = map.get(attempt.topicId) ?? [];
-      list.push(attempt);
-      map.set(attempt.topicId, list);
-    }
-    return map;
-  }, [attempts]);
+  /* Options come from this learner's own rows, not the whole curriculum: a filter listing 67 camps
+     when they have topics in four of them is a worse control than one listing four. */
+  const fields = useMemo<TableFieldDef<Row>[]>(() => {
+    const distinct = (pick: (row: Row) => string) =>
+      [...new Set(rows.map(pick))].sort().map((value) => ({ value, label: value }));
 
-  const completed = rows.filter((row) => row.progress?.status === "completed").length;
+    return [
+      { name: "title", label: "Topic", type: "string", searchable: true },
+      { name: "topicId", label: "Topic id", type: "string", searchable: true },
+      { name: "trackName", label: "Trail", type: "string", ...enumOf(distinct((r) => r.trackName)), quick: true },
+      { name: "moduleName", label: "Camp", type: "string", ...enumOf(distinct((r) => r.moduleName)), quick: true },
+      { name: "level", label: "Level", type: "string", ...enumOf(distinct((r) => r.level)) },
+      {
+        name: "status",
+        label: "Status",
+        type: "enum",
+        quick: true,
+        options: [
+          { value: "completed", label: "Completed" },
+          { value: "in-progress", label: "In progress" },
+          { value: "not-started", label: "Not started" },
+        ],
+      },
+      { name: "attempts", label: "Attempts", type: "number", min: 0, max: 20, quick: true },
+      { name: "bestScore", label: "Best score", type: "number", min: 0, max: 100, unit: "%", quick: true },
+      { name: "completedAt", label: "Completed", type: "date" },
+      { name: "inPlan", label: "In their plan", type: "boolean", trueLabel: "In the plan", falseLabel: "Outside it" },
+    ];
+  }, [rows]);
+
+  const columns = useMemo<ColumnDef<Row, unknown>[]>(
+    () => [
+      {
+        id: "title",
+        header: "Topic",
+        cell: ({ row }) => (
+          <div className="min-w-0">
+            <span className="block font-medium">{row.original.title}</span>
+            <span className="mt-0.5 block font-mono text-[11px] text-muted-foreground">
+              {row.original.topicId} · {row.original.level}
+            </span>
+          </div>
+        ),
+      },
+      {
+        id: "moduleName",
+        header: "Camp",
+        cell: ({ row }) => (
+          <div className="text-muted-foreground">
+            {row.original.moduleName}
+            <span className="mt-0.5 block text-xs">{row.original.trackName}</span>
+            {!row.original.inPlan && (
+              <Badge variant="outline" className="mt-1">
+                not in plan
+              </Badge>
+            )}
+          </div>
+        ),
+      },
+      { id: "status", header: "Status", cell: ({ row }) => <StatusBadge kind="topic" status={row.original.status} /> },
+      { id: "attempts", header: "Attempts", meta: { align: "right" }, cell: ({ row }) => <span className="tabular">{row.original.attempts}</span> },
+      {
+        id: "bestScore",
+        header: "Best score",
+        meta: { align: "right" },
+        cell: ({ row }) =>
+          row.original.bestScore === null ? (
+            <span className="text-muted-foreground">—</span>
+          ) : (
+            <span className="tabular">{row.original.bestScore}%</span>
+          ),
+      },
+      {
+        id: "completedAt",
+        header: "Completed",
+        cell: ({ row }) => (
+          <span className="whitespace-nowrap text-muted-foreground">
+            {row.original.completedAt === null ? "—" : formatTimestamp(row.original.completedAt)}
+          </span>
+        ),
+      },
+    ],
+    [],
+  );
+
+  const completed = rows.filter((row) => row.status === "completed").length;
 
   return (
     <section aria-label="Progress">
-      <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-4">
-        <div>
-          <h2 className="text-lg font-semibold">Progress</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {completed} of {rows.length} topic{rows.length === 1 ? "" : "s"} completed
-            {attempts ? ` · ${attempts.length} attempt${attempts.length === 1 ? "" : "s"} recorded` : ""}
-          </p>
-        </div>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={onlyStarted}
-            onChange={(e) => setOnlyStarted(e.target.checked)}
-            className="h-4 w-4 accent-[rgb(var(--trailmark))]"
-          />
-          Only topics they've opened
-        </label>
+      <div className="border-b pb-4">
+        <h2 className="font-display text-lg font-semibold">Progress</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {completed} of {rows.length} topic{rows.length === 1 ? "" : "s"} completed
+          {attempts ? ` · ${attempts.length} attempt${attempts.length === 1 ? "" : "s"} recorded` : ""}
+        </p>
       </div>
 
       {error && (
@@ -142,130 +236,64 @@ export function ProgressTab({
         </div>
       )}
 
-      {visible.length === 0 ? (
-        <p className="mt-8 text-sm text-muted-foreground">
-          {rows.length === 0 ? "No plan published yet, and nothing completed." : "Nothing started yet."}
-        </p>
-      ) : (
-        <div className="mt-6 overflow-x-auto rounded-md border">
-          <table className="w-full min-w-208 border-collapse text-sm">
-            <thead>
-              <tr className="border-b bg-surface-sunken/50 text-left">
-                <Th>Topic</Th>
-                <Th>Camp</Th>
-                <Th>Status</Th>
-                <Th className="text-right">Attempts</Th>
-                <Th className="text-right">Best score</Th>
-                <Th>Completed</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {visible.map((row) => {
-                const topicAttempts = byTopic.get(row.topicId) ?? [];
-                const expandable = topicAttempts.length > 0;
-                const expanded = open === row.topicId;
-                return (
-                  <ProgressRow
-                    key={row.topicId}
-                    row={row}
-                    attempts={topicAttempts}
-                    expandable={expandable}
-                    expanded={expanded}
-                    onToggle={() => setOpen(expanded ? null : row.topicId)}
-                    loading={attempts === null}
-                  />
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <div className="mt-6">
+        <DataTable
+          data={rows}
+          columns={columns}
+          fields={fields}
+          getRowId={(row) => row.topicId}
+          query={query}
+          onQueryChange={setQuery}
+          mode="client"
+          defaultSort={[{ field: "completedAt", dir: "desc" }]}
+          tableKey="admin.learner.progress"
+          loading={attempts === null}
+          noun="topic"
+          exportName={`progress-${userId}`}
+          searchPlaceholder="Search topic or id"
+          caption="Every topic in their plan, plus anything they completed outside it."
+          emptyState={{
+            title: "Nothing to show yet",
+            body: "Once a plan is published, its topics appear here with whatever they have attempted.",
+          }}
+          renderDetail={(row) => <TopicAttempts row={row} attempts={byTopic.get(row.topicId) ?? []} />}
+          detailTitle={(row) => row.title}
+          detailSubtitle={(row) => (
+            <span className="font-mono text-xs">
+              {row.topicId} · {row.moduleName}
+            </span>
+          )}
+          mobileCard={(row) => (
+            <div className="space-y-2">
+              <span className="block font-medium">{row.title}</span>
+              <span className="block font-mono text-[11px] text-muted-foreground">
+                {row.moduleName} · {row.level}
+              </span>
+              <div className="flex flex-wrap items-center gap-1.5">
+                <StatusBadge kind="topic" status={row.status} />
+                {row.bestScore !== null && <Badge variant="outline">{row.bestScore}%</Badge>}
+                {row.attempts > 0 && (
+                  <span className="text-xs text-muted-foreground">
+                    {row.attempts} attempt{row.attempts === 1 ? "" : "s"}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+        />
+      </div>
     </section>
   );
 }
 
-function ProgressRow({
-  row,
-  attempts,
-  expandable,
-  expanded,
-  onToggle,
-  loading,
-}: {
-  row: Row;
-  attempts: TopicAttempt[];
-  expandable: boolean;
-  expanded: boolean;
-  onToggle: () => void;
-  loading: boolean;
-}) {
-  const status = row.progress?.status ?? "not-started";
-
-  return (
-    <>
-      <tr className={cn("border-b hover:bg-surface-sunken/30", expanded && "bg-surface-sunken/30")}>
-        <Td>
-          {expandable ? (
-            <button
-              type="button"
-              onClick={onToggle}
-              aria-expanded={expanded}
-              className="flex items-start gap-1.5 text-left font-medium"
-            >
-              <ChevronRight
-                className={cn("mt-0.5 h-3.5 w-3.5 shrink-0 transition-transform", expanded && "rotate-90")}
-                aria-hidden="true"
-              />
-              <span>
-                {row.title}
-                <span className="mt-0.5 block font-mono text-[11px] font-normal text-muted-foreground">
-                  {row.topicId} · {row.level}
-                </span>
-              </span>
-            </button>
-          ) : (
-            <span className="block pl-5 font-medium">
-              {row.title}
-              <span className="mt-0.5 block font-mono text-[11px] font-normal text-muted-foreground">
-                {row.topicId} · {row.level}
-              </span>
-            </span>
-          )}
-        </Td>
-        <Td className="text-muted-foreground">
-          {row.moduleName}
-          <span className="mt-0.5 block text-xs">{row.trackName}</span>
-          {!row.inPlan && (
-            <Badge variant="outline" className="mt-1">
-              not in plan
-            </Badge>
-          )}
-        </Td>
-        <Td>
-          <StatusBadge kind="topic" status={status} />
-        </Td>
-        <Td className="text-right tabular">{row.progress?.attempts ?? 0}</Td>
-        <Td className="text-right tabular">
-          {row.progress?.bestScore === null || row.progress?.bestScore === undefined ? (
-            <span className="text-muted-foreground">—</span>
-          ) : (
-            `${row.progress.bestScore}%`
-          )}
-        </Td>
-        <Td className="whitespace-nowrap text-muted-foreground">
-          {row.progress?.completedAt ? formatTimestamp(row.progress.completedAt) : loading ? "" : "—"}
-        </Td>
-      </tr>
-
-      {expanded && (
-        <tr className="border-b bg-surface-sunken/20">
-          <td colSpan={6} className="px-3 py-4">
-            <TopicAttempts row={row} attempts={attempts} />
-          </td>
-        </tr>
-      )}
-    </>
-  );
+/**
+ * Turns a distinct-value list into the `enum` half of a field definition.
+ *
+ * Only when there is something to list: a faceted filter with zero options is a dead control, and
+ * one with a single option cannot change the result set, so both stay a plain string field.
+ */
+function enumOf(options: { value: string; label: string }[]) {
+  return options.length > 1 ? ({ type: "enum", options } as const) : {};
 }
 
 function TopicAttempts({ row, attempts }: { row: Row; attempts: TopicAttempt[] }) {
@@ -284,6 +312,16 @@ function TopicAttempts({ row, attempts }: { row: Row; attempts: TopicAttempt[] }
   }, [module, row.trackId, row.moduleId]);
 
   const topic = module?.topics.find((t) => t.id === row.topicId);
+
+  if (attempts.length === 0) {
+    return (
+      <p className="text-sm text-muted-foreground">
+        {row.status === "not-started"
+          ? "They have not opened this topic yet."
+          : "They have opened this topic but not submitted the challenge."}
+      </p>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -400,17 +438,4 @@ function QuizAnswers({
       })}
     </ol>
   );
-}
-
-// Sentence case, not the usual ALL-CAPS table header: the design system rules that out.
-function Th({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <th scope="col" className={cn("px-3 py-2 text-xs font-semibold text-muted-foreground", className)}>
-      {children}
-    </th>
-  );
-}
-
-function Td({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <td className={cn("px-3 py-3 align-top", className)}>{children}</td>;
 }

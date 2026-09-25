@@ -56,8 +56,8 @@ sessions. Terminating a live assessment is destructive to the *learner's* hour a
 
 Not yet a table but should be one: global integrity events, notifications.
 
-**The kit is built (U4); none of these pages have been migrated yet** — that is U7–U9, and the
-pages were owned by other agents while U4 ran. Each already has a whitelist waiting for it in
+**All five are migrated (U7–U9), plus two tables that did not exist before: the global integrity
+feed and the curriculum browser.** Each already has a whitelist waiting for it in
 `server/src/lib/tableSpecs.ts`, which is the only thing a server-paged route needs to add:
 
 | Page | Client field catalogue | Server spec | Mode |
@@ -416,3 +416,48 @@ reported: if there is no stage for it, there is no stage.
 `npm run lint` → `eslint .` with `eslint.config.js`: `no-alert` and `no-restricted-globals` for
 `alert`/`confirm`/`prompt`, and nothing else. `src/content/**` is exempt — see §1 for why. The
 TypeScript parser is there to read `.ts`/`.tsx`; no type-aware rules run.
+
+### Admin-screen API, in one place (U7–U9)
+
+```tsx
+// src/features/admin/parts/Sparkline.tsx — no chart library anywhere in the app
+<Sparkline values={trend.aiCalls} noun="calls" label="AI calls" height={28} area />
+<MiniBar value={row.calls} max={maxCalls} tone="brand|summit|trailmark|danger" />
+// Colour comes from `currentColor`: the caller sets `text-summit`, the stroke/fill/dot follow.
+// Zero baseline, never the minimum; a flat week draws flat. The svg is aria-hidden and the
+// accessible content is the sr-only sentence.
+```
+
+```ts
+// server/src/lib/pagedRoute.ts — the three lines every server-paged route repeats
+const { meta, apply } = pagedQuery(app.db, spec, table, request.query);
+const rows = apply(app.db.select().from(table).$dynamic()).all();
+return { meta, rows };
+// Counts with the same WHERE *before* resolving the page, so page 9 of a 3-page result returns
+// the last page instead of an empty one. Seven tests in `pagedRoute.test.ts` pin that.
+```
+
+**Which page uses which mode, and why.**
+
+| Page | Mode | Reason |
+| --- | --- | --- |
+| People | `client` | One response; client mode is the only one that can count facets |
+| Learner → Progress | `client` | Rows are assembled from the manifest + one progress record |
+| Curriculum browser | `client` | 715 rows already in the store; facet counts are most of the value |
+| Audit log | `server` | Unbounded. "No results" must mean no results, not "not in the newest 200" |
+| AI calls | `server` | One generation writes a dozen rows |
+| Integrity events (global) | `server` | Unbounded across every learner |
+
+**Two things the admin screens deliberately do not do.**
+
+- **No invented series.** Every sparkline is bucketed server-side from a real timestamp column
+  (`trend7d` on `/api/admin/overview`, on *local* midnights so a DST change does not put two events
+  in the wrong column). No smoothing, no interpolation.
+- **The live board is not a camera feed.** Thumbnails are snapshots already captured *with* an
+  integrity event, each labelled with the event and its time, from the auth-checked route. A grid
+  that refreshed itself would imply a freshness the data does not have.
+
+**Faceted lists that would go stale are not faceted.** The audit log's action vocabulary grows with
+new code, so the chips filter by *family* (`startsWith "assessment."`) rather than by a hardcoded
+list of actions — an action added tomorrow appears under its family without this file changing.
+Same rule as the notification-kind fallback in U5.

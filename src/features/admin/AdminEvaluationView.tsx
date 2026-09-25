@@ -121,15 +121,15 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
           </Button>
         </div>
 
-        <ul className="mt-3 space-y-3">
+        <ul className="mt-3 grid gap-3 lg:grid-cols-2">
           {result.areas.map((area) => (
-            <li key={area.area} className="rounded-md border px-4 py-3">
-              <p className="flex flex-wrap items-center gap-2 font-medium">
-                {area.area}
-                <Badge variant="outline">{area.level}/5</Badge>
-                <span
+            <li key={area.area} className="flex gap-4 rounded-md border px-4 py-3">
+              <LevelRing level={area.level} confidence={area.confidence} />
+              <div className="min-w-0 flex-1">
+                <p className="font-medium">{area.area}</p>
+                <p
                   className={cn(
-                    "font-mono text-xs",
+                    "mt-0.5 font-mono text-xs",
                     area.confidence === "high"
                       ? "text-summit-strong"
                       : area.confidence === "low"
@@ -138,27 +138,27 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
                   )}
                 >
                   {area.confidence} confidence
-                </span>
-              </p>
+                </p>
 
-              {area.strengths.length > 0 && (
-                <p className="mt-2 text-sm">
-                  <span className="font-medium text-summit-strong">Strengths: </span>
-                  <span className="text-muted-foreground">{area.strengths.join("; ")}</span>
-                </p>
-              )}
-              {area.gaps.length > 0 && (
-                <p className="mt-1 text-sm">
-                  <span className="font-medium text-trailmark-strong">Gaps: </span>
-                  <span className="text-muted-foreground">{area.gaps.join("; ")}</span>
-                </p>
-              )}
+                {area.strengths.length > 0 && (
+                  <p className="mt-2 text-sm">
+                    <span className="font-medium text-summit-strong">Strengths: </span>
+                    <span className="text-muted-foreground">{area.strengths.join("; ")}</span>
+                  </p>
+                )}
+                {area.gaps.length > 0 && (
+                  <p className="mt-1 text-sm">
+                    <span className="font-medium text-trailmark-strong">Gaps: </span>
+                    <span className="text-muted-foreground">{area.gaps.join("; ")}</span>
+                  </p>
+                )}
 
-              {showEvidence && area.evidence.length > 0 && (
-                <p className="mt-2 font-mono text-[11px] text-muted-foreground">
-                  Evidence: {area.evidence.join(", ")}
-                </p>
-              )}
+                {showEvidence && area.evidence.length > 0 && (
+                  <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+                    Evidence: {area.evidence.join(", ")}
+                  </p>
+                )}
+              </div>
             </li>
           ))}
         </ul>
@@ -225,6 +225,50 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
       <p className="font-mono text-xs text-muted-foreground">
         Learner id {userId} · assessment {assessmentId}
       </p>
+    </div>
+  );
+}
+
+/**
+ * One area's level, 1–5, as a ring.
+ *
+ * The ring is a fifth of the circle per level, which makes "3" and "4" distinguishable at a glance
+ * across a dozen areas in a way a row of identical badges is not.
+ *
+ * **Confidence colours the ring, it does not change the level.** A low-confidence 4 is still a 4;
+ * drawing it shorter would be the page quietly discounting a number the model reported, which is
+ * exactly the kind of silent adjustment the evaluation is careful not to make anywhere else.
+ */
+function LevelRing({ level, confidence }: { level: number; confidence: string }) {
+  const size = 44;
+  const stroke = 4;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const fraction = Math.max(0, Math.min(1, level / 5));
+  const tone =
+    confidence === "high" ? "text-summit" : confidence === "low" ? "text-destructive" : "text-trailmark";
+
+  return (
+    <div className="relative shrink-0" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90" aria-hidden="true">
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" strokeWidth={stroke} className="stroke-foreground/10" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          fill="none"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference * (1 - fraction)}
+          stroke="currentColor"
+          className={tone}
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center font-display text-sm font-semibold tabular">
+        {level}
+      </span>
+      <span className="sr-only">Level {level} of 5, {confidence} confidence</span>
     </div>
   );
 }

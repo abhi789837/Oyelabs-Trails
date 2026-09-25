@@ -1,4 +1,4 @@
-import { Cpu, LayoutDashboard, Radio, ScrollText, Users, UserPlus, type LucideIcon } from "lucide-react";
+import { Cpu, LayoutDashboard, Library, Radio, ScrollText, ShieldAlert, Users, UserPlus, type LucideIcon } from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 
@@ -44,13 +44,17 @@ const groups: SectionGroup[] = [
   },
   {
     label: "Assessments",
-    items: [{ to: "/admin/live", end: false, label: "Live", icon: Radio }],
+    items: [
+      { to: "/admin/live", end: false, label: "Live", icon: Radio },
+      { to: "/admin/integrity", end: false, label: "Integrity events", icon: ShieldAlert },
+    ],
   },
   {
     label: "System",
     items: [
       { to: "/admin/ai", end: false, label: "AI connection", icon: Cpu },
       { to: "/admin/audit", end: false, label: "Audit log", icon: ScrollText },
+      { to: "/admin/curriculum", end: false, label: "Curriculum", icon: Library },
     ],
   },
 ];

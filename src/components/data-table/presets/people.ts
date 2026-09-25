@@ -56,6 +56,18 @@ export const peopleFields: TableFieldDef<UserSummary>[] = [
     ],
   },
   { name: "yearsExperience", label: "Experience", type: "number", min: 0, max: 20, unit: "yrs", quick: true },
+  {
+    /* The evaluated overall level, 1–5. A number rather than an enum so "level 3 and up" is one
+       slider drag; null until an assessment has been evaluated, and a null never matches a range,
+       so filtering by level implicitly excludes the not-yet-assessed. That is the useful default:
+       someone asking "who is at level 4?" is not asking about people with no level at all. */
+    name: "overallLevel",
+    label: "Overall level",
+    type: "number",
+    min: 1,
+    max: 5,
+    quick: true,
+  },
   { name: "hardWarnings", label: "Hard warnings", type: "number", min: 0, max: 3 },
   {
     name: "mustChangePassword",

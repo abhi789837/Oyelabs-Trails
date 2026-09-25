@@ -8,6 +8,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminLayout } from "@/features/admin/AdminLayout";
 import AdminAiPage from "@/features/admin/AdminAiPage";
 import AdminAuditPage from "@/features/admin/AdminAuditPage";
+import AdminCurriculumPage from "@/features/admin/AdminCurriculumPage";
+import AdminIntegrityFeedPage from "@/features/admin/AdminIntegrityFeedPage";
 import AdminIntegrityPage from "@/features/admin/AdminIntegrityPage";
 import AdminLivePage from "@/features/admin/AdminLivePage";
 import AdminOnboardPage from "@/features/admin/AdminOnboardPage";
@@ -58,6 +60,8 @@ export default function App() {
                   <Route path="ai" element={<AdminAiPage />} />
                   <Route path="live" element={<AdminLivePage />} />
                   <Route path="audit" element={<AdminAuditPage />} />
+                  <Route path="integrity" element={<AdminIntegrityFeedPage />} />
+                  <Route path="curriculum" element={<AdminCurriculumPage />} />
                   <Route path="assessments/:assessmentId" element={<AdminPoolPage />} />
                   <Route path="assessments/:assessmentId/integrity" element={<AdminIntegrityPage />} />
                   <Route path="*" element={<Navigate to="/admin" replace />} />

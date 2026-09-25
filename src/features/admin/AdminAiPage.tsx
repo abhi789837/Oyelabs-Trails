@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { AlertTriangle, LoaderCircle, RefreshCw, Trash2 } from "lucide-react";
 
 import type { AiStatusResponse, SelectableProvider } from "@shared/ai";
@@ -11,10 +12,13 @@ import { useConfirm } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ShineBorder } from "@/components/ui/shine-border";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { AiCallsTable } from "./AiCallsTable";
 
 /**
  * Admin → AI connection (brief §8.1).
@@ -124,10 +128,16 @@ export default function AdminAiPage() {
               {status.credentials.map((credential) => {
                 const active = status.settings.activeCredentialId === credential.id;
                 const copy = PROVIDER_COPY[credential.provider as SelectableProvider];
+                const verifying = busy === `verify-${credential.id}`;
+                /* Only the active credential gets the travelling border. It is the one every
+                   generation actually runs through, and marking all of them would say nothing. */
+                const Shell = active ? ShineBorder : "li";
                 return (
-                  <li
+                  <Shell
                     key={credential.id}
-                    className={cn("rounded-md border px-4 py-3", active && "border-summit/60 bg-summit/5")}
+                    {...(active
+                      ? { className: "rounded-md", innerClassName: "rounded-md bg-summit/5 px-4 py-3" }
+                      : { className: "rounded-md border px-4 py-3" })}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -148,12 +158,29 @@ export default function AdminAiPage() {
                         {credential.lastError && (
                           <p className="mt-1.5 max-w-prose text-xs text-destructive">{credential.lastError}</p>
                         )}
+                        {/* Verification is a queued job, not the response to this click, so the
+                            line says "asked" rather than claiming a result it does not have yet. */}
+                        <AnimatePresence initial={false}>
+                          {verifying && (
+                            <motion.p
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={transition.fast}
+                              className="mt-1.5 flex items-center gap-1.5 overflow-hidden font-mono text-xs text-muted-foreground"
+                            >
+                              <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
+                              Asking the provider…
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
                       </div>
 
                       <div className="flex shrink-0 gap-1.5">
                         <Button
                           variant="ghost"
                           size="sm"
+                          loading={verifying}
                           disabled={busy !== null}
                           onClick={() =>
                             void act(`verify-${credential.id}`, () =>
@@ -189,7 +216,7 @@ export default function AdminAiPage() {
                         </Button>
                       </div>
                     </div>
-                  </li>
+                  </Shell>
                 );
               })}
             </ul>
@@ -240,6 +267,8 @@ export default function AdminAiPage() {
           table is the only per-learner view of usage.
         </p>
       </section>
+
+      <AiCallsTable />
     </div>
   );
 }

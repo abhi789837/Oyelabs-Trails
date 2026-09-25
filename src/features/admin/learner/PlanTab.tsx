@@ -62,6 +62,17 @@ export function PlanTab({
 
   const published = useMemo(() => new Set(plan?.plan?.topicIds ?? []), [plan]);
 
+  /* The AI's own proposal, for the per-topic diff. Publishing is append-only, so the original is
+     still in the history and is found by source rather than by position — a later admin version
+     does not displace it, and there is no AI version at all on a plan an admin assembled by hand.
+     Null in that case, which is what turns every diff marker off rather than marking the whole
+     plan as "added". */
+  const aiBaseline = useMemo(() => {
+    const aiVersion = plan?.history.find((p) => p.source === "ai");
+    if (!aiVersion || !plan?.plan || plan.plan.id === aiVersion.id) return null;
+    return { version: aiVersion.version, topicIds: new Set(aiVersion.topicIds) };
+  }, [plan]);
+
   // A fresh publish elsewhere (or the first load landing after this tab mounted) re-seeds the
   // selection, so the editor never sits on a stale baseline.
   useEffect(() => {
@@ -175,22 +186,23 @@ export function PlanTab({
         </div>
       </div>
 
-      {(() => {
-        const aiVersion = plan?.history.find((p) => p.source === "ai");
-        if (!aiVersion || !plan?.plan || plan.plan.id === aiVersion.id) return null;
-        const aiSet = new Set(aiVersion.topicIds);
-        const addedSinceAi = plan.plan.topicIds.filter((id) => !aiSet.has(id));
-        const removedSinceAi = aiVersion.topicIds.filter((id) => !plan.plan!.topicIds.includes(id));
-        if (addedSinceAi.length === 0 && removedSinceAi.length === 0) return null;
-        return (
-          <p className="mt-3 font-mono text-xs text-muted-foreground">
-            Against the AI's version {aiVersion.version}:{" "}
-            {addedSinceAi.length > 0 && <span className="text-summit-strong">+{addedSinceAi.length} added</span>}
-            {addedSinceAi.length > 0 && removedSinceAi.length > 0 && " · "}
-            {removedSinceAi.length > 0 && <span className="text-destructive">−{removedSinceAi.length} removed</span>}
-          </p>
-        );
-      })()}
+      {aiBaseline &&
+        (() => {
+          /* Measured against the **current selection**, not the published version, so the line
+             tracks edits as they are made rather than only after a publish. */
+          const addedSinceAi = [...selected].filter((id) => !aiBaseline.topicIds.has(id)).length;
+          const removedSinceAi = [...aiBaseline.topicIds].filter((id) => !selected.has(id)).length;
+          if (addedSinceAi === 0 && removedSinceAi === 0) return null;
+          return (
+            <p className="mt-3 font-mono text-xs text-muted-foreground">
+              Against the AI's version {aiBaseline.version}:{" "}
+              {addedSinceAi > 0 && <span className="text-summit-strong">+{addedSinceAi} added</span>}
+              {addedSinceAi > 0 && removedSinceAi > 0 && " · "}
+              {removedSinceAi > 0 && <span className="text-destructive">−{removedSinceAi} dropped</span>}
+              <span className="ml-1 text-muted-foreground/70">· marked on each topic below</span>
+            </p>
+          );
+        })()}
 
       {plan?.plan && selected.size > 0 && (
         <Progress
@@ -261,6 +273,7 @@ export function PlanTab({
               view={openView}
               selected={selected}
               published={published}
+              aiTopicIds={aiBaseline?.topicIds ?? null}
               progress={progress}
               query={query}
               collapsedCamps={collapsedCamps}
@@ -503,6 +516,7 @@ function TrackPanel({
   view,
   selected,
   published,
+  aiTopicIds,
   progress,
   query,
   collapsedCamps,
@@ -515,6 +529,8 @@ function TrackPanel({
   view: TrackView;
   selected: Set<string>;
   published: Set<string>;
+  /** The AI's original proposal, or null when there is nothing to diff against. */
+  aiTopicIds: Set<string> | null;
   progress: Record<string, TopicProgressValue>;
   query: string;
   collapsedCamps: Set<string>;
@@ -564,6 +580,7 @@ function TrackPanel({
               accent={accent}
               selected={selected}
               published={published}
+              aiTopicIds={aiTopicIds}
               progress={progress}
               filtering={query !== ""}
               /* A filter has to show what it found, so a hit re-opens a camp the admin closed. */
@@ -584,6 +601,7 @@ function Camp({
   accent,
   selected,
   published,
+  aiTopicIds,
   progress,
   filtering,
   open,
@@ -595,6 +613,7 @@ function Camp({
   accent: AccentClasses;
   selected: Set<string>;
   published: Set<string>;
+  aiTopicIds: Set<string> | null;
   progress: Record<string, TopicProgressValue>;
   filtering: boolean;
   open: boolean;
@@ -662,6 +681,7 @@ function Camp({
                   accent={accent}
                   isSelected={selected.has(topic.id)}
                   wasPublished={published.has(topic.id)}
+                  aiDiff={aiDiffOf(aiTopicIds, topic.id, selected.has(topic.id))}
                   progressValue={progress[topic.id]}
                   onToggle={() => onToggleTopic(topic.id)}
                 />
@@ -674,11 +694,27 @@ function Camp({
   );
 }
 
+/**
+ * How one topic differs from the AI's original proposal.
+ *
+ * `null` covers two different situations that need the same answer — there is no AI version to
+ * compare against, and this topic is exactly where the AI left it — because in both cases there is
+ * nothing to mark. Marking every unchanged topic "unchanged" would bury the handful that moved.
+ */
+function aiDiffOf(aiTopicIds: Set<string> | null, topicId: string, isSelected: boolean): "added" | "dropped" | null {
+  if (!aiTopicIds) return null;
+  const inAi = aiTopicIds.has(topicId);
+  if (isSelected && !inAi) return "added";
+  if (!isSelected && inAi) return "dropped";
+  return null;
+}
+
 function TopicCell({
   topic,
   accent,
   isSelected,
   wasPublished,
+  aiDiff,
   progressValue,
   onToggle,
 }: {
@@ -686,6 +722,7 @@ function TopicCell({
   accent: AccentClasses;
   isSelected: boolean;
   wasPublished: boolean;
+  aiDiff: "added" | "dropped" | null;
   progressValue: TopicProgressValue | undefined;
   onToggle: () => void;
 }) {
@@ -701,6 +738,11 @@ function TopicCell({
         "h-full transition-colors",
         isSelected ? cn(accent.border, accent.soft) : "hover:bg-surface-sunken/50",
         dropping && "border-destructive/60 bg-destructive/6",
+        /* A left edge for the AI diff, so it reads without competing with the selection state the
+           border and fill already carry. The two are different questions — "is this in the plan"
+           and "did a person change this" — and they need different channels. */
+        aiDiff === "added" && "border-l-2 border-l-summit",
+        aiDiff === "dropped" && "border-l-2 border-l-destructive",
       )}
     >
       <button
@@ -729,8 +771,18 @@ function TopicCell({
           <span>{formatMinutesCompact(topic.estMinutes)}</span>
         </span>
 
-        {(touched || dropping) && (
+        {(touched || dropping || aiDiff !== null) && (
           <span className="flex flex-wrap items-center gap-1.5">
+            {aiDiff !== null && (
+              <span
+                className={cn(
+                  "font-mono text-[10px]",
+                  aiDiff === "added" ? "text-summit-strong" : "text-destructive",
+                )}
+              >
+                {aiDiff === "added" ? "+ added by an admin" : "− dropped from the AI's plan"}
+              </span>
+            )}
             {status === "completed" && (
               <StatusBadge kind="topic" status="completed">
                 <span className="sr-only"> — the learner has completed this topic</span>

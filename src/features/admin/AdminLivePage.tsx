@@ -1,18 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Clock, LoaderCircle, Radio, ShieldAlert, TimerReset } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { HeartPulse, LoaderCircle, Radio, ShieldAlert, TimerReset, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { AssessmentStatus, Severity } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { relativeTime } from "@/components/layout/notifications";
 import { useConfirm } from "@/components/overlays";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { TimerRing } from "@/features/assessment/TimerRing";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { fadeUp, spring, stagger, transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
-import { cn } from "@/lib/utils";
+import { cn, formatTimestamp } from "@/lib/utils";
+import { AnimatedNumber } from "@/pages/parts/Stats";
 
 interface LiveRow {
   assessmentId: string;
@@ -24,11 +30,18 @@ interface LiveRow {
   startedAt: number | null;
   deadlineAt: number | null;
   msLeft: number | null;
+  /** The attempt's own budget, for the ring. Null on an attempt whose config predates the field. */
+  timeLimitMinutes: number | null;
   hardWarnings: number;
   softWarnings: number;
   lastHeartbeatAt: number | null;
   recentEvents: { id: string; type: string; severity: Severity; counted: boolean; createdAt: number; snapshotPath: string | null }[];
 }
+
+/** A heartbeat older than this means the tab is closed, asleep, or the network went. */
+const HEARTBEAT_STALE_MS = 30_000;
+/** How long a card stays highlighted after an event arrives over the stream. */
+const FLASH_MS = 6000;
 
 /** "about 12 minutes" / "under a minute" — for confirmation copy, not for the timer. */
 function minutesLeftLabel(msLeft: number | null): string {
@@ -45,6 +58,17 @@ function minutesLeftLabel(msLeft: number | null): string {
  * rather than at the next poll. The two together mean a dropped stream degrades to "a few seconds
  * late" rather than "silently stops working" — which for a monitoring screen matters more than
  * the latency does.
+ *
+ * ## What this screen is not
+ *
+ * It is not a camera feed. The thumbnails are **snapshots already captured with an integrity
+ * event**, served from an auth-checked route, and each one is labelled with the event and the time
+ * it belongs to. A grid of stills that updated on its own would read as surveillance-in-progress,
+ * which is not what the system does, and would imply a freshness the data does not have.
+ *
+ * Cards rather than table rows: each attempt carries a countdown, two warning counters, a snapshot
+ * and an event feed, and that is more than a row can hold without a horizontal scrollbar. This is
+ * also the one screen where a pulsing dot is right — the thing being shown genuinely is live.
  */
 export default function AdminLivePage() {
   useDocumentTitle("Live");
@@ -144,13 +168,17 @@ export default function AdminLivePage() {
     );
   }
 
+  const flagged = rows.filter((r) => r.hardWarnings > 0).length;
+
   return (
     <div className="px-4 py-8 sm:px-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Live</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {rows.length === 0 ? "Nobody is taking an assessment right now." : `${rows.length} in progress.`}
+          <p className="mt-1 text-sm text-muted-foreground" aria-live="polite">
+            {rows.length === 0
+              ? "Nobody is taking an assessment right now."
+              : `${rows.length} in progress${flagged > 0 ? `, ${flagged} carrying hard warnings` : ""}.`}
           </p>
         </div>
         <span
@@ -159,119 +187,219 @@ export default function AdminLivePage() {
             connected ? "text-summit-strong" : "text-muted-foreground",
           )}
         >
-          <Radio className="h-3.5 w-3.5" aria-hidden="true" />
+          <Radio className={cn("h-3.5 w-3.5", connected && "animate-status-pulse")} aria-hidden="true" />
           {connected ? "live feed connected" : "reconnecting…"}
         </span>
       </div>
 
-      {error && <div className="mt-6"><FormAlert>{error}</FormAlert></div>}
+      {error && (
+        <div className="mt-6">
+          <FormAlert>{error}</FormAlert>
+        </div>
+      )}
 
-      <ul className="mt-8 space-y-4">
-        {rows.map((row) => {
-          const recentlyFlagged = flash[row.assessmentId] && Date.now() - flash[row.assessmentId] < 6000;
-          const msLeft = row.deadlineAt ? Math.max(0, row.deadlineAt - Date.now()) : null;
-          const heartbeatStale = row.lastHeartbeatAt !== null && Date.now() - row.lastHeartbeatAt > 30_000;
-
-          return (
-            <li
-              key={row.assessmentId}
-              className={cn(
-                "rounded-md border px-4 py-3 transition-colors",
-                recentlyFlagged && "border-destructive/60 bg-destructive/5",
-              )}
-            >
-              <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  to={`/admin/people/${row.userId}`}
-                  className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
-                >
-                  {row.displayName}
-                </Link>
-                <span className="font-mono text-xs text-muted-foreground">{row.username}</span>
-                <StatusBadge kind="assessment" status={row.status} />
-
-                <span className="font-mono text-xs text-muted-foreground tabular">{row.answered} answered</span>
-
-                {msLeft !== null && (
-                  <span className="flex items-center gap-1 font-mono text-xs text-muted-foreground tabular">
-                    <Clock className="h-3 w-3" aria-hidden="true" />
-                    {formatClock(Math.round(msLeft / 1000))}
-                  </span>
-                )}
-
-                <span
-                  className={cn(
-                    "flex items-center gap-1 font-mono text-xs tabular",
-                    row.hardWarnings > 0 ? "font-medium text-destructive" : "text-muted-foreground",
-                  )}
-                >
-                  <ShieldAlert className="h-3 w-3" aria-hidden="true" />
-                  {row.hardWarnings}/3 hard · {row.softWarnings} soft
-                </span>
-
-                {heartbeatStale && (
-                  <Badge variant="danger">
-                    no heartbeat
-                  </Badge>
-                )}
-
-                <div className="ml-auto flex gap-1.5">
-                  {row.status === "in_progress" && (
-                    <>
-                      <Button variant="ghost" size="sm" disabled={busy !== null} onClick={() => void act(row, "extend")}>
-                        <TimerReset aria-hidden="true" />
-                        +10 min
-                      </Button>
-                      <Button variant="ghost" size="sm" disabled={busy !== null} onClick={() => void act(row, "terminate")}>
-                        End
-                      </Button>
-                    </>
-                  )}
-                  <Button asChild variant="ghost" size="sm">
-                    <Link to={`/admin/assessments/${row.assessmentId}/integrity`}>Events</Link>
-                  </Button>
-                </div>
-              </div>
-
-              {row.recentEvents.length > 0 && (
-                <ul className="mt-3 flex flex-wrap gap-2">
-                  {row.recentEvents.map((event) => (
-                    <li
-                      key={event.id}
-                      className="flex items-center gap-2 rounded-md border px-2 py-1 font-mono text-[11px] text-muted-foreground"
-                    >
-                      {event.snapshotPath && (
-                        <img
-                          src={`/api/admin/snapshots/${event.snapshotPath}`}
-                          alt=""
-                          className="h-8 w-10 rounded-sm object-cover"
-                          loading="lazy"
-                        />
-                      )}
-                      {/* This feed is live, so a hard warning is allowed to pulse here. The
-                          historical list on the integrity tab passes no `live` and stays still. */}
-                      <StatusBadge kind="severity" status={event.severity} live={row.status === "in_progress"} />
-                      <span>
-                        {event.type}
-                        {!event.counted && " (not counted)"}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      {rows.length === 0 ? (
+        <div className="mt-10 rounded-lg border border-dashed px-6 py-16 text-center">
+          <Users className="mx-auto h-6 w-6 text-muted-foreground" aria-hidden="true" />
+          <p className="mt-3 font-display font-semibold">Nothing live</p>
+          <p className="mx-auto mt-1 max-w-sm text-sm text-muted-foreground">
+            This board fills as soon as someone starts their assessment. It updates on its own — there is nothing to
+            refresh.
+          </p>
+          <Button asChild variant="outline" size="sm" className="mt-5">
+            <Link to="/admin/people">See everyone</Link>
+          </Button>
+        </div>
+      ) : (
+        <motion.ul
+          variants={stagger(0.04)}
+          initial="hidden"
+          animate="visible"
+          className="mt-8 grid gap-4 lg:grid-cols-2"
+        >
+          <AnimatePresence initial={false}>
+            {rows.map((row) => (
+              <LiveCard
+                key={row.assessmentId}
+                row={row}
+                flashedAt={flash[row.assessmentId] ?? null}
+                busy={busy === row.assessmentId}
+                disabled={busy !== null}
+                onAct={act}
+              />
+            ))}
+          </AnimatePresence>
+        </motion.ul>
+      )}
     </div>
   );
 }
 
-function formatClock(seconds: number): string {
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-  return h > 0
-    ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
-    : `${m}:${String(s).padStart(2, "0")}`;
+function LiveCard({
+  row,
+  flashedAt,
+  busy,
+  disabled,
+  onAct,
+}: {
+  row: LiveRow;
+  flashedAt: number | null;
+  busy: boolean;
+  disabled: boolean;
+  onAct: (row: LiveRow, action: "terminate" | "extend") => void | Promise<void>;
+}) {
+  const now = Date.now();
+  const recentlyFlagged = flashedAt !== null && now - flashedAt < FLASH_MS;
+  const secondsLeft = row.deadlineAt ? Math.max(0, Math.round((row.deadlineAt - now) / 1000)) : null;
+  const totalSeconds = row.timeLimitMinutes !== null ? row.timeLimitMinutes * 60 : null;
+  const heartbeatStale = row.lastHeartbeatAt !== null && now - row.lastHeartbeatAt > HEARTBEAT_STALE_MS;
+  const live = row.status === "in_progress";
+  // The newest snapshot we hold, which came with an event — not a camera frame.
+  const lastSnapshot = row.recentEvents.find((e) => e.snapshotPath !== null) ?? null;
+
+  return (
+    <motion.li
+      layout
+      variants={fadeUp}
+      exit={{ opacity: 0, scale: 0.98, transition: transition.exit }}
+      transition={spring}
+      className={cn(
+        "rounded-lg border p-4 transition-colors duration-500",
+        recentlyFlagged ? "border-destructive/60 bg-destructive/5" : "border-border",
+      )}
+    >
+      <div className="flex items-start gap-3">
+        <Avatar name={row.displayName} />
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              to={`/admin/people/${row.userId}`}
+              className="truncate font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+            >
+              {row.displayName}
+            </Link>
+            {live && (
+              <span className="flex items-center gap-1 text-[11px] font-medium text-summit-strong">
+                <span className="size-1.5 rounded-full bg-summit animate-status-pulse" aria-hidden="true" />
+                live
+              </span>
+            )}
+          </div>
+          <p className="truncate font-mono text-xs text-muted-foreground">{row.username}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <StatusBadge kind="assessment" status={row.status} live={live} />
+            {heartbeatStale && (
+              <Badge variant="danger" className="gap-1">
+                <HeartPulse className="size-3" aria-hidden="true" />
+                no heartbeat for {Math.round((now - (row.lastHeartbeatAt ?? now)) / 1000)}s
+              </Badge>
+            )}
+          </div>
+        </div>
+
+        {/* The countdown. Without the attempt's budget there is no fraction to draw, so it degrades
+            to the number rather than drawing a ring against a guessed total. */}
+        {secondsLeft !== null &&
+          (totalSeconds !== null ? (
+            <TimerRing secondsLeft={secondsLeft} totalSeconds={totalSeconds} />
+          ) : (
+            <span className="shrink-0 font-mono text-sm tabular text-muted-foreground">
+              {Math.floor(secondsLeft / 60)}:{String(secondsLeft % 60).padStart(2, "0")}
+            </span>
+          ))}
+      </div>
+
+      <dl className="mt-4 grid grid-cols-3 gap-3 rounded-md bg-surface-sunken/50 px-3 py-2.5">
+        <Counter label="Answered" value={row.answered} />
+        <Counter label="Hard" value={row.hardWarnings} suffix="/3" tone={row.hardWarnings > 0 ? "danger" : undefined} />
+        <Counter label="Soft" value={row.softWarnings} />
+      </dl>
+
+      {lastSnapshot && (
+        <div className="mt-4 flex items-start gap-3">
+          <img
+            src={`/api/admin/snapshots/${lastSnapshot.snapshotPath}`}
+            alt={`Snapshot captured with a ${lastSnapshot.severity} ${lastSnapshot.type.replace(/_/g, " ")} event`}
+            className="h-16 w-24 shrink-0 rounded-sm border object-cover"
+            loading="lazy"
+          />
+          <p className="text-xs text-muted-foreground">
+            Last snapshot, captured with a{" "}
+            <span className="font-mono">{lastSnapshot.type.replace(/_/g, " ")}</span> event{" "}
+            <span title={formatTimestamp(lastSnapshot.createdAt)}>{relativeTime(lastSnapshot.createdAt)}</span>. Not a
+            live camera view.
+          </p>
+        </div>
+      )}
+
+      {row.recentEvents.length > 0 && (
+        <ul className="mt-4 space-y-1.5">
+          {row.recentEvents.map((event) => (
+            <li key={event.id} className="flex items-center gap-2 text-xs">
+              {/* This feed is live, so a hard warning is allowed to pulse here. The historical list
+                  on the integrity tab passes no `live` and stays still. */}
+              <StatusBadge kind="severity" status={event.severity} live={live} />
+              <span className="truncate font-mono text-muted-foreground">
+                {event.type.replace(/_/g, " ")}
+                {!event.counted && " (not counted)"}
+              </span>
+              <span
+                className="ml-auto shrink-0 font-mono text-[11px] text-muted-foreground"
+                title={formatTimestamp(event.createdAt)}
+              >
+                {relativeTime(event.createdAt)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="mt-4 flex flex-wrap gap-1.5 border-t pt-3">
+        {live && (
+          <>
+            <Button variant="outline" size="sm" loading={busy} disabled={disabled} onClick={() => void onAct(row, "extend")}>
+              <TimerReset aria-hidden="true" />
+              +10 min
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              loading={busy}
+              disabled={disabled}
+              onClick={() => void onAct(row, "terminate")}
+              className="text-destructive hover:text-destructive"
+            >
+              <ShieldAlert aria-hidden="true" />
+              End now
+            </Button>
+          </>
+        )}
+        <Button asChild variant="ghost" size="sm" className="ml-auto">
+          <Link to={`/admin/assessments/${row.assessmentId}/integrity`}>All events</Link>
+        </Button>
+      </div>
+    </motion.li>
+  );
+}
+
+function Counter({
+  label,
+  value,
+  suffix,
+  tone,
+}: {
+  label: string;
+  value: number;
+  suffix?: string;
+  tone?: "danger";
+}) {
+  return (
+    <div>
+      <dd className={cn("font-display text-lg leading-none font-semibold", tone === "danger" && "text-destructive")}>
+        <AnimatedNumber value={value} />
+        {suffix && <span className="text-xs font-normal text-muted-foreground">{suffix}</span>}
+      </dd>
+      <dt className="mt-1 text-[11px] text-muted-foreground">{label}</dt>
+    </div>
+  );
 }

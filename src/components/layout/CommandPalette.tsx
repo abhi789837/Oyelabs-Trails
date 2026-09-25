@@ -99,7 +99,9 @@ function buildActions(isSuperadmin: boolean, context: "learner" | "admin"): Comm
     entry(GO_TO_LEARNER, "Go to learner…", "", "Search people by name or username"),
     entry("action:admin-live", "Live assessments", "/admin/live", "Who is sitting one right now"),
     entry("action:admin-ai", "AI connection", "/admin/ai", "Provider, credential and usage"),
+    entry("action:admin-integrity", "Integrity events", "/admin/integrity", "Every proctoring signal, across everyone"),
     entry("action:admin-audit", "Audit log", "/admin/audit", "Everything anyone changed"),
+    entry("action:admin-curriculum", "Curriculum", "/admin/curriculum", "Every topic, filterable"),
   ];
 
   return context === "admin"

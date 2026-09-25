@@ -55,9 +55,23 @@ Not yet installed: `@tanstack/react-table`, `@dnd-kit/*`, `cmdk`, `sonner`, `rec
 - [x] U4 DataTable kit + server query layer — 6 table specs, 46 SQL tests against real SQLite
 - [x] U5 Shell — notification centre (incl. the missing learner route), command palette, sidebar
 - [x] U6 Auth screens — and two real fixes: the leaky error path and the client/server rule mismatch
-- [ ] U7 Admin — overview, people, onboarding
-- [ ] U8 Admin — learner detail tabs, assessments, live
-- [ ] U9 Admin — AI connection, integrity, audit, curriculum browser
+- [x] U7 Admin — bento overview with real server-bucketed sparklines (`trend7d` added to
+      `/api/admin/overview`), People on the DataTable kit with bulk issue/disable/re-enable, and
+      onboarding as a five-step flow. Found and fixed: the track cards had a four-way accent
+      fallback that would have mis-coloured four of the seven trails — `accentClasses` already
+      covers all eight tokens.
+- [x] U8 Admin — Progress tab on the kit (submitted work moved from an inline expanding row into
+      the detail panel), integrity as a real timeline with gap labels and a snapshot lightbox,
+      served items filterable by area/kind/outcome, evaluation areas with level rings, plan editor
+      keeps its drill-down and gains a per-topic AI diff, live board rebuilt as cards with a
+      countdown ring (`timeLimitMinutes` added to the live row so the ring has a denominator).
+      The approval gate's `approvedBy === null` distinction and the generation log's closed-union
+      drop reasons are untouched.
+- [x] U9 Admin — audit, AI calls and a new global integrity feed are all server-paged through
+      the U4 whitelist via a new `pagedQuery` helper (+7 tests); AI credential cards gained a
+      ShineBorder on the active one and an inline verify state; new curriculum browser over all
+      715 topics at `/admin/curriculum`. No credential secret is rendered anywhere and the Claude
+      Code CLI terms warning is untouched.
 - [x] U10 Learner — pre-flight, runner, evaluating, plan filters, certificate. Trail and topic untouched
 - [ ] U11 Quality — accessibility, responsive, dark mode, performance, Lighthouse, delete superseded components
 - [ ] U12 After screenshots + `docs/UI_REPORT.md`

@@ -11,6 +11,7 @@ import type { PlanResponse } from "@shared/plans";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -168,13 +169,17 @@ export default function AdminLearnerPage() {
       </Button>
 
       <header className="mt-4 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">{detail.user.displayName}</h1>
-          <p className="mt-1 font-mono text-sm text-muted-foreground">
-            {detail.user.username}
-            {detail.profile.roleTitle ? ` · ${detail.profile.roleTitle}` : ""}
-            {detail.profile.yearsExperience !== null ? ` · ${detail.profile.yearsExperience} yrs` : ""}
-          </p>
+        <div className="flex items-start gap-3">
+          <Avatar name={detail.user.displayName} className="mt-1 size-10 text-sm" />
+          <div>
+            <h1 className="font-display text-2xl font-bold">{detail.user.displayName}</h1>
+            <p className="mt-1 font-mono text-sm text-muted-foreground">
+              {detail.user.username}
+              {detail.profile.roleTitle ? ` · ${detail.profile.roleTitle}` : ""}
+              {detail.profile.yearsExperience !== null ? ` · ${detail.profile.yearsExperience} yrs` : ""}
+              {detail.user.overallLevel !== null ? ` · level ${detail.user.overallLevel}/5` : ""}
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           {detail.user.status === "disabled" && <StatusBadge kind="user" status="disabled" />}

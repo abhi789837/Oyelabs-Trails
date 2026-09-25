@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, ChevronDown, Eye, LoaderCircle, Terminal, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -251,9 +251,29 @@ export function AssessmentTab({
   );
 }
 
+/** How an item ended up, for the outcome filter. Derived, because the server stores the pieces. */
+type Outcome = "correct" | "incorrect" | "skipped" | "ungraded";
+
+function outcomeOf(item: AnsweredItem): Outcome {
+  if (item.status === "skipped") return "skipped";
+  const score = item.autoScore ?? item.aiScore;
+  if (score === null) return "ungraded";
+  return score >= 50 ? "correct" : "incorrect";
+}
+
+const OUTCOME_LABELS: Record<Outcome, string> = {
+  correct: "Correct",
+  incorrect: "Incorrect",
+  skipped: "Skipped",
+  ungraded: "Not scored yet",
+};
+
 function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
   const [data, setData] = useState<AnswersResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [area, setArea] = useState("all");
+  const [kind, setKind] = useState("all");
+  const [outcome, setOutcome] = useState<Outcome | "all">("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -268,6 +288,21 @@ function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
     };
   }, [assessmentId]);
 
+  const items = useMemo(() => data?.items ?? [], [data]);
+  const areas = useMemo(() => [...new Set(items.map((i) => i.area))].sort(), [items]);
+  const kinds = useMemo(() => [...new Set(items.map((i) => i.kind))].sort(), [items]);
+
+  const visible = useMemo(
+    () =>
+      items.filter(
+        (item) =>
+          (area === "all" || item.area === area) &&
+          (kind === "all" || item.kind === kind) &&
+          (outcome === "all" || outcomeOf(item) === outcome),
+      ),
+    [items, area, kind, outcome],
+  );
+
   if (error) return <FormAlert>{error}</FormAlert>;
 
   if (!data) {
@@ -279,18 +314,24 @@ function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
     );
   }
 
-  if (data.items.length === 0) {
+  if (items.length === 0) {
     return <p className="text-sm text-muted-foreground">No items were served in this attempt.</p>;
   }
 
-  const byId = new Map(data.items.map((item) => [item.id, item]));
-  const paths = (data.selector?.areas ?? []).map((area) => ({
-    area: area.area,
-    steps: area.served.map<AdaptiveStep>((itemId, index) => ({
+  const byId = new Map(items.map((item) => [item.id, item]));
+  const paths = (data.selector?.areas ?? []).map((path) => ({
+    area: path.area,
+    steps: path.served.map<AdaptiveStep>((itemId, index) => ({
       difficulty: byId.get(itemId)?.difficulty ?? 0,
-      correct: index < area.outcomes.length ? area.outcomes[index] : null,
+      correct: index < path.outcomes.length ? path.outcomes[index] : null,
     })),
   }));
+
+  const filtering = area !== "all" || kind !== "all" || outcome !== "all";
+  const counts = items.reduce<Record<Outcome, number>>(
+    (acc, item) => ({ ...acc, [outcomeOf(item)]: acc[outcomeOf(item)] + 1 }),
+    { correct: 0, incorrect: 0, skipped: 0, ungraded: 0 },
+  );
 
   return (
     <div className="space-y-8">
@@ -312,17 +353,96 @@ function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
       )}
 
       <section aria-labelledby={`served-${assessmentId}`}>
-        <h3 id={`served-${assessmentId}`} className="text-sm font-semibold">
-          Served items
-          <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">{data.items.length}</span>
-        </h3>
-        <ol className="mt-3 space-y-3">
-          {data.items.map((item, index) => (
-            <ServedItemCard key={item.id} item={item} index={index + 1} />
-          ))}
-        </ol>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h3 id={`served-${assessmentId}`} className="text-sm font-semibold">
+            Served items
+            <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">{items.length}</span>
+          </h3>
+          <p className="font-mono text-xs text-muted-foreground">
+            {counts.correct} correct · {counts.incorrect} incorrect
+            {counts.skipped > 0 && ` · ${counts.skipped} skipped`}
+            {counts.ungraded > 0 && ` · ${counts.ungraded} not scored`}
+          </p>
+        </div>
+
+        {/* Filters over the cards rather than a table: an item carries its prompt, its options, the
+            key and a rationale, which is not row-shaped. The filters are what a table would have
+            been wanted for. */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {areas.length > 1 && (
+            <FilterSelect label="Area" value={area} onChange={setArea} options={areas.map((a) => [a, a])} />
+          )}
+          {kinds.length > 1 && (
+            <FilterSelect label="Kind" value={kind} onChange={setKind} options={kinds.map((k) => [k, k])} />
+          )}
+          <FilterSelect
+            label="Outcome"
+            value={outcome}
+            onChange={(v) => setOutcome(v as Outcome | "all")}
+            options={(Object.keys(OUTCOME_LABELS) as Outcome[])
+              .filter((o) => counts[o] > 0)
+              .map((o) => [o, `${OUTCOME_LABELS[o]} (${counts[o]})`])}
+          />
+          {filtering && (
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => {
+                setArea("all");
+                setKind("all");
+                setOutcome("all");
+              }}
+            >
+              Clear
+            </Button>
+          )}
+          <span className="ml-auto text-xs text-muted-foreground" aria-live="polite">
+            {visible.length} of {items.length} shown
+          </span>
+        </div>
+
+        {visible.length === 0 ? (
+          <p className="mt-6 text-sm text-muted-foreground">Nothing matches those filters.</p>
+        ) : (
+          <ol className="mt-3 space-y-3">
+            {visible.map((item) => (
+              <ServedItemCard key={item.id} item={item} index={items.indexOf(item) + 1} />
+            ))}
+          </ol>
+        )}
       </section>
     </div>
+  );
+}
+
+/** A labelled select with an "everything" option. Native, because it is a list of plain strings. */
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: [string, string][];
+}) {
+  return (
+    <label className="flex items-center gap-1.5 text-xs">
+      <span className="text-muted-foreground">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="rounded-md border border-input bg-surface px-2 py-1 text-xs"
+      >
+        <option value="all">Everything</option>
+        {options.map(([v, l]) => (
+          <option key={v} value={v}>
+            {l}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 
