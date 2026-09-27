@@ -48,6 +48,15 @@ declare module "@tanstack/react-table" {
     cellClassName?: string;
     /** What this column writes into a CSV, when the cell renders something a string cannot carry. */
     exportValue?: (row: TData) => unknown;
+    /**
+     * Start hidden, until this admin says otherwise.
+     *
+     * For a column that is real but rarely the question — "Onboarded" on People — where the cost of
+     * it being on by default is that the row's actions get pushed off the right edge. It is a
+     * default, not a restriction: the moment someone toggles it in View Options their choice is
+     * stored and wins from then on, including turning it back off.
+     */
+    defaultHidden?: boolean;
     /** Formats the raw value for display; here mainly so `TValue` is a used parameter. */
     formatValue?: (value: TValue) => string;
   }
@@ -249,6 +258,16 @@ export function DataTable<TRow>({
     return [select, ...columns];
   }, [columns, selectable, noun]);
 
+  /* Defaults first, the admin's stored choices on top — so a column marked `defaultHidden` starts
+     hidden, and stays visible once they have turned it on. */
+  const columnVisibility = useMemo<VisibilityState>(() => {
+    const defaults: VisibilityState = {};
+    for (const column of columns) {
+      if (column.meta?.defaultHidden && column.id) defaults[column.id] = false;
+    }
+    return { ...defaults, ...preferences.columns };
+  }, [columns, preferences.columns]);
+
   const table = useReactTable({
     data: rows,
     columns: modelColumns,
@@ -264,11 +283,14 @@ export function DataTable<TRow>({
     columnResizeMode: "onChange",
     state: {
       rowSelection,
-      columnVisibility: preferences.columns as VisibilityState,
+      columnVisibility,
     },
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: (updater) => {
-      const next = typeof updater === "function" ? updater(preferences.columns as VisibilityState) : updater;
+      const next = typeof updater === "function" ? updater(columnVisibility) : updater;
+      // Only the admin's own choices are stored. Writing the merged object back would freeze
+      // today's defaults into their browser, so a later change to `defaultHidden` would never
+      // reach anyone who had opened the table once.
       setPreferences({ columns: next });
     },
   });

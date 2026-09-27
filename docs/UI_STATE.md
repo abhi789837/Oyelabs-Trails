@@ -49,7 +49,7 @@ Not yet installed: `@tanstack/react-table`, `@dnd-kit/*`, `cmdk`, `sonner`, `rec
       Known gaps: **no before-screenshots existed**, so "the trail did not move" is argued from the
       diff rather than proven — `components/trail/` has one changed file (`TopicStatusBadge`, whose
       class output is byte-identical) plus a `StatusDot` label dedupe, and `src/pages/` is
-      untouched. `TagInput` has no call site yet, and `ChallengeResult`'s spring was deliberately
+      untouched. `TagInput` had no call site at U2 — U4 gave it one, as the `in`/`notIn` value editor in the advanced filter builder — and `ChallengeResult`'s spring was deliberately
       left un-migrated so the topic page's checkmark keeps its overshoot (see PROGRESS.md).
 - [x] U3 Overlays — `useConfirm`/`useFormDialog`/`DetailSheet`, sonner, eslint `no-alert`. All nine native dialogs gone; zero `window.confirm` left in app code.
 - [x] U4 DataTable kit + server query layer — 6 table specs, 46 SQL tests against real SQLite

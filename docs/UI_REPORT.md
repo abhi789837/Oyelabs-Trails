@@ -211,14 +211,17 @@ that would turn "should be equivalent" into "is".
   machine had 3.3 GB free of 15.7 GB for the whole pass. The build output is unchanged in shape:
   the only chunk over 500 KB is still `@react-pdf/renderer` (~1.2 MB), loaded on demand when someone
   clicks "Download PDF", never on page load.
-- **The People table scrolls horizontally below about 1250px of content width.** Column visibility
-  is per-admin in `localStorage` via the "View" control, so the fix is one click, but there is no
-  per-column "hidden by default" in the kit yet.
+- ~~The People table scrolls horizontally below about 1250px of content width.~~ **Closed.** The
+  kit gained `meta.defaultHidden`, and People's "Onboarded" column uses it: defaults are merged
+  *underneath* the admin's stored choices, so the column starts hidden and stays visible the moment
+  anyone turns it on. Only their own choices are written to `localStorage` — storing the merged
+  object would freeze today's defaults into their browser and a later change would never reach them.
 - **Contrast was checked at the token level in U2, not per screen.** The tokens carry measured
   ratios (`brand-600` on paper 4.91:1, `brand-400` on the dark background 5.89:1) and every colour
   on these screens is a token, but no automated per-screen audit ran.
-- **`TagInput` still has no call site.** It was built in U2 for a use that the onboarding stepper
-  ended up solving with a datalist instead.
+- ~~`TagInput` has no call site.~~ **This was wrong** — a line I carried from a stale U2 note
+  without re-checking it. U4 gave it one: it is the value editor for the `in` / `notIn` operators in
+  the advanced filter builder, which is exactly the control that shape of value needs.
 
 ---
 

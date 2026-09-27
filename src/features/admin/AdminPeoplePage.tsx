@@ -203,6 +203,10 @@ export default function AdminPeoplePage() {
       {
         id: "createdAt",
         header: "Onboarded",
+        /* Off by default. It is real, but it is rarely the question — and with it on, the row's
+           reset-password and disable buttons fall off the right edge at 1440. View Options turns
+           it back on, and that choice sticks. */
+        meta: { defaultHidden: true },
         cell: ({ row }) => (
           <span className="whitespace-nowrap text-muted-foreground">{formatTimestamp(row.original.createdAt)}</span>
         ),

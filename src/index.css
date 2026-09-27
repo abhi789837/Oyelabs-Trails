@@ -261,7 +261,7 @@
     --alpenglow-strong: 157 42 82;
     --alpenglow-foreground: 255 255 255;
 
-    --lichen: 107 127 30;
+    --lichen: 107 126 30;
     --lichen-strong: 85 102 26;
     --lichen-foreground: 255 255 255;
 
@@ -303,6 +303,10 @@
 
     --basalt: 123 132 150;
     --basalt-strong: 150 158 174;
+    /* The dark override lifts the fill, so white on it is 3.76:1 — under AA for the button label
+       `accentClasses.basalt.solid` puts there. Ink on it is 4.86:1, which is the same call already
+       made for trailmark in both themes. */
+    --basalt-foreground: 18 21 28;
 
     --canyon-strong: 240 132 90;
     --alpenglow-strong: 238 138 174;
