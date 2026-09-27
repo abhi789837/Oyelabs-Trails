@@ -89,15 +89,23 @@ describe("generation stops at the gate", () => {
     expect(notifications.some((n) => n.kind === "assessment.awaiting_approval")).toBe(true);
   });
 
-  test("re-issuing is still refused while one waits for approval", async () => {
+  test("another can be issued while this one waits for approval, and the gate still holds for it", async () => {
+    /* Concurrency does not weaken the gate. The second assessment is created, but it is created
+       `generating` like any other — being issued alongside one that is already through generation
+       does not let it skip review. */
     const res = await ctx.app.inject({
       method: "POST",
       url: `/api/admin/users/${learner.id}/assessments`,
       ...as(admin),
-      payload: {},
+      payload: { label: "Second track" },
     });
-    expect(res.statusCode).toBe(409);
-    expect(res.json().error.message).toMatch(/awaiting approval/);
+    expect(res.statusCode).toBe(202);
+
+    const rows = ctx.db.select().from(schema.assessments).where(eq(schema.assessments.userId, learner.id)).all();
+    expect(rows).toHaveLength(2);
+    const fresh = rows.find((r) => r.id !== assessmentId)!;
+    expect(fresh.status).toBe("generating");
+    expect(fresh.approvedAt).toBeNull();
   });
 });
 

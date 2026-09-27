@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronDown, Eye, LoaderCircle, Terminal, X } from "lucide-react";
+import { Check, ChevronDown, Eye, LoaderCircle, Terminal, Trash2, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { AUTO_APPROVE_AFTER_MS, type AssessmentSummary, type ItemKey, type ItemPayload } from "@shared/assessment";
@@ -7,11 +7,14 @@ import type { ItemKind } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { RichText } from "@/components/content/RichText";
-import { FormAlert } from "@/components/form/Field";
+import { FormAlert, TextField } from "@/components/form/Field";
+import { useConfirm, useFormDialog } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { adminApi } from "../api";
 import { ApprovalBanner, approvalNote } from "../ApprovalGate";
 import { GenerationLog } from "../GenerationLog";
 import { AdaptivePath, type AdaptiveStep } from "./AdaptivePath";
@@ -44,8 +47,15 @@ interface AnswersResponse {
   selector: SelectorState | null;
 }
 
-/** Statuses that mean an attempt is still in flight, so re-issuing would double-book the learner. */
-const LIVE_STATUSES = ["generating", "awaiting_approval", "ready", "in_progress", "submitted", "evaluating"];
+/**
+ * The one status that blocks issuing another: a clock is running and a proctor is watching, and a
+ * second sitting would fight the first for both. Everything else may sit alongside — see the issue
+ * route, which enforces exactly this.
+ */
+const BLOCKING_STATUSES = ["in_progress"];
+
+/** What the server will let you cancel: anything nobody has started answering. */
+const DELETABLE_STATUSES = ["generating", "awaiting_approval", "ready", "failed"];
 
 /**
  * The assessment tab (brief §13): every attempt, and for each one every item the learner was
@@ -63,12 +73,40 @@ export function AssessmentTab({
   assessments: AssessmentSummary[];
   onChanged: () => Promise<void>;
 }) {
+  const confirm = useConfirm();
+  const formDialog = useFormDialog();
   const [issuing, setIssuing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
   const [logId, setLogId] = useState<string | null>(null);
   const autoOpened = useRef(new Set<string>());
+
+  /**
+   * Cancels an assessment that has not been started.
+   *
+   * Typed confirmation, because from a list of attempts the rows look alike and the thing being
+   * destroyed is several minutes of generation plus — once released — whatever the learner was
+   * about to sit. The server refuses anything already underway, so this can only ever remove
+   * something nobody has answered.
+   */
+  const handleDelete = async (assessment: AssessmentSummary) => {
+    const name = assessment.label ?? `Attempt ${assessment.attemptNo}`;
+    const ok = await confirm({
+      title: `Delete "${name}"?`,
+      body:
+        assessment.status === "ready"
+          ? "It is already with the learner. Deleting it takes it back off them, and the generated questions go with it — a new one has to be generated from scratch. Nothing they have answered is affected, because they have not started."
+          : "The generated questions go with it, and a new one has to be generated from scratch. Nothing a learner has answered is affected.",
+      confirmLabel: "Delete it",
+      variant: "destructive",
+      confirmPhrase: name,
+      onConfirm: () => adminApi.deleteAssessment(assessment.id),
+    });
+    if (!ok) return;
+    notify.success(`Deleted "${name}".`);
+    await onChanged();
+  };
 
   /**
    * A run that is generating right now is the one log worth opening by itself: the admin clicked
@@ -83,11 +121,34 @@ export function AssessmentTab({
   }, [generatingId]);
 
   const handleIssue = async () => {
+    /* Asked for, not assumed: a learner can hold several at once now, and "Attempt 3" is a poor
+       name for the one about the company's incident process. Left empty it stays null and the UI
+       falls back to the attempt number, which is the right answer when there is only ever one. */
+    const answers = await formDialog({
+      title: assessments.length === 0 ? "Issue a placement assessment" : "Issue another assessment",
+      description:
+        "Generation reads this person's profile notes and takes a few minutes. It then waits for your approval before the learner sees anything.",
+      body: () => (
+        <TextField
+          name="label"
+          label="What is it for"
+          placeholder="Frontend placement"
+          hint="Optional. Worth setting when they will have more than one open at a time."
+          maxLength={60}
+        />
+      ),
+      onSubmit: (data) => {
+        const label = String(data.get("label") ?? "").trim();
+        return Promise.resolve(label.length >= 2 ? { label } : {});
+      },
+    });
+    if (answers === null) return;
+
     setIssuing(true);
     setError(null);
     setNotice(null);
     try {
-      await api.post(`/api/admin/users/${userId}/assessments`, {});
+      await adminApi.issueAssessment(userId, answers);
       await onChanged();
       setNotice(
         `Assessment queued. Generation runs in the background and usually takes a few minutes, then it waits ${Math.round(
@@ -112,7 +173,7 @@ export function AssessmentTab({
               : `${assessments.length} attempt${assessments.length === 1 ? "" : "s"}.`}
           </p>
         </div>
-        {!assessments.some((a) => LIVE_STATUSES.includes(a.status)) && (
+        {!assessments.some((a) => BLOCKING_STATUSES.includes(a.status)) && (
           <Button variant="outline" loading={issuing} onClick={() => void handleIssue()}>
             {assessments.length === 0 ? "Issue assessment" : "Re-issue assessment"}
           </Button>
@@ -154,6 +215,7 @@ export function AssessmentTab({
               <li key={assessment.id} className="rounded-md border">
                 <div className="flex flex-wrap items-center gap-3 px-4 py-3">
                   <StatusBadge kind="assessment" status={assessment.status} />
+                  {assessment.label && <span className="text-sm font-medium">{assessment.label}</span>}
                   <span className="font-mono text-xs text-muted-foreground">
                     Attempt {assessment.attemptNo} · {formatTimestamp(assessment.createdAt)}
                     {generated > 0 ? ` · ${generated} items` : ""}
@@ -211,6 +273,19 @@ export function AssessmentTab({
                           <Link to={`/admin/assessments/${assessment.id}`}>View pool</Link>
                         </Button>
                       ))}
+                    {/* Only where the server would actually allow it — offering a button that
+                        always 400s is worse than not offering one. */}
+                    {DELETABLE_STATUSES.includes(assessment.status) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => void handleDelete(assessment)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 aria-hidden="true" />
+                        Delete
+                      </Button>
+                    )}
                     {served > 0 && (
                       <Button
                         variant="ghost"

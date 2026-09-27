@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Check, LoaderCircle, TriangleAlert, X } from "lucide-react";
+import { ArrowLeft, Check, LoaderCircle, TriangleAlert, Undo2, X } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import type { AssessmentSummary, PoolItem } from "@shared/assessment";
@@ -11,9 +11,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatusBadge, statusMeta } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
+import { adminApi } from "./api";
 import { ApprovalBanner, approvalNote } from "./ApprovalGate";
 import { GenerationLog } from "./GenerationLog";
+
+/**
+ * The one drop reason a person can author, mirrored from the server.
+ *
+ * Every other value in `dropReason` is written by the generator or the critic and quotes the item's
+ * own content, so the column is rendered on the assumption it may be an answer key. This constant is
+ * what tells the two apart.
+ */
+const ADMIN_DROP_REASON = "dropped_by_admin";
 
 interface PoolResponse {
   assessment: AssessmentSummary;
@@ -34,6 +45,25 @@ export default function AdminPoolPage() {
   const [data, setData] = useState<PoolResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showDropped, setShowDropped] = useState(true);
+  const [busyItemId, setBusyItemId] = useState<string | null>(null);
+
+  /* The pool is only the admin's to change before anything has been served — the same rule the
+     server enforces. Past that the items belong to a learner's attempt. */
+  const editable = data !== null && ["awaiting_approval", "ready"].includes(data.assessment.status);
+
+  const toggleDropped = async (item: PoolItem) => {
+    setBusyItemId(item.id);
+    setError(null);
+    try {
+      await adminApi.setPoolItemDropped(assessmentId, item.id, item.status !== "dropped");
+      await reload();
+      notify.success(item.status === "dropped" ? "Put the item back in the pool." : "Dropped that item.");
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Could not change that item.");
+    } finally {
+      setBusyItemId(null);
+    }
+  };
 
   useDocumentTitle("Assessment pool");
 
@@ -239,6 +269,14 @@ export default function AdminPoolPage() {
           />
           Show dropped items
         </label>
+
+        {/* Says which mode the page is in, rather than leaving the absence of buttons to be
+            interpreted. Once anything has been served the pool belongs to the attempt. */}
+        <p className="ml-auto text-xs text-muted-foreground">
+          {editable
+            ? "You can drop anything that does not belong here before it reaches the learner."
+            : "This pool is read-only — the assessment has been started."}
+        </p>
       </div>
 
       <div className="mt-6 space-y-10">
@@ -252,7 +290,13 @@ export default function AdminPoolPage() {
             </h2>
             <ul className="mt-3 space-y-3">
               {items.map((item) => (
-                <ItemCard key={item.id} item={item} />
+                <ItemCard
+                  key={item.id}
+                  item={item}
+                  editable={editable}
+                  busy={busyItemId === item.id}
+                  onToggleDropped={() => void toggleDropped(item)}
+                />
               ))}
             </ul>
           </section>
@@ -262,8 +306,22 @@ export default function AdminPoolPage() {
   );
 }
 
-function ItemCard({ item }: { item: PoolItem }) {
+function ItemCard({
+  item,
+  editable,
+  busy,
+  onToggleDropped,
+}: {
+  item: PoolItem;
+  editable: boolean;
+  busy: boolean;
+  onToggleDropped: () => void;
+}) {
   const droppedItem = item.status === "dropped";
+  const byAdmin = item.dropReason === ADMIN_DROP_REASON;
+  /* Only an admin's own drop is reversible here. Restoring one the critic rejected would override
+     a different decision — the server refuses it, so the button is not offered either. */
+  const canToggle = editable && (item.status === "pool" || (droppedItem && byAdmin));
 
   return (
     <li className={cn("rounded-md border px-4 py-3", droppedItem && "border-dashed opacity-70")}>
@@ -273,11 +331,37 @@ function ItemCard({ item }: { item: PoolItem }) {
         <span>·</span>
         <span>{item.topicIds.join(", ")}</span>
         {droppedItem && <StatusBadge kind="item" status="dropped" />}
+        {canToggle && (
+          <Button
+            variant="ghost"
+            size="sm"
+            loading={busy}
+            onClick={onToggleDropped}
+            className={cn("ml-auto", !droppedItem && "text-destructive hover:text-destructive")}
+          >
+            {droppedItem ? (
+              <>
+                <Undo2 aria-hidden="true" />
+                Put back
+              </>
+            ) : (
+              <>
+                <X aria-hidden="true" />
+                Drop this
+              </>
+            )}
+            <span className="sr-only"> — {item.kind} item, difficulty {item.difficulty}</span>
+          </Button>
+        )}
       </div>
 
-      {droppedItem && item.dropReason && (
-        <p className="mt-2 text-sm text-destructive">{item.dropReason}</p>
-      )}
+      {droppedItem &&
+        item.dropReason &&
+        (byAdmin ? (
+          <p className="mt-2 text-sm text-muted-foreground">You dropped this before release.</p>
+        ) : (
+          <p className="mt-2 text-sm text-destructive">{item.dropReason}</p>
+        ))}
 
       <RichText text={item.payload.prompt} className="mt-3" />
 

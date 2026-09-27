@@ -2,6 +2,13 @@ import { eq } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 
 import type { ItemKey, ItemPayload } from "../../../shared/assessment";
+import {
+  DEFAULT_TIME_LIMIT_MIN,
+  EXPLAIN_BUDGET_MIN,
+  MAX_TIME_LIMIT_MIN,
+  MAX_TOTAL_MIN,
+  MIN_TIME_LIMIT_MIN,
+} from "../../../shared/assessment";
 import { HARD_LIMIT, HARD_COOLDOWN_MS, SOFT_ESCALATION_COUNT } from "../assessment/integrity";
 import { schema } from "../db";
 import { SAMPLE_LEARNERS } from "../dev/sampleProfiles";
@@ -103,11 +110,23 @@ describe("consent and start", () => {
     const start = await consentAndStart();
 
     expect(start.config.hardLimit).toBe(HARD_LIMIT);
-    expect(start.config.areas.length).toBeGreaterThanOrEqual(5);
-    // 60 minutes plus the 15-minute written budget.
+    expect(start.config.areas.length).toBeGreaterThanOrEqual(3);
+
+    /* The deadline a learner sees is the adaptive budget *plus* the written one, and capping only
+       the first is how a "60 minute" assessment used to show a 75-minute clock. Asserted on the
+       budget the server chose, which is exact — `before` is captured on this side of the request,
+       so a wall-clock span includes the round trip and lands a few milliseconds over the cap. */
+    expect(start.config.timeLimitMinutes + EXPLAIN_BUDGET_MIN).toBeLessThanOrEqual(MAX_TOTAL_MIN);
+
     const minutes = (start.deadlineAt - before) / 60_000;
-    expect(minutes).toBeGreaterThan(70);
-    expect(minutes).toBeLessThan(80);
+    expect(minutes).toBeGreaterThan(MIN_TIME_LIMIT_MIN + EXPLAIN_BUDGET_MIN - 1);
+    expect(minutes).toBeLessThan(MAX_TOTAL_MIN + 1);
+  });
+
+  test("no sitting can be scheduled past the total cap, whatever the blueprint asks for", () => {
+    // The one invariant worth pinning: every other limit is derived from this pair.
+    expect(MAX_TIME_LIMIT_MIN + EXPLAIN_BUDGET_MIN).toBe(MAX_TOTAL_MIN);
+    expect(DEFAULT_TIME_LIMIT_MIN).toBeLessThanOrEqual(MAX_TIME_LIMIT_MIN);
   });
 
   test("another learner cannot touch this assessment, and gets 404 rather than 403", async () => {

@@ -148,6 +148,12 @@ export const assessments = sqliteTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     attemptNo: integer("attempt_no").notNull().default(1),
+    /**
+     * What this sitting is *for*, when a learner has more than one open at a time — "Frontend
+     * placement", "Company process". Null on every assessment issued before labels existed, and on
+     * any issued without one, where the UI falls back to the attempt number.
+     */
+    label: text("label"),
     status: text("status").$type<AssessmentStatus>().notNull(),
     blueprint: text("blueprint", { mode: "json" }).$type<unknown>(),
     config: text("config", { mode: "json" }).$type<unknown>(),

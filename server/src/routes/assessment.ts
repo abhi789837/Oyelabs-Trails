@@ -9,6 +9,7 @@ import { BODY_LIMIT_SNAPSHOT } from "../../../shared/api";
 import {
   answerRequestSchema,
   consentRequestSchema,
+  DEFAULT_TIME_LIMIT_MIN,
   EXPLAIN_BUDGET_MIN,
   heartbeatRequestSchema,
   integrityEventRequestSchema,
@@ -60,13 +61,25 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
   /** The assessment this learner should be taking, if any. Drives the §12 funnel. */
   app.get("/api/me/assessment", async (request): Promise<{ assessment: MyAssessment | null }> => {
     const user = requireActiveUser(request);
-    const row = app.db
+    /* With several assessments open at once, "the latest" is the wrong answer: issuing a second one
+       would silently switch the learner away from the one they had already started. Pick by what
+       they should act on — the sitting already underway first, then the oldest one waiting for
+       them, then anything the server is still working on — and only fall back to the newest when
+       nothing is pending at all. */
+    const rows = app.db
       .select()
       .from(schema.assessments)
       .where(eq(schema.assessments.userId, user.id))
       .orderBy(desc(schema.assessments.attemptNo))
-      .get();
-    if (!row) return { assessment: null };
+      .all();
+    if (rows.length === 0) return { assessment: null };
+
+    const oldestFirst = [...rows].reverse();
+    const row =
+      oldestFirst.find((a) => a.status === "in_progress") ??
+      oldestFirst.find((a) => a.status === "ready") ??
+      oldestFirst.find((a) => ["generating", "awaiting_approval", "submitted", "evaluating"].includes(a.status)) ??
+      rows[0];
 
     const config = (row.config as StoredConfig | null) ?? {};
     return {
@@ -74,11 +87,12 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
         id: row.id,
         status: row.status,
         attemptNo: row.attemptNo,
+        label: row.label,
         consentAt: row.consentAt,
         deadlineAt: row.deadlineAt,
         hardWarnings: row.hardWarnings,
         hardLimit: HARD_LIMIT,
-        timeLimitMinutes: config.timeLimitMinutes ?? 60,
+        timeLimitMinutes: config.timeLimitMinutes ?? DEFAULT_TIME_LIMIT_MIN,
       },
     };
   });

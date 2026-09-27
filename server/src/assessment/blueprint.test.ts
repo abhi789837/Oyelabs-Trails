@@ -66,9 +66,40 @@ describe("issuing", () => {
     expect(job.type).toBe("assessment.blueprint");
   });
 
-  test("refuses a second assessment while one is live", async () => {
+  test("allows a second assessment alongside the first, each with its own label", async () => {
+    /* A learner may hold several — a placement one and a company-process one — and take them
+       independently. The old rule refused anything while one was "live", which also refused the
+       perfectly reasonable case of issuing a second before the first has been started. */
+    const userId = await onboardSample(0);
+    const first = await ctx.app.inject({
+      method: "POST",
+      url: `/api/admin/users/${userId}/assessments`,
+      ...as(admin),
+      payload: { label: "Frontend placement" },
+    });
+    expect(first.statusCode).toBe(202);
+
+    const second = await ctx.app.inject({
+      method: "POST",
+      url: `/api/admin/users/${userId}/assessments`,
+      ...as(admin),
+      payload: { label: "Company process" },
+    });
+    expect(second.statusCode).toBe(202);
+
+    const rows = ctx.db.select().from(schema.assessments).all();
+    expect(rows).toHaveLength(2);
+    expect(rows.map((r) => r.label).sort()).toEqual(["Company process", "Frontend placement"]);
+    // Each is its own attempt, so the history still reads in order.
+    expect(rows.map((r) => r.attemptNo).sort()).toEqual([1, 2]);
+  });
+
+  test("refuses a second while one is actually being sat", async () => {
+    // The one thing concurrency cannot mean: two clocks and one camera.
     const userId = await onboardSample(0);
     await ctx.app.inject({ method: "POST", url: `/api/admin/users/${userId}/assessments`, ...as(admin), payload: {} });
+    const live = ctx.db.select().from(schema.assessments).get()!;
+    ctx.db.update(schema.assessments).set({ status: "in_progress" }).where(eq(schema.assessments.id, live.id)).run();
 
     const second = await ctx.app.inject({
       method: "POST",
@@ -77,6 +108,7 @@ describe("issuing", () => {
       payload: {},
     });
     expect(second.statusCode).toBe(409);
+    expect(second.json().error.message).toMatch(/sitting an assessment right now/i);
   });
 
   test("refuses to issue one for the superadmin", async () => {
