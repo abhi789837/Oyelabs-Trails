@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import type { GenerationLogLine } from "../../../../shared/assessment";
 import type { Severity } from "../../../../shared/enums";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { integrityEventsFor, integritySummary } from "../../assessment/integrity";
 import { finishAndEvaluate } from "../assessment";
 import { schema } from "../../db";
@@ -87,7 +87,7 @@ export function publishGenerationLine(app: FastifyInstance, line: GenerationLogL
 const assessmentParams = z.object({ assessmentId: z.string().min(1).max(64) });
 
 export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<void> {
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   if (!subscribers.has(app)) subscribers.set(app, new Set());
   app.addHook("onClose", async () => {
@@ -158,7 +158,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
    * The event stream. Held open; a comment frame every 20 s keeps proxies from closing it.
    */
   app.get("/api/admin/live/stream", async (request, reply) => {
-    requireSuperadmin(request);
+    requireStaff(request);
 
     reply.raw.writeHead(200, {
       "content-type": "text/event-stream",
@@ -250,7 +250,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
    * pictures of people taken during a test, and a guessable URL would be a leak.
    */
   app.get("/api/admin/snapshots/*", async (request, reply) => {
-    requireSuperadmin(request);
+    requireStaff(request);
     const relative = (request.params as Record<string, string>)["*"] ?? "";
 
     // Resolve and confirm the result is still inside the snapshots directory, so "../" cannot
@@ -263,7 +263,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.post("/api/admin/assessments/:assessmentId/terminate", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
@@ -297,7 +297,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
 
   /** Adds ten minutes to a live assessment (§10.5). */
   app.post("/api/admin/assessments/:assessmentId/extend", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();

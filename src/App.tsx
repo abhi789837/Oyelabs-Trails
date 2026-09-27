@@ -18,7 +18,7 @@ import AdminPeoplePage from "@/features/admin/AdminPeoplePage";
 import AdminPoolPage from "@/features/admin/AdminPoolPage";
 import { AuthProvider } from "@/features/auth/AuthProvider";
 import ChangePasswordPage from "@/features/auth/ChangePasswordPage";
-import { RequireAuth, RequireSuperadmin } from "@/features/auth/guards";
+import { RequireAuth, RequireStaff, RequireSuperadmin } from "@/features/auth/guards";
 import LoginPage from "@/features/auth/LoginPage";
 import AssessmentPage from "@/features/assessment/AssessmentPage";
 import { CurriculumProvider } from "@/features/curriculum/CurriculumProvider";
@@ -46,18 +46,26 @@ export default function App() {
                 <Route
                   path="/admin"
                   element={
-                    <RequireSuperadmin>
+                    <RequireStaff>
                       <CurriculumProvider>
                         <AdminLayout />
                       </CurriculumProvider>
-                    </RequireSuperadmin>
+                    </RequireStaff>
                   }
                 >
                   <Route index element={<AdminOverviewPage />} />
                   <Route path="people" element={<AdminPeoplePage />} />
                   <Route path="onboard" element={<AdminOnboardPage />} />
                   <Route path="people/:userId" element={<AdminLearnerPage />} />
-                  <Route path="ai" element={<AdminAiPage />} />
+                  {/* The one page inside the console that an admin does not get. */}
+                  <Route
+                    path="ai"
+                    element={
+                      <RequireSuperadmin>
+                        <AdminAiPage />
+                      </RequireSuperadmin>
+                    }
+                  />
                   <Route path="live" element={<AdminLivePage />} />
                   <Route path="audit" element={<AdminAuditPage />} />
                   <Route path="integrity" element={<AdminIntegrityFeedPage />} />

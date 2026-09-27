@@ -1,7 +1,30 @@
 import { z } from "zod";
 
 /** Roles. There is no self-signup: the superadmin creates every learner. */
-export const roleSchema = z.enum(["superadmin", "learner"]);
+/**
+ * Three roles, and the line between the first two is deliberately narrow.
+ *
+ * `admin` manages people: onboarding, assessments, plans, progress, the live board. `superadmin`
+ * is that plus the two things that are not about any one learner — the shared AI credential, which
+ * everyone's generation runs through, and the admin accounts themselves. Keeping those with one
+ * person means a department lead cannot change what every other department's assessments are
+ * generated with, or grant themselves more than they were given.
+ */
+export const roleSchema = z.enum(["superadmin", "admin", "learner"]);
+
+/** Roles that see the admin console at all. */
+export const staffRoles = ["superadmin", "admin"] as const;
+
+/**
+ * "Does this person run the console?" — as opposed to "are they *the* superadmin".
+ *
+ * Worth a named function rather than `role !== "learner"`, because the two questions were the same
+ * one until the `admin` role existed and every call site that conflated them had to be revisited.
+ * A future fourth role gets checked here instead of in thirty places.
+ */
+export function isStaff(role: Role): boolean {
+  return role === "superadmin" || role === "admin";
+}
 export type Role = z.infer<typeof roleSchema>;
 
 export const userStatusSchema = z.enum(["active", "disabled"]);

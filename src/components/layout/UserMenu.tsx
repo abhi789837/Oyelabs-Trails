@@ -13,6 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { isStaff } from "@shared/enums";
+
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useUiStore } from "@/store/uiStore";
 
@@ -37,6 +39,8 @@ export function UserMenu({ context = "learner" }: { context?: "learner" | "admin
   if (!user) return null;
 
   const isSuperadmin = user.role === "superadmin";
+  // The console link is for both staff roles; the elevated avatar still marks the superadmin alone.
+  const staff = isStaff(user.role);
 
   const handleSignOut = async () => {
     await signOut();
@@ -58,10 +62,12 @@ export function UserMenu({ context = "learner" }: { context?: "learner" | "admin
           <div className="min-w-0">
             <p className="truncate text-sm font-medium">{user.displayName}</p>
             <p className="truncate font-mono text-xs text-muted-foreground">{user.username}</p>
-            {isSuperadmin && (
+            {/* Which staff role, not just "staff" — an admin should be able to see at a glance
+                why the AI connection is missing from their nav. */}
+            {staff && (
               <p className="mt-1 inline-flex items-center gap-1 font-mono text-[11px] text-primary-strong">
                 <ShieldCheck className="h-3 w-3" aria-hidden="true" />
-                Superadmin
+                {isSuperadmin ? "Superadmin" : "Admin"}
               </p>
             )}
           </div>
@@ -74,7 +80,7 @@ export function UserMenu({ context = "learner" }: { context?: "learner" | "admin
             <Compass aria-hidden="true" />
             Learner view
           </DropdownMenuItem>
-        ) : isSuperadmin ? (
+        ) : staff ? (
           <DropdownMenuItem onSelect={() => navigate("/admin")}>
             <ShieldCheck aria-hidden="true" />
             Admin console

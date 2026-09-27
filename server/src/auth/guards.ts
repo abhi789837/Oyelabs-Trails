@@ -65,6 +65,24 @@ export function requireActiveUser(request: FastifyRequest): SessionUser {
   return user;
 }
 
+/**
+ * The admin console. Both staff roles pass.
+ *
+ * Most of what the console does is about one learner — onboarding them, issuing and reviewing an
+ * assessment, editing a plan — and a department lead needs all of it. What they do not get is
+ * anything that reaches past a single learner, which is `requireSuperadmin` below.
+ */
+export function requireStaff(request: FastifyRequest): SessionUser {
+  const user = requireActiveUser(request);
+  if (user.role !== "superadmin" && user.role !== "admin") throw forbidden();
+  return user;
+}
+
+/**
+ * The two things an `admin` must not touch: the shared AI credential, which every learner's
+ * generation runs through, and the staff accounts themselves — because an account that can grant
+ * itself more than it was given is not a restricted account.
+ */
 export function requireSuperadmin(request: FastifyRequest): SessionUser {
   const user = requireActiveUser(request);
   if (user.role !== "superadmin") throw forbidden();
@@ -74,6 +92,10 @@ export function requireSuperadmin(request: FastifyRequest): SessionUser {
 // preHandler forms, for `app.addHook("preHandler", superadminOnly)` inside a route plugin.
 export async function userOnly(request: FastifyRequest, _reply: FastifyReply): Promise<void> {
   requireActiveUser(request);
+}
+
+export async function staffOnly(request: FastifyRequest, _reply: FastifyReply): Promise<void> {
+  requireStaff(request);
 }
 
 export async function superadminOnly(request: FastifyRequest, _reply: FastifyReply): Promise<void> {

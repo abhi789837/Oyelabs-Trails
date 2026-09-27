@@ -1,5 +1,7 @@
 import { Cpu, LayoutDashboard, Library, Radio, ScrollText, ShieldAlert, Users, UserPlus, type LucideIcon } from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
+
+import { useCurrentUser } from "@/features/auth/AuthProvider";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 
 import { CommandPalette } from "@/components/layout/CommandPalette";
@@ -22,6 +24,8 @@ interface Section {
   end: boolean;
   label: string;
   icon: LucideIcon;
+  /** Hidden from a plain admin. The route guards it too — this only keeps the nav honest. */
+  superadminOnly?: boolean;
 }
 
 interface SectionGroup {
@@ -52,18 +56,32 @@ const groups: SectionGroup[] = [
   {
     label: "System",
     items: [
-      { to: "/admin/ai", end: false, label: "AI connection", icon: Cpu },
+      { to: "/admin/ai", end: false, label: "AI connection", icon: Cpu, superadminOnly: true },
       { to: "/admin/audit", end: false, label: "Audit log", icon: ScrollText },
       { to: "/admin/curriculum", end: false, label: "Curriculum", icon: Library },
     ],
   },
 ];
 
-const sections = groups.flatMap((group) => group.items);
+const allSections = groups.flatMap((group) => group.items);
+
+/**
+ * The nav this person actually gets.
+ *
+ * `currentSection` still matches against every section, not this filtered set: if an admin somehow
+ * lands on a superadmin route the guard redirects them, and in the frame before it does, no marker
+ * is better than the marker sitting on the wrong item.
+ */
+function visibleGroups(isSuperadmin: boolean): SectionGroup[] {
+  if (isSuperadmin) return groups;
+  return groups
+    .map((group) => ({ ...group, items: group.items.filter((item) => !item.superadminOnly) }))
+    .filter((group) => group.items.length > 0);
+}
 
 /** Exactly one current section, deepest match first, so the marker has one home. */
 function currentSection(pathname: string): string {
-  const match = sections
+  const match = allSections
     .filter((section) => (section.end ? pathname === section.to : pathname.startsWith(section.to)))
     .sort((a, b) => b.to.length - a.to.length)[0];
   return match?.to ?? "";
@@ -72,6 +90,9 @@ function currentSection(pathname: string): string {
 export function AdminLayout() {
   const { pathname } = useLocation();
   const current = currentSection(pathname);
+  const me = useCurrentUser();
+  const nav = visibleGroups(me.role === "superadmin");
+  const sections = nav.flatMap((group) => group.items);
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -102,7 +123,7 @@ export function AdminLayout() {
         <nav aria-label="Admin sections" className="hidden w-52 shrink-0 border-r py-4 md:block">
           <LayoutGroup id="admin-nav">
             <div className="space-y-4">
-              {groups.map((group, index) => (
+              {nav.map((group, index) => (
                 <div key={group.label ?? `group-${index}`}>
                   {group.label && (
                     <p className="mb-1 px-3 text-xs font-medium text-muted-foreground">{group.label}</p>

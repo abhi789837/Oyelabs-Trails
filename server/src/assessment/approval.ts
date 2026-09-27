@@ -4,7 +4,7 @@ import { AUTO_APPROVE_AFTER_MS } from "../../../shared/assessment";
 import { schema, type Db } from "../db";
 import { writeAudit } from "../lib/audit";
 import { now } from "../lib/ids";
-import { notify } from "../lib/notify";
+import { notify, staffIds } from "../lib/notify";
 
 /**
  * The approval gate between generation and the learner.
@@ -109,9 +109,9 @@ function notifyLearnerAndAdmins(
 
   const user = db.select().from(schema.users).where(eq(schema.users.id, assessment.userId)).get();
   const minutes = Math.round(AUTO_APPROVE_AFTER_MS / 60_000);
-  for (const admin of db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.role, "superadmin")).all()) {
+  for (const recipientId of staffIds(db)) {
     notify(db, {
-      recipientId: admin.id,
+      recipientId,
       kind: "assessment.auto_approved",
       title: `${user?.displayName ?? "A learner"}'s assessment went out unreviewed`,
       body: `Nobody approved it within ${minutes} minutes, so it was released automatically. The pool is still worth a look.`,

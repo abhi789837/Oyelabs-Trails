@@ -14,7 +14,7 @@ import {
 } from "../../../../shared/assessment";
 import { approveAssessment } from "../../assessment/approval";
 import { generationLogFor } from "../../assessment/generationLog";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { enqueue } from "../../jobs/queue";
 import { writeAudit } from "../../lib/audit";
@@ -75,14 +75,14 @@ export function countItems(app: FastifyInstance, assessmentId: string): Record<s
 }
 
 export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promise<void> {
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   /**
    * Issues an assessment (brief §9.2). Creating the row and queueing the job is all this does —
    * generation is minutes of AI calls and belongs to the worker, not to a request.
    */
   app.post("/api/admin/users/:id/assessments", async (request, reply) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = parseOrThrow(userParams, request.params);
     const body = parseOrThrow(issueAssessmentRequestSchema, request.body ?? {});
 
@@ -293,7 +293,7 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
    * click after the deadline already released it should say so, not imply the admin reviewed it.
    */
   app.post("/api/admin/assessments/:assessmentId/approve", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
@@ -331,7 +331,7 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
    * of their attempt and is no longer the admin's to change.
    */
   app.post("/api/admin/assessments/:assessmentId/items/:itemId/drop", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
     const { itemId } = parseOrThrow(z.object({ itemId: z.string().min(1).max(64) }), request.params);
     const { restore } = parseOrThrow(z.object({ restore: z.boolean().default(false) }), request.body ?? {});
@@ -380,7 +380,7 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
   });
 
   app.delete("/api/admin/assessments/:assessmentId", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();

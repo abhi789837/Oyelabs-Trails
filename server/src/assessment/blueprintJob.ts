@@ -26,7 +26,7 @@ import type { ContentStore } from "../content/store";
 import { schema, type Db } from "../db";
 import type { Job } from "../jobs/queue";
 import { newId, now } from "../lib/ids";
-import { notify } from "../lib/notify";
+import { notify, staffIds } from "../lib/notify";
 import type { CodeSandbox } from "../sandbox";
 import { buildAreaDigest, buildManifestDigest, knownModuleIds } from "./digest";
 import { GenerationLog } from "./generationLog";
@@ -678,8 +678,7 @@ async function storeItem(input: StoreItemInput): Promise<StoreOutcome> {
 }
 
 function notifyAdmins(db: Db, message: { kind: string; title: string; body: string; link: string }): void {
-  const admins = db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.role, "superadmin")).all();
-  for (const admin of admins) notify(db, { recipientId: admin.id, ...message });
+  for (const recipientId of staffIds(db)) notify(db, { recipientId, ...message });
 }
 
 export { now };

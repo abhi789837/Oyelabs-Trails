@@ -1,4 +1,5 @@
 import type { SessionUser } from "@shared/auth";
+import { isStaff } from "@shared/enums";
 
 /**
  * Where a signed-in person belongs right now (brief §6).
@@ -12,7 +13,7 @@ import type { SessionUser } from "@shared/auth";
  */
 export function landingPathFor(user: SessionUser): string {
   if (user.mustChangePassword) return "/change-password";
-  if (user.role === "superadmin") return "/admin";
+  if (isStaff(user.role)) return "/admin";
   return "/plan";
 }
 

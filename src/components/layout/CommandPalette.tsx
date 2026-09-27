@@ -16,6 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import type { UserSummary } from "@shared/admin";
+import { isStaff, type Role } from "@shared/enums";
 
 import { StatusDot } from "@/components/trail/StatusDot";
 import { Avatar } from "@/components/ui/avatar";
@@ -76,7 +77,7 @@ const GO_TO_LEARNER = "action:go-to-learner";
 
 const EMPTY_RESULTS: GroupedResults = { trails: [], camps: [], topics: [], people: [], actions: [], total: 0 };
 
-function buildActions(isSuperadmin: boolean, context: "learner" | "admin"): CommandEntry[] {
+function buildActions(role: Role | undefined, context: "learner" | "admin"): CommandEntry[] {
   const entry = (id: string, title: string, href: string, subtitle: string): CommandEntry => ({
     id,
     kind: "action",
@@ -86,7 +87,7 @@ function buildActions(isSuperadmin: boolean, context: "learner" | "admin"): Comm
     haystack: `${title} ${subtitle}`.toLowerCase(),
   });
 
-  if (!isSuperadmin) {
+  if (!role || !isStaff(role)) {
     return [
       entry("action:dashboard", "Dashboard", "/", "Your trails at a glance"),
       entry("action:plan", "Your plan", "/plan", "The waypoints assigned to you"),
@@ -98,7 +99,11 @@ function buildActions(isSuperadmin: boolean, context: "learner" | "admin"): Comm
     entry("action:admin-onboard", "Onboard learner", "/admin/onboard", "Create an account and issue an assessment"),
     entry(GO_TO_LEARNER, "Go to learner…", "", "Search people by name or username"),
     entry("action:admin-live", "Live assessments", "/admin/live", "Who is sitting one right now"),
-    entry("action:admin-ai", "AI connection", "/admin/ai", "Provider, credential and usage"),
+    // The one console destination an admin does not have. Offering it would send them to a
+    // redirect, which reads as the app being broken rather than as a permission.
+    ...(role === "superadmin"
+      ? [entry("action:admin-ai", "AI connection", "/admin/ai", "Provider, credential and usage")]
+      : []),
     entry("action:admin-integrity", "Integrity events", "/admin/integrity", "Every proctoring signal, across everyone"),
     entry("action:admin-audit", "Audit log", "/admin/audit", "Everything anyone changed"),
     entry("action:admin-curriculum", "Curriculum", "/admin/curriculum", "Every topic, filterable"),
@@ -114,7 +119,7 @@ function buildPeopleIndex(people: UserSummary[]): CommandEntry[] {
     id: `person:${person.id}`,
     kind: "person" as const,
     title: person.displayName,
-    context: person.roleTitle ?? (person.role === "superadmin" ? "Superadmin" : "Learner"),
+    context: person.roleTitle ?? (person.role === "superadmin" ? "Superadmin" : person.role === "admin" ? "Admin" : "Learner"),
     href: `/admin/people/${person.id}`,
     haystack: `${person.displayName} ${person.username} ${person.roleTitle ?? ""}`.toLowerCase(),
     meta: person.status === "disabled" ? "disabled" : person.username,
@@ -134,7 +139,7 @@ export function CommandPalette({ context = "learner" }: { context?: "learner" | 
   const [people, setPeople] = useState<UserSummary[] | null>(null);
   const [recents, setRecents] = useState<RecentEntry[]>([]);
 
-  const isSuperadmin = user?.role === "superadmin";
+  const staff = user ? isStaff(user.role) : false;
   /* Depend on the id, not the object: `AuthProvider.refresh()` hands back a fresh `user` for the
      same person, and an effect keyed on the object would clear a half-typed query underneath them. */
   const userId = user?.id ?? null;
@@ -149,7 +154,7 @@ export function CommandPalette({ context = "learner" }: { context?: "learner" | 
     [tracks],
   );
   const peopleIndex = useMemo(() => buildPeopleIndex(people ?? []), [people]);
-  const actions = useMemo(() => buildActions(Boolean(isSuperadmin), context), [isSuperadmin, context]);
+  const actions = useMemo(() => buildActions(user?.role, context), [user?.role, context]);
 
   const index = useMemo(
     () => [...actions, ...curriculum, ...peopleIndex],
@@ -191,7 +196,7 @@ export function CommandPalette({ context = "learner" }: { context?: "learner" | 
   /* People are fetched once per session, on the first open, and only for a superadmin — a learner
      has no route that could use them and no permission to ask. */
   useEffect(() => {
-    if (!open || !isSuperadmin || people !== null) return;
+    if (!open || !staff || people !== null) return;
     const controller = new AbortController();
     adminApi
       .listUsers(controller.signal)
@@ -200,7 +205,7 @@ export function CommandPalette({ context = "learner" }: { context?: "learner" | 
         /* The palette still works without people; it just will not find them. */
       });
     return () => controller.abort();
-  }, [open, isSuperadmin, people]);
+  }, [open, staff, people]);
 
   const run = useCallback(
     (entry: CommandEntry) => {

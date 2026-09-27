@@ -4,6 +4,7 @@ import { KeyRound, ShieldCheck, ShieldOff, UserPlus, Wand2 } from "lucide-react"
 import { Link } from "react-router-dom";
 
 import type { UserSummary } from "@shared/admin";
+import { isStaff } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { DataTable, useTableQueryState, peopleBuiltInViews, peopleFields } from "@/components/data-table";
@@ -21,6 +22,13 @@ import { notify } from "@/lib/toast";
 import { formatTimestamp } from "@/lib/utils";
 import { adminApi } from "./api";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
+
+/** What the Role column says for someone with no role title of their own. */
+const ROLE_FALLBACK: Record<UserSummary["role"], string> = {
+  superadmin: "Super admin",
+  admin: "Admin",
+  learner: "Learner",
+};
 
 /**
  * The People table (brief §13), on the DataTable kit.
@@ -144,8 +152,8 @@ export default function AdminPeoplePage() {
         id: "roleTitle",
         header: "Role",
         cell: ({ row }) =>
-          row.original.role === "superadmin" ? (
-            <StatusBadge kind="role" status="superadmin" />
+          isStaff(row.original.role) ? (
+            <StatusBadge kind="role" status={row.original.role} />
           ) : (
             <span className="text-muted-foreground">{row.original.roleTitle ?? "Learner"}</span>
           ),
@@ -255,7 +263,7 @@ export default function AdminPeoplePage() {
         tone: "destructive" as const,
         icon: <ShieldOff aria-hidden="true" />,
         run: async (rows: UserSummary[]): Promise<void> => {
-          const targets = rows.filter((u) => u.role !== "superadmin" && u.status === "active");
+          const targets = rows.filter((u) => !isStaff(u.role) && u.status === "active");
           if (targets.length === 0) {
             notify.info("Nothing to disable in that selection.");
             throw new Error("nothing to do");
@@ -361,7 +369,7 @@ export default function AdminPeoplePage() {
           detailTitle={(u) => u.displayName}
           detailSubtitle={(u) => <span className="font-mono text-xs">{u.username}</span>}
           detailFooter={(u) =>
-            u.role === "superadmin" ? null : (
+            isStaff(u.role) ? null : (
               <Button asChild>
                 <Link to={`/admin/people/${u.id}`}>Open full profile</Link>
               </Button>
@@ -417,9 +425,9 @@ function Dash() {
 function PersonCell({ user }: { user: UserSummary }) {
   return (
     <div className="flex items-center gap-2.5">
-      <Avatar name={user.displayName} size="sm" elevated={user.role === "superadmin"} />
+      <Avatar name={user.displayName} size="sm" elevated={isStaff(user.role)} />
       <div className="min-w-0">
-        {user.role === "superadmin" ? (
+        {isStaff(user.role) ? (
           <span className="block truncate font-medium">{user.displayName}</span>
         ) : (
           <Link
@@ -488,7 +496,7 @@ function RowActions({
         <KeyRound aria-hidden="true" />
         <span className="sr-only">Reset {user.displayName}'s password</span>
       </Button>
-      {user.role !== "superadmin" && (
+      {!isStaff(user.role) && (
         <Button
           variant="ghost"
           size="icon-sm"
@@ -515,7 +523,7 @@ function PersonCard({ user }: { user: UserSummary }) {
       <div className="flex flex-wrap items-center gap-1.5">
         <StatusCell user={user} />
         {user.assessmentStatus && <StatusBadge kind="assessment" status={user.assessmentStatus} />}
-        {user.role === "superadmin" && <StatusBadge kind="role" status="superadmin" />}
+        {isStaff(user.role) && <StatusBadge kind="role" status={user.role} />}
         {user.hardWarnings > 0 && (
           <Badge variant="danger">
             {user.hardWarnings} hard warning{user.hardWarnings === 1 ? "" : "s"}
@@ -526,7 +534,7 @@ function PersonCard({ user }: { user: UserSummary }) {
         {/* A superadmin has no role title, and defaulting to "Learner" told the card's reader the
             opposite of the truth. The desktop column shows a badge instead of a title here for the
             same reason. */}
-        <Fact label="Role">{user.roleTitle ?? (user.role === "superadmin" ? "Super admin" : "Learner")}</Fact>
+        <Fact label="Role">{user.roleTitle ?? ROLE_FALLBACK[user.role]}</Fact>
         <Fact label="Level">{user.overallLevel ?? "—"}</Fact>
         <Fact label="Plan">{pct === null ? "—" : `${user.planCompletedCount}/${user.planTopicCount}`}</Fact>
         <Fact label="Last seen">{user.lastLoginAt === null ? "Never" : relativeTime(user.lastLoginAt)}</Fact>
@@ -547,7 +555,7 @@ function PersonDetail({ user }: { user: UserSummary }) {
         ) : (
           <Badge variant="outline">No assessment issued</Badge>
         )}
-        {user.role === "superadmin" && <StatusBadge kind="role" status="superadmin" />}
+        {isStaff(user.role) && <StatusBadge kind="role" status={user.role} />}
       </div>
 
       {user.planTopicCount > 0 && (
@@ -568,7 +576,7 @@ function PersonDetail({ user }: { user: UserSummary }) {
       )}
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-        <Fact label="Role">{user.roleTitle ?? (user.role === "superadmin" ? "Super admin" : "Learner")}</Fact>
+        <Fact label="Role">{user.roleTitle ?? ROLE_FALLBACK[user.role]}</Fact>
         <Fact label="Experience">{user.yearsExperience === null ? "—" : `${user.yearsExperience} yrs`}</Fact>
         <Fact label="Overall level">{user.overallLevel === null ? "Not evaluated" : `${user.overallLevel} of 5`}</Fact>
         <Fact label="Hard warnings">

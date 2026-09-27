@@ -11,11 +11,13 @@ import type { AccentToken } from "@/types/curriculum";
 import { ApiRequestError } from "@/api/client";
 import { Field, FormAlert, NumberField, PasswordField, TextField } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { useTracks } from "@/content";
+import { useCurrentUser } from "@/features/auth/AuthProvider";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { duration, transition } from "@/lib/motion";
 import { passwordStrength } from "@/lib/password-strength";
@@ -79,6 +81,11 @@ export default function AdminOnboardPage() {
   // A superadmin's manifest is unfiltered, so this is the whole curriculum.
   const tracks = useTracks();
 
+  const me = useCurrentUser();
+  /* Only the superadmin may create staff, and the server enforces it — the control is hidden here
+     rather than shown-and-rejected, because an option that always fails is worse than none. */
+  const mayCreateStaff = me.role === "superadmin";
+  const [role, setRole] = useState<"learner" | "admin">("learner");
   const [step, setStep] = useState<StepId>("account");
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -146,6 +153,7 @@ export default function AdminOnboardPage() {
       const result = await adminApi.onboard({
         username: username.trim(),
         displayName,
+        role,
         ...(passwordMode === "set" && password ? { password } : {}),
         profile: {
           ...profile,
@@ -284,6 +292,24 @@ export default function AdminOnboardPage() {
                     Either way they choose their own password at first sign-in, and this one stops working then.
                   </p>
                 </fieldset>
+
+                {mayCreateStaff && (
+                  <fieldset className="space-y-3">
+                    <legend className="text-sm font-medium">What kind of account</legend>
+                    <PasswordChoice
+                      checked={role === "learner"}
+                      onSelect={() => setRole("learner")}
+                      title="Learner"
+                      body="Takes assessments and works through a plan. Sees only their own trail."
+                    />
+                    <PasswordChoice
+                      checked={role === "admin"}
+                      onSelect={() => setRole("admin")}
+                      title="Admin"
+                      body="Runs the console for everyone: onboarding, assessments, plans, the live board. Cannot change the shared AI credential and cannot create or disable other admins — those stay with you."
+                    />
+                  </fieldset>
+                )}
               </>
             )}
 
@@ -447,6 +473,7 @@ export default function AdminOnboardPage() {
               <Review
                 username={username.trim()}
                 displayName={displayName}
+                role={role}
                 passwordMode={passwordMode}
                 passwordScore={passwordMode === "set" && password ? passwordStrength(password, username).score : null}
                 profile={profile}
@@ -673,6 +700,7 @@ function TrackCard({
 function Review({
   username,
   displayName,
+  role,
   passwordMode,
   passwordScore,
   profile,
@@ -682,6 +710,7 @@ function Review({
 }: {
   username: string;
   displayName: string;
+  role: "learner" | "admin";
   passwordMode: "generate" | "set";
   passwordScore: number | null;
   profile: LearnerProfile;
@@ -695,9 +724,10 @@ function Review({
   return (
     <div className="space-y-4">
       <ReviewBlock title="Account" onEdit={() => onEdit("account")}>
-        <p>
-          <span className="font-medium">{displayName || "—"}</span>{" "}
+        <p className="flex flex-wrap items-center gap-2">
+          <span className="font-medium">{displayName || "—"}</span>
           <span className="font-mono text-xs text-muted-foreground">{username || "—"}</span>
+          <StatusBadge kind="role" status={role} />
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
           {passwordMode === "generate"

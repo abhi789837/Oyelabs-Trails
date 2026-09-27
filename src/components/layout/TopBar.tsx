@@ -8,6 +8,7 @@ import { Logo } from "./Logo";
 import { MobileNav } from "./MobileNav";
 import { NotificationCentre } from "./NotificationCentre";
 import { UserMenu } from "./UserMenu";
+import { isStaff } from "@shared/enums";
 
 /**
  * The shell's one piece of fixed chrome: brand on the left, and on the right the three things that
@@ -32,7 +33,7 @@ export function TopBar() {
           <CommandPalette />
 
           {/* A superadmin browsing the curriculum needs a way back to the console. */}
-          {user?.role === "superadmin" && (
+          {user && isStaff(user.role) && (
             <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
               <Link to="/admin">
                 <ShieldCheck aria-hidden="true" />

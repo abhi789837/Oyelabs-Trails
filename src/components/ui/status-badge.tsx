@@ -96,6 +96,9 @@ const registry: { [K in StatusKind]: Record<StatusKinds[K], Entry> } = {
   },
   role: {
     superadmin: { label: "Super admin", tone: "brand" },
+    // Visibly staff, visibly not the super admin — the distinction is the AI credential and the
+    // admin accounts, and a badge that read the same for both would hide it.
+    admin: { label: "Admin", tone: "progress" },
     learner: { label: "Learner", tone: "outline" },
   },
 };

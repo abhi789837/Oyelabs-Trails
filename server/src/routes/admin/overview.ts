@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { getSettings, listCredentials } from "../../ai/credentials";
 import { usageByPurpose } from "../../ai/service";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { listNotifications, markAllRead, unreadCount } from "../../lib/notify";
 import { parseOrThrow } from "../../lib/errors";
@@ -58,7 +58,7 @@ function bucket(starts: number[], timestamps: (number | null)[]): number[] {
  * slower than the rest of the console for no benefit.
  */
 export async function registerAdminOverviewRoutes(app: FastifyInstance): Promise<void> {
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   app.get("/api/admin/overview", async () => {
     const users = app.db.select().from(schema.users).all();
@@ -164,7 +164,7 @@ export async function registerAdminOverviewRoutes(app: FastifyInstance): Promise
   });
 
   app.get("/api/admin/notifications", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { limit } = parseOrThrow(
       z.object({ limit: z.coerce.number().int().min(1).max(100).default(30) }),
       request.query,
@@ -173,7 +173,7 @@ export async function registerAdminOverviewRoutes(app: FastifyInstance): Promise
   });
 
   app.post("/api/admin/notifications/read", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     markAllRead(app.db, actor.id);
     return { ok: true };
   });

@@ -3,7 +3,7 @@ import type { FastifyInstance } from "fastify";
 
 import type { PlanResponse, PlanSummary } from "../../../../shared/plans";
 import { publishPlanRequestSchema } from "../../../../shared/plans";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { writeAudit } from "../../lib/audit";
 import { badRequest, notFound, parseOrThrow } from "../../lib/errors";
@@ -24,7 +24,7 @@ function toSummary(plan: PublishedPlan): PlanSummary {
 }
 
 export async function registerAdminPlanRoutes(app: FastifyInstance): Promise<void> {
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   app.get("/api/admin/users/:id/plan", async (request): Promise<PlanResponse> => {
     const { id } = request.params as { id: string };
@@ -44,7 +44,7 @@ export async function registerAdminPlanRoutes(app: FastifyInstance): Promise<voi
    * re-adding it later does not ask the learner to redo work.
    */
   app.put("/api/admin/users/:id/plan", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = request.params as { id: string };
     const body = parseOrThrow(publishPlanRequestSchema, request.body);
 
