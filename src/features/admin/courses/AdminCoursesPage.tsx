@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { BookOpen, Plus, Users } from "lucide-react";
+import { BookOpen, Plus, Search, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { Course } from "@shared/courses";
@@ -10,6 +10,7 @@ import { FormAlert, TextField } from "@/components/form/Field";
 import { useFormDialog } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { accentClasses } from "@/lib/accent";
@@ -32,6 +33,9 @@ export default function AdminCoursesPage() {
 
   const [courses, setCourses] = useState<Course[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<"all" | "published" | "draft">("all");
+  const [audience, setAudience] = useState<"all" | "everyone" | "assigned">("all");
+  const [search, setSearch] = useState("");
 
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -49,6 +53,16 @@ export default function AdminCoursesPage() {
     void load(controller.signal);
     return () => controller.abort();
   }, [load]);
+
+  const visible = (courses ?? []).filter((course) => {
+    if (status === "published" && !course.published) return false;
+    if (status === "draft" && course.published) return false;
+    if (audience !== "all" && course.audience !== audience) return false;
+    const query = search.trim().toLowerCase();
+    if (query && !`${course.title} ${course.summary}`.toLowerCase().includes(query)) return false;
+    return true;
+  });
+  const filtering = status !== "all" || audience !== "all" || search.trim() !== "";
 
   const handleCreate = async () => {
     const created = await formDialog({
@@ -107,6 +121,43 @@ export default function AdminCoursesPage() {
         </div>
       )}
 
+      {courses !== null && courses.length > 0 && (
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            onClear={() => setSearch("")}
+            leading={<Search aria-hidden="true" />}
+            placeholder="Search courses"
+            aria-label="Search courses"
+            containerClassName="max-w-xs"
+          />
+          <Chip active={status === "all"} onClick={() => setStatus("all")}>
+            All
+          </Chip>
+          <Chip active={status === "published"} onClick={() => setStatus("published")}>
+            Published
+          </Chip>
+          <Chip active={status === "draft"} onClick={() => setStatus("draft")}>
+            Drafts
+          </Chip>
+          <span aria-hidden="true" className="h-5 w-px bg-border" />
+          <Chip active={audience === "all"} onClick={() => setAudience("all")}>
+            Anyone
+          </Chip>
+          <Chip active={audience === "everyone"} onClick={() => setAudience("everyone")}>
+            For everyone
+          </Chip>
+          <Chip active={audience === "assigned"} onClick={() => setAudience("assigned")}>
+            Assigned
+          </Chip>
+          <span className="ml-auto text-xs text-muted-foreground" aria-live="polite">
+            {visible.length} of {courses.length}
+          </span>
+        </div>
+      )}
+
       {courses === null ? (
         <p className="mt-10 text-sm text-muted-foreground" role="status">
           Loading…
@@ -125,10 +176,14 @@ export default function AdminCoursesPage() {
           </Button>
         </div>
       ) : (
-        <motion.ul variants={stagger(0.04)} initial="hidden" animate="visible" className="mt-8 grid gap-4 lg:grid-cols-2">
-          {courses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
+        <motion.ul variants={stagger(0.04)} initial="hidden" animate="visible" className="mt-6 grid gap-4 lg:grid-cols-2">
+          {visible.length === 0 ? (
+            <li className="text-sm text-muted-foreground">
+              {filtering ? "No course matches those filters." : "Nothing to show."}
+            </li>
+          ) : (
+            visible.map((course) => <CourseCard key={course.id} course={course} />)
+          )}
         </motion.ul>
       )}
     </div>
@@ -185,5 +240,24 @@ function CourseCard({ course }: { course: Course }) {
         {topics > 0 && <Progress value={100} className="mt-3 h-1" indicatorClassName={accent.bg} aria-hidden="true" />}
       </Link>
     </motion.li>
+  );
+}
+
+/** A filter chip: dashed while it is doing nothing, solid once it is — the kit's own convention. */
+function Chip({ children, active, onClick }: { children: React.ReactNode; active: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "rounded-full border px-3 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
+        active
+          ? "border-foreground/30 bg-surface-sunken font-medium"
+          : "border-dashed text-muted-foreground hover:bg-surface-sunken/60",
+      )}
+    >
+      {children}
+    </button>
   );
 }
