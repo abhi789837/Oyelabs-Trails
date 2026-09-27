@@ -91,6 +91,7 @@ function buildActions(role: Role | undefined, context: "learner" | "admin"): Com
     return [
       entry("action:dashboard", "Dashboard", "/", "Your trails at a glance"),
       entry("action:plan", "Your plan", "/plan", "The waypoints assigned to you"),
+      entry("action:courses", "Courses", "/courses", "How things are done here"),
     ];
   }
 
@@ -107,6 +108,7 @@ function buildActions(role: Role | undefined, context: "learner" | "admin"): Com
     entry("action:admin-integrity", "Integrity events", "/admin/integrity", "Every proctoring signal, across everyone"),
     entry("action:admin-audit", "Audit log", "/admin/audit", "Everything anyone changed"),
     entry("action:admin-curriculum", "Curriculum", "/admin/curriculum", "Every topic, filterable"),
+    entry("action:admin-courses", "Courses", "/admin/courses", "Write an internal process by hand"),
   ];
 
   return context === "admin"

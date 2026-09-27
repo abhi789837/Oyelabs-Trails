@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Compass } from "lucide-react";
+import { BookOpen, Compass } from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
@@ -40,6 +40,7 @@ function currentKey(pathname: string, tracks: TrackMeta[]): string {
     }
     if (pathname.startsWith(`/track/${track.id}`) || pathname === `/report/${track.id}`) return `track:${track.id}`;
   }
+  if (pathname.startsWith("/courses")) return "courses";
   return pathname === "/" ? "dashboard" : "";
 }
 
@@ -53,6 +54,18 @@ export function TrackNav({ collapsed = false, onNavigate, group = "trail-nav" }:
       <nav aria-label="Tracks" className="flex flex-col gap-1">
         <NavItemLink to="/" end label="Dashboard" collapsed={collapsed} current={current === "dashboard"} onNavigate={onNavigate}>
           <Compass className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        </NavItemLink>
+
+        {/* Courses sit beside the trails, not among them: there is nothing to pass in one, and
+            listing them together would suggest otherwise. */}
+        <NavItemLink
+          to="/courses"
+          label="Courses"
+          collapsed={collapsed}
+          current={current === "courses"}
+          onNavigate={onNavigate}
+        >
+          <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </NavItemLink>
 
         {!collapsed && <p className="mb-1 mt-5 px-3 text-xs font-medium text-muted-foreground">Trails</p>}

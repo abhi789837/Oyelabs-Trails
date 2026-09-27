@@ -17,6 +17,8 @@ import { CompletionWatcher } from "./CompletionWatcher";
 import { Logo } from "./Logo";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
+import CoursePage from "@/pages/CoursePage";
+import CoursesPage from "@/pages/CoursesPage";
 
 /** How often to re-check an assessment the server is still working on. */
 const ASSESSMENT_POLL_MS = 30_000;
@@ -118,6 +120,8 @@ function AnimatedRoutes() {
           <Route path="track/:trackId/module/:moduleId/topic/:topicId" element={<TopicPage />} />
           {/* v1 links: /track/:trackId/topic/:topicId */}
           <Route path="track/:trackId/topic/:topicId" element={<LegacyTopicRedirect />} />
+          <Route path="courses" element={<CoursesPage />} />
+          <Route path="courses/:courseId" element={<CoursePage />} />
           <Route path="report/:trackId" element={<CertificatePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

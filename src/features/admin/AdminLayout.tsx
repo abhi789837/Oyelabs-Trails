@@ -1,4 +1,15 @@
-import { Cpu, LayoutDashboard, Library, Radio, ScrollText, ShieldAlert, Users, UserPlus, type LucideIcon } from "lucide-react";
+import {
+  BookOpen,
+  Cpu,
+  LayoutDashboard,
+  Library,
+  Radio,
+  ScrollText,
+  ShieldAlert,
+  Users,
+  UserPlus,
+  type LucideIcon,
+} from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
 
 import { useCurrentUser } from "@/features/auth/AuthProvider";
@@ -59,6 +70,7 @@ const groups: SectionGroup[] = [
       { to: "/admin/ai", end: false, label: "AI connection", icon: Cpu, superadminOnly: true },
       { to: "/admin/audit", end: false, label: "Audit log", icon: ScrollText },
       { to: "/admin/curriculum", end: false, label: "Curriculum", icon: Library },
+      { to: "/admin/courses", end: false, label: "Courses", icon: BookOpen },
     ],
   },
 ];
