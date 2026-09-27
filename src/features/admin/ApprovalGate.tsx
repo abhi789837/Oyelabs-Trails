@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LoaderCircle, ShieldCheck, Timer } from "lucide-react";
+import { ShieldCheck, Timer } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { AUTO_APPROVE_AFTER_MS, type AssessmentSummary } from "@shared/assessment";
@@ -50,7 +50,7 @@ export function ApprovalBanner({
   };
 
   return (
-    <div className="w-full rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3">
+    <div className="w-full rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Timer className="h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
         <p className="text-sm">
@@ -75,12 +75,8 @@ export function ApprovalBanner({
               <Link to={poolHref}>Review the pool</Link>
             </Button>
           )}
-          <Button size="sm" onClick={() => void approve()} disabled={busy}>
-            {busy ? (
-              <LoaderCircle className="animate-spin" aria-hidden="true" />
-            ) : (
-              <ShieldCheck aria-hidden="true" />
-            )}
+          <Button size="sm" loading={busy} onClick={() => void approve()}>
+            <ShieldCheck aria-hidden="true" />
             Approve and release
           </Button>
         </div>

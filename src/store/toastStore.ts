@@ -1,23 +1,27 @@
-import { create } from "zustand";
+import { createElement } from "react";
+import { toast } from "sonner";
 
-export interface Toast {
-  id: number;
+import { CompletionToast } from "@/components/overlays/CompletionToast";
+
+/**
+ * Camp and summit celebrations.
+ *
+ * This was a zustand store holding a list of toasts, rendered by a hand-written stack. The list and
+ * the stack are sonner's job now (U3); what stayed is the thing that matters — the payload shape
+ * and the one entry point `CompletionWatcher` calls when a learner finishes a camp or a trail.
+ */
+export interface CompletionToastPayload {
   title: string;
   body: string;
   action?: { label: string; to: string };
   tone: "camp" | "summit";
 }
 
-interface ToastState {
-  toasts: Toast[];
-  push: (toast: Omit<Toast, "id">) => void;
-  dismiss: (id: number) => void;
+/** Long enough to read the next-camp line and decide to follow it. */
+const COMPLETION_DURATION_MS = 8000;
+
+export function pushCompletionToast(payload: CompletionToastPayload) {
+  return toast.custom((id) => createElement(CompletionToast, { toast: payload, id }), {
+    duration: COMPLETION_DURATION_MS,
+  });
 }
-
-let nextId = 1;
-
-export const useToastStore = create<ToastState>()((set) => ({
-  toasts: [],
-  push: (toast) => set((s) => ({ toasts: [...s.toasts.slice(-2), { ...toast, id: nextId++ }] })),
-  dismiss: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
-}));

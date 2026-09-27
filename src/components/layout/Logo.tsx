@@ -76,7 +76,7 @@ export function Logo({
   const ratio = onPrimary ? RATIO.mark : RATIO[variant];
   const width = Math.round((ratio.w / ratio.h) * height);
   const alt = decorative ? "" : "Oyelearn";
-  const shared = cn("block h-[var(--logo-h)] w-auto", className);
+  const shared = cn("block h-(--logo-h) w-auto", className);
   const style = { "--logo-h": `${height}px` } as React.CSSProperties;
 
   const src = onPrimary ? "/brand/oyelearn-mark-mono-white.svg" : dark ? FILES[variant].dark : FILES[variant].light;

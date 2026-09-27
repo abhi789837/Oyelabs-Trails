@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import type { GenerationLogLine } from "../../../../shared/assessment";
 import type { Severity } from "../../../../shared/enums";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { integrityEventsFor, integritySummary } from "../../assessment/integrity";
 import { finishAndEvaluate } from "../assessment";
 import { schema } from "../../db";
@@ -15,6 +15,8 @@ import { writeAudit } from "../../lib/audit";
 import { badRequest, notFound, parseOrThrow } from "../../lib/errors";
 import { notify } from "../../lib/notify";
 import { now } from "../../lib/ids";
+import { pagedQuery } from "../../lib/pagedRoute";
+import { integrityEventsTableSpec } from "../../lib/tableSpecs";
 
 /**
  * The admin's live view (brief §10.5) over server-sent events (D12).
@@ -85,7 +87,7 @@ export function publishGenerationLine(app: FastifyInstance, line: GenerationLogL
 const assessmentParams = z.object({ assessmentId: z.string().min(1).max(64) });
 
 export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<void> {
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   if (!subscribers.has(app)) subscribers.set(app, new Set());
   app.addHook("onClose", async () => {
@@ -131,6 +133,11 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
           startedAt: row.startedAt,
           deadlineAt: row.deadlineAt,
           msLeft: row.deadlineAt ? Math.max(0, row.deadlineAt - now()) : null,
+          /* The board draws a countdown ring, which needs the whole budget and not just what is
+             left — a ring with no total can only ever be a number. Read from the attempt's own
+             config rather than the current default, so an attempt issued under an older time limit
+             still draws correctly. Null when the config predates the field. */
+          timeLimitMinutes: config.timeLimitMinutes ?? null,
           hardWarnings: row.hardWarnings,
           softWarnings: row.softWarnings,
           lastHeartbeatAt: row.lastHeartbeatAt,
@@ -151,7 +158,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
    * The event stream. Held open; a comment frame every 20 s keeps proxies from closing it.
    */
   app.get("/api/admin/live/stream", async (request, reply) => {
-    requireSuperadmin(request);
+    requireStaff(request);
 
     reply.raw.writeHead(200, {
       "content-type": "text/event-stream",
@@ -185,6 +192,48 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
     return reply;
   });
 
+  /**
+   * The global integrity feed, server-paged through `integrityEventsTableSpec`.
+   *
+   * Separate from the per-assessment route above, which answers "what happened in this sitting?"
+   * This one answers "has this been happening?" — across every learner and every attempt — and is
+   * unbounded, so it pages rather than truncating.
+   *
+   * `snapshotPath` is returned for rendering but is not a filterable field: the whitelist leaves it
+   * out so the table cannot be turned into a way to enumerate the snapshot directory.
+   */
+  app.get("/api/admin/integrity/events", async (request) => {
+    const { meta, apply } = pagedQuery(app.db, integrityEventsTableSpec, schema.integrityEvents, request.query);
+    const rows = apply(app.db.select().from(schema.integrityEvents).$dynamic()).all();
+
+    const userIds = [...new Set(rows.map((r) => r.userId))];
+    const users = userIds.length
+      ? app.db
+          .select({ id: schema.users.id, displayName: schema.users.displayName, username: schema.users.username })
+          .from(schema.users)
+          .where(inArray(schema.users.id, userIds))
+          .all()
+      : [];
+    const byId = new Map(users.map((u) => [u.id, u]));
+
+    return {
+      meta,
+      events: rows.map((row) => ({
+        id: row.id,
+        assessmentId: row.assessmentId,
+        userId: row.userId,
+        displayName: byId.get(row.userId)?.displayName ?? "Unknown",
+        username: byId.get(row.userId)?.username ?? "",
+        type: row.type,
+        severity: row.severity,
+        counted: row.counted,
+        details: row.details ?? null,
+        snapshotPath: row.snapshotPath,
+        createdAt: row.createdAt,
+      })),
+    };
+  });
+
   app.get("/api/admin/assessments/:assessmentId/integrity", async (request) => {
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
@@ -201,7 +250,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
    * pictures of people taken during a test, and a guessable URL would be a leak.
    */
   app.get("/api/admin/snapshots/*", async (request, reply) => {
-    requireSuperadmin(request);
+    requireStaff(request);
     const relative = (request.params as Record<string, string>)["*"] ?? "";
 
     // Resolve and confirm the result is still inside the snapshots directory, so "../" cannot
@@ -214,7 +263,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.post("/api/admin/assessments/:assessmentId/terminate", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
@@ -248,7 +297,7 @@ export async function registerAdminLiveRoutes(app: FastifyInstance): Promise<voi
 
   /** Adds ten minutes to a live assessment (§10.5). */
   app.post("/api/admin/assessments/:assessmentId/extend", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();

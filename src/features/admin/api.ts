@@ -33,4 +33,18 @@ export const adminApi = {
   /** Releases a generated assessment to the learner before its auto-approval deadline. */
   approveAssessment: (assessmentId: string) =>
     api.post<{ assessment: AssessmentSummary }>(`/api/admin/assessments/${assessmentId}/approve`),
+
+  /**
+   * Issues one. `label` only matters when the learner will hold several at a time; `timeLimitMinutes`
+   * overrides what the blueprint would have chosen.
+   */
+  issueAssessment: (userId: string, body: { label?: string; timeLimitMinutes?: number } = {}) =>
+    api.post<{ assessmentId: string }>(`/api/admin/users/${userId}/assessments`, body),
+
+  /** Cancels one that has not been started. The server refuses anything further along. */
+  deleteAssessment: (assessmentId: string) => api.del<{ ok: true }>(`/api/admin/assessments/${assessmentId}`),
+
+  /** Drops an item from the pool before release, or puts an admin-dropped one back. */
+  setPoolItemDropped: (assessmentId: string, itemId: string, dropped: boolean) =>
+    api.post<{ ok: true }>(`/api/admin/assessments/${assessmentId}/items/${itemId}/drop`, { restore: !dropped }),
 };

@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { Check, Lock, Mountain, Signpost } from "lucide-react";
 import { Link } from "react-router-dom";
 

@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { Check, RotateCcw } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -54,7 +54,7 @@ export const ChallengeResult = forwardRef<HTMLDivElement, ChallengeResultProps>(
       role="status"
       aria-live="polite"
       className={cn(
-        "flex flex-col gap-5 rounded-md border px-5 py-5 outline-none sm:flex-row sm:items-start",
+        "flex flex-col gap-5 rounded-md border px-5 py-5 outline-hidden sm:flex-row sm:items-start",
         passed ? "border-summit/40 bg-summit/[0.07]" : "border-trailmark/50 bg-trailmark/[0.07]",
         className,
       )}

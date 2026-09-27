@@ -13,6 +13,14 @@ export const onboardLearnerRequestSchema = z.object({
   username: usernameSchema,
   displayName: displayNameSchema,
   password: passwordSchema.optional(),
+  /**
+   * Defaults to `learner`, which is what this route is overwhelmingly used for.
+   *
+   * `superadmin` is deliberately not offerable: there is one, it is seeded at first boot, and a
+   * route that can mint another is a route that can be used to take the deployment over. Promoting
+   * someone is a deliberate, out-of-band act, not a dropdown.
+   */
+  role: z.enum(["learner", "admin"]).default("learner"),
   profile: learnerProfileSchema,
   /** The default at onboarding: queue the assessment blueprint as soon as the account exists. */
   issueAssessment: z.boolean().default(true),

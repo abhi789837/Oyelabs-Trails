@@ -22,7 +22,7 @@ import type { ContentStore } from "../content/store";
 import { schema, type Db } from "../db";
 import type { Job } from "../jobs/queue";
 import { newId, now } from "../lib/ids";
-import { notify } from "../lib/notify";
+import { notify, staffIds } from "../lib/notify";
 import { publishPlan } from "../plans/repo";
 import { getProgress } from "../progress/repo";
 import { buildManifestDigest } from "./digest";
@@ -210,9 +210,9 @@ export function evaluateHandler(deps: EvaluateDeps) {
         link: "/plan",
       });
 
-      for (const admin of db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.role, "superadmin")).all()) {
+      for (const recipientId of staffIds(db)) {
         notify(db, {
-          recipientId: admin.id,
+          recipientId,
           kind: "evaluation.ready",
           title: `${user.displayName}'s evaluation is ready`,
           body: `Overall level ${result.data.overallLevel}/5 · ${plan.topicIds.length} topics${
@@ -230,9 +230,9 @@ export function evaluateHandler(deps: EvaluateDeps) {
         .where(eq(schema.assessments.id, assessmentId))
         .run();
 
-      for (const admin of db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.role, "superadmin")).all()) {
+      for (const recipientId of staffIds(db)) {
         notify(db, {
-          recipientId: admin.id,
+          recipientId,
           kind: "evaluation.failed",
           title: `${user.displayName}'s evaluation failed`,
           body: message.slice(0, 300),

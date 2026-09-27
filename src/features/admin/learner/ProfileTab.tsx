@@ -1,11 +1,11 @@
 import { useMemo, useState, type FormEvent } from "react";
-import { LoaderCircle, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import type { ClaimedSkill, LearnerProfile } from "@shared/profile";
 import type { SkillLevel, TrackIdValue } from "@shared/enums";
 
 import { ApiRequestError } from "@/api/client";
-import { Field, FormAlert, TextField } from "@/components/form/Field";
+import { Field, FormAlert, NumberField, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTracks } from "@/content";
@@ -108,15 +108,14 @@ export function ProfileTab({
             placeholder="Frontend Engineer"
             onChange={(e) => update({ roleTitle: e.target.value || null })}
           />
-          <TextField
+          <NumberField
             label="Years of experience"
-            type="number"
             min={0}
             max={60}
             step={0.5}
-            value={profile.yearsExperience ?? ""}
+            value={profile.yearsExperience}
             error={fields["profile.yearsExperience"]}
-            onChange={(e) => update({ yearsExperience: e.target.value === "" ? null : Number(e.target.value) })}
+            onChange={(years) => update({ yearsExperience: years })}
           />
         </div>
       </section>
@@ -272,9 +271,8 @@ export function ProfileTab({
       </section>
 
       <div className="flex flex-wrap items-center gap-3 border-t pt-6">
-        <Button type="submit" disabled={!dirty || saving}>
-          {saving && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-          {saving ? "Saving…" : "Save profile"}
+        <Button type="submit" loading={saving} disabled={!dirty}>
+          Save profile
         </Button>
         {dirty && (
           <Button type="button" variant="ghost" size="sm" onClick={() => setProfile(saved)}>

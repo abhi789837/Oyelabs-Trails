@@ -30,30 +30,41 @@ const sheetVariants = cva(
   {
     variants: {
       side: {
-        left: "inset-y-0 left-0 h-full w-[85vw] max-w-xs border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
+        left: "inset-y-0 left-0 h-full w-[85vw] border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
         right:
-          "inset-y-0 right-0 h-full w-[85vw] max-w-xs border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+          "inset-y-0 right-0 h-full w-[85vw] border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+      },
+      // `sm` is the navigation drawer this started as. The wider sizes are for record detail
+      // panels (`DetailSheet`), which carry a table row's worth of fields rather than a nav list.
+      size: {
+        sm: "max-w-xs",
+        md: "max-w-md",
+        lg: "max-w-2xl",
       },
     },
     defaultVariants: {
       side: "left",
+      size: "sm",
     },
   },
 );
 
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
-    VariantProps<typeof sheetVariants> {}
+    VariantProps<typeof sheetVariants> {
+  /** What the corner close button announces. Say what closes, not just "Close". */
+  closeLabel?: string;
+}
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
-  ({ side = "left", className, children, ...props }, ref) => (
+  ({ side = "left", size = "sm", closeLabel = "Close", className, children, ...props }, ref) => (
     <SheetPortal>
       <SheetOverlay />
-      <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
+      <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side, size }), className)} {...props}>
         {children}
         <SheetPrimitive.Close className="absolute right-3 top-3 rounded-md p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close menu</span>
+          <X className="h-4 w-4" aria-hidden="true" />
+          <span className="sr-only">{closeLabel}</span>
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
     </SheetPortal>

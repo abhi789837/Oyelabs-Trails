@@ -148,6 +148,12 @@ export const assessments = sqliteTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     attemptNo: integer("attempt_no").notNull().default(1),
+    /**
+     * What this sitting is *for*, when a learner has more than one open at a time — "Frontend
+     * placement", "Company process". Null on every assessment issued before labels existed, and on
+     * any issued without one, where the UI falls back to the attempt number.
+     */
+    label: text("label"),
     status: text("status").$type<AssessmentStatus>().notNull(),
     blueprint: text("blueprint", { mode: "json" }).$type<unknown>(),
     config: text("config", { mode: "json" }).$type<unknown>(),
@@ -416,4 +422,130 @@ export const generationLog = sqliteTable(
     createdAt: integer("created_at").notNull(),
   },
   (t) => [index("generation_log_assessment_idx").on(t.assessmentId, t.seq)],
+);
+
+// ---------------------------------------------------------------------------
+// Admin-authored courses (§ "add courses manually")
+// ---------------------------------------------------------------------------
+
+/**
+ * A course written by an admin rather than generated: an internal process, a runbook, an
+ * onboarding walkthrough.
+ *
+ * Deliberately **not** folded into the curriculum tracks. A track is a trail with levels, adaptive
+ * assessment coverage and challenges that gate progress; `TrackIdValue` is a closed enum for that
+ * reason, and widening it so a company process could pretend to be one would make every accent
+ * lookup, every registry entry and every certificate calculation take a value they were not written
+ * for. These are their own shape, shown in their own place, and honest about being different.
+ */
+export const courses = sqliteTable(
+  "courses",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    /** One line under the title. */
+    summary: text("summary").notNull().default(""),
+    /** An accent token name, for the card. Validated against the same list the trails use. */
+    accent: text("accent").notNull().default("glacier"),
+    /**
+     * `everyone` is the reason this feature exists — "one internal process I want everyone to
+     * learn". `assigned` keeps it to people it has been added to, for a course that is not for the
+     * whole company.
+     */
+    audience: text("audience").$type<"everyone" | "assigned">().notNull().default("everyone"),
+    /** Unpublished courses are the author's draft and are invisible to learners. */
+    published: integer("published", { mode: "boolean" }).notNull().default(false),
+    position: integer("position").notNull().default(0),
+    createdBy: text("created_by"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("courses_published_idx").on(t.published, t.position)],
+);
+
+/** A section within a course — the equivalent of a camp, without the trail. */
+export const courseSections = sqliteTable(
+  "course_sections",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    summary: text("summary").notNull().default(""),
+    position: integer("position").notNull().default(0),
+  },
+  (t) => [index("course_sections_course_idx").on(t.courseId, t.position)],
+);
+
+/**
+ * One lesson: some prose, optionally a video, optionally some links.
+ *
+ * No quiz and no code challenge — that was the explicit scope. Completion is therefore
+ * self-reported, which is why these are counted separately from plan progress everywhere: a
+ * certificate that mixed "passed a graded challenge" with "ticked a box" would mean less than the
+ * one that exists today.
+ */
+export const courseTopics = sqliteTable(
+  "course_topics",
+  {
+    id: text("id").primaryKey(),
+    sectionId: text("section_id")
+      .notNull()
+      .references(() => courseSections.id, { onDelete: "cascade" }),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    /** Markdown-ish prose, rendered through the same `RichText` the curriculum uses. */
+    body: text("body").notNull().default(""),
+    /** A YouTube id, extracted from whatever URL was pasted. Null when there is no video. */
+    videoId: text("video_id"),
+    videoTitle: text("video_title"),
+    /** `[{ label, url }]`. Plain links; nothing is fetched or embedded server-side. */
+    links: text("links", { mode: "json" }).$type<{ label: string; url: string }[]>().notNull().default([]),
+    estMinutes: integer("est_minutes").notNull().default(10),
+    position: integer("position").notNull().default(0),
+  },
+  (t) => [index("course_topics_section_idx").on(t.sectionId, t.position), index("course_topics_course_idx").on(t.courseId)],
+);
+
+/**
+ * Who a course is for, when its audience is `assigned`.
+ *
+ * Absent for an `everyone` course: storing a row per learner for a company-wide course would have
+ * to be backfilled every time somebody joins, and the first person onboarded after that would
+ * quietly not have it.
+ */
+export const courseAssignments = sqliteTable(
+  "course_assignments",
+  {
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    assignedBy: text("assigned_by"),
+    assignedAt: integer("assigned_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.courseId, t.userId] })],
+);
+
+/** A learner ticking a lesson off. One row per person per topic; deleting it is "not done". */
+export const courseProgress = sqliteTable(
+  "course_progress",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    topicId: text("topic_id")
+      .notNull()
+      .references(() => courseTopics.id, { onDelete: "cascade" }),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    completedAt: integer("completed_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.topicId] }), index("course_progress_course_idx").on(t.userId, t.courseId)],
 );

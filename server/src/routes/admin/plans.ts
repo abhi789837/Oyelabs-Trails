@@ -3,10 +3,12 @@ import type { FastifyInstance } from "fastify";
 
 import type { PlanResponse, PlanSummary } from "../../../../shared/plans";
 import { publishPlanRequestSchema } from "../../../../shared/plans";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { writeAudit } from "../../lib/audit";
 import { badRequest, notFound, parseOrThrow } from "../../lib/errors";
+import { pagedQuery } from "../../lib/pagedRoute";
+import { auditTableSpec } from "../../lib/tableSpecs";
 import { latestPublishedPlan, planHistory, publishPlan, type PublishedPlan } from "../../plans/repo";
 import { getProgress } from "../../progress/repo";
 
@@ -22,7 +24,7 @@ function toSummary(plan: PublishedPlan): PlanSummary {
 }
 
 export async function registerAdminPlanRoutes(app: FastifyInstance): Promise<void> {
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   app.get("/api/admin/users/:id/plan", async (request): Promise<PlanResponse> => {
     const { id } = request.params as { id: string };
@@ -42,7 +44,7 @@ export async function registerAdminPlanRoutes(app: FastifyInstance): Promise<voi
    * re-adding it later does not ask the learner to redo work.
    */
   app.put("/api/admin/users/:id/plan", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = request.params as { id: string };
     const body = parseOrThrow(publishPlanRequestSchema, request.body);
 
@@ -133,13 +135,12 @@ export async function registerAdminPlanRoutes(app: FastifyInstance): Promise<voi
    * archive. `details` is returned as stored — `writeAudit` is the place that keeps secrets out of
    * it, so nothing has to be redacted on the way out.
    */
-  app.get("/api/admin/audit", async () => {
-    const rows = app.db
-      .select()
-      .from(schema.auditLog)
-      .orderBy(desc(schema.auditLog.createdAt))
-      .limit(200)
-      .all();
+  app.get("/api/admin/audit", async (request) => {
+    /* Server-paged through `auditTableSpec`. The log grows without bound — every approval, every
+       status change, every credential touch — so "the newest 200" stopped being an answer to
+       "what happened to this account in March". */
+    const { meta, apply } = pagedQuery(app.db, auditTableSpec, schema.auditLog, request.query);
+    const rows = apply(app.db.select().from(schema.auditLog).$dynamic()).all();
 
     const actorIds = [...new Set(rows.map((row) => row.actorId).filter((value): value is string => value !== null))];
     const actors = actorIds.length
@@ -156,6 +157,7 @@ export async function registerAdminPlanRoutes(app: FastifyInstance): Promise<voi
     const byId = new Map(actors.map((actor) => [actor.id, actor]));
 
     return {
+      meta,
       entries: rows.map((row) => {
         const actor = row.actorId ? byId.get(row.actorId) : undefined;
         return {

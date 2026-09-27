@@ -20,17 +20,32 @@ export type Difficulty = z.infer<typeof difficultySchema>;
 
 /** Per-item time budgets (brief §9.3). Generous enough to think, short enough to look things up. */
 export const TIME_LIMIT_SEC: Record<z.infer<typeof itemKindSchema>, number> = {
-  mcq: 90,
-  multi: 120,
-  predict_output: 150,
-  find_bug: 150,
-  code: 600,
-  explain: 300,
+  mcq: 75,
+  multi: 90,
+  predict_output: 120,
+  find_bug: 120,
+  // Trimmed with the overall budget: at the old 600s a single code item was a fifth of the whole
+  // sitting, which is not a proportion any one question should own.
+  code: 360,
+  explain: 180,
 };
 
-export const DEFAULT_TIME_LIMIT_MIN = 60;
+/**
+ * The longest a sitting may run, end to end — **this is the number that matters.**
+ *
+ * The deadline a learner actually sees is `timeLimitMinutes + EXPLAIN_BUDGET_MIN`, because the
+ * written section has its own budget on the end. Capping only the first of those is how a "60
+ * minute" assessment came to show a 75-minute clock. Everything below is derived from this, so
+ * changing it here changes the real ceiling.
+ */
+export const MAX_TOTAL_MIN = 30;
 /** Explain items get their own budget at the end of the test (§9.4). */
-export const EXPLAIN_BUDGET_MIN = 15;
+export const EXPLAIN_BUDGET_MIN = 6;
+/** What is left for the adaptive section once the written budget is reserved. */
+export const MAX_TIME_LIMIT_MIN = MAX_TOTAL_MIN - EXPLAIN_BUDGET_MIN;
+export const DEFAULT_TIME_LIMIT_MIN = MAX_TIME_LIMIT_MIN;
+/** Below this there is not enough room for a staircase to settle in any area. */
+export const MIN_TIME_LIMIT_MIN = 10;
 /**
  * How long a generated assessment waits for the superadmin before it is released anyway.
  *
@@ -40,8 +55,10 @@ export const EXPLAIN_BUDGET_MIN = 15;
  * yes". Change it here; nothing else hard-codes five minutes.
  */
 export const AUTO_APPROVE_AFTER_MS = 5 * 60_000;
-export const MIN_ITEM_TARGET = 25;
-export const MAX_ITEM_TARGET = 40;
+/* Resized for the 30-minute ceiling. At ~80 seconds an item, 24 minutes of adaptive testing is
+   roughly 18 items; the range leaves the blueprint room either side of that. */
+export const MIN_ITEM_TARGET = 12;
+export const MAX_ITEM_TARGET = 20;
 
 /**
  * How many modules one blueprint area may name. Exported because the mock fixture has to respect
@@ -61,8 +78,10 @@ export const blueprintAreaSchema = z.object({
 export type BlueprintArea = z.infer<typeof blueprintAreaSchema>;
 
 export const blueprintSchema = z.object({
-  areas: z.array(blueprintAreaSchema).min(5).max(9),
-  timeLimitMinutes: z.number().int().min(20).max(120),
+  /* Fewer areas than before. With 12–20 items, nine areas would leave two items each — not enough
+     for an adaptive staircase to reverse even once, which makes the level it reports a guess. */
+  areas: z.array(blueprintAreaSchema).min(3).max(6),
+  timeLimitMinutes: z.number().int().min(MIN_TIME_LIMIT_MIN).max(MAX_TIME_LIMIT_MIN),
   targetItemCount: z.number().int().min(MIN_ITEM_TARGET).max(MAX_ITEM_TARGET),
   summary: z.string().trim().min(20).max(1500),
 });
@@ -202,6 +221,8 @@ export const assessmentSummarySchema = z.object({
   id: z.string(),
   userId: z.string(),
   attemptNo: z.number(),
+  /** What this sitting is for, when a learner holds several. Null on anything issued without one. */
+  label: z.string().nullable(),
   status: assessmentStatusSchema,
   createdAt: z.number(),
   startedAt: z.number().nullable(),
@@ -226,7 +247,14 @@ export type AssessmentSummary = z.infer<typeof assessmentSummarySchema>;
 
 export const issueAssessmentRequestSchema = z.object({
   /** Overrides the blueprint's own suggestion. */
-  timeLimitMinutes: z.number().int().min(20).max(120).optional(),
+  timeLimitMinutes: z.number().int().min(MIN_TIME_LIMIT_MIN).max(MAX_TIME_LIMIT_MIN).optional(),
+  /**
+   * What this sitting is for, when someone holds more than one at a time.
+   *
+   * Optional, because most people only ever have one and "Attempt 2" says everything there is to
+   * say about it. It earns its place the moment a second one exists alongside the first.
+   */
+  label: z.string().trim().min(2).max(60).optional(),
 });
 export type IssueAssessmentRequest = z.infer<typeof issueAssessmentRequestSchema>;
 
@@ -317,6 +345,8 @@ export interface MyAssessment {
   id: string;
   status: z.infer<typeof assessmentStatusSchema>;
   attemptNo: number;
+  /** What this one is for, when several are open. Null falls back to the attempt number. */
+  label: string | null;
   consentAt: number | null;
   deadlineAt: number | null;
   hardWarnings: number;

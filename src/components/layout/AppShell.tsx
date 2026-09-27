@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
 import { isTransientAssessment } from "@/features/assessment/funnel";
@@ -16,8 +16,9 @@ import { AssessmentBanner } from "./AssessmentBanner";
 import { CompletionWatcher } from "./CompletionWatcher";
 import { Logo } from "./Logo";
 import { Sidebar } from "./Sidebar";
-import { Toaster } from "./Toaster";
 import { TopBar } from "./TopBar";
+import CoursePage from "@/pages/CoursePage";
+import CoursesPage from "@/pages/CoursesPage";
 
 /** How often to re-check an assessment the server is still working on. */
 const ASSESSMENT_POLL_MS = 30_000;
@@ -36,7 +37,7 @@ export function AppShell() {
       <TopBar />
       <div className="flex flex-1">
         <Sidebar />
-        <main id="main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-none">
+        <main id="main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-hidden">
           {/* Above the routed content, and outside the route transition, so it neither re-animates
               nor re-announces every time the learner moves around. */}
           <AssessmentBanner />
@@ -45,7 +46,6 @@ export function AppShell() {
       </div>
       <SiteFooter />
       <CompletionWatcher />
-      <Toaster />
     </div>
   );
 }
@@ -120,6 +120,8 @@ function AnimatedRoutes() {
           <Route path="track/:trackId/module/:moduleId/topic/:topicId" element={<TopicPage />} />
           {/* v1 links: /track/:trackId/topic/:topicId */}
           <Route path="track/:trackId/topic/:topicId" element={<LegacyTopicRedirect />} />
+          <Route path="courses" element={<CoursesPage />} />
+          <Route path="courses/:courseId" element={<CoursePage />} />
           <Route path="report/:trackId" element={<CertificatePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

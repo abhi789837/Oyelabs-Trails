@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { ArrowLeft, LoaderCircle } from "lucide-react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 
@@ -11,9 +11,12 @@ import type { PlanResponse } from "@shared/plans";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
 import { AccountTab } from "./learner/AccountTab";
@@ -166,23 +169,31 @@ export default function AdminLearnerPage() {
       </Button>
 
       <header className="mt-4 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">{detail.user.displayName}</h1>
-          <p className="mt-1 font-mono text-sm text-muted-foreground">
-            {detail.user.username}
-            {detail.profile.roleTitle ? ` · ${detail.profile.roleTitle}` : ""}
-            {detail.profile.yearsExperience !== null ? ` · ${detail.profile.yearsExperience} yrs` : ""}
-          </p>
+        <div className="flex items-start gap-3">
+          <Avatar name={detail.user.displayName} className="mt-1 size-10 text-sm" />
+          <div>
+            <h1 className="font-display text-2xl font-bold">{detail.user.displayName}</h1>
+            <p className="mt-1 font-mono text-sm text-muted-foreground">
+              {detail.user.username}
+              {detail.profile.roleTitle ? ` · ${detail.profile.roleTitle}` : ""}
+              {detail.profile.yearsExperience !== null ? ` · ${detail.profile.yearsExperience} yrs` : ""}
+              {detail.user.overallLevel !== null ? ` · level ${detail.user.overallLevel}/5` : ""}
+            </p>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          {detail.user.status === "disabled" && <Badge variant="outline">Disabled</Badge>}
-          {detail.user.mustChangePassword && <Badge variant="outline">Awaiting first sign-in</Badge>}
+          {detail.user.status === "disabled" && <StatusBadge kind="user" status="disabled" />}
+          {detail.user.mustChangePassword && <Badge variant="progress">Awaiting first sign-in</Badge>}
           {detail.user.hardWarnings > 0 && (
-            <Badge variant="outline" className="border-destructive/50 text-destructive">
+            <Badge variant="danger">
               {detail.user.hardWarnings} hard warning{detail.user.hardWarnings === 1 ? "" : "s"}
             </Badge>
           )}
-          <Badge variant="outline">{detail.user.assessmentStatus ?? "No assessment yet"}</Badge>
+          {detail.user.assessmentStatus ? (
+            <StatusBadge kind="assessment" status={detail.user.assessmentStatus} />
+          ) : (
+            <Badge variant="outline">No assessment yet</Badge>
+          )}
         </div>
       </header>
 
@@ -227,7 +238,7 @@ export default function AdminLearnerPage() {
                   <motion.span
                     layoutId="learner-tab-marker"
                     className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-trailmark"
-                    transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    transition={spring}
                   />
                 ))}
             </button>
@@ -246,7 +257,7 @@ export default function AdminLearnerPage() {
             aria-labelledby={`learner-tab-${tab.id}`}
             tabIndex={0}
             hidden={!selected}
-            className={cn("mt-8 focus:outline-none", !selected && "hidden")}
+            className={cn("mt-8 focus:outline-hidden", !selected && "hidden")}
           >
             {tab.id === "profile" && (
               <ProfileTab userId={userId} profile={detail.profile} onSaved={handleProfileSaved} />

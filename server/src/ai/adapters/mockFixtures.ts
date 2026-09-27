@@ -1,4 +1,10 @@
-import { MAX_AREA_MODULES, type Blueprint, type CriticVerdict, type GeneratedItem } from "../../../../shared/assessment";
+import {
+  DEFAULT_TIME_LIMIT_MIN,
+  MAX_AREA_MODULES,
+  type Blueprint,
+  type CriticVerdict,
+  type GeneratedItem,
+} from "../../../../shared/assessment";
 
 /**
  * Coherent fixtures for the assessment pipeline, used by `MockProvider`.
@@ -35,7 +41,7 @@ const AREA_TEMPLATES = [
 ];
 
 export function fixtureBlueprint(context: FixtureContext): Blueprint {
-  const count = Math.min(AREA_TEMPLATES.length, Math.max(5, context.moduleIds.length >= 6 ? 6 : 5));
+  const count = Math.min(AREA_TEMPLATES.length, Math.max(3, context.moduleIds.length >= 5 ? 5 : 3));
   const areas = AREA_TEMPLATES.slice(0, count).map((template, index) => ({
     name: template.name,
     // Spread the available modules across areas, always leaving each area at least one.
@@ -46,8 +52,8 @@ export function fixtureBlueprint(context: FixtureContext): Blueprint {
 
   return {
     areas,
-    timeLimitMinutes: 60,
-    targetItemCount: 32,
+    timeLimitMinutes: DEFAULT_TIME_LIMIT_MIN,
+    targetItemCount: 16,
     summary:
       "A deterministic fixture blueprint. It covers language fundamentals, the areas the notes point at, and one probe area, which is the shape a real blueprint should have.",
   };

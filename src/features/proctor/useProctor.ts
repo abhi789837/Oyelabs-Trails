@@ -124,7 +124,9 @@ export interface UseProctorOptions {
 
 export interface ProctorController {
   /** Attach to the status-strip thumbnail. The detectors read frames from this element. */
-  videoRef: React.RefObject<HTMLVideoElement>;
+  // React 19 types a ref initialised with null as RefObject<T | null>, which is the truth:
+  // the element is absent until the first commit.
+  videoRef: React.RefObject<HTMLVideoElement | null>;
   state: ProctorState;
   hardWarning: HardWarning | null;
   acknowledgeHardWarning: () => void;

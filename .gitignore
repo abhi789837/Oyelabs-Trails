@@ -23,3 +23,8 @@ npm-debug.log*
 
 # The brand kit is kept in the repo; its zip is not.
 /Oyelearn-Logo-Kit.zip
+
+# UI audit screenshots (scripts/ui/screens.mjs). Regenerated on demand, ~4 MB of PNGs, and the
+# AI-connection shots carry the last four characters of whatever credential the machine has
+# configured — a hint the admin console shows on purpose, but not one to put in a git history.
+/docs/ui-audit

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { getTracks, modulePath } from "@/content";
 import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { useProgressStore, type TopicProgress } from "@/store/progressStore";
-import { useToastStore } from "@/store/toastStore";
+import { pushCompletionToast } from "@/store/toastStore";
 
 function completedSets(progress: Record<string, TopicProgress>) {
   const modules = new Set<string>();
@@ -22,15 +22,13 @@ function completedSets(progress: Record<string, TopicProgress>) {
  * It compares against the state it started with, so loading saved progress never fires toasts.
  */
 export function CompletionWatcher() {
-  const push = useToastStore((s) => s.push);
-
   useEffect(() => {
     let previous = completedSets(useProgressStore.getState().progress);
     return useProgressStore.subscribe((state) => {
       const current = completedSets(state.progress);
       for (const track of getTracks()) {
         if (current.trackIds.has(track.id) && !previous.trackIds.has(track.id)) {
-          push({
+          pushCompletionToast({
             tone: "summit",
             title: `Summit reached: ${track.name}`,
             body: "Every camp on this trail is complete. Your certificate is ready.",
@@ -42,7 +40,7 @@ export function CompletionWatcher() {
         available.forEach((module, i) => {
           if (current.modules.has(module.id) && !previous.modules.has(module.id)) {
             const next = available.slice(i + 1).find((m) => !current.modules.has(m.id));
-            push({
+            pushCompletionToast({
               tone: "camp",
               title: `Camp complete: ${module.name}`,
               body: `All ${module.topics.length} topics done. ${next ? `Next camp: ${next.name}.` : "On to the rest of the trail."}`,
@@ -53,7 +51,7 @@ export function CompletionWatcher() {
       }
       previous = current;
     });
-  }, [push]);
+  }, []);
 
   return null;
 }

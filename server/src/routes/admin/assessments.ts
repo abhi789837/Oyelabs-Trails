@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
@@ -14,7 +14,7 @@ import {
 } from "../../../../shared/assessment";
 import { approveAssessment } from "../../assessment/approval";
 import { generationLogFor } from "../../assessment/generationLog";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { enqueue } from "../../jobs/queue";
 import { writeAudit } from "../../lib/audit";
@@ -24,6 +24,19 @@ import { newId, now } from "../../lib/ids";
 const userParams = z.object({ id: z.string().min(1).max(64) });
 const assessmentParams = z.object({ assessmentId: z.string().min(1).max(64) });
 
+/** Statuses where nothing has been served yet, so the pool is still the admin's to change. */
+const EDITABLE_STATUSES = ["awaiting_approval", "ready"];
+
+/**
+ * The one drop reason a person can author.
+ *
+ * A closed constant, not free text: every other `dropReason` is written by the generator or the
+ * critic and quotes the item's own content — "(expected X, got Y)" — so the column is rendered on
+ * the assumption that it may be an answer key. A typed note here would end up beside those in the
+ * same view and would be the one thing in it an admin might paste a real answer into.
+ */
+const ADMIN_DROP_REASON = "dropped_by_admin";
+
 export function summarise(
   row: typeof schema.assessments.$inferSelect,
   itemCounts: Record<string, number>,
@@ -32,6 +45,7 @@ export function summarise(
     id: row.id,
     userId: row.userId,
     attemptNo: row.attemptNo,
+    label: row.label,
     status: row.status,
     createdAt: row.createdAt,
     startedAt: row.startedAt,
@@ -61,14 +75,14 @@ export function countItems(app: FastifyInstance, assessmentId: string): Record<s
 }
 
 export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promise<void> {
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   /**
    * Issues an assessment (brief §9.2). Creating the row and queueing the job is all this does —
    * generation is minutes of AI calls and belongs to the worker, not to a request.
    */
   app.post("/api/admin/users/:id/assessments", async (request, reply) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = parseOrThrow(userParams, request.params);
     const body = parseOrThrow(issueAssessmentRequestSchema, request.body ?? {});
 
@@ -83,13 +97,17 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
       .orderBy(desc(schema.assessments.attemptNo))
       .get();
 
-    // Re-issuing while one is live would leave the learner with two open tests. One waiting on
-    // approval is live too — it is minutes away from being released.
-    if (
-      latest &&
-      ["generating", "awaiting_approval", "ready", "in_progress", "submitted", "evaluating"].includes(latest.status)
-    ) {
-      throw conflict(`This person already has an assessment that is ${latest.status.replace("_", " ")}.`);
+    /* A learner may hold several open assessments — a placement one and a company-process one, say
+       — and take them independently. What they cannot do is sit two at once: `in_progress` means a
+       clock is running and a proctor is watching, and a second would fight the first for the camera
+       and the deadline. So the guard narrowed from "anything live" to exactly that. */
+    const inProgress = app.db
+      .select({ id: schema.assessments.id })
+      .from(schema.assessments)
+      .where(and(eq(schema.assessments.userId, id), eq(schema.assessments.status, "in_progress")))
+      .get();
+    if (inProgress) {
+      throw conflict("This person is sitting an assessment right now. Wait for it to finish, or end it from the live board.");
     }
 
     if (!app.ai.isConfigured()) {
@@ -103,6 +121,7 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
         id: assessmentId,
         userId: id,
         attemptNo: (latest?.attemptNo ?? 0) + 1,
+        label: body.label ?? null,
         status: "generating",
         config: body.timeLimitMinutes ? { timeLimitMinutes: body.timeLimitMinutes } : {},
         hardWarnings: 0,
@@ -119,7 +138,7 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
       action: "assessment.issued",
       targetType: "assessment",
       targetId: assessmentId,
-      details: { userId: id, attemptNo: (latest?.attemptNo ?? 0) + 1 },
+      details: { userId: id, attemptNo: (latest?.attemptNo ?? 0) + 1, label: body.label ?? null },
     });
 
     reply.status(202);
@@ -274,7 +293,7 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
    * click after the deadline already released it should say so, not imply the admin reviewed it.
    */
   app.post("/api/admin/assessments/:assessmentId/approve", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
@@ -297,8 +316,71 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
   });
 
   /** Cancels a generating, waiting or ready assessment, so a bad profile can be corrected and re-issued. */
+  /**
+   * Drop one item from the pool, or put it back — the admin's edit pass before release.
+   *
+   * The generator and the critic already drop what they can judge mechanically. This is for the
+   * things they cannot: a question that is fair but tests the wrong thing for this person, one that
+   * leaks an answer another item depends on, or one that is simply wrong in a way only a reader
+   * notices.
+   *
+   * **Reversible, and only before anything has been served.** Dropping sets the status rather than
+   * deleting the row, so the item stays visible in the pool and can be restored — and the pool
+   * remains a complete record of what the generator produced, which is what makes it useful for
+   * telling a weak model from a strict critic. Once an item has been served to a learner it is part
+   * of their attempt and is no longer the admin's to change.
+   */
+  app.post("/api/admin/assessments/:assessmentId/items/:itemId/drop", async (request) => {
+    const actor = requireStaff(request);
+    const { assessmentId } = parseOrThrow(assessmentParams, request.params);
+    const { itemId } = parseOrThrow(z.object({ itemId: z.string().min(1).max(64) }), request.params);
+    const { restore } = parseOrThrow(z.object({ restore: z.boolean().default(false) }), request.body ?? {});
+
+    const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();
+    if (!assessment) throw notFound("No such assessment.");
+    if (!EDITABLE_STATUSES.includes(assessment.status)) {
+      throw badRequest("The pool can only be edited before the learner starts.");
+    }
+
+    const item = app.db.select().from(schema.assessmentItems).where(eq(schema.assessmentItems.id, itemId)).get();
+    if (!item || item.assessmentId !== assessmentId) throw notFound("No such item in this pool.");
+
+    if (restore) {
+      if (item.status !== "dropped") throw badRequest("That item is already in the pool.");
+      // Only an admin's own drop is reversible. Restoring one the critic rejected would put an
+      // item the system judged unfit back in front of a learner, which is not an edit — it is an
+      // override of a different decision, and it is not what this control is for.
+      if (item.dropReason !== ADMIN_DROP_REASON) {
+        throw badRequest("That item was dropped by the generator's own checks and cannot be restored.");
+      }
+      app.db
+        .update(schema.assessmentItems)
+        .set({ status: "pool", dropReason: null })
+        .where(eq(schema.assessmentItems.id, itemId))
+        .run();
+    } else {
+      if (item.status !== "pool") throw badRequest("Only an item still in the pool can be dropped.");
+      app.db
+        .update(schema.assessmentItems)
+        .set({ status: "dropped", dropReason: ADMIN_DROP_REASON })
+        .where(eq(schema.assessmentItems.id, itemId))
+        .run();
+    }
+
+    writeAudit(app.db, {
+      actorId: actor.id,
+      action: restore ? "assessment.item_restored" : "assessment.item_dropped",
+      targetType: "assessment",
+      targetId: assessmentId,
+      // The item's id and its area, never its content — the audit log is not an answer key.
+      details: { itemId, area: item.area, difficulty: item.difficulty },
+    });
+
+    return { ok: true };
+  });
+
   app.delete("/api/admin/assessments/:assessmentId", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { assessmentId } = parseOrThrow(assessmentParams, request.params);
 
     const assessment = app.db.select().from(schema.assessments).where(eq(schema.assessments.id, assessmentId)).get();

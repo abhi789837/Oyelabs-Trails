@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { KeyRound, LoaderCircle, LogOut, ShieldCheck, ShieldOff } from "lucide-react";
+import { KeyRound, LogOut, ShieldCheck, ShieldOff } from "lucide-react";
 
 import type { UserSummary } from "@shared/admin";
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
+import { useConfirm } from "@/components/overlays";
 import { Button } from "@/components/ui/button";
 import { formatTimestamp } from "@/lib/utils";
 import { adminApi } from "../api";
@@ -20,6 +21,7 @@ type Action = "password" | "status" | "sessions";
  * not the verb on the button.
  */
 export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: () => Promise<void> }) {
+  const confirm = useConfirm();
   const [busy, setBusy] = useState<Action | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -39,10 +41,14 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
     }
   };
 
-  const handleReset = () => {
-    if (!window.confirm(`Reset ${user.displayName}'s password? Their current password stops working immediately.`)) {
-      return;
-    }
+  const handleReset = async () => {
+    const ok = await confirm({
+      title: `Reset ${user.displayName}'s password?`,
+      body: "Their current password stops working the moment you confirm. A temporary one is shown to you once, here, and you have to pass it on yourself — it is not emailed. They choose a new password at their next sign-in.",
+      confirmLabel: "Reset password",
+      variant: "destructive",
+    });
+    if (!ok) return;
     void run("password", async () => {
       const result = await adminApi.resetPassword(user.id);
       if (result.temporaryPassword) setIssued({ username: user.username, password: result.temporaryPassword });
@@ -50,27 +56,54 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
     });
   };
 
-  const handleStatus = () => {
+  /*
+   * Disabling and revoking both ask for the username to be typed. Neither is undoable in the sense
+   * that matters: the person on the other end is thrown out of whatever they were doing, and no
+   * button here gives them that moment back. Both also run *inside* the dialog, so the admin waits
+   * with the consequence still on screen and a failure lands where they are looking.
+   */
+  const handleStatus = async () => {
     const next = user.status === "active" ? "disabled" : "active";
-    if (next === "disabled" && !window.confirm(`Disable ${user.displayName}? They will be signed out everywhere.`)) {
+    if (next === "active") {
+      void run("status", async () => {
+        await adminApi.setStatus(user.id, "active");
+        setNotice("Account re-enabled.");
+      });
       return;
     }
-    void run("status", async () => {
-      await adminApi.setStatus(user.id, next);
-      setNotice(next === "disabled" ? "Account disabled and sessions cleared." : "Account re-enabled.");
+
+    const disabled = await confirm({
+      title: `Disable ${user.displayName}?`,
+      body: "They are signed out of every device immediately and cannot sign in again until you re-enable the account. An assessment in progress ends where it is. Their progress, plan and history are kept.",
+      confirmLabel: "Disable account",
+      variant: "destructive",
+      confirmPhrase: user.username,
+      onConfirm: () => adminApi.setStatus(user.id, "disabled"),
     });
+    if (!disabled) return;
+    setError(null);
+    setNotice("Account disabled and sessions cleared.");
+    await onChanged();
   };
 
-  const handleRevoke = () => {
-    if (!window.confirm(`Sign ${user.displayName} out of every device?`)) return;
-    void run("sessions", async () => {
-      const result = await adminApi.revokeSessions(user.id);
-      setNotice(
-        result.removed === 0
-          ? "They had no active sessions."
-          : `Signed out of ${result.removed} session${result.removed === 1 ? "" : "s"}.`,
-      );
+  const handleRevoke = async () => {
+    let removed = 0;
+    const revoked = await confirm({
+      title: `Sign ${user.displayName} out of every device?`,
+      body: "Every session ends at once, including the one they may be using right now. Their password is unchanged, so they can sign straight back in — use this when a laptop goes missing, not to lock someone out.",
+      confirmLabel: "Revoke sessions",
+      variant: "destructive",
+      confirmPhrase: user.username,
+      onConfirm: async () => {
+        removed = (await adminApi.revokeSessions(user.id)).removed;
+      },
     });
+    if (!revoked) return;
+    setError(null);
+    setNotice(
+      removed === 0 ? "They had no active sessions." : `Signed out of ${removed} session${removed === 1 ? "" : "s"}.`,
+    );
+    await onChanged();
   };
 
   return (
@@ -109,8 +142,12 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
           title="Reset password"
           description="Generates a temporary password, shown to you once. Their current one stops working straight away and they choose a new one at the next sign-in."
           action={
-            <Button variant="outline" onClick={handleReset} disabled={busy !== null}>
-              {busy === "password" && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+            <Button
+              variant="outline"
+              loading={busy === "password"}
+              onClick={() => void handleReset()}
+              disabled={busy !== null}
+            >
               Reset password
             </Button>
           }
@@ -131,8 +168,12 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
               : "Lets them sign in again with their existing password."
           }
           action={
-            <Button variant="outline" onClick={handleStatus} disabled={busy !== null}>
-              {busy === "status" && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+            <Button
+              variant="outline"
+              loading={busy === "status"}
+              onClick={() => void handleStatus()}
+              disabled={busy !== null}
+            >
               {user.status === "active" ? "Disable" : "Re-enable"}
             </Button>
           }
@@ -143,8 +184,12 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
           title="Revoke sessions"
           description="Signs them out of every device without changing their password. Use this when a laptop goes missing."
           action={
-            <Button variant="outline" onClick={handleRevoke} disabled={busy !== null}>
-              {busy === "sessions" && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+            <Button
+              variant="outline"
+              loading={busy === "sessions"}
+              onClick={() => void handleRevoke()}
+              disabled={busy !== null}
+            >
               Revoke
             </Button>
           }

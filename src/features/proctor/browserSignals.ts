@@ -106,13 +106,13 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
   // --- Window blur lasting > 2 s: hard -------------------------------------
   // A hidden tab is already reported by the row above, and alt-tabbing fires both. Suppressing the
   // blur in that case keeps one action to one strike without relying on the server's cooldown.
-  on(window, "blur", () => {
-    startTimer("blur", WINDOW_BLUR_SUSTAINED_MS, () => {
+  on(window, "blur-sm", () => {
+    startTimer("blur-sm", WINDOW_BLUR_SUSTAINED_MS, () => {
       if (document.visibilityState === "hidden") return;
       emit("window_blur", { sustainedMs: WINDOW_BLUR_SUSTAINED_MS });
     });
   });
-  on(window, "focus", () => clearTimer("blur"));
+  on(window, "focus", () => clearTimer("blur-sm"));
 
   // --- Left fullscreen: immediate, hard ------------------------------------
   const onFullscreenChange = () => {

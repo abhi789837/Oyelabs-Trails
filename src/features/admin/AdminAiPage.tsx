@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { AlertTriangle, Check, LoaderCircle, RefreshCw, Trash2, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { AlertTriangle, LoaderCircle, RefreshCw, Trash2 } from "lucide-react";
 
 import type { AiStatusResponse, SelectableProvider } from "@shared/ai";
 import { PROVIDER_COPY, requiresSharedUseAcknowledgement, SHARED_CREDENTIAL_NOTICE } from "@shared/ai";
@@ -7,11 +8,17 @@ import { selectableProviderIds } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { Field, FormAlert, TextField } from "@/components/form/Field";
+import { useConfirm } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ShineBorder } from "@/components/ui/shine-border";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { transition } from "@/lib/motion";
+import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { AiCallsTable } from "./AiCallsTable";
 
 /**
  * Admin → AI connection (brief §8.1).
@@ -23,6 +30,7 @@ import { cn, formatTimestamp } from "@/lib/utils";
  */
 export default function AdminAiPage() {
   useDocumentTitle("AI connection");
+  const confirm = useConfirm();
 
   const [status, setStatus] = useState<AiStatusResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +48,25 @@ export default function AdminAiPage() {
   useEffect(() => {
     void load();
   }, []);
+
+  /**
+   * Deleting a credential is irreversible from here: the secret is encrypted at rest and never
+   * shown again, so there is nothing to paste back. Hence the typed confirmation, and hence the
+   * work running inside the dialog — the admin watches the thing they had to type for finish.
+   */
+  const handleDelete = async (id: string, label: string) => {
+    const deleted = await confirm({
+      title: `Delete "${label}"?`,
+      body: `Every AI feature using this credential stops the moment it goes — generating assessments, evaluating them, and the learning plans that come out of them. The secret itself is destroyed; re-adding it means fetching a fresh key from the provider.`,
+      confirmLabel: "Delete credential",
+      variant: "destructive",
+      confirmPhrase: label,
+      onConfirm: () => api.del(`/api/admin/ai/credentials/${id}`),
+    });
+    if (!deleted) return;
+    notify.success(`Deleted "${label}".`);
+    await load();
+  };
 
   const act = async (key: string, fn: () => Promise<unknown>) => {
     setBusy(key);
@@ -101,17 +128,31 @@ export default function AdminAiPage() {
               {status.credentials.map((credential) => {
                 const active = status.settings.activeCredentialId === credential.id;
                 const copy = PROVIDER_COPY[credential.provider as SelectableProvider];
+                const verifying = busy === `verify-${credential.id}`;
+                /* Only the active credential gets the travelling border. It is the one every
+                   generation actually runs through, and marking all of them would say nothing. */
+                const Shell = active ? ShineBorder : "li";
                 return (
-                  <li
+                  <Shell
                     key={credential.id}
-                    className={cn("rounded-md border px-4 py-3", active && "border-summit/60 bg-summit/[0.05]")}
+                    {...(active
+                      ? {
+                          className: "rounded-md",
+                          /* Padding only. The inner surface is what masks the conic gradient down
+                             to the 1px ring, and `ShineBorder` gives it an opaque `bg-surface` for
+                             exactly that reason — passing a translucent tint here replaces that
+                             background and the whole gradient shows through, turning the card into
+                             a block of orange. The "Active" badge already carries the state. */
+                          innerClassName: "px-4 py-3",
+                        }
+                      : { className: "rounded-md border px-4 py-3" })}
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0">
                         <p className="flex flex-wrap items-center gap-2 font-medium">
                           {credential.label}
                           {active && <Badge variant="success">Active</Badge>}
-                          <StatusBadge status={credential.status} />
+                          <StatusBadge kind="credential" status={credential.status} />
                         </p>
                         <p className="mt-1 font-mono text-xs text-muted-foreground">
                           {copy?.name ?? credential.provider} · {credential.secretHint}
@@ -125,12 +166,29 @@ export default function AdminAiPage() {
                         {credential.lastError && (
                           <p className="mt-1.5 max-w-prose text-xs text-destructive">{credential.lastError}</p>
                         )}
+                        {/* Verification is a queued job, not the response to this click, so the
+                            line says "asked" rather than claiming a result it does not have yet. */}
+                        <AnimatePresence initial={false}>
+                          {verifying && (
+                            <motion.p
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={transition.fast}
+                              className="mt-1.5 flex items-center gap-1.5 overflow-hidden font-mono text-xs text-muted-foreground"
+                            >
+                              <LoaderCircle className="size-3 animate-spin" aria-hidden="true" />
+                              Asking the provider…
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
                       </div>
 
                       <div className="flex shrink-0 gap-1.5">
                         <Button
                           variant="ghost"
                           size="sm"
+                          loading={verifying}
                           disabled={busy !== null}
                           onClick={() =>
                             void act(`verify-${credential.id}`, () =>
@@ -159,19 +217,14 @@ export default function AdminAiPage() {
                           variant="ghost"
                           size="sm"
                           disabled={busy !== null}
-                          onClick={() => {
-                            if (!window.confirm(`Delete "${credential.label}"? Any feature using it stops working.`)) return;
-                            void act(`delete-${credential.id}`, () =>
-                              api.del(`/api/admin/ai/credentials/${credential.id}`),
-                            );
-                          }}
+                          onClick={() => void handleDelete(credential.id, credential.label)}
                         >
                           <Trash2 aria-hidden="true" />
                           <span className="sr-only">Delete {credential.label}</span>
                         </Button>
                       </div>
                     </div>
-                  </li>
+                  </Shell>
                 );
               })}
             </ul>
@@ -222,26 +275,10 @@ export default function AdminAiPage() {
           table is the only per-learner view of usage.
         </p>
       </section>
+
+      <AiCallsTable />
     </div>
   );
-}
-
-function StatusBadge({ status }: { status: string }) {
-  if (status === "verified")
-    return (
-      <Badge variant="success">
-        <Check className="mr-1 h-3 w-3" aria-hidden="true" />
-        Verified
-      </Badge>
-    );
-  if (status === "failed")
-    return (
-      <Badge variant="outline" className="border-destructive/50 text-destructive">
-        <X className="mr-1 h-3 w-3" aria-hidden="true" />
-        Failed
-      </Badge>
-    );
-  return <Badge variant="outline">Not verified yet</Badge>;
 }
 
 function AddCredentialForm({ onAdded }: { onAdded: () => Promise<void> }) {
@@ -325,7 +362,7 @@ function AddCredentialForm({ onAdded }: { onAdded: () => Promise<void> }) {
         </Field>
 
         {copy.policyWarning && (
-          <div className="flex gap-3 rounded-md border border-destructive/40 bg-destructive/[0.05] px-4 py-3 text-sm">
+          <div className="flex gap-3 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" aria-hidden="true" />
             <p className="max-w-prose">{copy.policyWarning}</p>
           </div>
@@ -391,9 +428,8 @@ function AddCredentialForm({ onAdded }: { onAdded: () => Promise<void> }) {
           </label>
         )}
 
-        <Button type="submit" disabled={submitting || !label || !secret || (needsAck && !acknowledged)}>
-          {submitting && <LoaderCircle className="animate-spin" aria-hidden="true" />}
-          {submitting ? "Saving…" : "Save credential"}
+        <Button type="submit" loading={submitting} disabled={!label || !secret || (needsAck && !acknowledged)}>
+          Save credential
         </Button>
         <p className="text-xs text-muted-foreground">
           The credential is encrypted before it is stored and is never shown again — only its last four characters.
@@ -472,8 +508,7 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
         />
 
         <div className="flex items-center gap-3">
-          <Button type="submit" variant="outline" disabled={saving}>
-            {saving && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+          <Button type="submit" variant="outline" loading={saving}>
             Save models
           </Button>
           {saved && <span className="text-sm text-summit-strong">Saved</span>}

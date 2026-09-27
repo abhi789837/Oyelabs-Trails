@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Check, LoaderCircle, TriangleAlert, X } from "lucide-react";
+import { ArrowLeft, Check, LoaderCircle, Search, TriangleAlert, Undo2, X } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import type { AssessmentSummary, PoolItem } from "@shared/assessment";
@@ -9,10 +9,23 @@ import { RichText } from "@/components/content/RichText";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { StatusBadge, statusMeta } from "@/components/ui/status-badge";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
+import { adminApi } from "./api";
 import { ApprovalBanner, approvalNote } from "./ApprovalGate";
 import { GenerationLog } from "./GenerationLog";
+
+/**
+ * The one drop reason a person can author, mirrored from the server.
+ *
+ * Every other value in `dropReason` is written by the generator or the critic and quotes the item's
+ * own content, so the column is rendered on the assumption it may be an answer key. This constant is
+ * what tells the two apart.
+ */
+const ADMIN_DROP_REASON = "dropped_by_admin";
 
 interface PoolResponse {
   assessment: AssessmentSummary;
@@ -33,6 +46,30 @@ export default function AdminPoolPage() {
   const [data, setData] = useState<PoolResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showDropped, setShowDropped] = useState(true);
+  const [busyItemId, setBusyItemId] = useState<string | null>(null);
+  const [areaFilter, setAreaFilter] = useState("all");
+  const [kindFilter, setKindFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
+  const [search, setSearch] = useState("");
+
+  /* The pool is only the admin's to change before anything has been served — the same rule the
+     server enforces. Past that the items belong to a learner's attempt. */
+  const editable = data !== null && ["awaiting_approval", "ready"].includes(data.assessment.status);
+  const filtering = areaFilter !== "all" || kindFilter !== "all" || difficultyFilter !== "all" || search.trim() !== "";
+
+  const toggleDropped = async (item: PoolItem) => {
+    setBusyItemId(item.id);
+    setError(null);
+    try {
+      await adminApi.setPoolItemDropped(assessmentId, item.id, item.status !== "dropped");
+      await reload();
+      notify.success(item.status === "dropped" ? "Put the item back in the pool." : "Dropped that item.");
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Could not change that item.");
+    } finally {
+      setBusyItemId(null);
+    }
+  };
 
   useDocumentTitle("Assessment pool");
 
@@ -75,11 +112,26 @@ export default function AdminPoolPage() {
     }));
   }, [data]);
 
-  const byArea = useMemo(() => {
+  /* Filtering a pool of thirty-odd items across six areas is the difference between reading it and
+     scrolling past it — and with the drop control now on each card, "show me every level-5 code
+     item" is how an admin actually reviews one before approving. The prompt is searched, the key
+     is not: the point is to find an item, not to grep the answers. */
+  const filtered = useMemo(() => {
     if (!data) return [];
+    const query = search.trim().toLowerCase();
+    return data.pool.filter((item) => {
+      if (!showDropped && item.status === "dropped") return false;
+      if (areaFilter !== "all" && item.area !== areaFilter) return false;
+      if (kindFilter !== "all" && item.kind !== kindFilter) return false;
+      if (difficultyFilter !== "all" && String(item.difficulty) !== difficultyFilter) return false;
+      if (query && !item.payload.prompt.toLowerCase().includes(query)) return false;
+      return true;
+    });
+  }, [data, showDropped, areaFilter, kindFilter, difficultyFilter, search]);
+
+  const byArea = useMemo(() => {
     const groups = new Map<string, PoolItem[]>();
-    for (const item of data.pool) {
-      if (!showDropped && item.status === "dropped") continue;
+    for (const item of filtered) {
       const list = groups.get(item.area) ?? [];
       list.push(item);
       groups.set(item.area, list);
@@ -88,7 +140,11 @@ export default function AdminPoolPage() {
       area,
       items: items.sort((a, b) => a.difficulty - b.difficulty),
     }));
-  }, [data, showDropped]);
+  }, [filtered]);
+
+  /** Options from the pool itself, so no control offers something the pool does not contain. */
+  const areaOptions = useMemo(() => [...new Set((data?.pool ?? []).map((i) => i.area))].sort(), [data]);
+  const kindOptions = useMemo(() => [...new Set((data?.pool ?? []).map((i) => i.kind))].sort(), [data]);
 
   if (error) {
     return (
@@ -130,7 +186,8 @@ export default function AdminPoolPage() {
       <header className="mt-4">
         <h1 className="text-2xl font-bold">Assessment pool</h1>
         <p className="mt-1 font-mono text-sm text-muted-foreground">
-          Attempt {data.assessment.attemptNo} · {data.assessment.status.replace("_", " ")} · {kept} kept, {dropped}{" "}
+          Attempt {data.assessment.attemptNo} · {statusMeta("assessment", data.assessment.status).label} · {kept} kept,{" "}
+          {dropped}{" "}
           dropped
           {approvalNote(data.assessment) && ` · ${approvalNote(data.assessment)}`}
         </p>
@@ -161,7 +218,7 @@ export default function AdminPoolPage() {
       {/* Said before the gate, not after it: whether to approve a thinner assessment or re-issue
           is the decision being made on this page. */}
       {thin && (
-        <div className="mt-4 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3">
+        <div className="mt-4 rounded-md border border-trailmark/50 bg-trailmark/6 px-4 py-3">
           <p className="flex items-start gap-3 text-sm">
             <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
             <span>
@@ -209,7 +266,7 @@ export default function AdminPoolPage() {
                     {area.name}
                     <Badge variant="outline">Expected level {area.hypothesisLevel}/5</Badge>
                     {stat.kept === 0 ? (
-                      <Badge variant="outline" className="border-destructive/50 text-destructive">
+                      <Badge variant="danger">
                         Nothing usable — not covered
                       </Badge>
                     ) : (
@@ -227,7 +284,31 @@ export default function AdminPoolPage() {
         </section>
       )}
 
-      <div className="mt-8 flex items-center gap-3">
+      <div className="mt-8 flex flex-wrap items-center gap-3">
+        <Input
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          onClear={() => setSearch("")}
+          leading={<Search aria-hidden="true" />}
+          placeholder="Search the question"
+          aria-label="Search the question text"
+          containerClassName="max-w-xs"
+        />
+
+        {areaOptions.length > 1 && (
+          <PoolSelect label="Area" value={areaFilter} onChange={setAreaFilter} options={areaOptions.map((a) => [a, a])} />
+        )}
+        {kindOptions.length > 1 && (
+          <PoolSelect label="Kind" value={kindFilter} onChange={setKindFilter} options={kindOptions.map((k) => [k, k])} />
+        )}
+        <PoolSelect
+          label="Difficulty"
+          value={difficultyFilter}
+          onChange={setDifficultyFilter}
+          options={[1, 2, 3, 4, 5].map((d) => [String(d), `${d} of 5`])}
+        />
+
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
@@ -237,7 +318,40 @@ export default function AdminPoolPage() {
           />
           Show dropped items
         </label>
+
+        {filtering && (
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => {
+              setAreaFilter("all");
+              setKindFilter("all");
+              setDifficultyFilter("all");
+              setSearch("");
+            }}
+          >
+            Clear filters
+          </Button>
+        )}
+
+        <span className="text-xs text-muted-foreground" aria-live="polite">
+          {filtered.length} of {data.pool.length} shown
+        </span>
+
+        {/* Says which mode the page is in, rather than leaving the absence of buttons to be
+            interpreted. Once anything has been served the pool belongs to the attempt. */}
+        <p className="ml-auto text-xs text-muted-foreground">
+          {editable
+            ? "You can drop anything that does not belong here before it reaches the learner."
+            : "This pool is read-only — the assessment has been started."}
+        </p>
       </div>
+
+      {byArea.length === 0 && (
+        <p className="mt-8 text-sm text-muted-foreground">
+          {filtering ? "Nothing in this pool matches those filters." : "This pool has no items in it."}
+        </p>
+      )}
 
       <div className="mt-6 space-y-10">
         {byArea.map(({ area, items }) => (
@@ -250,7 +364,13 @@ export default function AdminPoolPage() {
             </h2>
             <ul className="mt-3 space-y-3">
               {items.map((item) => (
-                <ItemCard key={item.id} item={item} />
+                <ItemCard
+                  key={item.id}
+                  item={item}
+                  editable={editable}
+                  busy={busyItemId === item.id}
+                  onToggleDropped={() => void toggleDropped(item)}
+                />
               ))}
             </ul>
           </section>
@@ -260,8 +380,22 @@ export default function AdminPoolPage() {
   );
 }
 
-function ItemCard({ item }: { item: PoolItem }) {
+function ItemCard({
+  item,
+  editable,
+  busy,
+  onToggleDropped,
+}: {
+  item: PoolItem;
+  editable: boolean;
+  busy: boolean;
+  onToggleDropped: () => void;
+}) {
   const droppedItem = item.status === "dropped";
+  const byAdmin = item.dropReason === ADMIN_DROP_REASON;
+  /* Only an admin's own drop is reversible here. Restoring one the critic rejected would override
+     a different decision — the server refuses it, so the button is not offered either. */
+  const canToggle = editable && (item.status === "pool" || (droppedItem && byAdmin));
 
   return (
     <li className={cn("rounded-md border px-4 py-3", droppedItem && "border-dashed opacity-70")}>
@@ -270,12 +404,38 @@ function ItemCard({ item }: { item: PoolItem }) {
         <span>difficulty {item.difficulty}/5</span>
         <span>·</span>
         <span>{item.topicIds.join(", ")}</span>
-        {droppedItem && <Badge variant="outline" className="border-destructive/50 text-destructive">Dropped</Badge>}
+        {droppedItem && <StatusBadge kind="item" status="dropped" />}
+        {canToggle && (
+          <Button
+            variant="ghost"
+            size="sm"
+            loading={busy}
+            onClick={onToggleDropped}
+            className={cn("ml-auto", !droppedItem && "text-destructive hover:text-destructive")}
+          >
+            {droppedItem ? (
+              <>
+                <Undo2 aria-hidden="true" />
+                Put back
+              </>
+            ) : (
+              <>
+                <X aria-hidden="true" />
+                Drop this
+              </>
+            )}
+            <span className="sr-only"> — {item.kind} item, difficulty {item.difficulty}</span>
+          </Button>
+        )}
       </div>
 
-      {droppedItem && item.dropReason && (
-        <p className="mt-2 text-sm text-destructive">{item.dropReason}</p>
-      )}
+      {droppedItem &&
+        item.dropReason &&
+        (byAdmin ? (
+          <p className="mt-2 text-sm text-muted-foreground">You dropped this before release.</p>
+        ) : (
+          <p className="mt-2 text-sm text-destructive">{item.dropReason}</p>
+        ))}
 
       <RichText text={item.payload.prompt} className="mt-3" />
 
@@ -337,5 +497,36 @@ function ItemCard({ item }: { item: PoolItem }) {
         </p>
       )}
     </li>
+  );
+}
+
+/** A labelled select with an "everything" option. Native — these are lists of plain strings. */
+function PoolSelect({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: [string, string][];
+}) {
+  return (
+    <label className="flex items-center gap-1.5 text-xs">
+      <span className="text-muted-foreground">{label}</span>
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="rounded-md border border-input bg-surface px-2 py-1.5 text-xs"
+      >
+        <option value="all">Everything</option>
+        {options.map(([optionValue, optionLabel]) => (
+          <option key={optionValue} value={optionValue}>
+            {optionLabel}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

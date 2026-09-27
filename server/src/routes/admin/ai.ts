@@ -1,3 +1,4 @@
+import { inArray } from "drizzle-orm";
 import { z } from "zod";
 import type { FastifyInstance } from "fastify";
 
@@ -16,11 +17,14 @@ import {
   listCredentials,
   updateSettings,
 } from "../../ai/credentials";
-import { recentCalls, usageByPurpose } from "../../ai/service";
+import { usageByPurpose } from "../../ai/service";
 import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { schema } from "../../db";
 import { enqueue } from "../../jobs/queue";
 import { writeAudit } from "../../lib/audit";
 import { badRequest, notFound, parseOrThrow } from "../../lib/errors";
+import { pagedQuery } from "../../lib/pagedRoute";
+import { aiCallsTableSpec } from "../../lib/tableSpecs";
 
 const idParams = z.object({ id: z.string().min(1).max(64) });
 
@@ -38,9 +42,38 @@ export async function registerAdminAiRoutes(app: FastifyInstance): Promise<void>
     };
   });
 
+  /**
+   * Provider usage, server-paged through `aiCallsTableSpec`.
+   *
+   * One assessment generation writes a dozen rows or more, so this outgrows a "newest 50" list
+   * within a day of real use. The learner name is joined on for display only — `subjectUserId` is
+   * what the whitelist filters by, because a name is not unique and an id is.
+   *
+   * Nothing here can return a secret: `ai_calls` stores the provider, the model, token counts and
+   * a redacted error string, and never the prompt, the response or the credential.
+   */
   app.get("/api/admin/ai/calls", async (request) => {
-    const { limit } = parseOrThrow(z.object({ limit: z.coerce.number().int().min(1).max(200).default(50) }), request.query);
-    return { calls: recentCalls(app.db, limit) };
+    const { meta, apply } = pagedQuery(app.db, aiCallsTableSpec, schema.aiCalls, request.query);
+    const rows = apply(app.db.select().from(schema.aiCalls).$dynamic()).all();
+
+    const subjectIds = [...new Set(rows.map((r) => r.subjectUserId).filter((v): v is string => v !== null))];
+    const subjects = subjectIds.length
+      ? app.db
+          .select({ id: schema.users.id, displayName: schema.users.displayName, username: schema.users.username })
+          .from(schema.users)
+          .where(inArray(schema.users.id, subjectIds))
+          .all()
+      : [];
+    const byId = new Map(subjects.map((u) => [u.id, u]));
+
+    return {
+      meta,
+      calls: rows.map((row) => ({
+        ...row,
+        subjectName: row.subjectUserId ? (byId.get(row.subjectUserId)?.displayName ?? null) : null,
+        subjectUsername: row.subjectUserId ? (byId.get(row.subjectUserId)?.username ?? null) : null,
+      })),
+    };
   });
 
   /**

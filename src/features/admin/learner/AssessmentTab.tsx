@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Check, ChevronDown, Eye, LoaderCircle, Terminal, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, ChevronDown, Eye, LoaderCircle, Terminal, Trash2, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { AUTO_APPROVE_AFTER_MS, type AssessmentSummary, type ItemKey, type ItemPayload } from "@shared/assessment";
@@ -7,10 +7,14 @@ import type { ItemKind } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
 import { RichText } from "@/components/content/RichText";
-import { FormAlert } from "@/components/form/Field";
+import { FormAlert, TextField } from "@/components/form/Field";
+import { useConfirm, useFormDialog } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { adminApi } from "../api";
 import { ApprovalBanner, approvalNote } from "../ApprovalGate";
 import { GenerationLog } from "../GenerationLog";
 import { AdaptivePath, type AdaptiveStep } from "./AdaptivePath";
@@ -43,8 +47,15 @@ interface AnswersResponse {
   selector: SelectorState | null;
 }
 
-/** Statuses that mean an attempt is still in flight, so re-issuing would double-book the learner. */
-const LIVE_STATUSES = ["generating", "awaiting_approval", "ready", "in_progress", "submitted", "evaluating"];
+/**
+ * The one status that blocks issuing another: a clock is running and a proctor is watching, and a
+ * second sitting would fight the first for both. Everything else may sit alongside — see the issue
+ * route, which enforces exactly this.
+ */
+const BLOCKING_STATUSES = ["in_progress"];
+
+/** What the server will let you cancel: anything nobody has started answering. */
+const DELETABLE_STATUSES = ["generating", "awaiting_approval", "ready", "failed"];
 
 /**
  * The assessment tab (brief §13): every attempt, and for each one every item the learner was
@@ -62,12 +73,40 @@ export function AssessmentTab({
   assessments: AssessmentSummary[];
   onChanged: () => Promise<void>;
 }) {
+  const confirm = useConfirm();
+  const formDialog = useFormDialog();
   const [issuing, setIssuing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
   const [logId, setLogId] = useState<string | null>(null);
   const autoOpened = useRef(new Set<string>());
+
+  /**
+   * Cancels an assessment that has not been started.
+   *
+   * Typed confirmation, because from a list of attempts the rows look alike and the thing being
+   * destroyed is several minutes of generation plus — once released — whatever the learner was
+   * about to sit. The server refuses anything already underway, so this can only ever remove
+   * something nobody has answered.
+   */
+  const handleDelete = async (assessment: AssessmentSummary) => {
+    const name = assessment.label ?? `Attempt ${assessment.attemptNo}`;
+    const ok = await confirm({
+      title: `Delete "${name}"?`,
+      body:
+        assessment.status === "ready"
+          ? "It is already with the learner. Deleting it takes it back off them, and the generated questions go with it — a new one has to be generated from scratch. Nothing they have answered is affected, because they have not started."
+          : "The generated questions go with it, and a new one has to be generated from scratch. Nothing a learner has answered is affected.",
+      confirmLabel: "Delete it",
+      variant: "destructive",
+      confirmPhrase: name,
+      onConfirm: () => adminApi.deleteAssessment(assessment.id),
+    });
+    if (!ok) return;
+    notify.success(`Deleted "${name}".`);
+    await onChanged();
+  };
 
   /**
    * A run that is generating right now is the one log worth opening by itself: the admin clicked
@@ -82,11 +121,34 @@ export function AssessmentTab({
   }, [generatingId]);
 
   const handleIssue = async () => {
+    /* Asked for, not assumed: a learner can hold several at once now, and "Attempt 3" is a poor
+       name for the one about the company's incident process. Left empty it stays null and the UI
+       falls back to the attempt number, which is the right answer when there is only ever one. */
+    const answers = await formDialog({
+      title: assessments.length === 0 ? "Issue a placement assessment" : "Issue another assessment",
+      description:
+        "Generation reads this person's profile notes and takes a few minutes. It then waits for your approval before the learner sees anything.",
+      body: () => (
+        <TextField
+          name="label"
+          label="What is it for"
+          placeholder="Frontend placement"
+          hint="Optional. Worth setting when they will have more than one open at a time."
+          maxLength={60}
+        />
+      ),
+      onSubmit: (data) => {
+        const label = String(data.get("label") ?? "").trim();
+        return Promise.resolve(label.length >= 2 ? { label } : {});
+      },
+    });
+    if (answers === null) return;
+
     setIssuing(true);
     setError(null);
     setNotice(null);
     try {
-      await api.post(`/api/admin/users/${userId}/assessments`, {});
+      await adminApi.issueAssessment(userId, answers);
       await onChanged();
       setNotice(
         `Assessment queued. Generation runs in the background and usually takes a few minutes, then it waits ${Math.round(
@@ -111,9 +173,8 @@ export function AssessmentTab({
               : `${assessments.length} attempt${assessments.length === 1 ? "" : "s"}.`}
           </p>
         </div>
-        {!assessments.some((a) => LIVE_STATUSES.includes(a.status)) && (
-          <Button variant="outline" onClick={() => void handleIssue()} disabled={issuing}>
-            {issuing && <LoaderCircle className="animate-spin" aria-hidden="true" />}
+        {!assessments.some((a) => BLOCKING_STATUSES.includes(a.status)) && (
+          <Button variant="outline" loading={issuing} onClick={() => void handleIssue()}>
             {assessments.length === 0 ? "Issue assessment" : "Re-issue assessment"}
           </Button>
         )}
@@ -153,17 +214,8 @@ export function AssessmentTab({
             return (
               <li key={assessment.id} className="rounded-md border">
                 <div className="flex flex-wrap items-center gap-3 px-4 py-3">
-                  <Badge
-                    variant={
-                      assessment.status === "ready"
-                        ? "success"
-                        : assessment.status === "awaiting_approval"
-                          ? "progress"
-                          : "outline"
-                    }
-                  >
-                    {assessment.status.replace("_", " ")}
-                  </Badge>
+                  <StatusBadge kind="assessment" status={assessment.status} />
+                  {assessment.label && <span className="text-sm font-medium">{assessment.label}</span>}
                   <span className="font-mono text-xs text-muted-foreground">
                     Attempt {assessment.attemptNo} · {formatTimestamp(assessment.createdAt)}
                     {generated > 0 ? ` · ${generated} items` : ""}
@@ -221,6 +273,19 @@ export function AssessmentTab({
                           <Link to={`/admin/assessments/${assessment.id}`}>View pool</Link>
                         </Button>
                       ))}
+                    {/* Only where the server would actually allow it — offering a button that
+                        always 400s is worse than not offering one. */}
+                    {DELETABLE_STATUSES.includes(assessment.status) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => void handleDelete(assessment)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 aria-hidden="true" />
+                        Delete
+                      </Button>
+                    )}
                     {served > 0 && (
                       <Button
                         variant="ghost"
@@ -261,9 +326,29 @@ export function AssessmentTab({
   );
 }
 
+/** How an item ended up, for the outcome filter. Derived, because the server stores the pieces. */
+type Outcome = "correct" | "incorrect" | "skipped" | "ungraded";
+
+function outcomeOf(item: AnsweredItem): Outcome {
+  if (item.status === "skipped") return "skipped";
+  const score = item.autoScore ?? item.aiScore;
+  if (score === null) return "ungraded";
+  return score >= 50 ? "correct" : "incorrect";
+}
+
+const OUTCOME_LABELS: Record<Outcome, string> = {
+  correct: "Correct",
+  incorrect: "Incorrect",
+  skipped: "Skipped",
+  ungraded: "Not scored yet",
+};
+
 function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
   const [data, setData] = useState<AnswersResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [area, setArea] = useState("all");
+  const [kind, setKind] = useState("all");
+  const [outcome, setOutcome] = useState<Outcome | "all">("all");
 
   useEffect(() => {
     let cancelled = false;
@@ -278,6 +363,21 @@ function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
     };
   }, [assessmentId]);
 
+  const items = useMemo(() => data?.items ?? [], [data]);
+  const areas = useMemo(() => [...new Set(items.map((i) => i.area))].sort(), [items]);
+  const kinds = useMemo(() => [...new Set(items.map((i) => i.kind))].sort(), [items]);
+
+  const visible = useMemo(
+    () =>
+      items.filter(
+        (item) =>
+          (area === "all" || item.area === area) &&
+          (kind === "all" || item.kind === kind) &&
+          (outcome === "all" || outcomeOf(item) === outcome),
+      ),
+    [items, area, kind, outcome],
+  );
+
   if (error) return <FormAlert>{error}</FormAlert>;
 
   if (!data) {
@@ -289,18 +389,24 @@ function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
     );
   }
 
-  if (data.items.length === 0) {
+  if (items.length === 0) {
     return <p className="text-sm text-muted-foreground">No items were served in this attempt.</p>;
   }
 
-  const byId = new Map(data.items.map((item) => [item.id, item]));
-  const paths = (data.selector?.areas ?? []).map((area) => ({
-    area: area.area,
-    steps: area.served.map<AdaptiveStep>((itemId, index) => ({
+  const byId = new Map(items.map((item) => [item.id, item]));
+  const paths = (data.selector?.areas ?? []).map((path) => ({
+    area: path.area,
+    steps: path.served.map<AdaptiveStep>((itemId, index) => ({
       difficulty: byId.get(itemId)?.difficulty ?? 0,
-      correct: index < area.outcomes.length ? area.outcomes[index] : null,
+      correct: index < path.outcomes.length ? path.outcomes[index] : null,
     })),
   }));
+
+  const filtering = area !== "all" || kind !== "all" || outcome !== "all";
+  const counts = items.reduce<Record<Outcome, number>>(
+    (acc, item) => ({ ...acc, [outcomeOf(item)]: acc[outcomeOf(item)] + 1 }),
+    { correct: 0, incorrect: 0, skipped: 0, ungraded: 0 },
+  );
 
   return (
     <div className="space-y-8">
@@ -322,17 +428,96 @@ function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
       )}
 
       <section aria-labelledby={`served-${assessmentId}`}>
-        <h3 id={`served-${assessmentId}`} className="text-sm font-semibold">
-          Served items
-          <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">{data.items.length}</span>
-        </h3>
-        <ol className="mt-3 space-y-3">
-          {data.items.map((item, index) => (
-            <ServedItemCard key={item.id} item={item} index={index + 1} />
-          ))}
-        </ol>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h3 id={`served-${assessmentId}`} className="text-sm font-semibold">
+            Served items
+            <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">{items.length}</span>
+          </h3>
+          <p className="font-mono text-xs text-muted-foreground">
+            {counts.correct} correct · {counts.incorrect} incorrect
+            {counts.skipped > 0 && ` · ${counts.skipped} skipped`}
+            {counts.ungraded > 0 && ` · ${counts.ungraded} not scored`}
+          </p>
+        </div>
+
+        {/* Filters over the cards rather than a table: an item carries its prompt, its options, the
+            key and a rationale, which is not row-shaped. The filters are what a table would have
+            been wanted for. */}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          {areas.length > 1 && (
+            <FilterSelect label="Area" value={area} onChange={setArea} options={areas.map((a) => [a, a])} />
+          )}
+          {kinds.length > 1 && (
+            <FilterSelect label="Kind" value={kind} onChange={setKind} options={kinds.map((k) => [k, k])} />
+          )}
+          <FilterSelect
+            label="Outcome"
+            value={outcome}
+            onChange={(v) => setOutcome(v as Outcome | "all")}
+            options={(Object.keys(OUTCOME_LABELS) as Outcome[])
+              .filter((o) => counts[o] > 0)
+              .map((o) => [o, `${OUTCOME_LABELS[o]} (${counts[o]})`])}
+          />
+          {filtering && (
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => {
+                setArea("all");
+                setKind("all");
+                setOutcome("all");
+              }}
+            >
+              Clear
+            </Button>
+          )}
+          <span className="ml-auto text-xs text-muted-foreground" aria-live="polite">
+            {visible.length} of {items.length} shown
+          </span>
+        </div>
+
+        {visible.length === 0 ? (
+          <p className="mt-6 text-sm text-muted-foreground">Nothing matches those filters.</p>
+        ) : (
+          <ol className="mt-3 space-y-3">
+            {visible.map((item) => (
+              <ServedItemCard key={item.id} item={item} index={items.indexOf(item) + 1} />
+            ))}
+          </ol>
+        )}
       </section>
     </div>
+  );
+}
+
+/** A labelled select with an "everything" option. Native, because it is a list of plain strings. */
+function FilterSelect({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: [string, string][];
+}) {
+  return (
+    <label className="flex items-center gap-1.5 text-xs">
+      <span className="text-muted-foreground">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="rounded-md border border-input bg-surface px-2 py-1 text-xs"
+      >
+        <option value="all">Everything</option>
+        {options.map(([v, l]) => (
+          <option key={v} value={v}>
+            {l}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 
@@ -350,11 +535,7 @@ function ServedItemCard({ item, index }: { item: AnsweredItem; index: number }) 
         <span>{item.area}</span>
         <span>difficulty {item.difficulty}/5</span>
         {item.timeMs !== null && <span>{Math.round(item.timeMs / 1000)}s</span>}
-        {skipped && (
-          <Badge variant="outline" className="border-destructive/50 text-destructive">
-            Skipped
-          </Badge>
-        )}
+        {skipped && <StatusBadge kind="item" status="skipped" />}
         <span className="ml-auto">
           {score === null ? (
             "not scored yet"
@@ -378,7 +559,7 @@ function ServedItemCard({ item, index }: { item: AnsweredItem; index: number }) 
                   "flex items-start gap-2 rounded-sm px-1.5 py-0.5",
                   isCorrect && "font-medium text-summit-strong",
                   picked && !isCorrect && "bg-destructive/[0.07] text-destructive",
-                  picked && isCorrect && "bg-summit/[0.08]",
+                  picked && isCorrect && "bg-summit/8",
                 )}
               >
                 {isCorrect ? (
@@ -434,7 +615,7 @@ function ServedItemCard({ item, index }: { item: AnsweredItem; index: number }) 
       )}
 
       {item.aiFeedback && (
-        <p className="mt-3 rounded-md border border-ridge/40 bg-ridge/[0.06] px-3 py-2 text-sm">
+        <p className="mt-3 rounded-md border border-ridge/40 bg-ridge/6 px-3 py-2 text-sm">
           <span className="font-medium">Rubric grader: </span>
           <span className="text-muted-foreground">{item.aiFeedback}</span>
         </p>

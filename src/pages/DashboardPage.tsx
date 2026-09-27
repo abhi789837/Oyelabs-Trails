@@ -13,6 +13,8 @@ import { levelLabels } from "@/lib/track-meta";
 import { cn, formatMinutes, formatMinutesCompact, formatTimestamp } from "@/lib/utils";
 import { useProgressStore, type TopicProgress } from "@/store/progressStore";
 
+import { SectionHeading, StatCard, StatChip } from "./parts/Stats";
+
 export default function DashboardPage() {
   useDocumentTitle();
   const progress = useProgressStore((s) => s.progress);
@@ -37,10 +39,10 @@ export default function DashboardPage() {
           </p>
 
           <dl className="mt-10 grid max-w-2xl grid-cols-2 border-y sm:grid-cols-4">
-            <Stat label="Camps" value={String(camps)} />
-            <Stat label="Topics" value={String(topics.length)} className="border-l pl-4 sm:pl-6" />
-            <Stat label="Completed" value={String(completed)} className="border-t pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-4" />
-            <Stat label="Overall progress" value={`${overallPct}%`} className="border-l border-t pl-4 pt-4 sm:border-t-0 sm:pl-6" />
+            <StatCard label="Camps" value={camps} />
+            <StatCard label="Topics" value={topics.length} className="border-l pl-4 sm:pl-6" />
+            <StatCard label="Completed" value={completed} className="border-t sm:border-l sm:border-t-0 sm:pl-6" />
+            <StatCard label="Overall" value={overallPct} format={(n) => `${n}%`} className="border-l border-t pl-4 sm:border-t-0 sm:pl-6" />
           </dl>
           <Progress value={overallPct} className="mt-4 h-1 max-w-2xl" indicatorClassName="bg-summit" aria-label={`Overall progress: ${overallPct}%`} />
           <p className="mt-3 font-mono text-xs text-muted-foreground">About {Math.round(totalMinutes / 60)} hours of material in total.</p>
@@ -62,15 +64,6 @@ export default function DashboardPage() {
           </p>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function Stat({ label, value, className }: { label: string; value: string; className?: string }) {
-  return (
-    <div className={cn("flex flex-col-reverse py-4", className)}>
-      <dt className="mt-1 text-xs text-muted-foreground sm:text-sm">{label}</dt>
-      <dd className="font-display text-xl font-semibold tabular sm:text-2xl">{value}</dd>
     </div>
   );
 }
@@ -110,28 +103,19 @@ function TrackSection({ track, progress }: { track: TrackMeta; progress: Record<
   return (
     <section aria-labelledby={headingId} className="grid gap-8 border-b py-10 last:border-b-0 md:grid-cols-12 md:gap-10 md:py-12">
       <div className="md:col-span-5">
-        <div className="flex items-center gap-3">
-          {/* A trail blaze: the painted mark that tells hikers which trail they're on. */}
-          <span aria-hidden="true" className={cn("h-7 w-2 rounded-[2px]", accent.bg)} />
-          <h2 id={headingId} className="text-xl font-semibold">
-            {track.name}
-          </h2>
-        </div>
+        <SectionHeading
+          id={headingId}
+          /* A trail blaze: the painted mark that tells hikers which trail they're on. */
+          mark={<span aria-hidden="true" className={cn("h-7 w-2 shrink-0 rounded-[2px]", accent.bg)} />}
+        >
+          <span className="text-xl">{track.name}</span>
+        </SectionHeading>
         <p className="mt-2 max-w-prose text-muted-foreground">{track.tagline}</p>
-        <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-1 font-mono text-xs text-muted-foreground">
-          <div>
-            <dt className="sr-only">Camps</dt>
-            <dd>{track.modules.length} camps</dd>
-          </div>
-          <div>
-            <dt className="sr-only">Topics</dt>
-            <dd>{topics.length} topics</dd>
-          </div>
-          <div>
-            <dt className="sr-only">Estimated time</dt>
-            <dd>{formatMinutes(trackMinutes(track))}</dd>
-          </div>
-        </dl>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <StatChip label="Camps" value={track.modules.length} />
+          <StatChip label="Topics" value={topics.length} />
+          <StatChip label="Time" value={formatMinutes(trackMinutes(track))} />
+        </div>
 
         <div className="mt-6">
           <div className="flex items-baseline justify-between text-sm">

@@ -97,7 +97,7 @@ function ReferenceItem({ resource, defaultOpen }: { resource: TopicResource; def
 
 function PreviewFrame({ id, resource }: { id: string; resource: TopicResource }) {
   const [state, setState] = useState<"loading" | "loaded" | "failed">("loading");
-  const timer = useRef<number>();
+  const timer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     timer.current = window.setTimeout(() => setState((s) => (s === "loading" ? "failed" : s)), PREVIEW_TIMEOUT_MS);
@@ -132,7 +132,7 @@ function PreviewFrame({ id, resource }: { id: string; resource: TopicResource })
         loading="lazy"
         referrerPolicy="no-referrer"
         sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
-        className={cn("relative h-[26rem] w-full bg-white", state === "loading" && "opacity-0")}
+        className={cn("relative h-104 w-full bg-white", state === "loading" && "opacity-0")}
         onLoad={() => {
           window.clearTimeout(timer.current);
           setState("loaded");

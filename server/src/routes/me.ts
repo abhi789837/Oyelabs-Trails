@@ -1,14 +1,19 @@
 import type { FastifyInstance } from "fastify";
 
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
+import { z } from "zod";
 
 import type { EvaluationResult, MyEvaluation } from "../../../shared/assessment";
 import type { ManifestResponse, ProgressResponse } from "../../../shared/content";
 import { markInProgressRequestSchema } from "../../../shared/content";
+import type { NotificationsResponse } from "../../../shared/notifications";
 import { requireActiveUser } from "../auth/guards";
 import { filterManifest } from "../content/filter";
+import { completedTopicIds, coursesFor, getCourse, mayOpenCourse } from "../courses/repo";
 import { schema } from "../db";
 import { notFound, parseOrThrow } from "../lib/errors";
+import { now } from "../lib/ids";
+import { listNotifications, markAllRead, unreadCount } from "../lib/notify";
 import { allowedTopicIdsFor, latestPublishedPlan } from "../plans/repo";
 import { getProgress, markInProgress } from "../progress/repo";
 
@@ -31,6 +36,61 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
       planTopicIds: plan?.topicIds ?? [],
       planVersion: plan?.version ?? null,
     };
+  });
+
+  // -------------------------------------------------------------------------
+  // Admin-authored courses
+  // -------------------------------------------------------------------------
+
+  /**
+   * The courses this learner should see.
+   *
+   * Separate from the manifest, and separate from plan progress, because they are a different kind
+   * of thing: there is no challenge to pass, so completion is the learner's word. Mixing that into
+   * the plan percentage would quietly change what that number means.
+   */
+  app.get("/api/me/courses", async (request) => {
+    const user = requireActiveUser(request);
+    return { courses: coursesFor(app.db, user.id) };
+  });
+
+  app.get("/api/me/courses/:courseId", async (request) => {
+    const user = requireActiveUser(request);
+    const { courseId } = parseOrThrow(z.object({ courseId: z.string().min(1).max(64) }), request.params);
+
+    // An unpublished or unassigned course is a 404 rather than a 403: whether a draft exists is
+    // not something a learner needs to be able to probe for.
+    if (!mayOpenCourse(app.db, user.id, courseId)) throw notFound("No such course.");
+
+    const course = getCourse(app.db, courseId);
+    if (!course) throw notFound("No such course.");
+    return { course, completedTopicIds: completedTopicIds(app.db, user.id, courseId) };
+  });
+
+  /** Ticking a lesson off, or un-ticking it. Idempotent in both directions. */
+  app.post("/api/me/courses/topics/:topicId/complete", async (request) => {
+    const user = requireActiveUser(request);
+    const { topicId } = parseOrThrow(z.object({ topicId: z.string().min(1).max(64) }), request.params);
+    const { done } = parseOrThrow(z.object({ done: z.boolean().default(true) }), request.body ?? {});
+
+    const topic = app.db.select().from(schema.courseTopics).where(eq(schema.courseTopics.id, topicId)).get();
+    if (!topic) throw notFound("No such lesson.");
+    if (!mayOpenCourse(app.db, user.id, topic.courseId)) throw notFound("No such lesson.");
+
+    if (done) {
+      app.db
+        .insert(schema.courseProgress)
+        .values({ userId: user.id, topicId, courseId: topic.courseId, completedAt: now() })
+        .onConflictDoNothing()
+        .run();
+    } else {
+      app.db
+        .delete(schema.courseProgress)
+        .where(and(eq(schema.courseProgress.userId, user.id), eq(schema.courseProgress.topicId, topicId)))
+        .run();
+    }
+
+    return { completedTopicIds: completedTopicIds(app.db, user.id, topic.courseId) };
   });
 
   app.get("/api/me/progress", async (request): Promise<ProgressResponse> => {
@@ -90,6 +150,30 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
         estimatedHours: result.plan.estimatedHours,
       },
     };
+  });
+
+  /**
+   * My notifications, for the bell in the app shell.
+   *
+   * `notify()` already writes rows addressed to learners — "your placement assessment is ready",
+   * "your learning plan is ready", "your assessment was ended" — but until now the only way to
+   * read a notification was `/api/admin/notifications`, which a learner cannot call. So the shell
+   * reads this instead, for both roles: it is the same table, scoped to whoever is asking, which
+   * keeps one notification centre in one place rather than one per role.
+   */
+  app.get("/api/me/notifications", async (request): Promise<NotificationsResponse> => {
+    const user = requireActiveUser(request);
+    const { limit } = parseOrThrow(
+      z.object({ limit: z.coerce.number().int().min(1).max(100).default(30) }),
+      request.query,
+    );
+    return { notifications: listNotifications(app.db, user.id, limit), unread: unreadCount(app.db, user.id) };
+  });
+
+  app.post("/api/me/notifications/read", async (request) => {
+    const user = requireActiveUser(request);
+    markAllRead(app.db, user.id);
+    return { ok: true };
   });
 
   /** The learner's own plan. The admin's view of someone else's plan lives under /api/admin. */

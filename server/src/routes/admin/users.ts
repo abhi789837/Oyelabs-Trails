@@ -14,12 +14,12 @@ import {
   type UserSummary,
 } from "../../../../shared/admin";
 import { learnerProfileSchema, type LearnerProfile } from "../../../../shared/profile";
-import { requireSuperadmin, superadminOnly } from "../../auth/guards";
+import { requireStaff, staffOnly } from "../../auth/guards";
 import { checkPasswordPolicy, generatePassword, hashPassword } from "../../auth/password";
 import { revokeUserSessions } from "../../auth/sessions";
 import { schema, type Db } from "../../db";
 import { writeAudit } from "../../lib/audit";
-import { badRequest, conflict, notFound, parseOrThrow } from "../../lib/errors";
+import { badRequest, conflict, forbidden, notFound, parseOrThrow } from "../../lib/errors";
 import { newId, now } from "../../lib/ids";
 
 /**
@@ -105,10 +105,24 @@ function writeProfile(db: Db, userId: string, profile: LearnerProfile, actorId: 
     .run();
 }
 
+/**
+ * Refuses an action aimed at a staff account unless the actor is the superadmin.
+ *
+ * An `admin` manages learners. Letting one reset another admin's password, disable them, or revoke
+ * their sessions would make the role self-escalating in practice: three admins who can disable each
+ * other are not three restricted accounts, they are three superadmins with extra steps.
+ */
+function assertMayActOn(actor: { id: string; role: string }, target: { id: string; role: string }): void {
+  if (target.role === "learner") return;
+  if (actor.role === "superadmin") return;
+  if (actor.id === target.id) return; // Your own account is always yours.
+  throw forbidden();
+}
+
 export async function registerAdminUserRoutes(app: FastifyInstance): Promise<void> {
   // Everything under this plugin is superadmin-only. Registered as a hook rather than per route
   // so a new route cannot accidentally ship unguarded.
-  app.addHook("preHandler", superadminOnly);
+  app.addHook("preHandler", staffOnly);
 
   app.get("/api/admin/users", async () => {
     const rows = app.db.select().from(schema.users).orderBy(desc(schema.users.createdAt)).all();
@@ -123,8 +137,12 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.post("/api/admin/users", async (request, reply): Promise<OnboardLearnerResponse> => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const body = parseOrThrow(onboardLearnerRequestSchema, request.body);
+
+    /* Creating staff is the superadmin's alone — see `assertMayActOn`. An admin onboarding a
+       learner is the ordinary case and needs no extra right. */
+    if (body.role !== "learner" && actor.role !== "superadmin") throw forbidden();
 
     const taken = app.db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.username, body.username)).get();
     if (taken) throw conflict("That username is already taken.", { username: "Already taken." });
@@ -146,7 +164,7 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
         username: body.username,
         displayName: body.displayName,
         passwordHash: await hashPassword(password),
-        role: "learner",
+        role: body.role,
         status: "active",
         mustChangePassword: true,
         createdBy: actor.id,
@@ -162,7 +180,12 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
       targetType: "user",
       targetId: id,
       // Never the password, and never the notes verbatim — just that they were set.
-      details: { username: body.username, issueAssessment: body.issueAssessment, notesLength: body.profile.adminNotes.length },
+      details: {
+        username: body.username,
+        role: body.role,
+        issueAssessment: body.issueAssessment,
+        notesLength: body.profile.adminNotes.length,
+      },
     });
 
     const row = app.db.select().from(schema.users).where(eq(schema.users.id, id)).get()!;
@@ -171,7 +194,7 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.put("/api/admin/users/:id/profile", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = request.params as { id: string };
     const body = parseOrThrow(updateProfileRequestSchema, request.body);
 
@@ -184,12 +207,13 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.post("/api/admin/users/:id/reset-password", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = request.params as { id: string };
     const body = parseOrThrow(resetPasswordRequestSchema, request.body ?? {});
 
     const row = app.db.select().from(schema.users).where(eq(schema.users.id, id)).get();
     if (!row) throw notFound("No such person.");
+    assertMayActOn(actor, row);
 
     const generated = body.password ? undefined : generatePassword((n) => crypto.randomBytes(n), 12);
     const password = body.password ?? generated!;
@@ -211,13 +235,14 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.post("/api/admin/users/:id/status", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = request.params as { id: string };
     const { status } = parseOrThrow(setUserStatusRequestSchema, request.body);
 
     const row = app.db.select().from(schema.users).where(eq(schema.users.id, id)).get();
     if (!row) throw notFound("No such person.");
     if (row.id === actor.id) throw badRequest("You cannot disable your own account.");
+    assertMayActOn(actor, row);
 
     app.db.update(schema.users).set({ status }).where(eq(schema.users.id, id)).run();
     if (status === "disabled") revokeUserSessions(app.db, id);
@@ -227,10 +252,15 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
   });
 
   app.post("/api/admin/users/:id/revoke-sessions", async (request) => {
-    const actor = requireSuperadmin(request);
+    const actor = requireStaff(request);
     const { id } = request.params as { id: string };
-    const row = app.db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.id, id)).get();
+    const row = app.db
+      .select({ id: schema.users.id, role: schema.users.role })
+      .from(schema.users)
+      .where(eq(schema.users.id, id))
+      .get();
     if (!row) throw notFound("No such person.");
+    assertMayActOn(actor, row);
 
     // When an admin revokes their own sessions, keep the one they are using, so the action does
     // not sign them out mid-task.

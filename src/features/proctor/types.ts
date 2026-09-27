@@ -109,7 +109,7 @@ export interface CalibrationPose extends HeadPose {
 // §10.2 thresholds
 // ---------------------------------------------------------------------------
 
-/** Row "Window blur": lasting > 2 s. */
+/** Row "Window blur-sm": lasting > 2 s. */
 export const WINDOW_BLUR_SUSTAINED_MS = 2_000;
 /** Row "Mouse left window": lasting > 3 s. */
 export const MOUSE_LEFT_SUSTAINED_MS = 3_000;

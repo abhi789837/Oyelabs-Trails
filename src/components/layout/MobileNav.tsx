@@ -15,13 +15,14 @@ export function MobileNav() {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="flex flex-col p-0">
+      <SheetContent side="left" closeLabel="Close menu" className="flex flex-col p-0">
         <div className="border-b px-4 py-4">
           <SheetTitle>Oyelearn</SheetTitle>
           <SheetDescription className="sr-only">Navigate between the dashboard and the four learning trails.</SheetDescription>
         </div>
         <div className="flex-1 overflow-y-auto px-3 py-4">
-          <TrackNav onNavigate={() => setOpen(false)} />
+          {/* Its own marker group: the desktop sidebar can be mounted at the same time. */}
+          <TrackNav group="mobile-nav" onNavigate={() => setOpen(false)} />
         </div>
       </SheetContent>
     </Sheet>
