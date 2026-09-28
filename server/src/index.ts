@@ -12,6 +12,9 @@ import { blueprintHandler } from "./assessment/blueprintJob";
 import { evaluateHandler } from "./assessment/evaluateJob";
 import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
+import { enqueue } from "./jobs/queue";
+import { buildPathHandler } from "./jobs/handlers/buildPath";
+import { checkLinksHandler } from "./jobs/handlers/checkLinks";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { JobWorker } from "./jobs/worker";
 import { publishGenerationLine } from "./routes/admin/live";
@@ -66,6 +69,8 @@ async function main(): Promise<void> {
         publish: (line) => publishGenerationLine(app, line),
       }),
       "assessment.evaluate": evaluateHandler({ db, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "path.build": buildPathHandler({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "links.check": checkLinksHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });
@@ -84,6 +89,19 @@ async function main(): Promise<void> {
   }, 60_000);
   sweeper.unref?.();
 
+  /* The weekly link re-check for generated courses. Queued rather than run inline so it goes
+     through the same worker, retries and backoff as everything else; the interval only decides
+     *when* to ask. Unref'd, so it never holds the process open by itself. */
+  const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  const linkCheck = setInterval(() => {
+    try {
+      enqueue(db, { type: "links.check", payload: {} });
+    } catch (error) {
+      console.error("[oyelearn] could not queue the link check:", error instanceof Error ? error.message : error);
+    }
+  }, WEEK_MS);
+  linkCheck.unref?.();
+
   // Snapshot retention and the nightly backup (brief §10.6, §15).
   const stopMaintenance = startDailyMaintenance({
     db,
@@ -96,6 +114,7 @@ async function main(): Promise<void> {
     app.log.info({ signal }, "shutting down");
     try {
       clearInterval(sweeper);
+      clearInterval(linkCheck);
       stopMaintenance();
       await worker.stop();
       await app.close();

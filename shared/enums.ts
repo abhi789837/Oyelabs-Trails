@@ -95,7 +95,15 @@ export type AttemptKind = z.infer<typeof attemptKindSchema>;
 export const jobStatusSchema = z.enum(["queued", "running", "done", "failed"]);
 export type JobStatus = z.infer<typeof jobStatusSchema>;
 
-export const jobTypeSchema = z.enum(["credential.verify", "assessment.blueprint", "assessment.evaluate"]);
+export const jobTypeSchema = z.enum([
+  "credential.verify",
+  "assessment.blueprint",
+  "assessment.evaluate",
+  /** The AI course builder: gap analysis, matching and generation for one learner. */
+  "path.build",
+  /** The weekly re-check of every link a generated course cites. */
+  "links.check",
+]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 
 /**

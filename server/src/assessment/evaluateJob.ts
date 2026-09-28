@@ -20,7 +20,7 @@ import type { AiService } from "../ai/service";
 import { EVALUATION_TIMEOUT_MS } from "../ai/types";
 import type { ContentStore } from "../content/store";
 import { schema, type Db } from "../db";
-import type { Job } from "../jobs/queue";
+import { enqueue, type Job } from "../jobs/queue";
 import { newId, now } from "../lib/ids";
 import { notify, staffIds } from "../lib/notify";
 import { publishPlan } from "../plans/repo";
@@ -201,6 +201,12 @@ export function evaluateHandler(deps: EvaluateDeps) {
       });
 
       db.update(schema.assessments).set({ status: "completed" }).where(eq(schema.assessments.id, assessmentId)).run();
+
+      /* The course builder runs next, as its own job rather than inline: it is minutes of provider
+         calls and searches, and an evaluation that is finished should be *finished* — the learner's
+         plan is already published above and does not wait on it. If the builder fails, they still
+         have their trail. */
+      enqueue(db, { type: "path.build", payload: { userId: assessment.userId, assessmentId } });
 
       notify(db, {
         recipientId: assessment.userId,
