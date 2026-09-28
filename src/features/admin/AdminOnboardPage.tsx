@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, Check, Plus, Sparkles, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import { EMPTY_PRIORITIES, type LearnerPriorities } from "@shared/builder";
 import type { ClaimedSkill, LearnerProfile } from "@shared/profile";
 import type { SkillLevel, TrackIdValue } from "@shared/enums";
 
@@ -22,8 +23,11 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { duration, transition } from "@/lib/motion";
 import { passwordStrength } from "@/lib/password-strength";
 import { accentClasses } from "@/lib/accent";
+import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
+import { builderApi } from "./builder/api";
+import { PrioritiesFields, PrioritiesSummary } from "./builder/PrioritiesFields";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
 
 const LEVEL_LABELS: Record<SkillLevel, string> = {
@@ -45,13 +49,14 @@ const emptyProfile: LearnerProfile = {
   targetTracks: [],
 };
 
-type StepId = "account" | "profile" | "skills" | "trails" | "review";
+type StepId = "account" | "profile" | "skills" | "trails" | "priorities" | "review";
 
 const STEPS: { id: StepId; name: string; blurb: string }[] = [
   { id: "account", name: "Account", blurb: "Who they are and how they sign in." },
   { id: "profile", name: "Profile", blurb: "What you know before they are tested." },
   { id: "skills", name: "Skills", blurb: "Your estimate of where they stand." },
   { id: "trails", name: "Trails", blurb: "Where you want them to end up." },
+  { id: "priorities", name: "Priorities", blurb: "What the AI should build them, and in what order." },
   { id: "review", name: "Review", blurb: "One last read before the account exists." },
 ];
 
@@ -93,6 +98,7 @@ export default function AdminOnboardPage() {
   const [password, setPassword] = useState("");
   const [profile, setProfile] = useState<LearnerProfile>(emptyProfile);
   const [issueAssessment, setIssueAssessment] = useState(true);
+  const [priorities, setPriorities] = useState<LearnerPriorities>(EMPTY_PRIORITIES);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
@@ -166,6 +172,21 @@ export default function AdminOnboardPage() {
          right here — and they still have to send it, so the same hand-off applies. Without this,
          choosing "Set one now" silently skipped the invite step and dropped them on the People
          list with nothing to copy. */
+      /* Saved separately, and deliberately not allowed to fail the onboarding. The account already
+         exists by this point; losing the priorities would be annoying, losing the account because
+         of them would be worse. They can be set again from the learner's page. */
+      const hasPriorities = priorities.targetRole.trim().length > 0 || priorities.mustHave.length > 0;
+      if (hasPriorities) {
+        try {
+          await builderApi.setPriorities(result.user.id, {
+            ...priorities,
+            mustHave: priorities.mustHave.filter((entry) => entry.skill.trim().length > 0),
+          });
+        } catch {
+          notify.error("The account was created, but the learning priorities did not save. Set them from their profile.");
+        }
+      }
+
       const toSend = result.temporaryPassword ?? (passwordMode === "set" ? password : null);
       if (toSend) {
         setCreated({
@@ -177,6 +198,7 @@ export default function AdminOnboardPage() {
         setDisplayName("");
         setPassword("");
         setProfile(emptyProfile);
+        setPriorities(EMPTY_PRIORITIES);
         setStep("account");
       } else {
         navigate("/admin/people");
@@ -480,6 +502,17 @@ export default function AdminOnboardPage() {
               </>
             )}
 
+            {step === "priorities" && (
+              <>
+                <p className="max-w-prose text-sm text-muted-foreground">
+                  Once their placement assessment is graded, the AI compares what it found against
+                  this. Where a course already covers a gap it unlocks that one; where nothing does,
+                  it researches the topic and writes a course. What you set here decides the order.
+                </p>
+                <PrioritiesFields value={priorities} onChange={setPriorities} disabled={submitting} />
+              </>
+            )}
+
             {step === "review" && (
               <Review
                 username={username.trim()}
@@ -488,6 +521,7 @@ export default function AdminOnboardPage() {
                 passwordMode={passwordMode}
                 passwordScore={passwordMode === "set" && password ? passwordStrength(password, username).score : null}
                 profile={profile}
+                priorities={priorities}
                 tracks={tracks.map((t) => ({ id: t.id, name: t.name }))}
                 onEdit={goTo}
               >
@@ -715,6 +749,7 @@ function Review({
   passwordMode,
   passwordScore,
   profile,
+  priorities,
   tracks,
   onEdit,
   children,
@@ -725,6 +760,7 @@ function Review({
   passwordMode: "generate" | "set";
   passwordScore: number | null;
   profile: LearnerProfile;
+  priorities: LearnerPriorities;
   tracks: { id: string; name: string }[];
   onEdit: (step: StepId) => void;
   children: React.ReactNode;
@@ -778,6 +814,10 @@ function Review({
             ))}
           </ul>
         )}
+      </ReviewBlock>
+
+      <ReviewBlock title="Learning priorities" onEdit={() => onEdit("priorities")}>
+        <PrioritiesSummary value={priorities} />
       </ReviewBlock>
 
       <ReviewBlock title="Target trails" onEdit={() => onEdit("trails")}>

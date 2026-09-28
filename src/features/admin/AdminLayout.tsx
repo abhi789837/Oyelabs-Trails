@@ -6,6 +6,7 @@ import {
   Radio,
   ScrollText,
   ShieldAlert,
+  Sparkles,
   Users,
   UserPlus,
   type LucideIcon,
@@ -71,6 +72,7 @@ const groups: SectionGroup[] = [
       { to: "/admin/audit", end: false, label: "Audit log", icon: ScrollText },
       { to: "/admin/curriculum", end: false, label: "Curriculum", icon: Library },
       { to: "/admin/courses", end: false, label: "Courses", icon: BookOpen },
+      { to: "/admin/generated", end: false, label: "Generated", icon: Sparkles },
     ],
   },
 ];

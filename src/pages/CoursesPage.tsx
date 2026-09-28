@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
-import { BookOpen, Check } from "lucide-react";
+import { BookOpen, Check, Loader2, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { isPathBusy, type LearningPathView } from "@shared/builder";
 import type { CourseCard } from "@shared/courses";
 
 import { api, ApiRequestError } from "@/api/client";
@@ -26,6 +27,7 @@ export default function CoursesPage() {
   useDocumentTitle("Courses");
 
   const [courses, setCourses] = useState<CourseCard[] | null>(null);
+  const [path, setPath] = useState<LearningPathView | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,6 +39,13 @@ export default function CoursesPage() {
         if (err instanceof DOMException && err.name === "AbortError") return;
         setError(err instanceof ApiRequestError ? err.message : "Could not load your courses.");
       });
+    // The path is a separate request and a separate failure: a learner whose path is still being
+    // built should still see the courses they already have.
+    api
+      .get<{ path: LearningPathView | null }>("/api/me/path", controller.signal)
+      .then((result) => setPath(result.path))
+      .catch(() => setPath(null));
+
     return () => controller.abort();
   }, []);
 
@@ -53,6 +62,17 @@ export default function CoursesPage() {
           <FormAlert>{error}</FormAlert>
         </div>
       )}
+
+      {path && isPathBusy(path.status) && (
+        <p className="mt-6 flex items-center gap-2 rounded-md border border-primary/40 bg-primary/5 px-4 py-3 text-sm">
+          <Loader2 className="size-4 shrink-0 animate-spin text-primary-strong" aria-hidden="true" />
+          <span aria-live="polite">
+            {path.progressNote || "Working out what to build for you…"}
+          </span>
+        </p>
+      )}
+
+      {path && path.items.length > 0 && <PathOrder path={path} />}
 
       {courses === null ? (
         <p className="mt-10 text-sm text-muted-foreground" role="status">
@@ -121,5 +141,66 @@ function CourseTile({ course }: { course: CourseCard }) {
         </div>
       </Link>
     </motion.li>
+  );
+}
+
+/**
+ * Why each course is on the list, in the order the builder put them.
+ *
+ * The reason is the whole point. A course that appears with no explanation reads as the platform
+ * deciding things about you; the same course with "you missed 4 of 5 questions on server
+ * deployment" reads as a consequence of something you did — which is what it is.
+ */
+function PathOrder({ path }: { path: LearningPathView }) {
+  return (
+    <section aria-labelledby="path-heading" className="mt-10">
+      <h2 id="path-heading" className="font-display text-lg font-semibold">
+        Where to start
+      </h2>
+      <p className="mt-1 max-w-prose text-sm text-muted-foreground">
+        Ordered by what your assessment showed and what your administrator asked for. You can read
+        them in any order — this is the order we would.
+      </p>
+
+      <motion.ol variants={stagger(0.04)} initial="hidden" animate="visible" className="mt-5 space-y-3">
+        {path.items.map((item) => (
+          <motion.li key={item.id} variants={fadeUp} transition={transition.base}>
+            <div
+              className={cn(
+                "rounded-lg border px-4 py-3",
+                !item.available && "border-dashed opacity-70",
+              )}
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-mono text-xs text-muted-foreground tabular">{item.position + 1}</span>
+                {item.available && item.courseId ? (
+                  <Link
+                    to={`/courses/${item.courseId}`}
+                    className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+                  >
+                    {item.courseTitle}
+                  </Link>
+                ) : (
+                  <span className="font-medium">{item.courseTitle}</span>
+                )}
+                {item.source === "generated" && (
+                  <Badge variant="brand" className="gap-1">
+                    <Sparkles className="size-3" aria-hidden="true" />
+                    built for you
+                  </Badge>
+                )}
+                {/* Said plainly rather than hidden: a learner can see what is coming, and why it
+                    is not open yet. */}
+                {!item.available && <Badge variant="outline">waiting to be checked over</Badge>}
+                <span className="ml-auto font-mono text-[11px] text-muted-foreground tabular">
+                  {item.completedCount}/{item.topicCount}
+                </span>
+              </div>
+              <p className="mt-1.5 max-w-prose text-sm text-muted-foreground">{item.reason}</p>
+            </div>
+          </motion.li>
+        ))}
+      </motion.ol>
+    </section>
   );
 }

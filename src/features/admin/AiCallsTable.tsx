@@ -80,12 +80,18 @@ export function AiCallsTable() {
         type: "enum",
         quick: true,
         options: [
+          /* Exactly `aiPurposeSchema`. Three options here used to be `items`, `critic` and `grade`,
+             which the enum has never contained — filtering by one returned nothing, for ever, and
+             looked like "no calls of that kind" rather than a dead option. */
           { value: "blueprint", label: "Blueprint" },
-          { value: "items", label: "Items" },
-          { value: "critic", label: "Critic" },
-          { value: "grade", label: "Grade" },
+          { value: "item_critic", label: "Item critic" },
           { value: "evaluation", label: "Evaluation" },
           { value: "verify", label: "Verify" },
+          { value: "gap_analysis", label: "Gap analysis" },
+          { value: "course_match", label: "Course match" },
+          { value: "course_plan", label: "Course plan" },
+          { value: "course_write", label: "Course writing" },
+          { value: "course_review", label: "Course review" },
         ],
       },
       {

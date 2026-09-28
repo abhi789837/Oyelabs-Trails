@@ -132,17 +132,53 @@ either way.
 
 ---
 
-## 5. Status
+## 5. What is built
 
-Built in stages; this file is updated as each lands.
+All ten stages. 642 tests across the repo, of which the builder's own are:
 
-- [ ] Stage 1 — data model, migrations, shared schemas
-- [ ] Stage 2 — research providers and link verification
-- [ ] Stage 3 — gap analysis and priority scoring
-- [ ] Stage 4 — catalogue and generated-course matching
-- [ ] Stage 5 — the generation pipeline
-- [ ] Stage 6 — jobs, progress, cost limits
-- [ ] Stage 7 — admin UI: priorities, generated courses, gap map
-- [ ] Stage 8 — learner UI: the path and why each course is on it
-- [ ] Stage 9 — link health, audit log
-- [ ] Stage 10 — tests, including the cPanel run end to end
+| File | Covers |
+| --- | --- |
+| `scoring.test.ts` (17) | priority scoring, written as arguments rather than arithmetic |
+| `citations.test.ts` (12) | the invented-URL check, including the plausible fakes |
+| `pipeline.test.ts` (11) | the cPanel run end to end, model/search/YouTube/fetch all stubbed |
+| `routes.test.ts` (15) | who may touch what |
+
+### Where to find things
+
+| | |
+| --- | --- |
+| Set a learner's priorities | Onboarding, step 5 — or **People → a learner → AI path** |
+| Watch a run | Same tab. It polls only while a run is going |
+| Approve what was written | **Admin → Generated** |
+| Put a course in the catalogue | Same page, **Promote** (only after approving) |
+| The keys | **Admin → AI connection → Research** |
+| What the learner sees | **Courses**, with the order and the reason on each |
+
+### Two things worth knowing before you use it
+
+**A generated course does not reach anyone until it is approved.** Auto-publish is per learner and
+off by default, and even with it on a course only goes out if it passed its own review — the toggle
+means "I trust the process", not "ship whatever comes out".
+
+**Without the research keys, nothing is generated.** Gap analysis still runs and catalogue courses
+still unlock; only writing a new course needs them. That is the design, not a limitation: the
+alternative is a course written from the model's recollection of the internet, with URLs that look
+right and do not resolve.
+
+---
+
+## 6. Known limitations
+
+- **Not exercised against live providers.** Every test stubs Tavily/Brave/Serper, the YouTube API
+  and the fetcher. The adapters are written to each provider's documented response shape but have
+  not been run against a real key, so the first live run is the one that will find any mismatch
+  there.
+- **The review is the same family of model that wrote the course.** A second pass catches padding,
+  a thin test and a lesson that missed its objective; it is weaker evidence on factual accuracy,
+  where a model's blind spots correlate with its own. The rubric score is shown next to the approve
+  button for exactly this reason.
+- **Re-assessment is manual.** "Build the path" can be pressed at any time and a fresh assessment
+  re-runs it automatically, but nothing schedules a periodic re-test.
+- **No course-completion certificate.** Track certificates are unchanged. Course progress is counted
+  separately from plan progress throughout, because a lesson without a test is finished by the
+  learner saying so — mixing that into a certificate would weaken what the existing one means.

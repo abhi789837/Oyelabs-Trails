@@ -19,6 +19,7 @@ import { transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
 import { AiCallsTable } from "./AiCallsTable";
+import { ResearchSettings } from "./builder/ResearchSettings";
 
 /**
  * Admin → AI connection (brief §8.1).
@@ -275,6 +276,8 @@ export default function AdminAiPage() {
           table is the only per-learner view of usage.
         </p>
       </section>
+
+      <ResearchSettings />
 
       <AiCallsTable />
     </div>
