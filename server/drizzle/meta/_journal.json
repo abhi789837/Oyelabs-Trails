@@ -36,6 +36,20 @@
       "when": 1790491288419,
       "tag": "0004_clever_rocket_racer",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1790580121267,
+      "tag": "0005_lean_genesis",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1790580525709,
+      "tag": "0006_smiling_carlie_cooper",
+      "breakpoints": true
     }
   ]
 }

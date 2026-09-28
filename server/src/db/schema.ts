@@ -9,7 +9,7 @@
  *   validated with the matching zod schema on read and write in the repository layer, because
  *   `$type` is a compile-time assertion, not a runtime guarantee.
  */
-import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 import type { AiPurpose, AssessmentStatus, CredentialStatus, ItemKind, ItemStatus, JobStatus, JobType, PlanSource, ProviderId, Role, Severity, TopicStatus, UserStatus, AttemptKind } from "../../../shared/enums";
 import type { GenerationLevel, GenerationStage } from "../../../shared/assessment";
@@ -455,6 +455,8 @@ export const courses = sqliteTable(
     audience: text("audience").$type<"everyone" | "assigned">().notNull().default("everyone"),
     /** Unpublished courses are the author's draft and are invisible to learners. */
     published: integer("published", { mode: "boolean" }).notNull().default(false),
+    /** A `generated` course carries a `generated_courses` row saying what it answers and how it scored. */
+    origin: text("origin").$type<"manual" | "generated">().notNull().default("manual"),
     position: integer("position").notNull().default(0),
     createdBy: text("created_by"),
     createdAt: integer("created_at").notNull(),
@@ -504,6 +506,19 @@ export const courseTopics = sqliteTable(
     videoTitle: text("video_title"),
     /** `[{ label, url }]`. Plain links; nothing is fetched or embedded server-side. */
     links: text("links", { mode: "json" }).$type<{ label: string; url: string }[]>().notNull().default([]),
+    /**
+     * A hands-on task with acceptance criteria. Null on a read-only lesson.
+     *
+     * Optional rather than required, so the hand-written courses that predate the builder keep
+     * working unchanged - and so an author can add one if they want, which is why this lives on
+     * the shared topic rather than on a parallel "generated topic" table.
+     */
+    practice: text("practice", { mode: "json" }).$type<unknown>(),
+    /**
+     * A graded test. Null means the lesson is finished by the learner saying so, which is how
+     * every course worked before the builder existed; present means it is finished by passing.
+     */
+    test: text("test", { mode: "json" }).$type<unknown>(),
     estMinutes: integer("est_minutes").notNull().default(10),
     position: integer("position").notNull().default(0),
   },
@@ -549,3 +564,238 @@ export const courseProgress = sqliteTable(
   },
   (t) => [primaryKey({ columns: [t.userId, t.topicId] }), index("course_progress_course_idx").on(t.userId, t.courseId)],
 );
+
+// ---------------------------------------------------------------------------
+// AI course builder (docs/ai-course-builder.md)
+// ---------------------------------------------------------------------------
+
+/**
+ * What the admin said this learner is *for*, set during onboarding.
+ *
+ * One row per learner, replaced wholesale when edited. It is the half of the gap map that does not
+ * come from the test: the assessment can show that someone cannot deploy anything, but only a
+ * person knows that this hire was brought in to do Laravel and that DevOps is the thing that
+ * matters most this quarter.
+ */
+export const learnerPriorities = sqliteTable("learner_priorities", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  /** Free text: "Backend Engineer - Laravel", "DevOps". Used as context, never matched on. */
+  targetRole: text("target_role").notNull().default(""),
+  /** One entry per must-have skill; weight is high, medium or low. */
+  mustHave: text("must_have", { mode: "json" })
+    .$type<{ skill: string; weight: "high" | "medium" | "low" }[]>()
+    .notNull()
+    .default([]),
+  /** Skills to leave alone. Still recorded as gaps; simply never turned into a course. */
+  skip: text("skip", { mode: "json" }).$type<string[]>().notNull().default([]),
+  deadlineWeeks: integer("deadline_weeks"),
+  /** How many courses one run may generate. Guards both the learner's time and the AI bill. */
+  courseCap: integer("course_cap").notNull().default(5),
+  /** Off by default: a generated course is a draft until somebody has looked at it. */
+  autoPublish: integer("auto_publish", { mode: "boolean" }).notNull().default(false),
+  updatedBy: text("updated_by"),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+/**
+ * One thing this learner cannot yet do, and how sure we are.
+ *
+ * Evidence is kept rather than only the score, because the learner is shown *why* a course was
+ * added to their path, and "you missed 4 of 5 questions on server deployment" is a reason where
+ * "severity 0.8" is a number.
+ */
+export const skillGaps = sqliteTable(
+  "skill_gaps",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    /** Null for a gap that came only from the admin's priorities, before any assessment. */
+    assessmentId: text("assessment_id").references(() => assessments.id, { onDelete: "set null" }),
+    skill: text("skill").notNull(),
+    /** 0-1. How badly this is missing, from the items that touched it. */
+    severity: real("severity").notNull(),
+    /** Which items were missed and why, in words. Shown to the learner. */
+    evidence: text("evidence", { mode: "json" })
+      .$type<{ summary: string; itemIds: string[]; missed: number; asked: number }>()
+      .notNull(),
+    /** admin_priority, ai_detected, or both when the two agreed. */
+    source: text("source").$type<"admin_priority" | "ai_detected" | "both">().notNull(),
+    priorityScore: real("priority_score").notNull(),
+    /** True when the admin's skip list covers it: recorded, deliberately not taught. */
+    skipped: integer("skipped", { mode: "boolean" }).notNull().default(false),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [
+    index("skill_gaps_user_idx").on(t.userId, t.priorityScore),
+    index("skill_gaps_assessment_idx").on(t.assessmentId),
+  ],
+);
+
+/** One run of the builder for one learner. Re-running supersedes rather than edits. */
+export const learningPaths = sqliteTable(
+  "learning_paths",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    assessmentId: text("assessment_id").references(() => assessments.id, { onDelete: "set null" }),
+    status: text("status")
+      .$type<"analysing" | "researching" | "writing" | "reviewing" | "ready" | "failed" | "budget_reached">()
+      .notNull(),
+    /** What the UI shows while it works: "Writing module 2 of 4". Plain, already-safe text. */
+    progressNote: text("progress_note").notNull().default(""),
+    failureReason: text("failure_reason"),
+    /** Superseded when a newer run finishes. Only one path is current per learner. */
+    current: integer("current", { mode: "boolean" }).notNull().default(false),
+    tokensUsed: integer("tokens_used").notNull().default(0),
+    searchCalls: integer("search_calls").notNull().default(0),
+    createdAt: integer("created_at").notNull(),
+    completedAt: integer("completed_at"),
+  },
+  (t) => [index("learning_paths_user_idx").on(t.userId, t.current)],
+);
+
+/** One course on a path, in order, with the reason it is there. */
+export const pathItems = sqliteTable(
+  "path_items",
+  {
+    id: text("id").primaryKey(),
+    pathId: text("path_id")
+      .notNull()
+      .references(() => learningPaths.id, { onDelete: "cascade" }),
+    courseId: text("course_id").references(() => courses.id, { onDelete: "cascade" }),
+    gapId: text("gap_id").references(() => skillGaps.id, { onDelete: "set null" }),
+    position: integer("position").notNull(),
+    /** How this course got here: an existing one, one built earlier, or one built just now. */
+    source: text("source").$type<"unlock" | "reuse" | "generated">().notNull(),
+    /** "You missed 4 of 5 questions on server deployment; DevOps is marked High priority." */
+    reason: text("reason").notNull(),
+  },
+  (t) => [index("path_items_path_idx").on(t.pathId, t.position)],
+);
+
+/**
+ * The AI-built half of a course.
+ *
+ * A generated course is a row in `courses` like any other - same editor, same renderer, same
+ * progress. This table is what is true *about* it: which gap it answers, how the review scored it,
+ * and whether it belongs to one learner or has been promoted to the catalogue.
+ */
+export const generatedCourses = sqliteTable(
+  "generated_courses",
+  {
+    courseId: text("course_id")
+      .primaryKey()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    skill: text("skill").notNull(),
+    /** Who it was built for. Null once promoted: a catalogue course belongs to nobody. */
+    userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
+    scope: text("scope").$type<"learner" | "global">().notNull().default("learner"),
+    status: text("status")
+      .$type<"draft" | "pending_review" | "published" | "rejected" | "needs_review">()
+      .notNull(),
+    /** 1-5 overall from the review pass; null while it is still being written. */
+    reviewScore: real("review_score"),
+    reviewDetail: text("review_detail", { mode: "json" }).$type<unknown>(),
+    promptVersion: text("prompt_version").notNull().default(""),
+    approvedBy: text("approved_by"),
+    approvedAt: integer("approved_at"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [
+    index("generated_courses_skill_idx").on(t.skill, t.scope),
+    index("generated_courses_status_idx").on(t.status),
+  ],
+);
+
+/**
+ * Every URL a generated course cites, and what happened when it was last fetched.
+ *
+ * Separate from the topic that cites it so the weekly link check has one place to walk, and so a
+ * link that dies can be found without opening every course.
+ */
+export const courseSources = sqliteTable(
+  "course_sources",
+  {
+    id: text("id").primaryKey(),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    topicId: text("topic_id").references(() => courseTopics.id, { onDelete: "cascade" }),
+    url: text("url").notNull(),
+    kind: text("kind").$type<"article" | "docs" | "video">().notNull(),
+    title: text("title").notNull().default(""),
+    httpStatus: integer("http_status"),
+    verifiedAt: integer("verified_at"),
+    /** Set by the weekly check when a link stops resolving. */
+    deadSince: integer("dead_since"),
+  },
+  (t) => [index("course_sources_course_idx").on(t.courseId), index("course_sources_dead_idx").on(t.deadSince)],
+);
+
+/**
+ * Every decision the builder made, for the admin who has to answer "why is this course here".
+ *
+ * Deliberately not the audit log: that one is about people doing things. This is about the model
+ * doing things, it is far chattier, and mixing them would drown the human trail.
+ */
+export const aiAuditLog = sqliteTable(
+  "ai_audit_log",
+  {
+    id: text("id").primaryKey(),
+    pathId: text("path_id").references(() => learningPaths.id, { onDelete: "cascade" }),
+    courseId: text("course_id").references(() => courses.id, { onDelete: "set null" }),
+    /** gap_analysis, match, plan, search, verify, write, review or promote. */
+    step: text("step").notNull(),
+    promptVersion: text("prompt_version").notNull().default(""),
+    model: text("model").notNull().default(""),
+    /** Counts and scores - never a prompt body and never a learner's answers. */
+    detail: text("detail", { mode: "json" }).$type<unknown>(),
+    inputTokens: integer("input_tokens").notNull().default(0),
+    outputTokens: integer("output_tokens").notNull().default(0),
+    actorId: text("actor_id"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("ai_audit_path_idx").on(t.pathId, t.createdAt)],
+);
+
+/**
+ * Keys for the outside world the course builder reaches into: a web search provider and YouTube.
+ *
+ * A single row, like `ai_settings`. Both secrets are sealed with the same AES-256-GCM box as the AI
+ * credential and are never returned from a route — only the last four characters, the same
+ * affordance that lets an admin tell two keys apart without either being readable.
+ *
+ * Separate from `ai_settings` rather than four more columns on it, because these answer a different
+ * question. `ai_settings` is "which model writes"; this is "where the facts come from", and it is
+ * the half that decides whether a course cites real pages or invented ones.
+ */
+export const researchSettings = sqliteTable("research_settings", {
+  id: text("id").primaryKey(),
+  /** Null until a provider is chosen. Generation refuses to run while it is null. */
+  provider: text("provider").$type<"tavily" | "brave" | "serper">(),
+  searchCiphertext: text("search_ciphertext"),
+  searchIv: text("search_iv"),
+  searchTag: text("search_tag"),
+  searchHint: text("search_hint"),
+  youtubeCiphertext: text("youtube_ciphertext"),
+  youtubeIv: text("youtube_iv"),
+  youtubeTag: text("youtube_tag"),
+  youtubeHint: text("youtube_hint"),
+  /**
+   * The ceiling for one generation run.
+   *
+   * Per run rather than per month: a runaway loop is the failure worth stopping, and it announces
+   * itself inside a single run. A monthly cap would let one bad run burn the month's budget before
+   * anything noticed.
+   */
+  budgetTokens: integer("budget_tokens").notNull().default(400_000),
+  budgetSearches: integer("budget_searches").notNull().default(60),
+  updatedBy: text("updated_by"),
+  updatedAt: integer("updated_at").notNull(),
+});
