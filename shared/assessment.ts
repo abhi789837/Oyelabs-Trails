@@ -271,9 +271,67 @@ export type AssessmentStatusResponse = z.infer<typeof assessmentStatusResponseSc
 // Taking the test (brief §9.5)
 // ---------------------------------------------------------------------------
 
+/**
+ * What the learner agreed to be monitored by.
+ *
+ * Bumped whenever the wording of the consent screen changes in a way that changes what is being
+ * agreed to. A stored consent at an older version does not count and the learner is asked again —
+ * the only honest behaviour when the thing they said yes to has changed.
+ */
+export const CONSENT_POLICY_VERSION = "2026-09-proctoring-v1";
+
+/**
+ * Which permissions were actually granted, as facts rather than promises.
+ *
+ * The client sets these from the real state — `getUserMedia` resolved with a live track, the
+ * fullscreen request succeeded — not from a checkbox. A record saying camera was granted when it
+ * was not is worse than no record, because it is evidence of something that did not happen.
+ */
+export const consentPermissionsSchema = z.object({
+  camera: z.boolean(),
+  microphone: z.boolean(),
+  fullscreen: z.boolean(),
+  tabMonitoring: z.boolean(),
+});
+export type ConsentPermissions = z.infer<typeof consentPermissionsSchema>;
+
+/**
+ * The consent payload. **One schema, imported by both sides**, so the field names cannot drift —
+ * which is how this route came to be broken in the first place.
+ *
+ * `permissions` and `policyVersion` are optional so that a client which predates them still
+ * consents successfully; the record then simply says less. `agreed` is not optional, and it must
+ * be exactly `true` rather than merely truthy.
+ */
 export const consentRequestSchema = z.object({
   agreed: z.literal(true, { error: "Consent is required before the assessment can start." }),
+  permissions: consentPermissionsSchema.optional(),
+  policyVersion: z.string().trim().max(60).optional(),
 });
+export type ConsentRequest = z.infer<typeof consentRequestSchema>;
+
+/**
+ * The start payload.
+ *
+ * Empty in the ordinary flow, because consent was recorded by the call before it. `consent` is
+ * accepted inline so a single call also works — belt and braces against exactly the failure this
+ * schema's history is about: a client that forgets to consent first cannot silently produce a 400.
+ */
+export const startRequestSchema = z.object({
+  consent: consentRequestSchema.optional(),
+});
+export type StartRequest = z.infer<typeof startRequestSchema>;
+
+/** What the pre-flight screen needs to know before it asks again. */
+export const consentStatusSchema = z.object({
+  recorded: z.boolean(),
+  /** Null when nothing is recorded, or when the record predates version tracking. */
+  policyVersion: z.string().nullable(),
+  recordedAt: z.number().nullable(),
+  /** True when a record exists but is out of date, so the learner is asked again. */
+  stale: z.boolean(),
+});
+export type ConsentStatus = z.infer<typeof consentStatusSchema>;
 
 export const startResponseSchema = z.object({
   deadlineAt: z.number(),

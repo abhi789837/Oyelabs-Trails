@@ -2,13 +2,17 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { and, desc, eq } from "drizzle-orm";
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyRequest } from "fastify";
 import { z } from "zod";
 
 import { BODY_LIMIT_SNAPSHOT } from "../../../shared/api";
 import {
   answerRequestSchema,
+  CONSENT_POLICY_VERSION,
   consentRequestSchema,
+  startRequestSchema,
+  type ConsentRequest,
+  type ConsentStatus,
   DEFAULT_TIME_LIMIT_MIN,
   EXPLAIN_BUDGET_MIN,
   heartbeatRequestSchema,
@@ -112,12 +116,30 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
    */
   app.post("/api/assessment/:id/consent", async (request) => {
     const { assessment, user } = load(app, request, "ready");
-    parseOrThrow(consentRequestSchema, request.body);
+    const body = parseOrThrow(consentRequestSchema, request.body);
 
-    if (!assessment.consentAt) {
-      app.db.update(schema.assessments).set({ consentAt: now() }).where(eq(schema.assessments.id, assessment.id)).run();
-    }
-    return { ok: true, userId: user.id };
+    recordConsent(app, request, assessment.id, user.id, body);
+    return { ok: true, userId: user.id, policyVersion: CONSENT_POLICY_VERSION };
+  });
+
+  /**
+   * Whether this learner has already consented to this attempt, and whether it still counts.
+   *
+   * So the pre-flight screen can say "Consent recorded" after a reload instead of asking a learner
+   * to agree to the same thing twice — and so it asks again, honestly, when the wording has
+   * changed underneath a record they gave months ago.
+   */
+  app.get("/api/assessment/:id/consent", async (request): Promise<ConsentStatus> => {
+    const { assessment } = load(app, request, "any");
+    const row = app.db
+      .select()
+      .from(schema.assessmentConsents)
+      .where(eq(schema.assessmentConsents.assessmentId, assessment.id))
+      .get();
+
+    if (!row) return { recorded: false, policyVersion: null, recordedAt: null, stale: false };
+    const stale = row.policyVersion !== CONSENT_POLICY_VERSION;
+    return { recorded: !stale, policyVersion: row.policyVersion, recordedAt: row.updatedAt, stale };
   });
 
   /**
@@ -125,8 +147,16 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
    * display only, and every later request re-checks the deadline (§9.4).
    */
   app.post("/api/assessment/:id/start", async (request): Promise<StartResponse> => {
-    const { assessment } = load(app, request, "ready");
-    if (!assessment.consentAt) throw badRequest("Consent is required before starting.");
+    const { assessment, user } = load(app, request, "ready");
+
+    /* Two ways to have consented, and the second one exists because of how this route broke: the
+       client shipped without ever calling `/consent`, and a `start` that only reads a stored flag
+       has no way to tell "they refused" from "the caller forgot". Accepting the payload inline
+       means a single call works, and a future client that forgets cannot reproduce the bug. */
+    const inline = parseOrThrow(startRequestSchema, request.body ?? {}).consent;
+    if (inline) recordConsent(app, request, assessment.id, user.id, inline);
+
+    if (!hasCurrentConsent(app, assessment)) throw badRequest("Consent is required before starting.");
 
     const blueprint = assessment.blueprint as Blueprint | null;
     if (!blueprint) throw badRequest("This assessment has no blueprint and cannot be started.");
@@ -386,6 +416,60 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
  * Someone else's assessment is a 404, not a 403 — the same rule as content (§6): the response
  * must not confirm that an id exists.
  */
+/**
+ * Writes a consent record, and the denormalised flag beside it.
+ *
+ * Idempotent: consenting twice updates the row rather than failing, because a learner who reloads
+ * the pre-flight screen and agrees again has not done anything wrong.
+ */
+function recordConsent(
+  app: FastifyInstance,
+  request: FastifyRequest,
+  assessmentId: string,
+  userId: string,
+  body: ConsentRequest,
+): void {
+  const timestamp = now();
+  const values = {
+    permissions: body.permissions ?? null,
+    policyVersion: body.policyVersion ?? CONSENT_POLICY_VERSION,
+    // `trustProxy` is set in production, so this is the learner's address rather than Caddy's.
+    ip: request.ip,
+    userAgent: String(request.headers["user-agent"] ?? "").slice(0, 400),
+    updatedAt: timestamp,
+  };
+
+  app.db
+    .insert(schema.assessmentConsents)
+    .values({ assessmentId, userId, createdAt: timestamp, ...values })
+    .onConflictDoUpdate({ target: schema.assessmentConsents.assessmentId, set: values })
+    .run();
+
+  app.db
+    .update(schema.assessments)
+    .set({ consentAt: timestamp })
+    .where(eq(schema.assessments.id, assessmentId))
+    .run();
+}
+
+/**
+ * Whether there is a consent that still counts.
+ *
+ * A record at an older policy version does not, because the learner agreed to different wording.
+ * `consent_at` alone is accepted for attempts consented to before this table existed — refusing
+ * those would lock out anyone mid-flow at the moment of the deploy, to enforce a version they were
+ * never shown.
+ */
+function hasCurrentConsent(app: FastifyInstance, assessment: typeof schema.assessments.$inferSelect): boolean {
+  const row = app.db
+    .select()
+    .from(schema.assessmentConsents)
+    .where(eq(schema.assessmentConsents.assessmentId, assessment.id))
+    .get();
+  if (row) return row.policyVersion === CONSENT_POLICY_VERSION;
+  return assessment.consentAt !== null;
+}
+
 function load(app: FastifyInstance, request: Parameters<typeof requireActiveUser>[0], expect: "ready" | "in_progress" | "any") {
   const user = requireActiveUser(request);
   const { id } = parseOrThrow(idParams, request.params);

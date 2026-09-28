@@ -799,3 +799,41 @@ export const researchSettings = sqliteTable("research_settings", {
   updatedBy: text("updated_by"),
   updatedAt: integer("updated_at").notNull(),
 });
+
+/**
+ * What a learner agreed to before being monitored, as a record rather than a flag.
+ *
+ * `assessments.consent_at` stays as the denormalised timestamp every other query already reads.
+ * This is the evidence behind it: which permissions were actually granted, which version of the
+ * wording they saw, and where from. India's DPDP Act asks for consent to employee monitoring to be
+ * demonstrable, and a boolean does not demonstrate anything.
+ *
+ * One row per attempt. Each attempt is its own `assessments` row, so a retake asks again —
+ * consenting once in March should not silently cover a re-test in September.
+ */
+export const assessmentConsents = sqliteTable(
+  "assessment_consents",
+  {
+    assessmentId: text("assessment_id")
+      .primaryKey()
+      .references(() => assessments.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    /** Null on a record written by a client that predates permission reporting. */
+    permissions: text("permissions", { mode: "json" }).$type<{
+      camera: boolean;
+      microphone: boolean;
+      fullscreen: boolean;
+      tabMonitoring: boolean;
+    } | null>(),
+    /** Compared against `CONSENT_POLICY_VERSION`; an older one is re-asked. */
+    policyVersion: text("policy_version"),
+    /** From `X-Forwarded-For` behind the proxy. Evidence of where the consent came from. */
+    ip: text("ip"),
+    userAgent: text("user_agent"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("assessment_consents_user_idx").on(t.userId)],
+);

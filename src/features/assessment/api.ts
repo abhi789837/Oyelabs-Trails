@@ -1,10 +1,15 @@
-import type {
-  AnswerRequest,
-  AssessmentStatusResponse,
-  IntegrityEventResponse,
-  MyAssessment,
-  NextItemResponse,
-  StartResponse,
+import {
+  CONSENT_POLICY_VERSION,
+  type AnswerRequest,
+  type AssessmentStatusResponse,
+  type ConsentPermissions,
+  type ConsentRequest,
+  type ConsentStatus,
+  type IntegrityEventResponse,
+  type MyAssessment,
+  type NextItemResponse,
+  type StartRequest,
+  type StartResponse,
 } from "@shared/assessment";
 
 import { api } from "@/api/client";
@@ -21,9 +26,29 @@ export const assessmentApi = {
 
   status: (id: string, signal?: AbortSignal) => api.get<AssessmentStatusResponse>(`/api/assessment/${id}/status`, signal),
 
-  consent: (id: string) => api.post<{ ok: true }>(`/api/assessment/${id}/consent`, { agreed: true }),
+  /**
+   * Records consent. **Must be awaited before `start`** — `start` reads the record back, and the
+   * absence of this call is what broke the whole flow (docs/bugs/assessment-consent.md).
+   */
+  consent: (id: string, permissions?: ConsentPermissions) =>
+    api.post<{ ok: true }>(`/api/assessment/${id}/consent`, {
+      agreed: true,
+      permissions,
+      policyVersion: CONSENT_POLICY_VERSION,
+    } satisfies ConsentRequest),
 
-  start: (id: string) => api.post<StartResponse>(`/api/assessment/${id}/start`),
+  /** Whether consent is already on file for this attempt, and whether it is still current. */
+  consentStatus: (id: string, signal?: AbortSignal) =>
+    api.get<ConsentStatus>(`/api/assessment/${id}/consent`, signal),
+
+  /**
+   * Starts the clock. The consent payload rides along so that a single call is enough — belt and
+   * braces against a caller that skips `consent`, which is exactly how this broke.
+   */
+  start: (id: string, permissions?: ConsentPermissions) =>
+    api.post<StartResponse>(`/api/assessment/${id}/start`, {
+      consent: { agreed: true, permissions, policyVersion: CONSENT_POLICY_VERSION },
+    } satisfies StartRequest),
 
   next: (id: string, signal?: AbortSignal) => api.get<NextItemResponse>(`/api/assessment/${id}/next`, signal),
 

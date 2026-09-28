@@ -48,6 +48,10 @@ export default function AssessmentPage() {
 
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [calibration, setCalibration] = useState<CalibrationPose | null>(null);
+  /* Kept apart from `error`/`phase`: a failed start leaves the pre-flight screen usable, so the
+     learner retries the button instead of redoing the camera check. */
+  const [starting, setStarting] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
 
   const [next, setNext] = useState<NextItemResponse | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -206,16 +210,32 @@ export default function AssessmentPage() {
     return (
       <PreFlight
         assessmentId={assessment.id}
+        busy={starting}
+        error={startError}
         onCancel={() => navigate("/plan")}
-        onReady={async (pose, mediaStream) => {
+        onReady={async (pose, mediaStream, permissions) => {
+          if (starting) return;
           setCalibration(pose);
           setStream(mediaStream);
+          setStarting(true);
+          setStartError(null);
           try {
-            await assessmentApi.start(assessment.id);
+            /* **Consent first, and awaited.** This call was missing entirely, which is why every
+               learner hit "Consent is required before starting" — the server records consent here
+               and `start` reads it back. The payload also goes inline on `start` below, so even a
+               failure between the two calls cannot strand somebody on this screen. */
+            await assessmentApi.consent(assessment.id, permissions);
+            await assessmentApi.start(assessment.id, permissions);
             setPhase("taking");
           } catch (err) {
-            setError(err instanceof ApiRequestError ? err.message : "The assessment could not be started.");
-            setPhase("error");
+            /* Stays on the pre-flight screen rather than dropping to the error phase: the stream
+               and the calibration are still good, so the learner presses the button again instead
+               of walking through the camera check a second time. */
+            setStartError(
+              err instanceof ApiRequestError ? err.message : "The assessment could not be started. Try again.",
+            );
+          } finally {
+            setStarting(false);
           }
         }}
       />

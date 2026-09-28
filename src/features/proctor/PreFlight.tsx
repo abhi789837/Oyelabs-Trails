@@ -2,6 +2,9 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { motion, useReducedMotion } from "motion/react";
 import { Check, CircleDashed, Maximize, Monitor, ScanFace, ShieldAlert, TriangleAlert, Volume2, X } from "lucide-react";
 
+import type { ConsentPermissions } from "@shared/assessment";
+
+import { FormAlert } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
 import { cardVariants } from "@/components/ui/card";
 import { fadeUp } from "@/lib/motion";
@@ -42,12 +45,22 @@ const STEPS: { id: Step; label: string }[] = [
 
 export interface PreFlightProps {
   assessmentId: string;
-  /** Called once every check passes. The live stream is handed over rather than re-requested. */
-  onReady: (calibration: CalibrationPose, stream: MediaStream) => void;
+  /**
+   * Called once every check passes. The live stream is handed over rather than re-requested.
+   *
+   * `permissions` are read off the real objects — a live track, `document.fullscreenElement` — not
+   * from the checkboxes. A consent record saying the camera was granted when it was not is worse
+   * than no record, because it is evidence of something that did not happen.
+   */
+  onReady: (calibration: CalibrationPose, stream: MediaStream, permissions: ConsentPermissions) => void;
+  /** Set while the caller is talking to the server, so the start button can say so. */
+  busy?: boolean;
+  /** The server's own message when starting failed, shown with a retry. */
+  error?: string | null;
   onCancel: () => void;
 }
 
-export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
+export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error = null }: PreFlightProps) {
   const reduceMotion = useReducedMotion();
   const [step, setStep] = useState<Step>("consent");
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -112,16 +125,28 @@ export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
   }, [step, stream]);
 
   const enterFullscreen = useCallback(async () => {
-    if (!calibration || !stream) return;
+    if (!calibration || !stream || busy) return;
     try {
       await document.documentElement.requestFullscreen();
     } catch {
       // Some browsers refuse (an extension, a kiosk policy). The engine reports and re-prompts
       // rather than trapping the learner on this screen forever.
     }
+
+    /* Read, not assumed. A track that was granted and then stopped is not a granted camera, and
+       `requestFullscreen` can resolve without the document actually being fullscreen. */
+    const permissions: ConsentPermissions = {
+      camera: stream.getVideoTracks().some((track) => track.readyState === "live"),
+      microphone: stream.getAudioTracks().some((track) => track.readyState === "live"),
+      fullscreen: document.fullscreenElement !== null,
+      // Not a browser permission: it is the thing being agreed to, and the engine starts it on the
+      // next screen. True here means "they were told and said yes", which is what consent is.
+      tabMonitoring: true,
+    };
+
     handedOverRef.current = true;
-    onReady(calibration, stream);
-  }, [calibration, onReady, stream]);
+    onReady(calibration, stream, permissions);
+  }, [busy, calibration, onReady, stream]);
 
   const blocked = environment.coarsePointer || environment.narrowViewport;
   const index = STEPS.findIndex((s) => s.id === step);
@@ -186,7 +211,13 @@ export function PreFlight({ assessmentId, onReady, onCancel }: PreFlightProps) {
         )}
 
         {step === "fullscreen" && (
-          <FullscreenStep assessmentId={assessmentId} onStart={() => void enterFullscreen()} onCancel={onCancel} />
+          <FullscreenStep
+            assessmentId={assessmentId}
+            busy={busy}
+            error={error}
+            onStart={() => void enterFullscreen()}
+            onCancel={onCancel}
+          />
         )}
       </motion.div>
     </div>
@@ -680,10 +711,14 @@ function EnvironmentStep({
 
 function FullscreenStep({
   assessmentId,
+  busy,
+  error,
   onStart,
   onCancel,
 }: {
   assessmentId: string;
+  busy: boolean;
+  error: string | null;
   onStart: () => void;
   onCancel: () => void;
 }) {
@@ -711,11 +746,20 @@ function FullscreenStep({
 
       <p className="mt-5 font-mono text-xs text-muted-foreground">Attempt {assessmentId}</p>
 
+      {/* The server's own words, not a generic apology. If it said the assessment has not been
+          released, that is what the learner needs to read — and pressing the button again is a
+          reasonable thing to try, so it stays pressable. */}
+      {error && (
+        <div className="mt-5">
+          <FormAlert>{error}</FormAlert>
+        </div>
+      )}
+
       <StepActions
         primary={
-          <Button onClick={onStart}>
-            <Maximize aria-hidden="true" />
-            Enter fullscreen and start
+          <Button onClick={onStart} loading={busy}>
+            {!busy && <Maximize aria-hidden="true" />}
+            {busy ? "Starting…" : error ? "Try again" : "Enter fullscreen and start"}
           </Button>
         }
         secondary={
