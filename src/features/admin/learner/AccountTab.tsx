@@ -25,7 +25,7 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
   const [busy, setBusy] = useState<Action | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const [issued, setIssued] = useState<{ username: string; password: string } | null>(null);
+  const [issued, setIssued] = useState<{ username: string; displayName: string; password: string } | null>(null);
 
   const run = async (action: Action, work: () => Promise<void>) => {
     setBusy(action);
@@ -51,7 +51,9 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
     if (!ok) return;
     void run("password", async () => {
       const result = await adminApi.resetPassword(user.id);
-      if (result.temporaryPassword) setIssued({ username: user.username, password: result.temporaryPassword });
+      if (result.temporaryPassword) {
+        setIssued({ username: user.username, displayName: user.displayName, password: result.temporaryPassword });
+      }
       else setNotice("Password reset. They must choose a new one at their next sign-in.");
     });
   };
@@ -119,7 +121,9 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
       {issued && (
         <TemporaryPasswordNotice
           className="mt-6"
+          kind="reset"
           username={issued.username}
+          displayName={issued.displayName}
           password={issued.password}
           onDismiss={() => setIssued(null)}
         />

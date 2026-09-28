@@ -96,7 +96,7 @@ export default function AdminOnboardPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
-  const [created, setCreated] = useState<{ username: string; password: string } | null>(null);
+  const [created, setCreated] = useState<{ username: string; displayName: string; password: string } | null>(null);
   const [takenUsernames, setTakenUsernames] = useState<Set<string> | null>(null);
 
   // The existing roster, for the availability hint. A failure here is silent on purpose: the hint
@@ -162,8 +162,17 @@ export default function AdminOnboardPage() {
         },
         issueAssessment,
       });
-      if (result.temporaryPassword) {
-        setCreated({ username: result.user.username, password: result.temporaryPassword });
+      /* The server only returns a password it generated itself. When the admin typed one, it is
+         right here — and they still have to send it, so the same hand-off applies. Without this,
+         choosing "Set one now" silently skipped the invite step and dropped them on the People
+         list with nothing to copy. */
+      const toSend = result.temporaryPassword ?? (passwordMode === "set" ? password : null);
+      if (toSend) {
+        setCreated({
+          username: result.user.username,
+          displayName: result.user.displayName,
+          password: toSend,
+        });
         setUsername("");
         setDisplayName("");
         setPassword("");
@@ -199,7 +208,9 @@ export default function AdminOnboardPage() {
       {created && (
         <TemporaryPasswordNotice
           className="mt-6"
+          kind="new"
           username={created.username}
+          displayName={created.displayName}
           password={created.password}
           onDismiss={() => {
             setCreated(null);

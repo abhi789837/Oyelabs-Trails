@@ -52,7 +52,7 @@ export default function AdminPeoplePage() {
   const [users, setUsers] = useState<UserSummary[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [issued, setIssued] = useState<{ username: string; password: string } | null>(null);
+  const [issued, setIssued] = useState<{ username: string; displayName: string; password: string } | null>(null);
 
   /* A bulk action reloads when it finishes, by which time the component may be gone.
      `alive` is re-armed on every run, not just initialised once: React's StrictMode mounts, cleans
@@ -98,7 +98,9 @@ export default function AdminPeoplePage() {
       setBusyId(user.id);
       try {
         const result = await adminApi.resetPassword(user.id);
-        if (result.temporaryPassword) setIssued({ username: user.username, password: result.temporaryPassword });
+        if (result.temporaryPassword) {
+          setIssued({ username: user.username, displayName: user.displayName, password: result.temporaryPassword });
+        }
         await load();
       } catch (err) {
         setError(err instanceof ApiRequestError ? err.message : "Could not reset that password.");
@@ -321,7 +323,9 @@ export default function AdminPeoplePage() {
       {issued && (
         <TemporaryPasswordNotice
           className="mt-6"
+          kind="reset"
           username={issued.username}
+          displayName={issued.displayName}
           password={issued.password}
           onDismiss={() => setIssued(null)}
         />
