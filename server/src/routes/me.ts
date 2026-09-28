@@ -7,15 +7,19 @@ import type { EvaluationResult, MyEvaluation } from "../../../shared/assessment"
 import type { ManifestResponse, ProgressResponse } from "../../../shared/content";
 import { markInProgressRequestSchema } from "../../../shared/content";
 import type { NotificationsResponse } from "../../../shared/notifications";
+import type { WeekResponse } from "../../../shared/weeklyPlan";
+import { isWeekComplete } from "../../../shared/weeklyPlan";
 import { requireActiveUser } from "../auth/guards";
 import { filterManifest } from "../content/filter";
 import { currentPath } from "../builder/repo";
 import { completedTopicIds, coursesFor, getCourse, mayOpenCourse } from "../courses/repo";
 import { schema } from "../db";
-import { notFound, parseOrThrow } from "../lib/errors";
+import { badRequest, notFound, parseOrThrow } from "../lib/errors";
 import { now } from "../lib/ids";
 import { listNotifications, markAllRead, unreadCount } from "../lib/notify";
 import { allowedTopicIdsFor, latestPublishedPlan } from "../plans/repo";
+import { generateWeek, ensureWeek } from "../plans/weekly/generate";
+import { activeWeek, weekHistory, weekView } from "../plans/weekly/repo";
 import { getProgress, markInProgress } from "../progress/repo";
 
 export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
@@ -187,6 +191,62 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
     const user = requireActiveUser(request);
     markAllRead(app.db, user.id);
     return { ok: true };
+  });
+
+  // -------------------------------------------------------------------------
+  // This week
+  // -------------------------------------------------------------------------
+
+  /**
+   * The learner's current week.
+   *
+   * Generated here on the first read of a new week rather than by a scheduled job. There is no cron in
+   * this deployment, and adding one would mean somebody's Monday depended on a worker having woken up;
+   * generating on the visit means the week is always there when they look, and is never generated for
+   * a learner who is not looking. It is also how the existing 204-lesson plans become weekly ones
+   * without a migration script having to guess at anybody's priorities.
+   */
+  app.get("/api/me/week", async (request): Promise<WeekResponse> => {
+    const user = requireActiveUser(request);
+
+    const generated = await ensureWeek({ db: app.db, content: app.content, ai: app.ai, log: (m) => app.log.info(m) }, user.id);
+    const row = activeWeek(app.db, user.id);
+    if (!row) {
+      return { week: null, history: weekHistory(app.db, user.id), reason: generated?.reason ?? null };
+    }
+
+    return { week: weekView(app.db, app.content, user.id, row), history: weekHistory(app.db, user.id), reason: null };
+  });
+
+  /**
+   * "Plan my next week now."
+   *
+   * Gated on the red and Must-know lanes being clear, and deliberately not on Medium or Low: those are
+   * "as much as fits" and "skip if you like", and making either of them a gate would turn optional work
+   * into homework. The week rolls over on its own after seven days regardless; this is for somebody who
+   * finished on Thursday and wants the next one.
+   */
+  app.post("/api/me/week/next", async (request): Promise<WeekResponse> => {
+    const user = requireActiveUser(request);
+
+    const row = activeWeek(app.db, user.id);
+    if (row) {
+      const view = weekView(app.db, app.content, user.id, row);
+      if (!isWeekComplete(view.items)) {
+        throw badRequest("Finish this week's Do it now and Must know items first, and the next week will be ready.");
+      }
+    }
+
+    const result = await generateWeek(
+      { db: app.db, content: app.content, ai: app.ai, log: (m) => app.log.info(m) },
+      { userId: user.id, advance: true },
+    );
+    const next = activeWeek(app.db, user.id);
+    return {
+      week: next ? weekView(app.db, app.content, user.id, next) : null,
+      history: weekHistory(app.db, user.id),
+      reason: result.reason,
+    };
   });
 
   /** The learner's own plan. The admin's view of someone else's plan lives under /api/admin. */

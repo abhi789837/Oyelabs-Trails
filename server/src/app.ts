@@ -24,6 +24,7 @@ import { registerAdminLiveRoutes } from "./routes/admin/live";
 import { registerAdminOverviewRoutes } from "./routes/admin/overview";
 import { registerAdminPlanRoutes } from "./routes/admin/plans";
 import { registerAdminUserRoutes } from "./routes/admin/users";
+import { registerAdminWeekRoutes } from "./routes/admin/week";
 import { registerAssessmentRoutes } from "./routes/assessment";
 import { registerAuthRoutes } from "./routes/auth";
 import { registerContentRoutes } from "./routes/content";
@@ -172,6 +173,7 @@ export async function buildApp({
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
+  await app.register(registerAdminWeekRoutes);
   await app.register(registerAdminAiRoutes);
   await app.register(registerAdminCourseRoutes);
   await app.register(registerAdminBuilderRoutes);

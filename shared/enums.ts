@@ -52,6 +52,8 @@ export const aiPurposeSchema = z.enum([
   "course_plan",
   "course_write",
   "course_review",
+  /** Shaping one learner's week into the four lanes. Cheap and frequent, unlike the four above. */
+  "week_plan",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 

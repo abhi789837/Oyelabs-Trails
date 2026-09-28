@@ -39,6 +39,9 @@ export function getPriorities(db: Db, userId: string): LearnerPriorities {
     deadlineWeeks: row.deadlineWeeks,
     courseCap: row.courseCap,
     autoPublish: row.autoPublish,
+    hoursPerWeek: row.hoursPerWeek,
+    daysPerWeek: row.daysPerWeek,
+    weekStartsMonday: row.weekStartsMonday,
   };
 }
 
@@ -50,6 +53,9 @@ export function setPriorities(db: Db, userId: string, priorities: LearnerPriorit
     deadlineWeeks: priorities.deadlineWeeks,
     courseCap: priorities.courseCap,
     autoPublish: priorities.autoPublish,
+    hoursPerWeek: priorities.hoursPerWeek,
+    daysPerWeek: priorities.daysPerWeek,
+    weekStartsMonday: priorities.weekStartsMonday,
     updatedBy: actorId,
     updatedAt: now(),
   };

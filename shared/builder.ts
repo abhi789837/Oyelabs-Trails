@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+import {
+  DEFAULT_DAYS_PER_WEEK,
+  DEFAULT_HOURS_PER_WEEK,
+  MAX_DAYS_PER_WEEK,
+  MAX_HOURS_PER_WEEK,
+  MIN_DAYS_PER_WEEK,
+  MIN_HOURS_PER_WEEK,
+} from "./weeklyPlan";
+
 /**
  * The AI course builder's contracts — the shapes the model must return, and the shapes the UI
  * reads.
@@ -51,6 +60,17 @@ export const learnerPrioritiesSchema = z.object({
   deadlineWeeks: z.number().int().min(1).max(104).nullable().default(null),
   courseCap: z.number().int().min(1).max(20).default(5),
   autoPublish: z.boolean().default(false),
+  /**
+   * How much of their week this person actually has, and over how many days.
+   *
+   * The weekly plan is built to fit these two numbers, which is the whole reason "My plan" can say
+   * "14 h 30 min" instead of "190 h 50 min". The admin sets them at onboarding because only the
+   * admin knows whether this hire is on training full-time or fitting it around delivery.
+   */
+  hoursPerWeek: z.number().int().min(MIN_HOURS_PER_WEEK).max(MAX_HOURS_PER_WEEK).default(DEFAULT_HOURS_PER_WEEK),
+  daysPerWeek: z.number().int().min(MIN_DAYS_PER_WEEK).max(MAX_DAYS_PER_WEEK).default(DEFAULT_DAYS_PER_WEEK),
+  /** Off: a week starts the day it is generated. On: it starts on the Monday of that week. */
+  weekStartsMonday: z.boolean().default(false),
 });
 export type LearnerPriorities = z.infer<typeof learnerPrioritiesSchema>;
 
@@ -61,6 +81,9 @@ export const EMPTY_PRIORITIES: LearnerPriorities = {
   deadlineWeeks: null,
   courseCap: 5,
   autoPublish: false,
+  hoursPerWeek: DEFAULT_HOURS_PER_WEEK,
+  daysPerWeek: DEFAULT_DAYS_PER_WEEK,
+  weekStartsMonday: false,
 };
 
 // ---------------------------------------------------------------------------

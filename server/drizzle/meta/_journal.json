@@ -57,6 +57,13 @@
       "when": 1790588166216,
       "tag": "0007_thankful_malcolm_colcord",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1790594534426,
+      "tag": "0008_weekly_plan",
+      "breakpoints": true
     }
   ]
 }
