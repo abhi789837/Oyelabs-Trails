@@ -9,6 +9,7 @@ import { markInProgressRequestSchema } from "../../../shared/content";
 import type { NotificationsResponse } from "../../../shared/notifications";
 import { requireActiveUser } from "../auth/guards";
 import { filterManifest } from "../content/filter";
+import { currentPath } from "../builder/repo";
 import { completedTopicIds, coursesFor, getCourse, mayOpenCourse } from "../courses/repo";
 import { schema } from "../db";
 import { notFound, parseOrThrow } from "../lib/errors";
@@ -52,6 +53,18 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
   app.get("/api/me/courses", async (request) => {
     const user = requireActiveUser(request);
     return { courses: coursesFor(app.db, user.id) };
+  });
+
+  /**
+   * The learner's own path: what was added, in what order, and why.
+   *
+   * The reason on each item is the point. A course that appears without explanation reads as the
+   * platform deciding things about you; the same course with "you missed 4 of 5 questions on server
+   * deployment" reads as a consequence of something you did, which is what it is.
+   */
+  app.get("/api/me/path", async (request) => {
+    const user = requireActiveUser(request);
+    return { path: currentPath(app.db, user.id) };
   });
 
   app.get("/api/me/courses/:courseId", async (request) => {
