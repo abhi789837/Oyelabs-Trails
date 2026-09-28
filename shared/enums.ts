@@ -39,7 +39,20 @@ export const selectableProviderIds = ["anthropic-api", "openai-api", "claude-cli
 export const credentialStatusSchema = z.enum(["unverified", "verified", "failed"]);
 export type CredentialStatus = z.infer<typeof credentialStatusSchema>;
 
-export const aiPurposeSchema = z.enum(["blueprint", "item_critic", "evaluation", "verify"]);
+export const aiPurposeSchema = z.enum([
+  "blueprint",
+  "item_critic",
+  "evaluation",
+  "verify",
+  // The course builder's four calls. Separate purposes rather than one "builder", so the usage
+  // table can answer "what is the writing costing?" — which is the expensive one by an order of
+  // magnitude and the one worth tuning a model for.
+  "gap_analysis",
+  "course_match",
+  "course_plan",
+  "course_write",
+  "course_review",
+]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 
 /**
