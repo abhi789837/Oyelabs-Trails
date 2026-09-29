@@ -11,6 +11,7 @@ import { runVisibleTests, type LocalRunOutcome } from "@/lib/codeRunner";
 import { seededOrder } from "@/lib/shuffle";
 import { cn } from "@/lib/utils";
 
+import { clearDraft, readDraft, writeDraft } from "./draftStore";
 import { TimerRing } from "./TimerRing";
 
 /**
@@ -47,13 +48,25 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
   const [localRun, setLocalRun] = useState<LocalRunOutcome | null>(null);
   const [running, setRunning] = useState(false);
 
-  // Reset when the item changes: a stale answer must never carry across.
+  /* Reset when the item changes: a stale answer must never carry across.
+  
+     A draft for *this* item is restored, though. The item is re-served after a refresh, so without
+     this a learner who reloads mid-question loses five to ten minutes of typing — which is not an
+     integrity concern or a proctoring one, just a way of measuring somebody lower than they are. */
   useEffect(() => {
-    setSelected([]);
-    setText("");
-    setCode(item.payload.starterCode ?? "");
+    const draft = readDraft(item.id);
+    setSelected(draft?.selected ?? []);
+    setText(draft?.text ?? "");
+    setCode(draft?.code ?? item.payload.starterCode ?? "");
     setLocalRun(null);
   }, [item.id, item.payload.starterCode]);
+
+  /* Saved as they type, debounced. `sessionStorage` is synchronous and this is a few kilobytes, so
+     the debounce is about not writing on every keystroke rather than about cost. */
+  useEffect(() => {
+    const timer = window.setTimeout(() => writeDraft(item.id, { code, text, selected }), 400);
+    return () => window.clearTimeout(timer);
+  }, [item.id, code, text, selected]);
 
   const multi = item.kind === "multi";
   const options = item.payload.options ?? [];
@@ -120,9 +133,25 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
 
   const handleSubmit = () => {
     if (submitting) return;
+    // The answer is on its way to the server, so the draft has done its job.
+    clearDraft(item.id);
     if (options.length > 0) onSubmit({ selected });
     else if (item.kind === "code") onSubmit({ code });
     else onSubmit({ text });
+  };
+
+  /**
+   * "I don't know yet".
+   *
+   * Sent as an explicit flag rather than as an empty answer, because they are different facts: a
+   * blank box is somebody who ran out of time, and this is somebody telling us where their gap is.
+   * The staircase does not move down for it and the course builder reads it as the strongest
+   * evidence it gets — see `server/src/assessment/selector.ts`.
+   */
+  const handleUnknown = () => {
+    if (submitting) return;
+    clearDraft(item.id);
+    onSubmit({ unknown: true });
   };
 
   const handleRunTests = async () => {
@@ -225,7 +254,11 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
       )}
 
       {item.kind === "code" && (
-        <div className="mt-6" onPaste={blockPaste}>
+        /* No `onPaste={blockPaste}` here any more. The editor marks itself as the learner's
+           workspace and the proctoring engine judges a paste by whether the text came off this
+           page — so moving your own code around works, and pasting in an answer from another
+           window is still flagged. Blocking it here as well would defeat both halves. */
+        <div className="mt-6">
           <CodeEditor value={code} onChange={setCode} fileName={`${item.payload.functionName}.js`} />
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <Button variant="outline" size="sm" onClick={() => void handleRunTests()} loading={running}>
@@ -256,8 +289,14 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
       )}
 
       <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-4 border-t pt-6">
-        <Button onClick={handleSubmit} loading={submitting} size="lg">
-          {answered ? "Submit and continue" : "Skip this question"}
+        <Button onClick={handleSubmit} loading={submitting} size="lg" disabled={!answered}>
+          Submit and continue
+        </Button>
+
+        {/* Deliberately a plain, unalarming button rather than a "skip". Saying you have not met
+            something is a useful answer, not a forfeit, and it should not look like giving up. */}
+        <Button onClick={handleUnknown} variant="outline" disabled={submitting}>
+          I don't know yet
         </Button>
 
         <div className="flex items-center gap-3">
@@ -268,7 +307,9 @@ export function ItemRunner({ item, secondsLeft, submitting, onSubmit }: ItemRunn
         </div>
 
         <p className="w-full text-xs text-muted-foreground">
-          You cannot come back to a question once you move on, and you will not be told whether you were right.
+          "I don't know yet" is not a wrong answer — it tells us where to start, and nothing is marked
+          down for it. You cannot come back to a question once you move on, and you will not be told
+          whether you were right.
         </p>
       </div>
     </div>

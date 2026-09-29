@@ -1,5 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, type KeyboardEvent } from "react";
 
+import { editorScopeProps } from "@/features/proctor/editorScope";
+
 interface CodeEditorProps {
   value: string;
   onChange: (value: string) => void;
@@ -10,6 +12,11 @@ interface CodeEditorProps {
 /**
  * A plain <textarea> styled as an editor: monospace, line-number gutter, and an
  * editor-dark background in both themes. Tab indents; Esc then Tab leaves the editor.
+ *
+ * Marked as the learner's own workspace with `data-proctor-editor`, which is what tells the
+ * proctoring engine that typing, selecting, copying and cutting in here are ordinary work rather
+ * than integrity events. Pasting is still judged — see `features/proctor/editorScope.ts` — but on
+ * where the text came from rather than on where the caret is.
  */
 export const CodeEditor = forwardRef<HTMLTextAreaElement, CodeEditorProps>(function CodeEditor(
   { value, onChange, fileName = "solution.js", describedBy },
@@ -59,7 +66,10 @@ export const CodeEditor = forwardRef<HTMLTextAreaElement, CodeEditorProps>(funct
   };
 
   return (
-    <div className="overflow-hidden rounded-md border border-editor-gutter bg-editor text-editor-foreground focus-within:outline-solid focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-trailmark-strong">
+    <div
+      {...editorScopeProps()}
+      className="overflow-hidden rounded-md border border-editor-gutter bg-editor text-editor-foreground focus-within:outline-solid focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-trailmark-strong"
+    >
       <div className="flex items-center justify-between border-b border-white/10 bg-editor-gutter px-3 py-1.5 font-mono text-xs text-editor-foreground/60">
         <span>{fileName}</span>
         <span>JavaScript</span>

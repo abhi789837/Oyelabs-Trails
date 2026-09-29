@@ -1,3 +1,4 @@
+import { isInsideEditor, rememberCopiedText, wasCopiedFromPage } from "./editorScope";
 import {
   DEVTOOLS_SIZE_DELTA_PX,
   MOUSE_LEFT_SUSTAINED_MS,
@@ -128,21 +129,48 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
   on(document, "fullscreenchange", onFullscreenChange);
   on(document, "webkitfullscreenchange", onFullscreenChange);
 
-  // --- Copy / cut, prevented: immediate, hard ------------------------------
+  /* --- Copy / cut: immediate, hard, **except inside the editor** ------------
+
+     Copying out of the page is worth a warning. Copying a line of your own code so you can move it
+     three lines up is not, and it used to fire the same hard warning — three of which end the
+     assessment. A learner editing fluently in the hands-on section could be terminated for editing
+     fluently. See `editorScope.ts`.
+
+     What is copied inside the editor is fingerprinted, so that pasting it back can be recognised as
+     a move rather than an import. */
   const onCopyOrCut = (event: ClipboardEvent) => {
+    if (isInsideEditor(event.target)) {
+      rememberCopiedText(String(document.getSelection() ?? ""));
+      return; // Not prevented, not reported. It is their own work.
+    }
     event.preventDefault();
     emit("copy_cut_attempt", { action: event.type });
   };
   on(document, "copy", onCopyOrCut);
   on(document, "cut", onCopyOrCut);
 
-  // --- Paste, prevented: immediate, hard -----------------------------------
-  // Paste is blocked everywhere, code items included. The brief left that configurable, but a code
-  // item is precisely where a pasted answer is worth the most, so this build has no exception.
+  /* --- Paste: immediate, hard, unless it came off this page ----------------
+
+     The one that genuinely needs judgement, because "paste" covers both moving your own code around
+     and dropping in an answer from another window. Told apart by what is on the clipboard rather
+     than by where the caret is: text fingerprinted on the way out of this page is a move and is
+     allowed; anything else is still blocked and still flagged, editor or not.
+
+     That is the distinction the blanket rule was always reaching for. A learner cannot paste in a
+     solution from a second monitor, and can still cut and paste their own function. */
   on(document, "paste", (event: ClipboardEvent) => {
+    const pasted = event.clipboardData?.getData("text/plain") ?? "";
+
+    if (isInsideEditor(event.target) && wasCopiedFromPage(pasted)) return;
+
     event.preventDefault();
     const target = event.target as HTMLElement | null;
-    emit("paste_attempt", { into: target?.tagName?.toLowerCase() ?? "unknown" });
+    emit("paste_attempt", {
+      into: target?.tagName?.toLowerCase() ?? "unknown",
+      // Which of the two it was, for the admin reading the integrity feed. Never the text itself.
+      inEditor: isInsideEditor(event.target),
+      chars: pasted.length,
+    });
   });
 
   // --- PrintScreen: immediate, hard ----------------------------------------
@@ -161,7 +189,8 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
   });
   on(document, "selectstart", (event: Event) => {
     const target = event.target as HTMLElement | null;
-    // Selection inside the learner's own answer field is normal and must keep working.
+    // Selection inside the learner's own answer field, or anywhere in the editor, is normal work.
+    if (isInsideEditor(event.target)) return;
     if (target?.closest("input, textarea, [contenteditable=true], [data-proctor-allow-select]")) return;
     event.preventDefault();
     emit("text_selection_attempt");
