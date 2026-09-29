@@ -11,6 +11,8 @@ import {
   type SkillGapView,
 } from "@shared/builder";
 
+import type { TargetsRequest } from "@shared/targets";
+
 import { ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +25,7 @@ import { cn, formatTimestamp } from "@/lib/utils";
 import { adminWeekApi } from "@/features/plan/api";
 import { builderApi } from "../builder/api";
 import { PrioritiesFields } from "../builder/PrioritiesFields";
+import { TargetsFields } from "../builder/TargetsFields";
 
 /** How often to re-read while a run is going. Generation is minutes, so this is not a hot loop. */
 const POLL_MS = 5000;
@@ -41,6 +44,16 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
   const [priorities, setPriorities] = useState<LearnerPriorities>(EMPTY_PRIORITIES);
   const [weekStale, setWeekStale] = useState(false);
   const [rebuilding, setRebuilding] = useState(false);
+  const [savingTargets, setSavingTargets] = useState(false);
+  const [targets, setTargets] = useState<TargetsRequest>({
+    track: "backend",
+    stack: "",
+    yearsExperience: null,
+    selfLevel: null,
+    targets: [],
+    skip: [],
+    hoursPerWeek: 15,
+  });
   const [gaps, setGaps] = useState<SkillGapView[]>([]);
   const [path, setPath] = useState<LearningPathView | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -51,10 +64,26 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
   const load = useCallback(
     async (signal?: AbortSignal) => {
       try {
-        const [p, g] = await Promise.all([builderApi.getPriorities(userId, signal), builderApi.gaps(userId, signal)]);
+        const [p, g, t] = await Promise.all([
+          builderApi.getPriorities(userId, signal),
+          builderApi.gaps(userId, signal),
+          builderApi.getTargets(userId, signal),
+        ]);
         setPriorities(p.priorities);
         setGaps(g.gaps);
         setPath(g.path);
+        /* The skip list and the weekly budget still live on `learner_priorities`, and the targets
+           form shows them, so they are merged in here rather than left blank for the admin to
+           accidentally clear by saving a form that never knew about them. */
+        setTargets({
+          track: t.focus.track ?? "backend",
+          stack: t.focus.stack ?? "",
+          yearsExperience: t.focus.yearsExperience,
+          selfLevel: (t.focus.selfLevel ?? null) as TargetsRequest["selfLevel"],
+          targets: t.focus.targets,
+          skip: p.priorities.skip,
+          hoursPerWeek: p.priorities.hoursPerWeek,
+        });
         setError(null);
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") return;
@@ -80,6 +109,31 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
     const timer = setInterval(() => void load(), POLL_MS);
     return () => clearInterval(timer);
   }, [busy, load]);
+
+  /**
+   * Saves the track, the stack and the targets.
+   *
+   * Does not rebuild their week on its own — the same rule as the priorities below, and for the same
+   * reason: reshaping somebody's Tuesday because a weight was adjusted is a surprise, and the admin
+   * may be halfway through a larger edit.
+   */
+  const saveTargets = async () => {
+    setSavingTargets(true);
+    try {
+      const result = await builderApi.setTargets(userId, {
+        ...targets,
+        targets: targets.targets
+          .filter((entry) => entry.skill.trim().length > 0)
+          .map((entry, index) => ({ ...entry, position: index })),
+      });
+      notify.success("Targets saved.");
+      setWeekStale(result.weekNeedsRegeneration);
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Could not save those targets.");
+    } finally {
+      setSavingTargets(false);
+    }
+  };
 
   const save = async () => {
     setSaving(true);
@@ -143,7 +197,24 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
       {error && <FormAlert>{error}</FormAlert>}
 
       <div>
-        <h3 className="text-sm font-semibold">Priorities</h3>
+        <h3 className="text-sm font-semibold">Targets</h3>
+        <p className="mt-1 max-w-prose text-sm text-muted-foreground">
+          The track they are on and what they are working towards, in your order. The assessment
+          weights its questions by this and asks High first; so does the course builder, and so does
+          their weekly plan.
+        </p>
+        <div className="mt-4 max-w-2xl">
+          <TargetsFields value={targets} onChange={setTargets} disabled={savingTargets} />
+          <div className="mt-5">
+            <Button variant="outline" loading={savingTargets} onClick={() => void saveTargets()}>
+              Save targets
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-semibold">Course builder settings</h3>
         <div className="mt-4 max-w-2xl">
           <PrioritiesFields value={priorities} onChange={setPriorities} disabled={saving} />
           {weekStale && (

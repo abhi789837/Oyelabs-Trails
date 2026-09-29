@@ -1,6 +1,17 @@
 import type { LearnerPriorities, LearningPathView, SkillGapView } from "@shared/builder";
 
+import type { LearnerTarget, LearnerTrack, TargetsRequest } from "@shared/targets";
+
 import { api } from "@/api/client";
+
+/** What `GET /targets` returns: the profile half and the list, in one read. */
+export interface LearnerFocusView {
+  track: LearnerTrack | null;
+  stack: string | null;
+  yearsExperience: number | null;
+  selfLevel: number | null;
+  targets: LearnerTarget[];
+}
 
 /** One row of the generated-courses list. */
 export interface GeneratedCourseRow {
@@ -46,6 +57,19 @@ export const builderApi = {
       `/api/admin/users/${userId}/priorities`,
       priorities,
     ),
+
+  /**
+   * The track, the stack and the ordered targets.
+   *
+   * Separate from `setPriorities`, which it is taking over from: that one still owns the builder's
+   * own settings (the cap, auto-publish), and splitting them stops the onboarding form and the
+   * builder settings overwriting each other's fields.
+   */
+  getTargets: (userId: string, signal?: AbortSignal) =>
+    api.get<{ focus: LearnerFocusView }>(`/api/admin/users/${userId}/targets`, signal),
+
+  setTargets: (userId: string, body: TargetsRequest) =>
+    api.put<{ focus: LearnerFocusView; weekNeedsRegeneration: boolean }>(`/api/admin/users/${userId}/targets`, body),
 
   gaps: (userId: string, signal?: AbortSignal) =>
     api.get<{ gaps: SkillGapView[]; path: LearningPathView | null }>(`/api/admin/users/${userId}/gaps`, signal),

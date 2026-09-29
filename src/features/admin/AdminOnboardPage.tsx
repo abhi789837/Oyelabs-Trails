@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { EMPTY_PRIORITIES, type LearnerPriorities } from "@shared/builder";
 import type { ClaimedSkill, LearnerProfile } from "@shared/profile";
 import type { SkillLevel, TrackIdValue } from "@shared/enums";
+import type { TargetsRequest } from "@shared/targets";
 
 import type { AccentToken } from "@/types/curriculum";
 
@@ -28,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
 import { builderApi } from "./builder/api";
 import { PrioritiesFields, PrioritiesSummary } from "./builder/PrioritiesFields";
+import { TargetsFields, TargetsSummary } from "./builder/TargetsFields";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
 
 const LEVEL_LABELS: Record<SkillLevel, string> = {
@@ -56,7 +58,7 @@ const STEPS: { id: StepId; name: string; blurb: string }[] = [
   { id: "profile", name: "Profile", blurb: "What you know before they are tested." },
   { id: "skills", name: "Skills", blurb: "Your estimate of where they stand." },
   { id: "trails", name: "Trails", blurb: "Where you want them to end up." },
-  { id: "priorities", name: "Priorities", blurb: "What the AI should build them, and in what order." },
+  { id: "priorities", name: "Targets", blurb: "What they are being trained for, in your order." },
   { id: "review", name: "Review", blurb: "One last read before the account exists." },
 ];
 
@@ -99,6 +101,17 @@ export default function AdminOnboardPage() {
   const [profile, setProfile] = useState<LearnerProfile>(emptyProfile);
   const [issueAssessment, setIssueAssessment] = useState(true);
   const [priorities, setPriorities] = useState<LearnerPriorities>(EMPTY_PRIORITIES);
+  /* The track, the stack and the ordered targets. Separate state from `priorities` because they land
+     in different tables — `learner_profiles` and `learner_targets` — and one endpoint writes both. */
+  const [targets, setTargets] = useState<TargetsRequest>({
+    track: "backend",
+    stack: "",
+    yearsExperience: null,
+    selfLevel: null,
+    targets: [],
+    skip: [],
+    hoursPerWeek: 15,
+  });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
@@ -185,6 +198,22 @@ export default function AdminOnboardPage() {
         } catch {
           notify.error("The account was created, but the learning priorities did not save. Set them from their profile.");
         }
+      }
+
+      /* Same rule as the priorities above: the account already exists by this point, so a failure
+         here is reported and survivable rather than fatal. The targets are the more important of the
+         two, though, so the message says where to go and does not pretend it was nothing. */
+      try {
+        await builderApi.setTargets(result.user.id, {
+          ...targets,
+          targets: targets.targets
+            .filter((entry) => entry.skill.trim().length > 0)
+            .map((entry, index) => ({ ...entry, position: index })),
+        });
+      } catch {
+        notify.error(
+          "The account was created, but their track and targets did not save. Set them on the AI path tab before issuing an assessment.",
+        );
       }
 
       const toSend = result.temporaryPassword ?? (passwordMode === "set" ? password : null);
@@ -509,7 +538,16 @@ export default function AdminOnboardPage() {
                   this. Where a course already covers a gap it unlocks that one; where nothing does,
                   it researches the topic and writes a course. What you set here decides the order.
                 </p>
-                <PrioritiesFields value={priorities} onChange={setPriorities} disabled={submitting} />
+                <TargetsFields value={targets} onChange={setTargets} disabled={submitting} />
+
+                <details className="rounded-md border">
+                  <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium">
+                    Course builder settings
+                  </summary>
+                  <div className="border-t p-4">
+                    <PrioritiesFields value={priorities} onChange={setPriorities} disabled={submitting} />
+                  </div>
+                </details>
               </>
             )}
 
@@ -522,6 +560,7 @@ export default function AdminOnboardPage() {
                 passwordScore={passwordMode === "set" && password ? passwordStrength(password, username).score : null}
                 profile={profile}
                 priorities={priorities}
+                targets={targets}
                 tracks={tracks.map((t) => ({ id: t.id, name: t.name }))}
                 onEdit={goTo}
               >
@@ -750,6 +789,7 @@ function Review({
   passwordScore,
   profile,
   priorities,
+  targets,
   tracks,
   onEdit,
   children,
@@ -761,6 +801,7 @@ function Review({
   passwordScore: number | null;
   profile: LearnerProfile;
   priorities: LearnerPriorities;
+  targets: TargetsRequest;
   tracks: { id: string; name: string }[];
   onEdit: (step: StepId) => void;
   children: React.ReactNode;
@@ -816,7 +857,11 @@ function Review({
         )}
       </ReviewBlock>
 
-      <ReviewBlock title="Learning priorities" onEdit={() => onEdit("priorities")}>
+      <ReviewBlock title="Targets" onEdit={() => onEdit("priorities")}>
+        <TargetsSummary value={targets} />
+      </ReviewBlock>
+
+      <ReviewBlock title="Course builder settings" onEdit={() => onEdit("priorities")}>
         <PrioritiesSummary value={priorities} />
       </ReviewBlock>
 
