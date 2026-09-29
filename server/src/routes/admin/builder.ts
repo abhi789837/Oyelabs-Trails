@@ -3,11 +3,13 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 import { learnerPrioritiesSchema } from "../../../../shared/builder";
+import { targetsRequestSchema } from "../../../../shared/targets";
 import { requireStaff, requireSuperadmin, staffOnly } from "../../auth/guards";
 import { coursesWithDeadLinks } from "../../jobs/handlers/checkLinks";
 import { currentPath, getPriorities, listGaps, setPriorities } from "../../builder/repo";
 import { getResearchSettings, updateResearchSettings } from "../../builder/settings";
 import { activeWeek } from "../../plans/weekly/repo";
+import { getFocus, setFocus, setTargets } from "../../targets/repo";
 import { schema } from "../../db";
 import { enqueue } from "../../jobs/queue";
 import { writeAudit } from "../../lib/audit";
@@ -76,6 +78,60 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
       /** True when their current week no longer reflects these priorities. The UI offers a rebuild. */
       weekNeedsRegeneration: changesTheWeek && activeWeek(app.db, userId) !== null,
     };
+  });
+
+  // -------------------------------------------------------------------------
+  // Targets: the track, the stack and the prioritised list
+  // -------------------------------------------------------------------------
+
+  /**
+   * What this person is being trained for.
+   *
+   * Separate from `/priorities`, which it is replacing: that endpoint still serves the course
+   * builder's own settings (the cap, auto-publish, the weekly budget), and splitting them means the
+   * onboarding form and the builder settings stop overwriting each other's fields.
+   */
+  app.get("/api/admin/users/:userId/targets", async (request) => {
+    const { userId } = parseOrThrow(userParams, request.params);
+    return { focus: getFocus(app.db, userId) };
+  });
+
+  app.put("/api/admin/users/:userId/targets", async (request) => {
+    const actor = requireStaff(request);
+    const { userId } = parseOrThrow(userParams, request.params);
+    const body = parseOrThrow(targetsRequestSchema, request.body);
+
+    const user = app.db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.id, userId)).get();
+    if (!user) throw notFound("No such person.");
+
+    setFocus(app.db, userId, {
+      track: body.track,
+      stack: body.stack,
+      yearsExperience: body.yearsExperience,
+      selfLevel: body.selfLevel,
+    }, actor.id);
+    const targets = setTargets(app.db, userId, body.targets);
+
+    /* The skip list and the weekly budget still live on `learner_priorities`, so the form's copies of
+       them are written through. One form, two tables, and the admin should not have to know that. */
+    const priorities = getPriorities(app.db, userId);
+    setPriorities(app.db, userId, { ...priorities, skip: body.skip, hoursPerWeek: body.hoursPerWeek }, actor.id);
+
+    writeAudit(app.db, {
+      actorId: actor.id,
+      action: "targets.updated",
+      targetType: "user",
+      targetId: userId,
+      // The shape, never the skills themselves: the audit log is not a second copy of the profile.
+      details: {
+        track: body.track,
+        targets: targets.length,
+        high: targets.filter((target) => target.priority === "high").length,
+        hoursPerWeek: body.hoursPerWeek,
+      },
+    });
+
+    return { focus: getFocus(app.db, userId), weekNeedsRegeneration: activeWeek(app.db, userId) !== null };
   });
 
   app.get("/api/admin/users/:userId/gaps", async (request) => {

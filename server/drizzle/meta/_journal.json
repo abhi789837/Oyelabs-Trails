@@ -64,6 +64,13 @@
       "when": 1790594534426,
       "tag": "0008_weekly_plan",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1790657238307,
+      "tag": "0009_learner_targets",
+      "breakpoints": true
     }
   ]
 }

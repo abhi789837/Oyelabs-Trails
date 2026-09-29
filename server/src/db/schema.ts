@@ -70,9 +70,54 @@ export const learnerProfiles = sqliteTable("learner_profiles", {
   adminNotes: text("admin_notes").notNull().default(""),
   claimedSkills: text("claimed_skills", { mode: "json" }).$type<ClaimedSkill[]>().notNull(),
   targetTracks: text("target_tracks", { mode: "json" }).$type<string[]>().notNull(),
+  /**
+   * The track this person is actually on, and the stack they are actually on it with.
+   *
+   * `target_tracks` above is which *curriculum trails* to draw content from — a content question.
+   * These two are a statement about their job, and they are what makes everything downstream
+   * specific: the assessment's first section is the fundamentals of *this* stack, and "AI-driven
+   * development" is only a useful course when it can say "prompting for a Laravel controller with
+   * validation" rather than "prompting for code".
+   *
+   * Nullable because every account that predates this column has no answer, and guessing one from
+   * `target_tracks` would put a value the admin never chose in front of the assessment generator.
+   */
+  track: text("track"),
+  stack: text("stack"),
+  /** The admin's read of their level, 1–5, before any testing. The blueprint's starting hypothesis. */
+  selfLevel: integer("self_level"),
   updatedAt: integer("updated_at").notNull(),
   updatedBy: text("updated_by"),
 });
+
+/**
+ * What this learner is being trained *for*, in the admin's own order.
+ *
+ * Replaces `learner_priorities.must_have`, which held the same weights as unordered JSON. The
+ * missing piece was rank *within* a weight: "Docker deployment" and "Testing with Jest" can both be
+ * High and still not be equally urgent, and a `{skill, weight}[]` could not say so — every reader
+ * re-sorted by weight and threw the admin's ordering away.
+ *
+ * A row per target rather than a JSON column, because these are now joined against (which gaps
+ * answer which target), counted (the question budget) and reordered individually.
+ */
+export const learnerTargets = sqliteTable(
+  "learner_targets",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    skill: text("skill").notNull(),
+    priority: text("priority").$type<"high" | "medium" | "low">().notNull(),
+    /** Rank within the priority. Drag-to-reorder writes this. */
+    position: integer("position").notNull().default(0),
+    /** `yyyy-mm-dd`, optional. Most targets are "soon" rather than "by the 14th". */
+    targetDate: text("target_date"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("learner_targets_user_idx").on(t.userId, t.priority, t.position)],
+);
 
 // ---------------------------------------------------------------------------
 // AI configuration and audit
