@@ -17,17 +17,46 @@ So the two were separated. Nothing was removed from anybody's unlocked set.
 
 ## What it looks like
 
-| | |
-| --- | --- |
-| Trail, 1440, light | `ui-audit/weekly-plan/plan-trail-1440-light.png` |
-| Trail, 1440, dark | `ui-audit/weekly-plan/plan-trail-1440-dark.png` |
-| Trail, 390, light / dark | `plan-trail-390-light.png` · `plan-trail-390-dark.png` |
-| Lanes, 1440 / 390 | `plan-lanes-1440-light.png` · `plan-lanes-390-light.png` |
-| Library | `library-1440-light.png` |
+Signed in as a learner with a 204-lesson library and priorities of Deployment (High), Laravel (High),
+Testing (Medium), GraphQL (Low), skipping Vue, the week came out at **13 items and 14 h 50 min against a
+15 h budget**:
 
-Taken against the real app in headless Chromium, signed in as a learner with a 204-lesson library and
-priorities of Deployment (High), Laravel (High), Testing (Medium), GraphQL (Low), skipping Vue. The
-week came out at **13 items and 14 h 50 min against a 15 h budget**.
+```
+My plan   Week 1 · 28 Sept – 4 Oct
+
+This is your first week on the trail. This week is about deployment and hosting
+and laravel — 3 things to clear first, then the rest as time allows. By Sunday
+you should have 13 lessons and about 15 hours behind you.
+
+[ This week 0 / 13 done ] [ Progress 0% ] [ Time 14 h 50 min ]
+▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+🔖 204 lessons unlocked in your library →
+
+┌─ Your first waypoint ─────────────────────────────────────────┐
+│  Intro to Kubernetes (Pods, Services, Deployments)            │
+│  ● Do it now · Docker & Containers · Backend · 1h 40m [Start] │
+│  Admin: Deployment and hosting · High · not covered by the …  │
+└───────────────────────────────────────────────────────────────┘
+
+This week                                        [ Trail | List ]
+● Do it now 3   ■ Must know 2   ● Medium 3   ● Low 5
+
+Do it now   3 items · 3 h 10 min
+  Intro to Kubernetes (Pods, Services, Deployments)     1h 40m
+  Laravel's Shape and the Request Lifecycle               45m
+  Roles and Permissions (and Why Laravel Ships None)      45m
+      Needs: Enforcing Authorization, Authorization Gates
+
+Must know   2 items · 1 h 25 min
+  Enforcing Authorization: authorize(), can, @can …       45m
+  Authorization Gates                                     40m
+
+Medium      3 items · 4 h 5 min      Low  5 items · 6 h 10 min
+```
+
+Screenshots from that run — trail and lanes at 1440 and 390, light and dark, the waypoint popover and
+bottom sheet, the summit, the admin tab — are under `docs/ui-audit/weekly-plan/`. That folder is
+gitignored along with the rest of `docs/ui-audit`, so they are local to whoever produced them.
 
 ---
 
@@ -233,3 +262,10 @@ across the whole viewport and belongs to finishing a *track*. Throwing the same 
 make the certificate feel like a Tuesday.
 
 `prefers-reduced-motion` skips the drawing and the bursts and renders the final state.
+
+**One thing worth not repeating.** The summit burst first shipped with a single `ease: [0.2, 0.8, 0.2, 1]`
+covering a four-stop `opacity: [0, 1, 1, 0]` array. An ease-out curve races through its keyframes early,
+so the dots spent nearly the whole 1.5 s past the last stop and rendered at about **3% opacity** — the
+right colours, the right sizes, the right positions, and nothing visible on screen. It was only caught
+by screenshotting the card and reading the computed styles back. Position still eases; opacity now has
+its own `ease: "linear"` with explicit `times`.

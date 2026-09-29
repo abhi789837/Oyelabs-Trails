@@ -24,14 +24,17 @@ const LIFETIME_MS = 2600;
 function scatter(count: number) {
   return Array.from({ length: count }, (_, i) => {
     const angle = (i / count) * Math.PI * 2 + (i % 3) * 0.24;
-    const distance = 54 + ((i * 37) % 46);
+    const distance = 62 + ((i * 37) % 54);
     return {
       x: Math.cos(angle) * distance,
       y: Math.sin(angle) * distance - 18,
       delay: (i % 6) * 0.045,
-      size: 5 + (i % 3) * 2,
-      // The three brand-ish tokens, so the burst belongs to this product rather than to a library.
-      color: ["rgb(var(--summit))", "rgb(var(--trailmark))", "rgb(var(--primary))"][i % 3],
+      // Big enough to read against the card's own tint. At 5px they were there and invisible.
+      size: 7 + (i % 3) * 2,
+      /* Brand tokens, so the burst belongs to this product rather than to a library — but the
+         *strong* variants and the amber. The card is tinted `summit/7%`, and green dots on a green
+         card were technically present and visually invisible. */
+      color: ["rgb(var(--trailmark))", "rgb(var(--primary-strong))", "rgb(var(--summit-strong))"][i % 3],
     };
   });
 }
@@ -87,7 +90,16 @@ export function SummitCelebration({
                 initial={{ x: 0, y: 0, opacity: 0, scale: 0.4 }}
                 animate={{ x: dot.x, y: dot.y, opacity: [0, 1, 1, 0], scale: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1.5, delay: dot.delay, ease: [0.2, 0.8, 0.2, 1] }}
+                /* The position eases out — the dots fly and settle. The *opacity* does not, and must
+                   not: an ease-out curve applied to a four-stop opacity array spends almost the whole
+                   1.5 s past the last keyframe, so the burst rendered at about 3% and read as nothing
+                   at all. Linear with explicit `times` holds it at full for two thirds of a second. */
+                transition={{
+                  duration: 1.5,
+                  delay: dot.delay,
+                  ease: [0.2, 0.8, 0.2, 1],
+                  opacity: { duration: 1.5, delay: dot.delay, ease: "linear", times: [0, 0.12, 0.62, 1] },
+                }}
               />
             ))}
         </AnimatePresence>
