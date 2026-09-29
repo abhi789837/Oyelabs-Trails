@@ -30,7 +30,9 @@ import {
   setPathStatus,
   startPath,
 } from "./repo";
-import { normaliseSkill, actionableGaps, reasonFor, scoreGaps } from "./scoring";
+import { assertPartOrder, planParts } from "./parts";
+import { normaliseSkill, reasonFor, scoreGaps } from "./scoring";
+import { getFocus } from "../targets/repo";
 import { researchClients } from "./settings";
 
 /**
@@ -133,7 +135,31 @@ export async function runBuilder(
 
   const scored = scoreGaps(detected, priorities);
   const gapIds = replaceGaps(db, input.userId, input.assessmentId, scored);
-  const todo = actionableGaps(scored, priorities.courseCap);
+
+  /* The path in parts, rather than a flat list ordered by gap score.
+
+     Part 1 is the learner's own track, part 2 is AI-driven development for their stack, and only
+     then does the biggest detected gap get a look in. A score-ordered list opens wherever the
+     largest number happens to be, which for a backend engineer with a Docker gap is Docker —
+     before anything has shored up the backend work they do every day. See `parts.ts`. */
+  const focus = getFocus(db, input.userId);
+  const planned = planParts({
+    track: focus.track,
+    stack: focus.stack,
+    gaps: scored,
+    priorities,
+    evaluation: input.evaluation,
+    courseCap: priorities.courseCap,
+  });
+
+  /* Checked after the fact rather than trusted: the same split the weekly plan uses. A function
+     that tries to produce the right order, and a check that it did. */
+  const orderProblems = assertPartOrder(planned);
+  if (orderProblems.length > 0) {
+    auditStep(db, { pathId, step: "parts", detail: { problems: orderProblems } });
+  }
+
+  const todo = planned;
 
   if (todo.length === 0) {
     makeCurrent(db, input.userId, pathId);
@@ -146,16 +172,29 @@ export async function runBuilder(
   const outcome: RunOutcome = { pathId, unlocked: 0, reused: 0, generated: 0, failed: 0, status: "ready" };
   let position = 0;
 
-  for (const gap of todo) {
+  for (const part of todo) {
+    const gap = part.gap;
     const gapId = gapIds.get(gap.skill) ?? null;
-    const reason = reasonFor(gap, priorities);
+    /* Parts 1 and 2 are synthesised rather than detected, so their evidence sentence *is* the
+       reason — `reasonFor` would append an admin-weight line about a must-have that does not
+       exist. */
+    const reason = part.type === "general" ? reasonFor(gap, priorities) : gap.evidence.summary;
 
     setPathStatus(db, pathId, { status: "researching" });
     progress(`Looking for a course on ${gap.skill}`);
 
     const existing = await matchExisting(db, deps.ai, gap, input.userId, pathId);
     if (existing) {
-      addPathItem(db, { pathId, courseId: existing.courseId, gapId, position: position++, source: existing.source, reason });
+      addPathItem(db, {
+        pathId,
+        courseId: existing.courseId,
+        gapId,
+        position: position++,
+        source: existing.source,
+        reason,
+        partNumber: part.partNumber,
+        partType: part.type,
+      });
       if (existing.source === "unlock") outcome.unlocked += 1;
       else outcome.reused += 1;
       // An unlocked course has to actually reach them, or "unlocked" is a word with no effect.
@@ -217,7 +256,16 @@ export async function runBuilder(
       userId: input.userId,
       autoPublish: priorities.autoPublish,
     });
-    addPathItem(db, { pathId, courseId: stored.courseId, gapId, position: position++, source: "generated", reason });
+    addPathItem(db, {
+      pathId,
+      courseId: stored.courseId,
+      gapId,
+      position: position++,
+      source: "generated",
+      reason,
+      partNumber: part.partNumber,
+      partType: part.type,
+    });
     outcome.generated += 1;
 
     auditStep(db, {

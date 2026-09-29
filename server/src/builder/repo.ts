@@ -173,7 +173,17 @@ export function makeCurrent(db: Db, userId: string, pathId: string): void {
 
 export function addPathItem(
   db: Db,
-  input: { pathId: string; courseId: string | null; gapId: string | null; position: number; source: "unlock" | "reuse" | "generated"; reason: string },
+  input: {
+    pathId: string;
+    courseId: string | null;
+    gapId: string | null;
+    position: number;
+    source: "unlock" | "reuse" | "generated";
+    reason: string;
+    /** Which part of the path this is. Absent on a path built before parts existed. */
+    partNumber?: number;
+    partType?: "track" | "ai_dev" | "general";
+  },
 ): void {
   db.insert(schema.pathItems).values({ id: newId(), ...input }).run();
 }
@@ -234,6 +244,8 @@ export function currentPath(db: Db, userId: string): LearningPathView | null {
       // A generated course sitting in review is on the path but not yet openable. Saying so beats
       // a link that 404s, and beats hiding it — the learner can see what is coming.
       available: Boolean(course?.published),
+      partNumber: item.partNumber,
+      partType: item.partType,
     };
   });
 

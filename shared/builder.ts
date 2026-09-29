@@ -288,6 +288,16 @@ export type PathStatus = z.infer<typeof pathStatusSchema>;
 export const pathItemSourceSchema = z.enum(["unlock", "reuse", "generated"]);
 export type PathItemSource = z.infer<typeof pathItemSourceSchema>;
 
+/** Part 1 is the learner's own track, part 2 AI-driven development, 3+ everything else. */
+export const partTypeSchema = z.enum(["track", "ai_dev", "general"]);
+export type PartType = z.infer<typeof partTypeSchema>;
+
+export const PART_LABELS: Record<PartType, string> = {
+  track: "Strengthen your track",
+  ai_dev: "Building with AI",
+  general: "Next",
+};
+
 export interface PathItemView {
   id: string;
   courseId: string | null;
@@ -299,6 +309,9 @@ export interface PathItemView {
   completedCount: number;
   /** False while a generated course is still a draft — the learner cannot open it yet. */
   available: boolean;
+  /** Null on a path built before parts existed. Those render as the flat list they were. */
+  partNumber: number | null;
+  partType: PartType | null;
 }
 
 export interface LearningPathView {

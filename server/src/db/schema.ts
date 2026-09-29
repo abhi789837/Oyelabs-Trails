@@ -730,6 +730,19 @@ export const pathItems = sqliteTable(
     position: integer("position").notNull(),
     /** How this course got here: an existing one, one built earlier, or one built just now. */
     source: text("source").$type<"unlock" | "reuse" | "generated">().notNull(),
+    /**
+     * Which part of the path this is, and what kind.
+     *
+     * Part 1 is always the learner's own track and part 2 always AI-driven development for their
+     * stack; 3 onward is everything else by priority. Stored rather than derived from `position`,
+     * because the *kind* is not recoverable from the order — and it is what puts parts 1 and 2 into
+     * week one's "Do it now" lane.
+     *
+     * Nullable for every path built before parts existed. Those render as a flat list, which is
+     * what they were.
+     */
+    partNumber: integer("part_number"),
+    partType: text("part_type").$type<"track" | "ai_dev" | "general">(),
     /** "You missed 4 of 5 questions on server deployment; DevOps is marked High priority." */
     reason: text("reason").notNull(),
   },

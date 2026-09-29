@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import {
   EMPTY_PRIORITIES,
   isPathBusy,
+  PART_LABELS,
   type LearnerPriorities,
   type LearningPathView,
   type SkillGapView,
@@ -307,7 +308,23 @@ function PathPanel({ path, busy }: { path: LearningPathView | null; busy: boolea
               className="rounded-md border px-4 py-3"
             >
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono text-xs text-muted-foreground tabular">{item.position + 1}</span>
+                {/* The part, where there is one. A path built before parts existed shows its
+                    position instead, which is what it was. */}
+                {item.partNumber !== null && item.partType !== null ? (
+                  <span
+                    className={cn(
+                      "rounded-sm px-1.5 py-0.5 font-mono text-[10px] font-medium",
+                      item.partType === "track" && "bg-destructive/10 text-destructive",
+                      item.partType === "ai_dev" && "bg-ridge/10 text-ridge-strong",
+                      item.partType === "general" && "bg-basalt/10 text-basalt-strong",
+                    )}
+                    title={PART_LABELS[item.partType]}
+                  >
+                    Part {item.partNumber}
+                  </span>
+                ) : (
+                  <span className="font-mono text-xs text-muted-foreground tabular">{item.position + 1}</span>
+                )}
                 {item.courseId ? (
                   <Link
                     to={`/admin/courses/${item.courseId}`}
@@ -324,6 +341,9 @@ function PathPanel({ path, busy }: { path: LearningPathView | null; busy: boolea
                   {item.completedCount}/{item.topicCount}
                 </span>
               </div>
+              {item.partType !== null && item.partType !== "general" && (
+                <p className="mt-1 font-mono text-[11px] text-muted-foreground">{PART_LABELS[item.partType]}</p>
+              )}
               <p className="mt-1.5 max-w-prose text-sm text-muted-foreground">{item.reason}</p>
             </motion.li>
           ))}
