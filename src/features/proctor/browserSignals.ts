@@ -103,16 +103,23 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
     if (document.visibilityState === "hidden") emit("tab_hidden");
   });
 
-  // --- Window blur lasting > 2 s: hard -------------------------------------
-  // A hidden tab is already reported by the row above, and alt-tabbing fires both. Suppressing the
-  // blur in that case keeps one action to one strike without relying on the server's cooldown.
-  on(window, "blur-sm", () => {
-    startTimer("blur-sm", WINDOW_BLUR_SUSTAINED_MS, () => {
+  /* --- Window blur lasting > 2 s: hard -------------------------------------
+     A hidden tab is already reported by the row above, and alt-tabbing fires both. Suppressing the
+     blur in that case keeps one action to one strike without relying on the server's cooldown.
+
+     The event is `blur`. It was `"blur-sm"` from the Tailwind v3 to v4 migration (0c5ab8d) until
+     now: that codemod renamed the `blur` *utility class* to `blur-sm` and caught this DOM event
+     name with it. `addEventListener` takes any string, so nothing failed — the listener simply
+     never fired, and alt-tabbing to another window without hiding the tab went unreported for the
+     whole time. `PROCTOR_EVENT_NAMES` below is now the single list, so a rename cannot do it
+     again silently. */
+  on(window, "blur", () => {
+    startTimer("blur", WINDOW_BLUR_SUSTAINED_MS, () => {
       if (document.visibilityState === "hidden") return;
       emit("window_blur", { sustainedMs: WINDOW_BLUR_SUSTAINED_MS });
     });
   });
-  on(window, "focus", () => clearTimer("blur-sm"));
+  on(window, "focus", () => clearTimer("blur"));
 
   // --- Left fullscreen: immediate, hard ------------------------------------
   const onFullscreenChange = () => {
