@@ -134,6 +134,24 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
 
       const courseById = new Map(visible.map((course) => [course.id, course] as const));
 
+      /* Which part of the learning path each course belongs to. Read once here rather than per
+         lesson: the weekly builder uses it to put Parts 1 and 2 in the red lane, and a join per
+         lesson would be the same answer a hundred times. */
+      const partByCourse = new Map(
+        db
+          .select({
+            courseId: schema.pathItems.courseId,
+            partNumber: schema.pathItems.partNumber,
+            partType: schema.pathItems.partType,
+          })
+          .from(schema.pathItems)
+          .innerJoin(schema.learningPaths, eq(schema.learningPaths.id, schema.pathItems.pathId))
+          .where(and(eq(schema.learningPaths.userId, userId), eq(schema.learningPaths.current, true)))
+          .all()
+          .filter((row): row is typeof row & { courseId: string } => row.courseId !== null)
+          .map((row) => [row.courseId, { partNumber: row.partNumber, partType: row.partType }] as const),
+      );
+
       /* Ordered the way the course reads: by course position, then section, then lesson. The absolute
          number does not matter — only that "earlier" means "earlier in the course", because that is
          what the prerequisite search relies on. */
@@ -150,6 +168,7 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
       ordered.forEach((lesson, index) => {
         const course = courseById.get(lesson.courseId);
         const sectionTitle = sectionById.get(lesson.sectionId)?.title ?? "";
+        const part = partByCourse.get(lesson.courseId);
         candidates.push({
           key: lesson.id,
           topicId: null,
@@ -164,6 +183,9 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
           groupId: lesson.courseId,
           done: doneLessons.has(lesson.id),
           href: `/courses/${lesson.courseId}`,
+          ...(part?.partNumber !== null && part?.partNumber !== undefined
+            ? { partNumber: part.partNumber, partType: part.partType ?? undefined }
+            : {}),
         });
       });
     }

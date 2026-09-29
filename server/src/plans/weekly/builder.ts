@@ -174,6 +174,25 @@ export function buildWeek(input: BuildWeekInput): WeeklyPlanDraft {
     });
   }
 
+  // --- 2b. Parts 1 and 2 of the learning path -------------------------------
+  /* Before any detected gap. Part 1 strengthens the track they work in every day and Part 2 is
+     building with AI in their own stack; everything else on the path is a specific gap that stands
+     on those two. Putting them in the red lane is not a weighting — it is the order the path is in.
+
+     Taken in path order and capped by the same red-lane share as anything else, so a long Part 1
+     cannot swallow the whole week. What does not fit this week carries into the next one. */
+  const pathLessons = pool
+    .filter((c) => c.partNumber !== undefined && c.partNumber <= 2 && !used.has(c.key))
+    .sort((a, b) => (a.partNumber ?? 0) - (b.partNumber ?? 0) || a.order - b.order);
+
+  for (const candidate of pathLessons) {
+    const reason =
+      candidate.partType === "track"
+        ? "Part 1 of your path: the ground your own track stands on"
+        : "Part 2 of your path: building with AI in your stack";
+    take(candidate, "do_now", reason, "admin_priority", { laneCap: doNowCap });
+  }
+
   // --- 3. The admin's list, then the assessment's findings ------------------
   /* `gaps` arrives ordered by `sortGaps`: admin-listed before AI-detected, then by score. That
      order is followed exactly — it is the admin's decision, and re-sorting it here is precisely the

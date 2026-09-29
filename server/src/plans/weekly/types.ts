@@ -38,6 +38,15 @@ export interface Candidate {
   done: boolean;
   /** Where the learner goes to do it. */
   href: string;
+  /**
+   * The part of the learning path this lesson's course belongs to, if any.
+   *
+   * Parts 1 and 2 — strengthen your track, and building with AI for your stack — are the ground the
+   * rest stands on, so they fill week one's red lane before any detected gap is considered. Null for
+   * a curriculum topic, and for a course that is not on the path.
+   */
+  partNumber?: number;
+  partType?: "track" | "ai_dev" | "general";
 }
 
 /** An item the previous week did not finish. */

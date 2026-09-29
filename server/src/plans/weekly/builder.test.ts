@@ -563,3 +563,61 @@ describe("skill matching", () => {
     expect(matchScore("Laravel Eloquent", "Semantic HTML and document structure")).toBe(0);
   });
 });
+
+describe("the learning path's first two parts", () => {
+  test("fill the red lane before any detected gap", () => {
+    /* Part 1 strengthens the track they work in every day and Part 2 is building with AI in their
+       own stack. Everything else on the path is a specific gap standing on those two, so putting
+       them first is the order the path is in rather than a weighting applied on top of it. */
+    const candidates = [
+      candidate({ title: "Backend foundations lesson", key: "p1", order: 1_000_000, partNumber: 1, partType: "track", lessonId: "p1", courseId: "c1" }),
+      candidate({ title: "Prompting for Laravel", key: "p2", order: 1_000_001, partNumber: 2, partType: "ai_dev", lessonId: "p2", courseId: "c2" }),
+      candidate({ title: "Kubernetes Pods", key: "k8s", order: 5, haystack: "kubernetes pods" }),
+    ];
+
+    const draft = buildWeek(
+      input({
+        candidates,
+        priorities: priorities({ mustHave: [{ skill: "Kubernetes", weight: "high" }] }),
+        gaps: [gap({ skill: "Kubernetes" })],
+      }),
+    );
+
+    expect(draft.lanes.doNow.map(itemKey).slice(0, 2)).toEqual(["p1", "p2"]);
+  });
+
+  test("are ordered part 1 before part 2", () => {
+    const candidates = [
+      candidate({ title: "AI lesson", key: "p2", order: 1_000_000, partNumber: 2, partType: "ai_dev", lessonId: "p2", courseId: "c2" }),
+      candidate({ title: "Track lesson", key: "p1", order: 1_000_001, partNumber: 1, partType: "track", lessonId: "p1", courseId: "c1" }),
+    ];
+    const draft = buildWeek(input({ candidates }));
+    expect(draft.lanes.doNow.map(itemKey)).toEqual(["p1", "p2"]);
+  });
+
+  test("part 3 and beyond are not forced into the red lane", () => {
+    // Those are ordinary gaps and take their turn with everything else.
+    const candidates = [
+      candidate({ title: "Later part lesson", key: "p3", order: 1_000_000, partNumber: 3, partType: "general", lessonId: "p3", courseId: "c3" }),
+    ];
+    const draft = buildWeek(input({ candidates }));
+    expect(draft.lanes.doNow.map(itemKey)).not.toContain("p3");
+  });
+
+  test("a long part 1 cannot swallow the whole week", () => {
+    const candidates = Array.from({ length: 10 }, (_, i) =>
+      candidate({
+        title: `Part 1 lesson ${i}`,
+        key: `p1-${i}`,
+        order: 1_000_000 + i,
+        minutes: 90,
+        partNumber: 1,
+        partType: "track",
+        lessonId: `p1-${i}`,
+        courseId: "c1",
+      }),
+    );
+    const draft = buildWeek(input({ candidates, budgetMinutes: 600 }));
+    expect(laneMinutes(draft.lanes.doNow)).toBeLessThanOrEqual(600 * DO_NOW_SHARE);
+  });
+});
