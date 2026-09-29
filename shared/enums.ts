@@ -27,8 +27,26 @@ export function isStaff(role: Role): boolean {
 }
 export type Role = z.infer<typeof roleSchema>;
 
-export const userStatusSchema = z.enum(["active", "disabled"]);
+/**
+ * Three states, and the difference between the last two is the point.
+ *
+ * `disabled` is a suspension: they cannot sign in, everything is kept, and they are still on the
+ * People list because you are expected to let them back in. `archived` is "they have left the
+ * programme": hidden from the active list, progress frozen, data kept, restorable. Conflating them
+ * meant an admin had one word — "disable" — for both a week off and a departure, and the list grew
+ * a tail of accounts nobody could tell apart.
+ *
+ * Deletion is not a status. It removes the row.
+ */
+export const userStatusSchema = z.enum(["active", "disabled", "archived"]);
 export type UserStatus = z.infer<typeof userStatusSchema>;
+
+/** Statuses that appear on the People list by default. `archived` is behind its own filter. */
+export const LISTED_USER_STATUSES = ["active", "disabled"] as const;
+
+export function isArchived(status: UserStatus): boolean {
+  return status === "archived";
+}
 
 export const providerIdSchema = z.enum(["anthropic-api", "openai-api", "claude-cli", "codex-cli", "mock"]);
 export type ProviderId = z.infer<typeof providerIdSchema>;

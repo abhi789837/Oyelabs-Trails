@@ -7,6 +7,7 @@ import {
   listUsersResponseSchema,
   onboardLearnerRequestSchema,
   resetPasswordRequestSchema,
+  deleteUserRequestSchema,
   setUserStatusRequestSchema,
   updateProfileRequestSchema,
   type LearnerDetail,
@@ -14,7 +15,8 @@ import {
   type UserSummary,
 } from "../../../../shared/admin";
 import { learnerProfileSchema, type LearnerProfile } from "../../../../shared/profile";
-import { requireStaff, staffOnly } from "../../auth/guards";
+import { deleteUserCompletely, exportUser } from "../../admin/deleteUser";
+import { requireStaff, requireSuperadmin, staffOnly } from "../../auth/guards";
 import { checkPasswordPolicy, generatePassword, hashPassword } from "../../auth/password";
 import { revokeUserSessions } from "../../auth/sessions";
 import { schema, type Db } from "../../db";
@@ -245,10 +247,112 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
     assertMayActOn(actor, row);
 
     app.db.update(schema.users).set({ status }).where(eq(schema.users.id, id)).run();
-    if (status === "disabled") revokeUserSessions(app.db, id);
+    /* Anything that is not `active` signs them out of every device now. Archiving somebody who is
+       mid-session and leaving that session alive would mean "removed from the programme" took effect
+       whenever they next closed a tab. */
+    if (status !== "active") revokeUserSessions(app.db, id);
 
     writeAudit(app.db, { actorId: actor.id, action: `user.${status}`, targetType: "user", targetId: id });
     return { user: summarize(app.db, { ...row, status }) };
+  });
+
+  /**
+   * Everything the platform holds about one person, as a file.
+   *
+   * Offered before a deletion and downloadable on its own. Staff only — a learner's own export is a
+   * separate question with a separate answer, and this one is reached from the People table.
+   */
+  app.get("/api/admin/users/:id/export", async (request, reply) => {
+    const actor = requireStaff(request);
+    const { id } = request.params as { id: string };
+
+    const row = app.db.select().from(schema.users).where(eq(schema.users.id, id)).get();
+    if (!row) throw notFound("No such person.");
+    assertMayActOn(actor, row);
+
+    const data = exportUser(app.db, id, actor.username);
+    if (!data) throw notFound("No such person.");
+
+    writeAudit(app.db, { actorId: actor.id, action: "user.exported", targetType: "user", targetId: id });
+
+    // Named so the file in a downloads folder still says who it is about a month from now.
+    const stamp = new Date().toISOString().slice(0, 10);
+    void reply
+      .header("content-type", "application/json; charset=utf-8")
+      .header("content-disposition", `attachment; filename="oyelearn-${row.username}-${stamp}.json"`);
+    return data;
+  });
+
+  /**
+   * Deletes a person and everything personal to them.
+   *
+   * **Superadmin only**, and the only action in the console with no undo. Three things stand between
+   * an admin and an accident: the role check, typing the username, and the fact that the confirmation
+   * dialog lists what is about to go. Two further refusals are structural rather than cautionary —
+   * you cannot delete yourself, and you cannot delete the last superadmin, because either would
+   * leave the platform without a way back in.
+   *
+   * See `admin/deleteUser.ts` for what survives: catalogue courses, and an anonymised audit trail.
+   */
+  app.delete("/api/admin/users/:id", async (request) => {
+    const actor = requireSuperadmin(request);
+    const { id } = request.params as { id: string };
+    const body = parseOrThrow(deleteUserRequestSchema, request.body ?? {});
+
+    const row = app.db.select().from(schema.users).where(eq(schema.users.id, id)).get();
+    if (!row) throw notFound("No such person.");
+
+    /* The last-super-admin check comes **first**, and the order is the whole point.
+
+       Only a superadmin can reach this route, so a superadmin target that is not the caller implies
+       at least two exist — which means with the self-check first, the count could never fire. It was
+       written that way and was dead code. Reversed, it is reachable by the case that actually
+       happens: the only superadmin on the deployment trying to delete themselves. They get the
+       message that tells them what to do about it rather than the one that only says no. */
+    if (row.role === "superadmin") {
+      const remaining = app.db
+        .select({ id: schema.users.id })
+        .from(schema.users)
+        .where(eq(schema.users.role, "superadmin"))
+        .all();
+      if (remaining.length <= 1) {
+        throw badRequest("That is the last super admin. Promote somebody else first, or the console becomes unreachable.");
+      }
+    }
+    if (row.id === actor.id) {
+      throw badRequest("You cannot delete your own account. Ask another super admin.");
+    }
+
+    if (body.confirmUsername.trim().toLowerCase() !== row.username.toLowerCase()) {
+      throw badRequest("That username does not match. Nothing was deleted.", {
+        confirmUsername: `Type ${row.username} exactly.`,
+      });
+    }
+
+    const { counts, fileErrors } = deleteUserCompletely(app.db, app.env, id);
+
+    /* The audit row is written after the delete and names the account by the values it had, since
+       there is no longer a row to join to. This is the entry the brief asks for: who, which id, when. */
+    writeAudit(app.db, {
+      actorId: actor.id,
+      action: "user.deleted",
+      targetType: "user",
+      targetId: id,
+      details: {
+        username: row.username,
+        displayName: row.displayName,
+        role: row.role,
+        reason: body.reason ?? null,
+        counts,
+        ...(fileErrors.length ? { snapshotErrors: fileErrors } : {}),
+      },
+    });
+
+    if (fileErrors.length > 0) {
+      app.log.warn({ userId: id, fileErrors }, "deleted a user but could not remove every proctoring snapshot");
+    }
+
+    return { deleted: { id, username: row.username, displayName: row.displayName }, counts };
   });
 
   app.post("/api/admin/users/:id/revoke-sessions", async (request) => {

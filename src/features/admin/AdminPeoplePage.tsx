@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { KeyRound, ShieldCheck, ShieldOff, UserPlus, Wand2 } from "lucide-react";
+import { Archive, Download, KeyRound, MoreHorizontal, ShieldCheck, ShieldOff, Trash2, UserPlus, Wand2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { UserSummary } from "@shared/admin";
+import type { UserStatus } from "@shared/enums";
 import { isStaff } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
@@ -14,6 +15,12 @@ import { useConfirm } from "@/components/overlays";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Progress } from "@/components/ui/progress";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { useCurrentUser } from "@/features/auth/AuthProvider";
@@ -111,30 +118,117 @@ export default function AdminPeoplePage() {
     [confirm, load],
   );
 
+  /**
+   * Moving an account between the three states.
+   *
+   * Suspend and archive both sign the person out immediately, so both confirm; only suspend asks for
+   * the typed username, because from this table the rows look alike and suspending the wrong person
+   * locks them out of a machine they are working on right now. Archiving is reversible and sits under
+   * its own view, so a typed phrase there would be ceremony.
+   *
+   * Going back to `active` never confirms. Letting somebody in is not the dangerous direction.
+   */
   const handleStatus = useCallback(
-    async (user: UserSummary) => {
-      const next = user.status === "active" ? "disabled" : "active";
+    async (user: UserSummary, next: UserStatus) => {
       if (next === "disabled") {
-        // Typed confirmation: from this table the rows look alike, and disabling the wrong person
-        // signs them out of a machine they are working on right now.
         const ok = await confirm({
-          title: `Disable ${user.displayName}?`,
-          body: "They are signed out of every device immediately and cannot sign in again until you re-enable the account. Their progress, plan and assessment history are kept.",
-          confirmLabel: "Disable account",
+          title: `Suspend ${user.displayName}?`,
+          body: "They are signed out of every device immediately and cannot sign in again until you lift it. Their progress, plan and assessment history are kept.",
+          confirmLabel: "Suspend account",
           variant: "destructive",
           confirmPhrase: user.username,
         });
         if (!ok) return;
       }
+      if (next === "archived") {
+        const ok = await confirm({
+          title: `Remove ${user.displayName} from the programme?`,
+          body: "They are signed out and drop off this list, and their progress stops here. Nothing is deleted \u2014 you can find them under Archived and put them back at any point.",
+          confirmLabel: "Archive",
+        });
+        if (!ok) return;
+      }
+
       setBusyId(user.id);
+      const previous = user.status;
       try {
         await adminApi.setStatus(user.id, next);
-        notify.success(
-          next === "disabled" ? `${user.displayName} is disabled and signed out.` : `${user.displayName} can sign in again.`,
-        );
+        if (next === "active") {
+          notify.success(`${user.displayName} can sign in again.`);
+        } else {
+          /* `notify.undo` rather than a hand-built action: both of these genuinely restore the
+             previous state, which is the condition its doc comment sets for using it at all. */
+          notify.undo(
+            next === "disabled" ? `${user.displayName} is suspended and signed out.` : `${user.displayName} is archived.`,
+            {
+              onUndo: () => {
+                void adminApi
+                  .setStatus(user.id, previous)
+                  .then(() => load())
+                  .catch(() => setError("Could not put that back."));
+              },
+            },
+          );
+        }
         await load();
       } catch (err) {
         setError(err instanceof ApiRequestError ? err.message : "Could not change that account.");
+      } finally {
+        setBusyId(null);
+      }
+    },
+    [confirm, load],
+  );
+
+  /**
+   * Deleting, for real.
+   *
+   * Two dialogs rather than one. The first offers the export, because the moment *after* a deletion
+   * is exactly when somebody discovers they wanted it; the second is the deletion, and it names what
+   * goes. The server checks the typed username again \u2014 a confirmation that lives only in the
+   * client is a confirmation that only exists for people using the client.
+   */
+  const handleDelete = useCallback(
+    async (user: UserSummary) => {
+      const wantsExport = await confirm({
+        title: `Download ${user.displayName}'s record first?`,
+        body: "Their profile, assessment results, progress and certificates, as a JSON file. This is the last moment it exists.",
+        confirmLabel: "Download, then continue",
+        cancelLabel: "Skip",
+      });
+      if (wantsExport) {
+        /* A plain navigation rather than fetch-and-blob: the response already carries its filename in
+           `content-disposition`, and the browser's own download is what an admin expects to happen. */
+        window.location.href = adminApi.exportUserUrl(user.id);
+      }
+
+      const ok = await confirm({
+        title: `Delete ${user.displayName} permanently?`,
+        body:
+          "This cannot be undone. Their account, sessions, profile, assessments and proctoring records " +
+          "including webcam snapshots, plans, weekly plans, progress, attempts and certificates are all " +
+          "removed. Courses saved to the system library stay \u2014 they belong to the catalogue now.",
+        confirmLabel: "Delete permanently",
+        variant: "destructive",
+        confirmPhrase: user.username,
+      });
+      if (!ok) return;
+
+      setBusyId(user.id);
+      try {
+        const { counts } = await adminApi.deleteUser(user.id, user.username);
+        notify.success(`${user.displayName} is deleted.`, {
+          description:
+            `${counts.assessments} assessment${counts.assessments === 1 ? "" : "s"}, ` +
+            `${counts.snapshots} snapshot${counts.snapshots === 1 ? "" : "s"} and ` +
+            `${counts.progress} progress record${counts.progress === 1 ? "" : "s"} removed` +
+            (counts.keptGlobalCourses > 0
+              ? `. ${counts.keptGlobalCourses} course${counts.keptGlobalCourses === 1 ? "" : "s"} kept in the library.`
+              : "."),
+        });
+        await load();
+      } catch (err) {
+        setError(err instanceof ApiRequestError ? err.message : "Could not delete that account.");
       } finally {
         setBusyId(null);
       }
@@ -227,11 +321,18 @@ export default function AdminPeoplePage() {
         enableSorting: false,
         meta: { align: "right" },
         cell: ({ row }) => (
-          <RowActions user={row.original} busy={busyId === row.original.id} onReset={handleReset} onStatus={handleStatus} />
+          <RowActions
+            user={row.original}
+            busy={busyId === row.original.id}
+            canDelete={me?.role === "superadmin" && row.original.id !== me.id}
+            onReset={handleReset}
+            onStatus={handleStatus}
+            onDelete={handleDelete}
+          />
         ),
       },
     ],
-    [busyId, handleReset, handleStatus],
+    [busyId, handleReset, handleStatus, handleDelete, me],
   );
 
   /* Bulk actions run one request per row rather than one batched call, because no batched endpoint
@@ -287,13 +388,36 @@ export default function AdminPeoplePage() {
         id: "enable",
         label: "Re-enable",
         icon: <ShieldCheck aria-hidden="true" />,
-        run: async (rows: UserSummary[]): Promise<void> => {
-          const targets = rows.filter((u) => u.status === "disabled");
+        run: async (selected: UserSummary[]): Promise<void> => {
+          /* Both suspended and archived accounts come back with this. From a selection the admin's
+             intent is "let these people back in", and making them do it twice, once per state, would
+             be a distinction that serves the schema rather than them. */
+          const targets = selected.filter((u) => u.status !== "active");
           if (targets.length === 0) {
-            notify.info("Nothing to re-enable in that selection.");
+            notify.info("Everyone in that selection is already active.");
             throw new Error("nothing to do");
           }
-          await runEach(targets, (u) => adminApi.setStatus(u.id, "active"), "Re-enabled", "account");
+          await runEach(targets, (u) => adminApi.setStatus(u.id, "active"), "Restored", "account");
+          await load();
+        },
+      },
+      {
+        id: "archive",
+        label: "Remove from programme",
+        icon: <Archive aria-hidden="true" />,
+        run: async (selected: UserSummary[]): Promise<void> => {
+          const targets = selected.filter((u) => !isStaff(u.role) && u.status !== "archived");
+          if (targets.length === 0) {
+            notify.info("Nothing to archive in that selection.");
+            throw new Error("nothing to do");
+          }
+          const ok = await confirm({
+            title: `Remove ${targets.length} ${targets.length === 1 ? "person" : "people"} from the programme?`,
+            body: `${targets.map((u) => u.displayName).join(", ")} are signed out and drop off this list. Nothing is deleted — they move to Archived, and you can put them back at any point.`,
+            confirmLabel: `Archive ${targets.length}`,
+          });
+          if (!ok) throw new Error("cancelled");
+          await runEach(targets, (u) => adminApi.setStatus(u.id, "archived"), "Archived", "account");
           await load();
         },
       },
@@ -301,7 +425,25 @@ export default function AdminPeoplePage() {
     [confirm, load],
   );
 
-  const count = users?.length ?? 0;
+  /**
+   * Archived accounts appear only when the filters ask about status.
+   *
+   * "Removed from the programme" has to mean removed from the list somebody scans every morning, or
+   * it means nothing. Rather than a hidden exception, the rule is one sentence: the moment a filter
+   * mentions `status` this stops applying and you see exactly what you asked for — including from
+   * the Archived view, whose whole filter is a status.
+   */
+  const asksAboutStatus = useMemo(
+    () => query.filters.conditions.some((condition) => condition.field === "status"),
+    [query.filters],
+  );
+  const rows = useMemo(
+    () => (asksAboutStatus ? users : (users?.filter((user) => user.status !== "archived") ?? null)),
+    [users, asksAboutStatus],
+  );
+
+  const archivedCount = useMemo(() => users?.filter((user) => user.status === "archived").length ?? 0, [users]);
+  const count = rows?.length ?? 0;
 
   return (
     <div className="px-4 py-8 sm:px-6">
@@ -309,7 +451,31 @@ export default function AdminPeoplePage() {
         <div>
           <h1 className="text-2xl font-bold">People</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {users ? `${count} account${count === 1 ? "" : "s"} on the trail` : "Loading…"}
+            {rows ? `${count} account${count === 1 ? "" : "s"} on the trail` : "Loading…"}
+            {archivedCount > 0 && !asksAboutStatus && (
+              <>
+                {" "}
+                <span aria-hidden="true">·</span>{" "}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setQuery(
+                      (current) => ({
+                        ...current,
+                        filters: {
+                          combinator: "and",
+                          conditions: [{ field: "status", operator: "eq", value: "archived" }],
+                        },
+                      }),
+                      { push: true },
+                    )
+                  }
+                  className="rounded-sm underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+                >
+                  {archivedCount} archived
+                </button>
+              </>
+            )}
           </p>
         </div>
         <Button asChild>
@@ -339,7 +505,7 @@ export default function AdminPeoplePage() {
 
       <div className="mt-6">
         <DataTable
-          data={users ?? []}
+          data={rows ?? []}
           columns={columns}
           fields={peopleFields}
           getRowId={(u) => u.id}
@@ -476,17 +642,35 @@ function StatusCell({ user }: { user: UserSummary }) {
   return <StatusBadge kind="user" status="active" />;
 }
 
+/**
+ * The row menu.
+ *
+ * A menu rather than a row of icon buttons, because the lifecycle now has five entries and five
+ * icons in a table cell is a puzzle. Reset stays a button: it is the one an admin reaches for
+ * constantly, and burying the common action to make room for the rare ones is the wrong trade.
+ *
+ * Delete only appears for a super admin, and never on their own row. Hiding it is not the security
+ * boundary \u2014 the route checks both \u2014 it is so the menu does not offer something that will
+ * be refused.
+ */
 function RowActions({
   user,
   busy,
+  canDelete,
   onReset,
   onStatus,
+  onDelete,
 }: {
   user: UserSummary;
   busy: boolean;
+  canDelete: boolean;
   onReset: (user: UserSummary) => void | Promise<void>;
-  onStatus: (user: UserSummary) => void | Promise<void>;
+  onStatus: (user: UserSummary, next: UserStatus) => void | Promise<void>;
+  onDelete: (user: UserSummary) => void | Promise<void>;
 }) {
+  const [open, setOpen] = useState(false);
+  const staff = isStaff(user.role);
+
   return (
     // Stops a click on an action from also opening the row's detail panel.
     <div className="flex justify-end gap-1" onClick={(e) => e.stopPropagation()}>
@@ -500,20 +684,50 @@ function RowActions({
         <KeyRound aria-hidden="true" />
         <span className="sr-only">Reset {user.displayName}'s password</span>
       </Button>
-      {!isStaff(user.role) && (
-        <Button
-          variant="ghost"
-          size="icon-sm"
-          loading={busy}
-          onClick={() => void onStatus(user)}
-          title={user.status === "active" ? `Disable ${user.displayName}` : `Re-enable ${user.displayName}`}
-        >
-          {user.status === "active" ? <ShieldOff aria-hidden="true" /> : <ShieldCheck aria-hidden="true" />}
-          <span className="sr-only">
-            {user.status === "active" ? "Disable" : "Re-enable"} {user.displayName}
-          </span>
-        </Button>
-      )}
+
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon-sm" disabled={busy} title={`More actions for ${user.displayName}`}>
+            <MoreHorizontal aria-hidden="true" />
+            <span className="sr-only">More actions for {user.displayName}</span>
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end">
+          {user.status !== "active" && (
+            <DropdownMenuItem onSelect={() => void onStatus(user, "active")}>
+              <ShieldCheck aria-hidden="true" />
+              {user.status === "archived" ? "Restore to the programme" : "Lift the suspension"}
+            </DropdownMenuItem>
+          )}
+
+          {!staff && user.status === "active" && (
+            <DropdownMenuItem onSelect={() => void onStatus(user, "disabled")}>
+              <ShieldOff aria-hidden="true" />
+              Suspend
+            </DropdownMenuItem>
+          )}
+
+          {!staff && user.status !== "archived" && (
+            <DropdownMenuItem onSelect={() => void onStatus(user, "archived")}>
+              <Archive aria-hidden="true" />
+              Remove from programme
+            </DropdownMenuItem>
+          )}
+
+          <DropdownMenuItem onSelect={() => (window.location.href = adminApi.exportUserUrl(user.id))}>
+            <Download aria-hidden="true" />
+            Export their data
+          </DropdownMenuItem>
+
+          {canDelete && (
+            <DropdownMenuItem tone="danger" onSelect={() => void onDelete(user)}>
+              <Trash2 aria-hidden="true" />
+              Delete permanently
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

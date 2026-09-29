@@ -35,7 +35,8 @@ export const peopleFields: TableFieldDef<UserSummary>[] = [
     quick: true,
     options: [
       { value: "active", label: "Active" },
-      { value: "disabled", label: "Disabled" },
+      { value: "disabled", label: "Suspended" },
+      { value: "archived", label: "Archived" },
     ],
   },
   {
@@ -103,6 +104,32 @@ function base(query: Partial<TableQuery>): TableQuery {
  * timestamp is correct on the day it is written and wrong every day after (see `types.ts`).
  */
 export const peopleBuiltInViews: BuiltInView[] = [
+  {
+    /* First, and the default the page applies on a cold start. Archiving means "they have left the
+       programme": their rows are kept and restorable, and they should not be in the list somebody
+       scans every morning. "Archived" below is how you get to them. */
+    id: "on-programme",
+    name: "On the programme",
+    description: "excludes archived",
+    build: () =>
+      base({
+        filters: {
+          combinator: "and",
+          conditions: [{ field: "status", operator: "in", value: ["active", "disabled"] }],
+        },
+        sort: [{ field: "createdAt", dir: "desc" }],
+      }),
+  },
+  {
+    id: "archived",
+    name: "Archived",
+    description: "removed from the programme",
+    build: () =>
+      base({
+        filters: { combinator: "and", conditions: [{ field: "status", operator: "eq", value: "archived" }] },
+        sort: [{ field: "displayName", dir: "asc" }],
+      }),
+  },
   {
     id: "flagged",
     name: "Flagged",

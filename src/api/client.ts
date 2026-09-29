@@ -95,5 +95,8 @@ export const api = {
   put: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "PUT", body: body ?? {} }),
   /** For a partial update — moving one weekly-plan item rather than replacing the week. */
   patch: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "PATCH", body: body ?? {} }),
-  del: <T>(path: string) => apiFetch<T>(path, { method: "DELETE" }),
+  /* A body on a DELETE is unusual but correct here: deleting a user carries the typed confirmation
+     and the reason, and neither belongs in a URL that ends up in a proxy log. */
+  del: <T>(path: string, body?: unknown) =>
+    apiFetch<T>(path, { method: "DELETE", ...(body === undefined ? {} : { body }) }),
 };

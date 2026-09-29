@@ -70,6 +70,72 @@ export type ResetPasswordResponse = z.infer<typeof resetPasswordResponseSchema>;
 export const setUserStatusRequestSchema = z.object({ status: userStatusSchema });
 export type SetUserStatusRequest = z.infer<typeof setUserStatusRequestSchema>;
 
+/**
+ * Deleting a person, for real.
+ *
+ * The username is typed rather than clicked. Not theatre: this is the one action in the console with
+ * no undo, and the difference between "disable" and "delete" is a word in a menu — typing the name
+ * is the only step that cannot be completed by muscle memory.
+ */
+export const deleteUserRequestSchema = z.object({
+  /** Must match the target's username exactly, lowercased. */
+  confirmUsername: z.string().trim().min(1).max(64),
+  /** Why. Stored on the audit row, since the row it describes will be gone. */
+  reason: z.string().trim().max(500).optional(),
+});
+export type DeleteUserRequest = z.infer<typeof deleteUserRequestSchema>;
+
+/** What a delete actually removed, so the confirmation can be specific and the audit row honest. */
+export const deletionCountsSchema = z.object({
+  sessions: z.number().int(),
+  assessments: z.number().int(),
+  integrityEvents: z.number().int(),
+  snapshots: z.number().int(),
+  plans: z.number().int(),
+  weeks: z.number().int(),
+  progress: z.number().int(),
+  attempts: z.number().int(),
+  certificates: z.number().int(),
+  notifications: z.number().int(),
+  generatedCourses: z.number().int(),
+  /** Promoted to the catalogue, so kept and detached rather than deleted. */
+  keptGlobalCourses: z.number().int(),
+});
+export type DeletionCounts = z.infer<typeof deletionCountsSchema>;
+
+export const deleteUserResponseSchema = z.object({
+  deleted: z.object({ id: z.string(), username: z.string(), displayName: z.string() }),
+  counts: deletionCountsSchema,
+});
+export type DeleteUserResponse = z.infer<typeof deleteUserResponseSchema>;
+
+/**
+ * Everything the platform holds about one person, as a file.
+ *
+ * Offered before a delete, and downloadable on its own. It is their record: the profile an admin
+ * wrote, what they were assessed on and how it went, what they completed, and what they earned.
+ * Proctoring *images* are not in it — the events are, with their timestamps and severities, but a
+ * JSON file full of base64 webcam frames is not something to hand around.
+ */
+export interface UserExport {
+  exportedAt: number;
+  exportedBy: string;
+  user: { id: string; username: string; displayName: string; role: string; status: string; createdAt: number; lastLoginAt: number | null };
+  profile: unknown;
+  priorities: unknown;
+  targets: unknown[];
+  assessments: unknown[];
+  evaluations: unknown[];
+  integrity: unknown[];
+  plans: unknown[];
+  weeks: unknown[];
+  progress: unknown[];
+  attempts: unknown[];
+  certificates: unknown[];
+  courseProgress: unknown[];
+  generatedCourses: unknown[];
+}
+
 export const listUsersResponseSchema = z.object({ users: z.array(userSummarySchema) });
 export type ListUsersResponse = z.infer<typeof listUsersResponseSchema>;
 

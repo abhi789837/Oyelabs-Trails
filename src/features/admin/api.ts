@@ -1,5 +1,6 @@
 import type { AssessmentSummary } from "@shared/assessment";
 import type {
+  DeleteUserResponse,
   LearnerDetail,
   ListUsersResponse,
   OnboardLearnerRequest,
@@ -29,6 +30,19 @@ export const adminApi = {
     api.post<{ user: UserSummary }>(`/api/admin/users/${id}/status`, { status }),
 
   revokeSessions: (id: string) => api.post<{ removed: number }>(`/api/admin/users/${id}/revoke-sessions`),
+
+  /**
+   * Deletes a person and everything personal to them. Super admin only, and there is no undo.
+   *
+   * `confirmUsername` must match exactly — the server checks it as well as the dialog, because a
+   * confirmation that only exists in the client is a confirmation that only exists for people using
+   * the client.
+   */
+  deleteUser: (id: string, confirmUsername: string, reason?: string) =>
+    api.del<DeleteUserResponse>(`/api/admin/users/${id}`, { confirmUsername, ...(reason ? { reason } : {}) }),
+
+  /** Their whole record as a JSON file. Offered before a deletion, and available on its own. */
+  exportUserUrl: (id: string) => `/api/admin/users/${id}/export`,
 
   /** Releases a generated assessment to the learner before its auto-approval deadline. */
   approveAssessment: (assessmentId: string) =>

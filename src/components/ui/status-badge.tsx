@@ -53,7 +53,10 @@ export type StatusKind = keyof StatusKinds;
 const registry: { [K in StatusKind]: Record<StatusKinds[K], Entry> } = {
   user: {
     active: { label: "Active", tone: "success" },
-    disabled: { label: "Disabled", tone: "outline" },
+    /* "Suspended" rather than "Disabled": the two states now read as a pause and a departure, and
+       the word on the badge is what tells them apart at a glance in the table. */
+    disabled: { label: "Suspended", tone: "progress" },
+    archived: { label: "Archived", tone: "outline" },
   },
   assessment: {
     generating: { label: "Generating", tone: "progress" },
