@@ -110,21 +110,49 @@ export const MATCH_THRESHOLD = 0.5;
 export interface Match {
   candidate: Candidate;
   score: number;
+  /** The same score against the title alone. Decides the order; see `matchesFor`. */
+  titleScore: number;
 }
 
 /**
  * The lessons that answer one skill, best first.
  *
- * Ties break on trail order rather than arbitrarily, so a module's earlier lesson comes before its
- * later one when both match equally — which is both the more useful order and a stable one.
+ * **Qualifying** uses the whole haystack — title, module, track, course — so a lesson called
+ * "Invalidation" inside a "Caching" module is found. **Ordering** puts the title first, and that
+ * distinction is not academic: a track named "PHP & Laravel" makes every lesson in it a full match for
+ * "Laravel", so ranking on the combined score alone filled a red lane with "Syntax, Variables and Data
+ * Types" while the Laravel lessons sat further down. The title is the strongest evidence about what a
+ * lesson is actually about, so it decides who goes first; the context decides who is eligible at all.
+ *
+ * Ties break on trail order, so a module's earlier lesson comes before its later one.
  */
 export function matchesFor(skill: string, candidates: readonly Candidate[]): Match[] {
   const scored: Match[] = [];
   for (const candidate of candidates) {
     const score = matchScore(skill, candidate.haystack);
-    if (score >= MATCH_THRESHOLD) scored.push({ candidate, score });
+    if (score >= MATCH_THRESHOLD) {
+      scored.push({ candidate, score, titleScore: matchScore(skill, candidate.title) });
+    }
   }
-  return scored.sort((a, b) => b.score - a.score || a.candidate.order - b.candidate.order);
+  return scored.sort(
+    (a, b) => b.titleScore - a.titleScore || b.score - a.score || a.candidate.order - b.candidate.order,
+  );
+}
+
+/**
+ * Are these two names the same skill?
+ *
+ * Substring in either direction, as `builder/scoring.ts` does for the same reason: an admin writes
+ * "DevOps" and a model returns "DevOps deployment on shared hosting". The shorter side must be at
+ * least three characters so "Go" does not match "Django".
+ */
+export function skillsRelated(a: string, b: string): boolean {
+  const left = normaliseSkill(a);
+  const right = normaliseSkill(b);
+  if (left === right) return true;
+  const shorter = left.length <= right.length ? left : right;
+  if (shorter.length < 3) return false;
+  return left.includes(right) || right.includes(left);
 }
 
 /**

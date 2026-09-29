@@ -93,5 +93,7 @@ export const api = {
   get: <T>(path: string, signal?: AbortSignal) => apiFetch<T>(path, { method: "GET", signal }),
   post: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "POST", body: body ?? {} }),
   put: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "PUT", body: body ?? {} }),
+  /** For a partial update — moving one weekly-plan item rather than replacing the week. */
+  patch: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "PATCH", body: body ?? {} }),
   del: <T>(path: string) => apiFetch<T>(path, { method: "DELETE" }),
 };

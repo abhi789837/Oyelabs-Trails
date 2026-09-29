@@ -7,6 +7,7 @@ import { requireStaff, requireSuperadmin, staffOnly } from "../../auth/guards";
 import { coursesWithDeadLinks } from "../../jobs/handlers/checkLinks";
 import { currentPath, getPriorities, listGaps, setPriorities } from "../../builder/repo";
 import { getResearchSettings, updateResearchSettings } from "../../builder/settings";
+import { activeWeek } from "../../plans/weekly/repo";
 import { schema } from "../../db";
 import { enqueue } from "../../jobs/queue";
 import { writeAudit } from "../../lib/audit";
@@ -43,16 +44,38 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
     const user = app.db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.id, userId)).get();
     if (!user) throw notFound("No such person.");
 
+    /* Read before the write, so the comparison is against what was actually there. The week is built
+       from exactly these fields, so a change to any of them makes the current week out of date — and
+       that is worth *saying*, rather than silently rebuilding somebody's week under them mid-Tuesday. */
+    const previous = getPriorities(app.db, userId);
     setPriorities(app.db, userId, priorities, actor.id);
+
     writeAudit(app.db, {
       actorId: actor.id,
       action: "priorities.updated",
       targetType: "user",
       targetId: userId,
       // Counts and the role, never the notes: the audit log is not a second copy of the profile.
-      details: { targetRole: priorities.targetRole, mustHave: priorities.mustHave.length, cap: priorities.courseCap },
+      details: {
+        targetRole: priorities.targetRole,
+        mustHave: priorities.mustHave.length,
+        cap: priorities.courseCap,
+        hoursPerWeek: priorities.hoursPerWeek,
+      },
     });
-    return { priorities };
+
+    const changesTheWeek =
+      previous.hoursPerWeek !== priorities.hoursPerWeek ||
+      previous.daysPerWeek !== priorities.daysPerWeek ||
+      previous.weekStartsMonday !== priorities.weekStartsMonday ||
+      JSON.stringify(previous.mustHave) !== JSON.stringify(priorities.mustHave) ||
+      JSON.stringify(previous.skip) !== JSON.stringify(priorities.skip);
+
+    return {
+      priorities,
+      /** True when their current week no longer reflects these priorities. The UI offers a rebuild. */
+      weekNeedsRegeneration: changesTheWeek && activeWeek(app.db, userId) !== null,
+    };
   });
 
   app.get("/api/admin/users/:userId/gaps", async (request) => {

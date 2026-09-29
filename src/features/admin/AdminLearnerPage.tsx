@@ -25,6 +25,7 @@ import { EvaluationTab } from "./learner/EvaluationTab";
 import { IntegrityTab } from "./learner/IntegrityTab";
 import { PathTab } from "./learner/PathTab";
 import { PlanTab } from "./learner/PlanTab";
+import { WeekTab } from "./learner/WeekTab";
 import { ProfileTab } from "./learner/ProfileTab";
 import { ProgressTab } from "./learner/ProgressTab";
 
@@ -33,7 +34,8 @@ const TABS = [
   { id: "assessment", label: "Assessment" },
   { id: "integrity", label: "Integrity" },
   { id: "evaluation", label: "Evaluation" },
-  { id: "plan", label: "Plan" },
+  { id: "week", label: "This week" },
+  { id: "plan", label: "Library" },
   { id: "path", label: "AI path" },
   { id: "progress", label: "Progress" },
   { id: "account", label: "Account" },
@@ -278,6 +280,7 @@ export default function AdminLearnerPage() {
                 onPublished={reloadPlan}
               />
             )}
+            {tab.id === "week" && <WeekTab userId={userId} displayName={detail.user.displayName} />}
             {tab.id === "path" && <PathTab userId={userId} displayName={detail.user.displayName} />}
             {tab.id === "progress" && <ProgressTab userId={userId} progress={progress} plan={plan} />}
             {tab.id === "account" && <AccountTab user={detail.user} onChanged={reloadDetail} />}

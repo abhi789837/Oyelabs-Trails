@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "motion/react";
 import {
+  BookMarked,
   Compass,
   Cpu,
   Radio,
@@ -62,6 +63,7 @@ import { pushRecent, readRecents, writeRecents, type RecentEntry } from "./palet
 const ACTION_ICONS: Record<string, LucideIcon> = {
   "action:dashboard": Compass,
   "action:plan": Route,
+  "action:library": BookMarked,
   "action:admin": ShieldCheck,
   "action:admin-people": Users,
   "action:admin-onboard": UserPlus,
@@ -90,7 +92,8 @@ function buildActions(role: Role | undefined, context: "learner" | "admin"): Com
   if (!role || !isStaff(role)) {
     return [
       entry("action:dashboard", "Dashboard", "/", "Your trails at a glance"),
-      entry("action:plan", "Your plan", "/plan", "The waypoints assigned to you"),
+      entry("action:plan", "My plan", "/plan", "This week, by priority"),
+      entry("action:library", "Library", "/library", "Everything unlocked for you"),
       entry("action:courses", "Courses", "/courses", "How things are done here"),
     ];
   }

@@ -6,6 +6,7 @@ import { isTransientAssessment } from "@/features/assessment/funnel";
 import { useAuth } from "@/features/auth/AuthProvider";
 import CertificatePage from "@/pages/CertificatePage";
 import DashboardPage from "@/pages/DashboardPage";
+import LibraryPage from "@/pages/LibraryPage";
 import ModulePage from "@/pages/ModulePage";
 import NotFoundPage from "@/pages/NotFoundPage";
 import PlanPage from "@/pages/PlanPage";
@@ -115,6 +116,8 @@ function AnimatedRoutes() {
         <Routes location={location}>
           <Route index element={<DashboardPage />} />
           <Route path="plan" element={<PlanPage />} />
+          {/* The whole unlocked set. `/plan` is one week of it. */}
+          <Route path="library" element={<LibraryPage />} />
           <Route path="track/:trackId" element={<TrackPage />} />
           <Route path="track/:trackId/module/:moduleId" element={<ModulePage />} />
           <Route path="track/:trackId/module/:moduleId/topic/:topicId" element={<TopicPage />} />

@@ -1,6 +1,14 @@
 import { Minus, Plus } from "lucide-react";
 
 import { type LearnerPriorities, type MustHaveSkill, type SkillWeight } from "@shared/builder";
+import {
+  DEFAULT_DAYS_PER_WEEK,
+  DEFAULT_HOURS_PER_WEEK,
+  MAX_DAYS_PER_WEEK,
+  MAX_HOURS_PER_WEEK,
+  MIN_DAYS_PER_WEEK,
+  MIN_HOURS_PER_WEEK,
+} from "@shared/weeklyPlan";
 
 import { Field, TextField } from "@/components/form/Field";
 import { Badge } from "@/components/ui/badge";
@@ -125,6 +133,71 @@ export function PrioritiesFields({
         )}
       </Field>
 
+      <Field
+        label="Time available each week"
+        hint="What their weekly plan is built to fit. Only you know whether they are on training full-time or fitting it around delivery."
+      >
+        {() => (
+          <div className="flex flex-wrap items-end gap-4">
+            <label className="flex flex-col gap-1.5">
+              <span className="text-sm text-muted-foreground">Hours</span>
+              <input
+                type="number"
+                min={MIN_HOURS_PER_WEEK}
+                max={MAX_HOURS_PER_WEEK}
+                disabled={disabled}
+                value={value.hoursPerWeek}
+                onChange={(event) =>
+                  set(
+                    "hoursPerWeek",
+                    Math.max(MIN_HOURS_PER_WEEK, Math.min(MAX_HOURS_PER_WEEK, Number(event.target.value) || DEFAULT_HOURS_PER_WEEK)),
+                  )
+                }
+                className="w-24 rounded-md border border-input bg-surface px-3 py-2 text-sm tabular focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
+              />
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-sm text-muted-foreground">Over how many days</span>
+              <input
+                type="number"
+                min={MIN_DAYS_PER_WEEK}
+                max={MAX_DAYS_PER_WEEK}
+                disabled={disabled}
+                value={value.daysPerWeek}
+                onChange={(event) =>
+                  set(
+                    "daysPerWeek",
+                    Math.max(MIN_DAYS_PER_WEEK, Math.min(MAX_DAYS_PER_WEEK, Number(event.target.value) || DEFAULT_DAYS_PER_WEEK)),
+                  )
+                }
+                className="w-24 rounded-md border border-input bg-surface px-3 py-2 text-sm tabular focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
+              />
+            </label>
+
+            <p className="min-w-40 flex-1 font-mono text-[11px] text-muted-foreground">
+              ≈ {Math.round((value.hoursPerWeek / Math.max(1, value.daysPerWeek)) * 10) / 10} h a day
+            </p>
+          </div>
+        )}
+      </Field>
+
+      <label className="flex cursor-pointer items-start gap-3 rounded-md border p-4">
+        <Checkbox
+          checked={value.weekStartsMonday}
+          disabled={disabled}
+          onCheckedChange={(checked) => set("weekStartsMonday", checked === true)}
+          className="mt-0.5"
+        />
+        <span>
+          <span className="font-medium">Weeks start on Monday</span>
+          <span className="mt-0.5 block text-sm text-muted-foreground">
+            Off by default, so somebody who finishes their assessment on a Wednesday is given work that day rather
+            than waiting for Monday. Turn it on to line a whole cohort up on the same seven days.
+          </span>
+        </span>
+      </label>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Deadline" hint="Optional. Weeks from now.">
           {({ id }) => (
@@ -241,7 +314,8 @@ export function PrioritiesSummary({ value }: { value: LearnerPriorities }) {
         </ul>
       )}
       <p className="font-mono text-[11px] text-muted-foreground">
-        up to {value.courseCap} generated{value.skip.length > 0 && ` · skipping ${value.skip.length}`}
+        {value.hoursPerWeek} h/week over {value.daysPerWeek} days · up to {value.courseCap} generated
+        {value.skip.length > 0 && ` · skipping ${value.skip.length}`}
         {value.autoPublish ? " · auto-publish on" : ""}
       </p>
     </div>

@@ -34,8 +34,18 @@ export interface ResearchSettings {
 export const builderApi = {
   getPriorities: (userId: string, signal?: AbortSignal) =>
     api.get<{ priorities: LearnerPriorities }>(`/api/admin/users/${userId}/priorities`, signal),
+  /**
+   * Saves the priorities, and says whether their current week no longer matches them.
+   *
+   * Saving does not rebuild the week on its own: quietly reshaping somebody's Tuesday because an admin
+   * adjusted a weight is a surprise, and the admin may be halfway through a larger edit. The prompt
+   * puts the decision where it belongs.
+   */
   setPriorities: (userId: string, priorities: LearnerPriorities) =>
-    api.put<{ priorities: LearnerPriorities }>(`/api/admin/users/${userId}/priorities`, priorities),
+    api.put<{ priorities: LearnerPriorities; weekNeedsRegeneration: boolean }>(
+      `/api/admin/users/${userId}/priorities`,
+      priorities,
+    ),
 
   gaps: (userId: string, signal?: AbortSignal) =>
     api.get<{ gaps: SkillGapView[]; path: LearningPathView | null }>(`/api/admin/users/${userId}/gaps`, signal),

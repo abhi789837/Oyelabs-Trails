@@ -243,6 +243,14 @@ _(newest last: step, commit hash, known gaps)_
 - **`npm run dev:password -- <username>`** added (`45671da`): the first-boot superadmin password is
   printed once and stored nowhere, so a dev database that outlives its terminal had no way back in.
 
+- **The weekly plan** (`docs/weekly-plan.md`). "My plan" is now one week rather than the whole
+  library: four priority lanes (Do it now / Must know / Medium / Low) built to the learner's own
+  hours-per-week, with a trail view and a lane view, weekly rollover, carry-over and a summit
+  celebration. The unlocked set is unchanged and moved to `/library`. The deterministic builder always
+  runs and the model only *revises* its output, so the page works with no AI credential at all —
+  choosing twelve lessons out of two hundred by id is the task a model is worst at. Migration 0008
+  (additive). Existing plans convert on first read, so there is no backfill script.
+
 ## Blocked / needs Abhishek
 
 - **Real AI credential.** No `ANTHROPIC_API_KEY` in the build environment, so every AI path was

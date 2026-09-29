@@ -1,4 +1,4 @@
-import { WEIGHT_VALUE, type LearnerPriorities, type ScoredGap } from "../../../../shared/builder";
+import { WEIGHT_VALUE, type LearnerPriorities, type ScoredGap, type SkillWeight } from "../../../../shared/builder";
 import {
   DO_NOW_TARGET_ITEMS,
   LANE_KEYS,
@@ -12,7 +12,7 @@ import {
   type WeeklyPlanItem,
   type WeeklyPlanLanes,
 } from "../../../../shared/weeklyPlan";
-import { isSkipped, matchesFor } from "./matching";
+import { isSkipped, matchesFor, skillsRelated } from "./matching";
 import type { BuildWeekInput, Candidate } from "./types";
 
 /**
@@ -81,15 +81,17 @@ export function laneForGap(gap: ScoredGap): PlanLane {
  * cannot drift from what actually happened.
  */
 export function whyLine(gap: ScoredGap, priorities: LearnerPriorities): string {
-  const listed = priorities.mustHave.find(
-    (entry) => entry.skill.trim().toLowerCase() === gap.skill.trim().toLowerCase() || gap.source !== "ai_detected",
-  );
+  /* Matched on the skill, not on "is this an admin gap". An earlier version short-circuited with
+     `|| gap.source !== "ai_detected"`, which made `find` return the *first* must-have for every admin
+     gap — so a week with Deployment (High) at the top labelled its Testing and GraphQL items "High"
+     too, and the lane colours and the words disagreed on the same screen. */
+  const listed = priorities.mustHave.find((entry) => skillsRelated(entry.skill, gap.skill));
   const parts: string[] = [];
 
   if (gap.source === "ai_detected") {
     parts.push("From your assessment");
   } else {
-    const weight = listed ? listed.weight : "high";
+    const weight = listed?.weight ?? weightName(gap.weight);
     parts.push(`Admin: ${gap.skill}`, weight.charAt(0).toUpperCase() + weight.slice(1));
   }
 
@@ -99,6 +101,13 @@ export function whyLine(gap: ScoredGap, priorities: LearnerPriorities): string {
   else parts.push(gap.evidence.summary);
 
   return parts.join(" · ").slice(0, 300);
+}
+
+/** The nearest weight name to a stored multiplier, for a gap whose must-have entry has been renamed. */
+function weightName(weight: number): SkillWeight {
+  if (weight >= WEIGHT_VALUE.high) return "high";
+  if (weight >= WEIGHT_VALUE.medium) return "medium";
+  return "low";
 }
 
 /** "Needed before Multi-Stage Builds" — what a Must-know item is doing there. */
@@ -177,13 +186,19 @@ export function buildWeek(input: BuildWeekInput): WeeklyPlanDraft {
     const matches = matchesFor(gap.skill, pool).filter((m) => !used.has(m.candidate.key));
     if (matches.length === 0) continue;
 
-    /* How many lessons one gap may claim. Red is kept deliberately small — two to four items, and
-       never more than half the week — because a week where everything is an emergency is a week
-       nobody finishes. */
-    const quota = lane === "do_now" ? DO_NOW_TARGET_ITEMS.max : lane === "medium" ? 4 : 3;
+    /* How many lessons one gap may claim, and how large the red lane may get in total.
+    
+       Two per gap rather than four, with a hard cap of four items across the lane: with two High
+       must-haves, a per-gap quota of four let the first one take the whole lane and the second get
+       nothing, and the brief asks for two to four items *in the lane*. Two each means both of the
+       admin's top priorities are actually represented in the week they were marked High for. */
+    const perGap = lane === "do_now" ? 2 : lane === "medium" ? 3 : 2;
+    const laneItemCap = lane === "do_now" ? DO_NOW_TARGET_ITEMS.max : Infinity;
+
     let taken = 0;
     for (const match of matches) {
-      if (taken >= quota) break;
+      if (taken >= perGap) break;
+      if (selections.filter((s) => s.lane === lane).length >= laneItemCap) break;
       if (take(match.candidate, lane, reason, gap.source === "ai_detected" ? "ai_gap" : "admin_priority", {
         laneCap: lane === "do_now" ? doNowCap : undefined,
       })) {

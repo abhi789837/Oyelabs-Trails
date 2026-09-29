@@ -1,253 +1,214 @@
-import { useEffect, useMemo, useState } from "react";
-import { Clock, Flag, List, LoaderCircle, Map as MapIcon, Sparkles } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  ArrowRight,
+  BookMarked,
+  ChevronDown,
+  Clock,
+  List,
+  Map as MapIcon,
+  Sparkles,
+  Telescope,
+} from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { MyEvaluation } from "@shared/assessment";
+import {
+  LANE_ORDER,
+  formatRange,
+  isWeekComplete,
+  itemsInLane,
+  type WeekItemView,
+  type WeekResponse,
+  type WeekView,
+} from "@shared/weeklyPlan";
 
 import { api, ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
 import { Contours } from "@/components/trail/Contours";
-import { StatusDot } from "@/components/trail/StatusDot";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { findTopic, modulePath, topicPath, useTracks } from "@/content";
 import { isPendingAssessment } from "@/features/assessment/funnel";
+import { weekApi } from "@/features/plan/api";
+import { LANE_META } from "@/features/plan/laneMeta";
+import { Lanes } from "@/features/plan/Lanes";
+import { SummitCelebration } from "@/features/plan/SummitCelebration";
+import { LaneLegend, WeekTrail } from "@/features/plan/WeekTrail";
+import { WeekSkeleton } from "@/features/plan/WeekSkeleton";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { summarizeModule } from "@/hooks/useTrackProgress";
-import { accentClasses } from "@/lib/accent";
-import { levelLabels } from "@/lib/track-meta";
+import { fadeUp } from "@/lib/motion";
 import { cn, formatMinutes, formatMinutesCompact } from "@/lib/utils";
 import { useMyAssessmentStore } from "@/store/assessmentStore";
-import { useCurriculumStore } from "@/store/curriculumStore";
 import { useProgressStore } from "@/store/progressStore";
 
-import { PlanFilterBar } from "./parts/PlanFilterBar";
 import { SectionHeading, StatChip } from "./parts/Stats";
 import { useStoredView, ViewToggle } from "./parts/ViewToggle";
-import { EMPTY_PLAN_FILTERS, filterPlanRows, hasActiveFilters, type PlanRow } from "./planFilters";
-
-interface PlanRationale {
-  summary?: string;
-  learnerSummary?: string;
-  milestones?: string[];
-  estimatedHours?: number;
-}
 
 /**
- * My plan (brief §12).
+ * My plan — one week of it.
  *
- * The learner's home. It shows what they have been assigned and why, and nothing else — the
- * curriculum they cannot see is not hinted at, and the parts of the evaluation meant for their
- * manager (integrity, the onboarding notes) are not on this page at all.
+ * ## What changed, and why
  *
- * Two ways to read the same plan. **Trail view** is the camps-and-waypoints list this page has
- * always had, and it is deliberately untouched: it is the page's spine, and the ordering it shows
- * is the plan's own. **List view** flattens it and adds filters, for the days when the question is
- * "what have I got left that is a code challenge" rather than "where am I on the trail". Filtering
- * lives only in the list view — hiding a waypoint would break a path that means something.
+ * This page used to show the whole unlocked library at once: "0 of 204 lessons · 190 h 50 min", under a
+ * 450-word paragraph that walked through the next several months. All of it was true and none of it was
+ * usable, because the question somebody opens this page with is "what am I doing today", and a
+ * six-month journey is not an answer to it.
+ *
+ * So the two have been separated. The **library** is unchanged and lives at `/library` — every lesson
+ * the AI and the admin decided was relevant, still unlocked, still browsable, nothing removed. **This**
+ * page is one week, built to the hours the admin said this person actually has, split into four lanes
+ * by what is blocking them. The long narrative is still here, at the bottom, collapsed.
+ *
+ * ## The two views
+ *
+ * Trail is the default and the one this product is about: a week as a route, with waypoints, a "you are
+ * here" marker and a summit at the end. List is the same week as four lanes, for when the question is
+ * "what is left" rather than "where am I". The choice is remembered per browser.
  */
 export default function PlanPage() {
   useDocumentTitle("My plan");
   const navigate = useNavigate();
-  const tracks = useTracks();
-  const planTopicIds = useCurriculumStore((s) => s.planTopicIds);
   const progress = useProgressStore((s) => s.progress);
 
-  // The assessment is fetched once by the shell, for the banner that now carries this same
-  // message everywhere else. Re-fetching it here would be a second request for one answer.
   const assessment = useMyAssessmentStore((s) => s.assessment);
   const assessmentStatus = useMyAssessmentStore((s) => s.status);
   const assessmentError = useMyAssessmentStore((s) => s.error);
 
+  const [response, setResponse] = useState<WeekResponse | null>(null);
   const [evaluation, setEvaluation] = useState<MyEvaluation | null>(null);
-  const [rationale, setRationale] = useState<PlanRationale | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [planning, setPlanning] = useState(false);
+  const [planError, setPlanError] = useState<string | null>(null);
 
   const [view, setView] = useStoredView<"trail" | "list">("oyelearn.plan.view", "trail", ["trail", "list"]);
-  const [filters, setFilters] = useState(EMPTY_PLAN_FILTERS);
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const [evaluationResult, plan] = await Promise.all([
-          api.get<{ evaluation: MyEvaluation | null }>("/api/me/evaluation"),
-          api.get<{ plan: { rationale: PlanRationale | null } | null }>("/api/me/plan"),
-        ]);
-        if (cancelled) return;
-        setEvaluation(evaluationResult.evaluation);
-        setRationale(plan.plan?.rationale ?? null);
-      } catch (err) {
-        if (!cancelled) setError(err instanceof ApiRequestError ? err.message : "Could not load your plan.");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-    void load();
-    return () => {
-      cancelled = true;
-    };
+  const load = useCallback(async (signal?: AbortSignal) => {
+    const [week, evaluationResult] = await Promise.all([
+      weekApi.mine(signal),
+      api.get<{ evaluation: MyEvaluation | null }>("/api/me/evaluation", signal),
+    ]);
+    return { week, evaluation: evaluationResult.evaluation };
   }, []);
 
-  // The assessment fetch used to be one of this page's own three, so its failure was reported
-  // here. It still is, even though the request now belongs to the shell.
-  const pageError = error ?? assessmentError;
-
-  const completed = planTopicIds.filter((id) => progress[id]?.status === "completed").length;
-  const pct = planTopicIds.length ? Math.round((completed / planTopicIds.length) * 100) : 0;
-
-  // `findTopic` already knows which track and camp a topic belongs to, so the plan page does not
-  // need its own lookup.
-  const nextTopic = useMemo(
-    () => findTopic(planTopicIds.find((id) => progress[id]?.status !== "completed")),
-    [planTopicIds, progress],
-  );
-
-  const totalMinutes = useMemo(
-    () =>
-      tracks.reduce(
-        (sum, track) => sum + track.modules.reduce((n, m) => n + m.topics.reduce((t, topic) => t + topic.estMinutes, 0), 0),
-        0,
-      ),
-    [tracks],
-  );
-
-  /** The list view's rows: every assigned topic, in trail order, with its camp and trail attached. */
-  const rows = useMemo<PlanRow[]>(() => {
-    const all: PlanRow[] = [];
-    for (const track of tracks) {
-      for (const module of track.modules) {
-        for (const topic of module.topics) {
-          all.push({
-            topic,
-            module,
-            track,
-            status: progress[topic.id]?.status ?? "not-started",
-            position: all.length + 1,
-          });
-        }
+  useEffect(() => {
+    const controller = new AbortController();
+    let alive = true;
+    const run = async () => {
+      try {
+        const result = await load(controller.signal);
+        if (!alive) return;
+        setResponse(result.week);
+        setEvaluation(result.evaluation);
+      } catch (err) {
+        if (!alive || controller.signal.aborted) return;
+        setError(err instanceof ApiRequestError ? err.message : "Could not load your plan.");
+      } finally {
+        if (alive) setLoading(false);
       }
+    };
+    void run();
+    return () => {
+      alive = false;
+      controller.abort();
+    };
+  }, [load]);
+
+  /**
+   * Re-reads the week when the learner comes back from finishing something.
+   *
+   * The progress store is the honest signal here. Completing a topic happens on another page entirely —
+   * the challenge engine knows nothing about weekly plans — and the server reconciles the week's item
+   * statuses from `topic_progress` on every read. So watching the store and re-fetching is what makes
+   * the "you are here" marker walk forward without either side having to know about the other.
+   */
+  const completedCount = useMemo(
+    () => Object.values(progress).filter((entry) => entry.status === "completed").length,
+    [progress],
+  );
+  const lastSeen = useRef(completedCount);
+  useEffect(() => {
+    if (completedCount === lastSeen.current) return;
+    lastSeen.current = completedCount;
+    if (!response?.week) return;
+    let alive = true;
+    void weekApi
+      .mine()
+      .then((week) => {
+        if (alive) setResponse(week);
+      })
+      .catch(() => {
+        // A stale week is better than an error banner over a page that is otherwise fine.
+      });
+    return () => {
+      alive = false;
+    };
+  }, [completedCount, response?.week]);
+
+  const planNextWeek = async () => {
+    setPlanning(true);
+    setPlanError(null);
+    try {
+      setResponse(await weekApi.planNext());
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      setPlanError(err instanceof ApiRequestError ? err.message : "Could not plan your next week.");
+    } finally {
+      setPlanning(false);
     }
-    return all;
-  }, [tracks, progress]);
+  };
 
-  const visibleRows = useMemo(() => filterPlanRows(rows, filters), [rows, filters]);
+  if (loading || assessmentStatus === "idle" || assessmentStatus === "loading") return <WeekSkeleton />;
 
-  // Wait for the shared assessment too: rendering the plan before it has settled would flash the
-  // trail at someone whose funnel branch is about to replace it.
-  if (loading || assessmentStatus === "idle" || assessmentStatus === "loading") {
-    return (
-      <div className="flex min-h-[50vh] items-center justify-center" role="status">
-        <LoaderCircle className="h-5 w-5 animate-spin text-muted-foreground" aria-hidden="true" />
-        <span className="sr-only">Loading your plan</span>
-      </div>
-    );
-  }
-
-  // Still in the funnel: send them to the assessment rather than an empty plan.
+  // Still in the funnel: send them to the assessment rather than to an empty week.
   if (assessment && isPendingAssessment(assessment)) {
     return (
       <EmptyState
         title={assessment.status === "ready" ? "Your placement assessment is ready" : "We're still working on your plan"}
         body={
           assessment.status === "ready"
-            ? "It takes about an hour and decides what you'll be assigned. Find a quiet hour before you start — it is monitored, and it cannot be paused once it begins."
-            : "Your assessment is being prepared or evaluated. This page will have your plan when it's done."
+            ? "It takes about half an hour and decides what you'll be assigned. Find a quiet slot before you start — it is monitored, and it cannot be paused once it begins."
+            : "Your assessment is being prepared or evaluated. This page will have your first week when it's done."
         }
-        action={
-          assessment.status === "ready"
-            ? { label: "Start the assessment", onClick: () => navigate("/assessment") }
-            : { label: "Check progress", onClick: () => navigate("/assessment") }
-        }
+        action={{ label: assessment.status === "ready" ? "Start the assessment" : "Check progress", onClick: () => navigate("/assessment") }}
       />
     );
   }
 
-  if (planTopicIds.length === 0) {
+  const week = response?.week ?? null;
+  const pageError = error ?? assessmentError;
+
+  if (!week) {
     return (
       <EmptyState
-        title="Nothing assigned yet"
-        body="Your administrator hasn't set your plan yet. They'll either issue a placement assessment or assign topics directly."
+        title="Nothing planned yet"
+        body={response?.reason ?? "Your administrator hasn't set your plan yet. They'll either issue a placement assessment or assign topics directly."}
+        action={response && response.history.length > 0 ? { label: "See your past weeks", onClick: () => navigate("/library") } : undefined}
       />
     );
   }
 
   return (
     <div>
-      <section className="relative overflow-hidden border-b">
-        <Contours className="text-foreground/6" seed={4} />
-        <div className="relative mx-auto max-w-5xl px-4 pb-10 pt-12 sm:px-8">
-          <h1 className="text-2xl font-bold sm:text-3xl">My plan</h1>
+      <WeekHeader
+        week={week}
+        evaluation={evaluation}
+        error={pageError}
+        planError={planError}
+        onPlanNext={planNextWeek}
+        planning={planning}
+      />
 
-          {(rationale?.learnerSummary || evaluation?.learnerSummary) && (
-            <p className="mt-4 max-w-prose text-lg leading-relaxed text-muted-foreground">
-              {rationale?.learnerSummary ?? evaluation?.learnerSummary}
-            </p>
-          )}
-
-          <div className="mt-8 flex flex-wrap gap-2">
-            <StatChip label="Done" value={completed} format={(n) => `${n} of ${planTopicIds.length}`} />
-            <StatChip label="Progress" value={pct} format={(n) => `${n}%`} />
-            <StatChip label="Time" value={formatMinutes(totalMinutes)} icon={<Clock />} />
-            {evaluation && <StatChip label="Level" value={evaluation.overallLevel} format={(n) => `${n}/5`} icon={<Sparkles />} />}
-          </div>
-
-          <Progress value={pct} className="mt-5 h-2 max-w-xl" indicatorClassName="bg-summit" aria-label={`Plan progress: ${pct}%`} />
-
-          {nextTopic && <ContinueCard found={nextTopic} started={completed > 0} />}
-
-          {pageError && <div className="mt-6 max-w-prose"><FormAlert>{pageError}</FormAlert></div>}
-        </div>
-      </section>
-
-      {evaluation && evaluation.areas.length > 0 && (
-        <section aria-labelledby="areas-heading" className="mx-auto max-w-5xl px-4 py-10 sm:px-8">
-          <SectionHeading
-            id="areas-heading"
-            mark={<Sparkles className="h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />}
-            description="From your placement assessment. It is a starting point, not a verdict."
-          >
-            Where you are now
-          </SectionHeading>
-          <ul className="mt-5 grid gap-4 sm:grid-cols-2">
-            {evaluation.areas.map((area) => (
-              <li key={area.area} className="rounded-md border px-4 py-3">
-                <p className="flex items-center justify-between gap-3 font-medium">
-                  {area.area}
-                  <Badge variant="outline">{area.level}/5</Badge>
-                </p>
-                {area.strengths.length > 0 && (
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    <span className="font-medium text-summit-strong">Strong: </span>
-                    {area.strengths.join("; ")}
-                  </p>
-                )}
-                {area.gaps.length > 0 && (
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    <span className="font-medium text-trailmark-strong">To work on: </span>
-                    {area.gaps.join("; ")}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <section aria-labelledby="camps-heading" className="mx-auto max-w-5xl px-4 pb-16 sm:px-8">
+      <section aria-labelledby="week-heading" className="mx-auto max-w-5xl px-4 pb-6 sm:px-8">
         <SectionHeading
-          id="camps-heading"
+          id="week-heading"
           description={
-            view === "trail"
-              ? "In the order we suggest working through them."
-              : "Every assigned topic in one list, in the same order."
+            view === "trail" ? "Your route through the week, in the order we suggest." : "The same week, grouped by priority."
           }
           actions={
             <ViewToggle
-              label="How to show your plan"
+              label="How to show this week"
               value={view}
               onChange={setView}
               options={[
@@ -257,113 +218,129 @@ export default function PlanPage() {
             />
           }
         >
-          Your trail
+          This week
         </SectionHeading>
 
         {view === "trail" ? (
-          <div className="mt-6 space-y-8">
-            {tracks.map((track) => {
-              const accent = accentClasses[track.accentToken];
-              return (
-                <div key={track.id}>
-                  <h3 className="flex items-center gap-2.5 text-base font-semibold">
-                    <span aria-hidden="true" className={cn("h-5 w-1.5 rounded-[2px]", accent.bg)} />
-                    {track.name}
-                  </h3>
-
-                  <ul className="mt-3 space-y-3">
-                    {track.modules.map((module) => {
-                      const summary = summarizeModule(module, progress);
-                      return (
-                        <li key={module.id} className="rounded-md border">
-                          <Link
-                            to={modulePath(module)}
-                            className="flex flex-wrap items-center gap-3 border-b px-4 py-3 hover:bg-surface-sunken/40"
-                          >
-                            <span className="font-medium">{module.name}</span>
-                            <span className="font-mono text-xs text-muted-foreground tabular">
-                              {summary.completed}/{summary.total}
-                            </span>
-                            <span className="ml-auto flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
-                              <Clock className="h-3 w-3" aria-hidden="true" />
-                              {formatMinutes(module.topics.reduce((n, t) => n + t.estMinutes, 0))}
-                            </span>
-                          </Link>
-
-                          <ul className="divide-y">
-                            {module.topics.map((topic) => (
-                              <li key={topic.id}>
-                                <Link
-                                  to={topicPath(topic)}
-                                  className="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-surface-sunken/40"
-                                >
-                                  <StatusDot status={progress[topic.id]?.status ?? "not-started"} />
-                                  <span className="min-w-0 flex-1 truncate">{topic.title}</span>
-                                  <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
-                                    {levelLabels[topic.level]}
-                                  </span>
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              );
-            })}
+          <div className="mt-5">
+            <LaneLegend week={week} />
+            <WeekTrail week={week} />
           </div>
         ) : (
           <div className="mt-6">
-            <PlanFilterBar rows={rows} filters={filters} onChange={setFilters} shown={visibleRows.length} />
-
-            {visibleRows.length === 0 ? (
-              <div className="mt-6 rounded-lg border border-dashed px-6 py-10 text-center">
-                <p className="font-medium">Nothing matches those filters</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {hasActiveFilters(filters)
-                    ? "Widen one of them, or clear them all and start again."
-                    : "There is nothing in your plan yet."}
-                </p>
-                {hasActiveFilters(filters) && (
-                  <Button variant="outline" className="mt-5" onClick={() => setFilters(EMPTY_PLAN_FILTERS)}>
-                    Clear the filters
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <ul className="mt-5 divide-y rounded-lg border">
-                {visibleRows.map((row) => (
-                  <li key={row.topic.id}>
-                    <PlanListRow row={row} />
-                  </li>
-                ))}
-              </ul>
-            )}
+            <Lanes week={week} />
           </div>
         )}
       </section>
+
+      <ComingUp week={week} />
+      <Roadmap week={week} />
+      <WeekHistory week={week} history={response?.history ?? []} />
     </div>
   );
 }
 
 /**
- * The one card on this page with a tint and a filled button: where to go next.
+ * The header: what week it is, three sentences, this week's numbers, and where to go next.
  *
- * It repeats what the trail below already says, which is the point — the plan is long, and the
- * answer to "what now" should not require reading a list of two hundred things to find the first
- * one without a tick.
+ * The stats are **this week's**, not the library's, which is the single most important change on the
+ * page — and the link to the library is right beside them, saying exactly how much is behind it, so
+ * narrowing the week never reads as having taken something away.
  */
-function ContinueCard({
-  found,
-  started,
+function WeekHeader({
+  week,
+  evaluation,
+  error,
+  planError,
+  onPlanNext,
+  planning,
 }: {
-  found: NonNullable<ReturnType<typeof findTopic>>;
-  started: boolean;
+  week: WeekView;
+  evaluation: MyEvaluation | null;
+  error: string | null;
+  planError: string | null;
+  onPlanNext: () => void;
+  planning: boolean;
 }) {
-  const { topic, module, track } = found;
-  const accent = accentClasses[track.accentToken];
+  const done = week.items.filter((item) => item.status === "done").length;
+  const pct = week.items.length ? Math.round((done / week.items.length) * 100) : 0;
+  const complete = isWeekComplete(week.items);
+
+  /* The first unfinished item from the highest lane, which is what "your next step" means when the
+     lanes are ordered by urgency. */
+  const next = LANE_ORDER.flatMap((lane) => itemsInLane(week, lane)).find((item) => item.status !== "done");
+
+  return (
+    <section className="relative overflow-hidden border-b">
+      <Contours className="text-foreground/6" seed={4} />
+      <div className="relative mx-auto max-w-5xl px-4 pb-10 pt-12 sm:px-8">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h1 className="text-2xl font-bold sm:text-3xl">My plan</h1>
+          <p className="font-mono text-sm text-muted-foreground">
+            Week {week.weekNumber} <span aria-hidden="true">·</span> {formatRange(week.startDate, week.endDate)}
+          </p>
+        </div>
+
+        {week.summary && <p className="mt-4 max-w-prose text-lg leading-relaxed text-muted-foreground">{week.summary}</p>}
+
+        <div className="mt-8 flex flex-wrap items-center gap-2">
+          <StatChip label="This week" value={done} format={(n) => `${n} / ${week.items.length} done`} />
+          <StatChip label="Progress" value={pct} format={(n) => `${n}%`} />
+          <StatChip label="Time" value={formatMinutes(week.plannedMinutes)} icon={<Clock />} />
+          {evaluation && <StatChip label="Level" value={evaluation.overallLevel} format={(n) => `${n}/5`} icon={<Sparkles />} />}
+        </div>
+
+        <Progress
+          value={pct}
+          className="mt-5 h-2 max-w-xl"
+          indicatorClassName="bg-summit"
+          aria-label={`This week: ${pct}% done`}
+        />
+
+        <Link
+          to="/library"
+          className="mt-4 inline-flex items-center gap-1.5 rounded-md font-mono text-xs text-muted-foreground underline decoration-dotted underline-offset-4 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+        >
+          <BookMarked className="h-3.5 w-3.5" aria-hidden="true" />
+          {week.libraryLessonCount} lessons unlocked in your library
+          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
+
+        {next && <NextStepCard item={next} started={done > 0} />}
+
+        <div className="mt-6 space-y-4">
+          <SummitCelebration
+            reached={complete}
+            weekNumber={week.weekNumber}
+            minutes={week.plannedMinutes}
+            onPlanNext={onPlanNext}
+            planning={planning}
+          />
+          {planError && (
+            <div className="max-w-prose">
+              <FormAlert>{planError}</FormAlert>
+            </div>
+          )}
+          {error && (
+            <div className="max-w-prose">
+              <FormAlert>{error}</FormAlert>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * "Your next step" — the one card on this page with a tint and a filled button.
+ *
+ * It repeats what the lanes below already say, which is the point: the answer to "what now" should not
+ * require reading four lanes to find the first thing without a tick.
+ */
+function NextStepCard({ item, started }: { item: WeekItemView; started: boolean }) {
+  const meta = LANE_META[item.lane];
+  const Icon = meta.icon;
 
   return (
     <Card tone="progress" density="cozy" className="mt-7 max-w-2xl sm:p-5">
@@ -372,50 +349,170 @@ function ContinueCard({
           <p className="font-mono text-[11px] text-muted-foreground">
             {started ? "Pick up where you left off" : "Your first waypoint"}
           </p>
-          <p className="mt-1.5 font-display text-lg font-semibold">{topic.title}</p>
+          <p className="mt-1.5 font-display text-lg font-semibold">{item.title}</p>
           <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm text-muted-foreground">
-            <span aria-hidden="true" className={cn("h-3.5 w-1 rounded-[2px]", accent.bg)} />
-            <span className="min-w-0 truncate">{module.name}</span>
-            <span className="font-mono text-xs">{levelLabels[topic.level]}</span>
-            <span className="font-mono text-xs">{formatMinutesCompact(topic.estMinutes)}</span>
-            {topic.isMilestone && (
-              <span className="inline-flex items-center gap-1 font-mono text-xs text-trailmark-strong">
-                <Flag className="h-3 w-3" aria-hidden="true" />
-                milestone
-              </span>
-            )}
+            <span className={cn("inline-flex items-center gap-1.5 font-mono text-xs font-medium", meta.text)}>
+              <Icon className="h-3.5 w-3.5" aria-hidden="true" />
+              {meta.label}
+            </span>
+            <span className="min-w-0 truncate">{item.context}</span>
+            <span className="font-mono text-xs">{formatMinutesCompact(item.minutes)}</span>
           </p>
+          <p className="mt-2 max-w-prose text-sm text-muted-foreground">{item.reason}</p>
         </div>
         <Button asChild size="lg" className="shrink-0">
-          <Link to={topicPath(topic)}>{started ? "Continue" : "Start"}</Link>
+          <Link to={item.href}>{started ? "Continue" : "Start"}</Link>
         </Button>
       </div>
     </Card>
   );
 }
 
-function PlanListRow({ row }: { row: PlanRow }) {
-  const { topic, module, status, position } = row;
+/** "Coming up next week" — titles only, collapsed. Nothing is scheduled from it. */
+function ComingUp({ week }: { week: WeekView }) {
+  const [open, setOpen] = useState(false);
+  if (week.nextWeekPreview.length === 0) return null;
+
   return (
-    <Link
-      to={topicPath(topic)}
-      className="flex items-center gap-3 px-4 py-3 transition-colors duration-[120ms] hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong"
-    >
-      <span className="w-7 shrink-0 font-mono text-[11px] text-muted-foreground tabular">{position}</span>
-      <StatusDot status={status} />
-      <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-2">
-          <span className="min-w-0 truncate text-sm font-medium">{topic.title}</span>
-          {topic.isMilestone && <Flag className="h-3 w-3 shrink-0 text-trailmark-strong" aria-label="Milestone" />}
-        </span>
-        <span className="mt-0.5 block truncate text-xs text-muted-foreground">{module.name}</span>
-      </span>
-      <span className="hidden shrink-0 items-center gap-4 font-mono text-[11px] text-muted-foreground sm:flex">
-        <span className="w-24 text-right">{levelLabels[topic.level]}</span>
-        <span className="w-10 text-right">{topic.challengeType}</span>
-        <span className="w-12 text-right">{formatMinutesCompact(topic.estMinutes)}</span>
-      </span>
-    </Link>
+    <section className="mx-auto max-w-5xl px-4 pb-4 sm:px-8">
+      <Disclosure
+        open={open}
+        onToggle={() => setOpen((value) => !value)}
+        icon={<Telescope className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
+        label="Coming up next week"
+        hint={`${week.nextWeekPreview.length} likely, nothing scheduled yet`}
+        id="coming-up"
+      >
+        <ul className="mt-3 space-y-1.5">
+          {week.nextWeekPreview.map((title) => (
+            <li key={title} className="flex items-baseline gap-2.5 text-sm text-muted-foreground">
+              <span aria-hidden="true" className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-basalt/60" />
+              {title}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-xs text-muted-foreground">
+          A preview from your library, in the order we would pick next. It will change as your scores do.
+        </p>
+      </Disclosure>
+    </section>
+  );
+}
+
+/** The long view. This is where the 450-word paragraph went. */
+function Roadmap({ week }: { week: WeekView }) {
+  const [open, setOpen] = useState(false);
+  if (!week.roadmapNarrative.trim()) return null;
+
+  return (
+    <section className="mx-auto max-w-5xl px-4 pb-4 sm:px-8">
+      <Disclosure
+        open={open}
+        onToggle={() => setOpen((value) => !value)}
+        icon={<MapIcon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
+        label="Long-term roadmap"
+        hint="Where this week sits in the months ahead"
+        id="roadmap"
+      >
+        <div className="mt-3 max-w-prose space-y-3 text-sm leading-relaxed text-muted-foreground">
+          {week.roadmapNarrative.split(/\n{2,}/).map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+      </Disclosure>
+    </section>
+  );
+}
+
+/** Past weeks, as "Week 1 · 11/12 done". */
+function WeekHistory({ week, history }: { week: WeekView; history: WeekResponse["history"] }) {
+  const [open, setOpen] = useState(false);
+  const past = history.filter((entry) => entry.id !== week.id);
+  if (past.length === 0) return <div className="pb-16" />;
+
+  return (
+    <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-8">
+      <Disclosure
+        open={open}
+        onToggle={() => setOpen((value) => !value)}
+        icon={<ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
+        label="Past weeks"
+        hint={`${past.length} behind you`}
+        id="history"
+      >
+        <ul className="mt-3 divide-y rounded-md border">
+          {past.map((entry) => (
+            <li key={entry.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2.5">
+              <span className="font-medium">Week {entry.weekNumber}</span>
+              <span className="font-mono text-[11px] text-muted-foreground tabular">
+                {entry.doneCount}/{entry.totalCount} done
+              </span>
+              <span className="ml-auto font-mono text-[11px] text-muted-foreground">
+                {formatRange(entry.startDate, entry.endDate)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Disclosure>
+    </section>
+  );
+}
+
+/**
+ * A collapsed section.
+ *
+ * Three of these sit at the bottom of the page — coming up, the roadmap, past weeks — and they are all
+ * the same shape: a row you press, and content that is genuinely absent until you do. Absent rather
+ * than hidden, so a screen reader is not walking three hundred words of roadmap to reach the footer.
+ */
+function Disclosure({
+  open,
+  onToggle,
+  icon,
+  label,
+  hint,
+  id,
+  children,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  icon: React.ReactNode;
+  label: string;
+  hint: string;
+  id: string;
+  children: React.ReactNode;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div className="rounded-lg border">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={`${id}-panel`}
+        className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 text-left transition-colors duration-[120ms] hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+      >
+        {icon}
+        <span className="font-display font-semibold">{label}</span>
+        <span className="font-mono text-[11px] text-muted-foreground">{hint}</span>
+        <ChevronDown
+          className={cn("ml-auto h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200", open && "rotate-180")}
+          aria-hidden="true"
+        />
+      </button>
+      {open && (
+        <motion.div
+          id={`${id}-panel`}
+          initial={reduceMotion ? false : "hidden"}
+          animate="visible"
+          variants={fadeUp}
+          className="border-t px-4 pb-4 pt-1"
+        >
+          {children}
+        </motion.div>
+      )}
+    </div>
   );
 }
 

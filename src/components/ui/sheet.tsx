@@ -33,6 +33,10 @@ const sheetVariants = cva(
         left: "inset-y-0 left-0 h-full w-[85vw] border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
         right:
           "inset-y-0 right-0 h-full w-[85vw] border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+        /* A bottom sheet, for a detail card on a phone. `max-w-*` does not apply to it — it is full
+           width by design — so `size` is ignored on this side and the height is capped instead. */
+        bottom:
+          "inset-x-0 bottom-0 max-h-[85dvh] w-full max-w-none overflow-y-auto rounded-t-xl border-t pb-[env(safe-area-inset-bottom)] data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
       },
       // `sm` is the navigation drawer this started as. The wider sizes are for record detail
       // panels (`DetailSheet`), which carry a table row's worth of fields rather than a nav list.

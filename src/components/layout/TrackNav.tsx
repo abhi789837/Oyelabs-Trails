@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { BookOpen, Compass } from "lucide-react";
+import { BookMarked, BookOpen, Compass, Map as MapIcon } from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
@@ -41,6 +41,8 @@ function currentKey(pathname: string, tracks: TrackMeta[]): string {
     if (pathname.startsWith(`/track/${track.id}`) || pathname === `/report/${track.id}`) return `track:${track.id}`;
   }
   if (pathname.startsWith("/courses")) return "courses";
+  if (pathname.startsWith("/library")) return "library";
+  if (pathname.startsWith("/plan")) return "plan";
   return pathname === "/" ? "dashboard" : "";
 }
 
@@ -66,6 +68,15 @@ export function TrackNav({ collapsed = false, onNavigate, group = "trail-nav" }:
           onNavigate={onNavigate}
         >
           <BookOpen className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        </NavItemLink>
+
+        {/* This week, and everything unlocked. Two different questions, so two entries. */}
+        <NavItemLink to="/plan" label="My plan" collapsed={collapsed} current={current === "plan"} onNavigate={onNavigate}>
+          <MapIcon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        </NavItemLink>
+
+        <NavItemLink to="/library" label="Library" collapsed={collapsed} current={current === "library"} onNavigate={onNavigate}>
+          <BookMarked className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </NavItemLink>
 
         {!collapsed && <p className="mb-1 mt-5 px-3 text-xs font-medium text-muted-foreground">Trails</p>}

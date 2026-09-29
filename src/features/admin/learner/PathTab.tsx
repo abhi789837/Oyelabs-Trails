@@ -20,6 +20,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { fadeUp, stagger, transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { adminWeekApi } from "@/features/plan/api";
 import { builderApi } from "../builder/api";
 import { PrioritiesFields } from "../builder/PrioritiesFields";
 
@@ -38,6 +39,8 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
   useDocumentTitle(`${displayName} · path`);
 
   const [priorities, setPriorities] = useState<LearnerPriorities>(EMPTY_PRIORITIES);
+  const [weekStale, setWeekStale] = useState(false);
+  const [rebuilding, setRebuilding] = useState(false);
   const [gaps, setGaps] = useState<SkillGapView[]>([]);
   const [path, setPath] = useState<LearningPathView | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -81,15 +84,36 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
   const save = async () => {
     setSaving(true);
     try {
-      await builderApi.setPriorities(userId, {
+      const result = await builderApi.setPriorities(userId, {
         ...priorities,
         mustHave: priorities.mustHave.filter((entry) => entry.skill.trim().length > 0),
       });
       notify.success("Priorities saved.");
+      setWeekStale(result.weekNeedsRegeneration);
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "Could not save those priorities.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  /**
+   * Rebuilds their current week against the priorities just saved.
+   *
+   * In place, keeping the week's number and dates — an admin adjusting a weight on a Wednesday has not
+   * started a new week for them. Rules-only, because the lanes are what changed; the prose does not
+   * need re-writing and a model call would make a button press take fifteen seconds.
+   */
+  const rebuildWeek = async () => {
+    setRebuilding(true);
+    try {
+      await adminWeekApi.regenerate(userId, { rulesOnly: true });
+      notify.success("Their week has been rebuilt against the new priorities.");
+      setWeekStale(false);
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Could not rebuild their week.");
+    } finally {
+      setRebuilding(false);
     }
   };
 
@@ -122,6 +146,20 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
         <h3 className="text-sm font-semibold">Priorities</h3>
         <div className="mt-4 max-w-2xl">
           <PrioritiesFields value={priorities} onChange={setPriorities} disabled={saving} />
+          {weekStale && (
+            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-warning/40 bg-warning/[0.07] px-4 py-3">
+              <p className="min-w-0 flex-1 text-sm">
+                Their current week was built from the old priorities.
+              </p>
+              <Button size="sm" loading={rebuilding} onClick={() => void rebuildWeek()}>
+                Rebuild their week
+              </Button>
+              <Button size="sm" variant="ghost" disabled={rebuilding} onClick={() => setWeekStale(false)}>
+                Leave it
+              </Button>
+            </div>
+          )}
+
           <div className="mt-5 flex flex-wrap gap-3">
             <Button variant="outline" loading={saving} onClick={() => void save()}>
               Save priorities
