@@ -146,6 +146,8 @@ export function setPathStatus(
   patch: {
     status?: PathStatus;
     progressNote?: string;
+    /** Something worth telling the admin about a run that worked. See the column comment. */
+    notice?: string | null;
     failureReason?: string | null;
     tokensUsed?: number;
     searchCalls?: number;
@@ -254,6 +256,7 @@ export function currentPath(db: Db, userId: string): LearningPathView | null {
     status: row.status,
     progressNote: row.progressNote,
     failureReason: row.failureReason,
+    notice: row.notice,
     createdAt: row.createdAt,
     completedAt: row.completedAt,
     items: views,

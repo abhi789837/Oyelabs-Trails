@@ -64,19 +64,27 @@ export function buildPathHandler(deps: { db: Db; env: Env; ai: AiService; log?: 
       { db, env: deps.env, ai: deps.ai },
     );
 
-    /* A run that matched nothing and generated nothing is a failure worth surfacing, not a quiet
-       "ready" with an empty path. The usual cause is a missing research key, which somebody can fix
-       in thirty seconds once they are told — and never will, if the path just looks empty. */
-    if (outcome.status === "ready" && outcome.failed > 0 && outcome.generated === 0 && outcome.unlocked === 0) {
+    /* Exactly one thing is said about a run, and it is said here.
+    
+       This used to mark a path `failed` whenever nothing was added, which put "No course could be
+       matched or generated. Check the research provider" on the screen at the same time as the
+       tab's own "Nothing was added — no gap needed a course". Both were true and they contradicted
+       each other: one said the deployment was broken, the other said there had been nothing to do.
+    
+       Now a missing research provider is a *notice* on a successful run (`run.ts` writes it, and
+       every catalog course it matched is still assigned), and only a run that added nothing while
+       something was actually asked for is a failure. */
+    const added = outcome.unlocked + outcome.reused + outcome.generated;
+    if (outcome.status === "ready" && added === 0 && outcome.failed > 0) {
       setPathStatus(db, outcome.pathId, {
         status: "failed",
-        failureReason:
-          "No course could be matched or generated. Check the research provider under Admin → AI connection.",
+        failureReason: `Every course failed to generate. ${outcome.researchReason ?? "Check Admin → AI connection."}`,
       });
     }
 
     deps.log?.(
-      `path ${outcome.pathId}: ${outcome.unlocked} unlocked, ${outcome.reused} reused, ${outcome.generated} generated, ${outcome.failed} failed`,
+      `path ${outcome.pathId}: ${outcome.unlocked} unlocked, ${outcome.reused} reused, ${outcome.generated} generated, ` +
+        `${outcome.failed} failed, ${outcome.waitingForResearch ?? 0} waiting for research`,
     );
   };
 }

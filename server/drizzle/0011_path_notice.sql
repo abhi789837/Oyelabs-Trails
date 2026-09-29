@@ -1,0 +1,1 @@
+ALTER TABLE `learning_paths` ADD `notice` text;

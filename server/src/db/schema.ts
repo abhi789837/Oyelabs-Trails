@@ -707,6 +707,16 @@ export const learningPaths = sqliteTable(
     /** What the UI shows while it works: "Writing module 2 of 4". Plain, already-safe text. */
     progressNote: text("progress_note").notNull().default(""),
     failureReason: text("failure_reason"),
+    /**
+     * Something the admin should know about a run that nonetheless *worked*.
+     *
+     * Separate from `failure_reason`, because conflating the two is what put "No course could be
+     * matched or generated. Check the research provider" and "Nothing was added — no gap needed a
+     * course" on the same screen: one banner read from a failed status, the other from an empty
+     * list, and both were true at once. A run with no research provider now succeeds, assigns every
+     * catalog course it matched, and says here which targets are still waiting.
+     */
+    notice: text("notice"),
     /** Superseded when a newer run finishes. Only one path is current per learner. */
     current: integer("current", { mode: "boolean" }).notNull().default(false),
     tokensUsed: integer("tokens_used").notNull().default(0),

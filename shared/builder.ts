@@ -319,6 +319,13 @@ export interface LearningPathView {
   status: PathStatus;
   progressNote: string;
   failureReason: string | null;
+  /**
+   * Something worth telling the admin about a run that *worked*.
+   *
+   * Distinct from `failureReason`, because conflating them is what put a "check the research
+   * provider" banner next to a "nothing needed a course" message on the same screen.
+   */
+  notice: string | null;
   createdAt: number;
   completedAt: number | null;
   items: PathItemView[];

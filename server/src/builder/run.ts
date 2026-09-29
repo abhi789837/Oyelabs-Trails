@@ -30,8 +30,9 @@ import {
   setPathStatus,
   startPath,
 } from "./repo";
-import { assertPartOrder, planParts } from "./parts";
-import { normaliseSkill, reasonFor, scoreGaps } from "./scoring";
+import { planParts } from "./parts";
+import { assertSpine, buildSpine, type PriorityPath, type StartLevel } from "./priorityPath";
+import { normaliseSkill, scoreGaps } from "./scoring";
 import { getFocus } from "../targets/repo";
 import { researchClients } from "./settings";
 
@@ -66,6 +67,16 @@ export interface RunOutcome {
   failed: number;
   status: "ready" | "failed" | "budget_reached";
   reason?: string;
+  /**
+   * Why some targets could not be given a generated course, on a run that otherwise succeeded.
+   *
+   * A missing research provider is not a failed run: every catalog course that matched is still
+   * matched and still assigned, and the learner still has something to do. It is a thing the admin
+   * needs to know, which is a different statement and now has a different field.
+   */
+  researchReason?: string;
+  /** Targets left without a course because generation was unavailable. */
+  waitingForResearch?: number;
 }
 
 const DEFAULT_FETCH: BuildDeps["research"] = {
@@ -78,6 +89,91 @@ const DEFAULT_FETCH: BuildDeps["research"] = {
     return { status: response.status, headers: response.headers, text: () => response.text() };
   },
 };
+
+
+/**
+ * One thing to build, in the order it will be built.
+ *
+ * A target and its groundwork flatten into this so the loop below stays one loop — the alternative
+ * is a nested walk that has to remember which target it is under, and gets it wrong the first time
+ * a prerequisite fails to generate.
+ */
+interface PlannedItem {
+  gap: ScoredGap;
+  partNumber: number;
+  partType: "track" | "ai_dev" | "general";
+  startLevel: StartLevel;
+  /** The target this belongs to. Null for the fixed parts and for a standalone gap. */
+  targetSkill: string | null;
+}
+
+/**
+ * Flattens the spine: each target, then the refreshers it depends on.
+ *
+ * Groundwork comes *after* its target in build order rather than before, deliberately. Build order
+ * is not study order — the weekly plan decides that, and it puts refreshers in "Must know" above the
+ * target. What matters here is that a target never fails to be built because a refresher ahead of it
+ * used up the budget.
+ */
+function spineToItems(spine: PriorityPath): PlannedItem[] {
+  const items: PlannedItem[] = [];
+  let partNumber = 1;
+
+  for (const plan of spine.targets) {
+    items.push({
+      gap: targetAsGap(plan),
+      partNumber: partNumber++,
+      partType: "general",
+      startLevel: plan.startLevel,
+      targetSkill: plan.target.skill,
+    });
+    for (const prerequisite of plan.prerequisites) {
+      items.push({
+        gap: prerequisite,
+        partNumber: partNumber++,
+        partType: "track",
+        startLevel: "beginner",
+        targetSkill: plan.target.skill,
+      });
+    }
+  }
+
+  return items;
+}
+
+/**
+ * A target, as the thing the course builder already knows how to build from.
+ *
+ * The builder takes a `ScoredGap`, and a target is not one — it is a decision rather than a finding.
+ * Where the assessment matched it, its evidence is reused so the learner reads what actually
+ * happened; where it did not, the sentence says so plainly rather than inventing a result.
+ */
+function targetAsGap(plan: PriorityPath["targets"][number]): ScoredGap {
+  if (plan.evidence) return { ...plan.evidence, skill: plan.target.skill };
+
+  return {
+    skill: plan.target.skill,
+    severity: 0.5,
+    roleRelevance: 1,
+    weight: 1,
+    source: "admin_priority",
+    priorityScore: 1,
+    evidence: {
+      summary: `Your administrator set ${plan.target.skill} as a ${plan.priority} priority. The assessment did not cover it, so this starts at the beginning.`,
+      itemIds: [],
+      missed: 0,
+      asked: 0,
+    },
+    skipped: false,
+  };
+}
+
+/** At most 20 words. The full story lives behind the Evidence expander on the path tab. */
+function shortReason(item: PlannedItem, gap: ScoredGap): string {
+  const head = item.targetSkill && item.targetSkill !== gap.skill ? `Needed for ${item.targetSkill}. ` : "";
+  const words = `${head}${gap.evidence.summary}`.split(/\s+/);
+  return words.length <= 20 ? words.join(" ") : `${words.slice(0, 20).join(" ")}…`;
+}
 
 export async function runBuilder(
   input: { userId: string; assessmentId: string | null; evaluation: EvaluationResult | null; adminNotes: string },
@@ -136,30 +232,56 @@ export async function runBuilder(
   const scored = scoreGaps(detected, priorities);
   const gapIds = replaceGaps(db, input.userId, input.assessmentId, scored);
 
-  /* The path in parts, rather than a flat list ordered by gap score.
+  /* The admin's targets are the spine.
 
-     Part 1 is the learner's own track, part 2 is AI-driven development for their stack, and only
-     then does the biggest detected gap get a look in. A score-ordered list opens wherever the
-     largest number happens to be, which for a backend engineer with a Docker gap is Docker —
-     before anything has shored up the backend work they do every day. See `parts.ts`. */
+     This used to read `priorities.mustHave` — the old JSON column — while the admin screen wrote
+     `learner_targets`. So every target set through that screen was invisible here and the path was
+     built from whatever the model had noticed instead. That is the bug: a learner with two High
+     targets got seven AI-found gaps and neither target.
+
+     Now the targets come first, in the admin's order, and detected gaps are demoted to two jobs:
+     deciding where a target starts, and being offered at the bottom as optional extras. See
+     `priorityPath.ts`. */
   const focus = getFocus(db, input.userId);
-  const planned = planParts({
-    track: focus.track,
-    stack: focus.stack,
+  const spine = buildSpine({
+    targets: focus.targets,
     gaps: scored,
-    priorities,
-    evaluation: input.evaluation,
-    courseCap: priorities.courseCap,
+    skip: priorities.skip,
+    stack: focus.stack ?? undefined,
+    areaLevels: input.evaluation?.areas.map((area) => ({ area: area.area, level: area.level })) ?? [],
   });
 
-  /* Checked after the fact rather than trusted: the same split the weekly plan uses. A function
-     that tries to produce the right order, and a check that it did. */
-  const orderProblems = assertPartOrder(planned);
-  if (orderProblems.length > 0) {
-    auditStep(db, { pathId, step: "parts", detail: { problems: orderProblems } });
+  /* Checked after the fact rather than trusted, and the result is stored where the admin can see
+     it. A guarantee nobody verifies is a comment. */
+  const spineProblems = assertSpine(spine, {
+    targets: focus.targets,
+    gaps: scored,
+    skip: priorities.skip,
+    stack: focus.stack ?? undefined,
+  });
+  if (spineProblems.length > 0) {
+    auditStep(db, { pathId, step: "spine", detail: { problems: spineProblems } });
   }
 
-  const todo = planned;
+  /* Targets first, each with its groundwork underneath, then the two fixed foundation parts for a
+     learner who has no targets at all — which is the only case `planParts` still answers. */
+  const todo: PlannedItem[] =
+    spine.targets.length > 0
+      ? spineToItems(spine)
+      : planParts({
+          track: focus.track,
+          stack: focus.stack,
+          gaps: scored,
+          priorities,
+          evaluation: input.evaluation,
+          courseCap: priorities.courseCap,
+        }).map((part) => ({
+          gap: part.gap,
+          partNumber: part.partNumber,
+          partType: part.type,
+          startLevel: "beginner" as const,
+          targetSkill: null,
+        }));
 
   if (todo.length === 0) {
     makeCurrent(db, input.userId, pathId);
@@ -175,10 +297,9 @@ export async function runBuilder(
   for (const part of todo) {
     const gap = part.gap;
     const gapId = gapIds.get(gap.skill) ?? null;
-    /* Parts 1 and 2 are synthesised rather than detected, so their evidence sentence *is* the
-       reason — `reasonFor` would append an admin-weight line about a must-have that does not
-       exist. */
-    const reason = part.type === "general" ? reasonFor(gap, priorities) : gap.evidence.summary;
+    /* Short. The admin reads a list of targets, not a list of essays — the full evidence sits behind
+       an expander on the path tab, and a paragraph here just pushes the next target off the screen. */
+    const reason = shortReason(part, gap);
 
     setPathStatus(db, pathId, { status: "researching" });
     progress(`Looking for a course on ${gap.skill}`);
@@ -193,7 +314,7 @@ export async function runBuilder(
         source: existing.source,
         reason,
         partNumber: part.partNumber,
-        partType: part.type,
+        partType: part.partType,
       });
       if (existing.source === "unlock") outcome.unlocked += 1;
       else outcome.reused += 1;
@@ -203,8 +324,12 @@ export async function runBuilder(
     }
 
     if (!clients.ok) {
+      /* Not a failure of this target — a fact about the deployment. Counted separately so the run
+         can finish `ready` with every catalog match assigned and one honest line about what is
+         still waiting, rather than reporting a broken path when most of it works. */
       auditStep(db, { pathId, step: "generate", detail: { skill: gap.skill, skipped: clients.reason } });
-      outcome.failed += 1;
+      outcome.waitingForResearch = (outcome.waitingForResearch ?? 0) + 1;
+      outcome.researchReason = clients.reason;
       continue;
     }
 
@@ -264,7 +389,7 @@ export async function runBuilder(
       source: "generated",
       reason,
       partNumber: part.partNumber,
-      partType: part.type,
+      partType: part.partType,
     });
     outcome.generated += 1;
 
@@ -277,6 +402,12 @@ export async function runBuilder(
     });
 
     if (stored.status !== "published") notifyStaff(db, input.userId, built.course.plan.title, stored.status);
+  }
+
+  if (outcome.waitingForResearch) {
+    setPathStatus(db, pathId, {
+      notice: `${outcome.waitingForResearch} target${outcome.waitingForResearch === 1 ? "" : "s"} still need a generated course. ${outcome.researchReason}`,
+    });
   }
 
   if (outcome.status === "ready") makeCurrent(db, input.userId, pathId);

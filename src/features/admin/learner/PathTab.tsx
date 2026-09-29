@@ -244,13 +244,22 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
         </div>
       </div>
 
-      {loaded && <PathPanel path={path} busy={busy} />}
+      {loaded && <PathPanel path={path} busy={busy} targetCount={targets.targets.length} />}
       {loaded && gaps.length > 0 && <GapMap gaps={gaps} />}
     </section>
   );
 }
 
-function PathPanel({ path, busy }: { path: LearningPathView | null; busy: boolean }) {
+function PathPanel({
+  path,
+  busy,
+  targetCount,
+}: {
+  path: LearningPathView | null;
+  busy: boolean;
+  /** How many targets the admin has set, so the empty state can say which kind of empty it is. */
+  targetCount: number;
+}) {
   if (!path) {
     return (
       <div>
@@ -294,9 +303,34 @@ function PathPanel({ path, busy }: { path: LearningPathView | null; busy: boolea
         </p>
       )}
 
+      {/* A run that worked but could not do everything. Amber rather than red, and it sits under a
+          path that has real items on it, because most of it did work. */}
+      {path.status === "ready" && path.notice && (
+        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3 text-sm">
+          <span className="min-w-0 flex-1">{path.notice}</span>
+          <Link
+            to="/admin/ai"
+            className="shrink-0 font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+          >
+            Set up in AI connection
+          </Link>
+        </p>
+      )}
+
       {path.items.length === 0 ? (
+        /* Exactly one sentence, and it depends on what was actually asked for.
+        
+           "Nothing was added — no gap needed a course" used to render whenever the list was empty,
+           including next to a red banner saying the research provider was broken. Both were true and
+           they contradicted each other. It can now only appear when nobody had asked for anything. */
         <p className="mt-3 text-sm text-muted-foreground">
-          {busy ? "Nothing on it yet." : "Nothing was added — no gap needed a course."}
+          {busy
+            ? "Nothing on it yet."
+            : path.status === "failed"
+              ? "Nothing could be built. The reason is above."
+              : targetCount > 0
+                ? "Their targets are set but no course reached the path yet. Rebuild, or check the notice above."
+                : "No targets are set, so there was nothing to build. Add some above and rebuild."}
         </p>
       ) : (
         <motion.ol variants={stagger(0.04)} initial="hidden" animate="visible" className="mt-4 space-y-3">
