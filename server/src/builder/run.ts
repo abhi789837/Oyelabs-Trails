@@ -34,6 +34,7 @@ import { planParts } from "./parts";
 import { assertSpine, buildSpine, type PriorityPath, type StartLevel } from "./priorityPath";
 import { normaliseSkill, scoreGaps } from "./scoring";
 import { getFocus } from "../targets/repo";
+import { LEARNER_TRACK_LABELS } from "../../../shared/targets";
 import { researchClients } from "./settings";
 
 /**
@@ -180,7 +181,31 @@ export async function runBuilder(
   deps: RunDeps,
 ): Promise<RunOutcome> {
   const { db } = deps;
-  const priorities = getPriorities(db, input.userId);
+  const stored = getPriorities(db, input.userId);
+  const focus = getFocus(db, input.userId);
+
+  /**
+   * One list of targets, everywhere downstream.
+   *
+   * `learner_targets` is the source; `priorities.mustHave` is the column it replaced. Overlaying it
+   * here rather than changing four signatures means `scoreGaps`, `reasonFor` and the gap map all
+   * read the admin's real list — which is the same stale-field bug as the path itself had, one level
+   * down: the gap map was still listing must-haves nobody had edited since the new screen shipped.
+   *
+   * `mustHave` keeps the shape those functions expect, so nothing else has to know.
+   */
+  const priorities = {
+    ...stored,
+    mustHave: focus.targets.map((target) => ({ skill: target.skill, weight: target.priority })),
+    /* Derived from the track and the stack rather than typed separately. `targetRole` was a third
+       free-text field saying roughly what those two already say, and three fields that mean the same
+       thing drift apart the first time somebody edits one of them. A stored value still wins, for
+       accounts set up before the track existed. */
+    targetRole:
+      stored.targetRole.trim() ||
+      [focus.track ? LEARNER_TRACK_LABELS[focus.track] : "", focus.stack ?? ""].filter(Boolean).join(" · "),
+  };
+
   const pathId = startPath(db, input.userId, input.assessmentId);
   const progress = (note: string) => {
     setPathStatus(db, pathId, { progressNote: note });
@@ -242,7 +267,6 @@ export async function runBuilder(
      Now the targets come first, in the admin's order, and detected gaps are demoted to two jobs:
      deciding where a target starts, and being offered at the bottom as optional extras. See
      `priorityPath.ts`. */
-  const focus = getFocus(db, input.userId);
   const spine = buildSpine({
     targets: focus.targets,
     gaps: scored,
@@ -315,6 +339,8 @@ export async function runBuilder(
         reason,
         partNumber: part.partNumber,
         partType: part.partType,
+        targetSkill: part.targetSkill,
+        startLevel: part.startLevel,
       });
       if (existing.source === "unlock") outcome.unlocked += 1;
       else outcome.reused += 1;
@@ -390,6 +416,8 @@ export async function runBuilder(
       reason,
       partNumber: part.partNumber,
       partType: part.partType,
+      targetSkill: part.targetSkill,
+      startLevel: part.startLevel,
     });
     outcome.generated += 1;
 

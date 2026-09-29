@@ -1,32 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
-import { motion } from "motion/react";
-import { Loader2, Sparkles, Wand2 } from "lucide-react";
+import { Loader2, Wand2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import {
   EMPTY_PRIORITIES,
   isPathBusy,
-  PART_LABELS,
   type LearnerPriorities,
   type LearningPathView,
   type SkillGapView,
 } from "@shared/builder";
 
-import type { TargetsRequest } from "@shared/targets";
+import type { LearnerTarget, TargetsRequest } from "@shared/targets";
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert } from "@/components/form/Field";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { fadeUp, stagger, transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
-import { cn, formatTimestamp } from "@/lib/utils";
+import { formatTimestamp } from "@/lib/utils";
 import { adminWeekApi } from "@/features/plan/api";
 import { builderApi } from "../builder/api";
 import { PrioritiesFields } from "../builder/PrioritiesFields";
 import { TargetsFields } from "../builder/TargetsFields";
+import { PathByTarget } from "./PathByTarget";
 
 /** How often to re-read while a run is going. Generation is minutes, so this is not a hot loop. */
 const POLL_MS = 5000;
@@ -46,6 +42,7 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
   const [weekStale, setWeekStale] = useState(false);
   const [rebuilding, setRebuilding] = useState(false);
   const [savingTargets, setSavingTargets] = useState(false);
+  const [promoting, setPromoting] = useState<string | null>(null);
   const [targets, setTargets] = useState<TargetsRequest>({
     track: "backend",
     stack: "",
@@ -172,6 +169,30 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
     }
   };
 
+  /**
+   * Turns one of the model's suggestions into a target.
+   *
+   * Appended at Low rather than inserted anywhere clever: the admin's existing order is theirs, and
+   * a promotion should not quietly reshuffle it. They can drag it where they want and rebuild.
+   */
+  const promote = async (skill: string) => {
+    setPromoting(skill);
+    try {
+      const next = {
+        ...targets,
+        targets: [...targets.targets, { skill, priority: "low" as const, position: targets.targets.length, targetDate: null }],
+      };
+      await builderApi.setTargets(userId, next);
+      setTargets(next);
+      notify.success(`${skill} is now a Low target. Rebuild the path to give it a course.`);
+      setWeekStale(true);
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Could not promote that.");
+    } finally {
+      setPromoting(null);
+    }
+  };
+
   const build = async () => {
     setBuilding(true);
     try {
@@ -214,38 +235,55 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
         </div>
       </div>
 
-      <div>
-        <h3 className="text-sm font-semibold">Course builder settings</h3>
-        <div className="mt-4 max-w-2xl">
-          <PrioritiesFields value={priorities} onChange={setPriorities} disabled={saving} />
-          {weekStale && (
-            <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-warning/40 bg-warning/[0.07] px-4 py-3">
-              <p className="min-w-0 flex-1 text-sm">
-                Their current week was built from the old priorities.
-              </p>
-              <Button size="sm" loading={rebuilding} onClick={() => void rebuildWeek()}>
-                Rebuild their week
-              </Button>
-              <Button size="sm" variant="ghost" disabled={rebuilding} onClick={() => setWeekStale(false)}>
-                Leave it
-              </Button>
-            </div>
-          )}
+      {weekStale && (
+        <div className="flex max-w-2xl flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-warning/40 bg-warning/[0.07] px-4 py-3">
+          <p className="min-w-0 flex-1 text-sm">
+            Their current week was built from the old priorities.
+          </p>
+          <Button size="sm" loading={rebuilding} onClick={() => void rebuildWeek()}>
+            Rebuild their week
+          </Button>
+          <Button size="sm" variant="ghost" disabled={rebuilding} onClick={() => setWeekStale(false)}>
+            Leave it
+          </Button>
+        </div>
+      )}
 
-          <div className="mt-5 flex flex-wrap gap-3">
+      {/* The primary action, and it stays out of the disclosure below. Rebuilding the path is what
+          an admin came here to do after changing a target; the builder's own settings are something
+          they touch once. */}
+      <div className="flex max-w-2xl flex-wrap gap-3">
+        <Button loading={building} disabled={busy} onClick={() => void build()}>
+          <Wand2 aria-hidden="true" />
+          {path ? "Rebuild the path" : "Build the path"}
+        </Button>
+      </div>
+
+      <details className="max-w-2xl rounded-md border">
+        <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium">Advanced settings</summary>
+        <div className="border-t p-4">
+          <PrioritiesFields value={priorities} onChange={setPriorities} disabled={saving} />
+          <div className="mt-5">
             <Button variant="outline" loading={saving} onClick={() => void save()}>
-              Save priorities
-            </Button>
-            <Button loading={building} disabled={busy} onClick={() => void build()}>
-              <Wand2 aria-hidden="true" />
-              {path ? "Rebuild the path" : "Build the path"}
+              Save settings
             </Button>
           </div>
         </div>
-      </div>
+      </details>
 
-      {loaded && <PathPanel path={path} busy={busy} targetCount={targets.targets.length} />}
-      {loaded && gaps.length > 0 && <GapMap gaps={gaps} />}
+      {loaded && (
+        <PathPanel
+          path={path}
+          busy={busy}
+          targets={targets.targets}
+          gaps={gaps}
+          onPromote={promote}
+          promoting={promoting}
+        />
+      )}
+      {/* No separate gap map any more. Every target now carries its own evidence behind an
+          expander, and the findings that belong to no target are the "Also suggested" section — so
+          a third list of the same rows was the page repeating itself. */}
     </section>
   );
 }
@@ -253,13 +291,20 @@ export function PathTab({ userId, displayName }: { userId: string; displayName: 
 function PathPanel({
   path,
   busy,
-  targetCount,
+  targets,
+  gaps,
+  onPromote,
+  promoting,
 }: {
   path: LearningPathView | null;
   busy: boolean;
-  /** How many targets the admin has set, so the empty state can say which kind of empty it is. */
-  targetCount: number;
+  /** The admin's targets. The spine on screen is the spine in the data. */
+  targets: readonly LearnerTarget[];
+  gaps: readonly SkillGapView[];
+  onPromote: (skill: string) => void | Promise<void>;
+  promoting: string | null;
 }) {
+  const targetCount = targets.length;
   if (!path) {
     return (
       <div>
@@ -317,7 +362,16 @@ function PathPanel({
         </p>
       )}
 
-      {path.items.length === 0 ? (
+      {/* The targets are shown whenever there are any, even with nothing built yet.
+      
+          The brief's rule: every High target ends up with a course *or with a visible reason why
+          not*. Short-circuiting to a one-line empty state hid the targets entirely, which is the
+          version of "you got nothing" that does not say what was asked for. */}
+      {targetCount > 0 ? (
+        <div className="mt-4">
+          <PathByTarget path={path} targets={targets} gaps={gaps} onPromote={onPromote} promoting={promoting} />
+        </div>
+      ) : path.items.length === 0 ? (
         /* Exactly one sentence, and it depends on what was actually asked for.
         
            "Nothing was added — no gap needed a course" used to render whenever the list was empty,
@@ -328,77 +382,18 @@ function PathPanel({
             ? "Nothing on it yet."
             : path.status === "failed"
               ? "Nothing could be built. The reason is above."
-              : targetCount > 0
-                ? "Their targets are set but no course reached the path yet. Rebuild, or check the notice above."
-                : "No targets are set, so there was nothing to build. Add some above and rebuild."}
+              : "No targets are set, so there was nothing to build. Add some above and rebuild."}
         </p>
       ) : (
-        <motion.ol variants={stagger(0.04)} initial="hidden" animate="visible" className="mt-4 space-y-3">
-          {path.items.map((item) => (
-            <motion.li
-              key={item.id}
-              variants={fadeUp}
-              transition={transition.base}
-              className="rounded-md border px-4 py-3"
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                {/* The part, where there is one. A path built before parts existed shows its
-                    position instead, which is what it was. */}
-                {item.partNumber !== null && item.partType !== null ? (
-                  <span
-                    className={cn(
-                      "rounded-sm px-1.5 py-0.5 font-mono text-[10px] font-medium",
-                      item.partType === "track" && "bg-destructive/10 text-destructive",
-                      item.partType === "ai_dev" && "bg-ridge/10 text-ridge-strong",
-                      item.partType === "general" && "bg-basalt/10 text-basalt-strong",
-                    )}
-                    title={PART_LABELS[item.partType]}
-                  >
-                    Part {item.partNumber}
-                  </span>
-                ) : (
-                  <span className="font-mono text-xs text-muted-foreground tabular">{item.position + 1}</span>
-                )}
-                {item.courseId ? (
-                  <Link
-                    to={`/admin/courses/${item.courseId}`}
-                    className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
-                  >
-                    {item.courseTitle}
-                  </Link>
-                ) : (
-                  <span className="font-medium">{item.courseTitle}</span>
-                )}
-                <SourceBadge source={item.source} />
-                {!item.available && <Badge variant="outline">not published yet</Badge>}
-                <span className="ml-auto font-mono text-[11px] text-muted-foreground tabular">
-                  {item.completedCount}/{item.topicCount}
-                </span>
-              </div>
-              {item.partType !== null && item.partType !== "general" && (
-                <p className="mt-1 font-mono text-[11px] text-muted-foreground">{PART_LABELS[item.partType]}</p>
-              )}
-              <p className="mt-1.5 max-w-prose text-sm text-muted-foreground">{item.reason}</p>
-            </motion.li>
-          ))}
-        </motion.ol>
+        <div className="mt-4">
+          <PathByTarget path={path} targets={targets} gaps={gaps} onPromote={onPromote} promoting={promoting} />
+        </div>
       )}
     </div>
   );
 }
 
 /** Where a course came from. Worth showing: it is the difference between free and expensive. */
-function SourceBadge({ source }: { source: "unlock" | "reuse" | "generated" }) {
-  if (source === "generated") {
-    return (
-      <Badge variant="brand" className="gap-1">
-        <Sparkles className="size-3" aria-hidden="true" />
-        written for them
-      </Badge>
-    );
-  }
-  return <Badge variant="outline">{source === "reuse" ? "reused" : "from the catalogue"}</Badge>;
-}
 
 /**
  * The gap map.
@@ -406,51 +401,3 @@ function SourceBadge({ source }: { source: "unlock" | "reuse" | "generated" }) {
  * A bar per skill rather than a chart library — one number between 0 and 1 per row is a bar, and a
  * charting dependency to draw it would bring its own palette into a page built from tokens.
  */
-function GapMap({ gaps }: { gaps: SkillGapView[] }) {
-  return (
-    <div>
-      <h3 className="text-sm font-semibold">Skill gaps</h3>
-      <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Ordered the way the builder ordered them: what the admin listed first, then what the
-        assessment found, each weighted by how much the role needs it.
-      </p>
-
-      <ul className="mt-4 space-y-3">
-        {gaps.map((gap) => (
-          <li key={gap.id} className={cn("rounded-md border px-4 py-3", gap.skipped && "border-dashed opacity-70")}>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="font-medium">{gap.skill}</span>
-              <Badge variant={gap.source === "ai_detected" ? "outline" : "brand"}>
-                {gap.source === "both" ? "you and the test agreed" : gap.source === "admin_priority" ? "your priority" : "found by the test"}
-              </Badge>
-              {/* Recorded, deliberately not taught — different from never having looked. */}
-              {gap.skipped && <Badge variant="outline">skipped on purpose</Badge>}
-              <span className="ml-auto font-mono text-[11px] text-muted-foreground tabular">
-                score {gap.priorityScore.toFixed(2)}
-              </span>
-            </div>
-
-            <div className="mt-2 flex items-center gap-3">
-              <Progress
-                value={Math.round(gap.severity * 100)}
-                className="h-1.5 max-w-xs"
-                indicatorClassName={gap.severity >= 0.66 ? "bg-destructive" : gap.severity >= 0.33 ? "bg-trailmark" : "bg-summit"}
-                aria-label={`${gap.skill} severity`}
-              />
-              <span className="font-mono text-[11px] text-muted-foreground tabular">
-                {Math.round(gap.severity * 100)}% missing
-              </span>
-            </div>
-
-            <p className="mt-2 max-w-prose text-sm text-muted-foreground">{gap.evidence.summary}</p>
-            {gap.evidence.asked > 0 && (
-              <p className="mt-1 font-mono text-[11px] text-muted-foreground">
-                {gap.evidence.missed} of {gap.evidence.asked} items missed
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}

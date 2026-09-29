@@ -100,3 +100,42 @@ rakesh's path.
 4. **The assessment mix** (§4).
 
 Anything not reached is recorded at the bottom of this file rather than left to be found.
+
+---
+
+## What landed
+
+Written after the build rather than before it.
+
+| | Commit |
+| --- | --- |
+| The spine: admin targets first, one honest message | `3c951ca` |
+| The path tab grouped by target, and the duplicate form removed | this pass |
+
+### Three things the build found that the brief did not
+
+- **The gap map was reading the stale field too.** Fixing the path left `scoreGaps` and the gap map
+  still listing `must_have` entries nobody had edited since the targets screen shipped. One overlay
+  in `run.ts` — targets projected onto `mustHave` — fixes every reader at once rather than changing
+  four signatures.
+- **"Foundational" is not the same as "depended on".** An early prerequisite rule attached
+  JavaScript closures as groundwork for a Docker deployment course. Each foundation now names what
+  it actually underpins, and the learner's stack widens it.
+- **"3/5 assessed" was being invented.** A target the assessment never covered is stored as a
+  synthesised gap at severity 0.5 — "we do not know" — and a level was inferred from that number.
+  It put a measurement on screen that nobody took, and started the course at Intermediate. Now it
+  says "not assessed" and starts at the beginning.
+
+## Not landed
+
+- **§2's single setup screen.** The duplication is gone — the builder settings no longer carry a
+  second copy of the targets, the skip list or the hours — but the searchable catalog-backed skill
+  picker, the track chips and the three-step layout with a sticky summary are not built. The form is
+  still the field-by-field one.
+- **§4's assessment mix.** The easier staircase, the five sections and "I don't know" shipped
+  earlier; the coding-first *mix* (50% hands-on, 60% on High targets, stack-only basics) is not
+  built, and the editor is still the textarea rather than CodeMirror. No multi-language runner.
+- **§5's per-target tailoring.** Courses are generated per target in the admin's order, but the
+  generation prompt is not yet given the starting level or the stack examples.
+- **§6's `learner_skip` table.** The skip list still lives on `learner_priorities`.
+- **§8's deploy and rakesh's rebuild.** No VPS access from here.

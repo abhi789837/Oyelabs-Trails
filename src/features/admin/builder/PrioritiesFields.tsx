@@ -1,34 +1,25 @@
-import { Minus, Plus } from "lucide-react";
+import { type LearnerPriorities } from "@shared/builder";
 
-import { type LearnerPriorities, type MustHaveSkill, type SkillWeight } from "@shared/builder";
-import {
-  DEFAULT_DAYS_PER_WEEK,
-  DEFAULT_HOURS_PER_WEEK,
-  MAX_DAYS_PER_WEEK,
-  MAX_HOURS_PER_WEEK,
-  MIN_DAYS_PER_WEEK,
-  MIN_HOURS_PER_WEEK,
-} from "@shared/weeklyPlan";
-
-import { Field, TextField } from "@/components/form/Field";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Field } from "@/components/form/Field";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { TagInput } from "@/components/ui/tag-input";
-import { cn } from "@/lib/utils";
 
 /**
- * Learning priorities: what this person is being trained *for*.
+ * The course builder's own settings. Not the learner's priorities — those are `TargetsFields`.
  *
- * The half of the gap map that no assessment can produce. A test can show that somebody cannot
- * deploy anything; only a person knows this hire was brought in to do Laravel and that DevOps is
- * what matters this quarter. Everything here feeds the builder's scoring directly — the weights are
- * multipliers, and the skip list is honoured as "recorded, deliberately not taught".
+ * ## What came out of here, and why
  *
- * Controlled rather than uncontrolled, unlike the rest of the onboarding form: the weight buttons
- * and the skill rows need to re-render as they change, and reading a repeating structure back out
- * of `FormData` would be worse than holding it in state.
+ * This used to carry a target role, a weighted must-have list, a skills-to-skip list and the weekly
+ * hours. Every one of those is now on the targets form, which meant the learner page showed two
+ * overlapping forms: skills-to-skip twice, hours twice, priorities and weights twice. An admin had
+ * to know which copy the system actually read.
+ *
+ * Worse, by the end it read neither: the path builder overlays `learner_targets` over `mustHave`, so
+ * the must-have list on screen was doing nothing at all while looking exactly like it was. Fields
+ * that appear to work and do not are worse than missing ones.
+ *
+ * So what is left is the four things that are genuinely about *the builder* rather than about the
+ * person: how many courses it may write, whether they publish themselves, when the week starts, and
+ * a deadline. Most admins never open this.
  */
 export function PrioritiesFields({
   value,
@@ -42,162 +33,8 @@ export function PrioritiesFields({
   const set = <K extends keyof LearnerPriorities>(key: K, next: LearnerPriorities[K]) =>
     onChange({ ...value, [key]: next });
 
-  const setSkill = (index: number, patch: Partial<MustHaveSkill>) =>
-    set(
-      "mustHave",
-      value.mustHave.map((entry, i) => (i === index ? { ...entry, ...patch } : entry)),
-    );
-
   return (
     <div className="space-y-5">
-      <TextField
-        label="Target role"
-        value={value.targetRole}
-        disabled={disabled}
-        maxLength={120}
-        placeholder="Backend Engineer – Laravel"
-        hint="What they are being trained towards. The builder weighs every gap against this."
-        onChange={(event) => set("targetRole", event.target.value)}
-      />
-
-      <Field
-        label="Must-have skills"
-        hint="Weighted. High counts for the full score, Medium 60%, Low 30% — a skill the assessment finds on its own sits between Medium and Low."
-      >
-        {() => (
-          <div className="space-y-2">
-            {value.mustHave.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                None yet. Without any, the builder works from the assessment alone.
-              </p>
-            )}
-
-            <ul className="space-y-2">
-              {value.mustHave.map((entry, index) => (
-                <li key={index} className="flex flex-wrap items-center gap-2">
-                  <Input
-                    value={entry.skill}
-                    disabled={disabled}
-                    placeholder="Deployment and hosting"
-                    aria-label={`Skill ${index + 1}`}
-                    containerClassName="min-w-0 flex-1"
-                    onChange={(event) => setSkill(index, { skill: event.target.value })}
-                  />
-                  <WeightPicker
-                    value={entry.weight}
-                    disabled={disabled}
-                    label={entry.skill || `skill ${index + 1}`}
-                    onChange={(weight) => setSkill(index, { weight })}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    disabled={disabled}
-                    onClick={() => set("mustHave", value.mustHave.filter((_, i) => i !== index))}
-                  >
-                    <Minus aria-hidden="true" />
-                    <span className="sr-only">Remove {entry.skill || "this skill"}</span>
-                  </Button>
-                </li>
-              ))}
-            </ul>
-
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={disabled || value.mustHave.length >= 20}
-              onClick={() => set("mustHave", [...value.mustHave, { skill: "", weight: "high" }])}
-            >
-              <Plus aria-hidden="true" />
-              Add a skill
-            </Button>
-          </div>
-        )}
-      </Field>
-
-      <Field
-        label="Skills to skip"
-        hint="Still recorded as gaps if the assessment finds them — just never turned into a course. Saying nothing here is different from saying 'not this'."
-      >
-        {({ id }) => (
-          <TagInput
-            id={id}
-            value={value.skip}
-            disabled={disabled}
-            max={20}
-            placeholder="Add a skill to skip"
-            onChange={(next) => set("skip", next)}
-          />
-        )}
-      </Field>
-
-      <Field
-        label="Time available each week"
-        hint="What their weekly plan is built to fit. Only you know whether they are on training full-time or fitting it around delivery."
-      >
-        {() => (
-          <div className="flex flex-wrap items-end gap-4">
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm text-muted-foreground">Hours</span>
-              <input
-                type="number"
-                min={MIN_HOURS_PER_WEEK}
-                max={MAX_HOURS_PER_WEEK}
-                disabled={disabled}
-                value={value.hoursPerWeek}
-                onChange={(event) =>
-                  set(
-                    "hoursPerWeek",
-                    Math.max(MIN_HOURS_PER_WEEK, Math.min(MAX_HOURS_PER_WEEK, Number(event.target.value) || DEFAULT_HOURS_PER_WEEK)),
-                  )
-                }
-                className="w-24 rounded-md border border-input bg-surface px-3 py-2 text-sm tabular focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
-              />
-            </label>
-
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm text-muted-foreground">Over how many days</span>
-              <input
-                type="number"
-                min={MIN_DAYS_PER_WEEK}
-                max={MAX_DAYS_PER_WEEK}
-                disabled={disabled}
-                value={value.daysPerWeek}
-                onChange={(event) =>
-                  set(
-                    "daysPerWeek",
-                    Math.max(MIN_DAYS_PER_WEEK, Math.min(MAX_DAYS_PER_WEEK, Number(event.target.value) || DEFAULT_DAYS_PER_WEEK)),
-                  )
-                }
-                className="w-24 rounded-md border border-input bg-surface px-3 py-2 text-sm tabular focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
-              />
-            </label>
-
-            <p className="min-w-40 flex-1 font-mono text-[11px] text-muted-foreground">
-              ≈ {Math.round((value.hoursPerWeek / Math.max(1, value.daysPerWeek)) * 10) / 10} h a day
-            </p>
-          </div>
-        )}
-      </Field>
-
-      <label className="flex cursor-pointer items-start gap-3 rounded-md border p-4">
-        <Checkbox
-          checked={value.weekStartsMonday}
-          disabled={disabled}
-          onCheckedChange={(checked) => set("weekStartsMonday", checked === true)}
-          className="mt-0.5"
-        />
-        <span>
-          <span className="font-medium">Weeks start on Monday</span>
-          <span className="mt-0.5 block text-sm text-muted-foreground">
-            Off by default, so somebody who finishes their assessment on a Wednesday is given work that day rather
-            than waiting for Monday. Turn it on to line a whole cohort up on the same seven days.
-          </span>
-        </span>
-      </label>
-
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Deadline" hint="Optional. Weeks from now.">
           {({ id }) => (
@@ -232,6 +69,21 @@ export function PrioritiesFields({
 
       <label className="flex cursor-pointer items-start gap-3 rounded-md border p-4">
         <Checkbox
+          checked={value.weekStartsMonday}
+          disabled={disabled}
+          onCheckedChange={(checked) => set("weekStartsMonday", checked === true)}
+          className="mt-0.5"
+        />
+        <span>
+          <span className="font-medium">Weeks start on Monday</span>
+          <span className="mt-0.5 block text-sm text-muted-foreground">
+            Off by default, so somebody who finishes on a Wednesday is given work that day.
+          </span>
+        </span>
+      </label>
+
+      <label className="flex cursor-pointer items-start gap-3 rounded-md border p-4">
+        <Checkbox
           checked={value.autoPublish}
           disabled={disabled}
           onCheckedChange={(checked) => set("autoPublish", checked === true)}
@@ -240,8 +92,7 @@ export function PrioritiesFields({
         <span>
           <span className="font-medium">Publish generated courses automatically</span>
           <span className="mt-0.5 block text-sm text-muted-foreground">
-            Off by default. With it on, a course still only reaches them if it passed its own review —
-            this is a statement about trusting the process, not an instruction to ship whatever comes out.
+            Off by default. A course still only reaches them if it passed its own review.
           </span>
         </span>
       </label>
@@ -249,75 +100,14 @@ export function PrioritiesFields({
   );
 }
 
-const WEIGHTS: { value: SkillWeight; label: string }[] = [
-  { value: "high", label: "High" },
-  { value: "medium", label: "Med" },
-  { value: "low", label: "Low" },
-];
-
-/** Three buttons rather than a select: three options, and the weight is worth seeing at a glance. */
-function WeightPicker({
-  value,
-  onChange,
-  disabled,
-  label,
-}: {
-  value: SkillWeight;
-  onChange: (weight: SkillWeight) => void;
-  disabled?: boolean;
-  label: string;
-}) {
-  return (
-    <div className="flex shrink-0 overflow-hidden rounded-md border" role="group" aria-label={`Priority for ${label}`}>
-      {WEIGHTS.map((weight) => (
-        <button
-          key={weight.value}
-          type="button"
-          disabled={disabled}
-          aria-pressed={value === weight.value}
-          onClick={() => onChange(weight.value)}
-          className={cn(
-            "px-2.5 py-1.5 text-xs transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary-strong",
-            value === weight.value ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:bg-surface-sunken",
-          )}
-        >
-          {weight.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
 /** A one-line summary for the onboarding review step. */
 export function PrioritiesSummary({ value }: { value: LearnerPriorities }) {
-  if (!value.targetRole && value.mustHave.length === 0) {
-    return (
-      <p className="text-sm text-muted-foreground">
-        None set. The builder will work from the assessment alone.
-      </p>
-    );
-  }
   return (
-    <div className="space-y-2">
-      {value.targetRole && <p className="text-sm">{value.targetRole}</p>}
-      {value.mustHave.length > 0 && (
-        <ul className="flex flex-wrap gap-1.5">
-          {value.mustHave
-            .filter((entry) => entry.skill.trim().length > 0)
-            .map((entry, index) => (
-              <li key={index}>
-                <Badge variant={entry.weight === "high" ? "brand" : "outline"}>
-                  {entry.skill} · {entry.weight}
-                </Badge>
-              </li>
-            ))}
-        </ul>
-      )}
-      <p className="font-mono text-[11px] text-muted-foreground">
-        {value.hoursPerWeek} h/week over {value.daysPerWeek} days · up to {value.courseCap} generated
-        {value.skip.length > 0 && ` · skipping ${value.skip.length}`}
-        {value.autoPublish ? " · auto-publish on" : ""}
-      </p>
-    </div>
+    <p className="font-mono text-[11px] text-muted-foreground">
+      up to {value.courseCap} generated
+      {value.autoPublish ? " · auto-publish on" : ""}
+      {value.weekStartsMonday ? " · weeks start Monday" : ""}
+      {value.deadlineWeeks ? ` · ${value.deadlineWeeks} week deadline` : ""}
+    </p>
   );
 }

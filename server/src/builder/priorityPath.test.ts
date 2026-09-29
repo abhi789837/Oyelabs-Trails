@@ -146,6 +146,33 @@ describe("the assessment decides where a target starts, not whether", () => {
     expect(path.targets[0].assessedLevel).toBe(4);
   });
 
+  test("a target nobody asked about is not assessed, and starts at the beginning", () => {
+    /* A target the assessment never covered is stored as a synthesised gap at severity 0.5 — the
+       honest reading of "we do not know". Inferring a level from that number put "3/5 assessed" on
+       screen for something nobody had been asked about, and started the course at Intermediate.
+       Both were inventions. */
+    const path = buildSpine(
+      input({
+        targets: [target("Multi-agent AI development")],
+        gaps: [gap("Multi-agent AI development", { severity: 0.5, source: "admin_priority", evidence: { summary: "Not covered.", itemIds: [], missed: 0, asked: 0 } })],
+      }),
+    );
+
+    expect(path.targets[0].assessedLevel).toBeNull();
+    expect(path.targets[0].startLevel).toBe("beginner");
+  });
+
+  test("a gap with questions behind it is a measurement", () => {
+    const path = buildSpine(
+      input({
+        targets: [target("Docker")],
+        gaps: [gap("Docker deployment", { severity: 0.2, evidence: { summary: "Missed one.", itemIds: ["a"], missed: 1, asked: 5 } })],
+      }),
+    );
+    expect(path.targets[0].assessedLevel).toBe(4);
+    expect(path.targets[0].startLevel).toBe("advanced");
+  });
+
   test("the matched gap is kept as the target's evidence", () => {
     const path = buildSpine(input({ targets: [target("Docker")], gaps: [gap("Docker deployment")] }));
     expect(path.targets[0].evidence?.evidence.summary).toContain("Docker deployment");

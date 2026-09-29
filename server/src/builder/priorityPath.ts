@@ -230,7 +230,17 @@ function levelFor(
 ): number | null {
   const area = areaLevels.find((entry) => matchesTarget(entry.area, target.skill));
   if (area) return area.level;
-  if (evidence) return Math.max(0, Math.round((1 - evidence.severity) * 5));
+
+  /* Only a gap with questions behind it is a measurement.
+  
+     A target the assessment never covered is stored as a synthesised gap at severity 0.5 — the
+     honest reading of "we do not know" — and inferring a level from that number produced "3/5
+     assessed" on screen for something nobody had been asked about, and started the course at
+     Intermediate. Both are inventions. If we never asked, we do not know, and they start at the
+     beginning. */
+  if (evidence && evidence.evidence.asked > 0) {
+    return Math.max(0, Math.round((1 - evidence.severity) * 5));
+  }
   return null;
 }
 

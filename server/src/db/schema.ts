@@ -753,6 +753,17 @@ export const pathItems = sqliteTable(
      */
     partNumber: integer("part_number"),
     partType: text("part_type").$type<"track" | "ai_dev" | "general">(),
+    /**
+     * The admin target this item serves, by name.
+     *
+     * The spine is the admin's target list, so the path tab groups by it — a course *for* a target,
+     * and the refreshers that target depends on, under one heading. By name rather than by
+     * `learner_targets.id` on purpose: a target can be renamed or re-added and the path should still
+     * show what it was built for, rather than losing its grouping to a foreign key that moved.
+     */
+    targetSkill: text("target_skill"),
+    /** Where the course starts, from the assessment. The only thing it decides about a target. */
+    startLevel: text("start_level").$type<"beginner" | "intermediate" | "advanced">(),
     /** "You missed 4 of 5 questions on server deployment; DevOps is marked High priority." */
     reason: text("reason").notNull(),
   },

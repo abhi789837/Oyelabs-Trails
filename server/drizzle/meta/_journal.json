@@ -85,6 +85,13 @@
       "when": 1790668776684,
       "tag": "0011_path_notice",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1790669405736,
+      "tag": "0012_path_target",
+      "breakpoints": true
     }
   ]
 }

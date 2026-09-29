@@ -185,6 +185,9 @@ export function addPathItem(
     /** Which part of the path this is. Absent on a path built before parts existed. */
     partNumber?: number;
     partType?: "track" | "ai_dev" | "general";
+    /** The admin target this serves, and where its course starts. */
+    targetSkill?: string | null;
+    startLevel?: "beginner" | "intermediate" | "advanced" | null;
   },
 ): void {
   db.insert(schema.pathItems).values({ id: newId(), ...input }).run();
@@ -248,6 +251,8 @@ export function currentPath(db: Db, userId: string): LearningPathView | null {
       available: Boolean(course?.published),
       partNumber: item.partNumber,
       partType: item.partType,
+      targetSkill: item.targetSkill,
+      startLevel: item.startLevel,
     };
   });
 

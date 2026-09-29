@@ -312,6 +312,15 @@ export interface PathItemView {
   /** Null on a path built before parts existed. Those render as the flat list they were. */
   partNumber: number | null;
   partType: PartType | null;
+  /**
+   * The admin target this item serves.
+   *
+   * The path tab groups by this: a course for a target, and the refreshers that target depends on,
+   * under one heading in the admin's own order. Null on an older path and on a standalone suggestion.
+   */
+  targetSkill: string | null;
+  /** Where the course starts. The only thing the assessment decides about a target. */
+  startLevel: "beginner" | "intermediate" | "advanced" | null;
 }
 
 export interface LearningPathView {
