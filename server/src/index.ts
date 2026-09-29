@@ -14,6 +14,7 @@ import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
 import { enqueue } from "./jobs/queue";
 import { buildPathHandler } from "./jobs/handlers/buildPath";
+import { refineWeekHandler } from "./jobs/handlers/refineWeek";
 import { checkLinksHandler } from "./jobs/handlers/checkLinks";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { JobWorker } from "./jobs/worker";
@@ -71,6 +72,7 @@ async function main(): Promise<void> {
       "assessment.evaluate": evaluateHandler({ db, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "path.build": buildPathHandler({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "links.check": checkLinksHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "week.refine": refineWeekHandler({ db, content, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });

@@ -123,6 +123,13 @@ export const jobTypeSchema = z.enum([
   "path.build",
   /** The weekly re-check of every link a generated course cites. */
   "links.check",
+  /**
+   * Letting a model improve a week that was already built and served.
+   *
+   * A job rather than part of the request, because it is a provider call: `GET /api/me/week` used to
+   * make one inline and the learner's page sat on its skeleton for minutes.
+   */
+  "week.refine",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 

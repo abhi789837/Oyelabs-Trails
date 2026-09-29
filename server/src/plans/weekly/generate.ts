@@ -14,6 +14,7 @@ import type { AiService } from "../../ai/service";
 import { getPriorities } from "../../builder/repo";
 import type { ContentStore } from "../../content/store";
 import { schema, type Db } from "../../db";
+import { enqueue } from "../../jobs/queue";
 import { gatherLibrary, strengthsFor } from "./candidates";
 import { buildWeek } from "./builder";
 import { enforce } from "./enforce";
@@ -259,6 +260,10 @@ async function revise(
       schemaName: "week_plan",
       meta: { subjectUserId: userId },
       maxOutputTokens: 8000,
+      /* Well under the 120-second default. This call only reorders lanes and writes two short
+         pieces of prose; a model that has not managed that in 45 seconds is not going to, and the
+         built week is already a good answer waiting to be used. */
+      timeoutMs: 45_000,
     });
 
     /* The week's identity is ours, not the model's. It was told the numbers and dates; if it returns
@@ -325,5 +330,19 @@ function goodEnough(revised: WeeklyPlanDraft, built: WeeklyPlanDraft, protectedK
 export async function ensureWeek(deps: GenerateDeps, userId: string, nowMs = Date.now()): Promise<GenerateResult | null> {
   const current = activeWeek(deps.db, userId);
   if (current && !hasWeekEnded(current, nowMs)) return null;
-  return await generateWeek(deps, { userId, nowMs, advance: current !== null });
+
+  /* **Rules only, always.** This runs inside `GET /api/me/week`, and a provider call inside a
+     request is a page that never loads: a 120-second timeout, a retry policy and a concurrency
+     semaphore of two meant the learner sat on the skeleton for minutes and usually for ever. The
+     deterministic build is milliseconds and is always correct.
+
+     The model's pass is queued instead, and improves the week in place a moment later. Somebody who
+     never comes back still had a working week; somebody who reloads gets the better one. */
+  const result = await generateWeek(deps, { userId, nowMs, advance: current !== null, rulesOnly: true });
+
+  if (result.planId && deps.ai.isConfigured()) {
+    enqueue(deps.db, { type: "week.refine", payload: { userId, planId: result.planId } });
+  }
+
+  return result;
 }

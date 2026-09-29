@@ -372,3 +372,61 @@ describe("a learner with nothing unlocked", () => {
     expect(body.reason).toMatch(/nothing is unlocked/i);
   });
 });
+
+describe("the read path never waits on a model", () => {
+  test("building a week queues the AI pass instead of making the call inline", async () => {
+    /* The bug this exists for made `/plan` unusable in production: `ensureWeek` ran the model call
+       inside `GET /api/me/week`, so with a real credential the learner's page sat on its skeleton
+       for minutes — a 120s timeout, a retry policy and a concurrency semaphore of two.
+
+       `buildPathHandler` already states the rule in its own doc comment. This holds it down. */
+    await getWeek();
+
+    const jobs = ctx.db.select().from(schema.jobs).all();
+    expect(jobs.some((job) => job.type === "week.refine")).toBe(true);
+
+    const week = (await getWeek()).week!;
+    // Built by the rules, not by a model: that is what makes it instant.
+    expect(week.source).toBe("rules");
+    expect(week.items.length).toBeGreaterThan(0);
+  });
+
+  test("the week is complete and usable before the job has run", async () => {
+    // Somebody who never comes back still had a working week, which is the whole point.
+    const { week } = await getWeek();
+    expect(week!.summary.length).toBeGreaterThan(10);
+    expect(week!.plannedMinutes).toBeGreaterThan(0);
+    for (const item of week!.items) expect(item.reason.length).toBeGreaterThan(2);
+  });
+
+  test("the refine job improves the week in place rather than advancing it", async () => {
+    const before = (await getWeek()).week!;
+    await ctx.drainJobs();
+
+    const after = (await getWeek()).week!;
+    expect(after.weekNumber).toBe(before.weekNumber);
+    expect(after.startDate).toBe(before.startDate);
+  });
+
+  test("it declines once the learner has started the week", async () => {
+    /* Replacing a week somebody has begun would move items out from under them, so the job checks
+       rather than trusting that it was queued a moment ago. */
+    const { week } = await getWeek();
+    completeTopic(week!.items[0]!.topicId!);
+
+    await ctx.drainJobs();
+
+    const after = (await getWeek()).week!;
+    expect(after.id).toBe(week!.id);
+    expect(after.items.find((item) => item.id === week!.items[0]!.id)?.status).toBe("done");
+  });
+
+  test("a second read does not queue a second job", async () => {
+    await getWeek();
+    await getWeek();
+    await getWeek();
+
+    const refines = ctx.db.select().from(schema.jobs).all().filter((job) => job.type === "week.refine");
+    expect(refines).toHaveLength(1);
+  });
+});
