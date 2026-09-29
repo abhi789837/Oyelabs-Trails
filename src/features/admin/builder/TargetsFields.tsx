@@ -110,7 +110,9 @@ export function TargetsFields({
         />
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      {/* Two columns before three: the level picker is five buttons wide and squeezed the hours
+          field onto the same line as its own label at the middle breakpoint. */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Field label="Years of experience" hint="Roughly.">
           {({ id }) => (
             <input

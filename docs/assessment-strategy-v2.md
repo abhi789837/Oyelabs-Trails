@@ -155,6 +155,59 @@ the **reuse**:
 
 ---
 
+## What landed, and what did not
+
+Written after the build rather than before it, so it is a record instead of a promise.
+
+### Landed
+
+| | Commit | Notes |
+| --- | --- | --- |
+| Window-blur proctoring fix | `5ad3592` | Found while reading. Dead since the Tailwind v4 migration. |
+| §1 Suspend / archive / delete / export | `af17e31` | 17 tests. Found and fixed a dead last-super-admin guard. |
+| §2 Tracks, stacks, prioritised targets | `7e13ca2` | Migration 0009 with a backfill; 25 tests. |
+| §2 The targets editor | `0949772` | Onboarding step and the learner's AI-path tab. |
+| §3 Fairer staircase, five sections, "I don't know" | `7010f1f` | 29 selector tests. 45 min, 25–35 items. |
+| §4 Editor whitelist and autosave | `d6e99a5` | The live bug: editing fluently could terminate a sitting. |
+| §5 Part-based path | `5bf5cdf` | Migration 0010; 18 tests on the ordering. |
+| §5 Parts 1–2 into week one's red lane | `5652cf2` | 40 weekly-plan tests. |
+
+### Not landed
+
+Stated plainly rather than left to be discovered:
+
+- **§3's client shell.** The server serves sections and the learner can answer "I don't know", but
+  there are no per-section intro screens, no per-section timers and no question flagging. The
+  progress strip carries the part on the wire (`progress.part`) and the UI does not yet show it.
+- **§3's by-part results screen.** The evaluation still produces one summary rather than strengths
+  and gaps per part.
+- **§4's editor upgrade.** Still the existing textarea with a line gutter, auto-indent and
+  bracket-aware Enter — not CodeMirror. No Run/Reset panel for non-JS, and no language support
+  beyond JavaScript.
+- **§4's multi-language runner.** Designed below and not built. PHP, Python and SQL have no runner.
+- **§6 and §7 in full.** Generated courses already use the real course schema and the verified
+  research pipeline, so §6 is largely already true; the **review surface** (§7) — "Suggested for
+  this learner", the global suggested-courses page, `resources` / `course_resources`, and
+  de-duplication on save — is not built.
+
+### The code runner, as designed
+
+Not built, and it is the one item here that is infrastructure rather than application code, so it is
+written down rather than half-done:
+
+- its own container beside the app, on the internal Docker network only, never through Caddy;
+- `--network=none`, a read-only root, a tmpfs work directory, `--memory=256m`, `--cpus=0.5`, and a
+  wall-clock kill at 10 s;
+- one POST endpoint taking `{ language, code, tests }` and returning outcomes, with no filesystem
+  and no environment inherited from the host;
+- the browser worker stays the path for *feedback* on JS/TS; the server is the path for the *mark*,
+  in every language, so a learner cannot grade themselves by editing what runs.
+
+Until it exists, a PHP/Python/SQL question would have to be answered without being runnable, which
+is why the hands-on section currently generates JavaScript tasks only.
+
+---
+
 ## Sequencing, honestly
 
 Sections 1–3 and 5 are application code and land in this pass. Section 4 splits:
