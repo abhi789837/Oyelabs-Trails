@@ -18,6 +18,8 @@ import {
 import { itemKindSchema, type ItemKind } from "../../../shared/enums";
 import { learnerProfileSchema, type LearnerProfile } from "../../../shared/profile";
 import { buildBlueprintUser, BLUEPRINT_SYSTEM } from "../ai/prompts/blueprint";
+import { getPriorities } from "../builder/repo";
+import { getFocus } from "../targets/repo";
 import { buildCriticUser, CRITIC_SYSTEM } from "../ai/prompts/critic";
 import { buildExplainUser, buildItemsUser, EXPLAIN_SYSTEM, ITEMS_SYSTEM } from "../ai/prompts/items";
 import type { AiService } from "../ai/service";
@@ -137,6 +139,10 @@ export function blueprintHandler(deps: BlueprintDeps) {
 
     try {
       const profile = readProfile(db, assessment.userId);
+      /* The admin's ordered targets, which decide what the sections are and how the question budget
+         is split. Absent for a learner onboarded before targets existed; the prompt says so rather
+         than inventing any. */
+      const focus = getFocus(db, assessment.userId);
       const user = db.select().from(schema.users).where(eq(schema.users.id, assessment.userId)).get();
       const displayName = user?.displayName ?? "the learner";
 
@@ -150,7 +156,17 @@ export function blueprintHandler(deps: BlueprintDeps) {
       const blueprintResult = await ai.generateJson({
         purpose: "blueprint",
         system: BLUEPRINT_SYSTEM,
-        user: buildBlueprintUser(profile, digest, displayName),
+        user: buildBlueprintUser(profile, digest, displayName, {
+          track: focus.track,
+          stack: focus.stack,
+          selfLevel: focus.selfLevel,
+          targets: focus.targets.map((target) => ({
+            skill: target.skill,
+            priority: target.priority,
+            targetDate: target.targetDate,
+          })),
+          skip: getPriorities(db, assessment.userId).skip,
+        }),
         schema: blueprintSchema,
         schemaName: "blueprint",
         meta: { subjectUserId: assessment.userId, assessmentId },

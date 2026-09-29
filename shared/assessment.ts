@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { assessmentStatusSchema, itemKindSchema, itemStatusSchema, skillLevelSchema } from "./enums";
+import { assessmentSectionSchema, type AssessmentSection } from "./sections";
 
 /**
  * The placement assessment (brief §9).
@@ -38,7 +39,11 @@ export const TIME_LIMIT_SEC: Record<z.infer<typeof itemKindSchema>, number> = {
  * minute" assessment came to show a 75-minute clock. Everything below is derived from this, so
  * changing it here changes the real ceiling.
  */
-export const MAX_TOTAL_MIN = 30;
+/* 45 rather than 30. The shorter ceiling sounded gentler and was not: with 12-20 items every
+   question had to count, so the staircase started near the middle and climbed after one correct
+   answer. More questions from a lower starting difficulty is both the friendlier path and the more
+   accurate one — see `server/src/assessment/selector.ts`. */
+export const MAX_TOTAL_MIN = 45;
 /** Explain items get their own budget at the end of the test (§9.4). */
 export const EXPLAIN_BUDGET_MIN = 6;
 /** What is left for the adaptive section once the written budget is reserved. */
@@ -55,10 +60,11 @@ export const MIN_TIME_LIMIT_MIN = 10;
  * yes". Change it here; nothing else hard-codes five minutes.
  */
 export const AUTO_APPROVE_AFTER_MS = 5 * 60_000;
-/* Resized for the 30-minute ceiling. At ~80 seconds an item, 24 minutes of adaptive testing is
-   roughly 18 items; the range leaves the blueprint room either side of that. */
-export const MIN_ITEM_TARGET = 12;
-export const MAX_ITEM_TARGET = 20;
+/* Resized for the 45-minute ceiling and the sectioned test: about 25-35 questions, which at roughly
+   75 seconds an item is the 39 minutes of adaptive testing left once the written budget is
+   reserved. `shared/sections.ts` splits this across the five parts. */
+export const MIN_ITEM_TARGET = 25;
+export const MAX_ITEM_TARGET = 35;
 
 /**
  * How many modules one blueprint area may name. Exported because the mock fixture has to respect
@@ -74,6 +80,14 @@ export const blueprintAreaSchema = z.object({
   /** What the admin's notes suggest this person's level is, before testing. */
   hypothesisLevel: skillLevelSchema,
   rationale: z.string().trim().min(10).max(600),
+  /**
+   * Which of the five parts this area belongs to.
+   *
+   * Optional, and defaulted rather than required, because every blueprint generated before sections
+   * existed has none — and those assessments are still sitting in pools waiting to be taken. An area
+   * with no section is track basics, which is where a single undifferentiated pool effectively was.
+   */
+  section: assessmentSectionSchema.default("track_basics"),
 });
 export type BlueprintArea = z.infer<typeof blueprintAreaSchema>;
 
@@ -355,8 +369,21 @@ export interface ServedItem {
 export interface NextItemResponse {
   item: ServedItem | null;
   done: boolean;
-  /** Where they are, for a progress strip. Never their score. */
-  progress: { answered: number; target: number; section: "adaptive" | "written" };
+  /**
+   * Where they are, for a progress strip. Never their score.
+   *
+   * `part` and its counts are absent on an assessment generated before sections existed, so the strip
+   * falls back to the flat "12 of 20" it used to show rather than claiming a part it cannot name.
+   */
+  progress: {
+    answered: number;
+    target: number;
+    section: "adaptive" | "written";
+    part?: AssessmentSection;
+    partIndex?: number;
+    partCount?: number;
+    partAnswered?: number;
+  };
   deadlineAt: number;
   hardWarnings: number;
 }
@@ -368,6 +395,14 @@ export const answerRequestSchema = z.object({
   text: z.string().max(8000).optional(),
   /** code */
   code: z.string().max(40_000).optional(),
+  /**
+   * "I don't know yet".
+   *
+   * An explicit flag rather than an empty answer, because a blank box is somebody who ran out of
+   * time and this is somebody telling us where their gap is. They mean opposite things to the course
+   * builder, and the staircase treats them differently: an unknown does not push the level down.
+   */
+  unknown: z.boolean().optional(),
 });
 export type AnswerRequest = z.infer<typeof answerRequestSchema>;
 

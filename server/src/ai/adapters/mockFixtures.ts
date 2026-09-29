@@ -48,12 +48,18 @@ export function fixtureBlueprint(context: FixtureContext): Blueprint {
     moduleIds: pickModules(context.moduleIds, index, count),
     hypothesisLevel: ([2, 3, 3, 2, 4, 3] as const)[index % 6],
     rationale: template.rationale,
+    /* Spread across the sections the way a real blueprint is, so the fixture exercises the sectioned
+       selector rather than quietly collapsing every area into track basics. */
+    section: (["track_basics", "track_basics", "high_targets", "high_targets", "other_targets", "ai_working"] as const)[
+      index % 6
+    ],
   }));
 
   return {
     areas,
     timeLimitMinutes: DEFAULT_TIME_LIMIT_MIN,
-    targetItemCount: 16,
+    // Inside MIN_ITEM_TARGET..MAX_ITEM_TARGET, which moved to 25..35 with the sectioned test.
+    targetItemCount: 28,
     summary:
       "A deterministic fixture blueprint. It covers language fundamentals, the areas the notes point at, and one probe area, which is the shape a real blueprint should have.",
   };

@@ -24,12 +24,15 @@ import {
   type NextItemResponse,
   type StartResponse,
 } from "../../../shared/assessment";
+import type { Difficulty } from "../../../shared/assessment";
 import type { ItemKind } from "../../../shared/enums";
 import { requireActiveUser } from "../auth/guards";
 import { autoScoreItem, hasResponse } from "../assessment/gradeItem";
 import { HARD_LIMIT, MAX_PAUSE_PER_WARNING_MS, recordIntegrityEvent } from "../assessment/integrity";
 import {
+  currentSection,
   initSelectorState,
+  normaliseState,
   recordOutcome,
   selectNext,
   type PoolItemRef,
@@ -37,6 +40,7 @@ import {
 } from "../assessment/selector";
 import { schema } from "../db";
 import { enqueue } from "../jobs/queue";
+import { SECTION_ORDER } from "../../../shared/sections";
 import { badRequest, conflict, forbidden, notFound, parseOrThrow } from "../lib/errors";
 import { newId, now } from "../lib/ids";
 import { publishIntegrityEvent } from "./admin/live";
@@ -167,7 +171,7 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
     // The written-answer section gets its own budget on top of the adaptive time (§9.4).
     const deadlineAt = startedAt + (timeLimitMinutes + EXPLAIN_BUDGET_MIN) * 60_000;
 
-    const selector = initSelectorState(blueprint.areas.map((a) => ({ name: a.name, hypothesisLevel: a.hypothesisLevel })));
+    const selector = initSelectorState(blueprint.areas.map((a) => ({ name: a.name, hypothesisLevel: a.hypothesisLevel, section: a.section })));
 
     app.db
       .update(schema.assessments)
@@ -224,7 +228,12 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
       }
     }
 
-    const selector = config.selector ?? initSelectorState(blueprint.areas.map((a) => ({ name: a.name, hypothesisLevel: a.hypothesisLevel })));
+    /* Normalised on read: an assessment that was in flight when the sectioned selector shipped has a
+       state with boolean outcomes and no sections. Upgrading it in place is the difference between
+       somebody finishing their test and somebody restarting it. */
+    const selector = config.selector
+      ? normaliseState(config.selector)
+      : initSelectorState(blueprint.areas.map((a) => ({ name: a.name, hypothesisLevel: a.hypothesisLevel, section: a.section })));
     const pool = poolFor(app, assessment.id);
 
     let writtenSection = config.writtenSection ?? false;
@@ -511,11 +520,35 @@ function emptyNext(deadlineAt: number, hardWarnings: number): NextItemResponse {
 }
 
 function progressOf(config: StoredConfig, blueprint: Blueprint): NextItemResponse["progress"] {
+  const selector = config.selector;
+  const part = selector ? currentSection(selector) : null;
+
   return {
-    answered: config.selector?.servedCount ?? 0,
+    answered: selector?.servedCount ?? 0,
     target: blueprint.targetItemCount,
     section: config.writtenSection ? "written" : "adaptive",
+    /* Which of the five parts they are on, and how far through it. The old strip could only say
+       "12 of 20", which is a number with no shape — "Part 2 of 5, 3 of 8" is a place. */
+    ...(part
+      ? {
+          part,
+          partIndex: SECTION_ORDER.filter((id) => selector!.areas.some((area) => area.section === id)).indexOf(part) + 1,
+          partCount: SECTION_ORDER.filter((id) => selector!.areas.some((area) => area.section === id)).length,
+          partAnswered: selector?.sectionCounts?.[part] ?? 0,
+        }
+      : {}),
   };
+}
+
+/**
+ * Did the learner press "I don't know yet"?
+ *
+ * Carried as an explicit flag on the response rather than inferred from an empty answer: a blank
+ * text box is somebody who ran out of time, and treating the two the same would put "did not reach
+ * it" and "has not met it" in the same bucket. They mean opposite things to the course builder.
+ */
+function saidUnknown(response: unknown): boolean {
+  return typeof response === "object" && response !== null && (response as { unknown?: unknown }).unknown === true;
 }
 
 function poolFor(app: FastifyInstance, assessmentId: string): PoolItemRef[] {
@@ -569,10 +602,16 @@ async function finishItem(
     .where(eq(schema.assessmentItems.id, itemId))
     .run();
 
-  const selector = config.selector;
+  const selector = config.selector ? normaliseState(config.selector) : undefined;
   const nextSelector =
     selector && config.currentAreaIndex !== undefined && config.currentAreaIndex !== null
-      ? recordOutcome(selector, config.currentAreaIndex, itemId, score ?? 0)
+      ? recordOutcome(selector, config.currentAreaIndex, itemId, score ?? 0, {
+          /* Passed separately from the score, because they are different facts. A score of 0 means
+             they tried and were wrong; `unknown` means they told us they have not met this. The
+             staircase treats them differently and so does the gap map. */
+          unknown: saidUnknown(response),
+          difficulty: row.difficulty as Difficulty,
+        })
       : selector;
 
   app.db
