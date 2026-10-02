@@ -11,6 +11,7 @@ import {
 } from "../../../shared/builder";
 import { schema, type Db } from "../db";
 import { newId, now } from "../lib/ids";
+import type { ContentStore } from "../content/store";
 import { listSkillPriorities, listSkip, replaceSkipByNames, writeLegacyTargets } from "../setup/repo";
 import { sliderToPriority } from "../../../shared/setup";
 import type { BuiltCourse } from "./pipeline";
@@ -211,13 +212,16 @@ export function addPathItem(
     /** The admin target this serves, and where its course starts. */
     targetSkill?: string | null;
     startLevel?: "beginner" | "intermediate" | "advanced" | null;
+    /** v4: a curriculum module attached instead of a course, and the catalog skill served. */
+    moduleId?: string | null;
+    skillId?: string | null;
   },
 ): void {
   db.insert(schema.pathItems).values({ id: newId(), ...input }).run();
 }
 
 /** The current path for a learner, or the newest one while a run is still going. */
-export function currentPath(db: Db, userId: string): LearningPathView | null {
+export function currentPath(db: Db, userId: string, content?: ContentStore): LearningPathView | null {
   const row =
     db
       .select()
@@ -239,7 +243,38 @@ export function currentPath(db: Db, userId: string): LearningPathView | null {
     .orderBy(asc(schema.pathItems.position))
     .all();
 
+  const completedTopics = new Set(
+    db
+      .select({ topicId: schema.topicProgress.topicId })
+      .from(schema.topicProgress)
+      .where(and(eq(schema.topicProgress.userId, userId), eq(schema.topicProgress.status, "completed")))
+      .all()
+      .map((r) => r.topicId),
+  );
+
   const views: PathItemView[] = items.map((item) => {
+    if (item.moduleId) {
+      const found = content?.manifest.flatMap((track) => track.modules.map((m) => ({ track, m }))).find(({ m }) => m.id === item.moduleId);
+      const topicIds = found?.m.topics.map((t) => t.id) ?? [];
+      return {
+        id: item.id,
+        courseId: null,
+        courseTitle: found?.m.name ?? item.moduleId,
+        position: item.position,
+        source: item.source,
+        reason: item.reason,
+        topicCount: topicIds.length,
+        completedCount: topicIds.filter((id) => completedTopics.has(id)).length,
+        available: Boolean(found?.m.available ?? true),
+        partNumber: item.partNumber,
+        partType: item.partType,
+        targetSkill: item.targetSkill,
+        startLevel: item.startLevel,
+        moduleId: item.moduleId,
+        skillId: item.skillId,
+        href: found ? `/track/${found.track.id}/module/${found.m.id}` : null,
+      };
+    }
     const course = item.courseId
       ? db.select().from(schema.courses).where(eq(schema.courses.id, item.courseId)).get()
       : undefined;
@@ -276,6 +311,9 @@ export function currentPath(db: Db, userId: string): LearningPathView | null {
       partType: item.partType,
       targetSkill: item.targetSkill,
       startLevel: item.startLevel,
+      moduleId: null,
+      skillId: item.skillId,
+      href: item.courseId ? `/courses/${item.courseId}` : null,
     };
   });
 
@@ -300,6 +338,8 @@ export interface PersistInput {
   skill: string;
   userId: string;
   autoPublish: boolean;
+  /** v4: the id the model calls were attributed to while writing. */
+  courseId?: string;
 }
 
 /**
@@ -313,7 +353,7 @@ export interface PersistInput {
 export function persistCourse(db: Db, input: PersistInput): { courseId: string; status: GeneratedStatus } {
   const { built, skill, userId, autoPublish } = input;
   const timestamp = now();
-  const courseId = newId();
+  const courseId = input.courseId ?? newId();
 
   const published = autoPublish && built.passed;
   const status: GeneratedStatus = published ? "published" : built.passed ? "pending_review" : "needs_review";

@@ -321,6 +321,13 @@ export interface PathItemView {
   targetSkill: string | null;
   /** Where the course starts. The only thing the assessment decides about a target. */
   startLevel: "beginner" | "intermediate" | "advanced" | null;
+  /**
+   * v4: a curriculum module attached in place of a course (from the skill catalog, no model call).
+   * `courseTitle` then holds the module's name and `href` opens it.
+   */
+  moduleId?: string | null;
+  skillId?: string | null;
+  href?: string | null;
 }
 
 export interface LearningPathView {

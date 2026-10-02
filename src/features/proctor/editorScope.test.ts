@@ -93,24 +93,27 @@ describe("what the signal engine does with it", () => {
     "utf8",
   );
 
-  test("copy and cut inside the editor are neither prevented nor reported", () => {
+  test("copy and cut are judged by the whitelist, reading the editor's own selection", () => {
     const handler = source.slice(source.indexOf("const onCopyOrCut"), source.indexOf('on(document, "copy"'));
     expect(handler).toContain("isInsideEditor(event.target)");
-    expect(handler).toContain("rememberCopiedText");
+    expect(handler).toContain("copiedTextCandidates(event.target");
+    expect(handler).toContain("judgeScopedEvent(");
     // The early return comes before `preventDefault`, or the copy never reaches the clipboard.
     expect(handler.indexOf("return;")).toBeLessThan(handler.indexOf("event.preventDefault()"));
+    // Not the document selection: Firefox returns "" inside a textarea, Monaco keeps it in a model.
+    expect(handler).not.toContain("document.getSelection()");
   });
 
-  test("a paste is allowed only when it is inside the editor AND came off this page", () => {
-    const handler = source.slice(source.indexOf('on(document, "paste"'), source.indexOf('on(document, "keyup"'));
-    expect(handler).toMatch(/isInsideEditor\(event\.target\)\s*&&\s*wasCopiedFromPage/);
-    // Everything else still gets both.
+  test("a paste is judged in the capture phase, before Monaco inserts it", () => {
+    const handler = source.slice(source.indexOf('"paste",'), source.indexOf('on(document, "keyup"'));
+    expect(handler).toContain('type: "paste", inScope: isInsideEditor(event.target)');
     expect(handler).toContain("event.preventDefault()");
-    expect(handler).toContain('emit("paste_attempt"');
+    expect(handler).toContain("event.stopImmediatePropagation()");
+    expect(handler).toMatch(/\},\s*true,\s*\);/);
   });
 
   test("the flagged event says whether it happened in the editor, and never carries the text", () => {
-    const handler = source.slice(source.indexOf('on(document, "paste"'), source.indexOf('on(document, "keyup"'));
+    const handler = source.slice(source.indexOf('"paste",'), source.indexOf('on(document, "keyup"'));
     expect(handler).toContain("inEditor:");
     expect(handler).toContain("chars: pasted.length");
     expect(handler).not.toMatch(/text:\s*pasted/);
@@ -118,7 +121,7 @@ describe("what the signal engine does with it", () => {
 
   test("selection inside the editor is not reported", () => {
     const handler = source.slice(source.indexOf('on(document, "selectstart"'));
-    expect(handler.slice(0, 400)).toContain("isInsideEditor(event.target)");
+    expect(handler.slice(0, 700)).toContain("isInsideEditor(event.target)");
   });
 });
 

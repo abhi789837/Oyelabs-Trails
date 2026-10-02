@@ -24,6 +24,7 @@ import {
 } from "@shared/weeklyPlan";
 
 import { api, ApiRequestError } from "@/api/client";
+import { SkillReport } from "@/components/assessment/SkillReport";
 import { FormAlert } from "@/components/form/Field";
 import { Contours } from "@/components/trail/Contours";
 import { Button } from "@/components/ui/button";
@@ -287,7 +288,10 @@ function WeekHeader({
           <StatChip label="This week" value={done} format={(n) => `${n} / ${week.items.length} done`} />
           <StatChip label="Progress" value={pct} format={(n) => `${n}%`} />
           <StatChip label="Time" value={formatMinutes(week.plannedMinutes)} icon={<Clock />} />
-          {evaluation && <StatChip label="Level" value={evaluation.overallLevel} format={(n) => `${n}/5`} icon={<Sparkles />} />}
+          {/* v4 reports by skill below instead of one overall number. */}
+          {evaluation && !evaluation.v4 && (
+            <StatChip label="Level" value={evaluation.overallLevel} format={(n) => `${n}/5`} icon={<Sparkles />} />
+          )}
         </div>
 
         <Progress
@@ -307,6 +311,8 @@ function WeekHeader({
         </Link>
 
         {next && <NextStepCard item={next} started={done > 0} />}
+
+        {evaluation?.v4 && <SkillReport report={evaluation.v4} className="mt-8 max-w-3xl" />}
 
         <div className="mt-6 space-y-4">
           <SummitCelebration

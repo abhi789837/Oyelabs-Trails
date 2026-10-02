@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { getCredential, setCredentialStatus } from "../../ai/credentials";
+import { storeAvailableModels } from "../../ai/router";
 import type { AiService } from "../../ai/service";
 import type { Db } from "../../db";
 import type { Job } from "../queue";
@@ -26,6 +27,11 @@ export function verifyCredentialHandler(db: Db, ai: AiService) {
       const provider = ai.providerFor(credential);
       await provider.verify();
       setCredentialStatus(db, credentialId, "verified", null);
+      // v4: the router checks every configured model against this list.
+      if ("listModels" in provider && typeof provider.listModels === "function") {
+        const ids = await (provider.listModels as () => Promise<string[]>)().catch(() => null);
+        if (ids?.length) storeAvailableModels(db, ids);
+      }
     } catch (error) {
       setCredentialStatus(db, credentialId, "failed", error instanceof Error ? error.message : String(error));
     }

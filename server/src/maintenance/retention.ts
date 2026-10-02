@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { recomputeBankStats } from "../bank/stats";
 import path from "node:path";
 
 import { and, eq, isNotNull, lt } from "drizzle-orm";
@@ -158,6 +159,10 @@ export function startDailyMaintenance(options: MaintenanceOptions): () => void {
           }`,
         );
       }
+
+      // v4: item statistics and automatic retirement of items that measure nothing.
+      const stats = recomputeBankStats(options.db);
+      if (stats.retired.length) options.log?.(`question bank: ${stats.retired.length} item(s) auto-retired`);
 
       const backup = runBackup(options.sqlite, options.env);
       if (backup.error) options.log?.(`backup failed: ${backup.error}`);

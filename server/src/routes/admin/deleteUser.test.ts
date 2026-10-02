@@ -198,14 +198,17 @@ describe("deleting", () => {
     expect(ctx.db.select().from(schema.courses).where(eq(schema.courses.id, learnerCourse)).get()).toBeUndefined();
   });
 
-  test("leaves an audit row naming who did it and what went", async () => {
+  test("leaves an anonymised audit row: who did it and what went, never who it was", async () => {
     await del(learner.id, learner.username);
 
     const entry = ctx.db.select().from(schema.auditLog).all().find((row) => row.action === "user.deleted");
     expect(entry).toBeDefined();
     expect(entry!.actorId).toBe(admin.user.id);
     expect(entry!.targetId).toBe(learner.id);
-    expect((entry!.details as { username: string }).username).toBe(learner.username);
+    expect(JSON.stringify(entry!.details)).not.toContain(learner.username);
+    // Earlier rows about them (onboarding carried the username) lose their details too.
+    const about = ctx.db.select().from(schema.auditLog).all().filter((row) => row.targetId === learner.id && row.action !== "user.deleted");
+    expect(about.every((row) => row.details === null)).toBe(true);
   });
 
   test("anonymises what the deleted account did, rather than erasing it", async () => {

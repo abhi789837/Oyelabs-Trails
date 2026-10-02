@@ -162,7 +162,35 @@ export const aiSettings = sqliteTable("ai_settings", {
   modelEvaluation: text("model_evaluation"),
   modelCritic: text("model_critic"),
   monthlyBudgetNote: text("monthly_budget_note"),
+  /** v4: the monthly AI budget. 80% warns the superadmin; 100% pauses non-urgent jobs. Null = none. */
+  monthlyBudgetUsd: real("monthly_budget_usd"),
+  /** v4: model ids the active credential can use, from the provider's models API. */
+  availableModels: text("available_models", { mode: "json" }).$type<string[]>(),
+  modelsFetchedAt: integer("models_fetched_at"),
   updatedAt: integer("updated_at").notNull(),
+});
+
+/** v4: the admin's model and output cap per task type. Absent rows use `TASK_DEFAULTS`. */
+export const aiTaskRoutes = sqliteTable("ai_task_routes", {
+  task: text("task").primaryKey(),
+  model: text("model"),
+  maxTokens: integer("max_tokens"),
+  updatedBy: text("updated_by"),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+/** v4: a Message Batches API submission, polled by a job until it ends. */
+export const aiBatches = sqliteTable("ai_batches", {
+  id: text("id").primaryKey(),
+  providerBatchId: text("provider_batch_id").notNull(),
+  task: text("task").notNull(),
+  model: text("model").notNull(),
+  status: text("status").$type<"submitted" | "ended" | "failed">().notNull().default("submitted"),
+  /** Whatever the completion handler needs to finish the work: the skill, the type, ... */
+  context: text("context", { mode: "json" }).$type<unknown>().notNull(),
+  requestCount: integer("request_count").notNull(),
+  createdAt: integer("created_at").notNull(),
+  endedAt: integer("ended_at"),
 });
 
 export const aiCalls = sqliteTable(
@@ -179,6 +207,14 @@ export const aiCalls = sqliteTable(
     inputTokens: integer("input_tokens").notNull().default(0),
     outputTokens: integer("output_tokens").notNull().default(0),
     latencyMs: integer("latency_ms").notNull().default(0),
+    /** v4: the router task type; null on calls logged before v4. */
+    task: text("task"),
+    cacheReadTokens: integer("cache_read_tokens").notNull().default(0),
+    cacheWriteTokens: integer("cache_write_tokens").notNull().default(0),
+    /** v4: cost in micro-dollars at list price (batch discount applied). */
+    costMicros: integer("cost_micros").notNull().default(0),
+    courseId: text("course_id"),
+    batch: integer("batch", { mode: "boolean" }).notNull().default(false),
     ok: integer("ok", { mode: "boolean" }).notNull(),
     error: text("error"),
     createdAt: integer("created_at").notNull(),
@@ -789,6 +825,13 @@ export const pathItems = sqliteTable(
     targetSkill: text("target_skill"),
     /** Where the course starts, from the assessment. The only thing it decides about a target. */
     startLevel: text("start_level").$type<"beginner" | "intermediate" | "advanced">(),
+    /**
+     * v4: a curriculum module (content trail camp) that teaches this skill, attached with no model
+     * call from the skill catalog's `content_modules`. Set instead of `course_id` for those items.
+     */
+    moduleId: text("module_id"),
+    /** v4: the catalog skill this item serves, when known. */
+    skillId: text("skill_id"),
     /** "You missed 4 of 5 questions on server deployment; DevOps is marked High priority." */
     reason: text("reason").notNull(),
   },

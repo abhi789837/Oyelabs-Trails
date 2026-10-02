@@ -391,9 +391,14 @@ function UsageSection({ data }: { data: Overview }) {
         <h2 id="ai-heading" className="font-display text-lg font-semibold">
           AI usage
         </h2>
-        <Button asChild variant="ghost" size="sm">
-          <Link to="/admin/ai">Settings</Link>
-        </Button>
+        <div className="flex gap-1">
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/ai-usage">Costs and budget</Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/admin/ai">Settings</Link>
+          </Button>
+        </div>
       </div>
 
       {rows.length === 0 ? (

@@ -2,9 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { LoaderCircle, Maximize, ShieldAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import type { AnswerRequest, AssessmentStatusResponse, MyAssessment, NextItemResponse, ServedItem } from "@shared/assessment";
+import type { AnswerRequest, AssessmentStatusResponse, MyAssessment, MyEvaluation, NextItemResponse, ServedItem } from "@shared/assessment";
 
-import { ApiRequestError } from "@/api/client";
+import { api, ApiRequestError } from "@/api/client";
+import { SkillReport } from "@/components/assessment/SkillReport";
 import { FormAlert } from "@/components/form/Field";
 import { useConfirm } from "@/components/overlays";
 import { Logo } from "@/components/layout/Logo";
@@ -23,8 +24,9 @@ import { ItemRunner } from "./ItemRunner";
 import { JobStages } from "./JobStages";
 import { waitHeading, waitStages } from "./stages";
 import { formatClock } from "./TimerRing";
+import { V4Sheet, type FinishReason } from "./v4/V4Sheet";
 
-type Phase = "loading" | "preflight" | "taking" | "waiting" | "finished" | "error";
+type Phase = "loading" | "preflight" | "taking" | "waiting" | "complete" | "finished" | "error";
 
 /**
  * The assessment, end to end (brief §9.5, §10, §12).
@@ -57,6 +59,9 @@ export default function AssessmentPage() {
   const [submitting, setSubmitting] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [totalSecondsLeft, setTotalSecondsLeft] = useState(0);
+  /** v4: why the sheet closed, for one line on the waiting screen. */
+  const [finishNotice, setFinishNotice] = useState<string | null>(null);
+  const isV4 = assessment?.format === "v4";
 
   const proctor = useProctor({
     assessmentId: assessment?.id ?? "",
@@ -93,7 +98,9 @@ export default function AssessmentPage() {
           setPhase("waiting");
           break;
         case "completed":
-          navigate("/plan", { replace: true });
+          // v4 shows its report by skill first; the legacy flow goes straight to the plan.
+          if (mine.format === "v4") setPhase("complete");
+          else navigate("/plan", { replace: true });
           break;
         default:
           setPhase("finished");
@@ -132,8 +139,9 @@ export default function AssessmentPage() {
   }, [assessment, load]);
 
   useEffect(() => {
-    if (phase === "taking" && !next) void fetchNext();
-  }, [phase, next, fetchNext]);
+    // v4 has no `next`: the sheet loads every question at once.
+    if (phase === "taking" && !next && assessment && assessment.format !== "v4") void fetchNext();
+  }, [phase, next, fetchNext, assessment]);
 
   // ---- Display-only timers ----
   const pausedRef = useRef(proctor.paused);
@@ -243,7 +251,18 @@ export default function AssessmentPage() {
   }
 
   if (phase === "waiting") {
-    return <WaitingScreen assessment={assessment} onRefresh={load} onDone={() => navigate("/plan")} />;
+    return (
+      <WaitingScreen
+        assessment={assessment}
+        notice={finishNotice}
+        onRefresh={load}
+        onDone={() => (isV4 ? setPhase("complete") : navigate("/plan"))}
+      />
+    );
+  }
+
+  if (phase === "complete") {
+    return <CompleteScreen onContinue={() => navigate("/plan")} />;
   }
 
   if (phase === "finished") {
@@ -265,6 +284,25 @@ export default function AssessmentPage() {
   }
 
   // ---- Taking the test ----
+  if (isV4) {
+    return (
+      <V4Sheet
+        assessment={assessment}
+        proctor={proctor}
+        user={user ? { displayName: user.displayName, username: user.username } : null}
+        onFinished={(reason: FinishReason) => {
+          setFinishNotice(
+            reason === "deadline"
+              ? "Time is up, so your answers were handed in as they stood."
+              : "Your answers are handed in.",
+          );
+          setPhase("waiting");
+          void load();
+        }}
+      />
+    );
+  }
+
   const answered = next?.progress.answered ?? 0;
   const target = next?.progress.target ?? 0;
   const progressPct = target > 0 ? Math.min(100, (answered / target) * 100) : 0;
@@ -385,10 +423,12 @@ export default function AssessmentPage() {
  */
 function WaitingScreen({
   assessment,
+  notice,
   onRefresh,
   onDone,
 }: {
   assessment: MyAssessment;
+  notice?: string | null;
   onRefresh: () => Promise<void> | void;
   onDone: () => void;
 }) {
@@ -433,6 +473,7 @@ function WaitingScreen({
 
   return (
     <Shell>
+      {notice && <p className="mb-3 font-mono text-sm text-muted-foreground" role="status">{notice}</p>}
       <h1 className="text-2xl font-bold">{waitHeading(status)}</h1>
       <p className="mt-3 max-w-prose text-muted-foreground">
         {detail?.failureReason ??
@@ -459,6 +500,52 @@ function WaitingScreen({
       )}
       <p className="mt-2 font-mono text-xs text-muted-foreground">This page checks again every few seconds.</p>
     </Shell>
+  );
+}
+
+/**
+ * v4: the assessment is evaluated. The report by priority skill, then on to the plan. No overall
+ * percentage — `SkillReport` explains why.
+ */
+function CompleteScreen({ onContinue }: { onContinue: () => void }) {
+  const [evaluation, setEvaluation] = useState<MyEvaluation | null | undefined>(undefined);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    api
+      .get<{ evaluation: MyEvaluation | null }>("/api/me/evaluation", controller.signal)
+      .then((result) => setEvaluation(result.evaluation))
+      .catch(() => {
+        if (!controller.signal.aborted) setEvaluation(null);
+      });
+    return () => controller.abort();
+  }, []);
+
+  return (
+    <div className="relative min-h-dvh overflow-hidden px-4 py-12">
+      <Contours className="text-basalt/12" seed={7} rings={14} />
+      <div className="relative mx-auto max-w-3xl">
+        <Logo variant="stacked" height={56} className="mx-auto mb-8" />
+        <h1 className="text-center text-2xl font-bold">Your assessment is done</h1>
+        <p className="mx-auto mt-3 max-w-prose text-center text-muted-foreground">
+          {evaluation?.learnerSummary ?? "Here is where you are, and where your path starts."}
+        </p>
+        {evaluation === undefined ? (
+          <Centered>
+            <LoaderCircle className="h-5 w-5 animate-spin" aria-hidden="true" />
+          </Centered>
+        ) : evaluation?.v4 ? (
+          <SkillReport report={evaluation.v4} className="mt-8 text-left" />
+        ) : (
+          <p className="mt-8 text-center text-sm text-muted-foreground">Your results are on your plan.</p>
+        )}
+        <div className="mt-8 flex justify-center">
+          <Button size="lg" onClick={onContinue}>
+            Go to my plan
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 

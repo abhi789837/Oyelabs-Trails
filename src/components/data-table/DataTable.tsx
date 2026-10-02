@@ -481,7 +481,9 @@ export function DataTable<TRow>({
         onExport={exportName ? handleExport : undefined}
         exportLabel={mode === "server" && selectedRows.length === 0 ? "Export page" : "Export CSV"}
         searchPlaceholder={searchPlaceholder}
-        onOpenFilters={() => setDrawerOpen(true)}
+        /* A table whose filters all live outside it (every field `filterable: false`) gets no
+           drawer button: it would open onto an empty sheet. */
+        onOpenFilters={fields.some((field) => field.filterable !== false) ? () => setDrawerOpen(true) : undefined}
         activeFilterCount={query.filters.conditions.length}
       />
 

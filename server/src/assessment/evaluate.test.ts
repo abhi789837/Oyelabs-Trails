@@ -108,7 +108,13 @@ describe("the evaluation job", () => {
     await takeAndSubmit();
     await ctx.drainJobs();
 
-    const plan = ctx.db.select().from(schema.learningPlans).where(eq(schema.learningPlans.userId, learner.id)).get()!;
+    // The newest version: the path build (v4) may add the modules it attached to the library.
+    const plan = ctx.db
+      .select()
+      .from(schema.learningPlans)
+      .where(eq(schema.learningPlans.userId, learner.id))
+      .all()
+      .sort((a, b) => b.version - a.version)[0]!;
     const manifest = await ctx.app.inject({ method: "GET", url: "/api/me/manifest", ...as(learner.session) });
 
     const visible = manifest

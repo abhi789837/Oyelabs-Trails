@@ -34,8 +34,36 @@ export interface Library {
   lessonCount: number;
 }
 
+/**
+ * Which part of the current path each course and each curriculum module belongs to. v4 attaches
+ * catalog modules to the path directly, so a module's topics are Part 1 or 2 just like a course's
+ * lessons — and the weekly builder puts Parts 1 and 2 in "Do it now".
+ */
+function currentPathParts(db: Db, userId: string) {
+  const rows = db
+    .select({
+      courseId: schema.pathItems.courseId,
+      moduleId: schema.pathItems.moduleId,
+      partNumber: schema.pathItems.partNumber,
+      partType: schema.pathItems.partType,
+    })
+    .from(schema.pathItems)
+    .innerJoin(schema.learningPaths, eq(schema.learningPaths.id, schema.pathItems.pathId))
+    .where(and(eq(schema.learningPaths.userId, userId), eq(schema.learningPaths.current, true)))
+    .all();
+  const byModule = new Map<string, { partNumber: number | null; partType: "track" | "ai_dev" | "general" | null }>();
+  for (const row of rows) {
+    if (!row.moduleId) continue;
+    const existing = byModule.get(row.moduleId);
+    // A module serving two parts counts as the earlier one.
+    if (!existing || (row.partNumber ?? 99) < (existing.partNumber ?? 99)) byModule.set(row.moduleId, { partNumber: row.partNumber, partType: row.partType });
+  }
+  return byModule;
+}
+
 export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
   const candidates: Candidate[] = [];
+  const partByModule = currentPathParts(db, userId);
 
   // --- Curriculum topics from the published plan ---------------------------
   const plan = latestPublishedPlan(db, userId);
@@ -74,6 +102,9 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
       groupId: location.moduleId,
       done: completedTopics.has(topicId),
       href: `/track/${location.trackId}/module/${location.moduleId}/topic/${topicId}`,
+      ...(partByModule.get(location.moduleId)?.partNumber != null
+        ? { partNumber: partByModule.get(location.moduleId)!.partNumber!, partType: partByModule.get(location.moduleId)!.partType ?? undefined }
+        : {}),
     });
   }
 
@@ -213,6 +244,8 @@ export function strengthsFor(db: Db, userId: string): string[] {
   const row = db.select().from(schema.evaluations).where(eq(schema.evaluations.assessmentId, assessment.id)).get();
   if (!row) return [];
 
+  // v4 results carry their own strengths, by skill.
+  if ((row.result as { format?: string }).format === "v4") return ((row.result as { strengths?: string[] }).strengths ?? []).slice(0, 3);
   const result = row.result as EvaluationResult;
   return result.areas
     .filter((area) => area.level >= 4)

@@ -4,7 +4,9 @@ import { and, desc, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 
 import {
+  bulkUserActionSchema,
   listUsersResponseSchema,
+  type BulkUserResult,
   onboardLearnerRequestSchema,
   resetPasswordRequestSchema,
   deleteUserRequestSchema,
@@ -249,10 +251,10 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
     assertMayActOn(actor, row);
 
     app.db.update(schema.users).set({ status }).where(eq(schema.users.id, id)).run();
-    /* Anything that is not `active` signs them out of every device now. Archiving somebody who is
-       mid-session and leaving that session alive would mean "removed from the programme" took effect
-       whenever they next closed a tab. */
-    if (status !== "active") revokeUserSessions(app.db, id);
+    /* Every status change signs them out of every device (v4). Archiving somebody mid-session and
+       leaving that session alive would mean "removed" took effect whenever they next closed a tab;
+       and a reactivated account starts from a fresh sign-in rather than a session from before. */
+    revokeUserSessions(app.db, id);
 
     writeAudit(app.db, { actorId: actor.id, action: `user.${status}`, targetType: "user", targetId: id });
     return { user: summarize(app.db, { ...row, status }) };
@@ -296,6 +298,61 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
    *
    * See `admin/deleteUser.ts` for what survives: catalogue courses, and an anonymised audit trail.
    */
+  /**
+   * Bulk actions (v4 Phase 9), each person handled on their own with a result per id, so one
+   * refusal (yourself, the last super admin) does not stop the rest. Every action revokes sessions.
+   */
+  app.post("/api/admin/users/bulk", async (request) => {
+    const actor = requireStaff(request);
+    const body = parseOrThrow(bulkUserActionSchema, request.body);
+    if (body.action === "delete") {
+      if (actor.role !== "superadmin") throw forbidden("Only a super admin can delete people.");
+      if ((body.confirm ?? "").trim().toLowerCase() !== `delete ${body.ids.length}`) {
+        throw badRequest("Type the confirmation exactly. Nothing was deleted.", { confirm: `Type delete ${body.ids.length}` });
+      }
+    }
+    const statusFor = { disable: "disabled", activate: "active", archive: "archived", restore: "active" } as const;
+    const results: BulkUserResult[] = [];
+    for (const id of [...new Set(body.ids)]) {
+      const row = app.db.select().from(schema.users).where(eq(schema.users.id, id)).get();
+      if (!row) {
+        results.push({ id, ok: false, error: "Not found" });
+        continue;
+      }
+      if (row.id === actor.id) {
+        results.push({ id, ok: false, error: "That is your own account" });
+        continue;
+      }
+      try {
+        assertMayActOn(actor, row);
+      } catch {
+        results.push({ id, ok: false, error: "Not allowed" });
+        continue;
+      }
+      if (body.action === "revoke") {
+        revokeUserSessions(app.db, id);
+        writeAudit(app.db, { actorId: actor.id, action: "user.sessions_revoked", targetType: "user", targetId: id, details: { bulk: true } });
+      } else if (body.action === "delete") {
+        if (row.role === "superadmin") {
+          const supers = app.db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.role, "superadmin")).all();
+          if (supers.length <= 1) {
+            results.push({ id, ok: false, error: "The last super admin" });
+            continue;
+          }
+        }
+        const { counts } = deleteUserCompletely(app.db, app.env, id);
+        writeAudit(app.db, { actorId: actor.id, action: "user.deleted", targetType: "user", targetId: id, details: { role: row.role, bulk: true, counts } });
+      } else {
+        const status = statusFor[body.action];
+        app.db.update(schema.users).set({ status }).where(eq(schema.users.id, id)).run();
+        revokeUserSessions(app.db, id);
+        writeAudit(app.db, { actorId: actor.id, action: `user.${status}`, targetType: "user", targetId: id, details: { bulk: true } });
+      }
+      results.push({ id, ok: true });
+    }
+    return { results };
+  });
+
   app.delete("/api/admin/users/:id", async (request) => {
     const actor = requireSuperadmin(request);
     const { id } = request.params as { id: string };
@@ -340,13 +397,13 @@ export async function registerAdminUserRoutes(app: FastifyInstance): Promise<voi
       action: "user.deleted",
       targetType: "user",
       targetId: id,
+      /* Anonymised (v4): which role and how much was removed, never who. The target id is the only
+         link back, and it now points at nothing. */
       details: {
-        username: row.username,
-        displayName: row.displayName,
         role: row.role,
-        reason: body.reason ?? null,
+        reasonGiven: Boolean(body.reason),
         counts,
-        ...(fileErrors.length ? { snapshotErrors: fileErrors } : {}),
+        ...(fileErrors.length ? { snapshotErrors: fileErrors.length } : {}),
       },
     });
 

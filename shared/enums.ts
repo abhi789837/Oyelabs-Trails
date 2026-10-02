@@ -72,6 +72,10 @@ export const aiPurposeSchema = z.enum([
   "course_review",
   /** Shaping one learner's week into the four lanes. Cheap and frequent, unlike the four above. */
   "week_plan",
+  /** v4: writing items for a thin skill in the question bank. */
+  "bank_fill",
+  /** v4: rubric-grading a written PM/BD task. */
+  "grade_written",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 
@@ -132,6 +136,8 @@ export const jobTypeSchema = z.enum([
   "week.refine",
   /** v4: generate, validate and add bank items for a skill the bank is thin on. Once, for everyone. */
   "bank.fill",
+  /** v4: checks a Message Batches submission and finishes it when it ends. */
+  "ai.batch.poll",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 

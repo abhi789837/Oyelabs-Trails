@@ -133,3 +133,11 @@ export function countByStatus(db: Db) {
     .groupBy(schema.jobs.status)
     .all();
 }
+
+/** Puts a claimed job back in the queue for later without counting it as an attempt. */
+export function deferJob(db: Db, id: string, delayMs: number): void {
+  db.update(schema.jobs)
+    .set({ status: "queued", lockedAt: null, runAfter: now() + delayMs, attempts: sql`max(${schema.jobs.attempts} - 1, 0)` })
+    .where(eq(schema.jobs.id, id))
+    .run();
+}

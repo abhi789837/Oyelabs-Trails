@@ -64,6 +64,8 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/dist-server ./dist-server
 COPY --from=build /app/server/content ./server/content
 COPY --from=build /app/server/drizzle ./server/drizzle
+# v4: the validated question bank seed, inserted at boot when absent.
+COPY --from=build /app/server/bank ./server/bank
 
 # The mounted volume: SQLite, proctoring snapshots and nightly backups.
 RUN mkdir -p /data && chown -R node:node /data /app

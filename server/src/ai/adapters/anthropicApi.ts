@@ -46,6 +46,8 @@ export class AnthropicApiProvider implements AiProvider {
 
     let usageIn = 0;
     let usageOut = 0;
+    let cacheRead = 0;
+    let cacheWrite = 0;
 
     const call = async (messages: Anthropic.MessageParam[]): Promise<string> => {
       try {
@@ -53,7 +55,9 @@ export class AnthropicApiProvider implements AiProvider {
           {
             model,
             max_tokens: request.maxOutputTokens ?? DEFAULT_MAX_OUTPUT_TOKENS,
-            system: request.system,
+            // The static instructions are the cacheable prefix (v4 Phase 6). Below the model's
+            // minimum length the marker is simply ignored, so it is safe to always send.
+            system: [{ type: "text", text: request.system, cache_control: { type: "ephemeral" } }],
             messages,
             output_config: { format: { type: "json_schema", schema } },
           },
@@ -62,6 +66,8 @@ export class AnthropicApiProvider implements AiProvider {
 
         usageIn += response.usage.input_tokens;
         usageOut += response.usage.output_tokens;
+        cacheRead += response.usage.cache_read_input_tokens ?? 0;
+        cacheWrite += response.usage.cache_creation_input_tokens ?? 0;
 
         const text = response.content
           .filter((block): block is Anthropic.TextBlock => block.type === "text")
@@ -77,7 +83,7 @@ export class AnthropicApiProvider implements AiProvider {
     const first = await call([{ role: "user", content: request.user }]);
     const parsed = this.parse(request, first);
     if (parsed.ok) {
-      return { data: parsed.data, usage: { input: usageIn, output: usageOut }, latencyMs: Date.now() - started, model };
+      return { data: parsed.data, usage: { input: usageIn, output: usageOut, cacheRead, cacheWrite }, latencyMs: Date.now() - started, model };
     }
 
     // One repair turn, naming the exact paths that failed (brief §8.2, D9).
@@ -91,7 +97,7 @@ export class AnthropicApiProvider implements AiProvider {
     ]);
     const second = this.parse(request, repaired);
     if (second.ok) {
-      return { data: second.data, usage: { input: usageIn, output: usageOut }, latencyMs: Date.now() - started, model };
+      return { data: second.data, usage: { input: usageIn, output: usageOut, cacheRead, cacheWrite }, latencyMs: Date.now() - started, model };
     }
 
     throw new AiOutputError(`${model} returned output that did not match the schema, twice.`, second.issues, repaired.slice(0, 4000));
@@ -109,6 +115,18 @@ export class AnthropicApiProvider implements AiProvider {
     }
     const result = request.schema.safeParse(value);
     return result.success ? { ok: true, data: result.data } : { ok: false, issues: describeIssues(result.error) };
+  }
+
+  /** Model ids this key can use, from the Models API. */
+  async listModels(): Promise<string[]> {
+    const ids: string[] = [];
+    for await (const model of this.client.models.list({ limit: 100 })) ids.push(model.id);
+    return ids;
+  }
+
+  /** The Anthropic client, for the Message Batches path (`ai/batches.ts`). */
+  get raw(): Anthropic {
+    return this.client;
   }
 
   async verify(): Promise<void> {

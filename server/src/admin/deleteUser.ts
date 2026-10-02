@@ -124,6 +124,17 @@ export function deleteUserCompletely(db: Db, env: Env, userId: string): DeleteUs
     tx.delete(schema.learningPaths).where(eq(schema.learningPaths.userId, userId)).run();
     tx.delete(schema.learnerPriorities).where(eq(schema.learnerPriorities.userId, userId)).run();
     tx.delete(schema.learnerProfiles).where(eq(schema.learnerProfiles.userId, userId)).run();
+    // v4: the Setup screen's rows. Both cascade too; named so the list of personal tables is complete.
+    tx.delete(schema.learnerSkillPriorities).where(eq(schema.learnerSkillPriorities.userId, userId)).run();
+    tx.delete(schema.learnerSkip).where(eq(schema.learnerSkip.userId, userId)).run();
+    tx.delete(schema.learnerTargets).where(eq(schema.learnerTargets.userId, userId)).run();
+
+    /* v4: AI usage rows stay — they are the deployment's spend — but stop pointing at a person. */
+    tx.update(schema.aiCalls).set({ subjectUserId: null }).where(eq(schema.aiCalls.subjectUserId, userId)).run();
+
+    /* Audit rows *about* this person keep what happened and when, and lose what it said about them
+       (an onboarding row carries their username; a profile row their notes length). */
+    tx.update(schema.auditLog).set({ details: null }).where(eq(schema.auditLog.targetId, userId)).run();
 
     /* The audit trail survives the account. Actions this person *took* keep their shape and lose
        their author, because "somebody who no longer has an account disabled this learner" is still

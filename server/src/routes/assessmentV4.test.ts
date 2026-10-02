@@ -128,7 +128,9 @@ describe("v4 assessment", () => {
     const mine = (await ctx.app.inject({ method: "GET", url: "/api/me/evaluation", ...as(learner.session) })).json();
     expect(mine.evaluation.v4.skills.map((s: { skillName: string }) => s.skillName)).toContain("TypeScript fundamentals");
     expect(JSON.stringify(mine)).not.toContain("rawScore");
-    expect(ctx.db.select().from(schema.aiCalls).all()).toHaveLength(0);
+    // Grading and the report used no model (the path build that follows may match courses).
+    const grading = ctx.db.select().from(schema.aiCalls).all().filter((c) => ["blueprint", "item_critic", "evaluation", "gap_analysis"].includes(c.purpose));
+    expect(grading).toHaveLength(0);
   });
 
   test("past the deadline, writes are refused and the sitting is submitted", async () => {

@@ -35,7 +35,7 @@ export interface GenerateJsonRequest<T> {
   maxOutputTokens?: number;
   /** Default 120 s. Evaluation is allowed up to 480 s (brief §8.2). */
   timeoutMs?: number;
-  meta: { subjectUserId?: string | undefined; assessmentId?: string | undefined };
+  meta: { subjectUserId?: string | undefined; assessmentId?: string | undefined; courseId?: string | undefined };
   /**
    * Called after each failed attempt, before the backoff.
    *
@@ -49,7 +49,8 @@ export interface GenerateJsonRequest<T> {
 
 export interface GenerateJsonResult<T> {
   data: T;
-  usage: { input: number; output: number };
+  /** `cacheRead`/`cacheWrite`: prompt-cache tokens, where the provider reports them. */
+  usage: { input: number; output: number; cacheRead?: number; cacheWrite?: number };
   latencyMs: number;
   model: string;
 }
@@ -109,9 +110,9 @@ export const DEFAULT_MAX_OUTPUT_TOKENS = 16_000;
  * only what a fresh install starts with.
  */
 export const SUGGESTED_MODELS: Record<ProviderId, { generation: string; critic: string; evaluation: string }> = {
-  "anthropic-api": { generation: "claude-sonnet-5", critic: "claude-sonnet-5", evaluation: "claude-opus-5-5" },
+  "anthropic-api": { generation: "claude-sonnet-5-5", critic: "claude-sonnet-5-5", evaluation: "claude-opus-5-5" },
   "openai-api": { generation: "gpt-5.1", critic: "gpt-5.1", evaluation: "gpt-5.1" },
-  "claude-cli": { generation: "claude-sonnet-5", critic: "claude-sonnet-5", evaluation: "claude-opus-5-5" },
+  "claude-cli": { generation: "claude-sonnet-5-5", critic: "claude-sonnet-5-5", evaluation: "claude-opus-5-5" },
   "codex-cli": { generation: "gpt-5.1-codex", critic: "gpt-5.1-codex", evaluation: "gpt-5.1-codex" },
   mock: { generation: "mock-1", critic: "mock-1", evaluation: "mock-1" },
 };

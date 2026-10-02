@@ -12,6 +12,8 @@ import { blueprintHandler } from "./assessment/blueprintJob";
 import { evaluateHandler } from "./assessment/evaluateJob";
 import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
+import { bankFillHandler } from "./bank/fillJob";
+import { batchPollHandler } from "./ai/batches";
 import { enqueue } from "./jobs/queue";
 import { buildPathHandler } from "./jobs/handlers/buildPath";
 import { refineWeekHandler } from "./jobs/handlers/refineWeek";
@@ -70,9 +72,11 @@ async function main(): Promise<void> {
         publish: (line) => publishGenerationLine(app, line),
       }),
       "assessment.evaluate": evaluateHandler({ db, ai, content, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
-      "path.build": buildPathHandler({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "path.build": buildPathHandler({ db, env, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "links.check": checkLinksHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "week.refine": refineWeekHandler({ db, content, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "bank.fill": bankFillHandler({ db, ai, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "ai.batch.poll": batchPollHandler({ db, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });
@@ -132,6 +136,11 @@ async function main(): Promise<void> {
   process.on("SIGTERM", () => void shutdown("SIGTERM"));
 
   await app.listen({ port: env.port, host: env.host });
+
+  // v4: read the model ids this credential can use, so the router never sends one it cannot.
+  void ai.refreshModels().then((ids) => {
+    if (ids) console.log(`[oyelearn] AI models available: ${ids.length}`);
+  });
 }
 
 main().catch((error: unknown) => {

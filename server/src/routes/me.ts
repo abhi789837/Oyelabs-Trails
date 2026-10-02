@@ -69,7 +69,7 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
    */
   app.get("/api/me/path", async (request) => {
     const user = requireActiveUser(request);
-    return { path: currentPath(app.db, user.id) };
+    return { path: currentPath(app.db, user.id, app.content) };
   });
 
   app.get("/api/me/courses/:courseId", async (request) => {

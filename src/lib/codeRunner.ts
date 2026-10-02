@@ -1,16 +1,27 @@
 import type { ServedCodeChallenge } from "@shared/content";
 
 /*
- * Runs a learner's own code against the challenge's VISIBLE tests, in a throwaway Web Worker
- * built from a Blob URL. This is a fast feedback loop while they iterate, nothing more.
+ * Runs a learner's own code in the browser, in a throwaway Web Worker built from a Blob URL.
  *
- * It decides nothing. From v3 the verdict comes from the server, which runs the hidden tests too
- * inside an isolated V8 (brief §7.5). That matters twice over: the hidden tests never reach the
- * browser, and this worker runs the learner's own code in their own tab, so it is not a place
- * where a score could be forged.
+ * Two jobs:
+ * - **Tests**: the named function against VISIBLE tests (topic challenges, and v4 JS/TS assessment
+ *   items once the server has counted the run). Fast feedback only.
+ * - **Snippets**: a v4 MCQ's code, run as a script with `console.*` captured, so the learner can
+ *   see what it prints.
+ *
+ * It decides nothing. The verdict comes from the server, which runs the hidden tests too. The worker
+ * runs the learner's own code in their own tab, so it is not a place where a score could be forged.
+ *
+ * TypeScript is stripped with sucrase on the main thread before the code reaches the worker (types
+ * removed, nothing type-checked — exactly what a test run needs). Sucrase is loaded on demand so it
+ * never weighs on a page that only runs JavaScript.
  */
 
 export const RUN_TIMEOUT_MS = 3000;
+/** A snippet waits this long for its timers and promises to settle before it is cut off. */
+export const SNIPPET_TIMEOUT_MS = 3000;
+
+export type BrowserLanguage = "javascript" | "typescript";
 
 export interface TestResult {
   index: number;
@@ -30,6 +41,14 @@ export interface LocalRunOutcome {
   score: number;
   /** Set when the code couldn't be loaded at all (syntax error, missing function). */
   compileError?: string;
+  timedOut: boolean;
+  /** What the code wrote with `console.*` while the tests ran. */
+  logs: string;
+}
+
+export interface SnippetOutcome {
+  stdout: string;
+  stderr: string;
   timedOut: boolean;
 }
 
@@ -76,8 +95,63 @@ function describeError(err) {
 
 const send = self.postMessage.bind(self);
 
-self.onmessage = async (event) => {
-  const { code, functionName, testCases } = event.data;
+// console.* is captured and streamed back, so a learner sees what their code printed.
+function show(value) {
+  return typeof value === "string" ? value : format(value);
+}
+for (const [method, stream] of [["log", "stdout"], ["info", "stdout"], ["debug", "stdout"], ["table", "stdout"], ["warn", "stderr"], ["error", "stderr"]]) {
+  console[method] = (...args) => send({ type: "log", stream, text: args.map(show).join(" ") });
+}
+
+// Timers are counted so a snippet run waits for its setTimeout callbacks before it reports done.
+const realSetTimeout = self.setTimeout.bind(self);
+const realClearTimeout = self.clearTimeout.bind(self);
+const pending = new Set();
+self.setTimeout = (fn, ms, ...rest) => {
+  const id = realSetTimeout(() => {
+    pending.delete(id);
+    if (typeof fn === "function") fn(...rest);
+  }, ms);
+  pending.add(id);
+  return id;
+};
+self.clearTimeout = (id) => {
+  pending.delete(id);
+  realClearTimeout(id);
+};
+const tick = () => new Promise((resolve) => realSetTimeout(resolve, 0));
+
+self.onerror = (message) => {
+  send({ type: "log", stream: "stderr", text: "Uncaught " + message });
+  return true;
+};
+self.onunhandledrejection = (event) => {
+  send({ type: "log", stream: "stderr", text: "Uncaught (in promise) " + describeError(event.reason) });
+};
+
+async function runSnippet(code) {
+  const AsyncFunction = (async function () {}).constructor;
+  let fn;
+  try {
+    fn = new AsyncFunction(code);
+  } catch (err) {
+    send({ type: "log", stream: "stderr", text: describeError(err) });
+    send({ type: "done" });
+    return;
+  }
+  try {
+    await fn();
+  } catch (err) {
+    send({ type: "log", stream: "stderr", text: "Uncaught " + describeError(err) });
+  }
+  // Let pending timers and promise chains finish; the main thread cuts this off at its timeout.
+  await tick();
+  while (pending.size > 0) await tick();
+  await tick();
+  send({ type: "done" });
+}
+
+async function runTests(code, functionName, testCases) {
   let fn;
   try {
     fn = new Function(code + "\n;return typeof " + functionName + ' === "function" ? ' + functionName + " : undefined;")();
@@ -99,42 +173,90 @@ self.onmessage = async (event) => {
     }
   }
   send({ type: "done" });
+}
+
+self.onmessage = (event) => {
+  const data = event.data;
+  if (data.mode === "snippet") void runSnippet(data.code);
+  else void runTests(data.code, data.functionName, data.testCases);
 };
 `;
 
 type WorkerMessage =
   | { type: "compile-error"; message: string }
   | { type: "result"; index: number; passed: boolean; actual?: string; expected: string; error?: string }
+  | { type: "log"; stream: "stdout" | "stderr"; text: string }
   | { type: "done" };
 
-export function runVisibleTests(
-  code: string,
-  challenge: ServedCodeChallenge,
-  timeoutMs: number = RUN_TIMEOUT_MS,
-): Promise<LocalRunOutcome> {
-  if (!/^[A-Za-z_$][\w$]*$/.test(challenge.functionName)) {
-    throw new Error(`Invalid function name in challenge data: ${challenge.functionName}`);
+/** Strips TypeScript syntax. Throws the transform's own message on a syntax error. */
+export async function toRunnableJs(code: string, language: BrowserLanguage = "javascript"): Promise<string> {
+  if (language !== "typescript") return code;
+  const { transform } = await import("sucrase");
+  return transform(code, { transforms: ["typescript"], disableESTransforms: true }).code;
+}
+
+function describe(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function spawn(): { worker: Worker; dispose: () => void } {
+  const url = URL.createObjectURL(new Blob([WORKER_SOURCE], { type: "text/javascript" }));
+  const worker = new Worker(url);
+  return {
+    worker,
+    dispose: () => {
+      worker.terminate();
+      URL.revokeObjectURL(url);
+    },
+  };
+}
+
+export interface BrowserTestSpec {
+  functionName: string;
+  tests: { args: unknown[]; expected: unknown; description?: string }[];
+  language?: BrowserLanguage;
+}
+
+/** Runs the named function against the given tests. Never rejects. */
+export async function runBrowserTests(code: string, spec: BrowserTestSpec, timeoutMs: number = RUN_TIMEOUT_MS): Promise<LocalRunOutcome> {
+  if (!/^[A-Za-z_$][\w$]*$/.test(spec.functionName)) {
+    throw new Error(`Invalid function name in challenge data: ${spec.functionName}`);
+  }
+  const describeTest = (index: number) => spec.tests[index]?.description ?? `Example ${index + 1}`;
+
+  let source: string;
+  try {
+    source = await toRunnableJs(code, spec.language);
+  } catch (error) {
+    const compileError = describe(error);
+    const results = spec.tests.map((tc, index) => ({
+      index,
+      description: describeTest(index),
+      passed: false,
+      expected: JSON.stringify(tc.expected),
+      error: "Not run: the code didn't compile.",
+    }));
+    return { results, passedCount: 0, total: results.length, score: 0, compileError, timedOut: false, logs: "" };
   }
 
   return new Promise<LocalRunOutcome>((resolve) => {
-    const url = URL.createObjectURL(new Blob([WORKER_SOURCE], { type: "text/javascript" }));
-    const worker = new Worker(url);
+    const { worker, dispose } = spawn();
     const received = new Map<number, TestResult>();
+    const logs: string[] = [];
     let settled = false;
 
     const finish = ({ compileError, timedOut = false }: { compileError?: string; timedOut?: boolean }) => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      worker.terminate();
-      URL.revokeObjectURL(url);
+      dispose();
 
-      const results: TestResult[] = challenge.visibleTests.map((tc, index) => {
+      const results: TestResult[] = spec.tests.map((tc, index) => {
         const got = received.get(index);
         if (got) return got;
         return {
           index,
-          description: tc.description,
+          description: describeTest(index),
           passed: false,
           expected: JSON.stringify(tc.expected),
           timedOut,
@@ -153,6 +275,7 @@ export function runVisibleTests(
         score: results.length ? Math.round((passedCount / results.length) * 100) : 0,
         compileError,
         timedOut,
+        logs: logs.join("\n"),
       });
     };
 
@@ -161,10 +284,12 @@ export function runVisibleTests(
     worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
       const msg = event.data;
       if (msg.type === "compile-error") finish({ compileError: msg.message });
-      else if (msg.type === "result") {
+      else if (msg.type === "log") {
+        if (logs.length < 200) logs.push(msg.text);
+      } else if (msg.type === "result") {
         received.set(msg.index, {
           index: msg.index,
-          description: challenge.visibleTests[msg.index]?.description ?? `Test ${msg.index + 1}`,
+          description: describeTest(msg.index),
           passed: msg.passed,
           expected: msg.expected,
           actual: msg.actual,
@@ -178,6 +303,60 @@ export function runVisibleTests(
       finish({ compileError: event.message || "The code couldn't be run." });
     };
 
-    worker.postMessage({ code, functionName: challenge.functionName, testCases: challenge.visibleTests });
+    worker.postMessage({ mode: "tests", code: source, functionName: spec.functionName, testCases: spec.tests });
+  });
+}
+
+/** Topic code challenges: the visible tests, JavaScript. Kept for `CodeRunner` and the legacy runner. */
+export function runVisibleTests(
+  code: string,
+  challenge: ServedCodeChallenge,
+  timeoutMs: number = RUN_TIMEOUT_MS,
+): Promise<LocalRunOutcome> {
+  return runBrowserTests(code, { functionName: challenge.functionName, tests: challenge.visibleTests }, timeoutMs);
+}
+
+/** Runs a script with no tests and returns what it printed. Never rejects. */
+export async function runBrowserSnippet(
+  code: string,
+  language: BrowserLanguage = "javascript",
+  timeoutMs: number = SNIPPET_TIMEOUT_MS,
+): Promise<SnippetOutcome> {
+  let source: string;
+  try {
+    source = await toRunnableJs(code, language);
+  } catch (error) {
+    return { stdout: "", stderr: describe(error), timedOut: false };
+  }
+
+  return new Promise<SnippetOutcome>((resolve) => {
+    const { worker, dispose } = spawn();
+    const stdout: string[] = [];
+    const stderr: string[] = [];
+    let settled = false;
+
+    const finish = (timedOut: boolean) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      dispose();
+      if (timedOut) stderr.push(`Stopped after ${timeoutMs / 1000} seconds.`);
+      resolve({ stdout: stdout.join("\n"), stderr: stderr.join("\n"), timedOut });
+    };
+    const timer = setTimeout(() => finish(true), timeoutMs);
+
+    worker.onmessage = (event: MessageEvent<WorkerMessage>) => {
+      const msg = event.data;
+      if (msg.type === "log") {
+        const target = msg.stream === "stderr" ? stderr : stdout;
+        if (target.length < 500) target.push(msg.text);
+      } else if (msg.type === "done") finish(false);
+    };
+    worker.onerror = (event) => {
+      event.preventDefault();
+      stderr.push(event.message || "The code couldn't be run.");
+      finish(false);
+    };
+    worker.postMessage({ mode: "snippet", code: source });
   });
 }

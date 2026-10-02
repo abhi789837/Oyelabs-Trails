@@ -17,6 +17,8 @@ import { blueprintHandler } from "../assessment/blueprintJob";
 import { evaluateHandler } from "../assessment/evaluateJob";
 import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
 import { JobWorker } from "../jobs/worker";
+import { bankFillHandler } from "../bank/fillJob";
+import { buildPathHandler } from "../jobs/handlers/buildPath";
 import { publishGenerationLine } from "../routes/admin/live";
 import { WorkerSandbox } from "../sandbox/workerSandbox";
 
@@ -87,6 +89,8 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
         publish: (line) => publishGenerationLine(app, line),
       }),
       "assessment.evaluate": evaluateHandler({ db, ai, content, sandbox, piston: app.piston }),
+      "bank.fill": bankFillHandler({ db, ai, sandbox, piston: app.piston }),
+      "path.build": buildPathHandler({ db, env, ai, content }),
     },
   });
 

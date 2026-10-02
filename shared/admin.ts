@@ -148,3 +148,21 @@ export const learnerDetailSchema = z.object({
   profile: learnerProfileSchema,
 });
 export type LearnerDetail = z.infer<typeof learnerDetailSchema>;
+
+/**
+ * v4 bulk actions on the People table. Every one revokes the people's sessions. `delete` is the
+ * superadmin's and needs `confirm` typed as `delete <n>` — a bulk version of typing the username.
+ */
+export const bulkUserActionSchema = z.object({
+  ids: z.array(z.string().min(1).max(64)).min(1).max(200),
+  action: z.enum(["disable", "activate", "archive", "restore", "revoke", "delete"]),
+  confirm: z.string().max(40).optional(),
+});
+export type BulkUserAction = z.infer<typeof bulkUserActionSchema>;
+
+export interface BulkUserResult {
+  id: string;
+  ok: boolean;
+  /** Why this one was skipped: yourself, the last super admin, not allowed, not found. */
+  error?: string;
+}

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { AlertTriangle, LoaderCircle, RefreshCw, Trash2 } from "lucide-react";
 
 import type { AiStatusResponse, SelectableProvider } from "@shared/ai";
@@ -19,6 +20,7 @@ import { transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
 import { AiCallsTable } from "./AiCallsTable";
+import { ModelRouting } from "./ModelRouting";
 import { ResearchSettings } from "./builder/ResearchSettings";
 
 /**
@@ -235,12 +237,19 @@ export default function AdminAiPage() {
 
       <AddCredentialForm onAdded={load} />
 
+      <ModelRouting />
+
       <ModelSettings status={status} onSaved={load} />
 
       <section className="mt-12" aria-labelledby="usage-heading">
         <h2 id="usage-heading" className="text-lg font-semibold">
           Usage, last 7 days
         </h2>
+        <p className="mt-1 text-sm">
+          <Link to="/admin/ai-usage" className="underline decoration-primary/60 decoration-2 underline-offset-4 hover:decoration-primary">
+            Costs, budget and per-learner spend are on AI usage
+          </Link>
+        </p>
         {status.usage7d.length === 0 ? (
           <p className="mt-2 text-sm text-muted-foreground">No calls yet.</p>
         ) : (
@@ -478,11 +487,10 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
   return (
     <section className="mt-12" aria-labelledby="models-heading">
       <h2 id="models-heading" className="text-lg font-semibold">
-        Models
+        Legacy models (v3 assessments only)
       </h2>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Leave a field empty to use the suggested model. Evaluation is the one worth spending on: it reads the whole
-        assessment and writes the plan.
+        Only older v3 assessments read these; everything else follows Model routing above. Leave empty for the suggested model.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
@@ -512,7 +520,7 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
 
         <div className="flex items-center gap-3">
           <Button type="submit" variant="outline" loading={saving}>
-            Save models
+            Save legacy models
           </Button>
           {saved && <span className="text-sm text-summit-strong">Saved</span>}
         </div>

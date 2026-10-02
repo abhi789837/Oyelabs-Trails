@@ -1,4 +1,5 @@
 import { and, eq, inArray } from "drizzle-orm";
+import { newId } from "../lib/ids";
 
 import {
   MATCH_CONFIDENCE_THRESHOLD,
@@ -31,7 +32,13 @@ import {
   startPath,
 } from "./repo";
 import { planParts } from "./parts";
-import { assertSpine, buildSpine, type PriorityPath, type StartLevel } from "./priorityPath";
+import { assertV4Order, gapsFromV4, orderV4Parts, type PlannedItem } from "./v4Parts";
+import type { V4Result } from "../../../shared/assessmentV4";
+import { getCatalog } from "../catalog/repo";
+import type { ContentStore } from "../content/store";
+import { latestPublishedPlan, publishPlan } from "../plans/repo";
+import { getSetup } from "../setup/repo";
+import { assertSpine, buildSpine, type PriorityPath } from "./priorityPath";
 import { normaliseSkill, scoreGaps } from "./scoring";
 import { getFocus } from "../targets/repo";
 import { LEARNER_TRACK_LABELS } from "../../../shared/targets";
@@ -55,6 +62,8 @@ export interface RunDeps {
   db: Db;
   env: Env;
   ai: AiService;
+  /** v4: lets a priority attach its catalog modules with no model call. Optional for old callers. */
+  content?: ContentStore;
   /** Overridable so the tests can drive a run without a network. */
   research?: BuildDeps["research"];
   onProgress?: (note: string) => void;
@@ -99,14 +108,7 @@ const DEFAULT_FETCH: BuildDeps["research"] = {
  * is a nested walk that has to remember which target it is under, and gets it wrong the first time
  * a prerequisite fails to generate.
  */
-interface PlannedItem {
-  gap: ScoredGap;
-  partNumber: number;
-  partType: "track" | "ai_dev" | "general";
-  startLevel: StartLevel;
-  /** The target this belongs to. Null for the fixed parts and for a standalone gap. */
-  targetSkill: string | null;
-}
+// `PlannedItem` lives in v4Parts.ts (it gained the catalog skill id).
 
 /**
  * Flattens the spine: each target, then the refreshers it depends on.
@@ -127,6 +129,7 @@ function spineToItems(spine: PriorityPath): PlannedItem[] {
       partType: "general",
       startLevel: plan.startLevel,
       targetSkill: plan.target.skill,
+      skillId: null,
     });
     for (const prerequisite of plan.prerequisites) {
       items.push({
@@ -135,6 +138,7 @@ function spineToItems(spine: PriorityPath): PlannedItem[] {
         partType: "track",
         startLevel: "beginner",
         targetSkill: plan.target.skill,
+        skillId: null,
       });
     }
   }
@@ -177,10 +181,15 @@ function shortReason(item: PlannedItem, gap: ScoredGap): string {
 }
 
 export async function runBuilder(
-  input: { userId: string; assessmentId: string | null; evaluation: EvaluationResult | null; adminNotes: string },
+  input: { userId: string; assessmentId: string | null; evaluation: EvaluationResult | V4Result | null; adminNotes: string },
   deps: RunDeps,
 ): Promise<RunOutcome> {
   const { db } = deps;
+  const v4Result = input.evaluation && "format" in input.evaluation && input.evaluation.format === "v4" ? input.evaluation : null;
+  const legacyEvaluation = v4Result ? null : (input.evaluation as EvaluationResult | null);
+  const setup = getSetup(db, input.userId);
+  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
+  const skillsById = new Map(catalog.skills.map((s) => [s.id, s]));
   const stored = getPriorities(db, input.userId);
   const focus = getFocus(db, input.userId);
 
@@ -215,7 +224,11 @@ export async function runBuilder(
   // --- gaps ----------------------------------------------------------------
   progress("Analysing skill gaps");
   let detected: DetectedGap[] = [];
-  if (input.evaluation) {
+  if (v4Result) {
+    // v4: the report is already by skill, so the gaps need no model call.
+    detected = gapsFromV4(v4Result);
+    auditStep(db, { pathId, step: "gap_analysis", detail: { found: detected.length, source: "v4-report" } });
+  } else if (legacyEvaluation) {
     try {
       const result = await deps.ai.generateJson({
         purpose: "gap_analysis",
@@ -224,8 +237,8 @@ export async function runBuilder(
           targetRole: priorities.targetRole,
           adminNotes: input.adminNotes,
           mustHave: priorities.mustHave,
-          overallLevel: input.evaluation.overallLevel,
-          areas: input.evaluation.areas.map((area) => ({
+          overallLevel: legacyEvaluation.overallLevel,
+          areas: legacyEvaluation.areas.map((area) => ({
             area: area.area,
             level: area.level,
             gaps: area.gaps,
@@ -272,7 +285,9 @@ export async function runBuilder(
     gaps: scored,
     skip: priorities.skip,
     stack: focus.stack ?? undefined,
-    areaLevels: input.evaluation?.areas.map((area) => ({ area: area.area, level: area.level })) ?? [],
+    areaLevels: v4Result
+      ? v4Result.skills.filter((s) => s.level != null).map((s) => ({ area: s.skillName, level: s.level! }))
+      : (legacyEvaluation?.areas.map((area) => ({ area: area.area, level: area.level })) ?? []),
   });
 
   /* Checked after the fact rather than trusted, and the result is stored where the admin can see
@@ -289,15 +304,46 @@ export async function runBuilder(
 
   /* Targets first, each with its groundwork underneath, then the two fixed foundation parts for a
      learner who has no targets at all — which is the only case `planParts` still answers. */
-  const todo: PlannedItem[] =
-    spine.targets.length > 0
+  /* v4 (D6): Part 1 "Strengthen your current role", Part 2 "AI-driven work for your role", then the
+     remaining priorities — for every department. The v3 shapes below stay for a learner whose
+     department has no catalog yet. */
+  const department = catalog.departments.find((d) => d.id === setup.departmentId);
+  const track = catalog.tracks.find((t) => t.id === setup.trackId);
+  const aiSkills = catalog.skills.filter((s) => s.isAiSkill && s.status === "active");
+  const defaultAiSkill =
+    aiSkills.find((s) => s.stackIds.some((id) => setup.stackIds.includes(id))) ??
+    aiSkills.find((s) => setup.trackId != null && s.trackIds.includes(setup.trackId)) ??
+    aiSkills[0] ??
+    null;
+  const basicsNames = new Set((v4Result?.skills ?? []).filter((s) => s.group === "basics").map((s) => s.skillName.toLowerCase()));
+  const v4Items = department
+    ? orderV4Parts({
+        spine,
+        priorities: setup.priorities,
+        skills: skillsById,
+        trackId: setup.trackId,
+        trackName: track?.name ?? department.name,
+        departmentName: department.name,
+        stackIds: setup.stackIds,
+        ownTrackGaps: scored.filter((g) => !g.skipped && basicsNames.has(g.skill.toLowerCase())),
+        defaultAiSkill,
+      })
+    : null;
+  if (v4Items) {
+    const problems = assertV4Order(v4Items, setup.priorities);
+    if (problems.length > 0) auditStep(db, { pathId, step: "parts", detail: { problems } });
+  }
+
+  const todo: PlannedItem[] = v4Items
+    ? v4Items
+    : spine.targets.length > 0
       ? spineToItems(spine)
       : planParts({
           track: focus.track,
           stack: focus.stack,
           gaps: scored,
           priorities,
-          evaluation: input.evaluation,
+          evaluation: legacyEvaluation,
           courseCap: priorities.courseCap,
         }).map((part) => ({
           gap: part.gap,
@@ -305,6 +351,7 @@ export async function runBuilder(
           partType: part.type,
           startLevel: "beginner" as const,
           targetSkill: null,
+          skillId: null,
         }));
 
   if (todo.length === 0) {
@@ -327,6 +374,38 @@ export async function runBuilder(
 
     setPathStatus(db, pathId, { status: "researching" });
     progress(`Looking for a course on ${gap.skill}`);
+
+    // v4 (D7): the skill's own curriculum modules, then a course saved to the library for this skill.
+    const skill = part.skillId ? skillsById.get(part.skillId) : undefined;
+    const modules = skill && deps.content ? availableModules(deps.content, skill.contentModules) : [];
+    if (modules.length > 0) {
+      for (const moduleId of modules.slice(0, 2)) {
+        addPathItem(db, {
+          pathId,
+          courseId: null,
+          moduleId,
+          skillId: skill!.id,
+          gapId,
+          position: position++,
+          source: "unlock",
+          reason,
+          partNumber: part.partNumber,
+          partType: part.partType,
+          targetSkill: part.targetSkill,
+          startLevel: part.startLevel,
+        });
+      }
+      ensureInPlan(db, deps.content!, input.userId, modules.slice(0, 2));
+      outcome.unlocked += 1;
+      continue;
+    }
+    const saved = savedCourseFor(db, gap.skill);
+    if (saved) {
+      addPathItem(db, { pathId, courseId: saved, skillId: part.skillId, gapId, position: position++, source: "reuse", reason, partNumber: part.partNumber, partType: part.partType, targetSkill: part.targetSkill, startLevel: part.startLevel });
+      outcome.reused += 1;
+      assign(db, saved, input.userId);
+      continue;
+    }
 
     const existing = await matchExisting(db, deps.ai, gap, input.userId, pathId);
     if (existing) {
@@ -360,12 +439,14 @@ export async function runBuilder(
     }
 
     setPathStatus(db, pathId, { status: "writing" });
+    // v4: allocated before writing so every model call is attributed to the course it built.
+    const plannedCourseId = newId();
     const built = await buildCourse(
       gap,
-      { targetRole: priorities.targetRole, level: input.evaluation?.overallLevel ?? 2 },
+      { targetRole: priorities.targetRole, level: legacyEvaluation?.overallLevel ?? (part.startLevel === "advanced" ? 4 : part.startLevel === "intermediate" ? 3 : 2) },
       {
         ai: deps.ai,
-        meta: { subjectUserId: input.userId, assessmentId: input.assessmentId ?? undefined },
+        meta: { subjectUserId: input.userId, assessmentId: input.assessmentId ?? undefined, courseId: plannedCourseId },
         search: clients.search,
         video: clients.video,
         research: deps.research ?? DEFAULT_FETCH,
@@ -406,6 +487,7 @@ export async function runBuilder(
       skill: gap.skill,
       userId: input.userId,
       autoPublish: priorities.autoPublish,
+      courseId: plannedCourseId,
     });
     addPathItem(db, {
       pathId,
@@ -573,4 +655,41 @@ function itemsFor(db: Db, assessmentId: string | null) {
 
 function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : "unknown error";
+}
+
+/** The catalog's module ids that actually exist in this deployment's curriculum. */
+function availableModules(content: ContentStore, moduleIds: readonly string[]): string[] {
+  return moduleIds.filter((id) => content.manifest.some((track) => track.modules.some((m) => m.id === id && m.available)));
+}
+
+/** A published course already saved to the library for this skill. No model call. */
+function savedCourseFor(db: Db, skill: string): string | null {
+  const row = db
+    .select({ courseId: schema.generatedCourses.courseId })
+    .from(schema.generatedCourses)
+    .innerJoin(schema.courses, eq(schema.courses.id, schema.generatedCourses.courseId))
+    .where(and(eq(schema.generatedCourses.scope, "global"), eq(schema.courses.published, true)))
+    .all()
+    .find((r) => {
+      const g = db.select({ skill: schema.generatedCourses.skill }).from(schema.generatedCourses).where(eq(schema.generatedCourses.courseId, r.courseId)).get();
+      return g ? normaliseSkill(g.skill) === normaliseSkill(skill) : false;
+    });
+  return row?.courseId ?? null;
+}
+
+/** Makes sure an attached module's topics are in the learner's library, publishing a new plan version only if needed. */
+function ensureInPlan(db: Db, content: ContentStore, userId: string, moduleIds: readonly string[]): void {
+  const plan = latestPublishedPlan(db, userId);
+  const current = new Set(plan?.topicIds ?? []);
+  const wanted = moduleIds.flatMap((id) => content.manifest.flatMap((t) => t.modules.filter((m) => m.id === id).flatMap((m) => m.topics.map((topic) => topic.id))));
+  const missing = wanted.filter((id) => !current.has(id));
+  if (missing.length === 0) return;
+  publishPlan(db, content, {
+    userId,
+    topicIds: [...current, ...missing],
+    source: "ai",
+    assessmentId: plan?.assessmentId ?? null,
+    rationale: { summary: "Modules added for the learning path." },
+    publishedBy: null,
+  });
 }

@@ -136,10 +136,28 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
 
   app.get("/api/admin/users/:userId/gaps", async (request) => {
     const { userId } = parseOrThrow(userParams, request.params);
-    return { gaps: listGaps(app.db, userId), path: currentPath(app.db, userId) };
+    return { gaps: listGaps(app.db, userId), path: currentPath(app.db, userId, app.content) };
   });
 
   /** Runs the builder now, rather than waiting for the next evaluation. */
+  /**
+   * v4 rollout: rebuild every active learner's path under the new priority rules. Queued, one job
+   * per learner; progress and certificates are untouched (a rebuild supersedes the path, never the
+   * record of what was done). Superadmin only.
+   */
+  app.post("/api/admin/paths/rebuild-all", async (request, reply) => {
+    const actor = requireSuperadmin(request);
+    const learners = app.db
+      .select({ id: schema.users.id })
+      .from(schema.users)
+      .where(and(eq(schema.users.role, "learner"), eq(schema.users.status, "active")))
+      .all();
+    const queued = learners.map((l) => enqueue(app.db, { type: "path.build", payload: { userId: l.id } }));
+    writeAudit(app.db, { actorId: actor.id, action: "path.rebuild_all", details: { learners: learners.length } });
+    reply.status(202);
+    return { queued: queued.length };
+  });
+
   app.post("/api/admin/users/:userId/path", async (request, reply) => {
     const actor = requireStaff(request);
     const { userId } = parseOrThrow(userParams, request.params);

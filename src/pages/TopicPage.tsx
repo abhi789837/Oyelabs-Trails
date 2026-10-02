@@ -3,6 +3,7 @@ import { LoaderCircle } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
 import { ChallengeRunner } from "@/components/challenge/ChallengeRunner";
+import { PRACTICE_CHECKS, PracticeTask } from "@/components/tasks/PracticeTask";
 import { RichText } from "@/components/content/RichText";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { ReferenceList } from "@/components/trail/ReferenceList";
@@ -102,7 +103,21 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
 
       {topic && <TopicBody topic={topic} />}
 
-      {topic && (
+      {topic?.practice && (
+        <section aria-labelledby="practice-heading" className="mt-14 max-w-3xl border-t pt-8">
+          <h2 id="practice-heading" className="text-xl font-semibold">
+            {department.practiceNoun}
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Hands-on practice. Check your answer up to {PRACTICE_CHECKS} times, then the worked answer is shown.
+          </p>
+          <div className="mt-6">
+            <PracticeTask task={topic.practice} />
+          </div>
+        </section>
+      )}
+
+      {topic && (hasChallenge(topic) || !topic.practice) && (
         <section aria-labelledby="challenge-heading" className="mt-14 max-w-3xl border-t pt-8">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h2 id="challenge-heading" className="text-xl font-semibold">
@@ -153,6 +168,11 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
       </nav>
     </article>
   );
+}
+
+/** A topic whose practice task replaces the challenge has no quiz or code to run. */
+function hasChallenge(topic: ServedTopic): boolean {
+  return topic.challengeType === "quiz" ? Boolean(topic.quiz?.length) : Boolean(topic.codeChallenge);
 }
 
 function TopicBody({ topic }: { topic: ServedTopic }) {

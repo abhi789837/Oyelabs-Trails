@@ -73,7 +73,7 @@ export interface BuildDeps {
    * Priya's cPanel course cost?" — which is the only per-learner view of spend there is, since a
    * shared credential cannot be attributed by the provider.
    */
-  meta: { subjectUserId?: string; assessmentId?: string };
+  meta: { subjectUserId?: string; assessmentId?: string; courseId?: string };
   search: SearchClient;
   video: VideoClient;
   research: ResearchDeps;

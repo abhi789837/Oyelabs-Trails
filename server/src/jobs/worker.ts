@@ -1,6 +1,10 @@
 import type { JobType } from "../../../shared/enums";
+import { AiBudgetPausedError } from "../ai/router";
 import type { Db } from "../db";
-import { claimNext, completeJob, failJob, requeueAllRunning, type Job } from "./queue";
+import { claimNext, completeJob, deferJob, failJob, requeueAllRunning, type Job } from "./queue";
+
+/** How long a job paused by the AI budget waits before trying again. */
+const BUDGET_RETRY_MS = 6 * 60 * 60 * 1000;
 
 export type JobHandler = (job: Job) => Promise<void>;
 
@@ -74,6 +78,13 @@ export class JobWorker {
           this.options.log?.(`job ${job.type} completed`, { id: job.id });
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
+          // v4: over the monthly AI budget is not a failure; the job waits and tries again later.
+          if (error instanceof AiBudgetPausedError) {
+            deferJob(this.options.db, job.id, BUDGET_RETRY_MS);
+            this.options.log?.(`job ${job.type} paused: AI budget reached`, { id: job.id });
+            processed += 1;
+            continue;
+          }
           const { willRetry } = failJob(this.options.db, job, message);
           this.options.log?.(`job ${job.type} failed${willRetry ? ", will retry" : ""}: ${message}`, { id: job.id });
         }

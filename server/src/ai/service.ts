@@ -11,6 +11,8 @@ import { MockProvider } from "./adapters/mock";
 import { OpenAiApiProvider } from "./adapters/openaiApi";
 import { redact } from "./adapters/spawnJson";
 import { getSettings, revealSecret, type StoredCredential } from "./credentials";
+import { AiBudgetPausedError, budgetStatus, isRoutable, routeFor, storeAvailableModels, warnOnBudget } from "./router";
+import { costMicros, taskForPurpose, type AiTask } from "../../../shared/aiRouting";
 import { AiOutputError, AiProviderError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "./types";
 
 /**
@@ -168,9 +170,21 @@ export class AiService {
    * on it, and rolling the dice again mostly burns tokens. It surfaces as a failed job with a
    * visible reason instead.
    */
-  async generateJson<T>(request: GenerateJsonRequest<T>): Promise<GenerateJsonResult<T>> {
+  async generateJson<T>(incoming: GenerateJsonRequest<T>): Promise<GenerateJsonResult<T>> {
     const { provider, credentialId } = this.activeProvider();
     const maxAttempts = 3;
+
+    // v4: the router decides the model and the output cap for this task, and the budget decides
+    // whether non-urgent work may run at all.
+    const task = (incoming.task as AiTask | undefined) ?? taskForPurpose(incoming.purpose);
+    const route = routeFor(this.db, task);
+    if (!route.urgent && budgetStatus(this.db).paused) throw new AiBudgetPausedError();
+    const request: GenerateJsonRequest<T> = {
+      ...incoming,
+      task,
+      model: incoming.model ?? (isRoutable(provider.id) ? route.model : undefined),
+      maxOutputTokens: incoming.maxOutputTokens ?? route.maxTokens,
+    };
 
     return this.semaphore.run(async () => {
       let lastError: unknown;
@@ -184,12 +198,16 @@ export class AiService {
             provider: provider.id,
             model: result.model,
             purpose: request.purpose,
+            task,
             meta: request.meta,
             inputTokens: result.usage.input,
             outputTokens: result.usage.output,
+            cacheReadTokens: result.usage.cacheRead ?? 0,
+            cacheWriteTokens: result.usage.cacheWrite ?? 0,
             latencyMs: result.latencyMs,
             ok: true,
           });
+          warnOnBudget(this.db);
           return result;
         } catch (error) {
           lastError = error;
@@ -198,6 +216,7 @@ export class AiService {
             provider: provider.id,
             model: request.model ?? provider.defaultModel(request.purpose),
             purpose: request.purpose,
+            task,
             meta: request.meta,
             inputTokens: 0,
             outputTokens: 0,
@@ -226,14 +245,41 @@ export class AiService {
     });
   }
 
-  private recordCall(entry: {
+  /** Asks the provider which models this credential can use, and stores the list for the router. */
+  async refreshModels(): Promise<string[] | null> {
+    try {
+      const { provider } = this.activeProvider();
+      if (!(provider instanceof AnthropicApiProvider)) return null;
+      const ids = await provider.listModels();
+      storeAvailableModels(this.db, ids);
+      return ids;
+    } catch {
+      return null;
+    }
+  }
+
+  /** The Anthropic client behind the active credential, for the Message Batches path. Null otherwise. */
+  anthropicClient(): { client: import("@anthropic-ai/sdk").default; credentialId: string | null } | null {
+    try {
+      const { provider, credentialId } = this.activeProvider();
+      return provider instanceof AnthropicApiProvider ? { client: provider.raw, credentialId } : null;
+    } catch {
+      return null;
+    }
+  }
+
+  recordCall(entry: {
     credentialId: string | null;
     provider: ProviderId;
     model: string;
     purpose: AiPurpose;
-    meta: { subjectUserId?: string | undefined; assessmentId?: string | undefined };
+    task?: AiTask;
+    meta: { subjectUserId?: string | undefined; assessmentId?: string | undefined; courseId?: string | undefined };
     inputTokens: number;
     outputTokens: number;
+    cacheReadTokens?: number;
+    cacheWriteTokens?: number;
+    batch?: boolean;
     latencyMs: number;
     ok: boolean;
     error?: string;
@@ -250,6 +296,12 @@ export class AiService {
         assessmentId: entry.meta.assessmentId ?? null,
         inputTokens: entry.inputTokens,
         outputTokens: entry.outputTokens,
+        task: entry.task ?? null,
+        cacheReadTokens: entry.cacheReadTokens ?? 0,
+        cacheWriteTokens: entry.cacheWriteTokens ?? 0,
+        costMicros: costMicros(entry.model, { input: entry.inputTokens, output: entry.outputTokens, cacheRead: entry.cacheReadTokens, cacheWrite: entry.cacheWriteTokens }, entry.batch),
+        courseId: entry.meta.courseId ?? null,
+        batch: entry.batch ?? false,
         latencyMs: entry.latencyMs,
         ok: entry.ok,
         // Truncated: a provider error can carry a long body, and the useful part is the start.

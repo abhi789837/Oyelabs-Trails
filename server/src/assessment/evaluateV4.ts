@@ -50,7 +50,7 @@ export async function gradeWritten(ai: AiService, task: WriteTask, text: string,
     .filter(Boolean)
     .join("\n\n");
   const result = await ai.generateJson({
-    purpose: "evaluation",
+    purpose: "grade_written",
     task: "grade_written",
     system: RUBRIC_SYSTEM,
     user,

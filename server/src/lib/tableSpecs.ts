@@ -95,6 +95,10 @@ export const aiCallsTableSpec = defineTableSpec({
     inputTokens: { column: schema.aiCalls.inputTokens, type: "number", sortable: false },
     outputTokens: { column: schema.aiCalls.outputTokens, type: "number", sortable: false },
     latencyMs: { column: schema.aiCalls.latencyMs, type: "number", sortable: false },
+    /** v4: router task type and cost in micro-dollars. */
+    task: { column: schema.aiCalls.task, type: "string", searchable: true, sortable: false },
+    costMicros: { column: schema.aiCalls.costMicros, type: "number", sortable: true },
+    cacheReadTokens: { column: schema.aiCalls.cacheReadTokens, type: "number", sortable: false },
     ok: { column: schema.aiCalls.ok, type: "boolean", sortable: false },
     error: { column: schema.aiCalls.error, type: "string", searchable: true, sortable: false },
     createdAt: { column: schema.aiCalls.createdAt, type: "date" },

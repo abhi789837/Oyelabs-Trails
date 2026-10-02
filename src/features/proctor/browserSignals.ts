@@ -1,4 +1,4 @@
-import { isInsideEditor, rememberCopiedText, wasCopiedFromPage } from "./editorScope";
+import { copiedTextCandidates, isInsideEditor, judgeScopedEvent } from "./editorScope";
 import {
   DEVTOOLS_SIZE_DELTA_PX,
   MOUSE_LEFT_SUSTAINED_MS,
@@ -70,10 +70,10 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
 
   // One registration helper so no listener can be added without its removal being queued.
   // `never` for the event parameter lets each call site name the concrete event type it wants.
-  const on = (target: EventTarget, type: string, handler: (event: never) => void) => {
+  const on = (target: EventTarget, type: string, handler: (event: never) => void, capture = false) => {
     const listener = handler as EventListener;
-    target.addEventListener(type, listener);
-    teardown.push(() => target.removeEventListener(type, listener));
+    target.addEventListener(type, listener, capture);
+    teardown.push(() => target.removeEventListener(type, listener, capture));
   };
 
   const timers = new Map<string, number>();
@@ -139,12 +139,23 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
      What is copied inside the editor is fingerprinted, so that pasting it back can be recognised as
      a move rather than an import. */
   const onCopyOrCut = (event: ClipboardEvent) => {
-    if (isInsideEditor(event.target)) {
-      rememberCopiedText(String(document.getSelection() ?? ""));
-      return; // Not prevented, not reported. It is their own work.
+    const inScope = isInsideEditor(event.target);
+    let clipboardText = "";
+    try {
+      // Monaco has already written the clipboard by the time this bubbles to the document.
+      clipboardText = event.clipboardData?.getData("text/plain") ?? "";
+    } catch {
+      // Not readable in this browser during copy. The editor's own reader still applies.
     }
+    // The copied text is read from the editor's model rather than the document selection (editorScope.ts).
+    const verdict = judgeScopedEvent({
+      type: event.type === "cut" ? "cut" : "copy",
+      inScope,
+      copiedTexts: inScope ? copiedTextCandidates(event.target, clipboardText) : [],
+    });
+    if (!verdict.signal) return; // Not prevented, not reported. It is their own work.
     event.preventDefault();
-    emit("copy_cut_attempt", { action: event.type });
+    emit(verdict.signal, { action: event.type });
   };
   on(document, "copy", onCopyOrCut);
   on(document, "cut", onCopyOrCut);
@@ -156,22 +167,29 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
      than by where the caret is: text fingerprinted on the way out of this page is a move and is
      allowed; anything else is still blocked and still flagged, editor or not.
 
-     That is the distinction the blanket rule was always reaching for. A learner cannot paste in a
-     solution from a second monitor, and can still cut and paste their own function. */
-  on(document, "paste", (event: ClipboardEvent) => {
-    const pasted = event.clipboardData?.getData("text/plain") ?? "";
+     **Capture phase.** Monaco handles paste on its hidden textarea and inserts the text itself, so a
+     document listener in the bubble phase would run after the text was already in the editor. In
+     the capture phase a refused paste is stopped before Monaco ever sees it. */
+  on(
+    document,
+    "paste",
+    (event: ClipboardEvent) => {
+      const pasted = event.clipboardData?.getData("text/plain") ?? "";
+      const verdict = judgeScopedEvent({ type: "paste", inScope: isInsideEditor(event.target), clipboardText: pasted });
+      if (!verdict.signal) return;
 
-    if (isInsideEditor(event.target) && wasCopiedFromPage(pasted)) return;
-
-    event.preventDefault();
-    const target = event.target as HTMLElement | null;
-    emit("paste_attempt", {
-      into: target?.tagName?.toLowerCase() ?? "unknown",
-      // Which of the two it was, for the admin reading the integrity feed. Never the text itself.
-      inEditor: isInsideEditor(event.target),
-      chars: pasted.length,
-    });
-  });
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const target = event.target as HTMLElement | null;
+      emit(verdict.signal, {
+        into: target?.tagName?.toLowerCase() ?? "unknown",
+        // Which of the two it was, for the admin reading the integrity feed. Never the text itself.
+        inEditor: isInsideEditor(event.target),
+        chars: pasted.length,
+      });
+    },
+    true,
+  );
 
   // --- PrintScreen: immediate, hard ----------------------------------------
   on(document, "keyup", (event: KeyboardEvent) => {
@@ -184,16 +202,24 @@ export function startBrowserSignals(onEvent: EmitFn): () => void {
 
   // --- Right-click and text selection, prevented: immediate, soft ----------
   on(document, "contextmenu", (event: MouseEvent) => {
-    event.preventDefault();
-    emit("context_menu_attempt");
+    // The native menu is always suppressed (it offers Paste); inside the editor that is not reported.
+    const verdict = judgeScopedEvent({ type: "contextmenu", inScope: isInsideEditor(event.target) });
+    if (verdict.prevent) event.preventDefault();
+    if (verdict.signal) emit(verdict.signal);
   });
   on(document, "selectstart", (event: Event) => {
     const target = event.target as HTMLElement | null;
+    const element = target instanceof Element ? target : ((target as Node | null)?.parentElement ?? null);
     // Selection inside the learner's own answer field, or anywhere in the editor, is normal work.
-    if (isInsideEditor(event.target)) return;
-    if (target?.closest("input, textarea, [contenteditable=true], [data-proctor-allow-select]")) return;
+    const verdict = judgeScopedEvent({
+      type: "selectstart",
+      inScope: isInsideEditor(event.target),
+      inTextField: Boolean(element?.closest("input, textarea, [contenteditable=true]")),
+      allowSelect: Boolean(element?.closest("[data-proctor-allow-select]")),
+    });
+    if (!verdict.signal) return;
     event.preventDefault();
-    emit("text_selection_attempt");
+    emit(verdict.signal);
   });
 
   // --- Pointer left the window for > 3 s: soft -----------------------------

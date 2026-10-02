@@ -3,6 +3,8 @@ import { z } from "zod";
 
 import type { EvaluationResult } from "../../../../shared/assessment";
 import type { AiService } from "../../ai/service";
+import type { V4Result } from "../../../../shared/assessmentV4";
+import type { ContentStore } from "../../content/store";
 import { setPathStatus } from "../../builder/repo";
 import { runBuilder } from "../../builder/run";
 import { schema, type Db } from "../../db";
@@ -24,7 +26,7 @@ const payloadSchema = z.object({
  * Deliberately thin. Everything interesting is in `runBuilder`, which takes its clients as
  * arguments and is therefore testable without a queue.
  */
-export function buildPathHandler(deps: { db: Db; env: Env; ai: AiService; log?: (message: string) => void }) {
+export function buildPathHandler(deps: { db: Db; env: Env; ai: AiService; content?: ContentStore; log?: (message: string) => void }) {
   return async (job: Job): Promise<void> => {
     const payload = payloadSchema.parse(job.payload);
     const { db } = deps;
@@ -58,10 +60,10 @@ export function buildPathHandler(deps: { db: Db; env: Env; ai: AiService; log?: 
       {
         userId: payload.userId,
         assessmentId,
-        evaluation: (evaluationRow?.result as EvaluationResult | undefined) ?? null,
+        evaluation: (evaluationRow?.result as EvaluationResult | V4Result | undefined) ?? null,
         adminNotes: profile?.adminNotes ?? "",
       },
-      { db, env: deps.env, ai: deps.ai },
+      { db, env: deps.env, ai: deps.ai, content: deps.content },
     );
 
     /* Exactly one thing is said about a run, and it is said here.

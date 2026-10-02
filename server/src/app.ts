@@ -21,6 +21,8 @@ import { registerAdminBuilderRoutes } from "./routes/admin/builder";
 import { registerAdminCatalogRoutes } from "./routes/admin/catalog";
 import { registerAdminSetupRoutes } from "./routes/admin/setup";
 import { registerAdminAssessmentV4Routes } from "./routes/admin/assessmentV4";
+import { registerAdminBankRoutes } from "./routes/admin/bank";
+import { registerAdminAiRoutingRoutes } from "./routes/admin/aiRouting";
 import { registerAdminCourseRoutes } from "./routes/admin/courses";
 import { registerAdminAssessmentRoutes } from "./routes/admin/assessments";
 import { registerAdminLiveRoutes } from "./routes/admin/live";
@@ -192,6 +194,8 @@ export async function buildApp({
   await app.register(registerAdminCatalogRoutes);
   await app.register(registerAdminSetupRoutes);
   await app.register(registerAdminAssessmentV4Routes);
+  await app.register(registerAdminBankRoutes);
+  await app.register(registerAdminAiRoutingRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 
