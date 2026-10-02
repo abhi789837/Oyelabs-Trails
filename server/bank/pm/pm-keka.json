@@ -1,0 +1,881 @@
+[
+  {
+    "id": "pm-keka-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Approve last week's timesheets. Flag the rows you should not approve as they stand, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "keka-timesheets",
+      "prompt": "Flag rows you should not approve.",
+      "title": "Timesheet approvals — week 40",
+      "columns": [
+        "Employee",
+        "Project",
+        "Hours (week)",
+        "Description"
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": [
+            "Ann",
+            "Acme portal",
+            "40",
+            "Checkout API, bug fixes"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r2",
+          "cells": [
+            "Bo",
+            "Acme portal",
+            "72",
+            "Development"
+          ],
+          "issue": "72 h in one week is far over capacity; check before approving."
+        },
+        {
+          "id": "r3",
+          "cells": [
+            "Cy",
+            "Beta app",
+            "38",
+            "Push notifications, QA fixes"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r4",
+          "cells": [
+            "Dee",
+            "Beta app",
+            "40",
+            ""
+          ],
+          "issue": "No description of the work done."
+        },
+        {
+          "id": "r5",
+          "cells": [
+            "Eli",
+            "Acme portal",
+            "36",
+            "Sprint 5 stories, code review"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What do you do with Bo's row?",
+          "options": [
+            "Send it back with a comment asking him to check the hours",
+            "Approve it; overtime is good",
+            "Change it to 40 yourself"
+          ],
+          "correctIndex": 0,
+          "explanation": "Return it with a reason; don't approve or silently edit someone's hours."
+        }
+      ]
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Daily entries for approval, with each person's leave status. Flag the rows you should not approve, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "keka-timesheets",
+      "prompt": "Flag rows you should not approve.",
+      "title": "Timesheet approvals — 6–9 Oct",
+      "columns": [
+        "Employee",
+        "Date",
+        "Project",
+        "Hours",
+        "Leave"
+      ],
+      "rows": [
+        {
+          "id": "a",
+          "cells": [
+            "Ann",
+            "Mon 6 Oct",
+            "Acme portal",
+            "8",
+            "—"
+          ],
+          "issue": null
+        },
+        {
+          "id": "b",
+          "cells": [
+            "Ann",
+            "Tue 7 Oct",
+            "Acme portal",
+            "8",
+            "Approved leave"
+          ],
+          "issue": "Hours logged on an approved leave day."
+        },
+        {
+          "id": "c",
+          "cells": [
+            "Bo",
+            "Mon 6 Oct",
+            "Beta app",
+            "8",
+            "—"
+          ],
+          "issue": null
+        },
+        {
+          "id": "d",
+          "cells": [
+            "Bo",
+            "Tue 7 Oct",
+            "Beta app",
+            "4",
+            "Half-day leave"
+          ],
+          "issue": null
+        },
+        {
+          "id": "e",
+          "cells": [
+            "Cy",
+            "Wed 8 Oct",
+            "Acme portal",
+            "8",
+            "Approved leave"
+          ],
+          "issue": "Hours logged on an approved leave day."
+        },
+        {
+          "id": "f",
+          "cells": [
+            "Cy",
+            "Thu 9 Oct",
+            "Acme portal",
+            "8",
+            "—"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Bo logged 4 h on a half-day leave. You:",
+          "options": [
+            "Approve; it matches a half day",
+            "Reject; no hours on any leave day",
+            "Change his leave to a full day"
+          ],
+          "correctIndex": 0,
+          "explanation": "Four hours fits a half-day leave; only the full-day clashes need checking."
+        }
+      ]
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Compare where each person is allocated with where they logged time. Flag the rows to query, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "keka-timesheets",
+      "prompt": "Flag rows you should not approve as they stand.",
+      "title": "Timesheet approvals — week 41",
+      "columns": [
+        "Employee",
+        "Allocated to",
+        "Logged to",
+        "Hours",
+        "Billable"
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": [
+            "Ann",
+            "Acme portal",
+            "Acme portal",
+            "32",
+            "Yes"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r2",
+          "cells": [
+            "Bo",
+            "Beta app",
+            "Acme portal",
+            "16",
+            "Yes"
+          ],
+          "issue": "Logged to a project he isn't allocated to; risk of billing the wrong client."
+        },
+        {
+          "id": "r3",
+          "cells": [
+            "Cy",
+            "Bench",
+            "Internal training",
+            "20",
+            "No"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r4",
+          "cells": [
+            "Dee",
+            "Beta app",
+            "Beta app",
+            "36",
+            "Yes"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r5",
+          "cells": [
+            "Eli",
+            "Acme portal",
+            "Gamma site",
+            "12",
+            "Yes"
+          ],
+          "issue": "Logged to a project she isn't allocated to."
+        },
+        {
+          "id": "r6",
+          "cells": [
+            "Fay",
+            "Acme portal",
+            "Acme portal",
+            "30",
+            "Yes"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Bo says Acme's PM borrowed him for two days. Best fix?",
+          "options": [
+            "Confirm with both PMs and update the allocation, then approve",
+            "Approve; hours are hours",
+            "Move his hours to Beta app yourself"
+          ],
+          "correctIndex": 0,
+          "explanation": "Make the allocation match reality so billing and reports are right."
+        }
+      ]
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Check the project setup before month-end invoicing. Flag projects whose billing setup is wrong, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "keka-psa",
+      "prompt": "Flag projects with the wrong billing setup.",
+      "title": "Projects — billing setup",
+      "columns": [
+        "Project",
+        "Client",
+        "Billing type",
+        "Billable"
+      ],
+      "rows": [
+        {
+          "id": "p1",
+          "cells": [
+            "Acme portal",
+            "Acme",
+            "Time & materials",
+            "Yes"
+          ],
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "cells": [
+            "Beta app build",
+            "Beta",
+            "Fixed price",
+            "Yes"
+          ],
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "cells": [
+            "Internal training",
+            "Our company",
+            "Time & materials",
+            "Yes"
+          ],
+          "issue": "Internal work should be non-billable."
+        },
+        {
+          "id": "p4",
+          "cells": [
+            "Gamma site support",
+            "Gamma",
+            "Time & materials",
+            "Yes"
+          ],
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "cells": [
+            "Delta prototype (pre-sales)",
+            "Delta (prospect)",
+            "Fixed price",
+            "Yes"
+          ],
+          "issue": "No signed contract: pre-sales work is non-billable."
+        },
+        {
+          "id": "p6",
+          "cells": [
+            "Bench",
+            "Our company",
+            "Non-billable",
+            "No"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Which project's invoice depends directly on approved timesheet hours?",
+          "options": [
+            "Acme portal (time & materials)",
+            "Beta app build (fixed price)",
+            "Bench"
+          ],
+          "correctIndex": 0,
+          "explanation": "T&M bills hours worked, so approved timesheets drive the invoice."
+        }
+      ]
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Friday approvals for a T&M client. Flag rows you should not approve as they stand, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "keka-timesheets",
+      "prompt": "Flag rows you should not approve.",
+      "title": "Timesheet approvals — Fri 10 Oct",
+      "columns": [
+        "Employee",
+        "Project",
+        "Hours",
+        "Billable",
+        "Description"
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": [
+            "Ann",
+            "Acme portal",
+            "8",
+            "Yes",
+            "Payment webhook fix"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r2",
+          "cells": [
+            "Bo",
+            "Internal — hiring",
+            "6",
+            "Yes",
+            "Interviews"
+          ],
+          "issue": "Internal work marked billable."
+        },
+        {
+          "id": "r3",
+          "cells": [
+            "Cy",
+            "Acme portal",
+            "8",
+            "Yes",
+            "Work"
+          ],
+          "issue": "Vague description; the client may query invoiced hours."
+        },
+        {
+          "id": "r4",
+          "cells": [
+            "Dee",
+            "Acme portal",
+            "7.5",
+            "Yes",
+            "Login screen, unit tests"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r5",
+          "cells": [
+            "Eli",
+            "Internal — L&D",
+            "2",
+            "No",
+            "Lunch-and-learn session"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r6",
+          "cells": [
+            "Fay",
+            "Acme portal",
+            "8",
+            "Yes",
+            "API docs for client handover"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "On a T&M project, approved billable hours usually drive:",
+          "options": [
+            "The client invoice for the period",
+            "Each person's leave balance",
+            "The project's fixed price"
+          ],
+          "correctIndex": 0,
+          "explanation": "That is why billable flags and descriptions must be right before you approve."
+        }
+      ]
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Flag the people your resource review should follow up: billable below 50%, or total hours over capacity. Then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "keka-psa",
+      "prompt": "Flag people to follow up.",
+      "title": "Utilisation report — September",
+      "columns": [
+        "Employee",
+        "Capacity h",
+        "Billable h",
+        "Non-billable h",
+        "Billable %"
+      ],
+      "rows": [
+        {
+          "id": "u1",
+          "cells": [
+            "Ann",
+            "160",
+            "136",
+            "16",
+            "85%"
+          ],
+          "issue": null
+        },
+        {
+          "id": "u2",
+          "cells": [
+            "Bo",
+            "160",
+            "40",
+            "104",
+            "25%"
+          ],
+          "issue": "Billable well below 50%."
+        },
+        {
+          "id": "u3",
+          "cells": [
+            "Cy",
+            "160",
+            "150",
+            "30",
+            "94%"
+          ],
+          "issue": "180 h logged against 160 h capacity."
+        },
+        {
+          "id": "u4",
+          "cells": [
+            "Dee",
+            "80",
+            "64",
+            "12",
+            "80%"
+          ],
+          "issue": null
+        },
+        {
+          "id": "u5",
+          "cells": [
+            "Eli",
+            "160",
+            "120",
+            "32",
+            "75%"
+          ],
+          "issue": null
+        },
+        {
+          "id": "u6",
+          "cells": [
+            "Fay",
+            "160",
+            "128",
+            "24",
+            "80%"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "How is Billable % calculated in this report?",
+          "options": [
+            "Billable h ÷ capacity h",
+            "Billable h ÷ (billable + non-billable h)",
+            "Non-billable h ÷ capacity h"
+          ],
+          "correctIndex": 0,
+          "explanation": "Ann: 136 ÷ 160 = 85%; the other formula would give 89%."
+        }
+      ]
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Ravi's timesheet has 8 h on Wednesday, a day of approved leave. He says he cancelled the leave and worked.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Before approving you:",
+          "options": [
+            "Ask him to cancel or amend the leave request in the system, then approve",
+            "Approve both: he worked and keeps the leave",
+            "Reject the whole timesheet without comment",
+            "Delete his leave yourself"
+          ],
+          "correctIndex": 0,
+          "explanation": "Leave and timesheet records must agree; the employee fixes their own request."
+        },
+        {
+          "id": "s2",
+          "question": "The leave was already processed for the month. Whose call is it?",
+          "options": [
+            "Whoever owns leave and payroll, following your company's process",
+            "Yours alone as PM",
+            "The client's",
+            "Nobody; leave it"
+          ],
+          "correctIndex": 0,
+          "explanation": "Processed leave is an HR/payroll matter; raise it and follow the process."
+        }
+      ]
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.25,
+    "prompt": "Approved hours for the week. Acme is T&M at $45/h; Beta is fixed price. Work out what to invoice Acme.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Enter whole numbers.",
+      "table": {
+        "columns": [
+          "Employee",
+          "Project",
+          "Billing type",
+          "Approved h"
+        ],
+        "rows": [
+          [
+            "Ann",
+            "Acme portal",
+            "T&M",
+            "38"
+          ],
+          [
+            "Bo",
+            "Acme portal",
+            "T&M",
+            "30"
+          ],
+          [
+            "Bo",
+            "Internal",
+            "Non-billable",
+            "10"
+          ],
+          [
+            "Cy",
+            "Beta app",
+            "Fixed price",
+            "40"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Hours to invoice Acme",
+          "unit": "h",
+          "answer": 68,
+          "tolerance": 0.5,
+          "expression": "T[0][3]+T[1][3]"
+        },
+        {
+          "id": "amount",
+          "label": "Acme invoice",
+          "unit": "$",
+          "answer": 3060,
+          "tolerance": 1,
+          "expression": "(T[0][3]+T[1][3])*45"
+        }
+      ],
+      "explanation": "Only Acme's T&M hours: 38 + 30 = 68 h × $45 = $3,060. Internal and fixed-price hours are not invoiced by the hour."
+    },
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "Who normally approves a team member's project timesheet?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The manager or PM set as approver in the workflow",
+        "The client",
+        "Any colleague",
+        "Nobody; it's automatic"
+      ],
+      "correctIndex": 0,
+      "explanation": "Timesheet tools route each sheet to a configured approver, usually the reporting manager or project manager.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "Which timesheet entry is non-billable?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Internal hiring interviews",
+        "A bug fix for a T&M client",
+        "Feature work on a T&M client's backlog",
+        "A client-requested change on T&M"
+      ],
+      "correctIndex": 0,
+      "explanation": "Internal work isn't charged to any client.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "A timesheet has one wrong row. Best action?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Reject or send back with a comment on what to fix",
+        "Approve and fix it next week",
+        "Edit it yourself without telling them",
+        "Ignore it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sending it back with a clear reason keeps the record accurate and owned by the person who logged it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  },
+  {
+    "id": "pm-keka-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-keka",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.75,
+    "prompt": "Why log hours accurately on a fixed-price project when the client pays a set fee?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Hours show real cost and margin, and improve future estimates",
+        "The client is billed hourly anyway",
+        "It changes the contract price",
+        "It doesn't matter"
+      ],
+      "correctIndex": 0,
+      "explanation": "On fixed price, hours are your cost: they show whether the project is profitable and how good the estimate was.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "keka",
+      "timesheets"
+    ]
+  }
+]

@@ -1,0 +1,527 @@
+[
+  {
+    "id": "pm-client-management-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "On a fixed-price project, the client says on a call: \"Can you just add a wishlist feature? It's small.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you say on the call?",
+          "options": [
+            "\"Sure, we'll squeeze it in.\"",
+            "\"Good idea. Let me check the impact on scope, timeline and cost and come back to you by Thursday.\"",
+            "\"No, that is out of scope.\"",
+            "Say nothing and ask a developer to start it quietly."
+          ],
+          "correctIndex": 1,
+          "explanation": "Acknowledge the idea without committing. Any change on a fixed price needs its impact assessed first."
+        },
+        {
+          "id": "s2",
+          "question": "The team estimates 3 days of work. What next?",
+          "options": [
+            "Absorb it to keep the client happy.",
+            "Add it to the next sprint without telling the client.",
+            "Send a change request with the effort, cost and date impact for the client to approve.",
+            "Refuse it, since the scope is fixed."
+          ],
+          "correctIndex": 2,
+          "explanation": "A change request makes the trade-off visible and lets the client decide. Absorbing it silently trains the client to expect free work."
+        }
+      ]
+    },
+    "tags": [
+      "scope creep",
+      "fixed bid",
+      "change request"
+    ]
+  },
+  {
+    "id": "pm-client-management-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You must tell a client their launch will slip by a week. Put the parts of the message in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Present two recovery options with their trade-offs"
+        },
+        {
+          "id": "r1",
+          "label": "State the issue and its impact on the launch date"
+        },
+        {
+          "id": "r5",
+          "label": "Ask for a decision by a specific date"
+        },
+        {
+          "id": "r2",
+          "label": "Briefly explain the cause, without blame"
+        },
+        {
+          "id": "r4",
+          "label": "Recommend one option"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Lead with the news and impact so nothing is buried, then cause, options, your recommendation and the decision you need."
+    },
+    "tags": [
+      "bad news",
+      "delay"
+    ]
+  },
+  {
+    "id": "pm-client-management-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Your team works 10:00-19:00 IST. A new client in New York (IST is 9.5 hours ahead) wants a daily call at 10:00 New York time, which is 19:30 IST.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you propose?",
+          "options": [
+            "The whole team joins at 19:30 IST every day.",
+            "A short call 2-3 times a week near the edge of both days with you and the lead, plus a written daily update.",
+            "No calls at all; email only.",
+            "Ask the client to join at 09:00 IST."
+          ],
+          "correctIndex": 1,
+          "explanation": "A smaller, less frequent overlap call plus async updates respects both time zones without burning out the team."
+        },
+        {
+          "id": "s2",
+          "question": "The contract has no weekend support. What should be agreed up front for urgent issues?",
+          "options": [
+            "Developers share personal phone numbers with the client.",
+            "Nothing; the client waits until Monday.",
+            "A promise of 24/7 support to keep them happy.",
+            "Severity definitions, an escalation contact for critical issues and a stated response time."
+          ],
+          "correctIndex": 3,
+          "explanation": "Agree what counts as critical and how it is handled before it happens, so expectations are clear across time zones."
+        }
+      ]
+    },
+    "tags": [
+      "time zones",
+      "international clients",
+      "usa"
+    ]
+  },
+  {
+    "id": "pm-client-management-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A PM drafted this reply to a client asking for a new reporting dashboard in the current sprint.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Mark, thanks for the dashboard idea.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Unfortunately that's impossible.",
+          "issue": "A flat no with no reason or alternative closes the conversation."
+        },
+        {
+          "id": "p3",
+          "text": "The current sprint is fully committed to the checkout work you prioritised.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Honestly, we're also too busy with other clients right now.",
+          "issue": "Telling a client other clients come first damages trust and is unprofessional."
+        },
+        {
+          "id": "p5",
+          "text": "We could plan the dashboard for the next sprint, starting 3 June.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "I'll share an estimate by Friday so you can decide.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "saying no",
+      "scope"
+    ]
+  },
+  {
+    "id": "pm-client-management-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write a short reply to the client saying no, kindly.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Reply to the client. Say no, give the reason and offer an alternative.",
+      "context": "Client: \"Can we launch two weeks earlier, on 1 May?\" Testing needs those two weeks. A smaller first release on 1 May is possible.",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "no",
+          "label": "Clear no",
+          "description": "Says plainly the full launch cannot move to 1 May.",
+          "weight": 1
+        },
+        {
+          "id": "why",
+          "label": "Reason",
+          "description": "Gives the reason (testing time) briefly, without jargon.",
+          "weight": 1
+        },
+        {
+          "id": "alt",
+          "label": "Alternative",
+          "description": "Offers the smaller 1 May release as an option.",
+          "weight": 1.5
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "description": "Warm and professional, not defensive.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "We can't launch everything by 1 May; testing needs two weeks. A smaller first release on 1 May works. Interested?",
+      "variant": "email"
+    },
+    "tags": [
+      "saying no",
+      "deadline"
+    ]
+  },
+  {
+    "id": "pm-client-management-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A client emails: \"Third buggy build in a row. I'm losing confidence.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first move?",
+          "options": [
+            "Reply within hours, acknowledge it and offer a call soon.",
+            "Forward it to the developers asking who is responsible.",
+            "Wait until you have every answer before replying.",
+            "Reply listing the client's own late feedback."
+          ],
+          "correctIndex": 0,
+          "explanation": "Fast acknowledgement stops the situation escalating. Defending or going silent makes it worse."
+        },
+        {
+          "id": "s2",
+          "question": "On the call, what do you say?",
+          "options": [
+            "Offer a discount straight away.",
+            "Name the root cause and a concrete fix (regression tests before each build) with a date.",
+            "Promise there will be no more bugs.",
+            "Explain that the timeline was too tight."
+          ],
+          "correctIndex": 1,
+          "explanation": "Specific causes and specific fixes rebuild trust. Promises of zero bugs cannot be kept."
+        },
+        {
+          "id": "s3",
+          "question": "After the call?",
+          "options": [
+            "Nothing more; the call covered it.",
+            "Send a written summary of actions, owners and dates.",
+            "Ask the account manager to take over.",
+            "Wait for the client to raise it again."
+          ],
+          "correctIndex": 1,
+          "explanation": "Written follow-through shows the change is real."
+        }
+      ]
+    },
+    "tags": [
+      "unhappy client",
+      "quality"
+    ]
+  },
+  {
+    "id": "pm-client-management-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A new client has signed. Put the PM's first steps in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Send kickoff notes with the agreed cadence and next steps"
+        },
+        {
+          "id": "r1",
+          "label": "Internal handover from sales: SOW and any promises made"
+        },
+        {
+          "id": "r5",
+          "label": "Start discovery workshops"
+        },
+        {
+          "id": "r3",
+          "label": "Client kickoff: goals, scope, contacts and meeting cadence"
+        },
+        {
+          "id": "r2",
+          "label": "Confirm the internal team and roles"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Know what was sold and who is on the team before facing the client; confirm the kickoff in writing; then begin discovery."
+    },
+    "tags": [
+      "onboarding",
+      "kickoff"
+    ]
+  },
+  {
+    "id": "pm-client-management-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "On a fixed-price project, eight \"quick tweaks\" over two months now add up to 12% of the budget. The client sponsor says they were always implied by the SOW.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you bring to the conversation with the sponsor?",
+          "options": [
+            "A complaint about their team's behaviour.",
+            "A log of each request: date, requester, effort, and the SOW wording it falls outside.",
+            "Nothing; absorb the cost.",
+            "A notice that work stops until they pay."
+          ],
+          "correctIndex": 1,
+          "explanation": "Facts, not feelings: a dated log tied to the SOW turns an argument into a review."
+        },
+        {
+          "id": "s2",
+          "question": "The sponsor makes a fair case that two tweaks were ambiguous in the SOW. What do you do?",
+          "options": [
+            "Concede all eight to protect the relationship.",
+            "Refuse all eight; the log is clear.",
+            "Hand it to legal.",
+            "Accept the two ambiguous ones, raise a change request for the rest, and agree a change process from now on."
+          ],
+          "correctIndex": 3,
+          "explanation": "Conceding genuine ambiguity is fair and builds goodwill; the process change stops the leak."
+        }
+      ]
+    },
+    "tags": [
+      "scope creep",
+      "fixed bid",
+      "sponsor"
+    ]
+  },
+  {
+    "id": "pm-client-management-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "On a call, a client asks for a feature you are not sure is in scope. What is the best first response?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Agree so the call stays positive",
+        "Say you'll check it against the scope and reply by a set date",
+        "Tell them it is definitely out of scope",
+        "Ask them to email the developers directly"
+      ],
+      "correctIndex": 1,
+      "explanation": "Never commit or refuse on the spot without checking. Promise a specific follow-up and keep it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "scope"
+    ]
+  },
+  {
+    "id": "pm-client-management-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You learn on Monday that a milestone due in three weeks will probably slip. When should you tell the client?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Now, with the impact and your recovery plan",
+        "In the week it is due, in case the team catches up",
+        "After the milestone date has passed",
+        "Only if the client asks"
+      ],
+      "correctIndex": 0,
+      "explanation": "Early bad news gives the client time to adjust; late bad news looks like hiding it. Bring a plan with it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "bad news"
+    ]
+  },
+  {
+    "id": "pm-client-management-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your team works 10:00-19:00 IST. Your London client works 09:00-17:30 UK time, and IST is 4.5 hours ahead. Which UK-time window overlaps?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "09:00-14:30 UK time",
+        "10:00-19:00 UK time",
+        "13:30-17:30 UK time",
+        "There is no overlap"
+      ],
+      "correctIndex": 0,
+      "explanation": "10:00-19:00 IST is 05:30-14:30 UK time. The client starts at 09:00, so the overlap is 09:00-14:30 UK time.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "time zones",
+      "international clients",
+      "uk"
+    ]
+  },
+  {
+    "id": "pm-client-management-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The client's day-to-day contact keeps approving extra work by chat, but the sponsor holds the budget. What is the main risk?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The chat history may be lost",
+        "The developers will work too slowly",
+        "The approvals may not be valid, and the sponsor may refuse to pay",
+        "The contact will stop replying"
+      ],
+      "correctIndex": 2,
+      "explanation": "Confirm in writing who can approve scope and budget changes. Approval from someone without authority can leave the work unpaid.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "change request",
+      "sponsor"
+    ]
+  }
+]

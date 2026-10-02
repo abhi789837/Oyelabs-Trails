@@ -1,0 +1,546 @@
+[
+  {
+    "id": "pm-email-etiquette-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Write a polite chaser email to the client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a short, polite chaser. Make the ask and the date clear.",
+      "context": "You asked the client 5 days ago for App Store account access. Without it, submission on Friday 12 July slips.",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "ask",
+          "label": "Clear ask",
+          "description": "Asks for App Store account access in the first sentence or subject.",
+          "weight": 1.5
+        },
+        {
+          "id": "why",
+          "label": "Impact and date",
+          "description": "Says the Friday 12 July submission depends on it.",
+          "weight": 1
+        },
+        {
+          "id": "tone",
+          "label": "Polite tone",
+          "description": "Friendly, no blame or sarcasm.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Subject: App Store access needed\n\nHi Sam, could you share it by Wednesday? We submit on Friday 12 July. Thanks!",
+      "variant": "email"
+    },
+    "tags": [
+      "email",
+      "follow-up",
+      "chaser"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A PM sent this email to the client. Mark the problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Subject: Re: Re: FW: stuff",
+          "issue": "The subject does not say what the email is about or that action is needed."
+        },
+        {
+          "id": "p2",
+          "text": "Hi all,",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Login, profile and search are done; notifications start Monday.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "QA found two minor bugs; both are fixed on staging.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "By the way, we need design approval by tomorrow or the launch slips.",
+          "issue": "The urgent ask is buried at the end as an aside."
+        },
+        {
+          "id": "p6",
+          "text": "PLEASE DO NOT IGNORE THIS AGAIN!!!",
+          "issue": "Shouting in capitals is aggressive and unprofessional."
+        },
+        {
+          "id": "p7",
+          "text": "Thanks, Anna",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "email",
+      "tone",
+      "buried ask"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write the weekly status email to the client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a brief status email: overall status, progress, and the one thing you need.",
+      "context": "Status Green. Done: login and profile. Next: payments. Need: payment provider keys by Tuesday.",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "status",
+          "label": "Status first",
+          "description": "States overall status (Green) up front.",
+          "weight": 1
+        },
+        {
+          "id": "progress",
+          "label": "Progress",
+          "description": "Mentions done and next accurately.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Clear ask",
+          "description": "Asks for payment keys by Tuesday.",
+          "weight": 1.5
+        },
+        {
+          "id": "concise",
+          "label": "Concise",
+          "description": "Short and scannable.",
+          "weight": 0.5
+        }
+      ],
+      "sampleAnswer": "Subject: Status: Green\n\nHi Sam, login and profile are done; payments next. Please send the payment keys by Tuesday.",
+      "variant": "email"
+    },
+    "tags": [
+      "email",
+      "status email"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Decide who goes in To, CC or BCC.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "You email a release note to 15 beta testers from different companies. How do you address it?",
+          "options": [
+            "All of them in To.",
+            "All of them in CC.",
+            "Yourself in To and the testers in BCC.",
+            "Send one email to the first tester and ask them to forward it."
+          ],
+          "correctIndex": 2,
+          "explanation": "BCC protects external people's addresses from each other."
+        },
+        {
+          "id": "s2",
+          "question": "A client is escalating and you want your manager aware. What do you do?",
+          "options": [
+            "BCC your manager without saying so.",
+            "CC your manager openly and mention it in the email.",
+            "Forward the thread later without telling the client.",
+            "Leave your manager out."
+          ],
+          "correctIndex": 1,
+          "explanation": "An open CC is transparent; a hidden BCC in an escalation can backfire if your manager replies."
+        },
+        {
+          "id": "s3",
+          "question": "The client replies-all to 30 people criticising one of your developers. How do you respond?",
+          "options": [
+            "Reply-all defending the developer.",
+            "Reply only to the client, acknowledge it and offer a call.",
+            "Ignore it.",
+            "Forward it to the developer."
+          ],
+          "correctIndex": 1,
+          "explanation": "Take sensitive matters out of the large thread. Never argue in reply-all."
+        }
+      ]
+    },
+    "tags": [
+      "email",
+      "cc bcc",
+      "reply all"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the parts of an email whose main job is to get a decision.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Options, with your recommendation"
+        },
+        {
+          "id": "r2",
+          "label": "The ask in the first sentence"
+        },
+        {
+          "id": "r5",
+          "label": "Sign-off with the deadline restated"
+        },
+        {
+          "id": "r1",
+          "label": "Subject line that states the decision needed and the date"
+        },
+        {
+          "id": "r3",
+          "label": "Short context: why it matters"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Readers skim. Put the ask in the subject and first line; context and options support it."
+    },
+    "tags": [
+      "email",
+      "structure"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Write an email declining extra scope.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Decline the request politely and offer a way forward.",
+      "context": "Client: \"Please add a referral programme before launch.\" Launch scope is fixed. It could be estimated as a change request for phase 2.",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "decline",
+          "label": "Clear decline",
+          "description": "Says it cannot go into the launch scope.",
+          "weight": 1
+        },
+        {
+          "id": "reason",
+          "label": "Reason",
+          "description": "Explains briefly: the launch scope and date are fixed.",
+          "weight": 1
+        },
+        {
+          "id": "path",
+          "label": "Way forward",
+          "description": "Offers a phase 2 change request with an estimate.",
+          "weight": 1.5
+        },
+        {
+          "id": "tone",
+          "label": "Tone",
+          "description": "Positive, not defensive.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Lena, great idea. To protect launch we can't add it now, but I can estimate it for phase 2. Shall I?",
+      "variant": "email"
+    },
+    "tags": [
+      "email",
+      "saying no",
+      "scope"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Your client reads English as a second language. Mark the lines that could be misread.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Kenji, thanks for your feedback on the designs.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Let's touch base and circle back on the ballpark.",
+          "issue": "Idioms are hard for non-native readers; say plainly what you mean."
+        },
+        {
+          "id": "p3",
+          "text": "We will send the updated designs on 05/06.",
+          "issue": "05/06 means 5 June or 6 May depending on the country; write the month as a word."
+        },
+        {
+          "id": "p4",
+          "text": "Please review them and reply with any changes.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Our call is at 5.",
+          "issue": "No time zone or am/pm; give the time in both time zones."
+        },
+        {
+          "id": "p6",
+          "text": "Thank you for your help.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "email",
+      "international clients",
+      "non-native readers"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Write a delay escalation email to the client sponsor.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Escalate to the sponsor: state the problem, its impact and the decision you need.",
+      "context": "Their payment vendor's API is 2 weeks late. Launch on 1 March is at risk. Options: delay launch or launch without card payments.",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "impact",
+          "label": "Problem and impact",
+          "description": "States the vendor delay and the risk to 1 March.",
+          "weight": 1
+        },
+        {
+          "id": "options",
+          "label": "Options",
+          "description": "Gives both options clearly.",
+          "weight": 1
+        },
+        {
+          "id": "decision",
+          "label": "Decision and date",
+          "description": "Asks for a decision with a deadline.",
+          "weight": 1.5
+        },
+        {
+          "id": "tone",
+          "label": "Calm, no blame",
+          "description": "Factual, no blaming the vendor or client.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Subject: Decision needed by Friday\n\nThe payment API is 2 weeks late. Delay the 1 March launch, or launch without card payments?",
+      "variant": "email"
+    },
+    "tags": [
+      "email",
+      "escalation",
+      "delay"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which subject line is best for an email asking a client to approve designs?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Designs",
+        "Action needed: approve home screen designs by Thu 6 June",
+        "Hi!",
+        "Re: Re: Re: update"
+      ],
+      "correctIndex": 1,
+      "explanation": "A good subject says the action and the deadline, so the email is found and acted on.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "email",
+      "subject line"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "When is BCC the right choice?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To secretly copy your manager on an argument",
+        "To email many external people who should not see each other's addresses",
+        "To make sure the client replies faster",
+        "Whenever you email a client"
+      ],
+      "correctIndex": 1,
+      "explanation": "BCC is for privacy in group emails, not for hidden observers in a conversation.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "email",
+      "cc bcc"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client asks a question you cannot answer until the developers check. What do you send today?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Nothing until you have the full answer",
+        "A guess so they are not kept waiting",
+        "A short reply: you're checking and will answer by a set time",
+        "The question forwarded to the developers, CCing the client"
+      ],
+      "correctIndex": 2,
+      "explanation": "Acknowledge fast and set a time for the real answer. Silence or guesses both damage trust.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "email",
+      "response time"
+    ]
+  },
+  {
+    "id": "pm-email-etiquette-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-email-etiquette",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "At 23:00 a client sends an angry email blaming your team. What is best?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Reply immediately while you're still annoyed",
+        "Acknowledge briefly next morning and offer a call to resolve it",
+        "Reply-all and defend the team point by point",
+        "Ignore it until they calm down"
+      ],
+      "correctIndex": 1,
+      "explanation": "Respond promptly but calmly. Move heated issues to a call rather than a long email exchange.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "email",
+      "tone",
+      "unhappy client"
+    ]
+  }
+]

@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  ClipboardList,
   Building2,
   Cpu,
   Gauge,
@@ -78,6 +79,7 @@ const groups: SectionGroup[] = [
       { to: "/admin/curriculum", end: false, label: "Curriculum", icon: Library },
       { to: "/admin/question-bank", end: false, label: "Question bank", icon: ListChecks },
       { to: "/admin/courses", end: false, label: "Courses", icon: BookOpen },
+      { to: "/admin/sop", end: false, label: "Company SOPs", icon: ClipboardList },
       { to: "/admin/generated", end: false, label: "Generated", icon: Sparkles },
     ],
   },

@@ -131,6 +131,29 @@ function hintFor(task: Task, value: TaskResponse | null): string[] {
     }
     case "spot":
       return gradeTask(task, value).detail;
+    case "excel": {
+      // The full lines name the expected values, so before the reveal only the count.
+      const detail = gradeTask(task, value).detail;
+      return [`${detail.filter((d) => d.endsWith("correct")).length} of ${task.checks.length} checked cells right`];
+    }
+    case "allocate":
+      // Totals against capacity and need: nothing the grid does not already show.
+      return gradeTask(task, value).detail;
+    case "sim": {
+      const sim = value as Extract<TaskResponse, { kind: "sim" }>;
+      const lines: string[] = [];
+      const issues = task.rows.filter((r) => r.issue);
+      if (issues.length) {
+        const found = issues.filter((r) => sim.flagged.includes(r.id)).length;
+        const wrong = sim.flagged.filter((id) => !issues.some((r) => r.id === id)).length;
+        lines.push(`${found} of ${issues.length} problem rows flagged${wrong ? `, ${wrong} flagged that ${wrong === 1 ? "was" : "were"} fine` : ""}`);
+      }
+      if (task.questions.length) {
+        const right = task.questions.filter((q) => sim.answers[q.id] === q.correctIndex).length;
+        lines.push(`${right} of ${task.questions.length} questions right`);
+      }
+      return lines;
+    }
     default:
       return [];
   }

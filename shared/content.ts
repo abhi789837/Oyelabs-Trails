@@ -28,6 +28,7 @@ export const topicResourceSchema = z.object({
   label: z.string(),
   url: z.string(),
   kind: resourceKindSchema,
+  verifiedAt: z.string().optional(),
 });
 export type TopicResourceValue = z.infer<typeof topicResourceSchema>;
 
@@ -139,6 +140,8 @@ export interface ServedTopic {
    * whole, answers included — the learner sees them after checking, as with any worked exercise.
    */
   practice?: Task;
+  /** v4.1: how many Oyelabs SOP blocks the topic has; their text comes from /api/content/topics/:id/sop. */
+  sopCount?: number;
 }
 
 export interface ServedModule {

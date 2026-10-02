@@ -1,0 +1,4293 @@
+{
+  "pma-daily-pm-work": {
+    "title": "Diagnostic refresh: daily PM work",
+    "topics": {
+      "pma-planning-the-week": {
+        "title": "Planning a week as a PM",
+        "refs": [
+          {
+            "label": "Atlassian: How to Do Project Planning?",
+            "url": "https://www.atlassian.com/work-management/project-management/project-planning",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "TeamGantt: How to Become a Successful Project Manager",
+            "url": "https://www.teamgantt.com/project-management-guide/tips-skills-for-successful-project-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:33Z"
+          },
+          {
+            "label": "PMI: What Is Project Management",
+            "url": "https://www.pmi.org/about/what-is-project-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:55Z"
+          },
+          {
+            "label": "Asana: Time Blocking: Complete Guide for Focused Work & Rest",
+            "url": "https://asana.com/resources/what-is-time-blocking",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:50Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Stay Organized as a Project Manager | Explained in 6 Minutes",
+            "channel": "Max Mao",
+            "url": "https://www.youtube.com/watch?v=DW1jyQr3s28",
+            "videoId": "DW1jyQr3s28",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "How to Plan your Week as a Project Manager ! Productivity Planning",
+            "channel": "Productivity and Task Management Channel",
+            "url": "https://www.youtube.com/watch?v=rba4MmHO6LU",
+            "videoId": "rba4MmHO6LU",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-tracking-progress": {
+        "title": "Tracking progress and status",
+        "refs": [
+          {
+            "label": "Asana: Status Report Template for Projects: Tips & Examples",
+            "url": "https://asana.com/templates/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:32Z"
+          },
+          {
+            "label": "ProjectManager: RAG Status in Project Management: Importance & Benefits",
+            "url": "https://www.projectmanager.com/blog/rag-status",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:56Z"
+          },
+          {
+            "label": "TeamGantt: Project Management Reporting Types & Tips",
+            "url": "https://www.teamgantt.com/blog/project-management-reporting-types-and-tips",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:45Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Team Health Monitors for Building High-Performing Teams",
+            "url": "https://www.atlassian.com/team-playbook/health-monitor",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Secrets to Better Status Reports - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=N2kK8ubUY8c",
+            "videoId": "N2kK8ubUY8c",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Project Status Report Must-Haves - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=5mvXSAJgqec",
+            "videoId": "5mvXSAJgqec",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-follow-ups-ownership": {
+        "title": "Follow-ups, ownership and accountability",
+        "refs": [
+          {
+            "label": "Atlassian: RACI Chart: What is it & How to Use",
+            "url": "https://www.atlassian.com/work-management/project-management/raci-chart",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: How to Define Team Roles and Responsibilities",
+            "url": "https://www.atlassian.com/team-playbook/plays/roles-and-responsibilities",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: DACI: A Decision-Making Framework",
+            "url": "https://www.atlassian.com/team-playbook/plays/daci",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          },
+          {
+            "label": "Asana: RACI Charts: The Ultimate Guide, with Examples",
+            "url": "https://asana.com/resources/raci-chart",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:58Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a RACI Chart? Clarify Project Roles with This Simple Tool",
+            "channel": "PM Aspirant",
+            "url": "https://www.youtube.com/watch?v=x8EY1Nol06o",
+            "videoId": "x8EY1Nol06o",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-client-management": {
+    "title": "Client management",
+    "topics": {
+      "pma-client-onboarding-kickoff": {
+        "title": "Client onboarding and kickoff",
+        "refs": [
+          {
+            "label": "The Digital Project Manager: Project Kickoff Guide: 15 Steps For Success In 2026",
+            "url": "https://thedigitalprojectmanager.com/project-management/project-kickoff-guide/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:46Z"
+          },
+          {
+            "label": "The Digital Project Manager: How To Run Project Kickoff Meetings: The Ultimate Guide",
+            "url": "https://thedigitalprojectmanager.com/project-management/how-to-run-a-great-project-kick-off-meeting/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:15Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Planning Project Kickoff Meetings: Steps & Example Agenda",
+            "url": "https://www.atlassian.com/team-playbook/plays/project-kickoff",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          },
+          {
+            "label": "ProjectManager: Project Kickoff Meeting: How to Write a Project Kickoff Agenda",
+            "url": "https://www.projectmanager.com/blog/write-project-kickoff-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:38Z"
+          },
+          {
+            "label": "Asana: Project Kickoff Meeting: 10-Step Guide for Success",
+            "url": "https://asana.com/resources/project-kickoff-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:04Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Kickoff Best Practices | How to Run a Client Kickoff Meeting Successfully",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=4ESb9qoXVyo",
+            "videoId": "4ESb9qoXVyo",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Project Kickoff Meetings | 5-Minute Guide",
+            "channel": "TeamGantt",
+            "url": "https://www.youtube.com/watch?v=Bu84BEkN2e4",
+            "videoId": "Bu84BEkN2e4",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-expectations-scope-change-requests": {
+        "title": "Expectations, scope and change requests",
+        "refs": [
+          {
+            "label": "TeamGantt: What Is Scope Creep and How to Avoid It",
+            "url": "https://www.teamgantt.com/project-management-guide/taming-scope-creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "ProjectManager: Change Request Form (Free Word Template)",
+            "url": "https://www.projectmanager.com/templates/change-request-form",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:39:03Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Project Poster Template to Guide Your Work",
+            "url": "https://www.atlassian.com/team-playbook/plays/project-poster",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:21Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Control Change Requests on Projects - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=WWdgFFVkPgA",
+            "videoId": "WWdgFFVkPgA",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Managing Change: How To Manage Project Scope Change",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=tMR7jVefRIQ",
+            "videoId": "tMR7jVefRIQ",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          },
+          {
+            "title": "Controlling Project Scope: Top 5 Project Scope Control Tips",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=D7Jx1ob1sPg",
+            "videoId": "D7Jx1ob1sPg",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-saying-no-not-now": {
+        "title": "Saying no or not now",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Project Trade-Off Analysis",
+            "url": "https://www.atlassian.com/team-playbook/plays/trade-offs",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:28Z"
+          },
+          {
+            "label": "Harvard Business Review: How to Say No to Taking on More Work",
+            "url": "https://hbr.org/2015/12/how-to-say-no-to-taking-on-more-work",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          },
+          {
+            "label": "ProjectManager: What Is Stakeholder Management?",
+            "url": "https://www.projectmanager.com/guides/stakeholder-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:55Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "When to Push Back with Project Stakeholders - Leadership Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=FEUTaNgqvgk",
+            "videoId": "FEUTaNgqvgk",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to Say No to Bad Clients",
+            "channel": "Michael Janda",
+            "url": "https://www.youtube.com/watch?v=n_M3AVPuf1c",
+            "videoId": "n_M3AVPuf1c",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-escalations-unhappy-clients": {
+        "title": "Escalations and unhappy clients",
+        "refs": [
+          {
+            "label": "Atlassian: Escalation Policies for Incidents: Types & Tips",
+            "url": "https://www.atlassian.com/incident-management/on-call/escalation-policies",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Stakeholder Project Communication: Atlassian Plays",
+            "url": "https://www.atlassian.com/team-playbook/plays/stakeholder-communications-plan",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:59Z"
+          },
+          {
+            "label": "ProjectManager: What Is Stakeholder Management?",
+            "url": "https://www.projectmanager.com/guides/stakeholder-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:55Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "8 Steps To Manage Client Escalations Like a PRO",
+            "channel": "VenuMuvvala",
+            "url": "https://www.youtube.com/watch?v=fTGJMYcLVR0",
+            "videoId": "fTGJMYcLVR0",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "How to Manage Difficult Clients as a Project Manager (Without Losing Your Cool)",
+            "channel": "Haile Solutions",
+            "url": "https://www.youtube.com/watch?v=PRpR-2x9mN4",
+            "videoId": "PRpR-2x9mN4",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How to Manage Difficult Stakeholders [6 COMMON CHALLENGES]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=NaGhBpfZLzg",
+            "videoId": "NaGhBpfZLzg",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-bad-news-early": {
+        "title": "Delivering bad news early",
+        "refs": [
+          {
+            "label": "ProjectManager: 10 Free Communication Plan Templates for Word and Excel",
+            "url": "https://www.projectmanager.com/blog/communication-plan-templates",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:55Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Stakeholder Project Communication: Atlassian Plays",
+            "url": "https://www.atlassian.com/team-playbook/plays/stakeholder-communications-plan",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:59Z"
+          },
+          {
+            "label": "Atlassian: Incident Communication Best Practices & Channels",
+            "url": "https://www.atlassian.com/incident-management/incident-communication",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:19Z"
+          },
+          {
+            "label": "Atlassian: Project Status Report: Tips and Templates for Success",
+            "url": "https://www.atlassian.com/agile/project-management/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Deliver Bad News About a Project",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=WnUD1-k3B-o",
+            "videoId": "WnUD1-k3B-o",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Breaking Bad News to Project Stakeholders | Coffee with Brett",
+            "channel": "TeamGantt",
+            "url": "https://www.youtube.com/watch?v=PdUKlnVTauE",
+            "videoId": "PdUKlnVTauE",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-time-zones-cultures": {
+        "title": "Time zones and cultures",
+        "refs": [
+          {
+            "label": "Asana: Why Managers Need Cultural Intelligence",
+            "url": "https://asana.com/resources/cultural-intelligence",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:49Z"
+          },
+          {
+            "label": "Asana: Synchronous vs Asynchronous Communication",
+            "url": "https://asana.com/resources/synchronous-vs-asynchronous-communication",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:06Z"
+          },
+          {
+            "label": "Harvard Business Review: Navigating the Cultural Minefield",
+            "url": "https://hbr.org/2014/05/navigating-the-cultural-minefield",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          },
+          {
+            "label": "Asana: 7 Tips To Help Manage Your Distributed Team",
+            "url": "https://asana.com/resources/managing-distributed-teams",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:44Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "4 Rules to Manage Remote Teams in Different Time Zones [GIVEAWAY FINISHED]",
+            "channel": "ScrumMastered",
+            "url": "https://www.youtube.com/watch?v=Yr1pOCvcfW4",
+            "videoId": "Yr1pOCvcfW4",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Managing Cross Cultural Remote Teams | Ricardo Fernandez | TEDxIESEBarcelona",
+            "channel": "TEDx Talks",
+            "url": "https://www.youtube.com/watch?v=QIoAkFpN8wQ",
+            "videoId": "QIoAkFpN8wQ",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Effective Cross-Cultural Communication in Business",
+            "channel": "GetSmarter",
+            "url": "https://www.youtube.com/watch?v=Ty76zN3VIKM",
+            "videoId": "Ty76zN3VIKM",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-trust-long-term-relationships": {
+        "title": "Trust and long-term client relationships",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Stakeholder Project Communication: Atlassian Plays",
+            "url": "https://www.atlassian.com/team-playbook/plays/stakeholder-communications-plan",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:59Z"
+          },
+          {
+            "label": "ProjectManager: What Is Stakeholder Management?",
+            "url": "https://www.projectmanager.com/guides/stakeholder-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:55Z"
+          },
+          {
+            "label": "The Digital Project Manager: Project Kickoff Guide: 15 Steps For Success In 2026",
+            "url": "https://thedigitalprojectmanager.com/project-management/project-kickoff-guide/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:46Z"
+          },
+          {
+            "label": "Asana: Project Stakeholder: Definition, Analysis & Mapping",
+            "url": "https://asana.com/resources/project-stakeholder",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:41Z"
+          },
+          {
+            "label": "Asana: Effective communication workplace: 12 tips & styles",
+            "url": "https://asana.com/resources/effective-communication-workplace",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:08:00Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Project Stakeholder Management Plan: Managing Expectations!",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=0EkufUCo5qI",
+            "videoId": "0EkufUCo5qI",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Get Project Stakeholders on Your Side - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=RS4djBoGSRA",
+            "videoId": "RS4djBoGSRA",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Improving Your Communication With Clients - Robyn Birkedal",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=KA-7T8zCDt4",
+            "videoId": "KA-7T8zCDt4",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-satisfaction-check-ins": {
+        "title": "Client satisfaction check-ins",
+        "refs": [
+          {
+            "label": "Qualtrics: Net Promoter Score (NPS): The Ultimate Guide",
+            "url": "https://www.qualtrics.com/articles/customer-experience/net-promoter-score/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Sprint Retrospective: How to Hold an Effective Meeting",
+            "url": "https://www.atlassian.com/team-playbook/plays/retrospective",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          },
+          {
+            "label": "Microsoft Support: Microsoft Forms help & learning",
+            "url": "https://support.microsoft.com/en-us/forms/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Customer Satisfaction Survey: Proven Tips for HONEST Answers",
+            "channel": "HubSpot Marketing",
+            "url": "https://www.youtube.com/watch?v=Oivm_UFVj08",
+            "videoId": "Oivm_UFVj08",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to Measure Customer Satisfaction like a Pro?",
+            "channel": "SurveySparrow",
+            "url": "https://www.youtube.com/watch?v=WSJzNtdMqkk",
+            "videoId": "WSJzNtdMqkk",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-handover-to-support": {
+        "title": "Handover to support and maintenance",
+        "refs": [
+          {
+            "label": "ProjectManager: 7 Steps to Project Closure (Checklist Included)",
+            "url": "https://www.projectmanager.com/blog/project-closure",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:35Z"
+          },
+          {
+            "label": "Atlassian: What Is an SLA? Service Level Agreements Explained",
+            "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:35Z"
+          },
+          {
+            "label": "Atlassian: The Atlassian Incident Management Handbook",
+            "url": "https://www.atlassian.com/incident-management/handbook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "Atlassian: Knowledge Base Guide: Examples, Templates & Best Practices",
+            "url": "https://www.atlassian.com/itsm/knowledge-management/what-is-a-knowledge-base",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Closing the Project [5 STEPS TO PROJECT CLOSURE]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=Fl5BVFzigt8",
+            "videoId": "Fl5BVFzigt8",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Project Handover Process: 5 Simple Steps to a Successful Project Handover",
+            "channel": "ProjectSkillsMentor",
+            "url": "https://www.youtube.com/watch?v=dOXcbx0qmIk",
+            "videoId": "dOXcbx0qmIk",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-client-meetings-presenting": {
+    "title": "Client update meetings and presenting",
+    "topics": {
+      "pma-meeting-agenda": {
+        "title": "Agenda for a client update",
+        "refs": [
+          {
+            "label": "Asana: Meeting Agenda Templates & Examples for Better Meetings",
+            "url": "https://asana.com/resources/meeting-agenda",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:34Z"
+          },
+          {
+            "label": "Asana: How Project Status Reports Work: 8 Steps + Template",
+            "url": "https://asana.com/resources/how-project-status-reports",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:41Z"
+          },
+          {
+            "label": "Microsoft Support: Schedule a meeting in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/schedule-a-meeting-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Asana: Want Fewer, Better Meetings? Try Meeting Management",
+            "url": "https://asana.com/resources/meeting-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:52Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Run Project Status Meetings",
+            "channel": "American Management Association",
+            "url": "https://www.youtube.com/watch?v=iIss0K-W9UQ",
+            "videoId": "iIss0K-W9UQ",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "How to Lead a Meeting as a Project Manager | Explained in 8 Minutes",
+            "channel": "Max Mao",
+            "url": "https://www.youtube.com/watch?v=XsDSoWKroTk",
+            "videoId": "XsDSoWKroTk",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      },
+      "pma-rag-status": {
+        "title": "RAG status",
+        "refs": [
+          {
+            "label": "ProjectManager: RAG Status in Project Management: Importance & Benefits",
+            "url": "https://www.projectmanager.com/blog/rag-status",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:56Z"
+          },
+          {
+            "label": "Atlassian: Project Status Report: Tips and Templates for Success",
+            "url": "https://www.atlassian.com/agile/project-management/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          },
+          {
+            "label": "TeamGantt: How to Write a Weekly Project Status Report [Template]",
+            "url": "https://www.teamgantt.com/project-status-report-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:39:02Z"
+          },
+          {
+            "label": "Microsoft Support: Use conditional formatting to highlight information in Excel",
+            "url": "https://support.microsoft.com/en-us/excel/use-conditional-formatting-to-highlight-information-in-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a RAG Report? ...or a Traffic Light Report?",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=xadyhn3GjJc",
+            "videoId": "xadyhn3GjJc",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Project Status Reports: Everything you need to know and more!",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=U1oSjjNervA",
+            "videoId": "U1oSjjNervA",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-done-next-risks-decisions": {
+        "title": "Done / next / risks / decisions format",
+        "refs": [
+          {
+            "label": "Asana: How Project Status Reports Work: 8 Steps + Template",
+            "url": "https://asana.com/resources/how-project-status-reports",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:41Z"
+          },
+          {
+            "label": "Atlassian: Project Status Report: Tips and Templates for Success",
+            "url": "https://www.atlassian.com/agile/project-management/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          },
+          {
+            "label": "ProjectManager: Project Status Reports (Example & Template Included)",
+            "url": "https://www.projectmanager.com/guides/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:48Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: DACI: A Decision-Making Framework",
+            "url": "https://www.atlassian.com/team-playbook/plays/daci",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Write a Status Report - PPP methodology (Plans, Progress, Problems) with Weekdone",
+            "channel": "Weekdone",
+            "url": "https://www.youtube.com/watch?v=a77p1Dx0JHQ",
+            "videoId": "a77p1Dx0JHQ",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "Project Management Status Reports [WHAT TO INCLUDE]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=8C1PBSs_cMI",
+            "videoId": "8C1PBSs_cMI",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-demo-prep-flow": {
+        "title": "Demo preparation and flow",
+        "refs": [
+          {
+            "label": "Scrum Guides: Scrum Guide",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "Atlassian: What is a Sprint Review in Agile?",
+            "url": "https://www.atlassian.com/agile/scrum/sprint-reviews",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:25Z"
+          },
+          {
+            "label": "Mountain Goat Software: Sprint Review Meeting in Scrum",
+            "url": "https://www.mountaingoatsoftware.com/agile/scrum/meetings/sprint-review",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Facilitate the Sprint Review",
+            "channel": "Scrum.org",
+            "url": "https://www.youtube.com/watch?v=Fbp9eLbcf7A",
+            "videoId": "Fbp9eLbcf7A",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Sprint Review Agenda: How to Make the Most of Your Time",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=5cj0zeuCrR8",
+            "videoId": "5cj0zeuCrR8",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Sprint Review: More Than Just a Demo",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=9WzoYrtXR-A",
+            "videoId": "9WzoYrtXR-A",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-presenting-progress": {
+        "title": "Presenting progress: slides or live demo",
+        "refs": [
+          {
+            "label": "Microsoft Support: Present content in Microsoft Teams meetings",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/present-content-in-microsoft-teams-meetings",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          },
+          {
+            "label": "Atlassian: Project Status Report: Tips and Templates for Success",
+            "url": "https://www.atlassian.com/agile/project-management/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          },
+          {
+            "label": "TeamGantt: How to Write a Weekly Project Status Report [Template]",
+            "url": "https://www.teamgantt.com/project-status-report-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:39:02Z"
+          },
+          {
+            "label": "Microsoft Support: PowerPoint for Windows training",
+            "url": "https://support.microsoft.com/en-us/powerpoint/powerpoint-for-windows-training",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Project Status Reports: Everything you need to know and more!",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=U1oSjjNervA",
+            "videoId": "U1oSjjNervA",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "How To Create Executive Status Reports",
+            "channel": "Your Project Leadership Coach",
+            "url": "https://www.youtube.com/watch?v=MJyYxuKtUaQ",
+            "videoId": "MJyYxuKtUaQ",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-tough-questions": {
+        "title": "Handling tough questions",
+        "refs": [
+          {
+            "label": "Asana: Effective communication workplace: 12 tips & styles",
+            "url": "https://asana.com/resources/effective-communication-workplace",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:08:00Z"
+          },
+          {
+            "label": "Asana: Project Stakeholder: Definition, Analysis & Mapping",
+            "url": "https://asana.com/resources/project-stakeholder",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:41Z"
+          },
+          {
+            "label": "ProjectManager: What Is Stakeholder Management?",
+            "url": "https://www.projectmanager.com/guides/stakeholder-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:55Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Stakeholder Project Communication: Atlassian Plays",
+            "url": "https://www.atlassian.com/team-playbook/plays/stakeholder-communications-plan",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:59Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Answering Tough Questions",
+            "channel": "Stanford Graduate School of Business",
+            "url": "https://www.youtube.com/watch?v=hSeAGSPDG4w",
+            "videoId": "hSeAGSPDG4w",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "From Fear to Fabulous: Expert Tips for Answering Difficult Questions During a Presentation",
+            "channel": "Carl Kwan",
+            "url": "https://www.youtube.com/watch?v=cQMO3Z7lWPA",
+            "videoId": "cQMO3Z7lWPA",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      },
+      "pma-timeboxing-decisions-actions": {
+        "title": "Timeboxing, decisions and action items",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: DACI: A Decision-Making Framework",
+            "url": "https://www.atlassian.com/team-playbook/plays/daci",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          },
+          {
+            "label": "Asana: Action Items: Definition, How to Write, and Examples",
+            "url": "https://asana.com/resources/action-items",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:38Z"
+          },
+          {
+            "label": "Scrum Guides: Scrum Guide",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "Asana: Free Meeting Minutes Template (Examples + Tips)",
+            "url": "https://asana.com/templates/meeting-minutes",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:03Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "A Simple Way to Track Action Items in a Meeting",
+            "channel": "North Star Facilitators",
+            "url": "https://www.youtube.com/watch?v=mmTZbH-zWkM",
+            "videoId": "mmTZbH-zWkM",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to write meeting minutes LIKE A PRO [With meeting minutes example!]",
+            "channel": "Emelie Lindström - Productivity & Work Skills",
+            "url": "https://www.youtube.com/watch?v=cST_Q5VpLRw",
+            "videoId": "cST_Q5VpLRw",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-mom-follow-up-24h": {
+        "title": "Minutes of meeting and follow-up within 24h",
+        "refs": [
+          {
+            "label": "Asana: Free Meeting Minutes Template (Examples + Tips)",
+            "url": "https://asana.com/templates/meeting-minutes",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:03Z"
+          },
+          {
+            "label": "ProjectManager: Meeting Minutes Template",
+            "url": "https://www.projectmanager.com/templates/meeting-minutes-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:50Z"
+          },
+          {
+            "label": "Asana: Meeting Notes Tips: How to Take Notes & Track Actions",
+            "url": "https://asana.com/resources/meeting-notes-tips",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:59Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to write meeting minutes LIKE A PRO [With meeting minutes example!]",
+            "channel": "Emelie Lindström - Productivity & Work Skills",
+            "url": "https://www.youtube.com/watch?v=cST_Q5VpLRw",
+            "videoId": "cST_Q5VpLRw",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Minutes of Meeting | How  to write Meeting Minutes | Format | Example | Exercise",
+            "channel": "Nihir Shah",
+            "url": "https://www.youtube.com/watch?v=NHsTLSN6ozo",
+            "videoId": "NHsTLSN6ozo",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How To Write a Follow Up Email After a Meeting | Mindmaven",
+            "channel": "Mindmaven",
+            "url": "https://www.youtube.com/watch?v=s7FK_iCrL1U",
+            "videoId": "s7FK_iCrL1U",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-client-meetings-in-teams": {
+        "title": "Running client meetings in Teams",
+        "refs": [
+          {
+            "label": "Microsoft Support: Schedule a meeting in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/schedule-a-meeting-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Microsoft Support: Present content in Microsoft Teams meetings",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/present-content-in-microsoft-teams-meetings",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          },
+          {
+            "label": "Microsoft Support: Start, stop, and find meeting recordings in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/start-stop-and-find-meeting-recordings-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:41:14Z"
+          },
+          {
+            "label": "Microsoft Support: Start, stop, and download live transcripts in Microsoft Teams meetings",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/start-stop-and-download-live-transcripts-in-microsoft-teams-meetings",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          },
+          {
+            "label": "Microsoft Support: Join a meeting without an account in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/join-a-meeting-without-an-account-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:19Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Use Microsoft Teams (Full Tutorial)",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=vaeFzrIc9HU",
+            "videoId": "vaeFzrIc9HU",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Automate Note Taking in Microsoft Teams with Meeting Transcription",
+            "channel": "Microsoft Mechanics",
+            "url": "https://www.youtube.com/watch?v=PqzGP40Krks",
+            "videoId": "PqzGP40Krks",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How to use Microsoft Teams Lobby",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=dooaJNiSarc",
+            "videoId": "dooaJNiSarc",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-email-writing": {
+    "title": "Email etiquette and professional writing",
+    "topics": {
+      "pma-email-subject-structure": {
+        "title": "Subject lines and email structure",
+        "refs": [
+          {
+            "label": "Harvard Business Review: How to Write Email with Military Precision",
+            "url": "https://hbr.org/2016/11/how-to-write-email-with-military-precision",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          },
+          {
+            "label": "Digital.gov: Plain language guide series",
+            "url": "https://digital.gov/guides/plain-language",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          },
+          {
+            "label": "Purdue OWL: Email etiquette",
+            "url": "https://owl.purdue.edu/owl/general_writing/academic_writing/email_etiquette.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "Asana: Effective communication workplace: 12 tips & styles",
+            "url": "https://asana.com/resources/effective-communication-workplace",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:08:00Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "8 Email Etiquette Tips - How to Write Better Emails at Work",
+            "channel": "Harvard Business Review",
+            "url": "https://www.youtube.com/watch?v=1XctnF7C74s",
+            "videoId": "1XctnF7C74s",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "How to Write Effective Email Subject Lines",
+            "channel": "Learn English with Rebecca · engVid",
+            "url": "https://www.youtube.com/watch?v=cG7fUjEjeAw",
+            "videoId": "cG7fUjEjeAw",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          }
+        ]
+      },
+      "pma-email-tone-client-vs-internal": {
+        "title": "Tone: client vs internal",
+        "refs": [
+          {
+            "label": "Purdue OWL: Tone in business writing",
+            "url": "https://owl.purdue.edu/owl/subject_specific_writing/professional_technical_writing/tone_in_business_writing.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "Grammarly: Tone in Email: Tips on Striking a Professional Tone",
+            "url": "https://www.grammarly.com/blog/emailing/email-tone/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:43Z"
+          },
+          {
+            "label": "Harvard Business Review: How to Write Email with Military Precision",
+            "url": "https://hbr.org/2016/11/how-to-write-email-with-military-precision",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          },
+          {
+            "label": "Purdue OWL: Email etiquette",
+            "url": "https://owl.purdue.edu/owl/general_writing/academic_writing/email_etiquette.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "8 Email Etiquette Tips - How to Write Better Emails at Work",
+            "channel": "Harvard Business Review",
+            "url": "https://www.youtube.com/watch?v=1XctnF7C74s",
+            "videoId": "1XctnF7C74s",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "13 Must-see Tips for Perfect Email Writing",
+            "channel": "Grammarly",
+            "url": "https://www.youtube.com/watch?v=JuJRJRpenTk",
+            "videoId": "JuJRJRpenTk",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-to-cc-bcc-reply-all": {
+        "title": "To / CC / BCC, reply-all and response times",
+        "refs": [
+          {
+            "label": "Purdue OWL: Email etiquette",
+            "url": "https://owl.purdue.edu/owl/general_writing/academic_writing/email_etiquette.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "Inbox Zero: Reply vs Reply All vs Forward: When to Use Each (Guide)",
+            "url": "https://www.getinboxzero.com/blog/post/reply-vs-reply-all-vs-forward",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:51Z"
+          },
+          {
+            "label": "Elegant Themes: Email Etiquette: When Should You BCC, CC, or Reply-All?",
+            "url": "https://www.elegantthemes.com/blog/business/email-etiquette-when-should-you-bcc-cc-or-reply-all",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "English for Emails: Cc and Bcc explained",
+            "channel": "British Council | English",
+            "url": "https://www.youtube.com/watch?v=ZnSfEklfo34",
+            "videoId": "ZnSfEklfo34",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-status-escalation-mom-emails": {
+        "title": "Status, escalation and MoM emails",
+        "refs": [
+          {
+            "label": "Atlassian: Project Status Report: Tips and Templates for Success",
+            "url": "https://www.atlassian.com/agile/project-management/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          },
+          {
+            "label": "ProjectManager: Project Status Reports (Example & Template Included)",
+            "url": "https://www.projectmanager.com/guides/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:48Z"
+          },
+          {
+            "label": "Asana: Free Meeting Minutes Template (Examples + Tips)",
+            "url": "https://asana.com/templates/meeting-minutes",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:03Z"
+          },
+          {
+            "label": "Asana: How Project Status Reports Work: 8 Steps + Template",
+            "url": "https://asana.com/resources/how-project-status-reports",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:41Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Write a Project Status Report in 5 Easy Steps | ClickUp",
+            "channel": "ClickUp",
+            "url": "https://www.youtube.com/watch?v=IKUGFME2tlI",
+            "videoId": "IKUGFME2tlI",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How To Write a Follow Up Email After a Meeting | Mindmaven",
+            "channel": "Mindmaven",
+            "url": "https://www.youtube.com/watch?v=s7FK_iCrL1U",
+            "videoId": "s7FK_iCrL1U",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-chasing-politely": {
+        "title": "Chasing politely and follow-ups",
+        "refs": [
+          {
+            "label": "Grammarly: How to Write a Follow-Up Email, With Examples",
+            "url": "https://www.grammarly.com/blog/emailing/follow-up-email/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "Harvard Business Review: How to Write Email with Military Precision",
+            "url": "https://hbr.org/2016/11/how-to-write-email-with-military-precision",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          },
+          {
+            "label": "Purdue OWL: Email etiquette",
+            "url": "https://owl.purdue.edu/owl/general_writing/academic_writing/email_etiquette.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Make Outlook Remind THEM for YOU (Easy Email Follow-Up Tip)",
+            "channel": "Paul O'Malley",
+            "url": "https://www.youtube.com/watch?v=lvJOLgvhF38",
+            "videoId": "lvJOLgvhF38",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "How to write a Follow-up Email that Gets You Responses?",
+            "channel": "Saleshandy",
+            "url": "https://www.youtube.com/watch?v=B4ODYPqlATQ",
+            "videoId": "B4ODYPqlATQ",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-attachments-links-signatures": {
+        "title": "Attachments, links and signatures",
+        "refs": [
+          {
+            "label": "Microsoft Support: How to add and change an email signature in Outlook",
+            "url": "https://support.microsoft.com/en-us/outlook/mail/how-to-add-and-change-an-email-signature-in-outlook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:54Z"
+          },
+          {
+            "label": "Microsoft Support: Share files and folders in Microsoft OneDrive",
+            "url": "https://support.microsoft.com/en-us/onedrive/share-files-and-folders-in-microsoft-onedrive",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Microsoft Support: Add pictures or attach files to emails in Outlook",
+            "url": "https://support.microsoft.com/en-us/outlook/mail/add-pictures-or-attach-files-to-emails-in-outlook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:19Z"
+          },
+          {
+            "label": "Purdue OWL: Email etiquette",
+            "url": "https://owl.purdue.edu/owl/general_writing/academic_writing/email_etiquette.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Top 20 Microsoft Outlook Tips & Tricks",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=edABo0VnHK8",
+            "videoId": "edABo0VnHK8",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Microsoft Outlook Tutorial for Beginners",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=4e_ghbyXcJ0",
+            "videoId": "4e_ghbyXcJ0",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-outlook-features": {
+        "title": "Outlook features: rules, templates, scheduling, flags",
+        "refs": [
+          {
+            "label": "Microsoft Support: Manage email messages by using rules in Outlook",
+            "url": "https://support.microsoft.com/en-us/outlook/mail/manage-email-messages-by-using-rules-in-outlook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Microsoft Support: Delay or schedule sending email messages in Outlook",
+            "url": "https://support.microsoft.com/en-us/outlook/mail/delay-or-schedule-sending-email-messages-in-outlook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          },
+          {
+            "label": "Microsoft Support: Outlook training",
+            "url": "https://support.microsoft.com/en-us/outlook/outlook-training",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:43:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Create Rules in Outlook",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=87cqwadac6Y",
+            "videoId": "87cqwadac6Y",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "How To Create Email Templates in Outlook | My Templates & Quick Parts",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=RSlfhjbIoK8",
+            "videoId": "RSlfhjbIoK8",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Top 20 Microsoft Outlook Tips & Tricks",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=edABo0VnHK8",
+            "videoId": "edABo0VnHK8",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-writing-for-non-native-readers": {
+        "title": "Writing for non-native readers",
+        "refs": [
+          {
+            "label": "Digital.gov: Plain language guide series",
+            "url": "https://digital.gov/guides/plain-language",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          },
+          {
+            "label": "Microsoft Learn: Global communications - Microsoft Style Guide",
+            "url": "https://learn.microsoft.com/en-us/style-guide/global-communications/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "Google developer style guide: Write for a global audience",
+            "url": "https://developers.google.com/style/translation",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Communication Tips for Non-Native English Speakers",
+            "channel": "Stanford Graduate School of Business",
+            "url": "https://www.youtube.com/watch?v=5LOSNDJgkFs",
+            "videoId": "5LOSNDJgkFs",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-microsoft-teams": {
+    "title": "Microsoft Teams for PMs",
+    "topics": {
+      "pma-teams-channels-chats": {
+        "title": "Teams vs channels vs chats",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Overview of teams and channels in Microsoft Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/teams-channels-overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          },
+          {
+            "label": "Microsoft Support: Microsoft 365 video training - Microsoft Support",
+            "url": "https://support.microsoft.com/en-us/office/microsoft-365-video-training-4f108e54-240b-4351-8084-b1089f0d21d7",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          },
+          {
+            "label": "Microsoft Support: Chat with others in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/chat/chat-with-others-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:39:22Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "When To Use Teams Chats Vs Channels In Microsoft Teams",
+            "channel": "Jonathan Edwards",
+            "url": "https://www.youtube.com/watch?v=jcpJayfsm7w",
+            "videoId": "jcpJayfsm7w",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "All about using channels in Microsoft Teams",
+            "channel": "Microsoft Teams",
+            "url": "https://www.youtube.com/watch?v=m3i18aunzQU",
+            "videoId": "m3i18aunzQU",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Best practices for using channels",
+            "channel": "Microsoft Teams",
+            "url": "https://www.youtube.com/watch?v=ps7dDNrXI6E",
+            "videoId": "ps7dDNrXI6E",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-teams-meetings-features": {
+        "title": "Meetings: lobby, recording, transcripts, breakout rooms",
+        "refs": [
+          {
+            "label": "Microsoft Learn: IT Admins - Manage lobby options in Microsoft Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/who-can-bypass-meeting-lobby",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:39:00Z"
+          },
+          {
+            "label": "Microsoft Support: Start, stop, and find meeting recordings in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/start-stop-and-find-meeting-recordings-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:41:14Z"
+          },
+          {
+            "label": "Microsoft Support: Start, stop, and download live transcripts in Microsoft Teams meetings",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/start-stop-and-download-live-transcripts-in-microsoft-teams-meetings",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          },
+          {
+            "label": "Microsoft Support: Manage breakout rooms in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/manage-breakout-rooms-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:43Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to use Microsoft Teams Lobby",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=dooaJNiSarc",
+            "videoId": "dooaJNiSarc",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How to use Teams Breakout Rooms",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=DMfsilBhW7A",
+            "videoId": "DMfsilBhW7A",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Automate Note Taking in Microsoft Teams with Meeting Transcription",
+            "channel": "Microsoft Mechanics",
+            "url": "https://www.youtube.com/watch?v=PqzGP40Krks",
+            "videoId": "PqzGP40Krks",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      },
+      "pma-teams-files-sharepoint": {
+        "title": "Files and SharePoint basics",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Teams and SharePoint integration",
+            "url": "https://learn.microsoft.com/en-us/sharepoint/teams-connected-sites?bc=%2Fteamss%2Fbreadcrumb%2Ftoc.json&toc=%2Fteams%2Ftoc.json",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "Microsoft Support: Share files and folders in Microsoft OneDrive",
+            "url": "https://support.microsoft.com/en-us/onedrive/share-files-and-folders-in-microsoft-onedrive",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Microsoft Support: Microsoft 365 video training - Microsoft Support",
+            "url": "https://support.microsoft.com/en-us/office/microsoft-365-video-training-4f108e54-240b-4351-8084-b1089f0d21d7",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "All about file sharing in Microsoft Teams",
+            "channel": "Microsoft Teams",
+            "url": "https://www.youtube.com/watch?v=Pl__0ws3AZs",
+            "videoId": "Pl__0ws3AZs",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Are you STILL confused?  Sharepoint vs. OneDrive vs. Teams",
+            "channel": "Office Skills with Amy",
+            "url": "https://www.youtube.com/watch?v=sd5DKYZYtjY",
+            "videoId": "sd5DKYZYtjY",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-teams-tabs-planner-loop": {
+        "title": "Tabs: Planner and Loop",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Manage the Planner app for your organization in Microsoft Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/manage-planner-app",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:23Z"
+          },
+          {
+            "label": "Microsoft Support: Send a Loop component in Microsoft Teams chats",
+            "url": "https://support.microsoft.com/en-us/teams/apps-service/send-a-loop-component-in-microsoft-teams-chats",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:44:47Z"
+          },
+          {
+            "label": "Microsoft Support: Add an app to Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/apps-service/add-an-app-to-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to use the NEW Microsoft Planner in Teams",
+            "channel": "Teacher's Tech",
+            "url": "https://www.youtube.com/watch?v=r3dpzqttDuA",
+            "videoId": "r3dpzqttDuA",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to Use Loop Components in Microsoft Teams Chat",
+            "channel": "Microsoft Teams",
+            "url": "https://www.youtube.com/watch?v=s7b5sPEDlyw",
+            "videoId": "s7b5sPEDlyw",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-teams-mentions-presence": {
+        "title": "@mentions and presence etiquette",
+        "refs": [
+          {
+            "label": "Microsoft Support: Use @mentions to get someone's attention in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/notifications-settings/use-mentions-to-get-someone-s-attention-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:56Z"
+          },
+          {
+            "label": "Microsoft Support: Change your status in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/notifications-settings/change-your-status-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:47Z"
+          },
+          {
+            "label": "Microsoft Learn: User presence in Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/presence-admins",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          },
+          {
+            "label": "Microsoft Learn: Manage tags in Microsoft Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/manage-tags",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:57Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to use Microsoft Teams @mentions",
+            "channel": "Microsoft Copilot",
+            "url": "https://www.youtube.com/watch?v=BolSNI0RBPg",
+            "videoId": "BolSNI0RBPg",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Using tags in Microsoft Teams",
+            "channel": "Microsoft Teams",
+            "url": "https://www.youtube.com/watch?v=9y5AchSAEJY",
+            "videoId": "9y5AchSAEJY",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-teams-client-calls": {
+        "title": "Client calls with external guests",
+        "refs": [
+          {
+            "label": "Microsoft Support: Join a meeting without an account in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/join-a-meeting-without-an-account-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:19Z"
+          },
+          {
+            "label": "Microsoft Learn: Guest access in Microsoft Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/guest-access",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "Microsoft Learn: IT Admins - Manage external meetings and chat with people and organizations using Microsoft identities",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:23Z"
+          },
+          {
+            "label": "Microsoft Learn: IT Admins - Manage lobby options in Microsoft Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/who-can-bypass-meeting-lobby",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:39:00Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Invite External Users to a Microsoft Teams Meeting",
+            "channel": "Tactiq",
+            "url": "https://www.youtube.com/watch?v=FXX9WfaF4jE",
+            "videoId": "FXX9WfaF4jE",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Microsoft Teams External Access VS Guest Access VS Shared Channels",
+            "channel": "Vlad Talks Tech",
+            "url": "https://www.youtube.com/watch?v=-aO8KgRm2vQ",
+            "videoId": "-aO8KgRm2vQ",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-copilot-in-teams": {
+        "title": "Copilot in Teams",
+        "refs": [
+          {
+            "label": "Microsoft Support: Catch up on meetings with Microsoft Copilot in Teams",
+            "url": "https://support.microsoft.com/en-us/teams/copilot/catch-up-on-meetings-with-microsoft-365-copilot-in-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:49Z"
+          },
+          {
+            "label": "Microsoft Learn: What is Microsoft Copilot?",
+            "url": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:33Z"
+          },
+          {
+            "label": "Microsoft Learn: Manage Microsoft Copilot in Teams meetings and events",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/copilot-teams-transcription",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "Asana: Meeting Notes Tips: How to Take Notes & Track Actions",
+            "url": "https://asana.com/resources/meeting-notes-tips",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:59Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Copilot in Teams and Intelligent recap | After the meeting",
+            "channel": "Microsoft Copilot",
+            "url": "https://www.youtube.com/watch?v=rLC2frnUasw",
+            "videoId": "rLC2frnUasw",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "AI Simplified | Unlock meeting insights with intelligent meeting recap in Teams",
+            "channel": "Microsoft Teams",
+            "url": "https://www.youtube.com/watch?v=uaoa-N0zsVQ",
+            "videoId": "uaoa-N0zsVQ",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to Use Copilot in Microsoft Teams Meetings | 5 Powerful Features (2026)",
+            "channel": "Mike Tholfsen",
+            "url": "https://www.youtube.com/watch?v=l0nh1sYtY5A",
+            "videoId": "l0nh1sYtY5A",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-excel": {
+    "title": "Excel for PMs",
+    "topics": {
+      "pma-excel-tables-sort-filter-freeze": {
+        "title": "Tables, sort/filter, freeze panes, formatting",
+        "refs": [
+          {
+            "label": "Microsoft Support: Overview of Excel tables",
+            "url": "https://support.microsoft.com/en-us/excel/overview-of-excel-tables",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          },
+          {
+            "label": "Microsoft Support: Freeze panes to lock rows and columns",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/freeze-panes-to-lock-rows-and-columns",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:32Z"
+          },
+          {
+            "label": "Microsoft Support: Sort data in a range or table in Excel",
+            "url": "https://support.microsoft.com/en-us/excel/sort-data-in-a-range-or-table-in-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:45:51Z"
+          },
+          {
+            "label": "Microsoft Support: Filter data in a range or table in Excel",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/filter-data-in-a-range-or-table-in-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:43Z"
+          },
+          {
+            "label": "Microsoft Support: Excel help & learning",
+            "url": "https://support.microsoft.com/en-us/excel/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:44:16Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Freeze Panes in Excel",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=525FRQwpnQA",
+            "videoId": "525FRQwpnQA",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Excel Tutorial for Beginners",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=LgXzzu68j7M",
+            "videoId": "LgXzzu68j7M",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-excel-core-functions": {
+        "title": "SUM/AVERAGE/IF/COUNTIF/SUMIFS/XLOOKUP",
+        "refs": [
+          {
+            "label": "Microsoft Support: IF function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/if-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "Microsoft Support: Use the COUNTIF function in Microsoft Excel",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/use-the-countif-function-in-microsoft-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:43:52Z"
+          },
+          {
+            "label": "Microsoft Support: SUMIFS function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/sumifs-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:43:05Z"
+          },
+          {
+            "label": "Microsoft Support: XLOOKUP function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/xlookup-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "Microsoft Support: AVERAGE function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/average-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:35Z"
+          },
+          {
+            "label": "Microsoft Support: SUMIF function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/sumif-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Use SUMIFS, COUNTIFS and AVERAGEIFS in Excel (Multiple Criteria)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=AZuBNWMh7VM",
+            "videoId": "AZuBNWMh7VM",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to Use the NEW & IMPROVED Excel XLOOKUP (with 5 Examples)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=4c0CLUER6nw",
+            "videoId": "4c0CLUER6nw",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Excel Formulas and Functions - Tutorial for Beginners",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=ZwiQ0W5lTEg",
+            "videoId": "ZwiQ0W5lTEg",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to Use XLOOKUP in Excel – Step-by-Step Tutorial for Beginners",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=y5H6Yi3V4cw",
+            "videoId": "y5H6Yi3V4cw",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          }
+        ]
+      },
+      "pma-excel-dates-networkdays": {
+        "title": "Dates and NETWORKDAYS",
+        "refs": [
+          {
+            "label": "Microsoft Support: NETWORKDAYS function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/networkdays-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          },
+          {
+            "label": "Microsoft Support: WORKDAY function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/workday-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          },
+          {
+            "label": "Microsoft Support: NETWORKDAYS.INTL function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/networkdays-intl-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Microsoft Support: TODAY function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/today-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Calculate Working Days in Excel & Exclude ANY Days you WANT (weekends too)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=Wyoo9mQPxCY",
+            "videoId": "Wyoo9mQPxCY",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Calculate Working Days in Excel | WORKDAY and NETWORKDAYS",
+            "channel": "Excel Universe",
+            "url": "https://www.youtube.com/watch?v=BmM-W2e0NOI",
+            "videoId": "BmM-W2e0NOI",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-excel-conditional-formatting-rag": {
+        "title": "Conditional formatting for RAG",
+        "refs": [
+          {
+            "label": "Microsoft Support: Use conditional formatting to highlight information in Excel",
+            "url": "https://support.microsoft.com/en-us/excel/use-conditional-formatting-to-highlight-information-in-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          },
+          {
+            "label": "ProjectManager: RAG Status in Project Management: Importance & Benefits",
+            "url": "https://www.projectmanager.com/blog/rag-status",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:56Z"
+          },
+          {
+            "label": "Microsoft Support: IF function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/if-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Excel Conditional Formatting with Formula | Highlight Rows based on a cell value",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=XHT4paRaY4g",
+            "videoId": "XHT4paRaY4g",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          },
+          {
+            "title": "Excel Conditional Formatting with Symbols and Icons (for better reports)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=875eK_x4nyQ",
+            "videoId": "875eK_x4nyQ",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "How to Use Conditional Formatting Traffic Lights in Excel (Step-by-Step Guide)",
+            "channel": "Mark's Excel Tips",
+            "url": "https://www.youtube.com/watch?v=uTww1o7C96Q",
+            "videoId": "uTww1o7C96Q",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      },
+      "pma-excel-data-validation": {
+        "title": "Data validation (dropdowns)",
+        "refs": [
+          {
+            "label": "Microsoft Support: Apply data validation to cells",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/apply-data-validation-to-cells",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:25Z"
+          },
+          {
+            "label": "Microsoft Support: Create a drop-down list",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/create-a-drop-down-list",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:35Z"
+          },
+          {
+            "label": "Microsoft Support: More on data validation",
+            "url": "https://support.microsoft.com/en-us/excel/more-on-data-validation",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:45:17Z"
+          },
+          {
+            "label": "Microsoft Support: Overview of Excel tables",
+            "url": "https://support.microsoft.com/en-us/excel/overview-of-excel-tables",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Create SMART Drop Down Lists in Excel (with Data Validation)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=FRiFfKb_B_A",
+            "videoId": "FRiFfKb_B_A",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Excel Custom Data Validation (Use formulas to check for text, numbers & length)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=bDXQy60BcT4",
+            "videoId": "bDXQy60BcT4",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-excel-pivot-tables-charts": {
+        "title": "Pivot tables and charts",
+        "refs": [
+          {
+            "label": "Microsoft Support: Create a PivotTable to analyze worksheet data",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/create-a-pivottable-to-analyze-worksheet-data",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:43Z"
+          },
+          {
+            "label": "Microsoft Support: Create a chart from start to finish",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/create-a-chart-from-start-to-finish",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:39Z"
+          },
+          {
+            "label": "Microsoft Support: Create a PivotChart",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/create-a-pivotchart",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:41Z"
+          },
+          {
+            "label": "Microsoft Support: Excel help & learning",
+            "url": "https://support.microsoft.com/en-us/excel/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:44:16Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Excel Pivot Table EXPLAINED in 10 Minutes (Productivity tips included!)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=UsdedFoTA68",
+            "videoId": "UsdedFoTA68",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Pivot Table Excel | Step-by-Step Tutorial",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=dvbLrwD2SpA",
+            "videoId": "dvbLrwD2SpA",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Excel Charts and Graphs Tutorial",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=eHtZrIb0oWY",
+            "videoId": "eHtZrIb0oWY",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-excel-trackers": {
+        "title": "Building trackers: project, Gantt, resource, budget vs actuals, RAID",
+        "refs": [
+          {
+            "label": "Microsoft Support: Present your data in a Gantt chart in Excel",
+            "url": "https://support.microsoft.com/en-us/excel/present-your-data-in-a-gantt-chart-in-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "Asana: RAID Log: Track Risks, Assumptions, Issues & Decisions",
+            "url": "https://asana.com/resources/raid-log",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:40Z"
+          },
+          {
+            "label": "ProjectManager: What Is a RAID Log and Why Should I Use One?",
+            "url": "https://www.projectmanager.com/blog/raid-log-use-one",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:57Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Make This Awesome Gantt Chart in Excel (for Project Management)",
+            "channel": "Kenji Explains",
+            "url": "https://www.youtube.com/watch?v=1y40xTIEKbs",
+            "videoId": "1y40xTIEKbs",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Gantt Chart with Conditional Formatting in Excel? Done in 3 Minutes! (No Add-ins)",
+            "channel": "Analytics Success",
+            "url": "https://www.youtube.com/watch?v=U4gVKFEkN2U",
+            "videoId": "U4gVKFEkN2U",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "How to Use RAID Log in REAL-LIFE Project (+ Template)",
+            "channel": "Tactical Project Manager",
+            "url": "https://www.youtube.com/watch?v=inZI16nIvdo",
+            "videoId": "inZI16nIvdo",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Team Capacity Planner for Excel: Easily allocate and watch workload",
+            "channel": "Tactical Project Manager",
+            "url": "https://www.youtube.com/watch?v=oiBZb--8Mqg",
+            "videoId": "oiBZb--8Mqg",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          }
+        ]
+      },
+      "pma-excel-protect-share": {
+        "title": "Protect and share",
+        "refs": [
+          {
+            "label": "Microsoft Support: Protect a worksheet",
+            "url": "https://support.microsoft.com/en-us/excel/protect-a-worksheet",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:19Z"
+          },
+          {
+            "label": "Microsoft Support: Collaborate on Excel workbooks at the same time with co-authoring",
+            "url": "https://support.microsoft.com/en-us/excel/get-started/collaborate-on-excel-workbooks-at-the-same-time-with-co-authoring",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Microsoft Support: Protect a workbook",
+            "url": "https://support.microsoft.com/en-us/excel/protect-a-workbook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:45:07Z"
+          },
+          {
+            "label": "Microsoft Support: Share files and folders in Microsoft OneDrive",
+            "url": "https://support.microsoft.com/en-us/onedrive/share-files-and-folders-in-microsoft-onedrive",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "MS Excel - Protect Sheet",
+            "channel": "TutorialsPoint",
+            "url": "https://www.youtube.com/watch?v=3wlDbuDkKNY",
+            "videoId": "3wlDbuDkKNY",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "Difference Between Protect Workbook and Protect Sheet | क्या अंतर है Protect Workbook और Worksheet",
+            "channel": "Computer Tech Academy",
+            "url": "https://www.youtube.com/watch?v=QUOiYasiw0w",
+            "videoId": "QUOiYasiw0w",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-google-sheets-equivalents": {
+        "title": "Google Sheets equivalents",
+        "refs": [
+          {
+            "label": "Google Docs Editors Help: Google Sheets function list",
+            "url": "https://support.google.com/docs/table/25273",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:48Z"
+          },
+          {
+            "label": "Google Docs Editors Help: XLOOKUP function",
+            "url": "https://support.google.com/docs/answer/12405947",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          },
+          {
+            "label": "Google Docs Editors Help: SUMIFS function",
+            "url": "https://support.google.com/docs/answer/3238496",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:45Z"
+          },
+          {
+            "label": "Google Docs Editors Help: Use conditional formatting rules in Google Sheets",
+            "url": "https://support.google.com/docs/answer/78413",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:22Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Google Sheets Tutorial for Beginners",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=TENAbUa-R-w",
+            "videoId": "TENAbUa-R-w",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "How to Use COUNTIFS & SUMIFS in Google Sheets | Multi-Condition Formulas",
+            "channel": "Sheetomatic",
+            "url": "https://www.youtube.com/watch?v=wMUHBa82bPE",
+            "videoId": "wMUHBa82bPE",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-word-powerpoint": {
+    "title": "Word and PowerPoint for PMs",
+    "topics": {
+      "pma-word-styles-toc-templates": {
+        "title": "Styles, headings, automatic TOC, templates",
+        "refs": [
+          {
+            "label": "Microsoft Support: Insert a table of contents",
+            "url": "https://support.microsoft.com/en-us/word/training/insert-a-table-of-contents",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          },
+          {
+            "label": "Microsoft Support: Customize or create new styles",
+            "url": "https://support.microsoft.com/en-us/word/customize-or-create-new-styles",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:21Z"
+          },
+          {
+            "label": "Microsoft Support: Create a template",
+            "url": "https://support.microsoft.com/en-us/word/create-a-template",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "Microsoft Support: Word help & learning",
+            "url": "https://support.microsoft.com/en-us/word/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to use Styles in Microsoft Word",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=UOVU6qQ2iOM",
+            "videoId": "UOVU6qQ2iOM",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "How to Create a Table of Contents in Word (Automatically!)",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=45s9VKQ6wEI",
+            "videoId": "45s9VKQ6wEI",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-word-track-changes-comments": {
+        "title": "Track Changes and comments (SOW/PRD review)",
+        "refs": [
+          {
+            "label": "Microsoft Support: Track changes in Word",
+            "url": "https://support.microsoft.com/en-us/word/training/track-changes-in-word",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          },
+          {
+            "label": "Microsoft Support: Using Modern comments in Word",
+            "url": "https://support.microsoft.com/en-us/word/using-modern-comments-in-word",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:41Z"
+          },
+          {
+            "label": "Microsoft Support: Word help & learning",
+            "url": "https://support.microsoft.com/en-us/word/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Word: Track Changes and Comments",
+            "channel": "LearnFree",
+            "url": "https://www.youtube.com/watch?v=m7tmsWN6uH0",
+            "videoId": "m7tmsWN6uH0",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "How to Use Track Changes and Comments in Microsoft Word (2023 Update for PC & Mac)",
+            "channel": "Erin Wright Writing",
+            "url": "https://www.youtube.com/watch?v=1-gby_qDsHo",
+            "videoId": "1-gby_qDsHo",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Track changes and show markup in Microsoft Word",
+            "channel": "Microsoft Copilot",
+            "url": "https://www.youtube.com/watch?v=ymBMonYehFA",
+            "videoId": "ymBMonYehFA",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-word-tables-headers-pdf": {
+        "title": "Tables, headers/footers, PDF export",
+        "refs": [
+          {
+            "label": "Microsoft Support: Insert a table",
+            "url": "https://support.microsoft.com/en-us/word/training/insert-a-table",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Microsoft Support: Insert a header or footer",
+            "url": "https://support.microsoft.com/en-us/word/training/insert-a-header-or-footer",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          },
+          {
+            "label": "Microsoft Support: Save or convert to PDF or XPS in Office Desktop apps",
+            "url": "https://support.microsoft.com/en-us/office/collab-files/save-or-convert-to-pdf-or-xps-in-office-desktop-apps",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:40:04Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Everything You Need to Know About Headers & Footers in Microsoft Word",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=SE2br75WMSw",
+            "videoId": "SE2br75WMSw",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "Microsoft Word Tutorial for Beginners",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=5Im87VPQZ_0",
+            "videoId": "5Im87VPQZ_0",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-powerpoint-status-decks": {
+        "title": "PowerPoint status decks and charts from Excel",
+        "refs": [
+          {
+            "label": "Microsoft Support: PowerPoint for Windows training",
+            "url": "https://support.microsoft.com/en-us/powerpoint/powerpoint-for-windows-training",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "Microsoft Support: Insert and update Excel data in PowerPoint",
+            "url": "https://support.microsoft.com/en-us/powerpoint/insert-and-update-excel-data-in-powerpoint",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          },
+          {
+            "label": "Atlassian: Project Status Report: Tips and Templates for Success",
+            "url": "https://www.atlassian.com/agile/project-management/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "PowerPoint Tutorial for Beginners",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=l5Ij7nUy9UQ",
+            "videoId": "l5Ij7nUy9UQ",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How to Link Excel to PowerPoint | Excel to PPT",
+            "channel": "Kevin Stratvert",
+            "url": "https://www.youtube.com/watch?v=VIQIGs02veA",
+            "videoId": "VIQIGs02veA",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How to Make a Project Status Report Template with PowerPoint - Simple Design Tutorial",
+            "channel": "Stuart Taylor - Project Management",
+            "url": "https://www.youtube.com/watch?v=Pmabm_iKm_8",
+            "videoId": "Pmabm_iKm_8",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-keka": {
+    "title": "Keka for PMs",
+    "topics": {
+      "pma-keka-timesheets": {
+        "title": "Timesheets: log, submit, approve the team's",
+        "refs": [
+          {
+            "label": "Keka Help: Submitting a Weekly Timesheet by an Employee",
+            "url": "https://help.keka.com/hc/en-us/articles/39946820520209-Submitting-a-Weekly-Timesheet-by-an-Employee",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:06Z"
+          },
+          {
+            "label": "Keka Help: Enabling daily timesheet submissions and submitting them.",
+            "url": "https://help.keka.com/hc/en-us/articles/39946759044497-Enabling-daily-timesheet-submissions-and-submitting-them",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:55Z"
+          },
+          {
+            "label": "Keka Help: Managing your team's timesheets",
+            "url": "https://help.keka.com/hc/en-us/articles/39946833972753-Managing-your-team-s-timesheets",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:57Z"
+          },
+          {
+            "label": "Keka Help: Managing Timesheets in Keka: A Comprehensive Guide",
+            "url": "https://help.keka.com/hc/en-us/articles/39946834112529-Managing-Timesheets-in-Keka-A-Comprehensive-Guide",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:47Z"
+          },
+          {
+            "label": "Keka Help: How to Approve Timesheets for Multiple Employees at Once?",
+            "url": "https://help.keka.com/hc/en-us/articles/39946829251857-How-to-Approve-Timesheets-for-Multiple-Employees-at-Once",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          },
+          {
+            "label": "Keka Help: Getting Familiar with Timesheets",
+            "url": "https://help.keka.com/hc/en-us/articles/39946787157905-Getting-Familiar-with-Timesheets",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:42Z"
+          },
+          {
+            "label": "Keka Help: Managing Timesheet Policy Settings in Keka PSA",
+            "url": "https://help.keka.com/hc/en-us/articles/39946553817233-Managing-Timesheet-Policy-Settings-in-Keka-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:28Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Understanding Employee timesheets | Timesheets usage, Project Management, Billing & Invoices in Keka",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=Ote5na_Itb4",
+            "videoId": "Ote5na_Itb4",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Manage timesheets better l Keka HR",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=LgFGoWbjwM4",
+            "videoId": "LgFGoWbjwM4",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Reduce Your Project Costs with Keka Timesheets l Keka HR",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=ODYAnsng3ew",
+            "videoId": "ODYAnsng3ew",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-keka-leave-attendance": {
+        "title": "Leave and attendance, and delivery impact",
+        "refs": [
+          {
+            "label": "Keka Help: Managing and tracking your attendance logs and requests",
+            "url": "https://help.keka.com/hc/en-us/articles/39946840685969-Managing-and-tracking-your-attendance-logs-and-requests",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:44Z"
+          },
+          {
+            "label": "Keka Help: Filling Timesheet when on Leave in Keka Mobile App",
+            "url": "https://help.keka.com/hc/en-us/articles/39946842194833-Filling-Timesheet-when-on-Leave-in-Keka-Mobile-App",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:37Z"
+          },
+          {
+            "label": "Keka Help: Keka Help Centre home",
+            "url": "https://help.keka.com/hc/en-us",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          },
+          {
+            "label": "Keka: Advanced Employee Leave Management Software",
+            "url": "https://www.keka.com/leave-management-system",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:09Z"
+          },
+          {
+            "label": "Keka: Attendance Management",
+            "url": "https://www.keka.com/attendance-management-system",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:45Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Leave Management l Creating and Assigning Leave Policies l Keka HR",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=cauHVkEZtaw",
+            "videoId": "cauHVkEZtaw",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "KEKA HR App Complete Guide 🔥 | Partial Day, Overtime, Leave & Attendance apply कैसे करें?#KEKAHR APP",
+            "channel": "Unstoppable Satya",
+            "url": "https://www.youtube.com/watch?v=vxGhB--n1BM",
+            "videoId": "vxGhB--n1BM",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "How to apply your leave through Keka Software",
+            "channel": "POS Internal Trainings",
+            "url": "https://www.youtube.com/watch?v=T3CgXXwuMn0",
+            "videoId": "T3CgXXwuMn0",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-keka-psa-projects-clients": {
+        "title": "Keka PSA: projects and clients",
+        "refs": [
+          {
+            "label": "Keka Help: What is Keka Professional Services Automation (PSA)?",
+            "url": "https://help.keka.com/hc/en-us/articles/39946767676433-What-is-Keka-Professional-Services-Automation-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:58Z"
+          },
+          {
+            "label": "Keka Help: Getting started with Keka PSA",
+            "url": "https://help.keka.com/hc/en-us/articles/39946664044689-Getting-started-with-Keka-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:20Z"
+          },
+          {
+            "label": "Keka Help: Adding Clients in Keka PSA",
+            "url": "https://help.keka.com/hc/en-us/articles/39946628956049-Adding-Clients-in-Keka-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:49Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Deliver Profitable Projects on Time, Every Time | The Future of Professional Services Management!",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=3Fw_lSjDpwE",
+            "videoId": "3Fw_lSjDpwE",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Understanding Employee timesheets | Timesheets usage, Project Management, Billing & Invoices in Keka",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=Ote5na_Itb4",
+            "videoId": "Ote5na_Itb4",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-keka-psa-billing-types": {
+        "title": "Billing types: Time & Material, Milestone, Non-Billable",
+        "refs": [
+          {
+            "label": "Keka Help: What is Keka Professional Services Automation (PSA)?",
+            "url": "https://help.keka.com/hc/en-us/articles/39946767676433-What-is-Keka-Professional-Services-Automation-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:58Z"
+          },
+          {
+            "label": "Keka Help: Billing and Invoicing in Keka PSA: An Overview",
+            "url": "https://help.keka.com/hc/en-us/articles/39946758976913-Billing-and-Invoicing-in-Keka-PSA-An-Overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:51Z"
+          },
+          {
+            "label": "Keka Help: Accessing the Milestone Info Report",
+            "url": "https://help.keka.com/hc/en-us/articles/39946779615889-Accessing-the-Milestone-Info-Report",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:59Z"
+          },
+          {
+            "label": "Keka Help: Streamlining Your Billing Process",
+            "url": "https://help.keka.com/hc/en-us/articles/39946725420305-Streamlining-Your-Billing-Process",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:34Z"
+          },
+          {
+            "label": "Keka Help: Using the New Retainer Billing Model in PSA for Payroll Automation",
+            "url": "https://help.keka.com/hc/en-us/articles/39946698729361-Using-the-New-Retainer-Billing-Model-in-PSA-for-Payroll-Automation",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:39:03Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Understanding Employee timesheets | Timesheets usage, Project Management, Billing & Invoices in Keka",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=Ote5na_Itb4",
+            "videoId": "Ote5na_Itb4",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Deliver Profitable Projects on Time, Every Time | The Future of Professional Services Management!",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=3Fw_lSjDpwE",
+            "videoId": "3Fw_lSjDpwE",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-keka-psa-allocation-rate-cards": {
+        "title": "Resource allocation and rate cards",
+        "refs": [
+          {
+            "label": "Keka Help: Tailoring Resource Allocation",
+            "url": "https://help.keka.com/hc/en-us/articles/39946575810321-Tailoring-Resource-Allocation",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:31Z"
+          },
+          {
+            "label": "Keka Help: Using Bulk Imports in Keka PSA",
+            "url": "https://help.keka.com/hc/en-us/articles/39946756566801-Using-Bulk-Imports-in-Keka-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:54Z"
+          },
+          {
+            "label": "Keka Help: Unlocking Project Success with Keka PSA's Enhanced Estimation Tools",
+            "url": "https://help.keka.com/hc/en-us/articles/39946773026321-Unlocking-Project-Success-with-Keka-PSA-s-Enhanced-Estimation-Tools",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:45Z"
+          },
+          {
+            "label": "Keka Help: Getting started with Keka PSA",
+            "url": "https://help.keka.com/hc/en-us/articles/39946664044689-Getting-started-with-Keka-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:20Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Deliver Profitable Projects on Time, Every Time | The Future of Professional Services Management!",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=3Fw_lSjDpwE",
+            "videoId": "3Fw_lSjDpwE",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Understanding Employee timesheets | Timesheets usage, Project Management, Billing & Invoices in Keka",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=Ote5na_Itb4",
+            "videoId": "Ote5na_Itb4",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-keka-psa-utilisation-reports": {
+        "title": "Utilisation and project reports",
+        "refs": [
+          {
+            "label": "Keka Help: Tracking Resource Utilization Across Projects",
+            "url": "https://help.keka.com/hc/en-us/articles/39946725336337-Tracking-Resource-Utilization-Across-Projects",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:00Z"
+          },
+          {
+            "label": "Keka Help: Accessing the Milestone Info Report",
+            "url": "https://help.keka.com/hc/en-us/articles/39946779615889-Accessing-the-Milestone-Info-Report",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:59Z"
+          },
+          {
+            "label": "Keka Help: What is Keka Professional Services Automation (PSA)?",
+            "url": "https://help.keka.com/hc/en-us/articles/39946767676433-What-is-Keka-Professional-Services-Automation-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:58Z"
+          },
+          {
+            "label": "Keka: From Resource Planning to Billing with PSA Software",
+            "url": "https://www.keka.com/psa-software",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:01Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Understanding Employee timesheets | Timesheets usage, Project Management, Billing & Invoices in Keka",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=Ote5na_Itb4",
+            "videoId": "Ote5na_Itb4",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Manage timesheets better (Part ll) l Keka HR",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=hHQLEvavmfM",
+            "videoId": "hHQLEvavmfM",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-keka-psa-invoices": {
+        "title": "Invoice basics",
+        "refs": [
+          {
+            "label": "Keka Help: Managing billing entities and invoice settings on Keka PSA",
+            "url": "https://help.keka.com/hc/en-us/articles/39946764793745-Managing-billing-entities-and-invoice-settings-on-Keka-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:31Z"
+          },
+          {
+            "label": "Keka Help: Billing and Invoicing in Keka PSA: An Overview",
+            "url": "https://help.keka.com/hc/en-us/articles/39946758976913-Billing-and-Invoicing-in-Keka-PSA-An-Overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:06:51Z"
+          },
+          {
+            "label": "Keka Help: PSA: Invoicing, Simplified: New Invoice Templates.",
+            "url": "https://help.keka.com/hc/en-us/articles/39946829537809-PSA-Invoicing-Simplified-New-Invoice-Templates",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:45:30Z"
+          },
+          {
+            "label": "Keka Help: Streamlining Your Billing Process",
+            "url": "https://help.keka.com/hc/en-us/articles/39946725420305-Streamlining-Your-Billing-Process",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:34Z"
+          },
+          {
+            "label": "Keka Help: PSA: Proforma & Prepayment Invoices",
+            "url": "https://help.keka.com/hc/en-us/articles/39946837645073-PSA-Proforma-Prepayment-Invoices",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:28Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Understanding Employee timesheets | Timesheets usage, Project Management, Billing & Invoices in Keka",
+            "channel": "Keka HR",
+            "url": "https://www.youtube.com/watch?v=Ote5na_Itb4",
+            "videoId": "Ote5na_Itb4",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-resource-management": {
+    "title": "Agency resource management",
+    "topics": {
+      "pma-capacity-allocation-utilisation": {
+        "title": "Capacity vs allocation vs utilisation; billable %",
+        "refs": [
+          {
+            "label": "Productive: Billable Utilization Mastery: Enhancing Profitability in Services",
+            "url": "https://productive.io/blog/billable-utilization/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:23Z"
+          },
+          {
+            "label": "Productive: Agency Utilization Rate: The Most Important Metric For Your Business",
+            "url": "https://productive.io/blog/agency-utilization-rate-the-most-important-metric-for-your-business/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          },
+          {
+            "label": "Float: Capacity planning and resource scheduling",
+            "url": "https://support.float.com/en/articles/13847946-capacity-planning-and-resource-scheduling",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:36Z"
+          },
+          {
+            "label": "Float: Float Resource Management Guides",
+            "url": "https://www.float.com:443/guides",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:41Z"
+          },
+          {
+            "label": "Resource Guru: What project managers need to know about resource utilization",
+            "url": "https://resourceguruapp.com/blog/resource-management/resource-utilization",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Agency Utilization Rate: The Most Important Metric For Your Business",
+            "channel": "Productive",
+            "url": "https://www.youtube.com/watch?v=q9Xuzj1XMnY",
+            "videoId": "q9Xuzj1XMnY",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Billable Utilization: A Key Professional Services KPI",
+            "channel": "BigTime Software",
+            "url": "https://www.youtube.com/watch?v=XwChdn8xx5o",
+            "videoId": "XwChdn8xx5o",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "Utilization Rate Explained for Professional Services (Formula, Mistakes, and What It Misses)",
+            "channel": "Haile Solutions",
+            "url": "https://www.youtube.com/watch?v=gmAsCmOMC9o",
+            "videoId": "gmAsCmOMC9o",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-bench-skill-matrix": {
+        "title": "Bench and skill matrix",
+        "refs": [
+          {
+            "label": "Asana: Free Staffing Plan Template to Grow Your Workforce",
+            "url": "https://asana.com/templates/staffing-plan",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:38Z"
+          },
+          {
+            "label": "Asana: Resource Management Template for Balancing Team Workload",
+            "url": "https://asana.com/templates/resource-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:43Z"
+          },
+          {
+            "label": "Productive: Resource Management in 2026",
+            "url": "https://productive.io/blog/resource-management/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Asana: Explore Asana Capacity Planning Features",
+            "url": "https://asana.com/features/resource-management/capacity-planning",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:48Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Create Skill Matrix in Excel |How to Make Skill Matrix in MS Excel",
+            "channel": "NIZAZUPIN",
+            "url": "https://www.youtube.com/watch?v=AYzWUU2O0sI",
+            "videoId": "AYzWUU2O0sI",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "What \"Bench\" Actually Means in Indian IT (Nobody Explains This Before You Join)",
+            "channel": "Offer Letter",
+            "url": "https://www.youtube.com/watch?v=EEagsUBvN2g",
+            "videoId": "EEagsUBvN2g",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-multi-project-over-under-allocation": {
+        "title": "Multi-project allocation; over/under-allocation",
+        "refs": [
+          {
+            "label": "Float: How to Stop Resource Overallocation in Its Tracks",
+            "url": "https://www.float.com/resources/overallocation-of-resources",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          },
+          {
+            "label": "Keka Help: Tailoring Resource Allocation",
+            "url": "https://help.keka.com/hc/en-us/articles/39946575810321-Tailoring-Resource-Allocation",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:31Z"
+          },
+          {
+            "label": "ProjectManager: What Is Resource Allocation in Project Management?",
+            "url": "https://www.projectmanager.com/blog/resource-allocation",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:39:01Z"
+          },
+          {
+            "label": "Asana: What Is Resource Allocation? Here's How to Allocate Resources",
+            "url": "https://asana.com/resources/resource-allocation",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:32Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Resource Management: How to Manage Resources - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=CxapGqlh3Fg",
+            "videoId": "CxapGqlh3Fg",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Must-Know Tips for Resource Allocation in Project Management",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=N_UbPsGrOUI",
+            "videoId": "N_UbPsGrOUI",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      },
+      "pma-leave-holiday-planning": {
+        "title": "Leave and holiday planning",
+        "refs": [
+          {
+            "label": "Float: Capacity planning and resource scheduling",
+            "url": "https://support.float.com/en/articles/13847946-capacity-planning-and-resource-scheduling",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:36Z"
+          },
+          {
+            "label": "Microsoft Support: NETWORKDAYS.INTL function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/networkdays-intl-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Keka Help: Managing and tracking your attendance logs and requests",
+            "url": "https://help.keka.com/hc/en-us/articles/39946840685969-Managing-and-tracking-your-attendance-logs-and-requests",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:44Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to easily create Leave tracking in Excel",
+            "channel": "NETVN82",
+            "url": "https://www.youtube.com/watch?v=Xnywyy_Tb9M",
+            "videoId": "Xnywyy_Tb9M",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "How to Calculate Working Days in Excel & Exclude ANY Days you WANT (weekends too)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=Wyoo9mQPxCY",
+            "videoId": "Wyoo9mQPxCY",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-forecasting-from-pipeline": {
+        "title": "Forecasting from the BD pipeline and re-planning",
+        "refs": [
+          {
+            "label": "Float: Resource Forecasting Guide: the Key to Project Success",
+            "url": "https://www.float.com/resources/resource-forecasting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          },
+          {
+            "label": "Asana: Capacity Planning: Process, Strategies & Team success",
+            "url": "https://asana.com/resources/capacity-planning",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:55Z"
+          },
+          {
+            "label": "Scoro: Resource Forecasting For Projects: A Beginner’s Guide",
+            "url": "https://www.scoro.com/blog/resource-forecasting/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          },
+          {
+            "label": "Resource Guru: Capacity planning guide: Definitions, strategies, and formulas",
+            "url": "https://resourceguruapp.com/blog/project-management/capacity-planning-guide",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:28Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is Resource Forecasting? [Terms, Techniques, Examples]",
+            "channel": "ProSymmetry",
+            "url": "https://www.youtube.com/watch?v=a3K48ghUlnE",
+            "videoId": "a3K48ghUlnE",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Easy Project Management Forecasting [Resource Forecasting Tutorial, Capacity Heatmaps]",
+            "channel": "ProSymmetry",
+            "url": "https://www.youtube.com/watch?v=U5B7nhxWrcQ",
+            "videoId": "U5B7nhxWrcQ",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Resource Planning for Projects: A Guide - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=akj4R1xZHzA",
+            "videoId": "akj4R1xZHzA",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-weekly-resource-meeting": {
+        "title": "Weekly resource meeting",
+        "refs": [
+          {
+            "label": "Float: Float Resource Management Guides",
+            "url": "https://www.float.com:443/guides",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:41Z"
+          },
+          {
+            "label": "Productive: Resource Management in 2026",
+            "url": "https://productive.io/blog/resource-management/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Asana: How Project Status Reports Work: 8 Steps + Template",
+            "url": "https://asana.com/resources/how-project-status-reports",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:41Z"
+          },
+          {
+            "label": "Float: How to Stop Resource Overallocation in Its Tracks",
+            "url": "https://www.float.com/resources/overallocation-of-resources",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "5 Top Resource Management Tools To Keep Your Team Organized",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=rNuTmZ6oOAk",
+            "videoId": "rNuTmZ6oOAk",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          },
+          {
+            "title": "Resource Planning for Projects: A Guide - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=akj4R1xZHzA",
+            "videoId": "akj4R1xZHzA",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-resource-plan-in-excel-and-keka": {
+        "title": "Doing it in Excel and Keka PSA",
+        "refs": [
+          {
+            "label": "Keka Help: Tracking Resource Utilization Across Projects",
+            "url": "https://help.keka.com/hc/en-us/articles/39946725336337-Tracking-Resource-Utilization-Across-Projects",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:00Z"
+          },
+          {
+            "label": "Microsoft Support: SUMIFS function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/sumifs-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:43:05Z"
+          },
+          {
+            "label": "Microsoft Support: Use conditional formatting to highlight information in Excel",
+            "url": "https://support.microsoft.com/en-us/excel/use-conditional-formatting-to-highlight-information-in-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          },
+          {
+            "label": "Keka Help: Tailoring Resource Allocation",
+            "url": "https://help.keka.com/hc/en-us/articles/39946575810321-Tailoring-Resource-Allocation",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:31Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Team Capacity Planner for Excel: Easily allocate and watch workload",
+            "channel": "Tactical Project Manager",
+            "url": "https://www.youtube.com/watch?v=oiBZb--8Mqg",
+            "videoId": "oiBZb--8Mqg",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          },
+          {
+            "title": "How to Build a Simple Resource Planner in Excel",
+            "channel": "Stuart Taylor - Project Management",
+            "url": "https://www.youtube.com/watch?v=AzQQeU6OR8A",
+            "videoId": "AzQQeU6OR8A",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-git-github": {
+    "title": "Git and GitHub for PMs (no coding)",
+    "topics": {
+      "pma-repo-branch-commit-pr": {
+        "title": "Repo, branch, commit, PR",
+        "refs": [
+          {
+            "label": "GitHub Docs: About repositories",
+            "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "GitHub Docs: GitHub flow",
+            "url": "https://docs.github.com/en/get-started/using-github/github-flow",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "GitHub Docs: Branches",
+            "url": "https://docs.github.com/en/pull-requests/reference/branches",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          },
+          {
+            "label": "Git book: What is Git?",
+            "url": "https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Atlassian Git tutorial: What is Git",
+            "url": "https://www.atlassian.com/git/tutorials/what-is-git",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:28Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Git Explained in 100 Seconds",
+            "channel": "Fireship",
+            "url": "https://www.youtube.com/watch?v=hwP7WQkmECE",
+            "videoId": "hwP7WQkmECE",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "A brief introduction to Git for beginners | GitHub",
+            "channel": "GitHub",
+            "url": "https://www.youtube.com/watch?v=r8jQ9hVA2qs",
+            "videoId": "r8jQ9hVA2qs",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-reading-a-pr": {
+        "title": "Reading a PR, review status and checks",
+        "refs": [
+          {
+            "label": "GitHub Docs: Pull requests",
+            "url": "https://docs.github.com/en/pull-requests/reference/pull-requests",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:26Z"
+          },
+          {
+            "label": "GitHub Docs: Pull request reviews",
+            "url": "https://docs.github.com/en/pull-requests/reference/pull-request-reviews",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          },
+          {
+            "label": "GitHub Docs: Status checks",
+            "url": "https://docs.github.com/en/pull-requests/reference/status-checks",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:22Z"
+          },
+          {
+            "label": "Atlassian Git tutorial: What Is a Pull Request?",
+            "url": "https://www.atlassian.com/git/tutorials/making-a-pull-request",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to create a pull request in 4 min | GitHub for Beginners",
+            "channel": "GitHub",
+            "url": "https://www.youtube.com/watch?v=nCKdihvneS0",
+            "videoId": "nCKdihvneS0",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "GitHub Pull Request in 100 Seconds - Git a FREE sticker 🔥",
+            "channel": "Fireship",
+            "url": "https://www.youtube.com/watch?v=8lGpZkjnkt4",
+            "videoId": "8lGpZkjnkt4",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          },
+          {
+            "title": "How to Review a Pull Request in GitHub the RIGHT Way",
+            "channel": "CoderDave",
+            "url": "https://www.youtube.com/watch?v=lSnbOtw4izI",
+            "videoId": "lSnbOtw4izI",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-linking-tickets-to-prs": {
+        "title": "Linking tickets to PRs",
+        "refs": [
+          {
+            "label": "GitHub Docs: Linking a pull request to an issue",
+            "url": "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          },
+          {
+            "label": "Atlassian Support: Reference work items in your development spaces",
+            "url": "https://support.atlassian.com/jira-software-cloud/docs/reference-issues-in-your-development-work/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:36Z"
+          },
+          {
+            "label": "GitHub Docs: Autolinked references and URLs",
+            "url": "https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/autolinked-references-and-urls",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to use GitHub issues and projects | GitHub for Beginners",
+            "channel": "GitHub",
+            "url": "https://www.youtube.com/watch?v=c67GaAkf1BE",
+            "videoId": "c67GaAkf1BE",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-releases-tags": {
+        "title": "Releases and tags",
+        "refs": [
+          {
+            "label": "GitHub Docs: About releases",
+            "url": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          },
+          {
+            "label": "Git book: Tagging",
+            "url": "https://git-scm.com/book/en/v2/Git-Basics-Tagging",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "SemVer: Semantic Versioning 2.0.0",
+            "url": "https://semver.org/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:21Z"
+          },
+          {
+            "label": "GitHub Docs: Automatically generated release notes",
+            "url": "https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Adding Tags, Versioning, and Releases in Github | Git & Source Control #13",
+            "channel": "Swiftful Thinking",
+            "url": "https://www.youtube.com/watch?v=D3W66tfYGuc",
+            "videoId": "D3W66tfYGuc",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "How to Create a Release on Github",
+            "channel": "hUndefined",
+            "url": "https://www.youtube.com/watch?v=4qwadZfPsik",
+            "videoId": "4qwadZfPsik",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-environments-branch-deploys": {
+        "title": "Environments: which branch deploys where",
+        "refs": [
+          {
+            "label": "GitHub Docs: Managing environments for deployment",
+            "url": "https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          },
+          {
+            "label": "Atlassian Git tutorial: Gitflow Workflow",
+            "url": "https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "GitHub Docs: Understanding GitHub Actions",
+            "url": "https://docs.github.com/en/actions/get-started/understand-github-actions",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "GitHub Docs: GitHub flow",
+            "url": "https://docs.github.com/en/get-started/using-github/github-flow",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Difference Between Development, Staging, and Prod Environment?",
+            "channel": "CodeWithHarry",
+            "url": "https://www.youtube.com/watch?v=H2p4wowlD3Q",
+            "videoId": "H2p4wowlD3Q",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Learn How Companies Deploy Code to Production Environment [In 5 Mins!]",
+            "channel": "Cloud Champ",
+            "url": "https://www.youtube.com/watch?v=J9JbzsufemE",
+            "videoId": "J9JbzsufemE",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Getting started with branching workflows, Git Flow and GitHub Flow",
+            "channel": "Nick Chapsas",
+            "url": "https://www.youtube.com/watch?v=gW6dFpTMk8s",
+            "videoId": "gW6dFpTMk8s",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-github-issues-projects": {
+        "title": "GitHub Issues and Projects",
+        "refs": [
+          {
+            "label": "GitHub Docs: About issues",
+            "url": "https://docs.github.com/en/issues/tracking-your-work-with-issues/learning-about-issues/about-issues",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:23Z"
+          },
+          {
+            "label": "GitHub Docs: About Projects",
+            "url": "https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:36Z"
+          },
+          {
+            "label": "GitHub Docs: Quickstart for Projects",
+            "url": "https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/quickstart-for-projects",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:22Z"
+          },
+          {
+            "label": "GitHub Docs: About milestones",
+            "url": "https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/about-milestones",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to use GitHub issues and projects | GitHub for Beginners",
+            "channel": "GitHub",
+            "url": "https://www.youtube.com/watch?v=c67GaAkf1BE",
+            "videoId": "c67GaAkf1BE",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "GitHub Project Management - Create GitHub Project Board & Automations 2024",
+            "channel": "goobar",
+            "url": "https://www.youtube.com/watch?v=oPQgFxHcjAw",
+            "videoId": "oPQgFxHcjAw",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-pre-release-questions": {
+        "title": "Questions to ask before a release",
+        "refs": [
+          {
+            "label": "GitHub Docs: About protected branches",
+            "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "Atlassian: Software Releases: 3 Ingredients You Need for Success",
+            "url": "https://www.atlassian.com/agile/software-development/release",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:45Z"
+          },
+          {
+            "label": "Google SRE book: Role of Release Engineer and Best Practices",
+            "url": "https://sre.google/sre-book/release-engineering/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:37Z"
+          },
+          {
+            "label": "GitHub Docs: About releases",
+            "url": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Release and Deployment Management - Key Concepts",
+            "channel": "TutorialsPoint",
+            "url": "https://www.youtube.com/watch?v=6bP4DxMe2-4",
+            "videoId": "6bP4DxMe2-4",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Interview Question | 5 Steps to a Successful Release Management Process",
+            "channel": "Server Gyan",
+            "url": "https://www.youtube.com/watch?v=mqu_91ngChw",
+            "videoId": "mqu_91ngChw",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-sdlc-agency": {
+    "title": "SDLC in an agency",
+    "topics": {
+      "pma-sdlc-phases": {
+        "title": "Discovery to maintenance: the phases",
+        "refs": [
+          {
+            "label": "AWS: What is SDLC?",
+            "url": "https://aws.amazon.com/what-is/sdlc/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "Atlassian: What is Software Development Life Cycle (SDLC)? Complete Guide",
+            "url": "https://www.atlassian.com/agile/software-development/sdlc",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          },
+          {
+            "label": "IBM: What is the Software Development Lifecycle (SDLC)?",
+            "url": "https://www.ibm.com/think/topics/sdlc",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Software Development Life Cycle: Explained",
+            "channel": "AltexSoft",
+            "url": "https://www.youtube.com/watch?v=SaCYkPD4_K0",
+            "videoId": "SaCYkPD4_K0",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-dev-staging-prod": {
+        "title": "Dev, staging and prod",
+        "refs": [
+          {
+            "label": "Twelve-Factor App: Dev/prod parity",
+            "url": "https://12factor.net/dev-prod-parity",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "GitHub Docs: Managing environments for deployment",
+            "url": "https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          },
+          {
+            "label": "Atlassian: Continuous integration vs. delivery vs. deployment",
+            "url": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:45Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Difference Between Development, Staging, and Prod Environment?",
+            "channel": "CodeWithHarry",
+            "url": "https://www.youtube.com/watch?v=H2p4wowlD3Q",
+            "videoId": "H2p4wowlD3Q",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "💻 Staging vs Production Environments : How Tech Startups Deploy?",
+            "channel": "Mehul Mohan",
+            "url": "https://www.youtube.com/watch?v=A1E6P7U_nrk",
+            "videoId": "A1E6P7U_nrk",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          }
+        ]
+      },
+      "pma-sprints-in-practice": {
+        "title": "Sprints in practice",
+        "refs": [
+          {
+            "label": "Scrum Guides: Scrum Guide",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "Atlassian: Scrum sprints",
+            "url": "https://www.atlassian.com/agile/scrum/sprints",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:36Z"
+          },
+          {
+            "label": "Atlassian: Sprint Planning",
+            "url": "https://www.atlassian.com/agile/scrum/sprint-planning",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:22Z"
+          },
+          {
+            "label": "Atlassian: Kanban vs scrum",
+            "url": "https://www.atlassian.com/agile/kanban/kanban-vs-scrum",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Scrum vs Kanban - What's the Difference?",
+            "channel": "Development That Pays",
+            "url": "https://www.youtube.com/watch?v=rIaz-l1Kf8w",
+            "videoId": "rIaz-l1Kf8w",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "Sprint Planning in Scrum: How It Really Works",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=bT30zGIfaW8",
+            "videoId": "bT30zGIfaW8",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Scrum in 20 mins... (with examples)",
+            "channel": "Codex Community",
+            "url": "https://www.youtube.com/watch?v=SWDhGSZNF9M",
+            "videoId": "SWDhGSZNF9M",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-qa-uat": {
+        "title": "QA and UAT",
+        "refs": [
+          {
+            "label": "Atlassian: The different types of testing in software",
+            "url": "https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:41Z"
+          },
+          {
+            "label": "TechTarget: What is User Acceptance Testing (UAT)?",
+            "url": "https://www.techtarget.com/it-infrastructure/definition/What-is-user-acceptance-testing-UAT",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:21Z"
+          },
+          {
+            "label": "Atlassian: What is Acceptance Criteria? Definition, Examples, & Tips",
+            "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "IBM: What is Software Testing?",
+            "url": "https://www.ibm.com/think/topics/software-testing",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Software Testing Process Guide: What is User Acceptance Testing - UAT?",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=sGwm4p9sGPI",
+            "videoId": "sGwm4p9sGPI",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "What is UAT (User Acceptance Testing) ? How Does Business Analyst Drive UAT?",
+            "channel": "BA Professional",
+            "url": "https://www.youtube.com/watch?v=PzoD3FtzIbY",
+            "videoId": "PzoD3FtzIbY",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      },
+      "pma-hotfix-vs-release": {
+        "title": "Hotfix vs release",
+        "refs": [
+          {
+            "label": "Atlassian Git tutorial: Gitflow Workflow",
+            "url": "https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          },
+          {
+            "label": "SemVer: Semantic Versioning 2.0.0",
+            "url": "https://semver.org/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:21Z"
+          },
+          {
+            "label": "Atlassian: Incident Management: Processes, Best Practices & Tools",
+            "url": "https://www.atlassian.com/incident-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:41Z"
+          },
+          {
+            "label": "GitHub Docs: About releases",
+            "url": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Hotfix Branches: Essential Tips for Software Developers and DevOps | Hotfix from a Release Branch",
+            "channel": "LogicOps Lab",
+            "url": "https://www.youtube.com/watch?v=gpxvoPETVMo",
+            "videoId": "gpxvoPETVMo",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "What is Hotfix in Software Development / Testing | Incident Management | SoftwaretestingbyMKT",
+            "channel": "SoftwaretestingbyMKT",
+            "url": "https://www.youtube.com/watch?v=b9xlIC3qFYw",
+            "videoId": "b9xlIC3qFYw",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-app-store-play-review": {
+        "title": "App Store and Play Store review times",
+        "refs": [
+          {
+            "label": "Apple Developer: App Review",
+            "url": "https://developer.apple.com/distribute/app-review/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:28Z"
+          },
+          {
+            "label": "Apple Developer: App Review Guidelines",
+            "url": "https://developer.apple.com/app-store/review/guidelines/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:22Z"
+          },
+          {
+            "label": "Google Play Console Help: Publish your app",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9859751",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:39Z"
+          },
+          {
+            "label": "Google Play Console Help: Prepare and roll out a release",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9859348",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Why My App Was Rejected and How I Got It Approved | App Store Review Process Explained",
+            "channel": "Think Like an Engineer",
+            "url": "https://www.youtube.com/watch?v=gvQiTtUU_LE",
+            "videoId": "gvQiTtUU_LE",
+            "verifiedAt": "2026-10-02T09:36:05Z"
+          },
+          {
+            "title": "App Store Review Rejections - 8 Point Checklist Before You Submit",
+            "channel": "Marcin Kaczmarzyk",
+            "url": "https://www.youtube.com/watch?v=pn4RkSAF6f8",
+            "videoId": "pn4RkSAF6f8",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-definition-of-done": {
+        "title": "Definition of done",
+        "refs": [
+          {
+            "label": "Scrum Guides: Scrum Guide",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          },
+          {
+            "label": "Atlassian: What is the Definition of Done (DoD) in Agile?",
+            "url": "https://www.atlassian.com/agile/project-management/definition-of-done",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          },
+          {
+            "label": "Atlassian: What is Acceptance Criteria? Definition, Examples, & Tips",
+            "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Definition of Done - Agile Software Development",
+            "channel": "freeCodeCamp.org",
+            "url": "https://www.youtube.com/watch?v=pYOJyQoBT3U",
+            "videoId": "pYOJyQoBT3U",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Crafting a Definition of Done",
+            "channel": "Scrum.org",
+            "url": "https://www.youtube.com/watch?v=2MD5onpE6jg",
+            "videoId": "2MD5onpE6jg",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "What is a Definition of Done in Agile?",
+            "channel": "The Agile Shop",
+            "url": "https://www.youtube.com/watch?v=RidSAJVu07E",
+            "videoId": "RidSAJVu07E",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          }
+        ]
+      },
+      "pma-handover-support-sla": {
+        "title": "Handover and support SLAs",
+        "refs": [
+          {
+            "label": "Atlassian: What Is an SLA? Service Level Agreements Explained",
+            "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:35Z"
+          },
+          {
+            "label": "Atlassian: What are Service-Level Objectives (SLOs)?",
+            "url": "https://www.atlassian.com/incident-management/kpis/sla-vs-slo-vs-sli",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:25Z"
+          },
+          {
+            "label": "Google SRE book: Defining slo: service level objective meaning",
+            "url": "https://sre.google/sre-book/service-level-objectives/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:35Z"
+          },
+          {
+            "label": "Atlassian: Understanding incident severity levels",
+            "url": "https://www.atlassian.com/incident-management/kpis/severity-levels",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:47Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a Service-Level Agreement (SLA)?",
+            "channel": "Metroun Quantity Surveying",
+            "url": "https://www.youtube.com/watch?v=V-ypx6Rmu_k",
+            "videoId": "V-ypx6Rmu_k",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Do you need a Software Maintenance Agreement?",
+            "channel": "Martisz",
+            "url": "https://www.youtube.com/watch?v=rLEUmJ0g_8U",
+            "videoId": "rLEUmJ0g_8U",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-tech-terms": {
+    "title": "Tech terms in plain language",
+    "topics": {
+      "pma-frontend-backend-api": {
+        "title": "Frontend, backend and API",
+        "refs": [
+          {
+            "label": "MDN: How the web works",
+            "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "AWS: What is an API?",
+            "url": "https://aws.amazon.com/what-is/api/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:39Z"
+          },
+          {
+            "label": "AWS: Front End vs Back End",
+            "url": "https://aws.amazon.com/compare/the-difference-between-frontend-and-backend/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:28Z"
+          },
+          {
+            "label": "IBM: What Is an API (Application Programming Interface)?",
+            "url": "https://www.ibm.com/think/topics/api",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:38Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What Is an API? Types, Uses, & AI Integration",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=Qw8qVSZEWBc",
+            "videoId": "Qw8qVSZEWBc",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Frontend, API, Backend and Database explained",
+            "channel": "Tamara Jost",
+            "url": "https://www.youtube.com/watch?v=NzEYYemQ3_8",
+            "videoId": "NzEYYemQ3_8",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "RESTful APIs in 100 Seconds // Build an API from Scratch with Node.js Express",
+            "channel": "Fireship",
+            "url": "https://www.youtube.com/watch?v=-MTSQjw5DrM",
+            "videoId": "-MTSQjw5DrM",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-database-server-cloud-hosting": {
+        "title": "Database, server, cloud/AWS, hosting",
+        "refs": [
+          {
+            "label": "AWS: What is a Database?",
+            "url": "https://aws.amazon.com/what-is/database/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:27Z"
+          },
+          {
+            "label": "AWS: What is Cloud Computing?",
+            "url": "https://aws.amazon.com/what-is-cloud-computing/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          },
+          {
+            "label": "Cloudflare: What is the cloud?",
+            "url": "https://www.cloudflare.com/learning/cloud/what-is-the-cloud/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:51Z"
+          },
+          {
+            "label": "MDN: What is a web server?",
+            "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_web_server",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a Database?",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=hRulZhTtUTg",
+            "videoId": "hRulZhTtUTg",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "What is a Server?  Servers vs Desktops Explained",
+            "channel": "PowerCert Animated Videos",
+            "url": "https://www.youtube.com/watch?v=UjCDWCeHCzY",
+            "videoId": "UjCDWCeHCzY",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Cloud Computing Explained",
+            "channel": "PowerCert Animated Videos",
+            "url": "https://www.youtube.com/watch?v=_a6us8kaq0g",
+            "videoId": "_a6us8kaq0g",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-domain-dns-ssl": {
+        "title": "Domain, DNS, SSL",
+        "refs": [
+          {
+            "label": "MDN: What is a Domain Name?",
+            "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_domain_name",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:25Z"
+          },
+          {
+            "label": "Cloudflare: What is DNS?",
+            "url": "https://www.cloudflare.com/learning/dns/what-is-dns/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:13Z"
+          },
+          {
+            "label": "Cloudflare: What is SSL?",
+            "url": "https://www.cloudflare.com/learning/ssl/what-is-ssl/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:44Z"
+          },
+          {
+            "label": "AWS: What Is An SSL Certificate?",
+            "url": "https://aws.amazon.com/what-is/ssl-certificate/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:44Z"
+          },
+          {
+            "label": "MDN: What is a URL?",
+            "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/What_is_a_URL",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "DNS Explained in 100 Seconds",
+            "channel": "Fireship",
+            "url": "https://www.youtube.com/watch?v=UVR9lhUGAyU",
+            "videoId": "UVR9lhUGAyU",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "SSL, TLS, HTTPS Explained",
+            "channel": "ByteByteGo",
+            "url": "https://www.youtube.com/watch?v=j9QmMEWmcfo",
+            "videoId": "j9QmMEWmcfo",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "SSL, TLS, HTTP, HTTPS Explained",
+            "channel": "PowerCert Animated Videos",
+            "url": "https://www.youtube.com/watch?v=hExRDVZHhig",
+            "videoId": "hExRDVZHhig",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      },
+      "pma-deployment-cicd-staging": {
+        "title": "Deployment, CI/CD, staging",
+        "refs": [
+          {
+            "label": "AWS: What is CI/CD?",
+            "url": "https://aws.amazon.com/what-is/ci-cd/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Atlassian: Continuous integration vs. delivery vs. deployment",
+            "url": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:45Z"
+          },
+          {
+            "label": "IBM: What Is Continuous Integration?",
+            "url": "https://www.ibm.com/think/topics/continuous-integration",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:23Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "DevOps CI/CD Explained in 100 Seconds",
+            "channel": "Fireship",
+            "url": "https://www.youtube.com/watch?v=scEDHsr3APg",
+            "videoId": "scEDHsr3APg",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "CI/CD Explained in 5 Minutes",
+            "channel": "TechWorld with Nana",
+            "url": "https://www.youtube.com/watch?v=ddDJxFnv-qs",
+            "videoId": "ddDJxFnv-qs",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "What is Continuous Integration?",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=1er2cjUq1UI",
+            "videoId": "1er2cjUq1UI",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-bug-feature-cr-tech-debt-mvp": {
+        "title": "Bug vs feature vs change request; technical debt; MVP",
+        "refs": [
+          {
+            "label": "Atlassian: What is Tech Debt? Signs & How to Effectively Manage It",
+            "url": "https://www.atlassian.com/agile/software-development/technical-debt",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:45Z"
+          },
+          {
+            "label": "Atlassian: What is a Minimum Viable Product (MVP)? How to Get Started",
+            "url": "https://www.atlassian.com/agile/product-management/minimum-viable-product",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:39Z"
+          },
+          {
+            "label": "Martin Fowler: Technical Debt",
+            "url": "https://martinfowler.com/bliki/TechnicalDebt.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:47Z"
+          },
+          {
+            "label": "ProjectManager: Change Request Form (Free Word Template)",
+            "url": "https://www.projectmanager.com/templates/change-request-form",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:39:03Z"
+          },
+          {
+            "label": "Atlassian: User Stories With Examples and a Template",
+            "url": "https://www.atlassian.com/agile/project-management/user-stories",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:38:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is technical debt?  Definition, Overview, and Best Practices",
+            "channel": "ProductPlan",
+            "url": "https://www.youtube.com/watch?v=qGcm6GVyDNw",
+            "videoId": "qGcm6GVyDNw",
+            "verifiedAt": "2026-10-02T09:36:00Z"
+          },
+          {
+            "title": "Michael Seibel - How to Plan an MVP",
+            "channel": "Y Combinator",
+            "url": "https://www.youtube.com/watch?v=1hHMwLxN6EM",
+            "videoId": "1hHMwLxN6EM",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Business Analyst - Defect or Change Request",
+            "channel": "Business Analyst  REAL-TIME Training",
+            "url": "https://www.youtube.com/watch?v=fOfXsrNGpfc",
+            "videoId": "fOfXsrNGpfc",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-scalability-latency-caching": {
+        "title": "Scalability, latency, caching",
+        "refs": [
+          {
+            "label": "Cloudflare: What Is Latency?",
+            "url": "https://www.cloudflare.com/learning/performance/glossary/what-is-latency/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:07:34Z"
+          },
+          {
+            "label": "AWS: What is Caching and How it Works",
+            "url": "https://aws.amazon.com/caching/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:25Z"
+          },
+          {
+            "label": "Cloudflare: What is Caching?",
+            "url": "https://www.cloudflare.com/learning/cdn/what-is-caching/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:49Z"
+          },
+          {
+            "label": "MDN: HTTP caching",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T10:07:07Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "System Design BASICS: Horizontal vs. Vertical Scaling",
+            "channel": "Gaurav Sen",
+            "url": "https://www.youtube.com/watch?v=xpDnVSmNFX0",
+            "videoId": "xpDnVSmNFX0",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Cache Systems Every Developer Should Know",
+            "channel": "ByteByteGo",
+            "url": "https://www.youtube.com/watch?v=dGAgxozNWFE",
+            "videoId": "dGAgxozNWFE",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Caching - Simply Explained",
+            "channel": "Simply Explained",
+            "url": "https://www.youtube.com/watch?v=6FyXURRVmR0",
+            "videoId": "6FyXURRVmR0",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-auth-push-integrations-webhooks": {
+        "title": "Authentication, push notifications, integrations and webhooks",
+        "refs": [
+          {
+            "label": "Cloudflare: Authn vs. authz: How are they different?",
+            "url": "https://www.cloudflare.com/learning/access-management/authn-vs-authz/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T10:06:57Z"
+          },
+          {
+            "label": "Firebase: Firebase Cloud Messaging",
+            "url": "https://firebase.google.com/docs/cloud-messaging",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:28Z"
+          },
+          {
+            "label": "GitHub Docs: About webhooks",
+            "url": "https://docs.github.com/en/webhooks/about-webhooks",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          },
+          {
+            "label": "Stripe Docs: Receive Stripe events in your webhook endpoint",
+            "url": "https://docs.stripe.com/webhooks",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:43Z"
+          },
+          {
+            "label": "MDN: Push API",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/API/Push_API",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Authentication vs Authorization explained in 3 minutes",
+            "channel": "Permit",
+            "url": "https://www.youtube.com/watch?v=DakSdpODf-U",
+            "videoId": "DakSdpODf-U",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "How Do Push Notifications Work?",
+            "channel": "Gerald Versluis",
+            "url": "https://www.youtube.com/watch?v=AKYebqOCAzY",
+            "videoId": "AKYebqOCAzY",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          },
+          {
+            "title": "Top 3 Things You Should Know About Webhooks!",
+            "channel": "ByteByteGo",
+            "url": "https://www.youtube.com/watch?v=x_jjhcDrISk",
+            "videoId": "x_jjhcDrISk",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-llm-prompt-token-agent-hallucination": {
+        "title": "LLM, prompt, token, agent, hallucination",
+        "refs": [
+          {
+            "label": "IBM: What Are Large Language Models (LLMs)?",
+            "url": "https://www.ibm.com/think/topics/large-language-models",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:47Z"
+          },
+          {
+            "label": "AWS: What is LLM?",
+            "url": "https://aws.amazon.com/what-is/large-language-model/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          },
+          {
+            "label": "Anthropic Docs: Prompt engineering overview",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "IBM: What Are AI Hallucinations?",
+            "url": "https://www.ibm.com/think/topics/ai-hallucinations",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "IBM: What Are AI Agents?",
+            "url": "https://www.ibm.com/think/topics/ai-agents",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:23Z"
+          },
+          {
+            "label": "Anthropic Docs: Glossary",
+            "url": "https://platform.claude.com/docs/en/about-claude/glossary",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:58Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How Large Language Models Work",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=5sLYAQS9sWQ",
+            "videoId": "5sLYAQS9sWQ",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          },
+          {
+            "title": "Why Large Language Models Hallucinate",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=cfqtFvWOfg0",
+            "videoId": "cfqtFvWOfg0",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "What are AI Agents?",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=F8NKVhkZZWI",
+            "videoId": "F8NKVhkZZWI",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          },
+          {
+            "title": "Large Language Models explained briefly",
+            "channel": "3Blue1Brown",
+            "url": "https://www.youtube.com/watch?v=LPZh9BOjkQs",
+            "videoId": "LPZh9BOjkQs",
+            "verifiedAt": "2026-10-02T09:35:55Z"
+          }
+        ]
+      }
+    }
+  },
+  "pma-ai-for-pms": {
+    "title": "AI for PMs",
+    "topics": {
+      "pma-ai-moms-status-emails": {
+        "title": "AI for MoMs and status emails",
+        "refs": [
+          {
+            "label": "Microsoft Support: Catch up on meetings with Microsoft Copilot in Teams",
+            "url": "https://support.microsoft.com/en-us/teams/copilot/catch-up-on-meetings-with-microsoft-365-copilot-in-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:49Z"
+          },
+          {
+            "label": "Microsoft Support: Draft an email message with Copilot in Outlook",
+            "url": "https://support.microsoft.com/en-us/outlook/copilot-pages/draft-an-email-message-with-copilot-in-outlook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:42:56Z"
+          },
+          {
+            "label": "Microsoft Support: Summarize an email thread with Copilot in Outlook",
+            "url": "https://support.microsoft.com/en-us/outlook/copilot-pages/summarize-an-email-thread-with-copilot-in-outlook",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "Anthropic Docs: Prompt engineering overview",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to draft an email with Copilot - New Outlook for Windows",
+            "channel": "Microsoft Copilot",
+            "url": "https://www.youtube.com/watch?v=R7TNInXiqUY",
+            "videoId": "R7TNInXiqUY",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "How to Use Copilot to Automate Meeting Notes in Microsoft Teams!",
+            "channel": "Scott Brant",
+            "url": "https://www.youtube.com/watch?v=JvGmRVAJyF8",
+            "videoId": "JvGmRVAJyF8",
+            "verifiedAt": "2026-10-02T09:35:56Z"
+          },
+          {
+            "title": "M365 Copilot for Project Managers: Streamline Projects Like a Pro",
+            "channel": "Bulb Digital",
+            "url": "https://www.youtube.com/watch?v=hnSCSoFLakM",
+            "videoId": "hnSCSoFLakM",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          }
+        ]
+      },
+      "pma-ai-prds-risk-lists": {
+        "title": "AI for PRDs and risk lists",
+        "refs": [
+          {
+            "label": "Anthropic Docs: Prompting best practices",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#be-clear-and-direct",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:45Z"
+          },
+          {
+            "label": "Atlassian: What is a Product Requirements Document (PRD)?",
+            "url": "https://www.atlassian.com/agile/product-management/requirements",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Microsoft Support: Welcome to Copilot in Word",
+            "url": "https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Copilot for Project Managers: Your AI Assistant for Plans, Risks & Status Reports",
+            "channel": "PPM Works",
+            "url": "https://www.youtube.com/watch?v=oGjBgUIJCFs",
+            "videoId": "oGjBgUIJCFs",
+            "verifiedAt": "2026-10-02T09:35:59Z"
+          },
+          {
+            "title": "4 Methods of Prompt Engineering",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=1c9iyoVIwDs",
+            "videoId": "1c9iyoVIwDs",
+            "verifiedAt": "2026-10-02T09:35:53Z"
+          },
+          {
+            "title": "Why Every Project Manager Needs to Learn Claude AI Now",
+            "channel": "IT Project Managers",
+            "url": "https://www.youtube.com/watch?v=cw6svCZpXFg",
+            "videoId": "cw6svCZpXFg",
+            "verifiedAt": "2026-10-02T09:35:58Z"
+          }
+        ]
+      },
+      "pma-ai-excel-formulas": {
+        "title": "AI for Excel formulas",
+        "refs": [
+          {
+            "label": "Microsoft Support: Get started with Copilot in Excel",
+            "url": "https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:39Z"
+          },
+          {
+            "label": "Microsoft Support: XLOOKUP function",
+            "url": "https://support.microsoft.com/en-us/excel/functions/xlookup-function",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:30Z"
+          },
+          {
+            "label": "Anthropic Docs: Prompting best practices",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#be-clear-and-direct",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:45Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Excel + Copilot Tutorial For Beginners !",
+            "channel": "Deepak EduWorld",
+            "url": "https://www.youtube.com/watch?v=FxCthbRIrPo",
+            "videoId": "FxCthbRIrPo",
+            "verifiedAt": "2026-10-02T09:36:01Z"
+          },
+          {
+            "title": "Major COPILOT in EXCEL Advancements! Now Everyone Can Be an Excel EXPERT",
+            "channel": "Collaboration Simplified",
+            "url": "https://www.youtube.com/watch?v=kN3_55RUu9I",
+            "videoId": "kN3_55RUu9I",
+            "verifiedAt": "2026-10-02T09:35:57Z"
+          }
+        ]
+      },
+      "pma-ai-verification-habits": {
+        "title": "Verification habits",
+        "refs": [
+          {
+            "label": "IBM: What Are AI Hallucinations?",
+            "url": "https://www.ibm.com/think/topics/ai-hallucinations",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "Anthropic Docs: Reduce hallucinations",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:25Z"
+          },
+          {
+            "label": "Microsoft Learn: Application card: Microsoft Copilot (for organizations)",
+            "url": "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-application-card",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:34Z"
+          },
+          {
+            "label": "NIST: AI Risk Management Framework",
+            "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Why Large Language Models Hallucinate",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=cfqtFvWOfg0",
+            "videoId": "cfqtFvWOfg0",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          },
+          {
+            "title": "Why do AI models hallucinate?",
+            "channel": "Claude",
+            "url": "https://www.youtube.com/watch?v=005JLRt3gXI",
+            "videoId": "005JLRt3gXI",
+            "verifiedAt": "2026-10-02T09:35:54Z"
+          }
+        ]
+      }
+    }
+  }
+}

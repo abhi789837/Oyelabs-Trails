@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pm-advanced",
   trackId: "pm",
-  name: "Advanced Delivery",
+  name: "PM foundations and advanced theory: Advanced delivery",
   description:
     "For PMs already running sprints and client accounts: hybrid delivery, capacity across several projects, flow and earned-value metrics, contracts and SOWs, escalation, recovery and vendors. Written for an agency shipping AI-powered client platforms under fixed bids, retainers and T&M.",
   refs: [

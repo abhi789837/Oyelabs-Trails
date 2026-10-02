@@ -27,6 +27,8 @@ export interface TopicResource {
   label: string;
   url: string;
   kind: ResourceKind;
+  /** v4.1: ISO time the link last returned HTTP 200 with the right page. */
+  verifiedAt?: string;
 }
 
 export interface VideoResource {
@@ -42,6 +44,8 @@ export interface VideoResource {
   chapterLabel?: string;
   /** e.g. "19:11" or "7:44:20", for display only. */
   durationLabel?: string;
+  /** v4.1: ISO time the video last passed the oEmbed check. */
+  verifiedAt?: string;
 }
 
 export interface QuizQuestion {
@@ -93,6 +97,11 @@ export interface Topic {
    * challenge is still the quiz — so answers ship with it and are revealed after a check.
    */
   practice?: Task;
+  /**
+   * v4.1: Oyelabs-specific procedures nobody outside the company can know (Keka settings, meeting
+   * and email templates). Shown as "[Oyelabs SOP – admin to fill]" blocks until an admin fills them.
+   */
+  sop?: { title: string; prompt: string }[];
 }
 
 export interface Module {

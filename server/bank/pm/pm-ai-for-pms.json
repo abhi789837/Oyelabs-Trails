@@ -1,0 +1,563 @@
+[
+  {
+    "id": "pm-ai-for-pms-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Order the steps for using an AI assistant to draft a client status report.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Check every number and date against the source"
+        },
+        {
+          "id": "r5",
+          "label": "Send, and file the final version"
+        },
+        {
+          "id": "r1",
+          "label": "Gather the facts: tracker, RAID log, timesheets"
+        },
+        {
+          "id": "r4",
+          "label": "Edit the tone and add your own judgement"
+        },
+        {
+          "id": "r2",
+          "label": "Prompt the AI with the facts, audience and format"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Facts in, check facts out: the AI drafts, you stay accountable."
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.25,
+    "prompt": "An AI assistant drafted minutes of today's client call. You were on the call, and a transcript is saved.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Before sending the minutes to the client you:",
+          "options": [
+            "Check decisions, owners, dates and numbers against the transcript",
+            "Send as is; the AI heard everything",
+            "Send with \"AI-generated, may contain errors\"",
+            "Rewrite it all from memory"
+          ],
+          "correctIndex": 0,
+          "explanation": "You own the minutes; check what matters against the source."
+        },
+        {
+          "id": "s2",
+          "question": "The draft says the client \"approved the extra sprint\"; the transcript says they'll \"think about it\". You:",
+          "options": [
+            "Change it to \"considering; decision due by a date\"",
+            "Keep it; it helps the plan",
+            "Delete the line",
+            "Ask the AI to reword it"
+          ],
+          "correctIndex": 0,
+          "explanation": "Record what was said, plus the follow-up."
+        }
+      ]
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "AI drafted this status email from your tracker: 34 of 40 stories done, go-live 22 Nov, 71% of budget used. Mark what's wrong.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "e1",
+          "text": "Hi Priya, here's this week's update on the Acme portal.",
+          "issue": null
+        },
+        {
+          "id": "e2",
+          "text": "We've completed 34 of 40 stories.",
+          "issue": null
+        },
+        {
+          "id": "e3",
+          "text": "Go-live remains on track for 15 November.",
+          "issue": "The tracker says 22 Nov."
+        },
+        {
+          "id": "e4",
+          "text": "We've used 71% of the budget so far.",
+          "issue": null
+        },
+        {
+          "id": "e5",
+          "text": "Our QA pass rate this sprint is 98%.",
+          "issue": "Not in the tracker: an invented figure."
+        },
+        {
+          "id": "e6",
+          "text": "Let me know if you have any questions.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "AI suggested the formula in **F2** for Ann's total hours, but it returns 0. Fix F2 so it sums Ann's hours.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fix F2.",
+      "grid": [
+        [
+          "Person",
+          "Project",
+          "Hours",
+          "",
+          "Person",
+          "Total h"
+        ],
+        [
+          "Ann",
+          "Portal",
+          "12",
+          "",
+          "Ann",
+          "=SUMIF(A2:A5,E2,B2:B5)"
+        ],
+        [
+          "Bo",
+          "App",
+          "20",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Ann",
+          "App",
+          "9",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Cy",
+          "Portal",
+          "15",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "editable": [
+        "F2"
+      ],
+      "checks": [
+        {
+          "cell": "F2",
+          "expected": 21,
+          "requireFormula": true,
+          "functions": [
+            "SUMIF"
+          ]
+        }
+      ],
+      "solution": {
+        "F2": "=SUMIF(A2:A5,E2,C2:C5)"
+      },
+      "explanation": "The AI summed column B (project names, text) instead of C (hours). Test AI formulas on a row whose answer you know."
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "You want an AI tool to summarise a client's 40-page contract and its rates spreadsheet.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Before pasting anything in, you check:",
+          "options": [
+            "Which AI tools your company approves, and whether client data may go in",
+            "That the tool is free",
+            "That the file is under 10 MB",
+            "Nothing; summaries are harmless"
+          ],
+          "correctIndex": 0,
+          "explanation": "Client contracts are confidential; the tool must be approved for that data."
+        },
+        {
+          "id": "s2",
+          "question": "Only a public consumer chatbot is available. You:",
+          "options": [
+            "Don't paste it; use an approved tool or remove names and figures first",
+            "Paste it; the chatbot is popular",
+            "Paste only the rates",
+            "Ask the client afterwards"
+          ],
+          "correctIndex": 0,
+          "explanation": "Don't put confidential client data into unapproved tools."
+        }
+      ]
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Transcript: Ravi sends the UAT build Friday; Priya (client) confirms gateway keys by Wednesday; PM updates the SOW next week. Flag AI action items that don't match.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "generic",
+      "prompt": "Flag action items that don't match the transcript.",
+      "title": "AI meeting recap — action items",
+      "columns": [
+        "Action",
+        "Owner",
+        "Due"
+      ],
+      "rows": [
+        {
+          "id": "a1",
+          "cells": [
+            "Send UAT build",
+            "Ravi",
+            "Fri"
+          ],
+          "issue": null
+        },
+        {
+          "id": "a2",
+          "cells": [
+            "Confirm gateway keys",
+            "Ravi",
+            "Wed"
+          ],
+          "issue": "The owner is Priya, not Ravi."
+        },
+        {
+          "id": "a3",
+          "cells": [
+            "Update SOW",
+            "PM",
+            "Next week"
+          ],
+          "issue": null
+        },
+        {
+          "id": "a4",
+          "cells": [
+            "Approve extra sprint",
+            "Priya",
+            "Fri"
+          ],
+          "issue": "Never agreed in the call."
+        }
+      ],
+      "questions": []
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Write the prompt you'd give an AI assistant to draft this week's client status email from your notes.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write the prompt (max 20 words): what to use, audience, format, and what it must not do.",
+      "context": "",
+      "wordLimit": 20,
+      "variant": "general",
+      "rubric": [
+        {
+          "id": "input",
+          "label": "Grounded in your notes",
+          "description": "Tells the AI to use only the pasted notes or tracker as its source.",
+          "weight": 1
+        },
+        {
+          "id": "format",
+          "label": "Audience and format",
+          "description": "Names the reader (the client) and the shape: length, sections such as progress, risks, next steps.",
+          "weight": 1
+        },
+        {
+          "id": "limits",
+          "label": "Guardrails",
+          "description": "Says not to invent figures or dates, or to flag anything missing.",
+          "weight": 1.5
+        }
+      ],
+      "sampleAnswer": "Using only my notes below, draft a 150-word status email to the client: progress, risks, next steps. Never invent numbers."
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.25,
+    "prompt": "AI polished your delay email to Acme. Facts: gateway delay, go-live 22 Nov, UAT 10–14 Nov, updates every Friday. Mark what you must remove.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "d1",
+          "text": "Due to a payment gateway delay, go-live moves to 22 November.",
+          "issue": null
+        },
+        {
+          "id": "d2",
+          "text": "We guarantee there will be no further delays.",
+          "issue": "An overpromise you can't keep."
+        },
+        {
+          "id": "d3",
+          "text": "This is entirely the gateway provider's fault.",
+          "issue": "Blaming tone; not the message to send."
+        },
+        {
+          "id": "d4",
+          "text": "UAT is re-planned for 10–14 November.",
+          "issue": null
+        },
+        {
+          "id": "d5",
+          "text": "We'll update you every Friday until launch.",
+          "issue": null
+        },
+        {
+          "id": "d6",
+          "text": "As discussed, we'll waive the change-request fee.",
+          "issue": "Never discussed: an invented commitment."
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "In AI tools, a \"hallucination\" is:",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Confident output that is false or not in the source",
+        "A slow response",
+        "A refusal to answer",
+        "A formatting error"
+      ],
+      "correctIndex": 0,
+      "explanation": "Models can produce fluent, plausible text that isn't true, which is why figures and dates need checking.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "Which prompt will get the most useful status-report draft?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The facts, the audience, the format and what not to do",
+        "\"Write a status report\"",
+        "The whole project mailbox, no instructions",
+        "The same request in capitals"
+      ],
+      "correctIndex": 0,
+      "explanation": "Specific inputs and constraints give specific, checkable output.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "An AI gives you an Excel formula for the client tracker. Before using it you:",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Test it on rows where you know the answer",
+        "Trust it if it shows no error",
+        "Ask the AI if it's sure",
+        "Paste it into every sheet"
+      ],
+      "correctIndex": 0,
+      "explanation": "A formula can run without errors and still be wrong; test against a known answer.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  },
+  {
+    "id": "pm-ai-for-pms-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.75,
+    "prompt": "An AI tool estimates a feature at 3 days. How do you use that?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "As a starting point to confirm with the devs who'll build it",
+        "Send it to the client as the quote",
+        "Halve it",
+        "Ignore all AI estimates"
+      ],
+      "correctIndex": 0,
+      "explanation": "The team doing the work owns the estimate; an AI figure is a prompt for discussion.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "ai",
+      "productivity"
+    ]
+  }
+]

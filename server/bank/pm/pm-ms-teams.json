@@ -1,0 +1,625 @@
+[
+  {
+    "id": "pm-ms-teams-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You're about to post these in Teams. Flag the ones going to the wrong place, then answer the question.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "teams",
+      "prompt": "Flag the posts going to the wrong place.",
+      "title": "Drafts — Acme portal project",
+      "columns": [
+        "Posting to",
+        "Message"
+      ],
+      "rows": [
+        {
+          "id": "d1",
+          "cells": [
+            "Acme Portal › Sprints (internal)",
+            "Sprint 4 demo moved to Thu 3 pm."
+          ],
+          "issue": null
+        },
+        {
+          "id": "d2",
+          "cells": [
+            "1:1 chat with Ravi (dev)",
+            "Decision: reports module is out of scope for v1."
+          ],
+          "issue": "A project decision belongs in the channel, where the team sees it and can find it later."
+        },
+        {
+          "id": "d3",
+          "cells": [
+            "Shared channel with Acme",
+            "Internal: our margin on Acme is down to 12%."
+          ],
+          "issue": "Internal commercial information posted where the client can read it."
+        },
+        {
+          "id": "d4",
+          "cells": [
+            "Acme Portal › Dev (internal)",
+            "@Bo the staging build failed, can you check?"
+          ],
+          "issue": null
+        },
+        {
+          "id": "d5",
+          "cells": [
+            "Shared channel with Acme",
+            "UAT build is ready; test notes attached."
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Where should the weekly client status update go?",
+          "options": [
+            "Where the client reads it: the shared client channel or email",
+            "A 1:1 chat with the dev lead",
+            "The internal Dev channel"
+          ],
+          "correctIndex": 0,
+          "explanation": "Status goes to the client-facing place, not an internal channel or a private chat."
+        }
+      ]
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Order the steps for running a review meeting with an external client in Teams.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Tell attendees, then start recording and transcript"
+        },
+        {
+          "id": "r1",
+          "label": "Schedule it and invite the client's email address"
+        },
+        {
+          "id": "r5",
+          "label": "Post a recap: decisions, actions, owners, dates"
+        },
+        {
+          "id": "r3",
+          "label": "Send the agenda before the call"
+        },
+        {
+          "id": "r2",
+          "label": "Set meeting options: lobby and who can present"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Invite, lock down the options, set the agenda, record with consent, then follow up in writing."
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You set up a sprint review with Acme (external client). Flag the meeting options you should change.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "teams",
+      "prompt": "Flag the options to change.",
+      "title": "Meeting options — Acme sprint review",
+      "columns": [
+        "Option",
+        "Setting"
+      ],
+      "rows": [
+        {
+          "id": "o1",
+          "cells": [
+            "Who can bypass the lobby?",
+            "People in my org and guests"
+          ],
+          "issue": null
+        },
+        {
+          "id": "o2",
+          "cells": [
+            "Who can present?",
+            "Everyone"
+          ],
+          "issue": "With external attendees, limit presenting to organisers or named people."
+        },
+        {
+          "id": "o3",
+          "cells": [
+            "Record automatically",
+            "On"
+          ],
+          "issue": "Agree recording with the client up front rather than recording by default."
+        },
+        {
+          "id": "o4",
+          "cells": [
+            "Allow meeting chat",
+            "On"
+          ],
+          "issue": null
+        },
+        {
+          "id": "o5",
+          "cells": [
+            "Allow mic for attendees",
+            "On"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Acme's CEO has no Teams account. What do you tell her?",
+          "options": [
+            "She can usually join from the link in a browser",
+            "She must buy a Teams licence",
+            "She must be added to your organisation"
+          ],
+          "correctIndex": 0,
+          "explanation": "External people can normally join from the invite link in a browser or the free app, subject to your admin's settings."
+        }
+      ]
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your sprint review was a channel meeting in Acme Portal › Sprints, recorded with transcript on. Answer the questions.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "teams",
+      "prompt": "Answer the questions.",
+      "title": "Acme Portal › Sprints — meeting ended",
+      "columns": [
+        "Item"
+      ],
+      "rows": [],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Where is the recording of this channel meeting stored?",
+          "options": [
+            "In the channel's Files (SharePoint)",
+            "Only on the organiser's laptop",
+            "In each attendee's inbox",
+            "Nowhere; it expires at once"
+          ],
+          "correctIndex": 0,
+          "explanation": "Channel meeting recordings are saved to the channel's SharePoint folder, shown in its Files tab."
+        },
+        {
+          "id": "q2",
+          "question": "A transcript is available. What is it best used for?",
+          "options": [
+            "Checking exact wording of decisions before writing minutes",
+            "Replacing minutes; nobody needs a summary",
+            "Client sign-off of scope"
+          ],
+          "correctIndex": 0,
+          "explanation": "A transcript is raw evidence; minutes still need a short summary of decisions and actions."
+        },
+        {
+          "id": "q3",
+          "question": "The client missed the call. What do you send?",
+          "options": [
+            "A short recap of decisions and actions, linking the recording if they have access",
+            "The full transcript with no summary",
+            "Nothing; it was recorded"
+          ],
+          "correctIndex": 0,
+          "explanation": "Lead with what was decided and who does what; the recording is backup."
+        }
+      ]
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.25,
+    "prompt": "Acme's product owner wants to talk to your devs directly in Teams. Your internal team's channels hold estimates, margins and notes on other clients.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you set this up?",
+          "options": [
+            "A client-facing shared channel or team, with Acme added there only",
+            "Add Acme as a guest to your internal team",
+            "Give Acme a company account",
+            "Refuse; email only"
+          ],
+          "correctIndex": 0,
+          "explanation": "Give the client a dedicated space so internal channels stay internal."
+        },
+        {
+          "id": "s2",
+          "question": "The project ends next month. What about their access?",
+          "options": [
+            "Remove it at close, after handing over the files they need",
+            "Leave it; guests cost nothing",
+            "Delete the channel without notice",
+            "Convert them to full members"
+          ],
+          "correctIndex": 0,
+          "explanation": "Access should end with the engagement, after a clean handover."
+        }
+      ]
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The meeting's tasks were added to the channel's task board. Flag the tasks that can't be tracked as they stand.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "teams",
+      "prompt": "Flag the tasks that need fixing.",
+      "title": "Acme Portal › Tasks — from sprint review",
+      "columns": [
+        "Task",
+        "Assigned to",
+        "Due"
+      ],
+      "rows": [
+        {
+          "id": "a1",
+          "cells": [
+            "Send UAT build to Acme",
+            "Ravi",
+            "Fri 10 Oct"
+          ],
+          "issue": null
+        },
+        {
+          "id": "a2",
+          "cells": [
+            "Confirm payment gateway keys",
+            "—",
+            "Wed 8 Oct"
+          ],
+          "issue": "No owner: nobody will chase it."
+        },
+        {
+          "id": "a3",
+          "cells": [
+            "Update SOW for reports module",
+            "PM",
+            "—"
+          ],
+          "issue": "No due date."
+        },
+        {
+          "id": "a4",
+          "cells": [
+            "Fix login timeout bug",
+            "Bo",
+            "Thu 9 Oct"
+          ],
+          "issue": null
+        },
+        {
+          "id": "a5",
+          "cells": [
+            "Book UAT session with Acme",
+            "PM",
+            "Tue 7 Oct"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": []
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "A PM describes how they run a client project in Teams. Mark the practices that will cause problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "One team per client project, with channels for Dev, QA and Releases.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Decisions are made and kept in 1:1 chats with the relevant dev.",
+          "issue": "Decisions in private chats are invisible to the team and lost later."
+        },
+        {
+          "id": "p3",
+          "text": "The client is in a separate client-facing channel only.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Project files live in the channel's Files tab, not personal OneDrive.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Client meetings are recorded by default without mentioning it.",
+          "issue": "Tell attendees and agree before recording."
+        },
+        {
+          "id": "p6",
+          "text": "Build notifications post to the Releases channel.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Former contractors keep guest access after they leave, just in case.",
+          "issue": "Remove access when people leave the project."
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.25,
+    "prompt": "You're running a requirements call with a new client and want a recording and transcript to write the minutes from.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Before starting the recording you:",
+          "options": [
+            "Say it will be recorded and transcribed, why, and ask for objections",
+            "Start it quietly; Teams shows a banner anyway",
+            "Record on your phone instead",
+            "Record only the internal pre-call"
+          ],
+          "correctIndex": 0,
+          "explanation": "Ask openly; the banner is not consent."
+        },
+        {
+          "id": "s2",
+          "question": "Midway the client says: \"Off the record, our real budget is lower.\" You:",
+          "options": [
+            "Pause recording and transcript, and keep it out of shared minutes",
+            "Keep recording; it helps the proposal",
+            "Put it in the minutes in bold",
+            "End the meeting"
+          ],
+          "correctIndex": 0,
+          "explanation": "Respect the request and keep it out of anything shared."
+        }
+      ]
+    },
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "When should a project discussion be in a channel rather than a group chat?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "When the whole project team needs to see it and find it later",
+        "When it's urgent",
+        "When it's private between two people",
+        "Never; chats are always better"
+      ],
+      "correctIndex": 0,
+      "explanation": "Channels are organised by topic, visible to the team and searchable; chats suit quick, private or ad-hoc talk.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "A guest in your organisation's Teams is:",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Someone outside your organisation added to a team with limited access",
+        "Any colleague without a licence",
+        "A Teams admin",
+        "A bot"
+      ],
+      "correctIndex": 0,
+      "explanation": "Guests are external people invited into a team; they see only that team, with fewer permissions.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "What does turning on transcription in a Teams meeting give you?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A searchable text record of who said what, saved with the meeting",
+        "An approved set of minutes",
+        "A translation of all shared files",
+        "A recording of shared screens only"
+      ],
+      "correctIndex": 0,
+      "explanation": "A transcript is a speaker-attributed record; minutes still need writing and checking.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-ms-teams-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ms-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.75,
+    "prompt": "Main benefit of a shared channel with a client over adding them as a guest?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "They work from their own Teams organisation without switching accounts",
+        "They see all your other channels",
+        "No admin settings are needed",
+        "Recordings are turned off"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shared channels let people from another organisation join one channel from their own Teams, with no tenant switching.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "teams",
+      "tools"
+    ]
+  }
+]

@@ -26,7 +26,7 @@ import { catalogApi } from "../catalog/api";
 import { InfoTip } from "../catalog/InfoTip";
 import { refreshCatalog, useCatalog } from "../catalog/useCatalog";
 import {
-  changeDepartment,
+  changeDepartmentWithDefaults,
   findSkillToAdd,
   focusNames,
   hoursPerDayHint,
@@ -44,6 +44,7 @@ import {
   toUnderstandRequest,
   understandingKey,
   understandingReady,
+  withDepartmentDefaults,
   type SetupState,
 } from "./helpers";
 import { PriorityRows } from "./PriorityRows";
@@ -125,7 +126,8 @@ function SetupFormInner({
   const departments = useMemo(() => catalog.departments.filter((d) => !d.archived), [catalog]);
   const fallbackDepartment = departments[0]?.id ?? "engineering";
   const baseline = useMemo(() => initialSetupState(initial, fallbackDepartment), [initial, fallbackDepartment]);
-  const [state, setState] = useState<SetupState>(baseline);
+  // A new learner starts from their department's suggested priorities (v4.1); a saved setup is never touched.
+  const [state, setState] = useState<SetupState>(() => (initial ? baseline : withDepartmentDefaults(baseline, catalog)));
   const [pending, setPending] = useState<"save" | "assign" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
@@ -246,7 +248,7 @@ function SetupFormInner({
                 options={departments.map((d) => ({ value: d.id, label: d.name }))}
                 value={state.departmentId}
                 disabled={busy}
-                onChange={(id) => setState((s) => changeDepartment(s, catalog, id))}
+                onChange={(id) => setState((s) => changeDepartmentWithDefaults(s, catalog, id))}
               />
               <FieldMessage error={fieldError(fields, "departmentId")} />
             </div>
@@ -408,14 +410,21 @@ function SetupFormInner({
                 No priorities yet. The assessment then covers their track basics only.
               </p>
             ) : (
-              <PriorityRows
-                rows={state.priorities}
-                skills={skillById}
-                disabled={busy}
-                onSlider={(skillId, slider) => setState((s) => ({ ...s, priorities: setSlider(s.priorities, skillId, slider) }))}
-                onMove={(skillId, delta) => setState((s) => ({ ...s, priorities: movePriority(s.priorities, skillId, delta) }))}
-                onRemove={(skillId) => setState((s) => ({ ...s, priorities: removePriority(s.priorities, skillId) }))}
-              />
+              <>
+                {state.prefilledFrom === state.departmentId && (
+                  <p className="text-xs text-muted-foreground">
+                    Suggested defaults for {department?.name ?? "this department"} — adjust any slider.
+                  </p>
+                )}
+                <PriorityRows
+                  rows={state.priorities}
+                  skills={skillById}
+                  disabled={busy}
+                  onSlider={(skillId, slider) => setState((s) => ({ ...s, priorities: setSlider(s.priorities, skillId, slider) }))}
+                  onMove={(skillId, delta) => setState((s) => ({ ...s, priorities: movePriority(s.priorities, skillId, delta) }))}
+                  onRemove={(skillId) => setState((s) => ({ ...s, priorities: removePriority(s.priorities, skillId) }))}
+                />
+              </>
             )}
           </div>
         </Section>

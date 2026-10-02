@@ -1,0 +1,634 @@
+[
+  {
+    "id": "pm-word-powerpoint-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Order the sections of a weekly client status report in Word, top to bottom.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r5",
+          "label": "Next week's plan"
+        },
+        {
+          "id": "r2",
+          "label": "Summary: overall status and key message"
+        },
+        {
+          "id": "r6",
+          "label": "Appendix: detailed task list"
+        },
+        {
+          "id": "r1",
+          "label": "Title and reporting period"
+        },
+        {
+          "id": "r4",
+          "label": "Risks, issues and decisions needed"
+        },
+        {
+          "id": "r3",
+          "label": "Progress this week"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Lead with the headline so a busy reader gets it at once; detail goes last."
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "This is the status slide for Acme's steering meeting. Mark the flaws.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Title: Acme Portal — status, week 41",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Overall status: Green",
+          "issue": "Green contradicts a three-week go-live slip."
+        },
+        {
+          "id": "s3",
+          "text": "Go-live moved from 1 Nov to 22 Nov (payment gateway delay).",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Body text in 10 pt, 14 bullets, five colours.",
+          "issue": "Unreadable on screen; cut to the key points."
+        },
+        {
+          "id": "s5",
+          "text": "Decision needed: approve an extra QA week by 10 Oct.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Risks: see the attached 40-row RAID log.",
+          "issue": "Top risks belong on the slide, not in an attachment."
+        },
+        {
+          "id": "s7",
+          "text": "Next steps, each with an owner and date.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Order the steps for sending an SOW draft to a client for review.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Save as a new version number"
+        },
+        {
+          "id": "r6",
+          "label": "Export the agreed version to PDF for signature"
+        },
+        {
+          "id": "r1",
+          "label": "Turn on Track Changes"
+        },
+        {
+          "id": "r5",
+          "label": "Go through their changes one by one: accept or reject"
+        },
+        {
+          "id": "r2",
+          "label": "Make your edits, with comments explaining them"
+        },
+        {
+          "id": "r4",
+          "label": "Send to the client for review"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Track from the start, version it, review changes individually, sign a PDF."
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.25,
+    "prompt": "Acme returned the SOW with tracked changes. Flag the changes you should not simply accept, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "generic",
+      "prompt": "Flag changes that need discussion before accepting.",
+      "title": "Word — Review › Tracked changes (Acme SOW v3)",
+      "columns": [
+        "By",
+        "Change"
+      ],
+      "rows": [
+        {
+          "id": "c1",
+          "cells": [
+            "Priya (Acme)",
+            "'colour' → 'color' throughout"
+          ],
+          "issue": null
+        },
+        {
+          "id": "c2",
+          "cells": [
+            "Priya (Acme)",
+            "Delivery date 1 Nov → 18 Oct"
+          ],
+          "issue": "A date change affects the plan; agree it first."
+        },
+        {
+          "id": "c3",
+          "cells": [
+            "Priya (Acme)",
+            "Fixed a typo in the section 2 heading"
+          ],
+          "issue": null
+        },
+        {
+          "id": "c4",
+          "cells": [
+            "Priya (Acme)",
+            "Added 'Admin reports' to In scope"
+          ],
+          "issue": "Added scope: needs estimate and agreement."
+        },
+        {
+          "id": "c5",
+          "cells": [
+            "Priya (Acme)",
+            "Reworded intro, same meaning"
+          ],
+          "issue": null
+        },
+        {
+          "id": "c6",
+          "cells": [
+            "Priya (Acme)",
+            "Deleted the Out of scope list"
+          ],
+          "issue": "Removes your protection against scope creep."
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "How should Priya know why you rejected c4?",
+          "options": [
+            "A comment on the change, summarised in your reply email",
+            "Reject it silently",
+            "A phone call with no written record"
+          ],
+          "correctIndex": 0,
+          "explanation": "Leave a written reason where the change is, and summarise it."
+        }
+      ]
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "A PM's notes on preparing an SOW in Word. Mark the practices that will cause problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "w1",
+          "text": "Section titles use Heading 1/2 styles, so the table of contents updates.",
+          "issue": null
+        },
+        {
+          "id": "w2",
+          "text": "Saved as final_v3_REAL_final.docx.",
+          "issue": "Use clear version numbers or version history, not file-name guesses."
+        },
+        {
+          "id": "w3",
+          "text": "Scope lists in-scope and out-of-scope items.",
+          "issue": null
+        },
+        {
+          "id": "w4",
+          "text": "Client's tracked changes accepted with Accept All, unread.",
+          "issue": "Every change must be reviewed; one may alter scope or price."
+        },
+        {
+          "id": "w5",
+          "text": "Comments resolved with a reply explaining the change.",
+          "issue": null
+        },
+        {
+          "id": "w6",
+          "text": "Page numbers typed by hand in the footer.",
+          "issue": "Use a page number field so they stay right."
+        },
+        {
+          "id": "w7",
+          "text": "Sent to the client as a PDF for signature.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Acme returned your SOW with 23 tracked changes. Most are wording, but one changes \"3 rounds of revisions\" to \"unlimited revisions\".",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you handle the changes?",
+          "options": [
+            "Review each: accept wording fixes, comment on the revisions change",
+            "Accept All to save time",
+            "Reject All and resend the original",
+            "Edit their text with tracking off"
+          ],
+          "correctIndex": 0,
+          "explanation": "Wording can be accepted; a commercial change needs a response."
+        },
+        {
+          "id": "s2",
+          "question": "For the revisions change you:",
+          "options": [
+            "Reject it with a comment proposing a middle option; tell your account lead",
+            "Accept it to keep the client happy",
+            "Delete the clause silently",
+            "Ignore it"
+          ],
+          "correctIndex": 0,
+          "explanation": "Unlimited revisions is open-ended cost; negotiate it in the open."
+        }
+      ]
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You're reviewing the steering deck before it goes to the client. Flag the slides to fix, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "generic",
+      "prompt": "Flag the slides to fix.",
+      "title": "PowerPoint — Acme steering deck",
+      "columns": [
+        "Slide",
+        "Content"
+      ],
+      "rows": [
+        {
+          "id": "d1",
+          "cells": [
+            "1",
+            "Title, project name, date"
+          ],
+          "issue": null
+        },
+        {
+          "id": "d2",
+          "cells": [
+            "2",
+            "Summary: status Amber, one decision needed"
+          ],
+          "issue": null
+        },
+        {
+          "id": "d3",
+          "cells": [
+            "3",
+            "Burndown chart with no axis labels"
+          ],
+          "issue": "A chart without labels can't be read."
+        },
+        {
+          "id": "d4",
+          "cells": [
+            "4",
+            "Top 3 risks with owners and mitigations"
+          ],
+          "issue": null
+        },
+        {
+          "id": "d5",
+          "cells": [
+            "5",
+            "Raw Jira export, 60 rows"
+          ],
+          "issue": "Summarise; move detail to an appendix."
+        },
+        {
+          "id": "d6",
+          "cells": [
+            "6",
+            "Decision: approve +1 sprint by 10 Oct"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "You'll email the deck after the meeting. Which format?",
+          "options": [
+            "PDF, so layout and fonts hold",
+            "PPTX with your internal speaker notes",
+            "Screenshots pasted in the email"
+          ],
+          "correctIndex": 0,
+          "explanation": "A PDF looks the same everywhere and can't carry editable internal notes by mistake."
+        }
+      ]
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.25,
+    "prompt": "Acme sends back SOW v4 with no tracked changes: \"just small edits\". Signature is due tomorrow.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you find what changed?",
+          "options": [
+            "Word's Compare: your v3 against their v4",
+            "Trust them and sign",
+            "Skim both side by side",
+            "Ask them to list their edits from memory"
+          ],
+          "correctIndex": 0,
+          "explanation": "Compare shows every difference as tracked changes, whatever the client says."
+        },
+        {
+          "id": "s2",
+          "question": "Compare shows payment terms changed from 30 to 60 days. You:",
+          "options": [
+            "Raise it with the client and your finance or account lead before agreeing",
+            "Accept it as a small edit",
+            "Change it back silently",
+            "Ignore it; payment is finance's job"
+          ],
+          "correctIndex": 0,
+          "explanation": "A commercial change is never a small edit; agree it openly."
+        }
+      ]
+    },
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "You want an automatic table of contents in Word. What must you do first?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Apply Heading styles to section titles",
+        "Make the titles bold",
+        "Number the pages by hand",
+        "Add a section break after each title"
+      ],
+      "correctIndex": 0,
+      "explanation": "The table of contents is built from Heading styles; bold text is not picked up.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "What does Track Changes do?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Records each insertion and deletion so others can accept or reject it",
+        "Locks the document",
+        "Saves a copy every hour",
+        "Logs who opened the file"
+      ],
+      "correctIndex": 0,
+      "explanation": "It marks every edit with its author so changes can be reviewed one by one.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "You need the client's logo and footer on all 30 slides. Best way?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Edit the Slide Master",
+        "Paste them onto each slide",
+        "Add a background picture per slide",
+        "Group all the slides"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Slide Master applies to every slide using its layouts, and new slides get it too.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  },
+  {
+    "id": "pm-word-powerpoint-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-word-powerpoint",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.75,
+    "prompt": "Before sending a Word file that went through internal review to a client, you should:",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Run Inspect Document to remove comments and tracked changes",
+        "Turn off spell check",
+        "Remove all styles",
+        "Convert tables to images"
+      ],
+      "correctIndex": 0,
+      "explanation": "Inspect Document finds leftover comments, tracked changes and hidden content you don't want the client to see.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "word",
+      "powerpoint",
+      "tools"
+    ]
+  }
+]

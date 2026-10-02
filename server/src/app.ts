@@ -34,6 +34,7 @@ import { registerAssessmentRoutes } from "./routes/assessment";
 import { registerAssessmentV4Routes } from "./routes/assessmentV4";
 import { registerAuthRoutes } from "./routes/auth";
 import { registerContentRoutes } from "./routes/content";
+import { registerSopRoutes } from "./routes/sop";
 import { registerHealthRoutes } from "./routes/health";
 import { registerMeRoutes } from "./routes/me";
 import { registerTopicRoutes } from "./routes/topics";
@@ -178,6 +179,7 @@ export async function buildApp({
   await registerAuthRoutes(app);
   await registerMeRoutes(app);
   await registerContentRoutes(app);
+  await registerSopRoutes(app);
   await registerTopicRoutes(app);
   await registerAssessmentRoutes(app);
   await registerAssessmentV4Routes(app);

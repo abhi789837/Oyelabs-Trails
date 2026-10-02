@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pm-beginner",
   trackId: "pm",
-  name: "PM Foundations",
+  name: "PM foundations and advanced theory: Foundations",
   description:
     "The working vocabulary of delivering client software at an agency: the project lifecycle and who owns what, the scope/time/cost triangle, Scrum and Kanban as they are actually written, user stories, the tools, stand-ups, status reporting, requirements and the software basics a PM needs to hold their own with engineers. Beginner level, but every topic is framed around fixed-bid AI features, client politics and the gotchas that sink real projects.",
   refs: [

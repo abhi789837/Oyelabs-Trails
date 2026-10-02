@@ -9324,5 +9324,2278 @@ export const manifest: TrackMeta[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "pm",
+    "name": "Project Management",
+    "tagline": "Delivering client software at an agency, from the first stand-up to portfolio governance.",
+    "accentToken": "ridge",
+    "modules": [
+      {
+        "id": "pma-refresh",
+        "trackId": "pm",
+        "name": "Improving your existing PM skills",
+        "description": "A short, practical refresh of the daily PM work that slips first when you are busy: planning the week, tracking real progress, and following up so every action has one owner and a date. Built for PMs already running Laravel, React and mobile projects for overseas clients.",
+        "refs": [
+          {
+            "label": "Atlassian: How to Do Project Planning?",
+            "url": "https://www.atlassian.com/work-management/project-management/project-planning",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "Atlassian: RACI Chart: What is it & How to Use",
+            "url": "https://www.atlassian.com/work-management/project-management/raci-chart",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-planning-the-week",
+            "moduleId": "pma-refresh",
+            "trackId": "pm",
+            "title": "Planning a week as a PM",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-tracking-progress",
+            "moduleId": "pma-refresh",
+            "trackId": "pm",
+            "title": "Tracking progress and status",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-follow-ups-ownership",
+            "moduleId": "pma-refresh",
+            "trackId": "pm",
+            "title": "Follow-ups, ownership and accountability",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pma-client",
+        "trackId": "pm",
+        "name": "Client management",
+        "description": "Running the client side of an agency project well: kickoff, owning scope and change requests, saying no, bad news, escalations, time zones and cultures, satisfaction check-ins, long-term trust and a clean handover to support.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-client-onboarding-kickoff",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Client onboarding and kickoff",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-expectations-scope-change-requests",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Expectations, scope and change requests",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-saying-no-not-now",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Saying no or not now",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-time-zones-cultures",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Time zones and cultures",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-satisfaction-check-ins",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Client satisfaction check-ins",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-bad-news-early",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Delivering bad news early",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pma-escalations-unhappy-clients",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Escalations and unhappy clients",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pma-trust-long-term-relationships",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Trust and long-term client relationships",
+            "level": "advanced",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-handover-to-support",
+            "moduleId": "pma-client",
+            "trackId": "pm",
+            "title": "Handover to support and maintenance",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pma-meetings",
+        "trackId": "pm",
+        "name": "Client update meetings & presenting",
+        "description": "Running the weekly client update well: a tight agenda, honest RAG status, done / next / risks / decisions, demos that work, presenting progress, handling tough questions, timeboxing, and the minutes-of-meeting email within 24 hours, all run in Microsoft Teams.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-meeting-agenda",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Agenda for a client update",
+            "level": "beginner",
+            "estMinutes": 20,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-rag-status",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "RAG status",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-done-next-risks-decisions",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Done / next / risks / decisions format",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-demo-prep-flow",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Demo preparation and flow",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-presenting-progress",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Presenting progress: slides or live demo",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-client-meetings-in-teams",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Running client meetings in Teams",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-timeboxing-decisions-actions",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Timeboxing, decisions and action items",
+            "level": "advanced",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-tough-questions",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Handling tough questions",
+            "level": "advanced",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-mom-follow-up-24h",
+            "moduleId": "pma-meetings",
+            "trackId": "pm",
+            "title": "Minutes of meeting and follow-up within 24h",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pma-email",
+        "trackId": "pm",
+        "name": "Email etiquette & professional writing",
+        "description": "Client and internal email for agency PMs: subject lines and structure, tone, To/CC/BCC and reply-all, attachments and signatures, Outlook features, polite chasing, writing for non-native readers, and the status, escalation and MoM emails that keep overseas clients informed.",
+        "refs": [
+          {
+            "label": "Digital.gov: Plain language guide series",
+            "url": "https://digital.gov/guides/plain-language",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:40Z"
+          },
+          {
+            "label": "Purdue OWL: Email etiquette",
+            "url": "https://owl.purdue.edu/owl/general_writing/academic_writing/email_etiquette.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-email-subject-structure",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "Subject lines and email structure",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-email-tone-client-vs-internal",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "Tone: client vs internal",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-to-cc-bcc-reply-all",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "To / CC / BCC, reply-all and response times",
+            "level": "beginner",
+            "estMinutes": 20,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-attachments-links-signatures",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "Attachments, links and signatures",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-outlook-features",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "Outlook features: rules, templates, scheduling, flags",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-chasing-politely",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "Chasing politely and follow-ups",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-writing-for-non-native-readers",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "Writing for non-native readers",
+            "level": "advanced",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-status-escalation-mom-emails",
+            "moduleId": "pma-email",
+            "trackId": "pm",
+            "title": "Status, escalation and MoM emails",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pma-excel",
+        "trackId": "pm",
+        "name": "Excel for PMs",
+        "description": "Hands-on Excel for agency project managers: clean tracker tables, the formulas a PM uses every week (SUMIFS, COUNTIF, XLOOKUP, NETWORKDAYS), RAG status, drop-downs, pivots, sharing safely with clients, Google Sheets equivalents and real trackers such as budget vs actuals and a RAID log.",
+        "refs": [
+          {
+            "label": "Microsoft Support: Excel help & learning",
+            "url": "https://support.microsoft.com/en-us/excel/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:44:16Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-excel-tables-sort-filter-freeze",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Tables, sort/filter, freeze panes, formatting",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-excel-data-validation",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Data validation (dropdowns)",
+            "level": "beginner",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-excel-protect-share",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Protect and share",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-excel-core-functions",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "SUM/AVERAGE/IF/COUNTIF/SUMIFS/XLOOKUP",
+            "level": "intermediate",
+            "estMinutes": 60,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-excel-dates-networkdays",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Dates and NETWORKDAYS",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-excel-conditional-formatting-rag",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Conditional formatting for RAG",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-excel-pivot-tables-charts",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Pivot tables and charts",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-google-sheets-equivalents",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Google Sheets equivalents",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-excel-trackers",
+            "moduleId": "pma-excel",
+            "trackId": "pm",
+            "title": "Building trackers: project, Gantt, resource, budget vs actuals, RAID",
+            "level": "advanced",
+            "estMinutes": 75,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pma-resource",
+        "trackId": "pm",
+        "name": "Agency resource management",
+        "description": "How an agency PM plans people across several client projects: capacity, allocation and utilisation, billable %, the bench and skill matrix, over- and under-allocation, leave and holidays, forecasting from the BD pipeline, the weekly resource meeting, and keeping the plan in Excel and Keka PSA.",
+        "refs": [
+          {
+            "label": "Float: Capacity planning and resource scheduling",
+            "url": "https://support.float.com/en/articles/13847946-capacity-planning-and-resource-scheduling",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:36Z"
+          },
+          {
+            "label": "Float: Float Resource Management Guides",
+            "url": "https://www.float.com:443/guides",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:41Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-capacity-allocation-utilisation",
+            "moduleId": "pma-resource",
+            "trackId": "pm",
+            "title": "Capacity vs allocation vs utilisation; billable %",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-bench-skill-matrix",
+            "moduleId": "pma-resource",
+            "trackId": "pm",
+            "title": "Bench and skill matrix",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-multi-project-over-under-allocation",
+            "moduleId": "pma-resource",
+            "trackId": "pm",
+            "title": "Multi-project allocation; over/under-allocation",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-leave-holiday-planning",
+            "moduleId": "pma-resource",
+            "trackId": "pm",
+            "title": "Leave and holiday planning",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-weekly-resource-meeting",
+            "moduleId": "pma-resource",
+            "trackId": "pm",
+            "title": "Weekly resource meeting",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-forecasting-from-pipeline",
+            "moduleId": "pma-resource",
+            "trackId": "pm",
+            "title": "Forecasting from the BD pipeline and re-planning",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-resource-plan-in-excel-and-keka",
+            "moduleId": "pma-resource",
+            "trackId": "pm",
+            "title": "Doing it in Excel and Keka PSA",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pma-tech-terms",
+        "trackId": "pm",
+        "name": "Tech terms in plain language",
+        "description": "The technical words PMs hear every day, from APIs and DNS to CI/CD, caching, webhooks and LLMs. Each topic gives a plain definition, an everyday analogy, why a PM cares, and how to explain it to a client in one sentence.",
+        "refs": [
+          {
+            "label": "MDN: How the web works",
+            "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:31Z"
+          },
+          {
+            "label": "Anthropic Docs: Glossary",
+            "url": "https://platform.claude.com/docs/en/about-claude/glossary",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:58Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-frontend-backend-api",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "Frontend, backend and API",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-database-server-cloud-hosting",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "Database, server, cloud/AWS, hosting",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-domain-dns-ssl",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "Domain, DNS, SSL",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-deployment-cicd-staging",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "Deployment, CI/CD, staging",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-bug-feature-cr-tech-debt-mvp",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "Bug vs feature vs change request; technical debt; MVP",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-auth-push-integrations-webhooks",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "Authentication, push notifications, integrations and webhooks",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-scalability-latency-caching",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "Scalability, latency, caching",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-llm-prompt-token-agent-hallucination",
+            "moduleId": "pma-tech-terms",
+            "trackId": "pm",
+            "title": "LLM, prompt, token, agent, hallucination",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pma-sdlc",
+        "trackId": "pm",
+        "name": "The SDLC in an agency",
+        "description": "How a client project really moves from discovery to maintenance at an agency: environments, sprints, QA and UAT, what done means, hotfixes, app store reviews and the handover to support.",
+        "refs": [
+          {
+            "label": "Atlassian: What is Software Development Life Cycle (SDLC)? Complete Guide",
+            "url": "https://www.atlassian.com/agile/software-development/sdlc",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          },
+          {
+            "label": "Scrum Guides: Scrum Guide",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:44Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-sdlc-phases",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "Discovery to maintenance: the phases",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-dev-staging-prod",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "Dev, staging and prod",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-sprints-in-practice",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "Sprints in practice",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-qa-uat",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "QA and UAT",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-definition-of-done",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "Definition of done",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-app-store-play-review",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "App Store and Play Store review times",
+            "level": "advanced",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-hotfix-vs-release",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "Hotfix vs release",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-handover-support-sla",
+            "moduleId": "pma-sdlc",
+            "trackId": "pm",
+            "title": "Handover and support SLAs",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pma-teams",
+        "trackId": "pm",
+        "name": "Microsoft Teams for PMs",
+        "description": "Running an agency project in Microsoft Teams: where to post what, @mentions and presence etiquette, files and SharePoint, meeting features, Planner and Loop, client calls with external guests, and using Copilot recaps safely.",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Overview of teams and channels in Microsoft Teams",
+            "url": "https://learn.microsoft.com/en-us/microsoftteams/teams-channels-overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:20Z"
+          },
+          {
+            "label": "Microsoft Support: Microsoft 365 video training - Microsoft Support",
+            "url": "https://support.microsoft.com/en-us/office/microsoft-365-video-training-4f108e54-240b-4351-8084-b1089f0d21d7",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:42Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-teams-channels-chats",
+            "moduleId": "pma-teams",
+            "trackId": "pm",
+            "title": "Teams vs channels vs chats",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-teams-mentions-presence",
+            "moduleId": "pma-teams",
+            "trackId": "pm",
+            "title": "@mentions and presence etiquette",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-teams-files-sharepoint",
+            "moduleId": "pma-teams",
+            "trackId": "pm",
+            "title": "Files and SharePoint basics",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-teams-meetings-features",
+            "moduleId": "pma-teams",
+            "trackId": "pm",
+            "title": "Meetings: lobby, recording, transcripts, breakout rooms",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-teams-tabs-planner-loop",
+            "moduleId": "pma-teams",
+            "trackId": "pm",
+            "title": "Tabs: Planner and Loop",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-teams-client-calls",
+            "moduleId": "pma-teams",
+            "trackId": "pm",
+            "title": "Client calls with external guests",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-copilot-in-teams",
+            "moduleId": "pma-teams",
+            "trackId": "pm",
+            "title": "Copilot in Teams",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pma-word-ppt",
+        "trackId": "pm",
+        "name": "Word & PowerPoint for PMs",
+        "description": "The Word and PowerPoint skills an agency PM uses every week: SOWs and PRDs built on styles and templates, Track Changes reviews with clients, clean PDF exports, and simple status decks with charts from Excel.",
+        "refs": [
+          {
+            "label": "Microsoft Support: Word help & learning",
+            "url": "https://support.microsoft.com/en-us/word/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "Microsoft Support: PowerPoint for Windows training",
+            "url": "https://support.microsoft.com/en-us/powerpoint/powerpoint-for-windows-training",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:29Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-word-styles-toc-templates",
+            "moduleId": "pma-word-ppt",
+            "trackId": "pm",
+            "title": "Styles, headings, automatic TOC and templates",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-word-tables-headers-pdf",
+            "moduleId": "pma-word-ppt",
+            "trackId": "pm",
+            "title": "Tables, headers/footers and PDF export",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-powerpoint-status-decks",
+            "moduleId": "pma-word-ppt",
+            "trackId": "pm",
+            "title": "PowerPoint status decks and charts from Excel",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-word-track-changes-comments",
+            "moduleId": "pma-word-ppt",
+            "trackId": "pm",
+            "title": "Track Changes and comments for SOW and PRD reviews",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pma-keka",
+        "trackId": "pm",
+        "name": "Keka for PMs",
+        "description": "The Keka features an agency PM uses every week: logging, submitting and approving timesheets, leave and attendance and their effect on delivery, and Keka PSA for clients and projects, billing types, allocation and rate cards, utilisation reports and the basics of invoicing.",
+        "refs": [
+          {
+            "label": "Keka Help: Keka Help Centre home",
+            "url": "https://help.keka.com/hc/en-us",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:53Z"
+          },
+          {
+            "label": "Keka Help: What is Keka Professional Services Automation (PSA)?",
+            "url": "https://help.keka.com/hc/en-us/articles/39946767676433-What-is-Keka-Professional-Services-Automation-PSA",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:38:58Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-keka-timesheets",
+            "moduleId": "pma-keka",
+            "trackId": "pm",
+            "title": "Timesheets: log, submit, approve the team's",
+            "level": "beginner",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-keka-leave-attendance",
+            "moduleId": "pma-keka",
+            "trackId": "pm",
+            "title": "Leave and attendance, and delivery impact",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-keka-psa-projects-clients",
+            "moduleId": "pma-keka",
+            "trackId": "pm",
+            "title": "Keka PSA: projects and clients",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-keka-psa-billing-types",
+            "moduleId": "pma-keka",
+            "trackId": "pm",
+            "title": "Billing types: Time & Material, Milestone, Non-Billable",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-keka-psa-allocation-rate-cards",
+            "moduleId": "pma-keka",
+            "trackId": "pm",
+            "title": "Resource allocation and rate cards",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pma-keka-psa-utilisation-reports",
+            "moduleId": "pma-keka",
+            "trackId": "pm",
+            "title": "Utilisation and project reports",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-keka-psa-invoices",
+            "moduleId": "pma-keka",
+            "trackId": "pm",
+            "title": "Invoice basics",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pma-github",
+        "trackId": "pm",
+        "name": "Git & GitHub for PMs",
+        "description": "Git and GitHub for project managers who never write code: what repos, branches, commits and pull requests are, how to read a PR's reviews and checks, how tickets link to code, releases and versions, which branch deploys where, and the questions to ask before a client release.",
+        "refs": [
+          {
+            "label": "GitHub Docs: GitHub flow",
+            "url": "https://docs.github.com/en/get-started/using-github/github-flow",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:33Z"
+          },
+          {
+            "label": "GitHub Docs: Pull requests",
+            "url": "https://docs.github.com/en/pull-requests/reference/pull-requests",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:26Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-repo-branch-commit-pr",
+            "moduleId": "pma-github",
+            "trackId": "pm",
+            "title": "Repo, branch, commit, PR",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pma-linking-tickets-to-prs",
+            "moduleId": "pma-github",
+            "trackId": "pm",
+            "title": "Linking tickets to PRs",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-github-issues-projects",
+            "moduleId": "pma-github",
+            "trackId": "pm",
+            "title": "GitHub Issues and Projects",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-releases-tags",
+            "moduleId": "pma-github",
+            "trackId": "pm",
+            "title": "Releases and tags",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-environments-branch-deploys",
+            "moduleId": "pma-github",
+            "trackId": "pm",
+            "title": "Environments: which branch deploys where",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-reading-a-pr",
+            "moduleId": "pma-github",
+            "trackId": "pm",
+            "title": "Reading a PR, review status and checks",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-pre-release-questions",
+            "moduleId": "pma-github",
+            "trackId": "pm",
+            "title": "Questions to ask before a release",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pma-ai",
+        "trackId": "pm",
+        "name": "AI for PMs (Copilot & Claude)",
+        "description": "Using Microsoft Copilot and Claude for the PM's daily documents: meeting minutes and status emails, PRDs and risk lists, Excel formulas, and the verification habits that keep AI-drafted work accurate before a client sees it.",
+        "refs": [
+          {
+            "label": "Anthropic Docs: Prompt engineering overview",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T09:35:24Z"
+          },
+          {
+            "label": "NIST: AI Risk Management Framework",
+            "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T09:35:46Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pma-ai-moms-status-emails",
+            "moduleId": "pma-ai",
+            "trackId": "pm",
+            "title": "AI for MoMs and status emails",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pma-ai-excel-formulas",
+            "moduleId": "pma-ai",
+            "trackId": "pm",
+            "title": "AI for Excel formulas",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-ai-prds-risk-lists",
+            "moduleId": "pma-ai",
+            "trackId": "pm",
+            "title": "AI for PRDs and risk lists",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pma-ai-verification-habits",
+            "moduleId": "pma-ai",
+            "trackId": "pm",
+            "title": "Verification habits",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pm-beginner",
+        "trackId": "pm",
+        "name": "PM foundations and advanced theory: Foundations",
+        "description": "The working vocabulary of delivering client software at an agency: the project lifecycle and who owns what, the scope/time/cost triangle, Scrum and Kanban as they are actually written, user stories, the tools, stand-ups, status reporting, requirements and the software basics a PM needs to hold their own with engineers. Beginner level, but every topic is framed around fixed-bid AI features, client politics and the gotchas that sink real projects.",
+        "refs": [
+          {
+            "label": "PMI: What is Project Management?",
+            "url": "https://www.pmi.org/about/what-is-project-management",
+            "kind": "docs"
+          },
+          {
+            "label": "The Scrum Guide (November 2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec"
+          },
+          {
+            "label": "The Kanban Guide (May 2025)",
+            "url": "https://kanbanguides.org/the-kanban-guide/2025.5/",
+            "kind": "spec"
+          },
+          {
+            "label": "GOV.UK Service Manual: Agile delivery",
+            "url": "https://www.gov.uk/service-manual/agile-delivery",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pm-b-project-lifecycle-roles",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "The Project Lifecycle & Who Owns What",
+            "level": "beginner",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "pm-b-scope-time-cost",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Scope, Time & Cost: the Triple Constraint",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "pm-b-scrum-fundamentals",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Agile & Scrum Fundamentals: Accountabilities, Events, Artifacts",
+            "level": "beginner",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pm-b-kanban-basics",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Kanban Basics: Flow, WIP and the Four Flow Metrics",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "pm-b-user-stories-acceptance-criteria",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Writing User Stories & Acceptance Criteria",
+            "level": "beginner",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "pm-b-jira-clickup-basics",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Jira & ClickUp Basics for Agency Delivery",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "pm-b-running-standups",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Running Stand-ups That Are Worth the 15 Minutes",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "pm-b-status-reporting-client-comms",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Status Reporting & Client Communication",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pm-b-requirements-gathering",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Requirements Gathering & Discovery",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pm-b-software-basics-for-pms",
+            "moduleId": "pm-beginner",
+            "trackId": "pm",
+            "title": "Software Basics for PMs: Environments, APIs, Git & Deployment",
+            "level": "beginner",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          }
+        ]
+      },
+      {
+        "id": "pm-intermediate",
+        "trackId": "pm",
+        "name": "PM foundations and advanced theory: Running delivery",
+        "description": "The week-to-week machinery of delivering client work: sprint planning, estimation and velocity, backlog prioritisation, change control, RAID logs, stakeholders and RACI, the agency's commercial models, QA and UAT, releases, retrospectives and client expectations. Written for PMs who already know the vocabulary and now have to protect scope, margin and trust on fixed-bid and T&M projects that include AI features.",
+        "refs": [
+          {
+            "label": "The Scrum Guide (November 2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec"
+          },
+          {
+            "label": "PMI: PMBOK Guide (8th edition) overview",
+            "url": "https://www.pmi.org/standards/pmbok",
+            "kind": "spec"
+          },
+          {
+            "label": "Atlassian Agile Coach: Scrum",
+            "url": "https://www.atlassian.com/agile/scrum",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pm-i-sprint-planning",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Sprint Planning That Holds Up",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-estimation-story-points-velocity",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Estimation: Story Points, Planning Poker & Velocity",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-backlog-prioritisation",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Backlog Prioritisation: MoSCoW, RICE & WSJF",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-change-requests-scope-control",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Change Requests & Scope Control",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pm-i-raid-risk-management",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "RAID Logs & Risk Management",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-stakeholder-mapping-raci",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Stakeholder Mapping & RACI",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-agency-commercial-models",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Agency Commercial Models: Fixed Bid, T&M, Retainer & Time Tracking",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pm-i-qa-uat-coordination",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "QA & UAT Coordination",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-release-management",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Release Management",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-retrospectives",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Retrospectives That Change Something",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-i-managing-client-expectations",
+            "moduleId": "pm-intermediate",
+            "trackId": "pm",
+            "title": "Managing Client Expectations",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pm-advanced",
+        "trackId": "pm",
+        "name": "PM foundations and advanced theory: Advanced delivery",
+        "description": "For PMs already running sprints and client accounts: hybrid delivery, capacity across several projects, flow and earned-value metrics, contracts and SOWs, escalation, recovery and vendors. Written for an agency shipping AI-powered client platforms under fixed bids, retainers and T&M.",
+        "refs": [
+          {
+            "label": "PMI: PMBOK Guide 8th edition",
+            "url": "https://www.pmi.org/standards/pmbok",
+            "kind": "spec"
+          },
+          {
+            "label": "PMI: Disciplined Agile",
+            "url": "https://www.pmi.org/disciplined-agile",
+            "kind": "docs"
+          },
+          {
+            "label": "Atlassian: Agile metrics",
+            "url": "https://www.atlassian.com/agile/project-management/metrics",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pm-a-hybrid-delivery",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Hybrid Delivery: Predictive Governance, Agile Execution",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-capacity-planning",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Multi-Project Resource & Capacity Planning",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-burndown-burnup",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Reading Burndown, Burnup & Velocity Honestly",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-flow-metrics",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Flow Metrics: Cycle Time, Throughput, WIP & CFDs",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-evm-fundamentals",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Earned Value: PV, EV, AC, CPI & SPI",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-evm-forecasting",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Forecasting with EVM: EAC, ETC, VAC & TCPI",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-contract-types",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Contract Types & Commercial Risk: Fixed Bid, T&M, Cost-Plus, Retainer",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-sow-management",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Statements of Work & Contract Management",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-escalations",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Escalations & Difficult Conversations",
+            "level": "advanced",
+            "estMinutes": 40,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-project-recovery",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Project Recovery: Turning Around a Troubled Project",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-a-vendor-management",
+            "moduleId": "pm-advanced",
+            "trackId": "pm",
+            "title": "Vendor & Subcontractor Management",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pm-expert",
+        "trackId": "pm",
+        "name": "PM foundations and advanced theory: Programme & portfolio",
+        "description": "For senior PMs and delivery leads: governing programmes and portfolios, making and tracking business cases, scaling agile, PMP/PMI-ACP alignment, sustainability and coaching other PMs.",
+        "refs": [
+          {
+            "label": "PMI: The Standard for Program Management",
+            "url": "https://www.pmi.org/standards/program-management",
+            "kind": "spec"
+          },
+          {
+            "label": "PMI: PMP Examination Content Outline 2026 (PDF)",
+            "url": "https://www.pmi.org/-/media/pmi/documents/public/pdf/certifications/new-pmp-examination-content-outline-2026.pdf",
+            "kind": "spec"
+          },
+          {
+            "label": "NIST AI Risk Management Framework",
+            "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+            "kind": "spec"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pm-x-portfolio-governance",
+            "moduleId": "pm-expert",
+            "trackId": "pm",
+            "title": "Programme & Portfolio Governance",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pm-x-business-case",
+            "moduleId": "pm-expert",
+            "trackId": "pm",
+            "title": "Business Cases: Justifying Investment with ROI, Payback & NPV",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-x-benefits-realisation",
+            "moduleId": "pm-expert",
+            "trackId": "pm",
+            "title": "Benefits Realisation & Value Delivery",
+            "level": "expert",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-x-scaling-agile",
+            "moduleId": "pm-expert",
+            "trackId": "pm",
+            "title": "Scaling Agile: SAFe and LeSS in Overview",
+            "level": "expert",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-x-pmp-acp-alignment",
+            "moduleId": "pm-expert",
+            "trackId": "pm",
+            "title": "PMP & PMI-ACP Exam Alignment (2026 ECO, PMBOK 8)",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pm-x-sustainability",
+            "moduleId": "pm-expert",
+            "trackId": "pm",
+            "title": "Sustainability in Delivery: Green Software & Sustainable Pace",
+            "level": "expert",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-x-coaching-pms",
+            "moduleId": "pm-expert",
+            "trackId": "pm",
+            "title": "Coaching & Developing Other PMs",
+            "level": "expert",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pm-ai",
+        "trackId": "pm",
+        "name": "AI in Project Delivery",
+        "description": "Using Claude and other AI tools well in delivery: PRDs, meeting notes, risk analysis and estimates with verification, keeping client data confidential, and leading AI-assisted teams.",
+        "refs": [
+          {
+            "label": "NIST AI Risk Management Framework",
+            "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+            "kind": "spec"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "pm-x-ai-prds-meeting-notes",
+            "moduleId": "pm-ai",
+            "trackId": "pm",
+            "title": "Claude for PRDs, Meeting Notes & Delivery Documents",
+            "level": "expert",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-x-ai-risk-estimates",
+            "moduleId": "pm-ai",
+            "trackId": "pm",
+            "title": "Claude for Risk Analysis & Estimates, With Verification",
+            "level": "expert",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-x-ai-confidentiality",
+            "moduleId": "pm-ai",
+            "trackId": "pm",
+            "title": "AI Confidentiality, Data Handling & Governance for PMs",
+            "level": "expert",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pm-x-ai-assisted-teams",
+            "moduleId": "pm-ai",
+            "trackId": "pm",
+            "title": "Managing & Estimating AI-Assisted Development Teams",
+            "level": "expert",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bd",
+    "name": "Business Development",
+    "tagline": "Winning and growing agency work: from the first cold email to strategic accounts.",
+    "accentToken": "canyon",
+    "modules": [
+      {
+        "id": "bd-beginner",
+        "trackId": "bd",
+        "name": "BD Foundations",
+        "description": "The groundwork for agency business development: what an AI and app agency actually sells, who it sells to, where leads come from, how to keep the CRM honest, how to reach people by email and LinkedIn, and enough technical and estimation literacy to talk to clients and engineers without overpromising.",
+        "refs": [
+          {
+            "label": "HubSpot: Ideal customer profile template",
+            "url": "https://www.hubspot.com/make-my-persona/ideal-customer-profile-template",
+            "kind": "docs"
+          },
+          {
+            "label": "FTC: CAN-SPAM Act compliance guide",
+            "url": "https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+            "kind": "spec"
+          },
+          {
+            "label": "Digital.gov: Plain language guide series",
+            "url": "https://digital.gov/guides/plain-language",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "bd-b-agency-offerings",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "Agency Services & Offerings: AI Platforms and White-Label Apps",
+            "level": "beginner",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "bd-b-icp-personas",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "Ideal Customer Profile (ICP) & Buyer Personas",
+            "level": "beginner",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "bd-b-lead-sources",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "Lead Sources: Upwork, LinkedIn, Clutch, Referrals & Inbound",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "bd-b-crm-hygiene",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "CRM Hygiene: Records, Stages & Next Steps",
+            "level": "beginner",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "bd-b-cold-email",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "Cold Email Basics: Relevance, Deliverability & the Law",
+            "level": "beginner",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 7
+          },
+          {
+            "id": "bd-b-linkedin-outreach",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "LinkedIn Outreach Basics: Profiles, Connection Requests & Social Selling",
+            "level": "beginner",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "bd-b-business-writing",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "Professional Business Writing for Clients",
+            "level": "beginner",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "bd-b-tech-literacy",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "Tech Literacy for BD: Web vs Mobile vs AI, MVPs, APIs & the Stack",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "bd-b-software-estimation",
+            "moduleId": "bd-beginner",
+            "trackId": "bd",
+            "title": "How Software Projects Are Estimated (for BD)",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "bd-intermediate",
+        "trackId": "bd",
+        "name": "Winning Deals",
+        "description": "From first call to signed scope: discovery with SPIN questions, qualification with BANT and MEDDPICC, winning on Upwork, writing proposals and SOWs with engineering, choosing a pricing model, handling objections, following up without nagging, and running demos that sell. Written for selling AI platforms, where scope and model costs are genuinely uncertain.",
+        "refs": [
+          {
+            "label": "MEDDICC.com: MEDDPICC sales methodology",
+            "url": "https://meddicc.com/meddpicc-sales-methodology-and-process",
+            "kind": "spec"
+          },
+          {
+            "label": "Upwork Help Center",
+            "url": "https://support.upwork.com/hc/en-us",
+            "kind": "docs"
+          },
+          {
+            "label": "HubSpot: SPIN selling ultimate guide",
+            "url": "https://blog.hubspot.com/sales/spin-selling-the-ultimate-guide",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "bd-i-spin-discovery",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Discovery Calls with SPIN Questioning",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-i-qualification",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Qualification: From BANT to MEDDIC and MEDDPICC",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-i-upwork-jobs-connects",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Upwork Mastery I: Job Selection & Connects Strategy",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-i-upwork-proposals-profile",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Upwork Mastery II: Tailored Proposals, Loom Videos & Profile Optimisation",
+            "level": "intermediate",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-i-proposals-sows",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Writing Proposals & SOWs with Engineering",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-i-pricing-models",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Pricing Models: Fixed Price, Time & Materials, Retainer & Dedicated Team",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-i-objection-handling",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Objection Handling",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-i-follow-up-cadences",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Follow-Up Cadences That Add Value",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-i-running-demos",
+            "moduleId": "bd-intermediate",
+            "trackId": "bd",
+            "title": "Running Demos That Sell",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "bd-advanced",
+        "trackId": "bd",
+        "name": "Complex Sales & Accounts",
+        "description": "Multi-stakeholder deals for a software agency: consultative, solution and Challenger-style selling, negotiation, RFPs, enterprise procurement, account growth, forecasting, social proof and white-label partnerships. For BD people who already run their own deals and now need to win the larger, slower, riskier ones.",
+        "refs": [
+          {
+            "label": "MEDDICC: The MEDDPICC sales methodology",
+            "url": "https://meddicc.com/meddpicc-sales-methodology-and-process",
+            "kind": "spec"
+          },
+          {
+            "label": "Harvard PON: What is a BATNA?",
+            "url": "https://www.pon.harvard.edu/tag/batna/",
+            "kind": "article"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "bd-a-consultative-selling",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Consultative Selling",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-a-solution-selling",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Solution Selling: From Pain to a Costed Answer",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-a-challenger-selling",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Challenger-Style Selling: Teach, Tailor, Take Control",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-a-negotiation-batna-zopa",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Negotiation Preparation: BATNA, Reservation Price and ZOPA",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-a-concessions-anchoring",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "At the Table: Anchoring, Concessions and Counter-Offers",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-a-rfp-responses",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Responding to RFPs: Bid/No-Bid, Compliance and Win Themes",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-a-enterprise-procurement",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Enterprise Deals and Procurement",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-a-account-management-expansion",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Account Management: Upselling and Cross-Selling",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-a-pipeline-metrics-forecasting",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Pipeline Metrics and Forecasting: Win Rate, Cycle, ACV, Weighted Pipeline",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-a-case-studies-social-proof",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "Case Studies and Social Proof",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-a-white-label-partnerships",
+            "moduleId": "bd-advanced",
+            "trackId": "bd",
+            "title": "White-Label Products and Partnerships",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "bd-expert",
+        "trackId": "bd",
+        "name": "Strategic BD & AI-Powered Selling",
+        "description": "Running BD as a business: strategic accounts, new regions and verticals, pricing and margin on AI-heavy fixed bids, playbooks, leading a team, using AI for research and proposals without losing accuracy or confidentiality, and the contract terms every deal rests on. For senior BD people and leads.",
+        "refs": [
+          {
+            "label": "NIST AI Risk Management Framework",
+            "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+            "kind": "spec"
+          },
+          {
+            "label": "Claude Docs: Prompt engineering overview",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+            "kind": "docs"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "bd-x-strategic-accounts",
+            "moduleId": "bd-expert",
+            "trackId": "bd",
+            "title": "Strategic Accounts: Choosing and Growing the Few That Matter",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-x-new-regions-verticals",
+            "moduleId": "bd-expert",
+            "trackId": "bd",
+            "title": "Expanding into New Regions and Verticals",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-x-pricing-margins",
+            "moduleId": "bd-expert",
+            "trackId": "bd",
+            "title": "Pricing Strategy and Margins: Blended Rates, Utilisation and AI Costs on Fixed Bids",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "bd-x-bd-playbooks",
+            "moduleId": "bd-expert",
+            "trackId": "bd",
+            "title": "Building a BD Playbook",
+            "level": "expert",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-x-leading-bd-team",
+            "moduleId": "bd-expert",
+            "trackId": "bd",
+            "title": "Leading a BD Team: Hiring, Coaching, Incentives and Forecast Accountability",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-x-msa-sow-essentials",
+            "moduleId": "bd-expert",
+            "trackId": "bd",
+            "title": "Contract Essentials: MSAs, SOWs, Liability and Payment",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-x-nda-ip-clauses",
+            "moduleId": "bd-expert",
+            "trackId": "bd",
+            "title": "Contract Essentials: NDAs and IP Ownership",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "bd-ai",
+        "trackId": "bd",
+        "name": "AI-Powered Business Development",
+        "description": "Research and personalisation at scale, drafting proposals with Claude, and the accuracy, consent and confidentiality checks that keep AI-assisted selling honest.",
+        "refs": [
+          {
+            "label": "NIST AI Risk Management Framework",
+            "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+            "kind": "spec"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "bd-x-ai-research-personalisation",
+            "moduleId": "bd-ai",
+            "trackId": "bd",
+            "title": "AI for Account Research and Personalisation at Scale",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-x-ai-proposal-drafting",
+            "moduleId": "bd-ai",
+            "trackId": "bd",
+            "title": "Drafting Proposals with Claude",
+            "level": "expert",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "bd-x-ai-ethics-accuracy-confidentiality",
+            "moduleId": "bd-ai",
+            "trackId": "bd",
+            "title": "AI in BD: Accuracy, Confidentiality and Ethics Checks",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      }
+    ]
   }
 ];

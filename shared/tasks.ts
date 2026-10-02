@@ -159,7 +159,7 @@ export const allocateTaskSchema = z.object({
   /** Allowed over-staffing of a project, as a share of its need (0.1 = up to 10% over). */
   slack: z.number().min(0).max(0.5).default(0.1),
   /** Pairs that must stay at 0 (on leave, wrong skill). */
-  blocked: z.array(z.object({ person: text(20), project: text(20) })).max(10).default([]),
+  blocked: z.array(z.object({ person: text(20), project: text(20), reason: text(80).optional() })).max(10).default([]),
   explanation: z.string().max(1500).default(""),
 });
 
@@ -215,7 +215,7 @@ function rotate<T>(items: readonly T[], seed: number): T[] {
 export function toLearnerTask(task: Task, seed = 1): LearnerTask {
   switch (task.kind) {
     case "write":
-      return { kind: "write", prompt: task.prompt, context: task.context, wordLimit: task.wordLimit, rubric: task.rubric.map((c) => ({ label: c.label })) };
+      return { kind: "write", prompt: task.prompt, context: task.context, wordLimit: task.wordLimit, ...(task.variant && task.variant !== "general" ? { variant: task.variant } : {}), rubric: task.rubric.map((c) => ({ label: c.label })) };
     case "rank":
       return { kind: "rank", prompt: task.prompt, items: rotate(task.items, seed) };
     case "calculate":

@@ -327,7 +327,7 @@ export async function runBuilder(
         stackIds: setup.stackIds,
         ownTrackGaps: scored.filter((g) => !g.skipped && basicsNames.has(g.skill.toLowerCase())),
         defaultAiSkill,
-        refreshSkill: catalog.skills.find((s) => s.status === "active" && s.tags.includes("refresh") && !setup.skip.some((k) => k.skillId === s.id)) ?? null,
+        refreshSkill: catalog.skills.find((s) => s.status === "active" && s.departmentId === department.id && s.tags.includes("refresh") && !setup.skip.some((k) => k.skillId === s.id)) ?? null,
         assessmentFoundGaps: detected.length > 0,
       })
     : null;

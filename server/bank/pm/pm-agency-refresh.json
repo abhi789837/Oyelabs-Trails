@@ -1,0 +1,535 @@
+[
+  {
+    "id": "pm-agency-refresh-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "It's Monday morning. Rank these tasks by what you do first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Write Friday's status report"
+        },
+        {
+          "id": "r1",
+          "label": "Client's P1 bug blocking their sales demo today"
+        },
+        {
+          "id": "r5",
+          "label": "Archive last year's project files"
+        },
+        {
+          "id": "r3",
+          "label": "Prepare Wednesday's sprint planning"
+        },
+        {
+          "id": "r2",
+          "label": "Reply to a client question promised by noon"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Urgent and blocking first, then today's promises, then the week in date order; housekeeping last."
+    },
+    "tags": [
+      "planning a week",
+      "prioritisation"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Work out your team's available hours this week (6 focus hours per day).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Enter the total hours.",
+      "table": {
+        "columns": [
+          "Person",
+          "Days available",
+          "Hours per day"
+        ],
+        "rows": [
+          [
+            "Asha",
+            "5",
+            "6"
+          ],
+          [
+            "Ben",
+            "3",
+            "6"
+          ],
+          [
+            "Carlos",
+            "5",
+            "6"
+          ],
+          [
+            "Dina",
+            "4",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total available hours",
+          "unit": "h",
+          "answer": 102,
+          "tolerance": 0,
+          "expression": "T[0][1]*T[0][2]+T[1][1]*T[1][2]+T[2][1]*T[2][2]+T[3][1]*T[3][2]"
+        }
+      ],
+      "explanation": "(5 + 3 + 5 + 4) days x 6 hours = 102 hours. Plan the week against this, not 4 x 40."
+    },
+    "tags": [
+      "capacity",
+      "planning a week"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "In a client call, four actions were agreed verbally. A week later, none has happened.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What was most likely missing?",
+          "options": [
+            "A longer meeting.",
+            "Written minutes with an owner and date for each action.",
+            "More people on the call.",
+            "A recording of the call."
+          ],
+          "correctIndex": 1,
+          "explanation": "Actions without a named owner and date in writing tend to be forgotten."
+        },
+        {
+          "id": "s2",
+          "question": "What do you do now?",
+          "options": [
+            "Wait for the next call.",
+            "Send the actions with owners and dates, add them to the tracker, and check in before each date.",
+            "Do all four actions yourself.",
+            "Complain to the client's manager."
+          ],
+          "correctIndex": 1,
+          "explanation": "Write it down, track it, and follow up before the date, not after."
+        }
+      ]
+    },
+    "tags": [
+      "follow-ups",
+      "ownership"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Review this action tracker before the weekly call. Mark the entries that will not get done as written.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Send revised estimate to client | Anna | Tue 4 June | Open",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Fix login timeout | Team | ASAP | Open",
+          "issue": "No single owner and no real date."
+        },
+        {
+          "id": "p3",
+          "text": "Confirm hosting plan | Raj | Fri 7 June | Open",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Client brand assets | - | - | Waiting",
+          "issue": "No owner and no due date for chasing the client."
+        },
+        {
+          "id": "p5",
+          "text": "Update Jira board | Lena | Mon 3 June | Done",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Book UAT session | Anna | Thu 6 June | Open",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Database backup policy | Raj | 8 April | In progress",
+          "issue": "In progress for two months past its date; needs a new date or escalation."
+        },
+        {
+          "id": "p8",
+          "text": "Share demo recording | Lena | Wed 5 June | Open",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "tracking",
+      "ownership",
+      "follow-ups"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A bug reached the client. The developer says, \"QA should have caught it.\" QA says, \"It wasn't in the test cases.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you tell the client?",
+          "options": [
+            "That QA missed it.",
+            "We missed it; here is the fix and the date.",
+            "That the bug is minor and they should ignore it.",
+            "Nothing until the team agrees whose fault it is."
+          ],
+          "correctIndex": 1,
+          "explanation": "To the client, the agency owns its quality as one team."
+        },
+        {
+          "id": "s2",
+          "question": "What do you do internally?",
+          "options": [
+            "Name the person at fault in the team channel.",
+            "Run a blameless review and make test cases part of the definition of done.",
+            "Ask QA to test everything twice.",
+            "Nothing; bugs happen."
+          ],
+          "correctIndex": 1,
+          "explanation": "Fix the gap in the process so ownership is clear next time."
+        }
+      ]
+    },
+    "tags": [
+      "ownership",
+      "quality"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Check the budget burn on this fixed-price project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Enter percentages and hours.",
+      "table": {
+        "columns": [
+          "Budget hours",
+          "Hours used",
+          "Scope complete %"
+        ],
+        "rows": [
+          [
+            "400",
+            "260",
+            "55"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "burn",
+          "label": "Budget used",
+          "unit": "%",
+          "answer": 65,
+          "tolerance": 0.5,
+          "expression": "T[0][1]/T[0][0]*100"
+        },
+        {
+          "id": "forecast",
+          "label": "Forecast total hours at the current rate",
+          "unit": "h",
+          "answer": 472.7,
+          "tolerance": 1,
+          "expression": "T[0][1]/T[0][2]*100"
+        }
+      ],
+      "explanation": "65% of the budget is used for 55% of the scope. At this rate the project needs about 473 hours, 73 over budget, so raise it now."
+    },
+    "tags": [
+      "tracking",
+      "budget",
+      "forecast"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A client has not sent content the launch depends on. Order your follow-up steps.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Raise it in the status call and log it as a blocker"
+        },
+        {
+          "id": "r1",
+          "label": "Polite reminder email with the date needed and why"
+        },
+        {
+          "id": "r4",
+          "label": "Escalate to the sponsor with the impact on the launch date"
+        },
+        {
+          "id": "r2",
+          "label": "Quick nudge in the agreed chat channel or a short call"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Escalate gradually and keep a written trail, so the sponsor is not surprised by the impact."
+    },
+    "tags": [
+      "follow-ups",
+      "escalation"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Your developer is shared with another PM's project. That PM pulls her for three days, putting your sprint goal at risk.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Ask the developer to secretly keep working on your project.",
+            "Make the conflict visible: show both PMs and the resource manager the impact on each commitment.",
+            "Complain to your client.",
+            "Accept it and say nothing."
+          ],
+          "correctIndex": 1,
+          "explanation": "Resource conflicts are resolved with data by whoever owns the priorities, not by the developer."
+        },
+        {
+          "id": "s2",
+          "question": "The other project wins priority. Next?",
+          "options": [
+            "Tell your client the sprint goal changes, and why, before the review.",
+            "Hide the change until the sprint review.",
+            "Make the remaining team work overtime.",
+            "Cancel the sprint."
+          ],
+          "correctIndex": 0,
+          "explanation": "Re-plan openly and tell the client early, so the sprint review holds no surprises."
+        }
+      ]
+    },
+    "tags": [
+      "ownership",
+      "resources",
+      "multi-project"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "When should you send the follow-up after a client meeting?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The same day",
+        "Next week",
+        "Only if something went wrong",
+        "At the end of the project"
+      ],
+      "correctIndex": 0,
+      "explanation": "Follow up the same day while details are fresh and actions can start.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "follow-ups"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You realise you will miss a date you promised your manager. When do you say so?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "As soon as you know, with a new date",
+        "On the due date",
+        "After the date passes, if asked",
+        "Never; work late to make it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Owning a slip early gives others time to adjust.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "ownership"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your team tracks tasks in a spreadsheet, a chat thread and a board. What is the main problem?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Too many colours",
+        "No single source of truth, so items get lost or contradict each other",
+        "Spreadsheets are old-fashioned",
+        "Boards are only for developers"
+      ],
+      "correctIndex": 1,
+      "explanation": "One agreed place for status prevents missed and duplicated work.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-agency-refresh-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-refresh",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Your status report says \"On track\", but the tracker shows three overdue tasks on the critical path. What do you do?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Keep \"On track\"; the team will catch up",
+        "Change the status to reflect the risk and add a recovery plan",
+        "Delete the overdue tasks",
+        "Move the due dates without telling anyone"
+      ],
+      "correctIndex": 1,
+      "explanation": "Status must match the data. Overdue critical-path work is a risk to report, with a plan.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "tracking",
+      "rag status"
+    ]
+  }
+]

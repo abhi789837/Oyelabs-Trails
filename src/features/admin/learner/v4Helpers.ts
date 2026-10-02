@@ -1,7 +1,10 @@
 import type { ItemResponseV4, SheetItem, V4Result } from "@shared/assessmentV4";
 import type { Personalisation } from "@shared/personalise";
+import { parseRef } from "@shared/sheet";
 import type { LearnerTask, Task, TaskResponse } from "@shared/tasks";
 
+import { allocationTotals, allocKey } from "@/components/tasks/allocation";
+import { evaluateWithEntries, formatCellValue } from "@/components/tasks/sheetGrid";
 import { estMinutes, formatCostMicros } from "@/lib/timing";
 
 /**
@@ -126,12 +129,40 @@ export function summariseTaskResponse(task: LearnerTask, response: TaskResponse)
       if (response.explanation.trim()) lines.push(`Why: ${response.explanation.trim()}`);
       return lines;
     }
-    case "excel":
-      return Object.entries(response.cells).filter(([, v]) => v.trim()).map(([ref, v]) => `${ref}: ${v}`);
-    case "allocate":
-      return Object.entries(response.hours).filter(([, v]) => v > 0).map(([k, v]) => `${k}: ${v} h`);
-    case "sim":
-      return [`Flagged ${response.flagged.length} row(s)`, ...Object.entries(response.answers).map(([q, a]) => `${q}: option ${a + 1}`)];
+    case "excel": {
+      if (task.kind !== "excel") return Object.entries(response.cells).filter(([, v]) => v.trim()).map(([ref, v]) => `${ref}: ${v}`);
+      const { values } = evaluateWithEntries(task.grid, task.editable, response.cells);
+      return task.editable.map((ref) => {
+        const raw = (response.cells[ref] ?? "").trim();
+        if (!raw) return `${ref}: blank`;
+        const at = parseRef(ref);
+        const shown = at ? formatCellValue(values[at.row]?.[at.col] ?? null) : "";
+        return raw.startsWith("=") ? `${ref}: ${raw} → ${shown || "(empty)"}` : `${ref}: ${raw}`;
+      });
+    }
+    case "allocate": {
+      if (task.kind !== "allocate") return Object.entries(response.hours).filter(([, v]) => v > 0).map(([k, v]) => `${k}: ${v} h`);
+      const totals = allocationTotals(task, response.hours);
+      return task.people.map((person, i) => {
+        const parts = task.projects
+          .map((p) => ({ name: p.name, h: response.hours[allocKey(person.id, p.id)] ?? 0 }))
+          .filter((x) => x.h > 0)
+          .map((x) => `${x.name} ${x.h} h`);
+        const t = totals.people[i];
+        return `${person.name}: ${parts.length ? parts.join(", ") : "nothing"} (${t.sum}/${t.capacity} h${t.over ? ", over" : ""})`;
+      });
+    }
+    case "sim": {
+      if (task.kind !== "sim") return [`Flagged ${response.flagged.length} row(s)`, ...Object.entries(response.answers).map(([q, a]) => `${q}: option ${a + 1}`)];
+      const rowName = new Map(task.rows.map((r) => [r.id, r.cells.filter(Boolean).slice(0, 2).join(" · ")]));
+      const lines = [`Flagged ${response.flagged.length} of ${task.rows.length} row${task.rows.length === 1 ? "" : "s"}.`];
+      lines.push(...response.flagged.map((id) => `• ${rowName.get(id) ?? id}`));
+      for (const q of task.questions) {
+        const a = response.answers[q.id];
+        lines.push(`${q.question} → ${a === undefined ? "no answer" : (q.options[a] ?? `option ${a + 1}`)}`);
+      }
+      return lines;
+    }
   }
 }
 
@@ -152,10 +183,19 @@ export function expectedTaskAnswer(task: Task): string[] {
       return task.rubric.map((r) => `${r.label} (×${r.weight})`);
     case "excel":
       return Object.entries(task.solution).map(([ref, v]) => `${ref}: ${v}`);
-    case "allocate":
-      return task.projects.map((p) => `${p.name}: ${p.need} h covered without over-allocating anyone`);
+    case "allocate": {
+      const slack = Math.round(task.slack * 100);
+      return [
+        ...task.projects.map((p) => `${p.name}: ${p.need} h${slack ? ` (up to ${Math.round(p.need * (1 + task.slack) * 10) / 10} h)` : ""}`),
+        ...task.people.map((p) => `${p.name}: at most ${p.capacity} h`),
+        ...task.blocked.map((b) => `${task.people.find((p) => p.id === b.person)?.name ?? b.person} not on ${task.projects.find((p) => p.id === b.project)?.name ?? b.project}`),
+      ];
+    }
     case "sim":
-      return [...task.rows.filter((r) => r.issue).map((r) => `Flag: ${r.cells[0]} — ${r.issue}`), ...task.questions.map((q) => `${q.question} → ${q.options[q.correctIndex]}`)];
+      return [
+        ...task.rows.filter((r) => r.issue).map((r) => `Flag: ${r.cells.filter(Boolean).slice(0, 2).join(" · ")} — ${r.issue}`),
+        ...task.questions.map((q) => `${q.question} → ${q.options[q.correctIndex]}`),
+      ];
   }
 }
 

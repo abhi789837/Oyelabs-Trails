@@ -1,0 +1,643 @@
+[
+  {
+    "id": "pm-client-meetings-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put the agenda for a weekly client status call in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Risks, issues and decisions needed from the client"
+        },
+        {
+          "id": "r5",
+          "label": "Confirm the next meeting"
+        },
+        {
+          "id": "r1",
+          "label": "Confirm the agenda and the goal of the call"
+        },
+        {
+          "id": "r4",
+          "label": "Recap actions, owners and dates"
+        },
+        {
+          "id": "r2",
+          "label": "RAG status and progress against milestones"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Set the frame, report status, surface what needs the client, then close with actions and the next touchpoint."
+    },
+    "tags": [
+      "agenda",
+      "status meeting"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This RAG status report goes to the client tomorrow. Mark the lines with the wrong status.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Overall: Green.",
+          "issue": "With the API two weeks late and launch at risk, overall cannot be Green."
+        },
+        {
+          "id": "p2",
+          "text": "Design: Green. All screens signed off.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Backend API: Green. Two weeks behind; the launch date is at risk.",
+          "issue": "Two weeks behind with the launch at risk is Red, not Green."
+        },
+        {
+          "id": "p4",
+          "text": "Mobile app: Green. On plan for sprint 4.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "QA: Amber. Test devices arrive late; two days of slack left.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Payments: Green. Client's payment keys are 3 days overdue and blocking.",
+          "issue": "An overdue client dependency that blocks work is at least Amber."
+        },
+        {
+          "id": "p7",
+          "text": "Next demo: Thursday 14:00 IST.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "rag status",
+      "status report"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This is the chat from a client demo call in Teams. Flag the messages that are a problem.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "teams",
+      "prompt": "Flag the rows that are a problem, then answer the question.",
+      "title": "Sprint 5 demo - chat",
+      "columns": [
+        "Time",
+        "From",
+        "Message"
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": [
+            "10:01",
+            "System",
+            "Recording started"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r2",
+          "cells": [
+            "10:03",
+            "Priya (PM)",
+            "Staging link: app-staging.example.com, login admin / Admin123"
+          ],
+          "issue": "Shares a password in a recorded chat with external guests."
+        },
+        {
+          "id": "r3",
+          "cells": [
+            "10:12",
+            "Client",
+            "Can we also add Apple sign-in?"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r4",
+          "cells": [
+            "10:12",
+            "Priya (PM)",
+            "Sure, no problem, we'll add it this sprint!"
+          ],
+          "issue": "Commits to new scope on the spot without checking impact."
+        },
+        {
+          "id": "r5",
+          "cells": [
+            "10:20",
+            "Client",
+            "I'll send feedback on the checkout by Friday."
+          ],
+          "issue": null
+        },
+        {
+          "id": "r6",
+          "cells": [
+            "10:24",
+            "Dev lead",
+            "Let's just deploy this to production now, during the call."
+          ],
+          "issue": "Deploying live in a demo skips testing and the release process."
+        },
+        {
+          "id": "r7",
+          "cells": [
+            "10:28",
+            "Priya (PM)",
+            "Thanks all, notes and actions to follow today."
+          ],
+          "issue": null
+        },
+        {
+          "id": "r8",
+          "cells": [
+            "10:29",
+            "Client",
+            "Thanks, good progress!"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What should Priya have said about Apple sign-in?",
+          "options": [
+            "\"Sure, no problem.\"",
+            "\"Good idea. I'll check the impact and come back with an estimate.\"",
+            "\"That's not possible.\"",
+            "Nothing; ignore it."
+          ],
+          "correctIndex": 1,
+          "explanation": "Acknowledge, then assess impact before committing."
+        }
+      ]
+    },
+    "tags": [
+      "teams",
+      "demo",
+      "scope"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write the actions section of the minutes for this call.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write the actions: owner, task and date for each.",
+      "context": "Notes: Sam (client) sends brand colours Tuesday. Anna (PM) shares revised timeline Wednesday. Raj (dev) fixes login bug by Friday.",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "owners",
+          "label": "Owner per action",
+          "description": "Every action names one person.",
+          "weight": 1.5
+        },
+        {
+          "id": "dates",
+          "label": "Dates",
+          "description": "Each action has its date: Tuesday, Wednesday, Friday.",
+          "weight": 1
+        },
+        {
+          "id": "complete",
+          "label": "Complete and accurate",
+          "description": "All three actions, nothing invented.",
+          "weight": 1
+        },
+        {
+          "id": "concise",
+          "label": "Concise",
+          "description": "Scannable list, no padding.",
+          "weight": 0.5
+        }
+      ],
+      "sampleAnswer": "- Sam: send brand colours, Tue\n- Anna: share revised timeline, Wed\n- Raj: fix login bug, Fri",
+      "variant": "general"
+    },
+    "tags": [
+      "mom",
+      "minutes of meeting"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "For the status slide, work out overall progress from story points.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Enter the answer as a percentage.",
+      "table": {
+        "columns": [
+          "Milestone",
+          "Planned points",
+          "Done points"
+        ],
+        "rows": [
+          [
+            "Onboarding",
+            "40",
+            "40"
+          ],
+          [
+            "Payments",
+            "60",
+            "30"
+          ],
+          [
+            "Admin panel",
+            "100",
+            "20"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "pct",
+          "label": "Overall % complete (done / planned)",
+          "unit": "%",
+          "answer": 45,
+          "tolerance": 0.5,
+          "expression": "(T[0][2]+T[1][2]+T[2][2])/(T[0][1]+T[1][1]+T[2][1])*100"
+        }
+      ],
+      "explanation": "Done 90 of 200 planned points = 45%. Averaging the three percentages (100, 50, 20) gives 56.7%, which overstates progress."
+    },
+    "tags": [
+      "status report",
+      "progress"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Review this agenda for a 30-minute client steering call in Teams. Flag the problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "teams",
+      "prompt": "Flag the rows that are a problem, then answer the question.",
+      "title": "Steering call agenda - 30 min",
+      "columns": [
+        "Item",
+        "Owner",
+        "Minutes"
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": [
+            "Welcome and agenda",
+            "PM",
+            "2"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r2",
+          "cells": [
+            "Sprint 6 demo",
+            "QA lead",
+            "8"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r3",
+          "cells": [
+            "Walkthrough of database schema changes",
+            "Backend dev",
+            "10"
+          ],
+          "issue": "Too technical for a client steering call; send a short written note instead."
+        },
+        {
+          "id": "r4",
+          "cells": [
+            "Risks and decisions needed",
+            "PM",
+            "5"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r5",
+          "cells": [
+            "Change request CR-04 review",
+            "PM",
+            "5"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r6",
+          "cells": [
+            "Actions and next steps",
+            "-",
+            "0"
+          ],
+          "issue": "No owner and no time, so actions will not be recapped."
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "The sponsor can only attend the first 15 minutes. What do you change?",
+          "options": [
+            "Nothing; send them the recording.",
+            "Move risks, decisions and CR-04 to the start, while the sponsor is there.",
+            "Cancel the call.",
+            "Run the demo faster."
+          ],
+          "correctIndex": 1,
+          "explanation": "Put what needs the sponsor's decision in the time the sponsor is present."
+        }
+      ]
+    },
+    "tags": [
+      "teams",
+      "agenda",
+      "steering"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "During a live client demo, the staging server goes down five minutes in.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do in the moment?",
+          "options": [
+            "Keep refreshing until it works.",
+            "Name it calmly, switch to the recorded walkthrough or screenshots, and continue the agenda.",
+            "End the call immediately.",
+            "Blame the hosting provider."
+          ],
+          "correctIndex": 1,
+          "explanation": "A calm fallback keeps the meeting useful. Always have a recording or screenshots ready for demos."
+        },
+        {
+          "id": "s2",
+          "question": "After the call?",
+          "options": [
+            "Say nothing unless the client asks.",
+            "Send the minutes with the cause, a new live demo slot and the fix to stop it recurring.",
+            "Offer a discount.",
+            "Remove demos from future meetings."
+          ],
+          "correctIndex": 1,
+          "explanation": "Close the loop in writing and rebook the live demo so the client still sees working software."
+        }
+      ]
+    },
+    "tags": [
+      "demo",
+      "presenting"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "The project is Red: launch will slip three weeks. The client's sponsor asks you to show it as Amber on the slide for their board.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Show Amber as asked; it's their board.",
+            "Keep it Red, and offer to show the recovery plan and new date next to it.",
+            "Remove the RAG column from the slide.",
+            "Show Green and explain verbally."
+          ],
+          "correctIndex": 1,
+          "explanation": "A status you know is false will surface later and destroy trust. Help the sponsor tell the story with a plan instead."
+        },
+        {
+          "id": "s2",
+          "question": "The sponsor is still unhappy. Next step?",
+          "options": [
+            "Change it to Amber quietly.",
+            "Offer a short call to agree the wording of the recovery plan, and confirm the status in writing.",
+            "Escalate to your CEO immediately.",
+            "Stop sending status reports."
+          ],
+          "correctIndex": 1,
+          "explanation": "Work with the sponsor on how it is presented, not on what is true, and keep a written record."
+        }
+      ]
+    },
+    "tags": [
+      "rag status",
+      "sponsor",
+      "presenting"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of sending minutes (MoM) after a client meeting?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To prove the PM attended",
+        "To record decisions and actions with owners and dates",
+        "To transcribe everything that was said",
+        "To replace the next meeting"
+      ],
+      "correctIndex": 1,
+      "explanation": "Minutes exist so decisions and actions are agreed and traceable, not to transcribe the call.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "mom"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In a RAG status report, what does Amber usually mean?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Work is finished",
+        "At risk, but recoverable with action",
+        "The project is cancelled",
+        "Not started yet"
+      ],
+      "correctIndex": 1,
+      "explanation": "Amber signals a risk that can still be recovered with action; Red means it will miss without intervention.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "rag status"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "When should minutes from a client call usually be sent?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The same day, or within 24 hours",
+        "At the end of the month",
+        "Only if the client asks",
+        "Just before the next meeting"
+      ],
+      "correctIndex": 0,
+      "explanation": "While the call is fresh, so mistakes are corrected quickly and actions start on time.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "mom"
+    ]
+  },
+  {
+    "id": "pm-client-meetings-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You must demo a feature that is half built. What is the best approach?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Skip it and say nothing",
+        "Show it, clearly labelled as work in progress, with what is left and when",
+        "Show it as if it were finished",
+        "Show only slides instead of the app"
+      ],
+      "correctIndex": 1,
+      "explanation": "Showing real progress builds confidence, as long as it is clearly labelled so the client does not assume it is done.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "demo",
+      "presenting"
+    ]
+  }
+]

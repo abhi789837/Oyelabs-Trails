@@ -1,0 +1,499 @@
+[
+  {
+    "id": "pm-tech-terms-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Explain what an API is to a non-technical client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Explain it in plain words, with no jargon.",
+      "context": "Client: \"The developers keep saying the app talks to an API. What is that?\"",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "correct",
+          "label": "Correct",
+          "description": "An API is how two systems ask each other for data or actions.",
+          "weight": 1.5
+        },
+        {
+          "id": "simple",
+          "label": "Plain language",
+          "description": "No jargon; an everyday comparison is welcome.",
+          "weight": 1
+        },
+        {
+          "id": "relevant",
+          "label": "Relevant",
+          "description": "Links it to their app.",
+          "weight": 0.5
+        }
+      ],
+      "sampleAnswer": "An API is like a waiter: your app sends a request to another system and brings back the answer, like prices or payments.",
+      "variant": "explain"
+    },
+    "tags": [
+      "api",
+      "explain to a client"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A PM drafted this update for a non-technical client. Mark the lines the client won't understand.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Maria, here's this week's update.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The login screen is finished and ready for you to try.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "We refactored the monolith and fixed the N+1 queries in the ORM.",
+          "issue": "Jargon with no meaning for the client; say what they get: faster pages."
+        },
+        {
+          "id": "p4",
+          "text": "Search results now load in under a second.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Next we'll bump the SDK and resolve merge conflicts on main.",
+          "issue": "Internal detail the client cannot use; describe the outcome instead."
+        },
+        {
+          "id": "p6",
+          "text": "Please test the login before Thursday's call.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "jargon",
+      "client update"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Explain staging versus production to a non-technical client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Explain the difference simply and why it matters to them.",
+      "context": "Client: \"Why can I see the new feature on one link but not in the real app?\"",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "correct",
+          "label": "Correct",
+          "description": "Staging is a private test copy; production is the live app real users see.",
+          "weight": 1.5
+        },
+        {
+          "id": "why",
+          "label": "Why it matters",
+          "description": "Testing in staging protects real users.",
+          "weight": 1
+        },
+        {
+          "id": "simple",
+          "label": "Plain language",
+          "description": "No jargon.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Staging is a private copy for testing; production is the live app. We check features on staging first so real users never hit bugs.",
+      "variant": "explain"
+    },
+    "tags": [
+      "staging",
+      "production",
+      "environments"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Explain DNS propagation to a non-technical client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Explain why their new domain isn't working everywhere yet.",
+      "context": "Client: \"We switched the domain an hour ago. It works for me but not for my colleague. Is it broken?\"",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "correct",
+          "label": "Correct",
+          "description": "Address updates spread across the internet gradually; old copies expire over hours.",
+          "weight": 1.5
+        },
+        {
+          "id": "reassure",
+          "label": "Reassuring and timed",
+          "description": "Not broken; usually up to 24-48 hours.",
+          "weight": 1
+        },
+        {
+          "id": "simple",
+          "label": "Plain language",
+          "description": "No jargon.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "It isn't broken. The internet's address books update gradually, so some people see the new site sooner. It usually settles within 48 hours.",
+      "variant": "explain"
+    },
+    "tags": [
+      "dns",
+      "domain",
+      "launch"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "After a release, the client says they still see the old version of the website.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the most likely plain-language explanation?",
+          "options": [
+            "The release failed and must be redone.",
+            "Their browser or a cache is still showing a saved copy of the old pages.",
+            "The developers released to the wrong client.",
+            "Their internet is too slow."
+          ],
+          "correctIndex": 1,
+          "explanation": "Caches keep copies of pages to load them faster, so old versions can linger briefly after a release."
+        },
+        {
+          "id": "s2",
+          "question": "What do you ask them to try first?",
+          "options": [
+            "Reinstall their browser.",
+            "A hard refresh or a private window, then tell you what they see.",
+            "Wait a month.",
+            "Buy a new domain."
+          ],
+          "correctIndex": 1,
+          "explanation": "A hard refresh or private window bypasses the saved copy and quickly shows whether the release is live."
+        }
+      ]
+    },
+    "tags": [
+      "cache",
+      "release"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Explain technical debt to a non-technical client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Explain what it is and why you are asking for time to fix it.",
+      "context": "You want one sprint to clean up rushed code from the launch. Client: \"Why pay for work that adds no features?\"",
+      "wordLimit": 20,
+      "rubric": [
+        {
+          "id": "correct",
+          "label": "Correct",
+          "description": "Shortcuts taken to ship faster that make later changes slower and riskier.",
+          "weight": 1.5
+        },
+        {
+          "id": "value",
+          "label": "Business value",
+          "description": "Fixing it makes future features faster and safer.",
+          "weight": 1.5
+        },
+        {
+          "id": "simple",
+          "label": "Plain language",
+          "description": "No jargon; an analogy is fine.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "To launch fast we took shortcuts. Like an unpaid loan, they slow every new feature. One sprint now makes future work faster and safer.",
+      "variant": "explain"
+    },
+    "tags": [
+      "technical debt",
+      "explain to a client"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Put the steps in order: how a developer's change reaches the client's users.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Automated tests run (CI)"
+        },
+        {
+          "id": "r5",
+          "label": "Change is released to production"
+        },
+        {
+          "id": "r1",
+          "label": "Developer writes the change on a separate branch"
+        },
+        {
+          "id": "r4",
+          "label": "Change is deployed to staging for testing"
+        },
+        {
+          "id": "r2",
+          "label": "Pull request is opened and reviewed by another developer"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Code is reviewed and tested automatically, checked on staging, and only then released to real users."
+    },
+    "tags": [
+      "ci/cd",
+      "release"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A client wants an AI chatbot on their website that answers customers' questions about their refund policy.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you explain the main risk in plain language?",
+          "options": [
+            "AI is always right, so there's no risk.",
+            "It can sound confident but give a wrong answer, such as an incorrect refund rule.",
+            "AI chatbots don't work on websites.",
+            "It will read all their private emails."
+          ],
+          "correctIndex": 1,
+          "explanation": "LLMs can 'hallucinate': produce fluent but wrong answers. For policies that matters."
+        },
+        {
+          "id": "s2",
+          "question": "Which mitigation do you suggest?",
+          "options": [
+            "Ground answers in their actual policy pages, show the source, and hand off to a person when unsure.",
+            "Let it answer anything with no checks.",
+            "Never launch any AI feature.",
+            "Ask customers to double-check with Google."
+          ],
+          "correctIndex": 0,
+          "explanation": "Grounding in real documents, citing sources and a human fallback reduce wrong answers."
+        }
+      ]
+    },
+    "tags": [
+      "llm",
+      "hallucination",
+      "ai"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In plain language, what does an SSL certificate do for a website?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Makes the website load faster",
+        "Encrypts the connection and shows the padlock in the browser",
+        "Backs up the website every night",
+        "Blocks all spam emails"
+      ],
+      "correctIndex": 1,
+      "explanation": "SSL/TLS encrypts data between visitor and site; browsers show a padlock and warn when it is missing or expired.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "ssl",
+      "security"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A developer says, \"the bug is in the backend.\" What does that mean for the client?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The problem is in the server side that stores and processes data, not the screens",
+        "The bug is at the bottom of the page",
+        "The bug is on the client's own computer",
+        "The bug is in the design files"
+      ],
+      "correctIndex": 0,
+      "explanation": "The backend is the server-side logic and data; the frontend is what users see and tap.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "backend",
+      "frontend"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does CI/CD mean, in plain language?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A type of database",
+        "Code changes are automatically tested and released in small, frequent steps",
+        "A contract clause about delivery dates",
+        "The client signs off every line of code"
+      ],
+      "correctIndex": 1,
+      "explanation": "Continuous integration and delivery: automatic tests on every change and a repeatable release process.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "ci/cd"
+    ]
+  },
+  {
+    "id": "pm-tech-terms-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-tech-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client asks what an AI \"hallucination\" is. Which answer is accurate?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The AI is overheating",
+        "The AI gives a fluent, confident answer that is wrong or made up",
+        "The AI refuses to answer",
+        "The AI shows images instead of text"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hallucinations are plausible-sounding but false outputs, which is why AI answers need grounding and checks.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "llm",
+      "hallucination"
+    ]
+  }
+]

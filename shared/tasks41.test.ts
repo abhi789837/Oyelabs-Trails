@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 
 import { checkTask, gradeTask, taskSchema, type AllocateTask, type ExcelTask, type SimTask } from "./tasks";
+import { evaluateSheet } from "./sheet";
 
 const excel = taskSchema.parse({
   kind: "excel",
@@ -74,5 +75,17 @@ describe("Screen (sim) task", () => {
     expect(checkTask(sim)).toEqual([]);
     expect(gradeTask(sim, { kind: "sim", flagged: ["r2", "r3"], answers: { q1: 1 } }).score).toBe(1);
     expect(gradeTask(sim, { kind: "sim", flagged: ["r1", "r2", "r3", "r4"], answers: { q1: 0 } }).score).toBeLessThan(0.5);
+  });
+});
+
+describe("spreadsheet engine extras", () => {
+  test("MAX, MIN and COUNTA ignore text and blanks as Excel does", () => {
+    const { values, errors } = evaluateSheet([
+      ["5", "x", "=MAX(A1:A3)", "=MIN(A1:A3)", "=COUNTA(A1:B3)"],
+      ["9", "", "", "", ""],
+      ["2", "y", "", "", ""],
+    ]);
+    expect(errors).toEqual({});
+    expect(values[0].slice(2)).toEqual([9, 2, 5]);
   });
 });

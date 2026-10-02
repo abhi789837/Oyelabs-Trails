@@ -1,0 +1,689 @@
+[
+  {
+    "id": "pm-github-for-pms-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Release cut-off is today. Flag the pull requests that are not ready to merge, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "github-pr",
+      "prompt": "Flag PRs that are not ready to merge.",
+      "title": "Pull requests — acme-portal",
+      "columns": [
+        "PR",
+        "Title",
+        "Checks",
+        "Review",
+        "Conflicts"
+      ],
+      "rows": [
+        {
+          "id": "p101",
+          "cells": [
+            "#101",
+            "Add checkout page",
+            "Passing",
+            "Approved",
+            "None"
+          ],
+          "issue": null
+        },
+        {
+          "id": "p102",
+          "cells": [
+            "#102",
+            "Fix login timeout",
+            "2 failing",
+            "Approved",
+            "None"
+          ],
+          "issue": "Failing checks."
+        },
+        {
+          "id": "p103",
+          "cells": [
+            "#103",
+            "Update README",
+            "Passing",
+            "Approved",
+            "None"
+          ],
+          "issue": null
+        },
+        {
+          "id": "p104",
+          "cells": [
+            "#104",
+            "Payments refactor",
+            "Passing",
+            "Changes requested",
+            "None"
+          ],
+          "issue": "Reviewer asked for changes."
+        },
+        {
+          "id": "p105",
+          "cells": [
+            "#105",
+            "Push notifications",
+            "Passing",
+            "Approved",
+            "Has conflicts"
+          ],
+          "issue": "Merge conflict must be resolved first."
+        },
+        {
+          "id": "p106",
+          "cells": [
+            "#106",
+            "Reports export",
+            "Passing",
+            "Approved",
+            "None"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "#102's dev says the tests are flaky: \"just merge\". You:",
+          "options": [
+            "Ask for a re-run or fix; don't merge red into a release",
+            "Merge it; the deadline matters",
+            "Close the PR"
+          ],
+          "correctIndex": 0,
+          "explanation": "A red check is a warning until proven otherwise."
+        }
+      ]
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Order a change's journey from code to a client release.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Review and passing checks"
+        },
+        {
+          "id": "r6",
+          "label": "Tag a release, e.g. v1.4.0"
+        },
+        {
+          "id": "r2",
+          "label": "Commit and push the changes"
+        },
+        {
+          "id": "r5",
+          "label": "Merge into main"
+        },
+        {
+          "id": "r1",
+          "label": "Create a branch from main"
+        },
+        {
+          "id": "r3",
+          "label": "Open a pull request"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Branch, commit, PR, review and checks, merge, tag."
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You need PR #214 in today's UAT build. Flag what blocks it, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "github-pr",
+      "prompt": "Flag what blocks the merge.",
+      "title": "#214 Add Stripe webhooks — acme-portal",
+      "columns": [
+        "Item",
+        "Status"
+      ],
+      "rows": [
+        {
+          "id": "i1",
+          "cells": [
+            "Check: unit tests",
+            "Passed"
+          ],
+          "issue": null
+        },
+        {
+          "id": "i2",
+          "cells": [
+            "Check: lint",
+            "Passed"
+          ],
+          "issue": null
+        },
+        {
+          "id": "i3",
+          "cells": [
+            "Check: e2e tests",
+            "Failed (checkout.spec)"
+          ],
+          "issue": "A failing end-to-end check."
+        },
+        {
+          "id": "i4",
+          "cells": [
+            "Review: Ann",
+            "Approved"
+          ],
+          "issue": null
+        },
+        {
+          "id": "i5",
+          "cells": [
+            "Review: Bo",
+            "Changes requested: secret key is hard-coded"
+          ],
+          "issue": "Unresolved requested change, and a security one."
+        },
+        {
+          "id": "i6",
+          "cells": [
+            "Branch",
+            "Up to date with main"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Can #214 go into today's UAT build?",
+          "options": [
+            "No: fix the e2e test and Bo's change first",
+            "Yes: one approval is enough",
+            "Yes, if the PM approves it"
+          ],
+          "correctIndex": 0,
+          "explanation": "Both blockers need fixing; a PM approval doesn't replace review or checks."
+        }
+      ]
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "PR #230 shows: \"This branch has conflicts that must be resolved.\" Answer the questions.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "github-pr",
+      "prompt": "Answer the questions.",
+      "title": "#230 Update pricing page — acme-portal",
+      "columns": [
+        "Item"
+      ],
+      "rows": [],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does the message mean?",
+          "options": [
+            "main changed the same lines since the branch was made, so Git can't merge it automatically",
+            "Tests are failing",
+            "A reviewer rejected it",
+            "GitHub is down"
+          ],
+          "correctIndex": 0,
+          "explanation": "A conflict is two changes to the same lines that a person must reconcile."
+        },
+        {
+          "id": "q2",
+          "question": "Who should resolve it?",
+          "options": [
+            "The PR's developer, with the other change's author if needed",
+            "The PM, in the web editor",
+            "The client"
+          ],
+          "correctIndex": 0,
+          "explanation": "Whoever understands the code resolves it."
+        },
+        {
+          "id": "q3",
+          "question": "After it's resolved, before merging:",
+          "options": [
+            "Checks run again and pass; reviewers re-check if the change was large",
+            "Merge at once",
+            "Create a release tag first"
+          ],
+          "correctIndex": 0,
+          "explanation": "Resolving a conflict is a code change; it needs the same checks."
+        }
+      ]
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Release 2.3 must contain only the agreed stories ACME-41, 44 and 45. All PRs are green and approved. Flag those that shouldn't go in, then answer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "github-pr",
+      "prompt": "Flag PRs that should not go into release 2.3.",
+      "title": "Pull requests — milestone 2.3",
+      "columns": [
+        "PR",
+        "Linked issue",
+        "Checks",
+        "Review"
+      ],
+      "rows": [
+        {
+          "id": "p301",
+          "cells": [
+            "#301",
+            "ACME-41 Checkout",
+            "Passing",
+            "Approved"
+          ],
+          "issue": null
+        },
+        {
+          "id": "p302",
+          "cells": [
+            "#302",
+            "— none",
+            "Passing",
+            "Approved"
+          ],
+          "issue": "No linked issue: unknown scope."
+        },
+        {
+          "id": "p303",
+          "cells": [
+            "#303",
+            "ACME-44 Invoices",
+            "Passing",
+            "Approved"
+          ],
+          "issue": null
+        },
+        {
+          "id": "p304",
+          "cells": [
+            "#304",
+            "ACME-57 Bulk export",
+            "Passing",
+            "Approved"
+          ],
+          "issue": "Planned for a later release."
+        },
+        {
+          "id": "p305",
+          "cells": [
+            "#305",
+            "ACME-45 Cart totals bug",
+            "Passing",
+            "Approved"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Every PR is green and approved. Enough to ship?",
+          "options": [
+            "No: scope must match the release, and QA/UAT must sign off",
+            "Yes",
+            "Yes, if the client asks"
+          ],
+          "correctIndex": 0,
+          "explanation": "Green and approved means the code is acceptable, not that it belongs in this release."
+        }
+      ]
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A critical bug is found in production release v1.4.0. Order the hotfix steps.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Open a PR; checks and review"
+        },
+        {
+          "id": "r5",
+          "label": "Deploy and tell the client what's fixed"
+        },
+        {
+          "id": "r1",
+          "label": "Branch from the v1.4.0 release"
+        },
+        {
+          "id": "r4",
+          "label": "Merge and tag v1.4.1"
+        },
+        {
+          "id": "r2",
+          "label": "Fix it and add a test for the bug"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Start from what's live, fix with a test, review, tag a patch, deploy and communicate."
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "A client reports checkout failing in production. The developer has a one-line fix.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "The dev wants to push straight to main to save time. You:",
+          "options": [
+            "Ask for a quick PR with one reviewer and green checks",
+            "Agree; it's urgent",
+            "Wait for the next sprint",
+            "Fix it yourself in GitHub's web editor"
+          ],
+          "correctIndex": 0,
+          "explanation": "A small PR is still fast, and catches the second bug a rushed fix often brings."
+        },
+        {
+          "id": "s2",
+          "question": "After it's live, the client asks which version has the fix. You:",
+          "options": [
+            "Point to the release tag and notes, e.g. v1.4.1",
+            "Send the commit hash only",
+            "Say \"the latest\"",
+            "Tell them to ask the dev"
+          ],
+          "correctIndex": 0,
+          "explanation": "A tagged release with notes is the clear, traceable answer."
+        }
+      ]
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.25,
+    "prompt": "Draft release notes for client release 2.3 (agreed scope: ACME-41, 44, 45). Mark what must change before sending.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "n1",
+          "text": "v2.3.0 — 10 Oct",
+          "issue": null
+        },
+        {
+          "id": "n2",
+          "text": "Added: invoice PDF download (ACME-44).",
+          "issue": null
+        },
+        {
+          "id": "n3",
+          "text": "Fixed: cart totals rounding (ACME-45).",
+          "issue": null
+        },
+        {
+          "id": "n4",
+          "text": "Merged PR #302 \"misc fixes\".",
+          "issue": "Meaningless to the client; say what changed, or leave it out."
+        },
+        {
+          "id": "n5",
+          "text": "Added: bulk export (ACME-57).",
+          "issue": "Not in this release's scope."
+        },
+        {
+          "id": "n6",
+          "text": "Known issue: Safari date picker misaligned; fix due in 2.3.1.",
+          "issue": null
+        },
+        {
+          "id": "n7",
+          "text": "Rotated the live Stripe secret to sk_live_51Hx…",
+          "issue": "Never put secrets in release notes."
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "What is a release tag in GitHub?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A named marker on a commit, e.g. v1.4.0, showing what shipped",
+        "A label on an issue",
+        "A branch for each feature",
+        "A failing check"
+      ],
+      "correctIndex": 0,
+      "explanation": "A tag points at one exact commit; a GitHub release adds notes and files to it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "What is a pull request?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A request to merge a branch's changes, with review and checks",
+        "A download of the code",
+        "A bug report",
+        "A deploy to production"
+      ],
+      "correctIndex": 0,
+      "explanation": "A PR proposes changes from one branch into another and is where review and automated checks happen.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "Why protect the main branch?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "So changes only reach it via reviewed PRs with passing checks",
+        "To hide it from clients",
+        "To speed up builds",
+        "So nobody can read it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Branch protection rules enforce review and checks before merging.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "github",
+      "technical"
+    ]
+  },
+  {
+    "id": "pm-github-for-pms-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-github-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.75,
+    "prompt": "A release goes from v1.4.0 to v1.4.1. Under semantic versioning, that signals:",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A backwards-compatible bug fix",
+        "Breaking changes",
+        "New features",
+        "A rollback"
+      ],
+      "correctIndex": 0,
+      "explanation": "MAJOR.MINOR.PATCH: a patch bump means fixes only.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "github",
+      "technical"
+    ]
+  }
+]

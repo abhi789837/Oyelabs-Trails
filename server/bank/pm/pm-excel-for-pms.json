@@ -1,0 +1,874 @@
+[
+  {
+    "id": "pm-excel-for-pms-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Monthly hours for one developer. Fill **B6** with the total and **B7** with the weekly average, using formulas.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill B6 and B7 with formulas.",
+      "grid": [
+        [
+          "Week",
+          "Hours"
+        ],
+        [
+          "W1",
+          "32"
+        ],
+        [
+          "W2",
+          "36"
+        ],
+        [
+          "W3",
+          "28"
+        ],
+        [
+          "W4",
+          "40"
+        ],
+        [
+          "Total",
+          ""
+        ],
+        [
+          "Average",
+          ""
+        ]
+      ],
+      "editable": [
+        "B6",
+        "B7"
+      ],
+      "checks": [
+        {
+          "cell": "B6",
+          "expected": 136,
+          "requireFormula": true,
+          "functions": [
+            "SUM"
+          ]
+        },
+        {
+          "cell": "B7",
+          "expected": 34,
+          "requireFormula": true,
+          "functions": [
+            "AVERAGE"
+          ]
+        }
+      ],
+      "solution": {
+        "B6": "=SUM(B2:B5)",
+        "B7": "=AVERAGE(B2:B5)"
+      },
+      "explanation": "`=SUM(B2:B5)` and `=AVERAGE(B2:B5)`. Averaging B2:B6 would wrongly include the total."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fill **D2:D4** with % complete as a number from 0 to 100 (Done h ÷ Estimate h × 100), using formulas.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill D2:D4 with formulas.",
+      "grid": [
+        [
+          "Task",
+          "Estimate h",
+          "Done h",
+          "% complete"
+        ],
+        [
+          "Login",
+          "20",
+          "15",
+          ""
+        ],
+        [
+          "Checkout",
+          "40",
+          "10",
+          ""
+        ],
+        [
+          "Search",
+          "16",
+          "16",
+          ""
+        ]
+      ],
+      "editable": [
+        "D2",
+        "D3",
+        "D4"
+      ],
+      "checks": [
+        {
+          "cell": "D2",
+          "expected": 75,
+          "requireFormula": true
+        },
+        {
+          "cell": "D3",
+          "expected": 25,
+          "requireFormula": true
+        },
+        {
+          "cell": "D4",
+          "expected": 100,
+          "requireFormula": true
+        }
+      ],
+      "solution": {
+        "D2": "=C2/B2*100",
+        "D3": "=C3/B3*100",
+        "D4": "=C4/B4*100"
+      },
+      "explanation": "`=C2/B2*100`, copied down. Hours done is only a proxy for progress; check it against the work actually finished."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.25,
+    "prompt": "Fill **E2:E4** with an IF formula for RAG status: \"Red\" when over budget % is above 10, \"Amber\" when above 5, otherwise \"Green\".",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill E2:E4 with IF formulas.",
+      "grid": [
+        [
+          "Project",
+          "Budget h",
+          "Used h",
+          "Over budget %",
+          "RAG"
+        ],
+        [
+          "Portal",
+          "200",
+          "224",
+          "12",
+          ""
+        ],
+        [
+          "App",
+          "300",
+          "321",
+          "7",
+          ""
+        ],
+        [
+          "Site",
+          "100",
+          "103",
+          "3",
+          ""
+        ]
+      ],
+      "editable": [
+        "E2",
+        "E3",
+        "E4"
+      ],
+      "checks": [
+        {
+          "cell": "E2",
+          "expected": "Red",
+          "requireFormula": true,
+          "functions": [
+            "IF"
+          ]
+        },
+        {
+          "cell": "E3",
+          "expected": "Amber",
+          "requireFormula": true,
+          "functions": [
+            "IF"
+          ]
+        },
+        {
+          "cell": "E4",
+          "expected": "Green",
+          "requireFormula": true,
+          "functions": [
+            "IF"
+          ]
+        }
+      ],
+      "solution": {
+        "E2": "=IF(D2>10,\"Red\",IF(D2>5,\"Amber\",\"Green\"))",
+        "E3": "=IF(D3>10,\"Red\",IF(D3>5,\"Amber\",\"Green\"))",
+        "E4": "=IF(D4>10,\"Red\",IF(D4>5,\"Amber\",\"Green\"))"
+      },
+      "explanation": "Nest the IFs from the worst case down: `=IF(D2>10,\"Red\",IF(D2>5,\"Amber\",\"Green\"))`."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.25,
+    "prompt": "A timesheet export. Fill **F2:F4** with each person's total hours using SUMIF.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill F2:F4 with SUMIF formulas.",
+      "grid": [
+        [
+          "Person",
+          "Project",
+          "Hours",
+          "",
+          "Person",
+          "Total h"
+        ],
+        [
+          "Ann",
+          "Portal",
+          "16",
+          "",
+          "Ann",
+          ""
+        ],
+        [
+          "Bo",
+          "App",
+          "24",
+          "",
+          "Bo",
+          ""
+        ],
+        [
+          "Ann",
+          "App",
+          "12",
+          "",
+          "Cy",
+          ""
+        ],
+        [
+          "Cy",
+          "Portal",
+          "30",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Bo",
+          "Portal",
+          "10",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Ann",
+          "Portal",
+          "8",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "editable": [
+        "F2",
+        "F3",
+        "F4"
+      ],
+      "checks": [
+        {
+          "cell": "F2",
+          "expected": 36,
+          "requireFormula": true,
+          "functions": [
+            "SUMIF"
+          ]
+        },
+        {
+          "cell": "F3",
+          "expected": 34,
+          "requireFormula": true,
+          "functions": [
+            "SUMIF"
+          ]
+        },
+        {
+          "cell": "F4",
+          "expected": 30,
+          "requireFormula": true,
+          "functions": [
+            "SUMIF"
+          ]
+        }
+      ],
+      "solution": {
+        "F2": "=SUMIF($A$2:$A$7,E2,$C$2:$C$7)",
+        "F3": "=SUMIF($A$2:$A$7,E3,$C$2:$C$7)",
+        "F4": "=SUMIF($A$2:$A$7,E4,$C$2:$C$7)"
+      },
+      "explanation": "`=SUMIF($A$2:$A$7,E2,$C$2:$C$7)`: absolute ranges so it copies down, the name from column E."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "In **F2**, count overdue tasks: due day before today (F1) and status not \"Done\". Use one COUNTIFS formula.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill F2 with a COUNTIFS formula.",
+      "grid": [
+        [
+          "Task",
+          "Due (day)",
+          "Status",
+          "",
+          "Today (day)",
+          "12"
+        ],
+        [
+          "API spec",
+          "8",
+          "Done",
+          "",
+          "Overdue",
+          ""
+        ],
+        [
+          "Login",
+          "10",
+          "In progress",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Payments",
+          "11",
+          "Blocked",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Push",
+          "12",
+          "To do",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Reports",
+          "15",
+          "To do",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Admin",
+          "9",
+          "In progress",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "editable": [
+        "F2"
+      ],
+      "checks": [
+        {
+          "cell": "F2",
+          "expected": 3,
+          "requireFormula": true,
+          "functions": [
+            "COUNTIFS"
+          ]
+        }
+      ],
+      "solution": {
+        "F2": "=COUNTIFS(B2:B7,\"<\"&F1,C2:C7,\"<>Done\")"
+      },
+      "explanation": "`=COUNTIFS(B2:B7,\"<\"&F1,C2:C7,\"<>Done\")` gives 3 (Login, Payments, Admin). Push is due today, so not yet overdue; API spec is done."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Fill **C2:C5** with each ticket's owner, looked up from the module table in E:F with XLOOKUP.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill C2:C5 with XLOOKUP formulas.",
+      "grid": [
+        [
+          "Ticket",
+          "Module",
+          "Owner",
+          "",
+          "Module",
+          "Owner"
+        ],
+        [
+          "T-101",
+          "Payments",
+          "",
+          "",
+          "Login",
+          "Ann"
+        ],
+        [
+          "T-102",
+          "Login",
+          "",
+          "",
+          "Payments",
+          "Bo"
+        ],
+        [
+          "T-103",
+          "Reports",
+          "",
+          "",
+          "Reports",
+          "Cy"
+        ],
+        [
+          "T-104",
+          "Payments",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "editable": [
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "checks": [
+        {
+          "cell": "C2",
+          "expected": "Bo",
+          "requireFormula": true,
+          "functions": [
+            "XLOOKUP"
+          ]
+        },
+        {
+          "cell": "C3",
+          "expected": "Ann",
+          "requireFormula": true,
+          "functions": [
+            "XLOOKUP"
+          ]
+        },
+        {
+          "cell": "C4",
+          "expected": "Cy",
+          "requireFormula": true,
+          "functions": [
+            "XLOOKUP"
+          ]
+        },
+        {
+          "cell": "C5",
+          "expected": "Bo",
+          "requireFormula": true,
+          "functions": [
+            "XLOOKUP"
+          ]
+        }
+      ],
+      "solution": {
+        "C2": "=XLOOKUP(B2,$E$2:$E$4,$F$2:$F$4)",
+        "C3": "=XLOOKUP(B3,$E$2:$E$4,$F$2:$F$4)",
+        "C4": "=XLOOKUP(B4,$E$2:$E$4,$F$2:$F$4)",
+        "C5": "=XLOOKUP(B5,$E$2:$E$4,$F$2:$F$4)"
+      },
+      "explanation": "`=XLOOKUP(B2,$E$2:$E$4,$F$2:$F$4)`, with the lookup table locked so it copies down."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Fill **C2:C3** with days left (due day − today in F1) and **D2:D3** with status: \"Red\" if days left is below 0, \"Amber\" if 5 or fewer, else \"Green\".",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill C2:D3 with formulas.",
+      "grid": [
+        [
+          "Milestone",
+          "Due (day)",
+          "Days left",
+          "Status",
+          "Today (day)",
+          "40"
+        ],
+        [
+          "UAT start",
+          "38",
+          "",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Go-live",
+          "43",
+          "",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "editable": [
+        "C2",
+        "C3",
+        "D2",
+        "D3"
+      ],
+      "checks": [
+        {
+          "cell": "C2",
+          "expected": -2,
+          "requireFormula": true
+        },
+        {
+          "cell": "C3",
+          "expected": 3,
+          "requireFormula": true
+        },
+        {
+          "cell": "D2",
+          "expected": "Red",
+          "requireFormula": true,
+          "functions": [
+            "IF"
+          ]
+        },
+        {
+          "cell": "D3",
+          "expected": "Amber",
+          "requireFormula": true,
+          "functions": [
+            "IF"
+          ]
+        }
+      ],
+      "solution": {
+        "C2": "=B2-$F$1",
+        "C3": "=B3-$F$1",
+        "D2": "=IF(C2<0,\"Red\",IF(C2<=5,\"Amber\",\"Green\"))",
+        "D3": "=IF(C3<0,\"Red\",IF(C3<=5,\"Amber\",\"Green\"))"
+      },
+      "explanation": "`=B2-$F$1` (today locked) and `=IF(C2<0,\"Red\",IF(C2<=5,\"Amber\",\"Green\"))`."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Fill **G2:G3** with each person's billable % (billable hours ÷ all their hours × 100). Use SUMIFS for the billable hours.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "excel",
+      "prompt": "Fill G2:G3 with formulas.",
+      "grid": [
+        [
+          "Person",
+          "Project",
+          "Billable",
+          "Hours",
+          "",
+          "Person",
+          "Billable %"
+        ],
+        [
+          "Ann",
+          "Portal",
+          "Y",
+          "24",
+          "",
+          "Ann",
+          ""
+        ],
+        [
+          "Ann",
+          "Internal",
+          "N",
+          "8",
+          "",
+          "Bo",
+          ""
+        ],
+        [
+          "Bo",
+          "App",
+          "Y",
+          "30",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Ann",
+          "App",
+          "Y",
+          "6",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Bo",
+          "Bench",
+          "N",
+          "10",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "editable": [
+        "G2",
+        "G3"
+      ],
+      "checks": [
+        {
+          "cell": "G2",
+          "expected": 78.95,
+          "tolerance": 0.1,
+          "requireFormula": true,
+          "functions": [
+            "SUMIFS"
+          ]
+        },
+        {
+          "cell": "G3",
+          "expected": 75,
+          "tolerance": 0.1,
+          "requireFormula": true,
+          "functions": [
+            "SUMIFS"
+          ]
+        }
+      ],
+      "solution": {
+        "G2": "=SUMIFS($D$2:$D$6,$A$2:$A$6,F2,$C$2:$C$6,\"Y\")/SUMIF($A$2:$A$6,F2,$D$2:$D$6)*100",
+        "G3": "=SUMIFS($D$2:$D$6,$A$2:$A$6,F3,$C$2:$C$6,\"Y\")/SUMIF($A$2:$A$6,F3,$D$2:$D$6)*100"
+      },
+      "explanation": "Ann: 30 billable of 38 = 78.9%. Bo: 30 of 40 = 75%. SUMIFS takes two conditions (person and Y); SUMIF gives the person's total."
+    },
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "You export a month of timesheets (one row per entry). What is a pivot table for?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Summarising hours by person, project or week without writing formulas",
+        "Locking cells so the client cannot edit them",
+        "Drawing a Gantt chart from task dates",
+        "Finding formula errors in the sheet"
+      ],
+      "correctIndex": 0,
+      "explanation": "A pivot table groups and totals rows — hours per person per project — in a few clicks, and updates when refreshed.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "F1 holds the hourly rate. In C2 you enter `=B2*$F$1` and copy it down to C3. What is in C3?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "`=B3*$F$1`",
+        "`=B3*$F$2`",
+        "`=B2*$F$1`",
+        "`=B3*F2`"
+      ],
+      "correctIndex": 0,
+      "explanation": "B2 is relative, so it shifts to B3; `$F$1` is absolute and stays fixed.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.75,
+    "prompt": "Someone inserts a column in the lookup table. Which formula is most likely to now return the wrong column?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "`=VLOOKUP(A2,Owners!A:C,3,FALSE)`",
+        "`=XLOOKUP(A2,Owners!A:A,Owners!C:C)`",
+        "`=SUMIF(Owners!A:A,A2,Owners!C:C)`"
+      ],
+      "correctIndex": 0,
+      "explanation": "VLOOKUP's column number (3) is hard-coded, so an inserted column shifts what it returns. XLOOKUP and SUMIF use ranges, which move with the insert.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  },
+  {
+    "id": "pm-excel-for-pms-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-excel-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 0.75,
+    "prompt": "Your RAG formula is `=IF(D2>10,\"Red\",IF(D2>5,\"Amber\",\"Green\"))`. A project has no value in D2 yet. What shows, and why does it matter?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Green — a blank counts as 0, so missing data looks healthy",
+        "Red — blanks are treated as errors",
+        "An empty cell — IF skips blanks",
+        "#VALUE! — the formula cannot compare a blank"
+      ],
+      "correctIndex": 0,
+      "explanation": "A blank compares as 0, so it shows Green. Guard for it, e.g. `=IF(D2=\"\",\"No data\",…)`, so a missing update is not reported as on track.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "excel",
+      "tracking"
+    ]
+  }
+]

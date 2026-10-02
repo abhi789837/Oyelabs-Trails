@@ -49,6 +49,7 @@ export interface AuthoredResource {
   label: string;
   url: string;
   kind: "docs" | "article" | "interview-prep" | "spec" | "repo";
+  verifiedAt?: string;
 }
 
 export interface AuthoredTopic {
@@ -68,6 +69,8 @@ export interface AuthoredTopic {
   codeChallenge?: AuthoredCodeChallenge;
   /** v4: PM/BD practice task (shared/tasks.ts). */
   practice?: Task;
+  /** v4.1: company procedures an admin fills in (routes/sop.ts). */
+  sop?: { title: string; prompt: string }[];
 }
 
 export interface AuthoredModule {

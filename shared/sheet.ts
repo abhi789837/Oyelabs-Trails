@@ -5,7 +5,7 @@ import FormulaParser from "fast-formula-parser";
  *
  * Formulas are evaluated by `fast-formula-parser` (MIT, see docs/v4.1/DECISIONS.md), which covers
  * SUM, AVERAGE, IF, COUNTIF, SUMIF, VLOOKUP, NETWORKDAYS, dates and most of the rest; the five a
- * PM's tracker needs and it lacks — SUMIFS, COUNTIFS, AVERAGEIFS, XLOOKUP and MATCH — are added
+ * PM's tracker needs and it lacks — SUMIFS, COUNTIFS, AVERAGEIFS, XLOOKUP, MATCH, MAX, MIN and COUNTA — are added
  * here. Cells are plain strings: "12", "Ann", or "=SUMIF(A2:A9,"Ann",B2:B9)".
  */
 
@@ -63,7 +63,19 @@ function ifs(args: Arg[], start: number): (i: number) => boolean {
   return (i) => pairs.every((p) => matchesCriteria(p.range[i] ?? null, p.criteria));
 }
 
+const numbersIn = (args: Arg[]): number[] => args.flatMap(flat).filter((v): v is number => typeof v === "number");
+
 const extraFunctions = {
+  // The parser ships without these three; Excel ignores text and blanks in ranges, so do we.
+  MAX: (...args: Arg[]) => {
+    const n = numbersIn(args);
+    return n.length ? Math.max(...n) : 0;
+  },
+  MIN: (...args: Arg[]) => {
+    const n = numbersIn(args);
+    return n.length ? Math.min(...n) : 0;
+  },
+  COUNTA: (...args: Arg[]) => args.flatMap(flat).filter((v) => v !== null && v !== undefined && v !== "").length,
   SUMIFS: (...args: Arg[]) => {
     const sum = flat(args[0]);
     const ok = ifs(args, 1);

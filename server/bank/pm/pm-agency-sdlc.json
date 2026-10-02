@@ -1,0 +1,666 @@
+[
+  {
+    "id": "pm-agency-sdlc-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put the stages of an agency project in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Client UAT"
+        },
+        {
+          "id": "r6",
+          "label": "Maintenance and support"
+        },
+        {
+          "id": "r1",
+          "label": "Discovery and scoping"
+        },
+        {
+          "id": "r3",
+          "label": "Development and internal QA"
+        },
+        {
+          "id": "r5",
+          "label": "Production launch"
+        },
+        {
+          "id": "r2",
+          "label": "UX/UI design"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Agree what to build, design it, build and test it, let the client accept it, launch, then support it."
+    },
+    "tags": [
+      "sdlc",
+      "lifecycle"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The client has a 20-hour monthly support retainer. Work out what's left this month.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Enter hours and a percentage.",
+      "table": {
+        "columns": [
+          "Ticket",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Password reset bug",
+            "3"
+          ],
+          [
+            "Update app copy",
+            "2.5"
+          ],
+          [
+            "Server patching",
+            "4"
+          ],
+          [
+            "Report export fix",
+            "5.5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "left",
+          "label": "Hours remaining",
+          "unit": "h",
+          "answer": 5,
+          "tolerance": 0.1,
+          "expression": "20-(T[0][1]+T[1][1]+T[2][1]+T[3][1])"
+        },
+        {
+          "id": "used",
+          "label": "Share of retainer used",
+          "unit": "%",
+          "answer": 75,
+          "tolerance": 0.5,
+          "expression": "(T[0][1]+T[1][1]+T[2][1]+T[3][1])/20*100"
+        }
+      ],
+      "explanation": "15 of 20 hours used = 75%; 5 hours left. Tell the client before it runs out."
+    },
+    "tags": [
+      "support sla",
+      "retainer",
+      "maintenance"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A critical bug is reported in the live app. Put the hotfix steps in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r5",
+          "label": "Deploy to production and verify"
+        },
+        {
+          "id": "r2",
+          "label": "Create a hotfix branch from the production code"
+        },
+        {
+          "id": "r6",
+          "label": "Merge the fix back into the development branch"
+        },
+        {
+          "id": "r1",
+          "label": "Reproduce the bug and confirm its severity"
+        },
+        {
+          "id": "r4",
+          "label": "Test the fix on staging"
+        },
+        {
+          "id": "r3",
+          "label": "Fix it and get a code review"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Confirm first, fix from what is live, review and test, release, then merge back so the next release does not reintroduce the bug."
+    },
+    "tags": [
+      "hotfix",
+      "release"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Launch is Monday. In Thursday's UAT the client finds discount codes fail at checkout, plus six cosmetic issues.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Fix everything before Monday, whatever it takes.",
+            "Triage with the client: agree which issues block launch.",
+            "Launch anyway; UAT is just a formality.",
+            "Postpone launch by a month."
+          ],
+          "correctIndex": 1,
+          "explanation": "Not every UAT finding is a blocker. Agree severity with the client before planning."
+        },
+        {
+          "id": "s2",
+          "question": "The discount fix needs two days of work and testing. What do you offer?",
+          "options": [
+            "Launch Monday with broken discount codes and say nothing.",
+            "A short delay, or launch with discount codes off; the client decides in writing.",
+            "Skip testing the fix to make Monday.",
+            "Promise the fix by Friday night."
+          ],
+          "correctIndex": 1,
+          "explanation": "Give the client a real choice with trade-offs and record the decision."
+        },
+        {
+          "id": "s3",
+          "question": "What happens to the six cosmetic issues?",
+          "options": [
+            "Ignore them.",
+            "Log them for a post-launch patch with an agreed date.",
+            "Block the launch until all are fixed.",
+            "Ask the client to fix them."
+          ],
+          "correctIndex": 1,
+          "explanation": "Minor issues go into a scheduled patch so they are not forgotten."
+        }
+      ]
+    },
+    "tags": [
+      "uat",
+      "launch"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A client asks if this pull request can go out in today's release. Flag what blocks the merge.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "github-pr",
+      "prompt": "Flag the rows that are a problem, then answer the question.",
+      "title": "PR #212 Fix discount code rounding",
+      "columns": [
+        "Item",
+        "Status",
+        "Detail"
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": [
+            "CI: unit tests",
+            "Failed",
+            "3 tests failing in checkout"
+          ],
+          "issue": "Failing tests block the merge."
+        },
+        {
+          "id": "r2",
+          "cells": [
+            "CI: lint",
+            "Passed",
+            "-"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r3",
+          "cells": [
+            "Reviews",
+            "0 of 1 required",
+            "No approval yet"
+          ],
+          "issue": "A required review is missing."
+        },
+        {
+          "id": "r4",
+          "cells": [
+            "Branch",
+            "Up to date",
+            "With main"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r5",
+          "cells": [
+            "Conflicts",
+            "None",
+            "-"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r6",
+          "cells": [
+            "Linked ticket",
+            "APP-212",
+            "Discount rounding"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Can it ship today?",
+          "options": [
+            "Yes, merge it now.",
+            "Only after the tests pass and it is approved.",
+            "Yes, if an admin overrides the checks."
+          ],
+          "correctIndex": 1,
+          "explanation": "Failing tests and no review mean it is not ready; overriding checks to hit a date is how bugs reach production."
+        }
+      ]
+    },
+    "tags": [
+      "github",
+      "pull request",
+      "release"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "On Wednesday, Apple rejects the client's app because the reviewer had no demo login. The client's marketing launch is set for Friday.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do today?",
+          "options": [
+            "Wait until Friday to see what happens.",
+            "Tell the client today, add demo credentials to the review notes and resubmit.",
+            "Appeal the rejection and do nothing else.",
+            "Publish on the website instead."
+          ],
+          "correctIndex": 1,
+          "explanation": "Tell the client the same day and fix the cause quickly. A missing demo account is a common, easy fix."
+        },
+        {
+          "id": "s2",
+          "question": "What do you advise about Friday?",
+          "options": [
+            "Guarantee approval by Friday.",
+            "Review time isn't guaranteed: hold the marketing launch until approval, or have a fallback date.",
+            "Cancel the launch entirely.",
+            "Launch marketing anyway; the link will work eventually."
+          ],
+          "correctIndex": 1,
+          "explanation": "The agency doesn't control App Store review time, so never promise a date that depends on it."
+        },
+        {
+          "id": "s3",
+          "question": "How do you prevent this next time?",
+          "options": [
+            "Use a pre-submission checklist (demo account, privacy details) and plan buffer days for review.",
+            "Submit on the launch day.",
+            "Ask Apple to skip review.",
+            "Only release on Android."
+          ],
+          "correctIndex": 0,
+          "explanation": "A checklist and review buffer protect the launch date."
+        }
+      ]
+    },
+    "tags": [
+      "app store review",
+      "mobile",
+      "launch"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The release is due today. Review this pull request and flag what should stop it shipping.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "sim",
+      "app": "github-pr",
+      "prompt": "Flag the rows that are a problem, then answer the question.",
+      "title": "PR #348 Add push notification settings",
+      "columns": [
+        "Item",
+        "Status",
+        "Detail"
+      ],
+      "rows": [
+        {
+          "id": "r1",
+          "cells": [
+            "Checks",
+            "Passed",
+            "All 4 passed"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r2",
+          "cells": [
+            "Reviews",
+            "Approved",
+            "1 approval"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r3",
+          "cells": [
+            "Label",
+            "do-not-merge",
+            "Waiting for client copy"
+          ],
+          "issue": "The team marked it not ready: the client's text is missing."
+        },
+        {
+          "id": "r4",
+          "cells": [
+            "Base branch",
+            "main",
+            "-"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r5",
+          "cells": [
+            "Description",
+            "Migration",
+            "Adds a database change; not yet run on staging"
+          ],
+          "issue": "An untested database change is a release risk."
+        },
+        {
+          "id": "r6",
+          "cells": [
+            "Commits",
+            "7",
+            "-"
+          ],
+          "issue": null
+        },
+        {
+          "id": "r7",
+          "cells": [
+            "Conflicts",
+            "None",
+            "-"
+          ],
+          "issue": null
+        }
+      ],
+      "questions": [
+        {
+          "id": "q1",
+          "question": "Green checks and an approval are present. Is it ready?",
+          "options": [
+            "Yes; checks and approval are all that matter.",
+            "No: get the client copy, run the migration on staging, then merge.",
+            "Yes, if it is merged after office hours."
+          ],
+          "correctIndex": 1,
+          "explanation": "Passing checks are necessary but not sufficient; labels and untested migrations matter too."
+        }
+      ]
+    },
+    "tags": [
+      "github",
+      "pull request",
+      "release"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Friday 18:00: after today's release, card payments fail for 30% of users.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best immediate action?",
+          "options": [
+            "Roll back to the previous version, if it is safe to, and tell the client.",
+            "Keep the release and fix forward over the weekend.",
+            "Wait until Monday to investigate.",
+            "Turn off the whole app."
+          ],
+          "correctIndex": 0,
+          "explanation": "When payments fail, restore the last good version fast. Roll back only if no irreversible change, like a data migration, prevents it."
+        },
+        {
+          "id": "s2",
+          "question": "The client wants the new feature back on Monday. What do you agree?",
+          "options": [
+            "Redeploy the same build on Monday.",
+            "Find the root cause, fix and test on staging, then release with a short incident note.",
+            "Release only on Fridays from now on.",
+            "Drop the feature permanently."
+          ],
+          "correctIndex": 1,
+          "explanation": "A root cause and a tested fix, explained in a short incident note, rebuild confidence."
+        }
+      ]
+    },
+    "tags": [
+      "hotfix",
+      "rollback",
+      "incident"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Who carries out user acceptance testing (UAT) on an agency project?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Only the agency's developers",
+        "The client, or users they choose, checking it meets their needs",
+        "The app store",
+        "Nobody; it is optional"
+      ],
+      "correctIndex": 1,
+      "explanation": "UAT is the client's check that the work meets what was agreed before go-live.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "uat"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a \"definition of done\"?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The project's end date",
+        "A shared checklist every item must meet to count as finished",
+        "The final invoice",
+        "The client's sign-off email"
+      ],
+      "correctIndex": 1,
+      "explanation": "It sets a shared quality bar (reviewed, tested, deployed to staging...) so 'done' means the same thing to everyone.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "definition of done"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why shouldn't a PM promise a client an exact date for a new mobile app to go live in the stores?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Apps cannot be released on weekdays",
+        "Store review time varies and can end in rejection",
+        "Developers never know when they will finish",
+        "Store listings must be written by the client"
+      ],
+      "correctIndex": 1,
+      "explanation": "Apple and Google review every release; time varies and rejections happen, so plan a buffer.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "app store review",
+      "mobile"
+    ]
+  },
+  {
+    "id": "pm-agency-sdlc-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The SOW includes a 30-day warranty for defects. In week two, the client asks for a new CSV export. What is it?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A warranty fix, done free",
+        "New work: a change request or support request",
+        "A hotfix",
+        "UAT feedback"
+      ],
+      "correctIndex": 1,
+      "explanation": "A warranty covers things that do not work as agreed; new features are new scope.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "warranty",
+      "change request",
+      "maintenance"
+    ]
+  }
+]

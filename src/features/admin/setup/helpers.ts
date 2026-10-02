@@ -2,6 +2,7 @@ import { matchSkillByText, searchSkills, trackBasics, type Catalog, type Skill }
 import {
   DEFAULT_HOURS_PER_WEEK,
   DEFAULT_SLIDER,
+  MAX_PRIORITIES,
   planAssessmentMix,
   sortPriorities,
   type AssessmentMix,
@@ -38,6 +39,8 @@ export interface SetupState {
   advanced: SetupAdvanced;
   /** v4.1: "About this person and what you want" — the profile's notes, which the AI reads. */
   description: string;
+  /** UI only: the department whose suggested defaults filled the priorities, for the note under them. */
+  prefilledFrom?: string | null;
 }
 
 export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced" };
@@ -206,6 +209,38 @@ export function changeDepartment(state: SetupState, catalog: Catalog, department
     priorities: state.priorities.filter((p) => inDept(p.skillId)),
     skip: state.skip.filter(inDept),
   };
+}
+
+/**
+ * v4.1: fills an empty priority list with the department's suggested sliders (catalog skills with a
+ * `defaultSlider`), highest first, catalog order within a level. Never touches a list that has even
+ * one pick, and leaves out skills the admin put under "Don't include".
+ */
+export function withDepartmentDefaults(state: SetupState, catalog: Catalog): SetupState {
+  if (state.priorities.length > 0) return state;
+  const skip = new Set(state.skip);
+  const defaults = pickableSkills(catalog, state.departmentId)
+    .filter((s) => s.status === "active" && isSlider(s.defaultSlider) && !skip.has(s.id))
+    .map((s, index) => ({ skill: s, slider: s.defaultSlider as Slider, index }))
+    .sort((a, b) => b.slider - a.slider || a.index - b.index)
+    .slice(0, MAX_PRIORITIES);
+  if (defaults.length === 0) return state;
+  return {
+    ...state,
+    priorities: defaults.map((d, position) => ({ skillId: d.skill.id, slider: d.slider, position })),
+    prefilledFrom: state.departmentId,
+  };
+}
+
+/** The department switch with defaults: an empty list after the switch gets the new department's. */
+export function changeDepartmentWithDefaults(state: SetupState, catalog: Catalog, departmentId: string): SetupState {
+  if (departmentId === state.departmentId) return state;
+  const next = changeDepartment(state, catalog, departmentId);
+  return withDepartmentDefaults({ ...next, prefilledFrom: null }, catalog);
+}
+
+function isSlider(value: number | null | undefined): value is Slider {
+  return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 5;
 }
 
 // ---------------------------------------------------------------------------

@@ -2,9 +2,12 @@ import type { LearnerTask, Task, TaskResponse } from "@shared/tasks";
 
 import { RichText } from "@/components/content/RichText";
 
+import { AllocateTask } from "./AllocateTask";
 import { CalculateTask } from "./CalculateTask";
+import { ExcelTask } from "./ExcelTask";
 import { RankTask } from "./RankTask";
 import { ScenarioTask } from "./ScenarioTask";
+import { SimTask } from "./SimTask";
 import { SpotTask } from "./SpotTask";
 import type { ResponseOf, TaskOf } from "./types";
 import { WriteTask } from "./WriteTask";
@@ -21,7 +24,7 @@ export interface TaskViewProps {
   hidePrompt?: boolean;
 }
 
-/** Renders any of the five task kinds, controlled. */
+/** Renders any of the task kinds, controlled. */
 export function TaskView({ task, value, onChange, readOnly, answer, idPrefix, hidePrompt }: TaskViewProps) {
   const same = <K extends TaskResponse["kind"]>(kind: K) => (value && value.kind === kind ? (value as ResponseOf<K>) : null);
   const review = <K extends Task["kind"]>(kind: K) => (answer && answer.kind === kind ? (answer as TaskOf<K>) : null);
@@ -39,6 +42,11 @@ export function TaskView({ task, value, onChange, readOnly, answer, idPrefix, hi
         <ScenarioTask task={task} value={same("scenario")} onChange={onChange} answer={review("scenario")} {...common} />
       )}
       {task.kind === "spot" && <SpotTask task={task} value={same("spot")} onChange={onChange} answer={review("spot")} {...common} />}
+      {task.kind === "excel" && <ExcelTask task={task} value={same("excel")} onChange={onChange} answer={review("excel")} {...common} />}
+      {task.kind === "allocate" && (
+        <AllocateTask task={task} value={same("allocate")} onChange={onChange} answer={review("allocate")} {...common} />
+      )}
+      {task.kind === "sim" && <SimTask task={task} value={same("sim")} onChange={onChange} answer={review("sim")} {...common} />}
     </div>
   );
 }

@@ -141,6 +141,13 @@
       "when": 1790934381485,
       "tag": "0019_v41_default_slider",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1790935998202,
+      "tag": "0020_v41_sop",
+      "breakpoints": true
     }
   ]
 }

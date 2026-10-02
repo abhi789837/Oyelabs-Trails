@@ -18,12 +18,12 @@ Spec: `OYELEARN_V4_1_PROMPT.md`. Decisions: `DECISIONS.md`. Resume from the firs
 - [x] Checkpoint + commit `feat(v4.1-p1)`
 
 ## Phase 2: Agency PM curriculum
-- [ ] 2a Research → `PM_RESEARCH.md` + verified sources
-- [ ] 2b Skills + courses (13 areas, B→I→A), generic theory relabelled and ranked last, default PM priorities
-- [ ] 2c Task components: Excel grid (formula engine), email, meeting, explain-it, Keka/Teams sim, Git PR, resource allocation
-- [ ] 2d PM bank items for new skills; personalisation applies to PMs
-- [ ] 2e Existing PM learners mapped; paths rebuilt with defaults unless sliders set
-- [ ] Checkpoint + commit `feat(v4.1-p2)`
+- [x] 2a Research → `PM_RESEARCH.md` + verified sources
+- [x] 2b Skills + courses (13 areas, B→I→A), generic theory relabelled and ranked last, default PM priorities
+- [x] 2c Task components: Excel grid (formula engine), email, meeting, explain-it, Keka/Teams sim, Git PR, resource allocation
+- [x] 2d PM bank items for new skills; personalisation applies to PMs
+- [x] 2e Existing PM learners mapped; paths rebuilt with defaults unless sliders set
+- [x] Checkpoint + commit `feat(v4.1-p2)`
 
 ## Phase 3: Tests, deploy, verify
 - [ ] Tests (1d, task graders, course schema + verification timestamps, PM defaults, PM path order)
@@ -33,7 +33,11 @@ Spec: `OYELEARN_V4_1_PROMPT.md`. Decisions: `DECISIONS.md`. Resume from the firs
 - [ ] Tag v4.1.0
 
 ## Needs Abhishek
+- **56 `[Oyelabs SOP – admin to fill]` blocks** across the 13 agency PM courses (Keka timesheet/leave/PSA billing and rate cards, meeting cadence and MoM template, email templates and signature, support SLAs, time-zone overlap, AI tool rules). Fill them at **Admin → Company SOPs** (`/admin/sop`); learners see them on the topic.
+- Keka PSA has no per-feature public videos; short screen recordings from our own Keka would improve those topics.
+- Agency-specific material with no outside source (fixed-bid vs T&M wording, white-label resellers) is covered only through SOP blocks.
 
 ## Notes
+- Phase 2: 13 agency PM courses, 90 topics, 691 quiz questions, 247 verified reading links and 183 verified videos (each with `verifiedAt`; all 1,644 curriculum videos pass oEmbed), 90 hands-on practices (excel 14, write 17, sim 13, spot 16, scenario 14, rank 7, calculate 7, allocate 2). 156 validated PM bank items for the 13 new skills. Spreadsheet engine gained MAX/MIN/COUNTA. Existing PM progress untouched: the old topics keep their ids and sit last on the trail as "PM foundations and advanced theory".
 - Server for 1a/1b.6/1c done (preview endpoint, swap/regenerate, timing capture, calibration, est-vs-actual API); UI in progress.
 - 2c server done: task kinds excel (fast-formula-parser + SUMIFS/COUNTIFS/AVERAGEIFS/XLOOKUP/MATCH), allocate, sim; write variants email/explain; graders tested. 2b catalog: 14 agency PM skills with default sliders; PM paths open with the diagnostic refresh; defaults applied once to PM learners with no sliders.

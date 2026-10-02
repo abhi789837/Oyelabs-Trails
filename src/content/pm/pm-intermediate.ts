@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pm-intermediate",
   trackId: "pm",
-  name: "Running Delivery",
+  name: "PM foundations and advanced theory: Running delivery",
   description:
     "The week-to-week machinery of delivering client work: sprint planning, estimation and velocity, backlog prioritisation, change control, RAID logs, stakeholders and RACI, the agency's commercial models, QA and UAT, releases, retrospectives and client expectations. Written for PMs who already know the vocabulary and now have to protect scope, margin and trust on fixed-bid and T&M projects that include AI features.",
   refs: [

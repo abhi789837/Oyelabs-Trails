@@ -5,6 +5,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { ChallengeRunner } from "@/components/challenge/ChallengeRunner";
 import { PRACTICE_CHECKS, PracticeTask } from "@/components/tasks/PracticeTask";
 import { RichText } from "@/components/content/RichText";
+import { SopBlocks } from "@/features/curriculum/SopBlocks";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { ReferenceList } from "@/components/trail/ReferenceList";
 import { TopicStatusBadge } from "@/components/trail/TopicStatusBadge";
@@ -102,6 +103,8 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
       )}
 
       {topic && <TopicBody topic={topic} />}
+
+      {topic?.sopCount ? <SopBlocks topicId={topic.id} /> : null}
 
       {topic?.practice && (
         <section aria-labelledby="practice-heading" className="mt-14 max-w-3xl border-t pt-8">

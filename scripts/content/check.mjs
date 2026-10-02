@@ -28,6 +28,7 @@ function checkResource(where, r) {
   if (!r.label?.trim()) err(where, "resource label missing");
   if (!/^https:\/\//.test(r.url ?? "")) err(where, `resource url must be https: ${r.url}`);
   if (!KINDS.includes(r.kind)) err(where, `resource kind must be one of ${KINDS.join("/")}: got ${r.kind}`);
+  if (r.verifiedAt !== undefined && Number.isNaN(Date.parse(r.verifiedAt))) err(where, `resource verifiedAt is not a date: ${r.verifiedAt}`);
 }
 
 function checkVideo(where, v) {
@@ -45,6 +46,7 @@ function checkVideo(where, v) {
   if (v.startSeconds !== undefined && !(Number.isInteger(v.startSeconds) && v.startSeconds >= 0)) {
     err(where, "video.startSeconds must be a non-negative integer");
   }
+  if (v.verifiedAt !== undefined && Number.isNaN(Date.parse(v.verifiedAt))) err(where, `video verifiedAt is not a date: ${v.verifiedAt}`);
   if (v.startSeconds && !v.chapterLabel) warn(where, "video.startSeconds set without a chapterLabel");
   if (v.durationLabel !== undefined && !/^(\d{1,2}:)?\d{1,2}:\d{2}$/.test(v.durationLabel)) {
     err(where, `video.durationLabel should look like 19:11 or 1:32:35: ${v.durationLabel}`);

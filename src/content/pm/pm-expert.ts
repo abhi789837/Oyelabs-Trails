@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pm-expert",
   trackId: "pm",
-  name: "Programme, Portfolio & AI-Era PM",
+  name: "PM foundations and advanced theory: Programme & portfolio",
   description:
     "For senior PMs and delivery leads: governing programmes and portfolios, making and tracking business cases, scaling agile, PMP/PMI-ACP alignment, sustainability and coaching other PMs.",
   refs: [

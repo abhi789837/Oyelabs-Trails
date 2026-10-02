@@ -1319,3 +1319,20 @@ export const questionBank = sqliteTable(
     index("question_bank_pick_idx").on(t.departmentId, t.status, t.skillId, t.type, t.difficulty),
   ],
 );
+
+// ---------------------------------------------------------------------------
+// v4.1: Oyelabs SOP blocks — company procedures an admin writes into a topic
+// ---------------------------------------------------------------------------
+
+/** One filled `[Oyelabs SOP – admin to fill]` block, keyed by the topic and the block's position. */
+export const sopEntries = sqliteTable(
+  "sop_entries",
+  {
+    topicId: text("topic_id").notNull(),
+    blockIndex: integer("block_index").notNull(),
+    body: text("body").notNull(),
+    updatedBy: text("updated_by").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.topicId, t.blockIndex] })],
+);

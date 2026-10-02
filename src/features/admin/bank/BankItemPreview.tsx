@@ -2,9 +2,10 @@ import { useState, type ReactNode } from "react";
 import { Check, Eye, EyeOff } from "lucide-react";
 
 import type { BankItemRow } from "@shared/bank";
-import { TASK_KIND_LABELS, type Task } from "@shared/tasks";
+import { TASK_KIND_LABELS, toLearnerTask, type Task } from "@shared/tasks";
 
 import { CodeBlock, RichText } from "@/components/content/RichText";
+import { TaskView } from "@/components/tasks/TaskView";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn, formatTimestamp } from "@/lib/utils";
@@ -310,5 +311,39 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
           {task.askExplanation && <p className="mt-2 text-xs text-muted-foreground">The learner also explains the worst issue in one line.</p>}
         </Block>
       );
+    case "excel":
+    case "allocate":
+    case "sim":
+      return <InteractivePreview task={task} showAnswer={showAnswer} />;
   }
+}
+
+/**
+ * The spreadsheet, allocation grid and screen as the learner sees them, read-only. With the answer
+ * shown: the solution's entries (Excel) or the right flags and answers (screen) filled in, with the
+ * review panel under it.
+ */
+function InteractivePreview({ task, showAnswer }: { task: Extract<Task, { kind: "excel" | "allocate" | "sim" }>; showAnswer: boolean }) {
+  const value =
+    showAnswer && task.kind === "excel"
+      ? { kind: "excel" as const, cells: task.solution }
+      : showAnswer && task.kind === "sim"
+        ? { kind: "sim" as const, flagged: task.rows.filter((r) => r.issue).map((r) => r.id), answers: Object.fromEntries(task.questions.map((q) => [q.id, q.correctIndex])) }
+        : null;
+  return (
+    <Block title="As the learner sees it">
+      <TaskView
+        key={showAnswer ? "answer" : "plain"}
+        task={toLearnerTask(task)}
+        value={value}
+        onChange={() => {}}
+        readOnly
+        // An allocation has no single answer key, only rules, so its review panel would grade an empty plan.
+        answer={showAnswer && task.kind !== "allocate" ? task : null}
+        idPrefix={`bank-preview-${task.kind}`}
+        hidePrompt
+      />
+      {showAnswer && task.kind === "allocate" && task.explanation && <p className="mt-3 text-muted-foreground">{task.explanation}</p>}
+    </Block>
+  );
 }

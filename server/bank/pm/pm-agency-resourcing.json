@@ -1,0 +1,590 @@
+[
+  {
+    "id": "pm-agency-resourcing-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Staff both projects for next week without over-allocating anyone. Enter hours per person per project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "allocate",
+      "prompt": "Enter hours per person per project.",
+      "people": [
+        {
+          "id": "ann",
+          "name": "Ann",
+          "capacity": 40,
+          "note": ""
+        },
+        {
+          "id": "bo",
+          "name": "Bo",
+          "capacity": 40,
+          "note": ""
+        }
+      ],
+      "projects": [
+        {
+          "id": "p1",
+          "name": "Portal",
+          "need": 50
+        },
+        {
+          "id": "p2",
+          "name": "App",
+          "need": 25
+        }
+      ],
+      "slack": 0.1,
+      "blocked": [],
+      "explanation": "Ann 40 h on Portal; Bo 10 h on Portal and 25 h on App. Nobody over 40, both projects covered."
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.25,
+    "prompt": "Staff next week. Skills and leave are in each person's note; capacity already reflects leave.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "allocate",
+      "prompt": "Enter hours per person per project.",
+      "people": [
+        {
+          "id": "ann",
+          "name": "Ann",
+          "capacity": 40,
+          "note": "Laravel only"
+        },
+        {
+          "id": "bo",
+          "name": "Bo",
+          "capacity": 40,
+          "note": "Flutter only"
+        },
+        {
+          "id": "cy",
+          "name": "Cy",
+          "capacity": 24,
+          "note": "Laravel; on leave Thu–Fri"
+        }
+      ],
+      "projects": [
+        {
+          "id": "p1",
+          "name": "Laravel portal",
+          "need": 50
+        },
+        {
+          "id": "p2",
+          "name": "Flutter app",
+          "need": 30
+        }
+      ],
+      "slack": 0.1,
+      "blocked": [
+        {
+          "person": "ann",
+          "project": "p2"
+        },
+        {
+          "person": "bo",
+          "project": "p1"
+        },
+        {
+          "person": "cy",
+          "project": "p2"
+        }
+      ],
+      "explanation": "Bo is the only Flutter dev: 30 h on the app. Portal: Ann 40 + Cy 10 (Cy has only 24 h because of leave)."
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Hours are agreed with the client, so staff each project exactly (no over-staffing). Cy has 20 h free after support and no mobile experience.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "allocate",
+      "prompt": "Enter hours per person per project.",
+      "people": [
+        {
+          "id": "ann",
+          "name": "Ann",
+          "capacity": 40,
+          "note": ""
+        },
+        {
+          "id": "bo",
+          "name": "Bo",
+          "capacity": 40,
+          "note": ""
+        },
+        {
+          "id": "cy",
+          "name": "Cy",
+          "capacity": 20,
+          "note": "20 h free; no mobile"
+        }
+      ],
+      "projects": [
+        {
+          "id": "p1",
+          "name": "Web portal",
+          "need": 45
+        },
+        {
+          "id": "p2",
+          "name": "Mobile app",
+          "need": 35
+        }
+      ],
+      "slack": 0,
+      "blocked": [
+        {
+          "person": "cy",
+          "project": "p2"
+        }
+      ],
+      "explanation": "Cy can only go on the portal: 20 h. Ann 25 h portal + 15 h app; Bo 20 h app. Portal 45, app 35, exactly."
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Staff the fixed-bid launch and the T&M retainer. Ann is on leave Monday; Cy is a new joiner the launch team won't take this week. Stay within 5% of each need.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "allocate",
+      "prompt": "Enter hours per person per project.",
+      "people": [
+        {
+          "id": "ann",
+          "name": "Ann",
+          "capacity": 32,
+          "note": "Leave Monday"
+        },
+        {
+          "id": "bo",
+          "name": "Bo",
+          "capacity": 40,
+          "note": ""
+        },
+        {
+          "id": "cy",
+          "name": "Cy",
+          "capacity": 40,
+          "note": "New joiner; not on launch"
+        }
+      ],
+      "projects": [
+        {
+          "id": "p1",
+          "name": "Fixed-bid launch",
+          "need": 60
+        },
+        {
+          "id": "p2",
+          "name": "T&M retainer",
+          "need": 40
+        }
+      ],
+      "slack": 0.05,
+      "blocked": [
+        {
+          "person": "cy",
+          "project": "p1"
+        }
+      ],
+      "explanation": "Launch needs 60 h from Ann and Bo only: Ann 32 + Bo 28. Retainer: Bo's last 12 h + Cy 28."
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.25,
+    "prompt": "Billable utilisation = billable hours ÷ available hours × 100. Work out Ann's and the team's for last week.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Round to one decimal place.",
+      "table": {
+        "columns": [
+          "Person",
+          "Available h",
+          "Billable h",
+          "Non-billable h"
+        ],
+        "rows": [
+          [
+            "Ann",
+            "40",
+            "30",
+            "6"
+          ],
+          [
+            "Bo",
+            "32",
+            "16",
+            "12"
+          ],
+          [
+            "Cy",
+            "40",
+            "0",
+            "8"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ann",
+          "label": "Ann's billable utilisation",
+          "unit": "%",
+          "answer": 75,
+          "tolerance": 0.5,
+          "expression": "T[0][2]/T[0][1]*100"
+        },
+        {
+          "id": "team",
+          "label": "Team billable utilisation",
+          "unit": "%",
+          "answer": 41.1,
+          "tolerance": 0.5,
+          "expression": "(T[0][2]+T[1][2]+T[2][2])/(T[0][1]+T[1][1]+T[2][1])*100"
+        }
+      ],
+      "explanation": "Ann 30/40 = 75%. Team 46/112 = 41.1%: Cy's 40 h with no billable work pulls it down."
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Next month's plan. Bench = available − allocated. Work out the team's bench hours and bench as a % of available.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Round to one decimal place.",
+      "table": {
+        "columns": [
+          "Person",
+          "Available h",
+          "Allocated h"
+        ],
+        "rows": [
+          [
+            "Ann",
+            "160",
+            "160"
+          ],
+          [
+            "Bo",
+            "160",
+            "120"
+          ],
+          [
+            "Cy",
+            "160",
+            "40"
+          ],
+          [
+            "Dee",
+            "80",
+            "80"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "bench",
+          "label": "Bench hours",
+          "unit": "h",
+          "answer": 160,
+          "tolerance": 0.5,
+          "expression": "(T[0][1]-T[0][2])+(T[1][1]-T[1][2])+(T[2][1]-T[2][2])+(T[3][1]-T[3][2])"
+        },
+        {
+          "id": "pct",
+          "label": "Bench %",
+          "unit": "%",
+          "answer": 28.6,
+          "tolerance": 0.5,
+          "expression": "((T[0][1]-T[0][2])+(T[1][1]-T[1][2])+(T[2][1]-T[2][2])+(T[3][1]-T[3][2]))/(T[0][1]+T[1][1]+T[2][1]+T[3][1])*100"
+        }
+      ],
+      "explanation": "Bench 0 + 40 + 120 + 0 = 160 h of 560 available = 28.6%. Most of it is Cy: a re-staffing priority."
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.25,
+    "prompt": "Next week Bo is booked 30 h on Client A's portal and 25 h on Client B's API: 55 h against a 40 h week. Both PMs say their work is critical.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Compare both plans: real deadlines and what slips if Bo's hours move",
+            "Ask Bo to work 55 h this week",
+            "Cut both projects to 20 h each",
+            "Leave it; timesheets will sort it out"
+          ],
+          "correctIndex": 0,
+          "explanation": "Find out which commitments are truly fixed before moving anyone."
+        },
+        {
+          "id": "s2",
+          "question": "Client B's work can move a week without missing a commitment; Client A's cannot. Next?",
+          "options": [
+            "Bo 30 h on A, 10 h on B; agree B's new date with its PM and client",
+            "Move Bo fully to B because it was booked last",
+            "Keep both bookings and tell nobody",
+            "Ask Client A to accept a delay"
+          ],
+          "correctIndex": 0,
+          "explanation": "Protect the fixed commitment, re-plan the flexible one, and tell the affected client."
+        }
+      ]
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.25,
+    "prompt": "Two Flutter devs come off a project on Friday. There is no signed work for them for three weeks; a prospect may sign in four.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Decide what to do.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Best use of their time?",
+          "options": [
+            "Pre-sales prototype, internal tools and upskilling, logged as non-billable",
+            "Log their hours to the last client's T&M project",
+            "Book them on a fixed-bid project that doesn't need them",
+            "Nothing; the bench is HR's problem"
+          ],
+          "correctIndex": 0,
+          "explanation": "Bench time is real cost; use it on named internal work and never bill it to a client."
+        },
+        {
+          "id": "s2",
+          "question": "Finance asks why utilisation dropped. You say:",
+          "options": [
+            "80 h/week bench, logged as non-billable to named work, with a re-staffing plan",
+            "Timesheets are wrong; utilisation is fine",
+            "It's the sales team's fault",
+            "Utilisation doesn't matter for an agency"
+          ],
+          "correctIndex": 0,
+          "explanation": "Give the number, what the time is going on, and the plan."
+        }
+      ]
+    },
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.75,
+    "prompt": "Which hours are billable?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Dev work on a T&M client's agreed scope",
+        "An internal team meeting",
+        "Training on a new framework",
+        "Time on the bench"
+      ],
+      "correctIndex": 0,
+      "explanation": "Billable hours are work the client pays for under the contract. Meetings, training and bench are non-billable.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "Why don't agencies plan people at 100% billable utilisation?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It leaves no room for meetings, support, leave or estimates being wrong",
+        "Clients refuse to pay for full weeks",
+        "Timesheet tools cannot record 40 h",
+        "It lowers the hourly rate"
+      ],
+      "correctIndex": 0,
+      "explanation": "A plan at 100% breaks with the first surprise. Agencies plan below full capacity on purpose.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.75,
+    "prompt": "In a resource plan, a 'soft' or tentative booking is:",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Hours pencilled in for likely work, not yet confirmed",
+        "Hours the person may skip",
+        "Non-billable hours",
+        "Overtime"
+      ],
+      "correctIndex": 0,
+      "explanation": "Soft bookings reserve people for probable work (e.g. a deal about to sign) so they're not given away, without committing them.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  },
+  {
+    "id": "pm-agency-resourcing-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-agency-resourcing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.75,
+    "prompt": "What does a skill matrix help a resource manager decide?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Who can move onto a project needing a specific skill",
+        "How much to bill per hour",
+        "Which client to prioritise",
+        "When to run retrospectives"
+      ],
+      "correctIndex": 0,
+      "explanation": "It maps people to skills and levels, so you can staff or swap people quickly and spot gaps.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null,
+    "tags": [
+      "resources",
+      "capacity"
+    ]
+  }
+]
