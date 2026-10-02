@@ -79,13 +79,13 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - [x] 9.4 Checkpoint + commit `feat(v4-p9)`
 
 ## Phase 10: Polish, tests, deploy
-- [ ] 10.1 Test suite items (see spec)
-- [ ] 10.2 Playwright e2e per department
-- [ ] 10.3 UI pass (light/dark, 390/1440, reduced motion)
-- [ ] 10.4 Deploy (backup, migrate, code-runner container)
-- [ ] 10.5 Rebuild existing learners' paths
-- [ ] 10.6 RESULTS.md + chat summary
-- [ ] 10.7 Tag v4.0.0
+- [x] 10.1 Test suite items (see spec)
+- [x] 10.2 Playwright e2e per department
+- [x] 10.3 UI pass (light/dark, 390/1440, reduced motion)
+- [ ] 10.4 (BLOCKED — no server access; scripts ready, see RESULTS "Needs Abhishek") Deploy (backup, migrate, code-runner container)
+- [ ] 10.5 (BLOCKED with 10.4; one click / one call after deploy) Rebuild existing learners' paths
+- [x] 10.6 RESULTS.md + chat summary
+- [x] 10.7 Tag v4.0.0
 
 ## Needs Abhishek
 - **No SSH access to the production server** (169.58.125.156 / learn.oyegen.com): publickey denied for root/ubuntu/abhishek from this machine. Deploy steps are prepared as a script; running them needs server access.
@@ -105,3 +105,4 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - P8 committed: every department's path opens with Part 1 "Strengthen your current role" and Part 2 "AI-driven work for your role", then the remaining priorities in slider order (D6); gaps come from the v4 report with no model call; catalog modules and library-saved courses attach before any matching or generation (D7). Server logic landed in the P4 commit; this commit adds the module items on the admin Path tab and the learner Courses page.
 - P9 committed: bulk disable/activate/archive/restore/sign-out/delete with per-person results; delete is superadmin-only behind a typed `delete N`, offers exports first, never includes yourself or the last super admin; every status change revokes sessions; `user.deleted` and earlier audit rows about the person are anonymised; v4 tables and AI-call attribution are cleaned in the same transaction. Also in this commit: the admin v4 results view, the minimum-time-before-Finish setting card, and Rebuild all paths.
 - P7 committed: PM and BD curricula (4 levels + a dedicated AI camp each, every topic with verified refs, an oEmbed-checked video, a summary, a practice task and a graded quiz), task components, PM/BD bank for every skill, CURRICULUM.md. The e2e run found Part 2 pointing at general camps for PM/BD; AI topics now live in `pm-ai` / `bd-ai` and the AI skills map there.
+- P10: full suite 1,033/1,033, e2e PASS ×3, migration rehearsal on the real pre-v4 DB lost nothing, production image smoke-tested locally with Piston. Remaining items are the production deploy and path rebuild, which need server access.
