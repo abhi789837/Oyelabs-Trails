@@ -152,6 +152,7 @@ export const registry: TrackEntry[] = [
       { id: "pm-intermediate", name: "Running Delivery", idPrefix: "pm-i-" },
       { id: "pm-advanced", name: "Advanced Delivery", idPrefix: "pm-a-" },
       { id: "pm-expert", name: "Programme, Portfolio & AI-Era PM", idPrefix: "pm-x-" },
+      { id: "pm-ai", name: "AI in Project Delivery", idPrefix: "pm-x-ai-" },
     ],
   },
   {
@@ -164,6 +165,7 @@ export const registry: TrackEntry[] = [
       { id: "bd-intermediate", name: "Winning Deals", idPrefix: "bd-i-" },
       { id: "bd-advanced", name: "Complex Sales & Accounts", idPrefix: "bd-a-" },
       { id: "bd-expert", name: "Strategic BD & AI-Powered Selling", idPrefix: "bd-x-" },
+      { id: "bd-ai", name: "AI-Powered Business Development", idPrefix: "bd-x-ai-" },
     ],
   },
 ];

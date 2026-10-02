@@ -1,0 +1,1490 @@
+[
+  {
+    "id": "eng-flutter-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The cart shows prices from an integer number of cents. `formatPrice(1205)` prints `$12.5` instead of `$12.05`.\nFix `formatPrice` so cents always have two digits.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString formatPrice(int cents) {\n  return '\\$${cents ~/ 100}.${cents % 100}';\n}\n\nvoid main() {\n  final cents = int.parse(stdin.readLineSync()!.trim());\n  print(formatPrice(cents));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString formatPrice(int cents) {\n  return '\\$${cents ~/ 100}.${(cents % 100).toString().padLeft(2, '0')}';\n}\n\nvoid main() {\n  final cents = int.parse(stdin.readLineSync()!.trim());\n  print(formatPrice(cents));\n}",
+      "sampleTests": [
+        {
+          "stdin": "1205",
+          "expected": "$12.05"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "1999",
+          "expected": "$19.99"
+        },
+        {
+          "stdin": "5",
+          "expected": "$0.05"
+        },
+        {
+          "stdin": "0",
+          "expected": "$0.00"
+        },
+        {
+          "stdin": "100000",
+          "expected": "$1000.00"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A notification badge shows the unread count. It must be hidden (empty label) for `0` or less and show `99+`\nabove 99. The program prints `(hidden)` for an empty label. Fix `badgeLabel`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString badgeLabel(int count) {\n  if (count > 99) return '99+';\n  return '$count';\n}\n\nvoid main() {\n  final n = int.parse(stdin.readLineSync()!.trim());\n  final label = badgeLabel(n);\n  print(label.isEmpty ? '(hidden)' : label);\n}",
+      "referenceSolution": "import 'dart:io';\n\nString badgeLabel(int count) {\n  if (count <= 0) return '';\n  if (count > 99) return '99+';\n  return '$count';\n}\n\nvoid main() {\n  final n = int.parse(stdin.readLineSync()!.trim());\n  final label = badgeLabel(n);\n  print(label.isEmpty ? '(hidden)' : label);\n}",
+      "sampleTests": [
+        {
+          "stdin": "5",
+          "expected": "5"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "0",
+          "expected": "(hidden)"
+        },
+        {
+          "stdin": "100",
+          "expected": "99+"
+        },
+        {
+          "stdin": "99",
+          "expected": "99"
+        },
+        {
+          "stdin": "-3",
+          "expected": "(hidden)"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A `TextFormField` validator returns an error message, or `null` when the value is fine. Fix `validateEmail`:\n`null`, empty or whitespace-only → `Required`; no `@` → `Invalid email`; otherwise `null`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString? validateEmail(String? value) {\n  if (!value!.contains('@')) return 'Invalid email';\n  return null;\n}\n\nvoid main() {\n  final value = stdin.readLineSync() ?? '';\n  print(validateEmail(value) ?? 'valid');\n}",
+      "referenceSolution": "import 'dart:io';\n\nString? validateEmail(String? value) {\n  if (value == null || value.trim().isEmpty) return 'Required';\n  if (!value.contains('@')) return 'Invalid email';\n  return null;\n}\n\nvoid main() {\n  final value = stdin.readLineSync() ?? '';\n  print(validateEmail(value) ?? 'valid');\n}",
+      "sampleTests": [
+        {
+          "stdin": "ana@example.com",
+          "expected": "valid"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "Required"
+        },
+        {
+          "stdin": "   ",
+          "expected": "Required"
+        },
+        {
+          "stdin": "ana.example.com",
+          "expected": "Invalid email"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A bottom navigation bar highlights the tab for the current route. Tabs: `/home` → 0, `/search` → 1,\n`/profile` → 2, including nested routes such as `/profile/edit`. Anything else → 0. Fix `tabIndexFor`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nint tabIndexFor(String location) {\n  switch (location) {\n    case '/home':\n      return 0;\n    case '/search':\n      return 1;\n  }\n  return 0;\n}\n\nvoid main() {\n  print(tabIndexFor(stdin.readLineSync()!.trim()));\n}",
+      "referenceSolution": "import 'dart:io';\n\nint tabIndexFor(String location) {\n  if (location.startsWith('/search')) return 1;\n  if (location.startsWith('/profile')) return 2;\n  return 0;\n}\n\nvoid main() {\n  print(tabIndexFor(stdin.readLineSync()!.trim()));\n}",
+      "sampleTests": [
+        {
+          "stdin": "/search",
+          "expected": "1"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "/profile",
+          "expected": "2"
+        },
+        {
+          "stdin": "/profile/edit",
+          "expected": "2"
+        },
+        {
+          "stdin": "/search/results",
+          "expected": "1"
+        },
+        {
+          "stdin": "/settings",
+          "expected": "0"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A counter screen. Mark the lines that are bugs.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class _CounterState extends State<Counter> {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  int count = 0;",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  @override",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  Widget build(BuildContext context) {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    setState(() => count = 0);",
+          "issue": "Calling `setState` inside `build` asks for another build during a build: it throws (or loops) and resets the count every time."
+        },
+        {
+          "id": "l6",
+          "text": "    return Column(children: [",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "      Text('$count'),",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "      ElevatedButton(onPressed: () { count++; }, child: const Text('Add')),",
+          "issue": "Changes the field without `setState`, so the widget never rebuilds and the number does not change."
+        },
+        {
+          "id": "l9",
+          "text": "    ]);",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-flutter-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A header widget. Mark the lines that should change.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class Header extends StatelessWidget {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  Header({super.key});",
+          "issue": "The constructor can be `const`, so `const Header()` can be reused instead of rebuilt."
+        },
+        {
+          "id": "l3",
+          "text": "  int taps = 0;",
+          "issue": "A `StatelessWidget` is immutable: a mutable field is never shown again after it changes. Use a `StatefulWidget` (or keep the state elsewhere)."
+        },
+        {
+          "id": "l4",
+          "text": "  @override",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  Widget build(BuildContext context) {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    return Padding(",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "      padding: EdgeInsets.all(16),",
+          "issue": "Missing `const`: `const EdgeInsets.all(16)` is created once at compile time instead of on every build."
+        },
+        {
+          "id": "l8",
+          "text": "      child: Text('Orders', style: Theme.of(context).textTheme.titleLarge),",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "    );",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-flutter-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A widget shows a checkbox the user can tick on and off. Which base class fits?",
+    "mcq": {
+      "options": [
+        "`StatefulWidget`, because the checked value changes over time inside the widget",
+        "`StatelessWidget`, because checkboxes have no state",
+        "`InheritedWidget`",
+        "`RenderObject`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `StatefulWidget` keeps a `State` object that survives rebuilds; calling `setState` there updates the UI. (If the parent owns the value, the checkbox itself can be stateless and take `value` + `onChanged`.)",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the difference between hot reload and hot restart?",
+    "mcq": {
+      "options": [
+        "Hot reload injects changed code and keeps the app's state; hot restart re-runs `main()` and resets state",
+        "They are the same",
+        "Hot restart keeps state; hot reload resets it",
+        "Hot reload also reinstalls the app"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hot reload rebuilds the widget tree with new code but keeps `State` objects, so changes to `initState` or global initialisers need a hot restart.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why add `const` to widgets such as `const SizedBox(height: 8)`?",
+    "mcq": {
+      "options": [
+        "Const widgets are created once and reused, so Flutter can skip rebuilding them",
+        "It makes the widget invisible to hot reload",
+        "It is required for every widget",
+        "It makes the widget stateful"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `const` instance is canonicalised at compile time; when the parent rebuilds, the identical instance tells Flutter the subtree did not change.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The program prints a cart total from the API's JSON. It crashes when the API sends a whole-number price such\nas `\"price\": 10` (Dart decodes it as `int`). Fix `cartTotal`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:convert';\nimport 'dart:io';\n\ndouble cartTotal(String json) {\n  final items = jsonDecode(json) as List;\n  var total = 0.0;\n  for (final e in items) {\n    total += (e['price'] as double) * (e['qty'] as int);\n  }\n  return total;\n}\n\nvoid main() {\n  final line = stdin.readLineSync() ?? '[]';\n  print(cartTotal(line).toStringAsFixed(2));\n}",
+      "referenceSolution": "import 'dart:convert';\nimport 'dart:io';\n\ndouble cartTotal(String json) {\n  final items = jsonDecode(json) as List;\n  var total = 0.0;\n  for (final e in items) {\n    total += (e['price'] as num).toDouble() * (e['qty'] as int);\n  }\n  return total;\n}\n\nvoid main() {\n  final line = stdin.readLineSync() ?? '[]';\n  print(cartTotal(line).toStringAsFixed(2));\n}",
+      "sampleTests": [
+        {
+          "stdin": "[{\"price\": 2.5, \"qty\": 4}]",
+          "expected": "10.00"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "[{\"price\": 10, \"qty\": 2}]",
+          "expected": "20.00"
+        },
+        {
+          "stdin": "[]",
+          "expected": "0.00"
+        },
+        {
+          "stdin": "[{\"price\": 1, \"qty\": 1}, {\"price\": 0.5, \"qty\": 3}]",
+          "expected": "2.50"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A `LayoutBuilder` picks the number of grid columns from the available width: under 600 → 2, from 600 up to\n(not including) 1024 → 3, 1024 and wider → 4. Fix `columnsFor`; the boundaries are wrong.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nint columnsFor(double width) {\n  if (width <= 600) return 2;\n  if (width <= 1024) return 3;\n  return 4;\n}\n\nvoid main() {\n  print(columnsFor(double.parse(stdin.readLineSync()!.trim())));\n}",
+      "referenceSolution": "import 'dart:io';\n\nint columnsFor(double width) {\n  if (width < 600) return 2;\n  if (width < 1024) return 3;\n  return 4;\n}\n\nvoid main() {\n  print(columnsFor(double.parse(stdin.readLineSync()!.trim())));\n}",
+      "sampleTests": [
+        {
+          "stdin": "360",
+          "expected": "2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "600",
+          "expected": "3"
+        },
+        {
+          "stdin": "1024",
+          "expected": "4"
+        },
+        {
+          "stdin": "599.5",
+          "expected": "2"
+        },
+        {
+          "stdin": "1440",
+          "expected": "4"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A to-do list filters items with chips: `all`, `active` (not done) or `done`. Input: the filter on line 1, then\n`title:1` (done) / `title:0` items separated by commas on line 2. Fix `visible`; `all` is broken.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> visible(List<(String, bool)> todos, String filter) {\n  return todos.where((t) => filter == 'done' ? t.$2 : !t.$2).map((t) => t.$1).toList();\n}\n\nvoid main() {\n  final filter = (stdin.readLineSync() ?? 'all').trim();\n  final line = (stdin.readLineSync() ?? '').trim();\n  final todos = line.isEmpty\n      ? <(String, bool)>[]\n      : line.split(',').map((p) {\n          final parts = p.split(':');\n          return (parts[0], parts[1] == '1');\n        }).toList();\n  final out = visible(todos, filter);\n  print(out.isEmpty ? '(none)' : out.join(', '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> visible(List<(String, bool)> todos, String filter) {\n  return todos\n      .where((t) => switch (filter) { 'active' => !t.$2, 'done' => t.$2, _ => true })\n      .map((t) => t.$1)\n      .toList();\n}\n\nvoid main() {\n  final filter = (stdin.readLineSync() ?? 'all').trim();\n  final line = (stdin.readLineSync() ?? '').trim();\n  final todos = line.isEmpty\n      ? <(String, bool)>[]\n      : line.split(',').map((p) {\n          final parts = p.split(':');\n          return (parts[0], parts[1] == '1');\n        }).toList();\n  final out = visible(todos, filter);\n  print(out.isEmpty ? '(none)' : out.join(', '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "done\nMilk:1,Dog:0",
+          "expected": "Milk"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "all\nMilk:1,Dog:0",
+          "expected": "Milk, Dog"
+        },
+        {
+          "stdin": "active\nMilk:1,Dog:0",
+          "expected": "Dog"
+        },
+        {
+          "stdin": "done\nDog:0",
+          "expected": "(none)"
+        },
+        {
+          "stdin": "all\n",
+          "expected": "(none)"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Tasks are `title,yyyy-mm-dd` lines; a task with no due date has nothing after the comma. Sort by due date,\nearliest first, with **undated tasks last**; ties are ordered by title. Fix `byDueDate` (undated tasks come first now).",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> byDueDate(List<(String, String)> tasks) {\n  final sorted = [...tasks]..sort((a, b) => a.$2.compareTo(b.$2));\n  return sorted.map((t) => t.$1).toList();\n}\n\nvoid main() {\n  final tasks = <(String, String)>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    if (line.trim().isEmpty) continue;\n    final i = line.indexOf(',');\n    tasks.add((line.substring(0, i), line.substring(i + 1).trim()));\n  }\n  print(byDueDate(tasks).join('\\n'));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> byDueDate(List<(String, String)> tasks) {\n  final sorted = [...tasks]\n    ..sort((a, b) {\n      if (a.$2.isEmpty != b.$2.isEmpty) return a.$2.isEmpty ? 1 : -1;\n      final byDate = a.$2.compareTo(b.$2);\n      return byDate != 0 ? byDate : a.$1.compareTo(b.$1);\n    });\n  return sorted.map((t) => t.$1).toList();\n}\n\nvoid main() {\n  final tasks = <(String, String)>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    if (line.trim().isEmpty) continue;\n    final i = line.indexOf(',');\n    tasks.add((line.substring(0, i), line.substring(i + 1).trim()));\n  }\n  print(byDueDate(tasks).join('\\n'));\n}",
+      "sampleTests": [
+        {
+          "stdin": "Pay rent,2024-06-01\nCall bank,\nFile taxes,2024-04-15",
+          "expected": "File taxes\nPay rent\nCall bank"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "Walk,\nAlpha,2024-01-01",
+          "expected": "Alpha\nWalk"
+        },
+        {
+          "stdin": "B,\nA,",
+          "expected": "A\nB"
+        },
+        {
+          "stdin": "Only,2024-02-02",
+          "expected": "Only"
+        },
+        {
+          "stdin": "Z,2024-03-03\nY,2024-03-03\nX,",
+          "expected": "Y\nZ\nX"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An orders page that shows a spinner, then the list. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class OrdersPage extends StatelessWidget {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const OrdersPage({super.key});",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  @override",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  Widget build(BuildContext context) {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    return FutureBuilder<List<Order>>(",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "      future: api.fetchOrders(),",
+          "issue": "A new Future is created on every build, so any rebuild refetches and flashes the spinner. Create it once (in `initState` of a `StatefulWidget`, or a state-management layer)."
+        },
+        {
+          "id": "l7",
+          "text": "      builder: (context, snapshot) {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "        if (snapshot.connectionState == ConnectionState.waiting) return const CircularProgressIndicator();",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "        return OrderList(orders: snapshot.data!);",
+          "issue": "Ignores `snapshot.hasError`: on a failed request `data` is null and `!` throws. Handle the error state."
+        },
+        {
+          "id": "l10",
+          "text": "      },",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "    );",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l13",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-flutter-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A login screen. Mark the lines that are bugs.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class _LoginState extends State<Login> {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  final email = TextEditingController();",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  Future<void> submit() async {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    await auth.signIn(email.text);",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    Navigator.of(context).pushReplacementNamed('/home');",
+          "issue": "Uses `context` after an `await`: the widget may be gone by then. Check `if (!mounted) return;` first."
+        },
+        {
+          "id": "l6",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  @override",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  void dispose() {",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "    super.dispose();",
+          "issue": "The controller is never disposed; call `email.dispose()` before `super.dispose()`."
+        },
+        {
+          "id": "l10",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "  @override",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "  Widget build(BuildContext context) => TextField(controller: email, onSubmitted: (_) => submit());",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-flutter-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "5",
+        "0",
+        "null",
+        "It throws a null error"
+      ],
+      "correctIndex": 0,
+      "explanation": "`nickname` is null, so `??` falls back to `'Guest'`, whose length is 5. The variable `name` is a non-nullable `String`, so `.length` needs no `?`.",
+      "snippet": "void main() {\n  String? nickname;\n  final name = nickname ?? 'Guest';\n  print(name.length);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-flutter-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A `Row` holds an icon and a long `Text`; Flutter shows yellow-and-black stripes and \"A RenderFlex overflowed\". What is the usual fix?",
+    "mcq": {
+      "options": [
+        "Wrap the `Text` in `Expanded` (or `Flexible`) so it gets the remaining width and wraps or ellipsises",
+        "Wrap the `Row` in a `Container`",
+        "Set `mainAxisSize: MainAxisSize.max`",
+        "Use a `Stack` instead"
+      ],
+      "correctIndex": 0,
+      "explanation": "Row children are laid out with unbounded width by default, so long text asks for more than the screen. `Expanded` constrains it to the free space.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does calling `setState(() { ... })` do?",
+    "mcq": {
+      "options": [
+        "Runs the callback, marks the `State` as dirty, and schedules `build` for the next frame",
+        "Immediately calls `build` synchronously",
+        "Saves the state to disk",
+        "Rebuilds the whole app"
+      ],
+      "correctIndex": 0,
+      "explanation": "Flutter rebuilds dirty elements once per frame. Only this widget's subtree is rebuilt, which is why moving state down the tree makes rebuilds cheaper.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A cart's state is an immutable list of lines. Each input line is an action `add <id>` or `remove <id>`; the\nprogram prints the final cart as `<id> x<qty>` lines (or `(empty)`). Adding an id already in the cart must\nincrease its `qty`, not add a second line. Fix `apply`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nclass Line {\n  final String id;\n  final int qty;\n  const Line(this.id, this.qty);\n}\n\nList<Line> apply(List<Line> cart, String op, String id) {\n  if (op == 'add') return [...cart, Line(id, 1)];\n  if (op == 'remove') return cart.where((l) => l.id != id).toList();\n  return cart;\n}\n\nvoid main() {\n  var cart = <Line>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    final parts = line.trim().split(' ');\n    if (parts.length == 2) cart = apply(cart, parts[0], parts[1]);\n  }\n  print(cart.isEmpty ? '(empty)' : cart.map((l) => '${l.id} x${l.qty}').join('\\n'));\n}",
+      "referenceSolution": "import 'dart:io';\n\nclass Line {\n  final String id;\n  final int qty;\n  const Line(this.id, this.qty);\n}\n\nList<Line> apply(List<Line> cart, String op, String id) {\n  if (op == 'add') {\n    if (!cart.any((l) => l.id == id)) return [...cart, Line(id, 1)];\n    return [for (final l in cart) l.id == id ? Line(l.id, l.qty + 1) : l];\n  }\n  if (op == 'remove') return cart.where((l) => l.id != id).toList();\n  return cart;\n}\n\nvoid main() {\n  var cart = <Line>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    final parts = line.trim().split(' ');\n    if (parts.length == 2) cart = apply(cart, parts[0], parts[1]);\n  }\n  print(cart.isEmpty ? '(empty)' : cart.map((l) => '${l.id} x${l.qty}').join('\\n'));\n}",
+      "sampleTests": [
+        {
+          "stdin": "add a\nadd b\nadd a",
+          "expected": "a x2\nb x1"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "add a\nremove a",
+          "expected": "(empty)"
+        },
+        {
+          "stdin": "",
+          "expected": "(empty)"
+        },
+        {
+          "stdin": "add x\nadd x\nadd x\nremove y",
+          "expected": "x x3"
+        },
+        {
+          "stdin": "add a\nadd b\nremove a\nadd b",
+          "expected": "b x2"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A sign-up form shows one password error at a time. Return the **first** failing rule's message, in this order:\nempty → `Required`; under 8 characters → `At least 8 characters`; no digit → `Add a number`;\nno uppercase letter → `Add an uppercase letter`; otherwise `ok`. Fix `passwordError`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString passwordError(String value) {\n  if (value.length < 8) return 'At least 8 characters';\n  if (!value.contains(RegExp(r'[0-9]'))) return 'Add a number';\n  return 'ok';\n}\n\nvoid main() {\n  print(passwordError(stdin.readLineSync() ?? ''));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString passwordError(String value) {\n  if (value.isEmpty) return 'Required';\n  if (value.length < 8) return 'At least 8 characters';\n  if (!value.contains(RegExp(r'[0-9]'))) return 'Add a number';\n  if (!value.contains(RegExp(r'[A-Z]'))) return 'Add an uppercase letter';\n  return 'ok';\n}\n\nvoid main() {\n  print(passwordError(stdin.readLineSync() ?? ''));\n}",
+      "sampleTests": [
+        {
+          "stdin": "Secret123",
+          "expected": "ok"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "Required"
+        },
+        {
+          "stdin": "secret123",
+          "expected": "Add an uppercase letter"
+        },
+        {
+          "stdin": "Secretive",
+          "expected": "Add a number"
+        },
+        {
+          "stdin": "S3cret",
+          "expected": "At least 8 characters"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Deep links open screens. `route(link)` must print `product id=<id>` (plus ` ref=<ref>` when the `ref` query\nparameter is present) for `/product/<id>`, `cart` for `/cart`, and `home` for anything else, including an empty\npath or `/product` with no id. The current version crashes on some links and prints `ref=null`. Fix it.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString route(String link) {\n  final uri = Uri.parse(link);\n  final segs = uri.pathSegments;\n  if (segs.first == 'product') return 'product id=${segs[1]} ref=${uri.queryParameters['ref']}';\n  if (segs.first == 'cart') return 'cart';\n  return 'home';\n}\n\nvoid main() {\n  print(route(stdin.readLineSync()!.trim()));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString route(String link) {\n  final uri = Uri.parse(link);\n  final segs = uri.pathSegments.where((s) => s.isNotEmpty).toList();\n  if (segs.length == 2 && segs[0] == 'product') {\n    final ref = uri.queryParameters['ref'];\n    return ref == null ? 'product id=${segs[1]}' : 'product id=${segs[1]} ref=$ref';\n  }\n  if (segs.length == 1 && segs[0] == 'cart') return 'cart';\n  return 'home';\n}\n\nvoid main() {\n  print(route(stdin.readLineSync()!.trim()));\n}",
+      "sampleTests": [
+        {
+          "stdin": "https://shop.example.com/product/42?ref=push",
+          "expected": "product id=42 ref=push"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "https://shop.example.com/product/7",
+          "expected": "product id=7"
+        },
+        {
+          "stdin": "https://shop.example.com/",
+          "expected": "home"
+        },
+        {
+          "stdin": "https://shop.example.com/cart",
+          "expected": "cart"
+        },
+        {
+          "stdin": "https://shop.example.com/product",
+          "expected": "home"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A transactions screen shows sticky day headers. Input lines are `yyyy-mm-ddThh:mm,amount`. Print one line per\nday, **newest day first**: `<day>: <count> items, <total>` with the total to 2 decimals. Fix `summarise`\n(days come out oldest first).",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> summarise(List<(String, double)> txs) {\n  final days = <String, List<double>>{};\n  for (final (at, amount) in txs) {\n    days.putIfAbsent(at.substring(0, 10), () => []).add(amount);\n  }\n  final keys = days.keys.toList()..sort();\n  return [\n    for (final k in keys)\n      '$k: ${days[k]!.length} items, ${days[k]!.fold(0.0, (a, b) => a + b).toStringAsFixed(2)}'\n  ];\n}\n\nvoid main() {\n  final txs = <(String, double)>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    if (line.trim().isEmpty) continue;\n    final parts = line.split(',');\n    txs.add((parts[0], double.parse(parts[1])));\n  }\n  final out = summarise(txs);\n  print(out.isEmpty ? '(no transactions)' : out.join('\\n'));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> summarise(List<(String, double)> txs) {\n  final days = <String, List<double>>{};\n  for (final (at, amount) in txs) {\n    days.putIfAbsent(at.substring(0, 10), () => []).add(amount);\n  }\n  final keys = days.keys.toList()..sort((a, b) => b.compareTo(a));\n  return [\n    for (final k in keys)\n      '$k: ${days[k]!.length} items, ${days[k]!.fold(0.0, (a, b) => a + b).toStringAsFixed(2)}'\n  ];\n}\n\nvoid main() {\n  final txs = <(String, double)>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    if (line.trim().isEmpty) continue;\n    final parts = line.split(',');\n    txs.add((parts[0], double.parse(parts[1])));\n  }\n  final out = summarise(txs);\n  print(out.isEmpty ? '(no transactions)' : out.join('\\n'));\n}",
+      "sampleTests": [
+        {
+          "stdin": "2024-05-01T10:00,12.50\n2024-05-02T09:00,3\n2024-05-01T18:30,7.5",
+          "expected": "2024-05-02: 1 items, 3.00\n2024-05-01: 2 items, 20.00"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "(no transactions)"
+        },
+        {
+          "stdin": "2024-01-01T00:00,1",
+          "expected": "2024-01-01: 1 items, 1.00"
+        },
+        {
+          "stdin": "2023-12-31T23:59,5\n2024-01-01T00:01,5",
+          "expected": "2024-01-01: 1 items, 5.00\n2023-12-31: 1 items, 5.00"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Two lists in a messaging app. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "ReorderableListView(",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  onReorder: _moveTask,",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  children: [for (final t in tasks) ListTile(title: Text(t.title))],",
+          "issue": "Children of `ReorderableListView` need unique keys (`ListTile(key: ValueKey(t.id), …)`); without them it throws and cannot track moved items."
+        },
+        {
+          "id": "l4",
+          "text": ")",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "ListView(",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  children: messages.map((m) => MessageTile(message: m)).toList(),",
+          "issue": "Builds every tile for 10,000 messages up front; use `ListView.builder` so only visible items are built."
+        },
+        {
+          "id": "l7",
+          "text": ")",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "final controller = ScrollController();  // disposed in dispose()",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-flutter-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A cart built with `provider`. Mark the lines that are bugs.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class CartModel extends ChangeNotifier {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  final _items = <Item>[];",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  List<Item> get items => List.unmodifiable(_items);",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  void add(Item item) { _items.add(item); }",
+          "issue": "Missing `notifyListeners()`: listeners never hear about the change, so the UI does not update."
+        },
+        {
+          "id": "l5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "// in a widget",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "Text('${context.watch<CartModel>().items.length} items'),",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "ElevatedButton(onPressed: () => context.watch<CartModel>().add(item), child: const Text('Add')),",
+          "issue": "`watch` must only be used in `build`; in a callback use `context.read<CartModel>()`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-flutter-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "A C D B",
+        "A B C D",
+        "A D C B",
+        "A C B D"
+      ],
+      "correctIndex": 0,
+      "explanation": "Synchronous code runs first (A). `scheduleMicrotask` and the continuation after `await` are microtasks and run in order (C, then D) before the event-queue task created by `Future(() => …)` (B).",
+      "snippet": "import 'dart:async';\n\nvoid main() async {\n  print('A');\n  Future(() => print('B'));\n  scheduleMicrotask(() => print('C'));\n  await null;\n  print('D');\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-flutter-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A list of `StatefulWidget` rows loses track of which row is expanded after an item is deleted from the middle. What fixes it?",
+    "mcq": {
+      "options": [
+        "Give each row a `ValueKey(item.id)` so Flutter matches State objects to items, not positions",
+        "Make the rows `const`",
+        "Call `setState` twice",
+        "Use a `GlobalKey` created in `build`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without keys Flutter matches elements by type and position, so the State of row 3 slides onto the item that moved into slot 3. A `GlobalKey` created in `build` is new every time and recreates the state.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In an `async` handler you `await api.save()` and then call `ScaffoldMessenger.of(context).showSnackBar(...)`. What should come between them?",
+    "mcq": {
+      "options": [
+        "`if (!context.mounted) return;` (or `mounted` inside a `State`)",
+        "`setState(() {})`",
+        "`await Future.delayed(Duration.zero)`",
+        "Nothing; context is always valid"
+      ],
+      "correctIndex": 0,
+      "explanation": "The widget can be removed while the request runs. Using its `BuildContext` afterwards can throw or reach the wrong part of the tree; the `use_build_context_synchronously` lint flags this.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A tag cloud uses `Wrap(spacing: s)`. Given the max width and spacing (line 1) and the children's widths\n(line 2), print how many runs (lines) it takes. A child joins the current run if `used + spacing + width <= maxWidth`;\notherwise it starts a new run (a child wider than the max still gets its own run). No children → `0`. Fix `wrapRuns`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nint wrapRuns(List<double> widths, double spacing, double maxWidth) {\n  final total = widths.fold(0.0, (a, b) => a + b);\n  return (total / maxWidth).ceil();\n}\n\nvoid main() {\n  final head = stdin.readLineSync()!.trim().split(' ').map(double.parse).toList();\n  final line = (stdin.readLineSync() ?? '').trim();\n  final widths = line.isEmpty ? <double>[] : line.split(' ').map(double.parse).toList();\n  print(wrapRuns(widths, head[1], head[0]));\n}",
+      "referenceSolution": "import 'dart:io';\n\nint wrapRuns(List<double> widths, double spacing, double maxWidth) {\n  if (widths.isEmpty) return 0;\n  var runs = 1;\n  var used = widths.first;\n  for (final w in widths.skip(1)) {\n    if (used + spacing + w <= maxWidth) {\n      used += spacing + w;\n    } else {\n      runs++;\n      used = w;\n    }\n  }\n  return runs;\n}\n\nvoid main() {\n  final head = stdin.readLineSync()!.trim().split(' ').map(double.parse).toList();\n  final line = (stdin.readLineSync() ?? '').trim();\n  final widths = line.isEmpty ? <double>[] : line.split(' ').map(double.parse).toList();\n  print(wrapRuns(widths, head[1], head[0]));\n}",
+      "sampleTests": [
+        {
+          "stdin": "300 8\n100 100 100",
+          "expected": "2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "300 0\n100 100 100",
+          "expected": "1"
+        },
+        {
+          "stdin": "100 10\n60 60 60",
+          "expected": "3"
+        },
+        {
+          "stdin": "100 8\n150 20",
+          "expected": "2"
+        },
+        {
+          "stdin": "200 10\n",
+          "expected": "0"
+        },
+        {
+          "stdin": "200 10\n90 90 90 90",
+          "expected": "2"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "On launch the app compares its version with the minimum the server supports and prints `update` or `ok`.\nFlutter versions look like `1.10.0+42`: the part after `+` is the build number and must be **ignored**; compare the\nrest numerically part by part (missing parts are `0`). Fix `needsUpdate`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nbool needsUpdate(String installed, String minimum) {\n  return installed.compareTo(minimum) < 0;\n}\n\nvoid main() {\n  final parts = stdin.readLineSync()!.trim().split(' ');\n  print(needsUpdate(parts[0], parts[1]) ? 'update' : 'ok');\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<int> _parts(String v) => v.split('+').first.split('.').map(int.parse).toList();\n\nbool needsUpdate(String installed, String minimum) {\n  final a = _parts(installed);\n  final b = _parts(minimum);\n  for (var i = 0; i < (a.length > b.length ? a.length : b.length); i++) {\n    final x = i < a.length ? a[i] : 0;\n    final y = i < b.length ? b[i] : 0;\n    if (x != y) return x < y;\n  }\n  return false;\n}\n\nvoid main() {\n  final parts = stdin.readLineSync()!.trim().split(' ');\n  print(needsUpdate(parts[0], parts[1]) ? 'update' : 'ok');\n}",
+      "sampleTests": [
+        {
+          "stdin": "1.9.3+10 1.10.0",
+          "expected": "update"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "1.10.0+1 1.9.3",
+          "expected": "ok"
+        },
+        {
+          "stdin": "2.0.0+99 2.0.0+100",
+          "expected": "ok"
+        },
+        {
+          "stdin": "2.0 2.0.1",
+          "expected": "update"
+        },
+        {
+          "stdin": "10.0.0 9.9.9",
+          "expected": "ok"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A repository retries failed requests with exponential back-off. Given `attempts baseMs maxMs`, print the delays\nbefore each retry, space separated: `baseMs * 2^n` for `n = 0..attempts-1`, but never more than `maxMs`.\nZero attempts prints an empty line. Fix `backoff`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<int> backoff(int attempts, int baseMs, int maxMs) {\n  return [for (var n = 1; n <= attempts; n++) baseMs * (1 << n)];\n}\n\nvoid main() {\n  final p = stdin.readLineSync()!.trim().split(' ').map(int.parse).toList();\n  print(backoff(p[0], p[1], p[2]).join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<int> backoff(int attempts, int baseMs, int maxMs) {\n  final out = <int>[];\n  var delay = baseMs;\n  for (var n = 0; n < attempts; n++) {\n    out.add(delay > maxMs ? maxMs : delay);\n    if (delay < maxMs) delay *= 2;\n  }\n  return out;\n}\n\nvoid main() {\n  final p = stdin.readLineSync()!.trim().split(' ').map(int.parse).toList();\n  print(backoff(p[0], p[1], p[2]).join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "3 100 10000",
+          "expected": "100 200 400"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "4 500 3000",
+          "expected": "500 1000 2000 3000"
+        },
+        {
+          "stdin": "0 500 3000",
+          "expected": ""
+        },
+        {
+          "stdin": "40 1000 30000",
+          "expected": "1000 2000 4000 8000 16000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000 30000"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Offline sync resolves conflicts with last-write-wins. Each input line is `L|S id updatedAt value` (local or\nserver); a value of `-` is a deletion (tombstone). For each id keep the version with the larger `updatedAt`\n(server wins ties), drop ids whose winner is a deletion, and print `id=value` lines sorted by id. Fix `resolve`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nMap<String, String> resolve(List<(String, String, int, String)> rows) {\n  final out = <String, String>{};\n  for (final (_, id, _, value) in rows) {\n    out[id] = value;\n  }\n  return out;\n}\n\nvoid main() {\n  final rows = <(String, String, int, String)>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    final p = line.trim().split(' ');\n    if (p.length == 4) rows.add((p[0], p[1], int.parse(p[2]), p[3]));\n  }\n  final out = resolve(rows);\n  final ids = out.keys.toList()..sort();\n  print(ids.isEmpty ? '(empty)' : ids.map((id) => '$id=${out[id]}').join('\\n'));\n}",
+      "referenceSolution": "import 'dart:io';\n\nMap<String, String> resolve(List<(String, String, int, String)> rows) {\n  final best = <String, (String, int, String)>{};\n  for (final (src, id, at, value) in rows) {\n    final cur = best[id];\n    if (cur == null || at > cur.$2 || (at == cur.$2 && src == 'S')) best[id] = (src, at, value);\n  }\n  return {\n    for (final e in best.entries)\n      if (e.value.$3 != '-') e.key: e.value.$3\n  };\n}\n\nvoid main() {\n  final rows = <(String, String, int, String)>[];\n  while (true) {\n    final line = stdin.readLineSync();\n    if (line == null) break;\n    final p = line.trim().split(' ');\n    if (p.length == 4) rows.add((p[0], p[1], int.parse(p[2]), p[3]));\n  }\n  final out = resolve(rows);\n  final ids = out.keys.toList()..sort();\n  print(ids.isEmpty ? '(empty)' : ids.map((id) => '$id=${out[id]}').join('\\n'));\n}",
+      "sampleTests": [
+        {
+          "stdin": "S a 3 server\nL a 5 local",
+          "expected": "a=local"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "L a 5 local\nS a 5 server",
+          "expected": "a=server"
+        },
+        {
+          "stdin": "L b 1 x\nS b 2 -\nS a 1 y",
+          "expected": "a=y"
+        },
+        {
+          "stdin": "S c 9 -\nL c 4 z",
+          "expected": "(empty)"
+        },
+        {
+          "stdin": "",
+          "expected": "(empty)"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A feed screen janks while scrolling and memory keeps growing. Mark the lines that cause it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@override",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Widget build(BuildContext context) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  final posts = jsonDecode(rawJson) as List;",
+          "issue": "Decodes a large JSON string on the UI thread on every rebuild; decode once, off the main isolate with `compute()` / `Isolate.run`."
+        },
+        {
+          "id": "l4",
+          "text": "  return ListView.builder(",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    itemCount: posts.length,",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    itemBuilder: (context, i) => Image.network(posts[i]['imageUrl']),",
+          "issue": "Full-resolution images are decoded at their original size; pass `cacheWidth`/`cacheHeight` (or use a resized URL)."
+        },
+        {
+          "id": "l7",
+          "text": "  );",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "@override",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "void initState() { super.initState(); _pulse = AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat(); }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "@override",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "void dispose() { super.dispose(); }",
+          "issue": "The repeating `AnimationController` is never disposed, so its ticker keeps running and leaks; call `_pulse.dispose()`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-flutter-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A Flutter app's home screen drops frames. A clock in the app bar calls `setState` every second on the root\n`HomePage` state, which also builds a long feed and a chart. Reported only on real devices; debug builds were used to measure.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A Flutter app's home screen drops frames. A clock in the app bar calls `setState` every second on the root\n`HomePage` state, which also builds a long feed and a chart. Reported only on real devices; debug builds were used to measure.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How should you measure first?",
+          "options": [
+            "Run in profile mode on a real device and use the DevTools performance view / rebuild counts",
+            "Measure in debug mode on the simulator",
+            "Add print statements to every build method",
+            "Measure in release mode with DevTools attached"
+          ],
+          "correctIndex": 0,
+          "explanation": "Debug mode is JIT-compiled with extra checks and is much slower; release mode cannot be profiled. Profile mode is the right one."
+        },
+        {
+          "id": "q2",
+          "question": "The profile shows the whole page rebuilding every second. What is the best fix?",
+          "options": [
+            "Move the clock into its own small widget (or a `ValueListenableBuilder`) so only it rebuilds",
+            "Wrap the page in `const`",
+            "Call `setState` less often by using a 500ms timer"
+          ],
+          "correctIndex": 0,
+          "explanation": "State should live as low in the tree as possible; then a tick rebuilds one `Text`, not the feed and chart."
+        },
+        {
+          "id": "q3",
+          "question": "The chart still repaints when the feed scrolls next to it. What helps?",
+          "options": [
+            "Wrap the chart in a `RepaintBoundary` so it gets its own layer",
+            "Use `Opacity(opacity: 0.99)` around it",
+            "Increase the frame rate"
+          ],
+          "correctIndex": 0,
+          "explanation": "A `RepaintBoundary` isolates painting, so changes elsewhere do not repaint the chart."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-flutter-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Parsing a 5 MB JSON response freezes animations for 300ms. What is the idiomatic fix?",
+    "mcq": {
+      "options": [
+        "Parse it on another isolate with `compute(parse, body)` or `Isolate.run(() => parse(body))`",
+        "Make the parsing function `async`",
+        "Wrap the parsing in `Future.microtask`",
+        "Use `setState` after parsing"
+      ],
+      "correctIndex": 0,
+      "explanation": "`async` only lets other code run while waiting on I/O; CPU-bound work still blocks the single UI isolate. A separate isolate runs it in parallel.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why does `Theme.of(context)` inside `initState` cause an error, and where should that lookup go?",
+    "mcq": {
+      "options": [
+        "`initState` runs before the widget is fully wired into inherited widgets; use `didChangeDependencies` (or `build`)",
+        "`Theme.of` only works in `StatelessWidget`",
+        "It must go in `dispose`",
+        "It must go in the constructor"
+      ],
+      "correctIndex": 0,
+      "explanation": "Depending on an `InheritedWidget` registers a dependency that `didChangeDependencies` reacts to; that is not allowed from `initState`. `didChangeDependencies` runs right after `initState` and whenever the dependency changes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-flutter-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-flutter",
+    "trackId": null,
+    "stackId": "stack-flutter",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does wrapping a frequently animating widget in `RepaintBoundary` do?",
+    "mcq": {
+      "options": [
+        "Gives it a separate layer so its repaints do not repaint its ancestors and siblings",
+        "Stops it from rebuilding",
+        "Caches its state across navigation",
+        "Moves its painting to another isolate"
+      ],
+      "correctIndex": 0,
+      "explanation": "Rebuild and repaint are different: a boundary limits repaint area, not `build` calls. Too many boundaries cost memory, so measure first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

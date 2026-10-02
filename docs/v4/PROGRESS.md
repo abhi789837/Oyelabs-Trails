@@ -59,12 +59,12 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 
 ## Phase 7: PM and BD curricula
 - [x] 7.1 Research + verified sources (RESEARCH.md)
-- [ ] 7.2 Task components: Write, Rank, Calculate, Scenario, Spot the issue (+ graders)
+- [x] 7.2 Task components: Write, Rank, Calculate, Scenario, Spot the issue (+ graders)
 - [x] 7.3 PM skills + courses (4 levels)
 - [x] 7.4 BD skills + courses (4 levels)
-- [ ] 7.5 PM/BD question bank + tasks
-- [ ] 7.6 CURRICULUM.md
-- [ ] 7.7 Checkpoint + commit `feat(v4-p7)`
+- [x] 7.5 PM/BD question bank + tasks
+- [x] 7.6 CURRICULUM.md
+- [x] 7.7 Checkpoint + commit `feat(v4-p7)`
 
 ## Phase 8: Path, plan, generation for all departments
 - [x] 8.1 Part 1 / Part 2 / rest ordering per department
@@ -104,3 +104,4 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - P5 committed: validated seed bank — engineering 37 skills (core + Java/Dart), PM all 85 skills (775 items), BD all 78 skills (707 items). Java grading retries a run that timed out with no output (busy-runner JVM start). A further 24 engineering major-stack skills are being seeded and land with Phase 7/10.
 - P8 committed: every department's path opens with Part 1 "Strengthen your current role" and Part 2 "AI-driven work for your role", then the remaining priorities in slider order (D6); gaps come from the v4 report with no model call; catalog modules and library-saved courses attach before any matching or generation (D7). Server logic landed in the P4 commit; this commit adds the module items on the admin Path tab and the learner Courses page.
 - P9 committed: bulk disable/activate/archive/restore/sign-out/delete with per-person results; delete is superadmin-only behind a typed `delete N`, offers exports first, never includes yourself or the last super admin; every status change revokes sessions; `user.deleted` and earlier audit rows about the person are anonymised; v4 tables and AI-call attribution are cleaned in the same transaction. Also in this commit: the admin v4 results view, the minimum-time-before-Finish setting card, and Rebuild all paths.
+- P7 committed: PM and BD curricula (4 levels + a dedicated AI camp each, every topic with verified refs, an oEmbed-checked video, a summary, a practice task and a graded quiz), task components, PM/BD bank for every skill, CURRICULUM.md. The e2e run found Part 2 pointing at general camps for PM/BD; AI topics now live in `pm-ai` / `bd-ai` and the AI skills map there.

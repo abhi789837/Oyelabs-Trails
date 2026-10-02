@@ -1,0 +1,2081 @@
+[
+  {
+    "id": "eng-react-native-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A `FlatList` needs a **string** key per row. Fix `keyExtractor(item, index)`: return `String(item.id)` when the item\nhas an `id` (including `0`), otherwise `\"row-<index>\"`. The driver `keysFor` runs it over a list.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "keysFor",
+      "starterCode": "function keyExtractor(item, index) {\n  return item.id;\n}\n\n// Test driver (leave as is)\nfunction keysFor(items) {\n  return items.map(keyExtractor);\n}",
+      "referenceSolution": "function keyExtractor(item, index) {\n  return item.id !== undefined && item.id !== null ? String(item.id) : `row-${index}`;\n}\n\nfunction keysFor(items) {\n  return items.map(keyExtractor);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 7
+              },
+              {
+                "id": 8
+              }
+            ]
+          ],
+          "expected": [
+            "7",
+            "8"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 0
+              },
+              {
+                "name": "x"
+              }
+            ]
+          ],
+          "expected": [
+            "0",
+            "row-1"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a1"
+              }
+            ]
+          ],
+          "expected": [
+            "a1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`select(platform, values)` works like `Platform.select`: return `values[platform]` if that key exists, else\n`values.default`, else `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "select",
+      "starterCode": "function select(platform, values) {\n  return values[platform];\n}",
+      "referenceSolution": "function select(platform, values) {\n  if (platform in values) return values[platform];\n  if (\"default\" in values) return values.default;\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "ios",
+            {
+              "ios": 20,
+              "android": 0
+            }
+          ],
+          "expected": 20
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "web",
+            {
+              "ios": 1,
+              "default": 5
+            }
+          ],
+          "expected": 5
+        },
+        {
+          "args": [
+            "android",
+            {
+              "ios": 1
+            }
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "android",
+            {
+              "android": 0,
+              "default": 9
+            }
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Small icons need a bigger touch area. `hitSlop(size, platform)` returns the extra space on **each** side so the\ntarget reaches the platform minimum: 44 on `\"ios\"`, 48 on `\"android\"`. Never negative; round up:\n`hitSlop(24, \"ios\")` → `{ top: 10, bottom: 10, left: 10, right: 10 }`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "hitSlop",
+      "starterCode": "function hitSlop(size, platform) {\n  const pad = (44 - size) / 2;\n  return { top: pad, bottom: pad, left: pad, right: pad };\n}",
+      "referenceSolution": "function hitSlop(size, platform) {\n  const min = platform === \"android\" ? 48 : 44;\n  const pad = Math.max(0, Math.ceil((min - size) / 2));\n  return { top: pad, bottom: pad, left: pad, right: pad };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            24,
+            "ios"
+          ],
+          "expected": {
+            "top": 10,
+            "bottom": 10,
+            "left": 10,
+            "right": 10
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            24,
+            "android"
+          ],
+          "expected": {
+            "top": 12,
+            "bottom": 12,
+            "left": 12,
+            "right": 12
+          }
+        },
+        {
+          "args": [
+            60,
+            "ios"
+          ],
+          "expected": {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+          }
+        },
+        {
+          "args": [
+            33,
+            "ios"
+          ],
+          "expected": {
+            "top": 6,
+            "bottom": 6,
+            "left": 6,
+            "right": 6
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`flatten(style)` mimics `StyleSheet.flatten` for the `style` prop: `style` is an object, a falsy value, or an array\nof those (arrays may nest). Later entries override earlier ones; falsy entries (from `cond && styles.x`) are skipped.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "flatten",
+      "starterCode": "function flatten(style) {\n  if (Array.isArray(style)) return Object.assign({}, ...style);\n  return style;\n}",
+      "referenceSolution": "function flatten(style) {\n  if (!style) return {};\n  if (Array.isArray(style)) return style.reduce((acc, s) => ({ ...acc, ...flatten(s) }), {});\n  return { ...style };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "padding": 8
+              },
+              false,
+              {
+                "padding": 12,
+                "color": "red"
+              }
+            ]
+          ],
+          "expected": {
+            "padding": 12,
+            "color": "red"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "a": 1
+              },
+              [
+                {
+                  "b": 2
+                },
+                [
+                  {
+                    "a": 3
+                  }
+                ]
+              ]
+            ]
+          ],
+          "expected": {
+            "a": 3,
+            "b": 2
+          }
+        },
+        {
+          "args": [
+            {
+              "margin": 4
+            }
+          ],
+          "expected": {
+            "margin": 4
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A contacts screen. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "return (",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  <ScrollView>",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    {contacts.map((c) => <ContactRow key={c.id} contact={c} />)}",
+          "issue": "Rendering a long list (thousands of contacts) with `ScrollView` + `map` mounts every row at once; use `FlatList`, which virtualises."
+        },
+        {
+          "id": "l4",
+          "text": "    {contacts.length === 0 && 'No contacts yet'}",
+          "issue": "Text must be inside a `<Text>` component in React Native; a bare string here throws."
+        },
+        {
+          "id": "l5",
+          "text": "  </ScrollView>",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": ");",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-native-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A header component written by someone coming from the web. Mark the lines that will not work in React Native.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<View style={{ padding: '16px', flexDirection: 'row' }}>",
+          "issue": "Lengths are unitless numbers (density-independent pixels): `padding: 16`, not `'16px'`."
+        },
+        {
+          "id": "l2",
+          "text": "  <Image source=\"logo.png\" style={{ width: 32, height: 32 }} />",
+          "issue": "`source` must be `require('./logo.png')` or `{ uri }`, not a path string."
+        },
+        {
+          "id": "l3",
+          "text": "  <Text style={styles.title}>Orders</Text>",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  <Pressable onPress={openMenu} accessibilityRole=\"button\">",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    <Text>Menu</Text>",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  </Pressable>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  <Button title=\"Sync\" onPress={sync()} />",
+          "issue": "`sync()` runs on every render and passes its result; pass the function: `onPress={sync}`."
+        },
+        {
+          "id": "l8",
+          "text": "</View>",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "const styles = StyleSheet.create({ title: { fontSize: 18 } });",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-native-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why prefer `FlatList` over `ScrollView` for a list of 2,000 messages?",
+    "mcq": {
+      "options": [
+        "`FlatList` renders only the rows near the screen and recycles memory; `ScrollView` mounts all 2,000 at once",
+        "`ScrollView` cannot scroll vertically",
+        "`FlatList` does not need keys",
+        "`ScrollView` only works on iOS"
+      ],
+      "correctIndex": 0,
+      "explanation": "`ScrollView` is fine for short content. Long lists need virtualisation, which `FlatList`/`SectionList` (or FlashList) provide.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What unit is `width: 100` in a React Native style?",
+    "mcq": {
+      "options": [
+        "Density-independent pixels (points on iOS, dp on Android)",
+        "Physical pixels",
+        "Percent of the parent",
+        "rem"
+      ],
+      "correctIndex": 0,
+      "explanation": "Numbers are logical pixels, scaled by the device's pixel ratio. Percentages are written as strings (`'50%'`).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which is the default main axis direction of a `View` with `display: flex` in React Native?",
+    "mcq": {
+      "options": [
+        "Column (top to bottom)",
+        "Row (left to right)",
+        "It depends on the platform",
+        "There is no flexbox in React Native"
+      ],
+      "correctIndex": 0,
+      "explanation": "Unlike the web, React Native defaults to `flexDirection: 'column'`, and every `View` is a flex container.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An infinite-scroll feed appends pages from the API; items can repeat across pages when new posts shift the\noffset. Fix `mergePages(existing, page)` to append only items whose `id` is not already present (and not\nrepeated inside `page`), keeping order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mergePages",
+      "starterCode": "function mergePages(existing, page) {\n  return [...existing, ...page];\n}",
+      "referenceSolution": "function mergePages(existing, page) {\n  const seen = new Set(existing.map((i) => i.id));\n  const out = [...existing];\n  for (const item of page) {\n    if (seen.has(item.id)) continue;\n    seen.add(item.id);\n    out.push(item);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            [
+              {
+                "id": 2
+              },
+              {
+                "id": 3
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1
+            },
+            {
+              "id": 2
+            },
+            {
+              "id": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "id": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a"
+              }
+            ],
+            [
+              {
+                "id": "b"
+              },
+              {
+                "id": "a"
+              },
+              {
+                "id": "c"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": "a"
+            },
+            {
+              "id": "b"
+            },
+            {
+              "id": "c"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`parseDeepLink(url)` turns `myapp://product/42?ref=push` into `{ path: [\"product\", \"42\"], query: { ref: \"push\" } }`.\nThe scheme can be anything (`myapp://`, `https://shop.example.com/` — for https drop the host too). Decode\nquery values, and ignore empty path segments.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseDeepLink",
+      "starterCode": "function parseDeepLink(url) {\n  const [path, qs] = url.split(\"?\");\n  return { path: path.split(\"/\"), query: {} };\n}",
+      "referenceSolution": "function parseDeepLink(url) {\n  let rest = url.replace(/^[a-z][a-z0-9+.-]*:\\/\\//i, \"\");\n  if (/^https?:/i.test(url)) rest = rest.replace(/^[^/?#]*/, \"\");\n  const [pathPart, qs = \"\"] = rest.split(\"?\");\n  const path = pathPart.split(\"/\").filter(Boolean);\n  const query = {};\n  for (const pair of qs.split(\"&\").filter(Boolean)) {\n    const [k, v = \"\"] = pair.split(\"=\");\n    query[decodeURIComponent(k)] = decodeURIComponent(v.replace(/\\+/g, \" \"));\n  }\n  return { path, query };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "myapp://product/42?ref=push"
+          ],
+          "expected": {
+            "path": [
+              "product",
+              "42"
+            ],
+            "query": {
+              "ref": "push"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "https://shop.example.com/orders/7"
+          ],
+          "expected": {
+            "path": [
+              "orders",
+              "7"
+            ],
+            "query": {}
+          }
+        },
+        {
+          "args": [
+            "myapp://search?q=red%20shoes&page=2"
+          ],
+          "expected": {
+            "path": [
+              "search"
+            ],
+            "query": {
+              "q": "red shoes",
+              "page": "2"
+            }
+          }
+        },
+        {
+          "args": [
+            "myapp://"
+          ],
+          "expected": {
+            "path": [],
+            "query": {}
+          }
+        },
+        {
+          "args": [
+            "myapp://cart//"
+          ],
+          "expected": {
+            "path": [
+              "cart"
+            ],
+            "query": {}
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`timeAgo(seconds)` labels chat messages: under 60 → `\"now\"`, under an hour → `\"5m\"`, under a day →\n`\"3h\"`, otherwise days `\"2d\"`. Always round **down**.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "timeAgo",
+      "starterCode": "function timeAgo(seconds) {\n  if (seconds < 60) return \"now\";\n  if (seconds < 3600) return Math.round(seconds / 60) + \"m\";\n  return Math.round(seconds / 3600) + \"h\";\n}",
+      "referenceSolution": "function timeAgo(seconds) {\n  if (seconds < 60) return \"now\";\n  if (seconds < 3600) return Math.floor(seconds / 60) + \"m\";\n  if (seconds < 86400) return Math.floor(seconds / 3600) + \"h\";\n  return Math.floor(seconds / 86400) + \"d\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            300
+          ],
+          "expected": "5m"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            59
+          ],
+          "expected": "now"
+        },
+        {
+          "args": [
+            3599
+          ],
+          "expected": "59m"
+        },
+        {
+          "args": [
+            7200
+          ],
+          "expected": "2h"
+        },
+        {
+          "args": [
+            200000
+          ],
+          "expected": "2d"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`keyboardProps(platform, headerHeight)` returns props for a `KeyboardAvoidingView` around a form:\non `\"ios\"` use `behavior: \"padding\"` and `keyboardVerticalOffset` equal to the header height; on Android use\n`behavior: \"height\"` and an offset of `0`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "keyboardProps",
+      "starterCode": "function keyboardProps(platform, headerHeight) {\n  return { behavior: \"padding\", keyboardVerticalOffset: headerHeight };\n}",
+      "referenceSolution": "function keyboardProps(platform, headerHeight) {\n  return platform === \"ios\"\n    ? { behavior: \"padding\", keyboardVerticalOffset: headerHeight }\n    : { behavior: \"height\", keyboardVerticalOffset: 0 };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "ios",
+            64
+          ],
+          "expected": {
+            "behavior": "padding",
+            "keyboardVerticalOffset": 64
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "android",
+            56
+          ],
+          "expected": {
+            "behavior": "height",
+            "keyboardVerticalOffset": 0
+          }
+        },
+        {
+          "args": [
+            "ios",
+            0
+          ],
+          "expected": {
+            "behavior": "padding",
+            "keyboardVerticalOffset": 0
+          }
+        },
+        {
+          "args": [
+            "android",
+            0
+          ],
+          "expected": {
+            "behavior": "height",
+            "keyboardVerticalOffset": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A screen that refreshes data when the app returns to the foreground. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "useEffect(() => {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  AppState.addEventListener('change', (s) => {",
+          "issue": "The subscription is never removed: keep the returned object and call `sub.remove()` in the effect's cleanup."
+        },
+        {
+          "id": "l3",
+          "text": "    if (s === 'active') refresh();",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  });",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "});",
+          "issue": "No dependency array: the effect re-runs after every render and adds another listener each time; use `[]` (or `[refresh]`)."
+        },
+        {
+          "id": "l6",
+          "text": "const { data, refresh } = useOrders();",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "return <OrderList data={data} onRefresh={refresh} />;",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-native-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A profile screen looks broken on some phones. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const { width } = Dimensions.get('window'); // at module scope",
+          "issue": "Read once at import time, so it never updates on rotation or split screen; use `useWindowDimensions()` inside the component."
+        },
+        {
+          "id": "l2",
+          "text": "export function Profile({ user }) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  return (",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    <View style={{ flex: 1 }}>",
+          "issue": "Content starts under the notch/status bar; wrap in a safe-area container or apply `useSafeAreaInsets()` padding."
+        },
+        {
+          "id": "l5",
+          "text": "      <Image source={{ uri: user.avatarUrl }} />",
+          "issue": "Network images have no intrinsic size in React Native; without `width`/`height` they render at 0×0."
+        },
+        {
+          "id": "l6",
+          "text": "      <Text style={{ width: width - 32 }}>{user.bio}</Text>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "      <Text>{user.name}</Text>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    </View>",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  );",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-native-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You have `Button.ios.tsx` and `Button.android.tsx`. How do you import the component?",
+    "mcq": {
+      "options": [
+        "`import Button from './Button'` — Metro picks the file for the current platform",
+        "`import Button from './Button.ios'` everywhere",
+        "With `Platform.require('./Button')`",
+        "You must merge them into one file"
+      ],
+      "correctIndex": 0,
+      "explanation": "Metro resolves platform-specific extensions automatically, so callers import the base name.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "On a phone with a notch, content hides under the status bar. What is the most portable fix?",
+    "mcq": {
+      "options": [
+        "Use `react-native-safe-area-context` (`SafeAreaView` or `useSafeAreaInsets`) and pad by the insets",
+        "Add `marginTop: 44` to every screen",
+        "Hide the status bar",
+        "Use `position: absolute; top: 0`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Inset sizes differ per device and orientation (and on Android cut-outs). The safe-area library reports the real values on both platforms.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `onPress={() => navigation.navigate('Details', { id: item.id })}` pass to the Details screen?",
+    "mcq": {
+      "options": [
+        "A `route.params` object `{ id }`, read with `route.params.id`",
+        "Props `id` directly on the component",
+        "A global variable `id`",
+        "Nothing; params are only allowed on deep links"
+      ],
+      "correctIndex": 0,
+      "explanation": "React Navigation hands params to the screen as `route.params`. Pass ids, not whole objects or functions, so state stays serialisable and deep-linkable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`sections(contacts)` builds data for a `SectionList`: `[{ title: \"A\", data: [names] }, …]`. Group names by their\nfirst letter upper-cased, sort sections A–Z and names inside each section alphabetically (case-insensitive).\nNames starting with anything other than A–Z go in a `\"#\"` section placed **last**.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "sections",
+      "starterCode": "function sections(contacts) {\n  const groups = {};\n  for (const name of contacts) {\n    const k = name[0];\n    (groups[k] = groups[k] || []).push(name);\n  }\n  return Object.keys(groups).map((title) => ({ title, data: groups[title] }));\n}",
+      "referenceSolution": "function sections(contacts) {\n  const groups = {};\n  for (const name of contacts) {\n    const first = name[0] ? name[0].toUpperCase() : \"#\";\n    const k = first >= \"A\" && first <= \"Z\" ? first : \"#\";\n    (groups[k] = groups[k] || []).push(name);\n  }\n  const keys = Object.keys(groups).filter((k) => k !== \"#\").sort();\n  if (groups[\"#\"]) keys.push(\"#\");\n  return keys.map((title) => ({\n    title,\n    data: groups[title].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase())),\n  }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "bob",
+              "Alice",
+              "anna"
+            ]
+          ],
+          "expected": [
+            {
+              "title": "A",
+              "data": [
+                "Alice",
+                "anna"
+              ]
+            },
+            {
+              "title": "B",
+              "data": [
+                "bob"
+              ]
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "9lives",
+              "Zoe",
+              "@home",
+              "zack"
+            ]
+          ],
+          "expected": [
+            {
+              "title": "Z",
+              "data": [
+                "zack",
+                "Zoe"
+              ]
+            },
+            {
+              "title": "#",
+              "data": [
+                "@home",
+                "9lives"
+              ]
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              "Carl"
+            ]
+          ],
+          "expected": [
+            {
+              "title": "C",
+              "data": [
+                "Carl"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A `FlatList` with fixed-height rows uses `getItemLayout`. `visibleRange(count, itemHeight, offset, viewport)`\nreturns `[first, last]`: the indexes of the first and last rows at least partly visible when scrolled to\n`offset` with a viewport of `viewport` px. Clamp to the list; return `null` for an empty list.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "visibleRange",
+      "starterCode": "function visibleRange(count, itemHeight, offset, viewport) {\n  const first = Math.floor(offset / itemHeight);\n  const last = Math.floor((offset + viewport) / itemHeight);\n  return [first, last];\n}",
+      "referenceSolution": "function visibleRange(count, itemHeight, offset, viewport) {\n  if (count === 0) return null;\n  const first = Math.min(count - 1, Math.max(0, Math.floor(offset / itemHeight)));\n  const last = Math.min(count - 1, Math.max(0, Math.ceil((offset + viewport) / itemHeight) - 1));\n  return [first, last];\n}",
+      "sampleTests": [
+        {
+          "args": [
+            100,
+            50,
+            0,
+            200
+          ],
+          "expected": [
+            0,
+            3
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            100,
+            50,
+            25,
+            200
+          ],
+          "expected": [
+            0,
+            4
+          ]
+        },
+        {
+          "args": [
+            3,
+            50,
+            0,
+            1000
+          ],
+          "expected": [
+            0,
+            2
+          ]
+        },
+        {
+          "args": [
+            0,
+            50,
+            0,
+            200
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            10,
+            100,
+            950,
+            300
+          ],
+          "expected": [
+            9,
+            9
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "React Navigation's `linking.config` maps screens to paths, e.g. `{ Profile: \"user/:id\", Settings: \"settings\" }`.\n`matchLink(config, path)` returns `{ screen, params }` for the first screen (in key order) whose pattern matches\nthe path (no leading slash; segment counts must be equal, `:name` captures), or `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matchLink",
+      "starterCode": "function matchLink(config, path) {\n  for (const [screen, pattern] of Object.entries(config)) {\n    if (pattern === path) return { screen, params: {} };\n  }\n  return null;\n}",
+      "referenceSolution": "function matchLink(config, path) {\n  const segs = path.split(\"/\").filter(Boolean);\n  for (const [screen, pattern] of Object.entries(config)) {\n    const p = pattern.split(\"/\").filter(Boolean);\n    if (p.length !== segs.length) continue;\n    const params = {};\n    let ok = true;\n    for (let i = 0; i < p.length; i++) {\n      if (p[i].startsWith(\":\")) params[p[i].slice(1)] = segs[i];\n      else if (p[i] !== segs[i]) { ok = false; break; }\n    }\n    if (ok) return { screen, params };\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "Profile": "user/:id",
+              "Settings": "settings"
+            },
+            "user/12"
+          ],
+          "expected": {
+            "screen": "Profile",
+            "params": {
+              "id": "12"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "Profile": "user/:id",
+              "Settings": "settings"
+            },
+            "settings"
+          ],
+          "expected": {
+            "screen": "Settings",
+            "params": {}
+          }
+        },
+        {
+          "args": [
+            {
+              "Profile": "user/:id"
+            },
+            "user/12/edit"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "Chat": "chat/:room/:msg"
+            },
+            "chat/general/99"
+          ],
+          "expected": {
+            "screen": "Chat",
+            "params": {
+              "room": "general",
+              "msg": "99"
+            }
+          }
+        },
+        {
+          "args": [
+            {},
+            "anything"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "On launch the app asks the server for the minimum supported version and shows a force-update screen if the\ninstalled one is older. Fix `needsUpdate(installed, minimum)` for versions like `\"1.10.0\"` (compare each part as a\nnumber; missing parts count as `0`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "needsUpdate",
+      "starterCode": "function needsUpdate(installed, minimum) {\n  return installed < minimum;\n}",
+      "referenceSolution": "function needsUpdate(installed, minimum) {\n  const a = installed.split(\".\").map(Number);\n  const b = minimum.split(\".\").map(Number);\n  for (let i = 0; i < Math.max(a.length, b.length); i++) {\n    const x = a[i] || 0;\n    const y = b[i] || 0;\n    if (x !== y) return x < y;\n  }\n  return false;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "1.9.3",
+            "1.10.0"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "1.10.0",
+            "1.9.3"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "2.0",
+            "2.0.0"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "2.0.0",
+            "2.0.1"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "10.0.0",
+            "9.9.9"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Tapping a row should highlight it, but the list does not update. Mark the lines responsible.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const [selectedId, setSelectedId] = useState(null);",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "const renderItem = ({ item }) => (",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  <Row item={item} selected={item.id === selectedId} onPress={() => setSelectedId(item.id)} />",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": ");",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "<FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id} />",
+          "issue": "`FlatList` is a pure component: when `data` is unchanged it does not re-render rows, so the new `selectedId` never reaches them; pass `extraData={selectedId}`."
+        },
+        {
+          "id": "l6",
+          "text": "const Row = React.memo(function Row({ item, selected, onPress }) {",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  return <Pressable onPress={onPress}><Text style={selected && styles.on}>{item.title}</Text></Pressable>;",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "});",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-native-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A collapsing header animation is janky whenever the JS thread is busy. Mark the lines that cause it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const scrollY = useRef(new Animated.Value(0)).current;",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "<Animated.ScrollView",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  onScroll={(e) => setOffset(e.nativeEvent.contentOffset.y)}",
+          "issue": "Setting React state on every scroll event re-renders the screen ~60 times a second on the JS thread; drive the animation with `Animated.event` instead."
+        },
+        {
+          "id": "l4",
+          "text": "  scrollEventThrottle={16}>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "Animated.timing(opacity, {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  toValue: 0, duration: 200, useNativeDriver: false,",
+          "issue": "Opacity and transform can run on the native driver; `useNativeDriver: false` keeps every frame on the busy JS thread."
+        },
+        {
+          "id": "l7",
+          "text": "}).start();",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "const headerHeight = scrollY.interpolate({ inputRange: [0, 100], outputRange: [120, 60], extrapolate: 'clamp' });",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-native-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does `useNativeDriver: true` change for an `Animated` animation?",
+    "mcq": {
+      "options": [
+        "The animation is sent to the native side once and runs on the UI thread, so a busy JS thread does not drop frames",
+        "It makes the animation run in a Web Worker",
+        "It allows animating any style, including `height` and `width`",
+        "It only works on iOS"
+      ],
+      "correctIndex": 0,
+      "explanation": "The native driver supports non-layout properties such as `transform` and `opacity`. Layout properties still need the JS driver or Reanimated.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why does providing `getItemLayout` help a `FlatList` with fixed-height rows?",
+    "mcq": {
+      "options": [
+        "The list can compute row positions without measuring them, so `scrollToIndex` and initial rendering are faster",
+        "It turns on native virtualisation",
+        "It is required for keys to work",
+        "It lets rows have different heights"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without it, `FlatList` must render and measure rows to know offsets, which is slow and makes `scrollToIndex` unreliable for far-away rows.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Where should a refresh token be stored in a React Native app?",
+    "mcq": {
+      "options": [
+        "In the platform's secure storage (iOS Keychain / Android Keystore, e.g. via `expo-secure-store`)",
+        "In `AsyncStorage`",
+        "In a JS module-level variable",
+        "In the app bundle"
+      ],
+      "correctIndex": 0,
+      "explanation": "`AsyncStorage` is unencrypted plain storage readable on rooted devices and in backups. Secure storage encrypts at rest with hardware-backed keys.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An offline-first app queues mutations while offline and compacts the queue before syncing.\n`enqueue(queue, op)` adds `op = { type: \"create\" | \"update\" | \"delete\", id, data? }`:\n- `update` after a queued `create`/`update` for the same id → merge `data` into that op (keep its type)\n- `delete` after a queued `create` → remove the create (the server never saw it) and do not add the delete\n- `delete` after a queued `update` → replace the update with the delete (in its place)\n- otherwise append",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "enqueue",
+      "starterCode": "function enqueue(queue, op) {\n  return [...queue, op];\n}",
+      "referenceSolution": "function enqueue(queue, op) {\n  const i = queue.findIndex((q) => q.id === op.id);\n  if (i === -1) return [...queue, op];\n  const prev = queue[i];\n  const out = [...queue];\n  if (op.type === \"update\" && (prev.type === \"create\" || prev.type === \"update\")) {\n    out[i] = { ...prev, data: { ...prev.data, ...op.data } };\n    return out;\n  }\n  if (op.type === \"delete\" && prev.type === \"create\") {\n    out.splice(i, 1);\n    return out;\n  }\n  if (op.type === \"delete\" && prev.type === \"update\") {\n    out[i] = { type: \"delete\", id: op.id };\n    return out;\n  }\n  return [...queue, op];\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "type": "create",
+                "id": "a",
+                "data": {
+                  "t": "x"
+                }
+              }
+            ],
+            {
+              "type": "update",
+              "id": "a",
+              "data": {
+                "done": true
+              }
+            }
+          ],
+          "expected": [
+            {
+              "type": "create",
+              "id": "a",
+              "data": {
+                "t": "x",
+                "done": true
+              }
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "type": "create",
+                "id": "a",
+                "data": {}
+              },
+              {
+                "type": "update",
+                "id": "b",
+                "data": {
+                  "n": 1
+                }
+              }
+            ],
+            {
+              "type": "delete",
+              "id": "a"
+            }
+          ],
+          "expected": [
+            {
+              "type": "update",
+              "id": "b",
+              "data": {
+                "n": 1
+              }
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "update",
+                "id": "b",
+                "data": {
+                  "n": 1
+                }
+              },
+              {
+                "type": "create",
+                "id": "c",
+                "data": {}
+              }
+            ],
+            {
+              "type": "delete",
+              "id": "b"
+            }
+          ],
+          "expected": [
+            {
+              "type": "delete",
+              "id": "b"
+            },
+            {
+              "type": "create",
+              "id": "c",
+              "data": {}
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            {
+              "type": "delete",
+              "id": "z"
+            }
+          ],
+          "expected": [
+            {
+              "type": "delete",
+              "id": "z"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "update",
+                "id": "a",
+                "data": {
+                  "x": 1,
+                  "y": 1
+                }
+              }
+            ],
+            {
+              "type": "update",
+              "id": "a",
+              "data": {
+                "y": 2
+              }
+            }
+          ],
+          "expected": [
+            {
+              "type": "update",
+              "id": "a",
+              "data": {
+                "x": 1,
+                "y": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "After a sync attempt, `afterSync(queue, failedIds, maxAttempts)` returns what stays queued. Each op is\n`{ id, attempts }`. Ops not in `failedIds` succeeded and leave the queue. Failed ops stay, in order, with\n`attempts + 1` — unless that reaches `maxAttempts`, in which case they are dropped (moved to a dead-letter list).\nReturn `{ queue, dead }` where `dead` holds the dropped ids in order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "afterSync",
+      "starterCode": "function afterSync(queue, failedIds, maxAttempts) {\n  return { queue: queue.filter((op) => failedIds.includes(op.id)), dead: [] };\n}",
+      "referenceSolution": "function afterSync(queue, failedIds, maxAttempts) {\n  const out = [];\n  const dead = [];\n  for (const op of queue) {\n    if (!failedIds.includes(op.id)) continue;\n    const attempts = op.attempts + 1;\n    if (attempts >= maxAttempts) dead.push(op.id);\n    else out.push({ ...op, attempts });\n  }\n  return { queue: out, dead };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "attempts": 0
+              },
+              {
+                "id": "b",
+                "attempts": 2
+              }
+            ],
+            [
+              "a",
+              "b"
+            ],
+            3
+          ],
+          "expected": {
+            "queue": [
+              {
+                "id": "a",
+                "attempts": 1
+              }
+            ],
+            "dead": [
+              "b"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "attempts": 0
+              }
+            ],
+            [],
+            3
+          ],
+          "expected": {
+            "queue": [],
+            "dead": []
+          }
+        },
+        {
+          "args": [
+            [],
+            [
+              "x"
+            ],
+            3
+          ],
+          "expected": {
+            "queue": [],
+            "dead": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "attempts": 0
+              },
+              {
+                "id": "b",
+                "attempts": 0
+              }
+            ],
+            [
+              "b"
+            ],
+            1
+          ],
+          "expected": {
+            "queue": [],
+            "dead": [
+              "b"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Two-way sync resolves conflicts with last-write-wins. `resolve(local, server)` gets two arrays of\n`{ id, updatedAt, deleted? }`. For each id present in either, keep the version with the larger `updatedAt`\n(server wins ties). Drop records whose winning version has `deleted: true` (tombstones). Return the records\nsorted by `id`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "resolve",
+      "starterCode": "function resolve(local, server) {\n  const byId = {};\n  for (const r of [...server, ...local]) byId[r.id] = r;\n  return Object.values(byId);\n}",
+      "referenceSolution": "function resolve(local, server) {\n  const byId = {};\n  for (const r of local) byId[r.id] = r;\n  for (const r of server) {\n    const cur = byId[r.id];\n    if (!cur || r.updatedAt >= cur.updatedAt) byId[r.id] = r;\n  }\n  return Object.values(byId)\n    .filter((r) => !r.deleted)\n    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "updatedAt": 5,
+                "v": "local"
+              }
+            ],
+            [
+              {
+                "id": "a",
+                "updatedAt": 3,
+                "v": "server"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "updatedAt": 5,
+              "v": "local"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "updatedAt": 5,
+                "v": "l"
+              }
+            ],
+            [
+              {
+                "id": "a",
+                "updatedAt": 5,
+                "v": "s"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "updatedAt": 5,
+              "v": "s"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "b",
+                "updatedAt": 1
+              }
+            ],
+            [
+              {
+                "id": "b",
+                "updatedAt": 2,
+                "deleted": true
+              },
+              {
+                "id": "a",
+                "updatedAt": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "updatedAt": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "c",
+                "updatedAt": 9,
+                "deleted": true
+              }
+            ],
+            [
+              {
+                "id": "c",
+                "updatedAt": 4
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`permissionStep(status, canAskAgain)` decides what the camera button does, given the result of\n`getPermissionsAsync()`:\n- `\"granted\"` → `\"open-camera\"`; `\"limited\"` (iOS partial access) → `\"open-camera\"` too\n- `\"undetermined\"` → `\"request\"`\n- `\"denied\"` → `\"explain-then-request\"` if `canAskAgain`, else `\"open-settings\"` (the system dialog will not show again)",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "permissionStep",
+      "starterCode": "function permissionStep(status, canAskAgain) {\n  if (status === \"granted\") return \"open-camera\";\n  return \"request\";\n}",
+      "referenceSolution": "function permissionStep(status, canAskAgain) {\n  if (status === \"granted\" || status === \"limited\") return \"open-camera\";\n  if (status === \"undetermined\") return \"request\";\n  return canAskAgain ? \"explain-then-request\" : \"open-settings\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "undetermined",
+            true
+          ],
+          "expected": "request"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "denied",
+            false
+          ],
+          "expected": "open-settings"
+        },
+        {
+          "args": [
+            "denied",
+            true
+          ],
+          "expected": "explain-then-request"
+        },
+        {
+          "args": [
+            "limited",
+            false
+          ],
+          "expected": "open-camera"
+        },
+        {
+          "args": [
+            "granted",
+            true
+          ],
+          "expected": "open-camera"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Put the steps of shipping a native-code change (a new native module) to both stores in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Bump the app version and the build numbers (`versionCode` / `CFBundleVersion`)"
+        },
+        {
+          "id": "s2",
+          "label": "Build signed release binaries (AAB and IPA) in CI"
+        },
+        {
+          "id": "s3",
+          "label": "Smoke-test the release builds on real devices (TestFlight / internal testing track)"
+        },
+        {
+          "id": "s4",
+          "label": "Submit for store review with release notes"
+        },
+        {
+          "id": "s5",
+          "label": "Roll out gradually (phased release / staged rollout) and watch crash-free rate"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Stores reject duplicate build numbers, so versioning comes first; release builds behave differently from debug (Hermes bytecode, minification), so test them before review; staged rollout limits the blast radius. A native module cannot ship as an OTA update."
+    }
+  },
+  {
+    "id": "eng-react-native-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An image-heavy feed crashes on low-end Android phones after a few minutes of scrolling. The `FlatList` renders\n`<Image source={{ uri }}>` with 3000×2000 originals scaled to 360×240 tiles, and `windowSize` was raised to 51.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An image-heavy feed crashes on low-end Android phones after a few minutes of scrolling. The `FlatList` renders\n`<Image source={{ uri }}>` with 3000×2000 originals scaled to 360×240 tiles, and `windowSize` was raised to 51.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the main cause of the crash?",
+          "options": [
+            "Decoded full-size bitmaps (3000×2000×4 bytes ≈ 24 MB each) exhaust memory",
+            "Too many `keyExtractor` calls",
+            "The JS bundle is too large",
+            "`FlatList` does not support images"
+          ],
+          "correctIndex": 0,
+          "explanation": "The device decodes the full image regardless of display size; a few dozen in memory is enough to OOM."
+        },
+        {
+          "id": "q2",
+          "question": "What is the best first fix?",
+          "options": [
+            "Request thumbnails sized for the tile (a resizing CDN `?w=720`) and use a caching image library",
+            "Wrap each image in `React.memo`",
+            "Set `resizeMode=\"contain\"`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Smaller source images cut decode memory and bandwidth; a caching library (e.g. expo-image / FastImage) also handles memory caching well."
+        },
+        {
+          "id": "q3",
+          "question": "What about `windowSize={51}`?",
+          "options": [
+            "Lower it back towards the default (21) or less, so fewer off-screen rows stay mounted",
+            "Raise it further so images do not reload",
+            "It has no effect on memory"
+          ],
+          "correctIndex": 0,
+          "explanation": "`windowSize` is measured in viewport heights; 51 keeps ~25 screens of rows (and their bitmaps) alive."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-native-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which change can be shipped with an over-the-air (EAS Update / CodePush) update without a store release?",
+    "mcq": {
+      "options": [
+        "A fix to JavaScript business logic and an updated image asset",
+        "Adding a new native module",
+        "Changing the app's permissions in `AndroidManifest.xml` / `Info.plist`",
+        "Upgrading the React Native version"
+      ],
+      "correctIndex": 0,
+      "explanation": "OTA updates replace the JS bundle and assets only. Anything that changes native code or configuration needs a new binary, and the update must match the binary's runtime version.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In React Native's New Architecture, what does JSI replace?",
+    "mcq": {
+      "options": [
+        "The asynchronous JSON bridge: JS can hold references to native objects and call them directly, even synchronously",
+        "The JavaScript engine (Hermes)",
+        "Metro, the bundler",
+        "The React reconciler"
+      ],
+      "correctIndex": 0,
+      "explanation": "JSI is a C++ interface between the JS runtime and native code. It underpins TurboModules (lazy, typed native modules) and Fabric (the new renderer).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-native-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-native",
+    "trackId": null,
+    "stackId": "stack-react-native",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A list screen re-renders all 500 rows when one row's `liked` flag changes. The row component is wrapped in `React.memo`. What is the most likely reason?",
+    "mcq": {
+      "options": [
+        "The parent passes a new inline callback (e.g. `onLike={() => like(item.id)}`) to every row on each render, so memo's shallow compare fails",
+        "`React.memo` does not work in React Native",
+        "`FlatList` always re-renders every row",
+        "The rows lack a `style` prop"
+      ],
+      "correctIndex": 0,
+      "explanation": "Memoised rows still re-render when any prop changes identity. Pass a stable `useCallback` handler that takes the id (and keep item objects immutable) so only the changed row re-renders.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

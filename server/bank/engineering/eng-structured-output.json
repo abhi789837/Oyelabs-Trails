@@ -1,0 +1,1922 @@
+[
+  {
+    "id": "eng-structured-output-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The model often wraps its JSON in a Markdown fence like ` ```json ... ``` `. Fix `extractJson` so it strips a surrounding fence (with or without a language tag) before parsing. Return `null` when the text is not valid JSON.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "extractJson",
+      "starterCode": "function extractJson(text) {\n  try {\n    return JSON.parse(text);\n  } catch {\n    return null;\n  }\n}",
+      "referenceSolution": "function extractJson(text) {\n  let s = text.trim();\n  if (s.startsWith(\"```\")) {\n    s = s.replace(/^```[a-zA-Z]*\\s*/, \"\").replace(/```$/, \"\").trim();\n  }\n  try {\n    return JSON.parse(s);\n  } catch {\n    return null;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "```json\n{\"a\": 1}\n```"
+          ],
+          "expected": {
+            "a": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "{\"ok\": true}"
+          ],
+          "expected": {
+            "ok": true
+          }
+        },
+        {
+          "args": [
+            "```\n[1, 2]\n```"
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            "not json"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "```json\n{\"name\": \"Ann\", \"tags\": []}\n```"
+          ],
+          "expected": {
+            "name": "Ann",
+            "tags": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`missing_keys` returns the required keys that are **absent** from the model's parsed output. A key whose value is `0`, `False`, `\"\"` or `None` is present. Right now those are reported as missing. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "missing_keys",
+      "starterCode": "def missing_keys(obj, required):\n    return [k for k in required if not obj.get(k)]",
+      "referenceSolution": "def missing_keys(obj, required):\n    return [k for k in required if k not in obj]",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ann"
+            },
+            [
+              "name",
+              "email"
+            ]
+          ],
+          "expected": [
+            "email"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "a",
+              "age": 0
+            },
+            [
+              "name",
+              "age"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {},
+            [
+              "a"
+            ]
+          ],
+          "expected": [
+            "a"
+          ]
+        },
+        {
+          "args": [
+            {
+              "a": false,
+              "b": null
+            },
+            [
+              "a",
+              "b",
+              "c"
+            ]
+          ],
+          "expected": [
+            "c"
+          ]
+        },
+        {
+          "args": [
+            {
+              "x": 1
+            },
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A prompt for extracting contact details. The output is parsed by code.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that will make the output hard to parse.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Extract the contact details from the email below.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Return a JSON object with keys `name`, `email` and `phone`.",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "Use `null` for any value that is not in the email.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "Start with a friendly sentence summarising the email, then give the JSON.",
+          "issue": "Prose before the JSON breaks a plain JSON.parse; ask for JSON only."
+        },
+        {
+          "id": "l5",
+          "text": "Feel free to add any other fields you think are useful.",
+          "issue": "Unpredictable extra keys make the shape unstable for the code that reads it."
+        },
+        {
+          "id": "l6",
+          "text": "Email:",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "{email_text}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-structured-output-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Your app gives the model a `get_weather` tool and the user asks \"Do I need an umbrella in Pune today?\"",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Send the user's message plus the `get_weather` tool definition to the model"
+        },
+        {
+          "id": "s2",
+          "label": "The model replies with a tool call: `get_weather` with `{\"city\": \"Pune\"}`"
+        },
+        {
+          "id": "s3",
+          "label": "Your code runs the real weather lookup"
+        },
+        {
+          "id": "s4",
+          "label": "Send the tool result back to the model in the conversation"
+        },
+        {
+          "id": "s5",
+          "label": "The model writes the final answer for the user"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "The model only asks for the tool; your code runs it and returns the result, then the model uses that to answer."
+    }
+  },
+  {
+    "id": "eng-structured-output-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "JSON parsing fails in production.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your service calls `JSON.parse` on the model's reply. About 2% of requests crash with `SyntaxError`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you do first?",
+          "options": [
+            "Log the raw model replies that failed so you can see what they look like",
+            "Switch to a different model immediately",
+            "Wrap it in try/catch and ignore the error",
+            "Double max tokens"
+          ],
+          "correctIndex": 0,
+          "explanation": "You need to see the bad outputs: fences, prose, truncation and trailing commas each have different fixes."
+        },
+        {
+          "id": "q2",
+          "question": "The logs show replies cut off mid-object because `max_tokens` was reached. What is the fix?",
+          "options": [
+            "Raise `max_tokens` enough for the largest expected output and treat a length stop as a failure to retry",
+            "Ask the model to \"be brief\"",
+            "Strip the last character before parsing",
+            "Use temperature 0"
+          ],
+          "correctIndex": 0,
+          "explanation": "Truncated JSON can never parse. Give enough room, and check the stop reason before parsing."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A tool definition a teammate added for the model.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the parts that will make the model use the tool badly.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "name: `do_stuff`",
+          "issue": "A vague name gives the model no idea when to call it; name it for what it does, e.g. `create_ticket`."
+        },
+        {
+          "id": "l2",
+          "text": "description: \"\"",
+          "issue": "An empty description: the model picks tools and fills arguments from the description."
+        },
+        {
+          "id": "l3",
+          "text": "parameters.type: object",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "parameters.properties.title: string, \"Short summary of the issue\"",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "parameters.properties.priority: string, enum [low, medium, high]",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "parameters.required: [title, priority]",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-structured-output-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Your code needs the model's answer as data (a category and a confidence). Why ask for JSON instead of a sentence?",
+    "mcq": {
+      "options": [
+        "Code can parse and validate JSON reliably; a sentence needs fragile text matching",
+        "JSON answers are always more accurate",
+        "Models are cheaper when they output JSON",
+        "Sentences cannot contain numbers"
+      ],
+      "correctIndex": 0,
+      "explanation": "Structured output is about being machine-readable. It does not make the answer more correct, but it makes it checkable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "With tool calling, who actually executes the function?",
+    "mcq": {
+      "options": [
+        "Your application code, after the model returns the tool name and arguments",
+        "The model provider's servers, automatically",
+        "The user's browser",
+        "The model itself, inside its weights"
+      ],
+      "correctIndex": 0,
+      "explanation": "The model only produces a structured request; your code decides whether and how to run it, then sends the result back.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it.",
+    "mcq": {
+      "options": [
+        "`SyntaxError`",
+        "`{ a: 1 }`",
+        "`null`",
+        "`undefined`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Markdown fence is not JSON, so `JSON.parse` throws a `SyntaxError`. Strip fences or ask for raw JSON.",
+      "snippet": "try {\n  console.log(JSON.parse('```json\\n{\"a\": 1}\\n```'));\n} catch (e) {\n  console.log(e.name);\n}",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-structured-output-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`checkTypes` validates a parsed object against a tiny schema like `{ \"tags\": \"array\", \"n\": \"number\" }`. Types are `string`, `number`, `boolean` and `array`. It returns errors in schema order: `\"field: missing\"` or `\"field: expected <type>\"`. Arrays are always rejected. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "checkTypes",
+      "starterCode": "function checkTypes(obj, schema) {\n  const errors = [];\n  for (const [field, type] of Object.entries(schema)) {\n    if (!(field in obj)) {\n      errors.push(field + \": missing\");\n      continue;\n    }\n    if (typeof obj[field] !== type) errors.push(field + \": expected \" + type);\n  }\n  return errors;\n}",
+      "referenceSolution": "function checkTypes(obj, schema) {\n  const errors = [];\n  for (const [field, type] of Object.entries(schema)) {\n    if (!(field in obj)) {\n      errors.push(field + \": missing\");\n      continue;\n    }\n    const value = obj[field];\n    const actual = Array.isArray(value) ? \"array\" : typeof value;\n    if (actual !== type) errors.push(field + \": expected \" + type);\n  }\n  return errors;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "tags": [
+                "a"
+              ],
+              "n": 1
+            },
+            {
+              "tags": "array",
+              "n": "number"
+            }
+          ],
+          "expected": []
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "tags": "a"
+            },
+            {
+              "tags": "array"
+            }
+          ],
+          "expected": [
+            "tags: expected array"
+          ]
+        },
+        {
+          "args": [
+            {
+              "tags": []
+            },
+            {
+              "tags": "array"
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {},
+            {
+              "a": "string"
+            }
+          ],
+          "expected": [
+            "a: missing"
+          ]
+        },
+        {
+          "args": [
+            {
+              "n": "5"
+            },
+            {
+              "n": "number"
+            }
+          ],
+          "expected": [
+            "n: expected number"
+          ]
+        },
+        {
+          "args": [
+            {
+              "ok": true,
+              "items": [
+                1
+              ]
+            },
+            {
+              "ok": "boolean",
+              "items": "array",
+              "name": "string"
+            }
+          ],
+          "expected": [
+            "name: missing"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A model response's `content` is a list of blocks. `tool_calls` should return `{\"name\", \"input\"}` for **every** block whose `type` is `\"tool_use\"`, in order. The model can ask for several tools in one turn, but only the first is returned. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "tool_calls",
+      "starterCode": "def tool_calls(content):\n    for block in content:\n        if block[\"type\"] == \"tool_use\":\n            return [{\"name\": block[\"name\"], \"input\": block[\"input\"]}]\n    return []",
+      "referenceSolution": "def tool_calls(content):\n    return [{\"name\": block[\"name\"], \"input\": block[\"input\"]}\n            for block in content if block[\"type\"] == \"tool_use\"]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "type": "text",
+                "text": "Checking."
+              },
+              {
+                "type": "tool_use",
+                "id": "t1",
+                "name": "get_weather",
+                "input": {
+                  "city": "Pune"
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "name": "get_weather",
+              "input": {
+                "city": "Pune"
+              }
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "text",
+                "text": "Hi"
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "tool_use",
+                "id": "t1",
+                "name": "a",
+                "input": {}
+              },
+              {
+                "type": "text",
+                "text": "and"
+              },
+              {
+                "type": "tool_use",
+                "id": "t2",
+                "name": "b",
+                "input": {
+                  "x": 1
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "name": "a",
+              "input": {}
+            },
+            {
+              "name": "b",
+              "input": {
+                "x": 1
+              }
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "tool_use",
+                "id": "t1",
+                "name": "a",
+                "input": {
+                  "q": "x"
+                }
+              },
+              {
+                "type": "tool_use",
+                "id": "t2",
+                "name": "a",
+                "input": {
+                  "q": "y"
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "name": "a",
+              "input": {
+                "q": "x"
+              }
+            },
+            {
+              "name": "a",
+              "input": {
+                "q": "y"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Handler for a tool-calling response from the Anthropic Messages API, where `content` is a list of blocks and a `tool_use` block's `input` is already a parsed object.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const response = await client.messages.create({ model, max_tokens: 1024, tools, messages });",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "if (response.stop_reason === \"tool_use\") {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  const call = response.content[0];",
+          "issue": "The first block is often text (\"Let me check...\"); find the block(s) with type `tool_use` instead."
+        },
+        {
+          "id": "l4",
+          "text": "  const args = JSON.parse(call.input);",
+          "issue": "`input` is already an object; JSON.parse on it throws."
+        },
+        {
+          "id": "l5",
+          "text": "  const result = await runTool(call.name, args);",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  messages.push({ role: \"assistant\", content: response.content });",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  messages.push({ role: \"user\", content: [{ type: \"tool_result\", tool_use_id: call.id, content: JSON.stringify(result) }] });",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-structured-output-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You are adding a feature that extracts order details from customer emails.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Agree the output fields and types the downstream code needs"
+        },
+        {
+          "id": "s2",
+          "label": "Write the JSON schema with a clear description for each field"
+        },
+        {
+          "id": "s3",
+          "label": "Prompt the model with the schema and two or three example emails"
+        },
+        {
+          "id": "s4",
+          "label": "Validate every response against the schema in code"
+        },
+        {
+          "id": "s5",
+          "label": "On validation failure, retry once with the error, then route to manual review"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Start from what consumers need, express it as a schema, prompt with examples, and never trust output without validating it and having a failure path."
+    }
+  },
+  {
+    "id": "eng-structured-output-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Prices come back as strings.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your extraction schema says `price` is a string. The model returns values like `\"$12.99\"`, `\"12,99 EUR\"` and `\"twelve dollars\"`, and the billing code chokes.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What schema change helps most?",
+          "options": [
+            "Make it `amount_cents` (integer) plus `currency` (enum of ISO codes), each with a description",
+            "Keep it a string and add \"be careful\" to the prompt",
+            "Make it an array of strings",
+            "Remove the field and compute prices later"
+          ],
+          "correctIndex": 0,
+          "explanation": "A precise type and unit removes the formatting choices the model was making for you."
+        },
+        {
+          "id": "q2",
+          "question": "A few responses still have the wrong currency. What do you add?",
+          "options": [
+            "Validation in code against the order's known currency, rejecting or flagging mismatches",
+            "A higher temperature",
+            "A second identical call and take the first",
+            "Nothing; schemas guarantee correctness"
+          ],
+          "correctIndex": 0,
+          "explanation": "Schemas constrain shape, not truth. Cross-check values against data you already trust."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The model invents a priority value.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your `create_ticket` tool takes `priority` as a free string described as \"low, medium or high\". Tickets arrive with `\"urgent\"` and `\"P1\"`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the first fix?",
+          "options": [
+            "Declare `priority` with `enum: [\"low\", \"medium\", \"high\"]` in the tool schema",
+            "Tell users not to say urgent",
+            "Map every unknown value to high",
+            "Remove priority from the tool"
+          ],
+          "correctIndex": 0,
+          "explanation": "An enum tells the model the exact allowed values, and strict modes can enforce it."
+        },
+        {
+          "id": "q2",
+          "question": "Should your handler still check the value?",
+          "options": [
+            "Yes: validate against the same enum and return a tool error if it is wrong",
+            "No: the enum makes checks redundant",
+            "Only in development",
+            "Only for high priority"
+          ],
+          "correctIndex": 0,
+          "explanation": "Always validate tool arguments server-side; returning an error lets the model correct itself."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A response arrives with `stop_reason: \"tool_use\"`. What should your code do next?",
+    "mcq": {
+      "options": [
+        "Run the requested tool(s) and send the results back in a follow-up request that includes the conversation so far",
+        "Show the response text to the user; the turn is done",
+        "Retry the same request until the stop reason changes",
+        "Ignore the tool call and ask the user to repeat"
+      ],
+      "correctIndex": 0,
+      "explanation": "The model has paused to wait for tool results. The loop continues until it produces a normal final answer.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Does setting temperature to 0 guarantee the model returns valid JSON?",
+    "mcq": {
+      "options": [
+        "No; it makes output more deterministic, but it can still be malformed or miss fields, so validate (or use schema-constrained output)",
+        "Yes, temperature 0 always produces valid JSON",
+        "Yes, but only for short outputs",
+        "No, temperature 0 makes JSON less likely"
+      ],
+      "correctIndex": 0,
+      "explanation": "Temperature controls sampling randomness, not format. Use structured-output features and validate in code.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it.",
+    "mcq": {
+      "options": [
+        "`[ 'tags: expected array' ]`",
+        "`[]`",
+        "`[ 'tags: missing' ]`",
+        "`TypeError`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`typeof []` is `\"object\"`, so a naive `typeof` check reports a perfectly good array as wrong. Use `Array.isArray`.",
+      "snippet": "const value = { tags: [\"a\", \"b\"] };\nconst schema = { tags: \"array\" };\nconst errors = [];\nfor (const [k, t] of Object.entries(schema)) {\n  if (typeof value[k] !== t) errors.push(`${k}: expected ${t}`);\n}\nconsole.log(errors);",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-structured-output-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The model sometimes writes prose around its JSON object, e.g. `Sure! {...} Hope this helps.` `extractObject` should parse the text from the first `{` to the **last** `}`, and return `null` if there is none or it does not parse. Nested objects break it. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "extractObject",
+      "starterCode": "function extractObject(text) {\n  const start = text.indexOf(\"{\");\n  const end = text.indexOf(\"}\");\n  if (start === -1 || end < start) return null;\n  try {\n    return JSON.parse(text.slice(start, end + 1));\n  } catch {\n    return null;\n  }\n}",
+      "referenceSolution": "function extractObject(text) {\n  const start = text.indexOf(\"{\");\n  const end = text.lastIndexOf(\"}\");\n  if (start === -1 || end < start) return null;\n  try {\n    return JSON.parse(text.slice(start, end + 1));\n  } catch {\n    return null;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "Sure! {\"a\": 1} Hope this helps."
+          ],
+          "expected": {
+            "a": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Here you go: {\"user\": {\"id\": 7}} done"
+          ],
+          "expected": {
+            "user": {
+              "id": 7
+            }
+          }
+        },
+        {
+          "args": [
+            "no json here"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "{bad}"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "{\"items\": [{\"q\": 1}, {\"q\": 2}]}"
+          ],
+          "expected": {
+            "items": [
+              {
+                "q": 1
+              },
+              {
+                "q": 2
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            "} oops {"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`run_tools` turns the model's tool calls into `tool_result` blocks. `calls` are `{\"id\", \"name\", \"input\"}`; `tools` maps each available tool name to its (stubbed) output string. For an unknown tool, return `content` `\"unknown tool: <name>\"` with `is_error: True` instead of crashing, so the model can recover. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "run_tools",
+      "starterCode": "def run_tools(calls, tools):\n    results = []\n    for call in calls:\n        results.append({\"type\": \"tool_result\", \"tool_use_id\": call[\"id\"],\n                        \"content\": tools[call[\"name\"]], \"is_error\": False})\n    return results",
+      "referenceSolution": "def run_tools(calls, tools):\n    results = []\n    for call in calls:\n        if call[\"name\"] in tools:\n            content, is_error = tools[call[\"name\"]], False\n        else:\n            content, is_error = \"unknown tool: \" + call[\"name\"], True\n        results.append({\"type\": \"tool_result\", \"tool_use_id\": call[\"id\"],\n                        \"content\": content, \"is_error\": is_error})\n    return results",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "t1",
+                "name": "time",
+                "input": {}
+              }
+            ],
+            {
+              "time": "10:00"
+            }
+          ],
+          "expected": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "t1",
+              "content": "10:00",
+              "is_error": false
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "t1",
+                "name": "nope",
+                "input": {}
+              }
+            ],
+            {
+              "time": "10:00"
+            }
+          ],
+          "expected": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "t1",
+              "content": "unknown tool: nope",
+              "is_error": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            {
+              "time": "10:00"
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "name": "time",
+                "input": {}
+              },
+              {
+                "id": "b",
+                "name": "weather",
+                "input": {
+                  "city": "Goa"
+                }
+              }
+            ],
+            {
+              "time": "9:00"
+            }
+          ],
+          "expected": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "a",
+              "content": "9:00",
+              "is_error": false
+            },
+            {
+              "type": "tool_result",
+              "tool_use_id": "b",
+              "content": "unknown tool: weather",
+              "is_error": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "x",
+                "name": "time",
+                "input": {}
+              }
+            ],
+            {}
+          ],
+          "expected": [
+            {
+              "type": "tool_result",
+              "tool_use_id": "x",
+              "content": "unknown tool: time",
+              "is_error": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Your provider's strict structured-output mode has three rules: every property must be listed in `required`, every object needs `additionalProperties: false`, and an optional value is written as a nullable type (e.g. `[\"string\", \"null\"]`). Here is the schema.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that break the strict-mode rules.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"type\": \"object\",",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "\"properties\": { \"name\": {\"type\": \"string\"}, \"email\": {\"type\": \"string\"}, \"phone\": {\"type\": [\"string\", \"null\"]} },",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "\"required\": [\"name\", \"email\"],",
+          "issue": "`phone` is a property but not in `required`; strict mode wants it required and nullable."
+        },
+        {
+          "id": "l4",
+          "text": "\"additionalProperties\": true",
+          "issue": "Strict mode needs `additionalProperties: false` so the model cannot add keys."
+        },
+        {
+          "id": "l5",
+          "text": "Description of `email`: \"The sender's email address\"",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "Description of `phone`: \"Phone number, or null if not given\"",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-structured-output-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "One full tool-use exchange in a chat API.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the messages in the order they appear in the conversation you send on the second request.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "user: \"What's the status of order 1042?\""
+        },
+        {
+          "id": "s2",
+          "label": "assistant: a `tool_use` block calling `get_order` with id 1042"
+        },
+        {
+          "id": "s3",
+          "label": "user: a `tool_result` block with the same tool_use_id and the order data"
+        },
+        {
+          "id": "s4",
+          "label": "assistant: \"Order 1042 shipped yesterday and arrives Friday.\""
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "The assistant's tool call must be in the history, followed by a user turn carrying the matching tool_result; the final answer comes from the model's reply to that request."
+    }
+  },
+  {
+    "id": "eng-structured-output-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Parallel tool calls fail.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The model returns two `tool_use` blocks in one turn (`get_order` and `get_customer`). Your loop runs the first, sends its result, and the API responds with an error about a missing tool result.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why does the API complain?",
+          "options": [
+            "Every tool_use in the assistant turn needs a matching tool_result in the next user turn",
+            "Only one tool may be defined per request",
+            "The tool results must be sent as plain text",
+            "Parallel calls are only allowed with streaming"
+          ],
+          "correctIndex": 0,
+          "explanation": "The conversation is invalid while any requested call is unanswered."
+        },
+        {
+          "id": "q2",
+          "question": "What is the correct fix?",
+          "options": [
+            "Run all requested calls and send all tool_result blocks, each with its tool_use_id, in one user message",
+            "Send each result in a separate request one after another",
+            "Disable tool use for the second tool",
+            "Drop the second tool_use block from the history"
+          ],
+          "correctIndex": 0,
+          "explanation": "Answer every call in the same follow-up turn, matched by id."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A tool-calling loop in a support bot.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs or risks.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "while (true) {",
+          "issue": "No upper bound on iterations: a model that keeps calling tools loops (and bills) forever. Cap the turns."
+        },
+        {
+          "id": "l2",
+          "text": "  const res = await callModel(messages, tools);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  if (res.stop_reason !== \"tool_use\") return res;",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  messages.push({ role: \"assistant\", content: res.content });",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  const results = await Promise.all(toolUses(res).map(runTool));",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  messages.push({ role: \"user\", content: results });",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-structured-output-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You use a provider feature that constrains decoding to your JSON schema. What do you still need to check in code?",
+    "mcq": {
+      "options": [
+        "Whether the values are right: amounts match the source, dates are plausible, ids exist",
+        "Nothing; the schema guarantees correct data",
+        "Only that the response is valid JSON",
+        "Only the field order"
+      ],
+      "correctIndex": 0,
+      "explanation": "Constrained decoding guarantees the shape. It cannot guarantee the model extracted the right number.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A model returned `{\"qty\": 0}`. What does this print? You can run it.",
+    "mcq": {
+      "options": [
+        "`1`",
+        "`0`",
+        "`None`",
+        "`KeyError`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`0` is falsy, so `or 1` replaces a real zero with the default. Check `is None` (or `in`) instead.",
+      "snippet": "data = {\"qty\": 0}\nqty = data.get(\"qty\") or 1\nprint(qty)",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-structured-output-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Two tools have similar names, `search_orders` and `search_customers`, and the model often picks the wrong one. What helps most?",
+    "mcq": {
+      "options": [
+        "Clear descriptions saying what each searches, when to use it, and an example input",
+        "Rename them `tool_a` and `tool_b`",
+        "Lower the temperature to 0",
+        "Remove one tool and hope"
+      ],
+      "correctIndex": 0,
+      "explanation": "The model chooses tools from their names and descriptions; precise descriptions are the main lever.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`validate(value, schema)` is a small recursive JSON-schema checker (types `object`, `array`, `string`, `number`, `integer`, `boolean`, with `properties`, `required` and `items`). It returns error strings like `$.items[1].qty: expected integer` and `$.qty: required`. Orders with `qty: 1.5` pass validation. Find and fix the bug.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "validate",
+      "starterCode": "function validate(value, schema, path = \"$\") {\n  const t = schema.type;\n  const ok =\n    t === \"object\" ? value !== null && typeof value === \"object\" && !Array.isArray(value) :\n    t === \"array\" ? Array.isArray(value) :\n    t === \"integer\" ? typeof value === \"number\" :\n    typeof value === t;\n  if (!ok) return [path + \": expected \" + t];\n  const errors = [];\n  if (t === \"object\") {\n    for (const key of schema.required || []) {\n      if (!(key in value)) errors.push(path + \".\" + key + \": required\");\n    }\n    for (const [key, sub] of Object.entries(schema.properties || {})) {\n      if (key in value) errors.push(...validate(value[key], sub, path + \".\" + key));\n    }\n  }\n  if (t === \"array\") {\n    value.forEach((v, i) => errors.push(...validate(v, schema.items, path + \"[\" + i + \"]\")));\n  }\n  return errors;\n}",
+      "referenceSolution": "function validate(value, schema, path = \"$\") {\n  const t = schema.type;\n  const ok =\n    t === \"object\" ? value !== null && typeof value === \"object\" && !Array.isArray(value) :\n    t === \"array\" ? Array.isArray(value) :\n    t === \"integer\" ? Number.isInteger(value) :\n    typeof value === t;\n  if (!ok) return [path + \": expected \" + t];\n  const errors = [];\n  if (t === \"object\") {\n    for (const key of schema.required || []) {\n      if (!(key in value)) errors.push(path + \".\" + key + \": required\");\n    }\n    for (const [key, sub] of Object.entries(schema.properties || {})) {\n      if (key in value) errors.push(...validate(value[key], sub, path + \".\" + key));\n    }\n  }\n  if (t === \"array\") {\n    value.forEach((v, i) => errors.push(...validate(v, schema.items, path + \"[\" + i + \"]\")));\n  }\n  return errors;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "sku": "A1",
+              "qty": 2
+            },
+            {
+              "type": "object",
+              "required": [
+                "sku",
+                "qty"
+              ],
+              "properties": {
+                "sku": {
+                  "type": "string"
+                },
+                "qty": {
+                  "type": "integer"
+                }
+              }
+            }
+          ],
+          "expected": []
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "sku": "A1",
+              "qty": 1.5
+            },
+            {
+              "type": "object",
+              "required": [
+                "sku",
+                "qty"
+              ],
+              "properties": {
+                "sku": {
+                  "type": "string"
+                },
+                "qty": {
+                  "type": "integer"
+                }
+              }
+            }
+          ],
+          "expected": [
+            "$.qty: expected integer"
+          ]
+        },
+        {
+          "args": [
+            {
+              "sku": "A1"
+            },
+            {
+              "type": "object",
+              "required": [
+                "sku",
+                "qty"
+              ],
+              "properties": {
+                "sku": {
+                  "type": "string"
+                },
+                "qty": {
+                  "type": "integer"
+                }
+              }
+            }
+          ],
+          "expected": [
+            "$.qty: required"
+          ]
+        },
+        {
+          "args": [
+            [],
+            {
+              "type": "object",
+              "required": [],
+              "properties": {}
+            }
+          ],
+          "expected": [
+            "$: expected object"
+          ]
+        },
+        {
+          "args": [
+            {
+              "items": [
+                {
+                  "qty": 1
+                },
+                {
+                  "qty": 2.5
+                },
+                {}
+              ]
+            },
+            {
+              "type": "object",
+              "required": [
+                "items"
+              ],
+              "properties": {
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "qty"
+                    ],
+                    "properties": {
+                      "qty": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "expected": [
+            "$.items[1].qty: expected integer",
+            "$.items[2].qty: required"
+          ]
+        },
+        {
+          "args": [
+            null,
+            {
+              "type": "object",
+              "required": [],
+              "properties": {}
+            }
+          ],
+          "expected": [
+            "$: expected object"
+          ]
+        },
+        {
+          "args": [
+            {
+              "sku": 5,
+              "qty": 1
+            },
+            {
+              "type": "object",
+              "required": [
+                "sku",
+                "qty"
+              ],
+              "properties": {
+                "sku": {
+                  "type": "string"
+                },
+                "qty": {
+                  "type": "integer"
+                }
+              }
+            }
+          ],
+          "expected": [
+            "$.sku: expected string"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`parse_with_retries` simulates a retry loop: `outputs` are the model's successive replies. Try them in order, at most `max_attempts`. A reply is accepted only if it parses as a JSON **object** containing every key in `required`. Return `{\"attempts\": n, \"value\": obj}` for the first accepted reply, or `{\"attempts\": n, \"value\": None}` after giving up. It accepts anything that parses. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_with_retries",
+      "starterCode": "import json\n\ndef parse_with_retries(outputs, required, max_attempts):\n    attempts = 0\n    for text in outputs[:max_attempts]:\n        attempts += 1\n        try:\n            obj = json.loads(text)\n        except ValueError:\n            continue\n        return {\"attempts\": attempts, \"value\": obj}\n    return {\"attempts\": attempts, \"value\": None}",
+      "referenceSolution": "import json\n\ndef parse_with_retries(outputs, required, max_attempts):\n    attempts = 0\n    for text in outputs[:max_attempts]:\n        attempts += 1\n        try:\n            obj = json.loads(text)\n        except ValueError:\n            continue\n        if isinstance(obj, dict) and all(k in obj for k in required):\n            return {\"attempts\": attempts, \"value\": obj}\n    return {\"attempts\": attempts, \"value\": None}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "oops",
+              "{\"a\": 1}"
+            ],
+            [
+              "a"
+            ],
+            3
+          ],
+          "expected": {
+            "attempts": 2,
+            "value": {
+              "a": 1
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "{\"b\": 1}",
+              "{\"a\": 2, \"b\": 1}"
+            ],
+            [
+              "a"
+            ],
+            3
+          ],
+          "expected": {
+            "attempts": 2,
+            "value": {
+              "a": 2,
+              "b": 1
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              "[1]",
+              "x",
+              "y",
+              "{\"a\": 1}"
+            ],
+            [
+              "a"
+            ],
+            3
+          ],
+          "expected": {
+            "attempts": 3,
+            "value": null
+          }
+        },
+        {
+          "args": [
+            [],
+            [
+              "a"
+            ],
+            3
+          ],
+          "expected": {
+            "attempts": 0,
+            "value": null
+          }
+        },
+        {
+          "args": [
+            [
+              "{\"a\": null}"
+            ],
+            [
+              "a"
+            ],
+            1
+          ],
+          "expected": {
+            "attempts": 1,
+            "value": {
+              "a": null
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              "\"a\"",
+              "{\"a\": 1, \"b\": 2}"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            2
+          ],
+          "expected": {
+            "attempts": 2,
+            "value": {
+              "a": 1,
+              "b": 2
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A refund tool fires twice.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your agent has an `issue_refund(order_id, amount)` tool. A network timeout made your loop retry the whole model turn, and a customer was refunded twice.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the core fix?",
+          "options": [
+            "Make the tool idempotent: derive an idempotency key from the tool_use id (or order + request) and have the payment call reject duplicates",
+            "Tell the model in the prompt to never call it twice",
+            "Remove retries entirely",
+            "Lower the temperature"
+          ],
+          "correctIndex": 0,
+          "explanation": "Retries are normal in distributed systems; side-effecting tools must be safe to repeat."
+        },
+        {
+          "id": "q2",
+          "question": "Refunds above $500 should need a human. Where does that rule live?",
+          "options": [
+            "In the tool handler: it returns a \"needs approval\" result instead of refunding",
+            "In the system prompt only",
+            "In the tool description only",
+            "In the model's temperature setting"
+          ],
+          "correctIndex": 0,
+          "explanation": "Hard limits belong in code the model cannot talk its way around; the prompt can explain them, not enforce them."
+        },
+        {
+          "id": "q3",
+          "question": "How do you know this does not regress?",
+          "options": [
+            "Add tests that replay a duplicate tool call and an over-limit call against the handler",
+            "Watch the bill each month",
+            "Ask the model if it would refund twice",
+            "Check the logs once"
+          ],
+          "correctIndex": 0,
+          "explanation": "Test the handler's guarantees directly; they do not depend on model behaviour."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Tool definitions proposed for an internal analytics agent.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the tools that give the model too much power.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "`get_dashboard(name)`: read a saved dashboard by name.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "`run_sql(query)`: run any SQL on the production database with the app's read/write user.",
+          "issue": "Arbitrary SQL with write access: an injected or confused model can modify or drop data. Use a read-only replica role or narrow, parameterised tools."
+        },
+        {
+          "id": "l3",
+          "text": "`list_metrics()`: list available metric names.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "`fetch_url(url)`: GET any URL, including internal hostnames.",
+          "issue": "Unrestricted fetch is an SSRF and exfiltration path (internal metadata endpoints, sending data out in the query string). Allow-list hosts."
+        },
+        {
+          "id": "l5",
+          "text": "`get_metric(name, start_date, end_date)`: dates validated, range max 1 year.",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "`export_csv(dashboard)`: writes to the user's own downloads folder.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-structured-output-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An extraction call's output failed schema validation in production.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the handling steps in the order your code should apply them.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Try a cheap local repair (strip fences, take the outer object) and re-validate"
+        },
+        {
+          "id": "s2",
+          "label": "Retry the call once, including the validation errors in the message"
+        },
+        {
+          "id": "s3",
+          "label": "If it still fails, return a typed failure and queue the input for human review"
+        },
+        {
+          "id": "s4",
+          "label": "Log the input, raw output and errors so the case can join the eval set"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "Cheapest fix first, then one informed retry, then a safe failure path; always keep the evidence to improve the prompt or schema."
+    }
+  },
+  {
+    "id": "eng-structured-output-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Classification with reasons.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your schema for ticket triage is `{ \"category\": enum, \"reasoning\": string }`. Accuracy is lower than in your notebook tests, where you asked for reasoning first.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why might field order matter?",
+          "options": [
+            "The model generates fields in order, so putting `reasoning` before `category` lets the category be based on the reasoning",
+            "JSON parsers read the first key only",
+            "Enums must always be last",
+            "It does not; field order never matters"
+          ],
+          "correctIndex": 0,
+          "explanation": "Output tokens are produced left to right; reasoning written after the answer cannot inform it."
+        },
+        {
+          "id": "q2",
+          "question": "You do not want to show the reasoning to users or store it. What do you do?",
+          "options": [
+            "Keep `reasoning` first in the schema and drop it in code after validation",
+            "Remove `reasoning` from the schema",
+            "Ask the model to keep the reasoning secret",
+            "Put the reasoning in a separate call after the answer"
+          ],
+          "correctIndex": 0,
+          "explanation": "Generate it for accuracy, then discard it in your code; schema design and display are separate concerns."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-structured-output-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You extract invoices. The due date is sometimes missing from the document. Which schema choice works best with strict structured output?",
+    "mcq": {
+      "options": [
+        "A required `due_date` field typed string-or-null, described as \"ISO date, or null if not stated\"",
+        "An optional `due_date` string with no description",
+        "A required `due_date` string, so the model always fills one in",
+        "Leave due_date out and parse it later from the raw text"
+      ],
+      "correctIndex": 0,
+      "explanation": "Requiring a non-null string pushes the model to invent a date. Required-but-nullable plus a clear description gives an honest \"unknown\".",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your tool takes a `product_sku` and the catalogue has 40,000 SKUs. What is the better design?",
+    "mcq": {
+      "options": [
+        "Let the model pass a free-text product query to a search tool, then resolve the SKU in code",
+        "Put all 40,000 SKUs in an enum in the tool schema",
+        "Paste the full catalogue into the system prompt every time",
+        "Let the model guess SKUs and retry until one exists"
+      ],
+      "correctIndex": 0,
+      "explanation": "Huge enums bloat every request and still fail on near-misses. Search in code, return candidates, and let the model pick from a short list.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-structured-output-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-structured-output",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your loop retries a model turn after a timeout. Which tool is most dangerous to re-run blindly?",
+    "mcq": {
+      "options": [
+        "`send_invoice_email(customer_id)`",
+        "`get_invoice(invoice_id)`",
+        "`list_customers(page)`",
+        "`get_exchange_rate(currency)`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reads are safe to repeat; a tool with external side effects (an email sent twice) needs idempotency or a check before re-running.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

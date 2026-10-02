@@ -1,0 +1,1844 @@
+[
+  {
+    "id": "eng-aws-iam-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`actionMatches(pattern, action)` checks an IAM `Action` pattern against an API action. `*` matches any characters (so `s3:*` and `s3:Get*` work), and action names are case-insensitive. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "actionMatches",
+      "starterCode": "function actionMatches(pattern, action) {\n  return pattern === action;\n}",
+      "referenceSolution": "function actionMatches(pattern, action) {\n  const re = pattern.replace(/[.+^${}()|[\\]\\\\?]/g, \"\\\\$&\").replace(/\\*/g, \".*\");\n  return new RegExp(\"^\" + re + \"$\", \"i\").test(action);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "s3:GetObject",
+            "s3:GetObject"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "s3:*",
+            "s3:PutObject"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "s3:Get*",
+            "s3:PutObject"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "*",
+            "ec2:RunInstances"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "s3:getobject",
+            "s3:GetObject"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "s3:Get*",
+            "s3:GetObjectAcl"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "ec2:*",
+            "s3:GetObject"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`arn_parts(arn)` splits an ARN (`arn:partition:service:region:account:resource`) into a dict. The resource part may itself contain `:` (Lambda: `function:my-fn`). Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "arn_parts",
+      "starterCode": "def arn_parts(arn):\n    p = arn.split(\":\")\n    return {\"partition\": p[1], \"service\": p[2], \"region\": p[3], \"account\": p[4], \"resource\": p[5]}",
+      "referenceSolution": "def arn_parts(arn):\n    p = arn.split(\":\", 5)\n    return {\"partition\": p[1], \"service\": p[2], \"region\": p[3], \"account\": p[4], \"resource\": p[5]}",
+      "sampleTests": [
+        {
+          "args": [
+            "arn:aws:iam::123456789012:role/app"
+          ],
+          "expected": {
+            "partition": "aws",
+            "service": "iam",
+            "region": "",
+            "account": "123456789012",
+            "resource": "role/app"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "arn:aws:lambda:us-east-1:123456789012:function:my-fn"
+          ],
+          "expected": {
+            "partition": "aws",
+            "service": "lambda",
+            "region": "us-east-1",
+            "account": "123456789012",
+            "resource": "function:my-fn"
+          }
+        },
+        {
+          "args": [
+            "arn:aws:s3:::my-bucket/a/b.txt"
+          ],
+          "expected": {
+            "partition": "aws",
+            "service": "s3",
+            "region": "",
+            "account": "",
+            "resource": "my-bucket/a/b.txt"
+          }
+        },
+        {
+          "args": [
+            "arn:aws:logs:eu-west-1:111122223333:log-group:/app:*"
+          ],
+          "expected": {
+            "partition": "aws",
+            "service": "logs",
+            "region": "eu-west-1",
+            "account": "111122223333",
+            "resource": "log-group:/app:*"
+          }
+        },
+        {
+          "args": [
+            "arn:aws-cn:sqs:cn-north-1:111122223333:jobs"
+          ],
+          "expected": {
+            "partition": "aws-cn",
+            "service": "sqs",
+            "region": "cn-north-1",
+            "account": "111122223333",
+            "resource": "jobs"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Notes for setting up AWS access for a new team of four developers.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the steps that go against IAM best practice.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Turn on MFA for every human sign-in.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Store the root account email and password in the team password manager so anyone can use it in an emergency.",
+          "issue": "Root should be locked away with MFA and used almost never, not shared with the team."
+        },
+        {
+          "id": "l3",
+          "text": "Put developers in a group and attach policies to the group, not to each person.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "Give everyone `AdministratorAccess` so nobody gets blocked.",
+          "issue": "Violates least privilege; grant what each job needs and add more on request."
+        },
+        {
+          "id": "l5",
+          "text": "Give EC2 instances a role instead of putting access keys on disk.",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "Review unused permissions each quarter using last-accessed data.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-iam-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A new Lambda function must read items from one DynamoDB table, `orders`.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Create an execution role whose trust policy lets `lambda.amazonaws.com` assume it"
+        },
+        {
+          "id": "s2",
+          "label": "Attach a policy allowing `dynamodb:GetItem` and `dynamodb:Query` on the `orders` table ARN"
+        },
+        {
+          "id": "s3",
+          "label": "Set the function to use that role"
+        },
+        {
+          "id": "s4",
+          "label": "Invoke the function and check CloudWatch Logs for `AccessDenied`"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "The role must exist and have permissions before the function can use it; then test."
+    }
+  },
+  {
+    "id": "eng-aws-iam-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "The CLI says you are not allowed.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You run `aws s3 ls s3://acme-reports` and get `AccessDenied`, though your colleague says your user has read access.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you run first?",
+          "options": [
+            "`aws sts get-caller-identity` to see which identity the CLI is using",
+            "`aws iam create-access-key` to get fresh keys",
+            "Reinstall the AWS CLI",
+            "Ask for `AdministratorAccess`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Most \"I have access\" mismatches come from the CLI using a different profile or role than you think."
+        },
+        {
+          "id": "q2",
+          "question": "It shows an old `sandbox` profile. What fixes it?",
+          "options": [
+            "Use the right profile: `--profile work` or set `AWS_PROFILE=work`",
+            "Delete the bucket policy",
+            "Add the sandbox user to the admin group",
+            "Wait for IAM to propagate for an hour"
+          ],
+          "correctIndex": 0,
+          "explanation": "Pick the intended credentials explicitly; no permission change is needed."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This policy is meant to let a reporting job **read** files in the `reports` bucket.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that grant more than that.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"Version\": \"2012-10-17\",",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "\"Sid\": \"ReadReports\",",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "\"Effect\": \"Allow\",",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "\"Action\": [\"s3:GetObject\", \"s3:DeleteObject\"],",
+          "issue": "Reading needs only `s3:GetObject`; `s3:DeleteObject` lets the job delete reports."
+        },
+        {
+          "id": "l5",
+          "text": "\"Resource\": \"arn:aws:s3:::reports/*\"",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-iam-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main difference between an IAM role and an IAM user?",
+    "mcq": {
+      "options": [
+        "A role has no long-term password or keys; whoever assumes it gets temporary credentials",
+        "A role can only be used by the root user",
+        "A user cannot have policies attached",
+        "Roles only work inside the AWS console"
+      ],
+      "correctIndex": 0,
+      "explanation": "Roles are assumed by people, services or other accounts, and hand out short-lived credentials.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A user's only policy allows `s3:GetObject`. They call `ec2:RunInstances`. What happens?",
+    "mcq": {
+      "options": [
+        "Denied: anything not explicitly allowed is implicitly denied",
+        "Allowed, because no policy denies it",
+        "Allowed for 1 hour",
+        "The call is queued for an admin to approve"
+      ],
+      "correctIndex": 0,
+      "explanation": "IAM denies by default. Without an Allow for the action, the request fails.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A GitHub Actions workflow needs to deploy to AWS. What is the best way to give it credentials?",
+    "mcq": {
+      "options": [
+        "Let it assume a role through GitHub's OIDC provider, getting short-lived credentials",
+        "Store an IAM user's access key as a repository secret",
+        "Commit the access key to a private repo",
+        "Use the root account's keys"
+      ],
+      "correctIndex": 0,
+      "explanation": "OIDC federation removes long-lived keys entirely; each run gets temporary credentials for a scoped role.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`evaluate(statements, action)` returns `\"Allow\"`, `\"ExplicitDeny\"` or `\"ImplicitDeny\"` for one action. Each statement has `Effect` and `Action` (a string or a list, wildcards allowed via `matches`). An explicit Deny always wins, no matter the order. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "evaluate",
+      "starterCode": "function matches(pattern, value) {\n  const re = pattern.replace(/[.+^${}()|[\\]\\\\?]/g, \"\\\\$&\").replace(/\\*/g, \".*\");\n  return new RegExp(\"^\" + re + \"$\", \"i\").test(value);\n}\n\nfunction evaluate(statements, action) {\n  for (const s of statements) {\n    const actions = [].concat(s.Action);\n    if (actions.some((p) => matches(p, action))) {\n      return s.Effect === \"Deny\" ? \"ExplicitDeny\" : \"Allow\";\n    }\n  }\n  return \"ImplicitDeny\";\n}",
+      "referenceSolution": "function matches(pattern, value) {\n  const re = pattern.replace(/[.+^${}()|[\\]\\\\?]/g, \"\\\\$&\").replace(/\\*/g, \".*\");\n  return new RegExp(\"^\" + re + \"$\", \"i\").test(value);\n}\n\nfunction evaluate(statements, action) {\n  let allowed = false;\n  for (const s of statements) {\n    const actions = [].concat(s.Action);\n    if (!actions.some((p) => matches(p, action))) continue;\n    if (s.Effect === \"Deny\") return \"ExplicitDeny\";\n    allowed = true;\n  }\n  return allowed ? \"Allow\" : \"ImplicitDeny\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:*"
+              }
+            ],
+            "s3:GetObject"
+          ],
+          "expected": "Allow"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:*"
+              },
+              {
+                "Effect": "Deny",
+                "Action": "s3:DeleteObject"
+              }
+            ],
+            "s3:DeleteObject"
+          ],
+          "expected": "ExplicitDeny"
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "s3:GetObject",
+                  "s3:ListBucket"
+                ]
+              }
+            ],
+            "s3:PutObject"
+          ],
+          "expected": "ImplicitDeny"
+        },
+        {
+          "args": [
+            [],
+            "s3:GetObject"
+          ],
+          "expected": "ImplicitDeny"
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              },
+              {
+                "Effect": "Deny",
+                "Action": "iam:*"
+              }
+            ],
+            "iam:CreateUser"
+          ],
+          "expected": "ExplicitDeny"
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Deny",
+                "Action": "ec2:*"
+              },
+              {
+                "Effect": "Allow",
+                "Action": "s3:*"
+              }
+            ],
+            "s3:PutObject"
+          ],
+          "expected": "Allow"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`find_wildcards(policy)` lists the `Sid`s (sorted) of **Allow** statements that are too broad: an action of `*` or a whole service (`s3:*`), or a resource of `*`. `Action` and `Resource` may be a string or a list. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "find_wildcards",
+      "starterCode": "def find_wildcards(policy):\n    out = []\n    for s in policy[\"Statement\"]:\n        if s[\"Effect\"] == \"Allow\" and s[\"Action\"] == \"*\":\n            out.append(s[\"Sid\"])\n    return sorted(out)",
+      "referenceSolution": "def _as_list(v):\n    return v if isinstance(v, list) else [v]\n\ndef find_wildcards(policy):\n    out = []\n    for s in policy[\"Statement\"]:\n        if s[\"Effect\"] != \"Allow\":\n            continue\n        broad_action = any(a == \"*\" or a.endswith(\":*\") for a in _as_list(s[\"Action\"]))\n        broad_resource = \"*\" in _as_list(s[\"Resource\"])\n        if broad_action or broad_resource:\n            out.append(s[\"Sid\"])\n    return sorted(out)",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "Statement": [
+                {
+                  "Sid": "All",
+                  "Effect": "Allow",
+                  "Action": "*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          ],
+          "expected": [
+            "All"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "Statement": [
+                {
+                  "Sid": "S3",
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": "arn:aws:s3:::b/*"
+                }
+              ]
+            }
+          ],
+          "expected": [
+            "S3"
+          ]
+        },
+        {
+          "args": [
+            {
+              "Statement": [
+                {
+                  "Sid": "Read",
+                  "Effect": "Allow",
+                  "Action": "s3:GetObject",
+                  "Resource": "*"
+                }
+              ]
+            }
+          ],
+          "expected": [
+            "Read"
+          ]
+        },
+        {
+          "args": [
+            {
+              "Statement": [
+                {
+                  "Sid": "NoIam",
+                  "Effect": "Deny",
+                  "Action": "*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "Statement": [
+                {
+                  "Sid": "Get",
+                  "Effect": "Allow",
+                  "Action": "s3:Get*",
+                  "Resource": "arn:aws:s3:::b/*"
+                },
+                {
+                  "Sid": "Ec2",
+                  "Effect": "Allow",
+                  "Action": [
+                    "ec2:Describe*",
+                    "ec2:*"
+                  ],
+                  "Resource": [
+                    "arn:aws:ec2:*:*:instance/*"
+                  ]
+                }
+              ]
+            }
+          ],
+          "expected": [
+            "Ec2"
+          ]
+        },
+        {
+          "args": [
+            {
+              "Statement": []
+            }
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The trust policy of the role your GitHub Actions deploy job assumes via OIDC.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the line that lets the wrong callers in.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"Effect\": \"Allow\",",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "\"Principal\": { \"Federated\": \"arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com\" },",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "\"Action\": \"sts:AssumeRoleWithWebIdentity\",",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "\"StringEquals\": { \"token.actions.githubusercontent.com:aud\": \"sts.amazonaws.com\" },",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "\"StringLike\": { \"token.actions.githubusercontent.com:sub\": \"repo:*\" }",
+          "issue": "Any repository on GitHub can assume this role. Pin it, e.g. `repo:acme/api:ref:refs/heads/main`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-iam-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An app uses an IAM user's access key and you must rotate it without downtime.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Create a second access key for the user"
+        },
+        {
+          "id": "s2",
+          "label": "Deploy the app with the new key"
+        },
+        {
+          "id": "s3",
+          "label": "Check the old key's last-used time to confirm nothing still uses it"
+        },
+        {
+          "id": "s4",
+          "label": "Deactivate the old key"
+        },
+        {
+          "id": "s5",
+          "label": "Delete the old key after a waiting period"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "A user can hold two keys, so the new one goes live before the old one stops. Deactivating before deleting gives you an undo."
+    }
+  },
+  {
+    "id": "eng-aws-iam-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A developer should manage only their team's servers.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Developers on the web team must be able to start and stop EC2 instances tagged `team=web`, and no others.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you express this in IAM?",
+          "options": [
+            "Allow `ec2:StartInstances` and `ec2:StopInstances` with a condition `aws:ResourceTag/team` equals `web`",
+            "List every instance ID in the policy and update it on each launch",
+            "Give them `ec2:*` and ask them to be careful",
+            "Use a separate AWS account for every instance"
+          ],
+          "correctIndex": 0,
+          "explanation": "Tag-based conditions (ABAC) follow the tags, so new instances need no policy change."
+        },
+        {
+          "id": "q2",
+          "question": "Testing shows they can still terminate any instance. Why?",
+          "options": [
+            "Another policy attached to them (for example through a group) allows it; permissions from all attached policies add up",
+            "Conditions are ignored for EC2",
+            "Terminate is always allowed for the instance owner",
+            "IAM changes take a day to apply"
+          ],
+          "correctIndex": 0,
+          "explanation": "Effective permissions are the union of all Allows (minus Denies). Find the broad policy and remove it or add a Deny."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A Node.js service that reads files from S3, as written in a PR.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that leak or hard-code credentials.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const s3 = new S3Client({ region: \"eu-west-1\",",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  credentials: { accessKeyId: \"AKIAIOSFODNN7EXAMPLE\", secretAccessKey: \"wJalrXUtnFEMI/K7MDENG\" } });",
+          "issue": "Hard-coded keys end up in git; let the SDK pick up the instance or task role."
+        },
+        {
+          "id": "l3",
+          "text": "logger.info(\"startup config\", process.env);",
+          "issue": "Logs every environment variable, including any secrets."
+        },
+        {
+          "id": "l4",
+          "text": "const res = await s3.send(new GetObjectCommand({ Bucket, Key }));",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "return res.Body.transformToString();",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "module.exports = { readFile };",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-iam-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A user is in a group whose policy allows `s3:*`. Their own user policy denies `s3:DeleteObject`. Can they delete objects?",
+    "mcq": {
+      "options": [
+        "No: an explicit Deny overrides any Allow",
+        "Yes: group policies win over user policies",
+        "Yes: the more recent policy wins",
+        "Only in buckets they created"
+      ],
+      "correctIndex": 0,
+      "explanation": "Policy order and attachment point do not matter; any matching explicit Deny wins.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A role's identity policy allows `iam:*` and `s3:*`. Its permissions boundary allows only `s3:*`. What can the role do?",
+    "mcq": {
+      "options": [
+        "Only S3 actions: effective permissions are the intersection of the policy and the boundary",
+        "IAM and S3 actions",
+        "Nothing: a boundary blocks everything it does not deny",
+        "Only IAM actions"
+      ],
+      "correctIndex": 0,
+      "explanation": "A boundary sets the maximum; it grants nothing on its own and caps what identity policies allow.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Launching an EC2 instance with an instance profile fails with an error about `iam:PassRole`. What does that permission control?",
+    "mcq": {
+      "options": [
+        "Whether you may hand a role to an AWS service, such as attaching it to an instance",
+        "Whether you may change your own password",
+        "Whether a role may assume another role",
+        "Whether you may read IAM policies"
+      ],
+      "correctIndex": 0,
+      "explanation": "`iam:PassRole` stops people from giving a service a more powerful role than they have themselves.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`evaluate(statements, action, resource)` now checks resources too: a statement applies only if one of its `Action` patterns matches the action **and** one of its `Resource` patterns matches the resource. Use `matches` for both (wildcards). Explicit Deny wins. Fix the resource check.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "evaluate",
+      "starterCode": "function matches(pattern, value) {\n  const re = pattern.replace(/[.+^${}()|[\\]\\\\?]/g, \"\\\\$&\").replace(/\\*/g, \".*\");\n  return new RegExp(\"^\" + re + \"$\", \"i\").test(value);\n}\n\nfunction evaluate(statements, action, resource) {\n  let allowed = false;\n  for (const s of statements) {\n    const actions = [].concat(s.Action);\n    const resources = [].concat(s.Resource);\n    if (!actions.some((p) => matches(p, action)) || !resources.includes(resource)) continue;\n    if (s.Effect === \"Deny\") return \"ExplicitDeny\";\n    allowed = true;\n  }\n  return allowed ? \"Allow\" : \"ImplicitDeny\";\n}",
+      "referenceSolution": "function matches(pattern, value) {\n  const re = pattern.replace(/[.+^${}()|[\\]\\\\?]/g, \"\\\\$&\").replace(/\\*/g, \".*\");\n  return new RegExp(\"^\" + re + \"$\", \"i\").test(value);\n}\n\nfunction evaluate(statements, action, resource) {\n  let allowed = false;\n  for (const s of statements) {\n    const actions = [].concat(s.Action);\n    const resources = [].concat(s.Resource);\n    if (!actions.some((p) => matches(p, action)) || !resources.some((p) => matches(p, resource))) continue;\n    if (s.Effect === \"Deny\") return \"ExplicitDeny\";\n    allowed = true;\n  }\n  return allowed ? \"Allow\" : \"ImplicitDeny\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::acme/report.csv"
+              }
+            ],
+            "s3:GetObject",
+            "arn:aws:s3:::acme/report.csv"
+          ],
+          "expected": "Allow"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::acme/*"
+              }
+            ],
+            "s3:GetObject",
+            "arn:aws:s3:::acme/a/b.txt"
+          ],
+          "expected": "Allow"
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:*",
+                "Resource": "arn:aws:s3:::acme/*"
+              },
+              {
+                "Effect": "Deny",
+                "Action": "s3:*",
+                "Resource": "arn:aws:s3:::acme/secret/*"
+              }
+            ],
+            "s3:GetObject",
+            "arn:aws:s3:::acme/secret/k.pem"
+          ],
+          "expected": "ExplicitDeny"
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::acme/*"
+              }
+            ],
+            "s3:GetObject",
+            "arn:aws:s3:::other/a.txt"
+          ],
+          "expected": "ImplicitDeny"
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:ListBucket",
+                "Resource": [
+                  "arn:aws:s3:::a",
+                  "arn:aws:s3:::acme*"
+                ]
+              }
+            ],
+            "s3:ListBucket",
+            "arn:aws:s3:::acme-logs"
+          ],
+          "expected": "Allow"
+        },
+        {
+          "args": [
+            [],
+            "s3:GetObject",
+            "arn:aws:s3:::acme/x"
+          ],
+          "expected": "ImplicitDeny"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`conditions_match(condition, context)` evaluates an IAM `Condition` block against request context keys. Supported operators: `StringEquals`, `StringLike` (with `*`), `Bool`. **Every** operator and key must match (AND); a list of values for one key means any of them (OR). A key missing from the context does not match. An empty condition matches. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "conditions_match",
+      "starterCode": "from fnmatch import fnmatchcase\n\ndef conditions_match(condition, context):\n    for op, block in condition.items():\n        for key, expected in block.items():\n            values = expected if isinstance(expected, list) else [expected]\n            actual = context.get(key)\n            if actual is None:\n                continue\n            if op == \"StringLike\":\n                ok = any(fnmatchcase(actual, v) for v in values)\n            else:\n                ok = any(actual == v for v in values)\n            if ok:\n                return True\n    return False",
+      "referenceSolution": "from fnmatch import fnmatchcase\n\ndef conditions_match(condition, context):\n    for op, block in condition.items():\n        for key, expected in block.items():\n            values = expected if isinstance(expected, list) else [expected]\n            actual = context.get(key)\n            if actual is None:\n                return False\n            if op == \"StringLike\":\n                ok = any(fnmatchcase(actual, v) for v in values)\n            else:\n                ok = any(actual == v for v in values)\n            if not ok:\n                return False\n    return True",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "StringEquals": {
+                "aws:RequestedRegion": [
+                  "eu-west-1",
+                  "eu-central-1"
+                ]
+              }
+            },
+            {
+              "aws:RequestedRegion": "eu-west-1"
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            {
+              "aws:RequestedRegion": "us-east-1"
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "StringEquals": {
+                "aws:RequestedRegion": "eu-west-1"
+              },
+              "Bool": {
+                "aws:SecureTransport": "true"
+              }
+            },
+            {
+              "aws:RequestedRegion": "eu-west-1",
+              "aws:SecureTransport": "false"
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "StringLike": {
+                "s3:prefix": "home/alice/*"
+              }
+            },
+            {
+              "s3:prefix": "home/alice/docs/"
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "StringEquals": {
+                "aws:PrincipalTag/team": "web"
+              }
+            },
+            {}
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "StringLike": {
+                "s3:prefix": [
+                  "home/bob/*",
+                  "public/*"
+                ]
+              },
+              "Bool": {
+                "aws:SecureTransport": "true"
+              }
+            },
+            {
+              "s3:prefix": "home/alice/x",
+              "aws:SecureTransport": "true"
+            }
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The permissions policy for the CI role that deploys the static site. Each line is one statement.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the statements that let the CI role escalate its own privileges.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Allow `s3:PutObject` on `arn:aws:s3:::acme-site/*`",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Allow `s3:ListBucket` on `arn:aws:s3:::acme-site`",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "Allow `cloudfront:CreateInvalidation` on `arn:aws:cloudfront::111122223333:distribution/E1ABC`",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "Allow `iam:PassRole` on `*`",
+          "issue": "Can hand any role, including admin roles, to a service it controls. Scope it to the one role it must pass."
+        },
+        {
+          "id": "l5",
+          "text": "Allow `iam:CreateAccessKey` on `*`",
+          "issue": "Can mint keys for any user, including admins."
+        },
+        {
+          "id": "l6",
+          "text": "Allow `logs:PutLogEvents` on `arn:aws:logs:eu-west-1:111122223333:log-group:/ci/*`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-iam-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "AWS evaluates a request from a role in an account that belongs to an AWS Organization.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the checks in the order AWS's policy evaluation logic applies them.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Any explicit Deny in any applicable policy"
+        },
+        {
+          "id": "s2",
+          "label": "Service control policies (SCPs) of the organization"
+        },
+        {
+          "id": "s3",
+          "label": "Resource-based policies (e.g. a bucket policy)"
+        },
+        {
+          "id": "s4",
+          "label": "Identity-based policies on the role"
+        },
+        {
+          "id": "s5",
+          "label": "The role's permissions boundary"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Explicit denies are checked first and end the evaluation. Then SCPs, resource-based policies, identity-based policies and permissions boundaries, as in AWS's evaluation flowchart."
+    }
+  },
+  {
+    "id": "eng-aws-iam-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "CI in a tools account deploys into the prod account.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A CI role in the tools account (111111111111) must deploy to prod (222222222222) by assuming the role `deployer` there.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What must be in place?",
+          "options": [
+            "`deployer`'s trust policy names the CI role's ARN, and the CI role has `sts:AssumeRole` on `deployer`'s ARN",
+            "Only the CI role's `sts:AssumeRole` permission",
+            "Only `deployer`'s trust policy",
+            "An access key for `deployer` stored in the tools account"
+          ],
+          "correctIndex": 0,
+          "explanation": "Assuming a cross-account role needs both: the target trusts the caller, and the caller is allowed to assume it."
+        },
+        {
+          "id": "q2",
+          "question": "AssumeRole now works, but `s3:PutObject` to the prod bucket returns `AccessDenied`. Where do you look?",
+          "options": [
+            "The `deployer` role's permissions, the bucket policy, and any SCP on the prod account",
+            "The CI role's S3 permissions in the tools account",
+            "The GitHub repository settings",
+            "The tools account's root user"
+          ],
+          "correctIndex": 0,
+          "explanation": "After AssumeRole the request is made as `deployer`, so prod-side policies decide."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A PR description for a new support role.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the changes that are not least privilege.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "New role `support-readonly` with the AWS managed `ViewOnlyAccess` policy.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Adds `secretsmanager:GetSecretValue` on `*` so support can debug config issues.",
+          "issue": "Lets support read every secret in the account, including database passwords."
+        },
+        {
+          "id": "l3",
+          "text": "Requires MFA through an `aws:MultiFactorAuthPresent` condition.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "Started from a copy of the admin role's inline policy and removed the lines that looked dangerous.",
+          "issue": "A deny-by-memory approach; start from nothing and add only what support needs."
+        },
+        {
+          "id": "l5",
+          "text": "Maximum session duration is 1 hour.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-iam-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An SCP on a member account denies `ec2:*` when `aws:RequestedRegion` is not in the EU. A user there with `AdministratorAccess` calls `ec2:RunInstances` in `us-east-1`. What happens?",
+    "mcq": {
+      "options": [
+        "Denied: SCPs limit every principal in the account, admins included",
+        "Allowed: AdministratorAccess overrides SCPs",
+        "Allowed, but logged as a warning",
+        "Denied only if the user lacks MFA"
+      ],
+      "correctIndex": 0,
+      "explanation": "SCPs set the maximum permissions for the account; an explicit Deny there applies to everyone except the management account.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In the **same** account, a bucket policy allows IAM user `alice` to `s3:GetObject`. Alice's own policies do not mention S3. Can she read objects?",
+    "mcq": {
+      "options": [
+        "Yes: within one account, an Allow in either the resource-based or the identity-based policy is enough",
+        "No: she also needs an identity policy",
+        "Only through a presigned URL",
+        "Only if the bucket is public"
+      ],
+      "correctIndex": 0,
+      "explanation": "For same-account access to an IAM user, policies are combined; an Allow in the bucket policy suffices when nothing denies.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this statement do?\n\n```json\n{ \"Effect\": \"Allow\", \"NotAction\": \"iam:*\", \"Resource\": \"*\" }\n```",
+    "mcq": {
+      "options": [
+        "Allows every action except IAM actions; IAM actions are simply not allowed by this statement",
+        "Denies all IAM actions, even if another policy allows them",
+        "Allows only IAM actions",
+        "It is invalid; NotAction only works with Deny"
+      ],
+      "correctIndex": 0,
+      "explanation": "`NotAction` with Allow grants everything not listed. It does not deny the listed actions; another policy could still allow them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`escalationRisks(actions)` takes the action patterns a policy allows (wildcards allowed, case-insensitive) and returns which entries of `RISKY` they grant, in `RISKY` order. Fix it: `iam:*`, `iam:Put*` or `*` must count too.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "escalationRisks",
+      "starterCode": "function matches(pattern, value) {\n  const re = pattern.replace(/[.+^${}()|[\\]\\\\?]/g, \"\\\\$&\").replace(/\\*/g, \".*\");\n  return new RegExp(\"^\" + re + \"$\", \"i\").test(value);\n}\n\nconst RISKY = [\n  \"iam:AttachRolePolicy\", \"iam:AttachUserPolicy\", \"iam:CreateAccessKey\", \"iam:CreatePolicyVersion\",\n  \"iam:PassRole\", \"iam:PutRolePolicy\", \"iam:PutUserPolicy\", \"iam:UpdateAssumeRolePolicy\",\n];\n\nfunction escalationRisks(actions) {\n  return RISKY.filter((r) => actions.includes(r));\n}",
+      "referenceSolution": "function matches(pattern, value) {\n  const re = pattern.replace(/[.+^${}()|[\\]\\\\?]/g, \"\\\\$&\").replace(/\\*/g, \".*\");\n  return new RegExp(\"^\" + re + \"$\", \"i\").test(value);\n}\n\nconst RISKY = [\n  \"iam:AttachRolePolicy\", \"iam:AttachUserPolicy\", \"iam:CreateAccessKey\", \"iam:CreatePolicyVersion\",\n  \"iam:PassRole\", \"iam:PutRolePolicy\", \"iam:PutUserPolicy\", \"iam:UpdateAssumeRolePolicy\",\n];\n\nfunction escalationRisks(actions) {\n  return RISKY.filter((r) => actions.some((p) => matches(p, r)));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "s3:GetObject",
+              "iam:PassRole"
+            ]
+          ],
+          "expected": [
+            "iam:PassRole"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "iam:Put*",
+              "s3:*"
+            ]
+          ],
+          "expected": [
+            "iam:PutRolePolicy",
+            "iam:PutUserPolicy"
+          ]
+        },
+        {
+          "args": [
+            [
+              "*"
+            ]
+          ],
+          "expected": [
+            "iam:AttachRolePolicy",
+            "iam:AttachUserPolicy",
+            "iam:CreateAccessKey",
+            "iam:CreatePolicyVersion",
+            "iam:PassRole",
+            "iam:PutRolePolicy",
+            "iam:PutUserPolicy",
+            "iam:UpdateAssumeRolePolicy"
+          ]
+        },
+        {
+          "args": [
+            [
+              "iam:passrole"
+            ]
+          ],
+          "expected": [
+            "iam:PassRole"
+          ]
+        },
+        {
+          "args": [
+            [
+              "iam:Get*",
+              "iam:List*"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`effective(identity, boundary, scp, action)` says whether a role may perform `action`. Each argument is a list of statements `{Effect, Action}` (`Action` is a string or list; use `_decide`). `boundary` is `None` when the role has no permissions boundary. The action is allowed only if no layer denies it and **every** layer present allows it. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "effective",
+      "starterCode": "from fnmatch import fnmatchcase\n\ndef _decide(statements, action):\n    result = None\n    for s in statements:\n        acts = s[\"Action\"] if isinstance(s[\"Action\"], list) else [s[\"Action\"]]\n        if any(fnmatchcase(action.lower(), p.lower()) for p in acts):\n            if s[\"Effect\"] == \"Deny\":\n                return \"deny\"\n            result = \"allow\"\n    return result\n\ndef effective(identity, boundary, scp, action):\n    results = [_decide(layer, action) for layer in [identity, scp]]\n    if \"deny\" in results:\n        return False\n    return all(r == \"allow\" for r in results)",
+      "referenceSolution": "from fnmatch import fnmatchcase\n\ndef _decide(statements, action):\n    result = None\n    for s in statements:\n        acts = s[\"Action\"] if isinstance(s[\"Action\"], list) else [s[\"Action\"]]\n        if any(fnmatchcase(action.lower(), p.lower()) for p in acts):\n            if s[\"Effect\"] == \"Deny\":\n                return \"deny\"\n            result = \"allow\"\n    return result\n\ndef effective(identity, boundary, scp, action):\n    layers = [identity, scp] + ([boundary] if boundary is not None else [])\n    results = [_decide(layer, action) for layer in layers]\n    if \"deny\" in results:\n        return False\n    return all(r == \"allow\" for r in results)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:*"
+              }
+            ],
+            null,
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            "s3:GetObject"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:*"
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            "ec2:RunInstances"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:*"
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            "s3:PutObject"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            null,
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              },
+              {
+                "Effect": "Deny",
+                "Action": "iam:*"
+              }
+            ],
+            "iam:CreateUser"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": "s3:GetObject"
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            "s3:DeleteObject"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "ec2:Start*",
+                  "ec2:Stop*"
+                ]
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "ec2:*"
+              },
+              {
+                "Effect": "Deny",
+                "Action": "ec2:StopInstances"
+              }
+            ],
+            [
+              {
+                "Effect": "Allow",
+                "Action": "*"
+              }
+            ],
+            "ec2:StopInstances"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A role a third-party analytics vendor (account 999988887777) assumes to read your exports.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the parts that put you at risk.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Trust: `\"Principal\": { \"AWS\": \"arn:aws:iam::999988887777:root\" }`",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Trust: `\"Action\": \"sts:AssumeRole\"`",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "Trust: no `Condition` block",
+          "issue": "No `sts:ExternalId` check, so the vendor can be tricked into using this role for another customer (confused deputy)."
+        },
+        {
+          "id": "l4",
+          "text": "Permissions: Allow `s3:GetObject` on `arn:aws:s3:::acme-exports/*`",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "Permissions: Allow `s3:*` on `arn:aws:s3:::acme-exports`",
+          "issue": "Bucket-level `s3:*` includes `PutBucketPolicy` and `DeleteBucket`; listing needs only `s3:ListBucket`."
+        },
+        {
+          "id": "l6",
+          "text": "Maximum session duration: 1 hour",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-iam-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Your company still has 40 IAM users with long-lived access keys. You are moving everyone to IAM Identity Center (SSO).",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the migration steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Inventory every user, access key and its last-used date"
+        },
+        {
+          "id": "s2",
+          "label": "Set up Identity Center with permission sets per job function"
+        },
+        {
+          "id": "s3",
+          "label": "Move people over to SSO and confirm they can work"
+        },
+        {
+          "id": "s4",
+          "label": "Deactivate the old users' keys and watch for breakage"
+        },
+        {
+          "id": "s5",
+          "label": "Delete the old users and add an SCP denying `iam:CreateUser` and `iam:CreateAccessKey`"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Know what exists, build the replacement, move people, switch off the old path reversibly, then remove it and stop it coming back."
+    }
+  },
+  {
+    "id": "eng-aws-iam-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "CloudTrail shows something odd.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A developer role, `dev-sandbox`, is allowed `iam:CreatePolicyVersion` on `*`. CloudTrail shows it called `CreatePolicyVersion` with `SetAsDefault: true` on a policy attached to itself, then created IAM users.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What happened?",
+          "options": [
+            "Privilege escalation: it rewrote its own attached policy to grant itself more access",
+            "A normal IAM policy update by AWS",
+            "A bug in CloudTrail",
+            "The role assumed the root user"
+          ],
+          "correctIndex": 0,
+          "explanation": "Being able to publish a new default version of your own policy is equivalent to granting yourself anything."
+        },
+        {
+          "id": "q2",
+          "question": "What do you do first?",
+          "options": [
+            "Revoke the role's active sessions and remove its IAM write permissions",
+            "Delete the CloudTrail logs to reduce noise",
+            "Wait to see what it does next",
+            "Rotate the root password only"
+          ],
+          "correctIndex": 0,
+          "explanation": "Revoking sessions invalidates credentials already issued; then remove the permission that allowed it."
+        },
+        {
+          "id": "q3",
+          "question": "How do you prevent it for roles that developers create in future?",
+          "options": [
+            "Require a permissions boundary on those roles that excludes IAM write actions",
+            "Ask developers not to use IAM",
+            "Turn off CloudTrail",
+            "Give every role `ReadOnlyAccess` on top"
+          ],
+          "correctIndex": 0,
+          "explanation": "A boundary caps what a role can ever do, even if its own policy is rewritten."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "One bucket holds files for many customers (tenants).",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Each tenant's files live under `s3://acme-tenants/{tenantId}/`. Your app assumes a role per request and passes the tenant ID as a session tag `tenant`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you limit each session to its tenant's prefix with one policy?",
+          "options": [
+            "Resource `arn:aws:s3:::acme-tenants/${aws:PrincipalTag/tenant}/*`",
+            "One IAM role per tenant, created by hand",
+            "Check the prefix in the frontend",
+            "A bucket policy listing every tenant ID"
+          ],
+          "correctIndex": 0,
+          "explanation": "Policy variables with session tags (ABAC) give one policy that scales to any number of tenants."
+        },
+        {
+          "id": "q2",
+          "question": "What must you also control?",
+          "options": [
+            "Who may set the `tenant` session tag, so callers cannot tag themselves as another tenant",
+            "The S3 storage class of each tenant",
+            "The number of objects per prefix",
+            "Nothing else; tags are always trustworthy"
+          ],
+          "correctIndex": 0,
+          "explanation": "If any caller can choose its own tag value, the isolation is gone. Restrict `sts:TagSession` to your trusted app."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-iam-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A bucket policy contains `\"Condition\": { \"StringEquals\": { \"aws:PrincipalOrgID\": \"o-abc123\" } }` on an Allow. What does it do?",
+    "mcq": {
+      "options": [
+        "Limits the Allow to principals from accounts in your AWS Organization",
+        "Grants access to every account in the world",
+        "Encrypts objects with the organization's key",
+        "Requires MFA for organization members"
+      ],
+      "correctIndex": 0,
+      "explanation": "`aws:PrincipalOrgID` lets you grant to the whole org without listing every account ID.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why does a third-party vendor ask you to put an `sts:ExternalId` condition in the role you create for them?",
+    "mcq": {
+      "options": [
+        "To stop another of their customers from tricking the vendor into accessing your account (the confused deputy problem)",
+        "To encrypt the session",
+        "To make the role work across regions",
+        "To avoid CloudTrail logging"
+      ],
+      "correctIndex": 0,
+      "explanation": "The external ID ties the role to your contract with the vendor, so knowing your role ARN is not enough.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-iam-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-iam",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A policy allows `s3:*` on `arn:aws:s3:::home/${aws:username}/*`. What can IAM user `alice` reach?",
+    "mcq": {
+      "options": [
+        "Only objects under `home/alice/`",
+        "Every object under `home/`",
+        "Nothing; variables are not allowed in resources",
+        "Objects of any user whose name she knows"
+      ],
+      "correctIndex": 0,
+      "explanation": "`${aws:username}` is replaced with the caller's user name at evaluation time.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

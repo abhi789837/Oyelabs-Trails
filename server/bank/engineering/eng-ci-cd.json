@@ -1,0 +1,1665 @@
+[
+  {
+    "id": "eng-ci-cd-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The deploy step should run only for pushes to the `main` branch. GitHub gives the ref as `refs/heads/<branch>`. Fix `shouldDeploy`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "shouldDeploy",
+      "starterCode": "function shouldDeploy(ref) {\n  return ref.includes(\"main\");\n}",
+      "referenceSolution": "function shouldDeploy(ref) {\n  return ref === \"refs/heads/main\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "refs/heads/main"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "refs/heads/maintenance"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "refs/heads/feature/main-menu"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "refs/tags/v1.0.0"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "refs/heads/dev"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A release job reads the version from a git tag like `v1.4.2` and needs `[major, minor, patch]` as integers. Tags may or may not start with `v`. Fix `parse_version`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_version",
+      "starterCode": "def parse_version(tag):\n    return [int(p) for p in tag.split(\".\")]",
+      "referenceSolution": "def parse_version(tag):\n    if tag.startswith(\"v\"):\n        tag = tag[1:]\n    return [int(p) for p in tag.split(\".\")]",
+      "sampleTests": [
+        {
+          "args": [
+            "v1.4.2"
+          ],
+          "expected": [
+            1,
+            4,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2.0.0"
+          ],
+          "expected": [
+            2,
+            0,
+            0
+          ]
+        },
+        {
+          "args": [
+            "v10.21.3"
+          ],
+          "expected": [
+            10,
+            21,
+            3
+          ]
+        },
+        {
+          "args": [
+            "v0.0.1"
+          ],
+          "expected": [
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A pipeline for a Node web app.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the stages in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Check out the code"
+        },
+        {
+          "id": "s2",
+          "label": "Install dependencies (`npm ci`)"
+        },
+        {
+          "id": "s3",
+          "label": "Lint and type-check"
+        },
+        {
+          "id": "s4",
+          "label": "Run the tests"
+        },
+        {
+          "id": "s5",
+          "label": "Build the production bundle"
+        },
+        {
+          "id": "s6",
+          "label": "Deploy"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "explanation": "Cheap, fast checks first so failures show up early; only build and deploy what passed."
+    }
+  },
+  {
+    "id": "eng-ci-cd-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A GitHub Actions workflow for a Node app.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are mistakes.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "on:\n  push:\n    branches: [main]",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "jobs:\n  test:\n    runs-on: ubuntu-latest",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "      - uses: actions/checkout@v4",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "      - run: npm install",
+          "issue": "In CI use `npm ci`: it installs exactly what the lockfile says and fails if it is out of sync."
+        },
+        {
+          "id": "l5",
+          "text": "      - run: npm test",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "        env:\n          API_KEY: sk_live_8f2a9c71",
+          "issue": "A real key in the workflow file is committed to git; use `${{ secrets.API_KEY }}`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ci-cd-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "Tests pass on your laptop but fail in CI.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The CI log shows `Cannot find module 'date-fns'`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the most likely cause?",
+          "options": [
+            "The package is installed locally but missing from `package.json`",
+            "GitHub's servers are down",
+            "CI runs tests in a random order",
+            "The test file is too long"
+          ],
+          "correctIndex": 0,
+          "explanation": "CI starts from a clean checkout, so anything not declared in package.json is missing."
+        },
+        {
+          "id": "q2",
+          "question": "What is the fix?",
+          "options": [
+            "`npm install date-fns` and commit `package.json` and the lockfile",
+            "Add `continue-on-error: true` to the test step",
+            "Delete the test",
+            "Re-run the job until it passes"
+          ],
+          "correctIndex": 0,
+          "explanation": "Declaring the dependency and committing the lockfile makes CI match your machine."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A teammate's notes on the team's CI setup.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the statements that are wrong.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Every pull request runs lint and tests before it can be merged.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "If CI is red, merge anyway and fix it in the next PR.",
+          "issue": "A red main branch blocks everyone and hides new failures; fix or revert first."
+        },
+        {
+          "id": "l3",
+          "text": "Secrets are stored in the repository's Actions secrets.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "Deploys to production run only from `main`.",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "Flaky tests are fine as long as a re-run passes.",
+          "issue": "Flaky tests train people to ignore failures; quarantine and fix them."
+        },
+        {
+          "id": "l6",
+          "text": "The workflow file lives in `.github/workflows/`.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ci-cd-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `on: pull_request` in a GitHub Actions workflow do?",
+    "mcq": {
+      "options": [
+        "Runs the workflow when a pull request is opened or updated",
+        "Runs it only after a pull request is merged",
+        "Runs it on a schedule",
+        "Runs it only when someone clicks Run"
+      ],
+      "correctIndex": 0,
+      "explanation": "Opening, reopening or pushing to a PR triggers it, so checks run before merge.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Where should a deploy token used by a workflow be kept?",
+    "mcq": {
+      "options": [
+        "In the repository or environment secrets, referenced as `${{ secrets.NAME }}`",
+        "In the workflow YAML",
+        "In a `.env` file committed to the repo",
+        "In the README"
+      ],
+      "correctIndex": 0,
+      "explanation": "Secrets are encrypted, masked in logs and never stored in git.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why run tests in CI instead of trusting that developers ran them locally?",
+    "mcq": {
+      "options": [
+        "CI runs the same checks on a clean machine for every change",
+        "CI tests run faster than local tests",
+        "Local tests cannot use a database",
+        "CI fixes failing tests automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "A clean, consistent environment catches \"works on my machine\" problems and forgotten runs.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The npm cache key should change when the OS, the Node **major** version or the lockfile changes, but not on Node patch updates. Fix `cacheKey` to return `<os>-node<major>-<lockHash>`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cacheKey",
+      "starterCode": "function cacheKey(os, nodeVersion, lockHash) {\n  return `${os}-node${nodeVersion}-${lockHash}`;\n}",
+      "referenceSolution": "function cacheKey(os, nodeVersion, lockHash) {\n  const major = nodeVersion.replace(/^v/, \"\").split(\".\")[0];\n  return `${os}-node${major}-${lockHash}`;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "Linux",
+            "20.11.1",
+            "ab12"
+          ],
+          "expected": "Linux-node20-ab12"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "macOS",
+            "18.19.0",
+            "ff00"
+          ],
+          "expected": "macOS-node18-ff00"
+        },
+        {
+          "args": [
+            "Linux",
+            "v22.3.0",
+            "9c9c"
+          ],
+          "expected": "Linux-node22-9c9c"
+        },
+        {
+          "args": [
+            "Windows",
+            "20",
+            "x1"
+          ],
+          "expected": "Windows-node20-x1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Skip the test job when a change touches only docs. `should_run_tests(changed)` gets the changed file paths. Docs are files ending in `.md` or under `docs/`. Return `True` if any changed file is not docs; an empty list means nothing to test.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "should_run_tests",
+      "starterCode": "def should_run_tests(changed):\n    return not any(f.endswith(\".md\") for f in changed)",
+      "referenceSolution": "def should_run_tests(changed):\n    def is_doc(f):\n        return f.endswith(\".md\") or f.startswith(\"docs/\")\n    return any(not is_doc(f) for f in changed)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "src/app.ts",
+              "README.md"
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "README.md",
+              "docs/setup.md"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              "docs/diagram.png"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              "src/a.ts"
+            ]
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A deploy workflow step. The repo is public.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that can leak a secret into the logs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "- name: Deploy\n  env:\n    TOKEN: ${{ secrets.DEPLOY_TOKEN }}",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  run: |\n    set -x",
+          "issue": "`set -x` echoes every command with expanded values; a transformed secret (e.g. base64) is not masked."
+        },
+        {
+          "id": "l3",
+          "text": "    echo \"Deploying with $TOKEN\"",
+          "issue": "Printing the secret: masking is best-effort and any variation of it leaks."
+        },
+        {
+          "id": "l4",
+          "text": "    ./deploy.sh --env production",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    curl -fsS https://status.example.com/ping",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    echo \"done\"",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ci-cd-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Releasing version 2.3.0 of a library from `main`.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Merge the last PR; CI is green on `main`"
+        },
+        {
+          "id": "s2",
+          "label": "Bump the version and update the changelog"
+        },
+        {
+          "id": "s3",
+          "label": "Create and push the tag `v2.3.0`"
+        },
+        {
+          "id": "s4",
+          "label": "The tag-triggered workflow builds and publishes the package"
+        },
+        {
+          "id": "s5",
+          "label": "Check the published package installs"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "The tag marks a tested commit; publishing from the tag workflow means every release is built the same way."
+    }
+  },
+  {
+    "id": "eng-ci-cd-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A test fails about one run in five.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`checkout.spec.ts` fails randomly in CI with a timeout and always passes when re-run.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What should the team do first?",
+          "options": [
+            "Quarantine it (skip with a ticket) so `main` stays trustworthy, and investigate",
+            "Add automatic retries to every job",
+            "Ignore it; re-run when it fails",
+            "Delete the whole test suite"
+          ],
+          "correctIndex": 0,
+          "explanation": "A known-flaky test erodes trust in every red build; isolate it quickly but track the fix."
+        },
+        {
+          "id": "q2",
+          "question": "The test waits a fixed `sleep(2000)` for an API call. What is the real fix?",
+          "options": [
+            "Wait for the response or the element to appear instead of a fixed sleep",
+            "Increase the sleep to 10 s",
+            "Run the test first",
+            "Use a faster runner"
+          ],
+          "correctIndex": 0,
+          "explanation": "Fixed sleeps race against variable CI speed; waiting on the actual condition removes the race."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Caching for a Node project in GitHub Actions.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that make the cache wrong or useless.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "- uses: actions/cache@v4",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  with:\n    path: ~/.npm",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    key: npm-cache",
+          "issue": "A fixed key never changes, so the cache is saved once and goes stale as dependencies change. Include `hashFiles('package-lock.json')`."
+        },
+        {
+          "id": "l4",
+          "text": "- run: npm ci",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "- uses: actions/cache@v4\n  with:\n    path: dist\n    key: build-${{ github.sha }}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "- run: npm test",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ci-cd-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `needs: build` on a `deploy` job do?",
+    "mcq": {
+      "options": [
+        "`deploy` waits for `build` to succeed and is skipped if it fails",
+        "It runs both jobs in parallel",
+        "It copies the build output into `deploy` automatically",
+        "It reruns `build` after `deploy`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`needs` orders jobs; files still have to be passed with artifacts.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why include the lockfile's hash in a dependency cache key?",
+    "mcq": {
+      "options": [
+        "The cache is invalidated exactly when dependencies change",
+        "It makes the cache smaller",
+        "GitHub requires it",
+        "It speeds up the hash function"
+      ],
+      "correctIndex": 0,
+      "explanation": "Same lockfile, same dependencies: reuse. Changed lockfile: new key, fresh install.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A `build` job produces `dist/` that the `deploy` job needs. What should you use?",
+    "mcq": {
+      "options": [
+        "Upload it as an artifact in `build` and download it in `deploy`",
+        "A cache keyed on the commit",
+        "An environment variable",
+        "Nothing: jobs share a filesystem"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each job runs on a fresh runner. Artifacts pass outputs between jobs; caches are for speeding up repeat work and may be evicted.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Pick which cache to restore. `existing` lists saved keys **oldest first**. Use the exact `key` if it exists; otherwise, for each prefix in `restoreKeys` in order, the **newest** key starting with it; otherwise `null`. Fix `pickCache`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pickCache",
+      "starterCode": "function pickCache(existing, key, restoreKeys) {\n  if (existing.includes(key)) return key;\n  for (const prefix of restoreKeys) {\n    const hit = existing.find((k) => k.startsWith(prefix));\n    if (hit) return hit;\n  }\n  return null;\n}",
+      "referenceSolution": "function pickCache(existing, key, restoreKeys) {\n  if (existing.includes(key)) return key;\n  for (const prefix of restoreKeys) {\n    const hits = existing.filter((k) => k.startsWith(prefix));\n    if (hits.length) return hits[hits.length - 1];\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "npm-a1",
+              "npm-b2"
+            ],
+            "npm-b2",
+            [
+              "npm-"
+            ]
+          ],
+          "expected": "npm-b2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "npm-a1",
+              "npm-b2"
+            ],
+            "npm-c3",
+            [
+              "npm-"
+            ]
+          ],
+          "expected": "npm-b2"
+        },
+        {
+          "args": [
+            [],
+            "npm-c3",
+            [
+              "npm-"
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              "linux-npm-1",
+              "npm-x",
+              "linux-npm-2"
+            ],
+            "linux-npm-9",
+            [
+              "linux-npm-",
+              "npm-"
+            ]
+          ],
+          "expected": "linux-npm-2"
+        },
+        {
+          "args": [
+            [
+              "npm-x"
+            ],
+            "linux-npm-9",
+            [
+              "linux-npm-",
+              "npm-"
+            ]
+          ],
+          "expected": "npm-x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Expand a build matrix. `expand(matrix, exclude)` gets a dict of lists and returns every combination as a dict (first key varies slowest), leaving out any combination that matches all keys of an `exclude` entry. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "expand",
+      "starterCode": "from itertools import product\n\ndef expand(matrix, exclude):\n    keys = list(matrix)\n    return [dict(zip(keys, combo)) for combo in product(*matrix.values())]",
+      "referenceSolution": "from itertools import product\n\ndef expand(matrix, exclude):\n    keys = list(matrix)\n    out = []\n    for combo in product(*matrix.values()):\n        row = dict(zip(keys, combo))\n        if any(all(row.get(k) == v for k, v in ex.items()) for ex in exclude):\n            continue\n        out.append(row)\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "os": [
+                "linux",
+                "windows"
+              ],
+              "node": [
+                18,
+                20
+              ]
+            },
+            [
+              {
+                "os": "windows",
+                "node": 18
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "os": "linux",
+              "node": 18
+            },
+            {
+              "os": "linux",
+              "node": 20
+            },
+            {
+              "os": "windows",
+              "node": 20
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "os": [
+                "linux"
+              ],
+              "node": [
+                20
+              ]
+            },
+            []
+          ],
+          "expected": [
+            {
+              "os": "linux",
+              "node": 20
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "os": [
+                "linux",
+                "mac"
+              ],
+              "node": [
+                18,
+                20
+              ]
+            },
+            [
+              {
+                "os": "mac"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "os": "linux",
+              "node": 18
+            },
+            {
+              "os": "linux",
+              "node": 20
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "node": [
+                18,
+                20
+              ]
+            },
+            [
+              {
+                "node": 22
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "node": 18
+            },
+            {
+              "node": 20
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "node": [
+                18
+              ]
+            },
+            [
+              {
+                "node": 18
+              }
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A workflow that labels and tests incoming pull requests, including ones from forks.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are a security hole.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "on:\n  pull_request_target:",
+          "issue": "Runs with the base repo's secrets and a write token, even for fork PRs; dangerous combined with checking out PR code."
+        },
+        {
+          "id": "l2",
+          "text": "jobs:\n  test:\n    runs-on: ubuntu-latest",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "      - uses: actions/checkout@v4\n        with:\n          ref: ${{ github.event.pull_request.head.sha }}",
+          "issue": "Checks out the untrusted fork code into a privileged context."
+        },
+        {
+          "id": "l4",
+          "text": "      - run: npm ci && npm test",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        env:\n          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}",
+          "issue": "The fork's code (its tests, its postinstall scripts) can read and exfiltrate this token."
+        },
+        {
+          "id": "l6",
+          "text": "      - uses: actions/labeler@v5",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "permissions:\n  contents: read\n  pull-requests: write",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "timeout-minutes: 15",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ci-cd-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A blue/green deploy: `blue` serves production, `green` is idle.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Deploy the new version to `green`"
+        },
+        {
+          "id": "s2",
+          "label": "Run smoke tests against `green` directly"
+        },
+        {
+          "id": "s3",
+          "label": "Switch the load balancer to `green`"
+        },
+        {
+          "id": "s4",
+          "label": "Watch error rates and latency"
+        },
+        {
+          "id": "s5",
+          "label": "Keep `blue` running until you are confident, then retire it"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Green is tested before it gets traffic, and blue stays ready so rollback is a single switch back."
+    }
+  },
+  {
+    "id": "eng-ci-cd-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Production broke after a deploy.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A deploy 10 minutes ago made checkout return 500s for 30% of users. The cause is not obvious yet.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you do first?",
+          "options": [
+            "Roll back to the last good version",
+            "Debug in production until you find the bug",
+            "Wait to see if it settles",
+            "Push a quick fix without review"
+          ],
+          "correctIndex": 0,
+          "explanation": "Restore service first; rollback is the known-good path."
+        },
+        {
+          "id": "q2",
+          "question": "Checkout is healthy again. What change to the pipeline would catch this earlier?",
+          "options": [
+            "Deploy to a small canary first and auto-roll back on error-rate alerts",
+            "Deploy only on Fridays",
+            "Remove the staging environment",
+            "Make deploys manual and skip tests to save time"
+          ],
+          "correctIndex": 0,
+          "explanation": "A canary limits the blast radius and an automated health gate stops the rollout."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A release workflow.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that weaken the pipeline's security.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "permissions: write-all",
+          "issue": "Gives every step write access to everything; set the minimum, e.g. `contents: read`."
+        },
+        {
+          "id": "l2",
+          "text": "      - uses: actions/checkout@v4",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "      - uses: some-user/deploy-action@main",
+          "issue": "A third-party action on a moving branch can change under you; pin it to a full commit SHA."
+        },
+        {
+          "id": "l4",
+          "text": "      - run: npm ci",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "      - run: npm run build",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    environment: production",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ci-cd-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A PR from a fork runs your `pull_request` workflow, and a step using `${{ secrets.API_KEY }}` gets an empty value. Why?",
+    "mcq": {
+      "options": [
+        "Secrets are not passed to workflows triggered by PRs from forks",
+        "The secret has expired",
+        "Secrets only work on Linux runners",
+        "`pull_request` workflows cannot run steps"
+      ],
+      "correctIndex": 0,
+      "explanation": "Otherwise anyone could open a PR that prints your secrets. Run secret-needing jobs after merge or behind approval.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does `concurrency: { group: deploy-prod, cancel-in-progress: false }` give a deploy workflow?",
+    "mcq": {
+      "options": [
+        "Only one production deploy runs at a time; later ones wait instead of overlapping",
+        "Deploys run in parallel",
+        "Every new push cancels the running deploy",
+        "The workflow runs only once per day"
+      ],
+      "correctIndex": 0,
+      "explanation": "Overlapping deploys can race; queuing them keeps order. Cancelling a half-done deploy can leave things inconsistent.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why pin third-party actions to a commit SHA rather than a tag like `@v2`?",
+    "mcq": {
+      "options": [
+        "Tags can be moved to different code; a SHA cannot",
+        "SHAs run faster",
+        "Tags are not supported",
+        "GitHub bills less for SHAs"
+      ],
+      "correctIndex": 0,
+      "explanation": "If the action's repo is compromised, a moved tag runs the attacker's code in your pipeline with your secrets.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A canary gate compares error rates. `canaryVerdict(canary, baseline, minRequests, maxDelta)` gets `{requests, errors}` for each. Return `\"wait\"` if the canary has fewer than `minRequests` requests, `\"rollback\"` if its error rate exceeds the baseline's by more than `maxDelta`, else `\"promote\"`. A baseline with 0 requests has rate 0. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "canaryVerdict",
+      "starterCode": "function canaryVerdict(canary, baseline, minRequests, maxDelta) {\n  const c = canary.errors / canary.requests;\n  const b = baseline.errors / baseline.requests;\n  return c - b > maxDelta ? \"rollback\" : \"promote\";\n}",
+      "referenceSolution": "function canaryVerdict(canary, baseline, minRequests, maxDelta) {\n  if (canary.requests < minRequests) return \"wait\";\n  const c = canary.errors / canary.requests;\n  const b = baseline.requests ? baseline.errors / baseline.requests : 0;\n  return c - b > maxDelta ? \"rollback\" : \"promote\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "requests": 1000,
+              "errors": 50
+            },
+            {
+              "requests": 10000,
+              "errors": 100
+            },
+            500,
+            0.01
+          ],
+          "expected": "rollback"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "requests": 1000,
+              "errors": 12
+            },
+            {
+              "requests": 10000,
+              "errors": 100
+            },
+            500,
+            0.01
+          ],
+          "expected": "promote"
+        },
+        {
+          "args": [
+            {
+              "requests": 20,
+              "errors": 10
+            },
+            {
+              "requests": 10000,
+              "errors": 100
+            },
+            500,
+            0.01
+          ],
+          "expected": "wait"
+        },
+        {
+          "args": [
+            {
+              "requests": 0,
+              "errors": 0
+            },
+            {
+              "requests": 0,
+              "errors": 0
+            },
+            1,
+            0.01
+          ],
+          "expected": "wait"
+        },
+        {
+          "args": [
+            {
+              "requests": 600,
+              "errors": 0
+            },
+            {
+              "requests": 0,
+              "errors": 0
+            },
+            500,
+            0.01
+          ],
+          "expected": "promote"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Lead time for changes: `median_lead_time(pairs)` gets `[commit_ts, deploy_ts]` pairs in Unix seconds and returns the **median** lead time in hours (average the middle two for an even count), or `None` for no deploys. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "median_lead_time",
+      "starterCode": "def median_lead_time(pairs):\n    hours = [(d - c) / 3600 for c, d in pairs]\n    return sum(hours) / len(hours)",
+      "referenceSolution": "def median_lead_time(pairs):\n    if not pairs:\n        return None\n    hours = sorted((d - c) / 3600 for c, d in pairs)\n    mid = len(hours) // 2\n    if len(hours) % 2:\n        return hours[mid]\n    return (hours[mid - 1] + hours[mid]) / 2",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                0,
+                3600
+              ],
+              [
+                0,
+                7200
+              ],
+              [
+                0,
+                36000
+              ]
+            ]
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              [
+                0,
+                7200
+              ],
+              [
+                100,
+                3700
+              ]
+            ]
+          ],
+          "expected": 1.5
+        },
+        {
+          "args": [
+            [
+              [
+                0,
+                36000
+              ],
+              [
+                0,
+                3600
+              ],
+              [
+                0,
+                7200
+              ],
+              [
+                0,
+                10800
+              ]
+            ]
+          ],
+          "expected": 2.5
+        },
+        {
+          "args": [
+            [
+              [
+                50,
+                3650
+              ]
+            ]
+          ],
+          "expected": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A team moved CI deploys to AWS using OIDC. This is the IAM role trust policy condition and the workflow.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are too permissive.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"Principal\": { \"Federated\": \"arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com\" }",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "\"Action\": \"sts:AssumeRoleWithWebIdentity\"",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "\"token.actions.githubusercontent.com:aud\": \"sts.amazonaws.com\"",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "\"token.actions.githubusercontent.com:sub\": \"repo:acme/*\"",
+          "issue": "Any repo, branch or PR in the org can assume the production deploy role; scope it to `repo:acme/shop:environment:production`."
+        },
+        {
+          "id": "l5",
+          "text": "permissions:\n  id-token: write\n  contents: read",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "Role policy: \"Action\": \"*\", \"Resource\": \"*\"",
+          "issue": "The deploy role can do anything in the account; grant only what the deploy needs."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ci-cd-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A CI log shows a production database password printed in plain text in a public repo's Actions run.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the response.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Rotate the password and update the secret store"
+        },
+        {
+          "id": "s2",
+          "label": "Delete the workflow run logs that contain it"
+        },
+        {
+          "id": "s3",
+          "label": "Check database access logs for use of the leaked credential"
+        },
+        {
+          "id": "s4",
+          "label": "Fix the step that printed it and add a check against it"
+        },
+        {
+          "id": "s5",
+          "label": "Write a short post-incident note with the timeline"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Assume it is already copied: rotate first, then remove the exposure, check for misuse, prevent a repeat, and record what happened."
+    }
+  },
+  {
+    "id": "eng-ci-cd-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "CI in a monorepo takes 40 minutes.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A monorepo has 12 packages. Every PR builds and tests all of them, taking 40 minutes; most PRs touch one package.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What gives the biggest win first?",
+          "options": [
+            "Only build and test packages affected by the change (and their dependents)",
+            "Buy bigger runners",
+            "Run tests only on `main`",
+            "Drop the slowest tests"
+          ],
+          "correctIndex": 0,
+          "explanation": "Affected-only runs turn most PRs into a fraction of the work without losing coverage."
+        },
+        {
+          "id": "q2",
+          "question": "Builds still repeat work for unchanged packages on `main`. What next?",
+          "options": [
+            "A remote build cache keyed on each package's inputs",
+            "Disable caching to avoid stale builds",
+            "Merge all packages into one",
+            "Rebuild everything nightly instead of per commit"
+          ],
+          "correctIndex": 0,
+          "explanation": "Content-addressed caching reuses outputs whenever inputs are the same, across branches and machines."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Database migrations in the deploy pipeline.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The pipeline runs `migrate` and then rolls out the new app version. Last week a migration dropped a column the old pods still read during the rollout, causing 5 minutes of errors.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What rule prevents this class of failure?",
+          "options": [
+            "Every migration must be compatible with both the old and new app versions (expand, then contract later)",
+            "Run migrations after the rollout finishes",
+            "Never change the schema",
+            "Stop the app during migrations"
+          ],
+          "correctIndex": 0,
+          "explanation": "Old and new code overlap during any rolling deploy, so schema changes must work with both."
+        },
+        {
+          "id": "q2",
+          "question": "How do you enforce it in CI?",
+          "options": [
+            "Run the previous release's tests against the migrated schema before deploying",
+            "Ask reviewers to be careful",
+            "Only allow migrations on Mondays",
+            "Skip migrations in staging"
+          ],
+          "correctIndex": 0,
+          "explanation": "Testing the old code on the new schema automatically catches breaking migrations."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ci-cd-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why use GitHub's OIDC to get short-lived cloud credentials instead of storing an access key as a secret?",
+    "mcq": {
+      "options": [
+        "No long-lived key exists to leak, and access can be limited to a specific repo, branch or environment",
+        "OIDC deploys run faster",
+        "Secrets cannot hold cloud keys",
+        "It removes the need for IAM roles"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tokens are minted per run and expire quickly; the cloud's trust policy decides which workflows may assume the role.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A team deploys `main` to production many times a day with trunk-based development. How do they ship a half-finished feature safely?",
+    "mcq": {
+      "options": [
+        "Merge it behind a feature flag that is off in production",
+        "Keep it on a long-lived branch for weeks",
+        "Disable CI for that feature",
+        "Deploy it only on weekends"
+      ],
+      "correctIndex": 0,
+      "explanation": "Flags separate deploying code from releasing it, so `main` stays shippable without long-lived branches.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ci-cd-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ci-cd",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A deploy job requires approval via `environment: production` with required reviewers. What does that protect against?",
+    "mcq": {
+      "options": [
+        "Untested or unexpected changes reaching production without a human check, and environment secrets being used outside that gate",
+        "Merge conflicts",
+        "Flaky tests",
+        "Slow builds"
+      ],
+      "correctIndex": 0,
+      "explanation": "Environment protection rules pause the job until approved, and the environment's secrets are only released to jobs that pass the gate.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

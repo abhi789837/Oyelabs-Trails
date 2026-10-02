@@ -1,0 +1,1983 @@
+[
+  {
+    "id": "eng-css-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`renderedWidth(width, padding, border, boxSizing)` returns the width an element takes on screen.\nWith `content-box` the padding and border are added on both sides; with `border-box` they are inside\n`width`. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "renderedWidth",
+      "starterCode": "function renderedWidth(width, padding, border, boxSizing) {\n  return width + 2 * padding + 2 * border;\n}",
+      "referenceSolution": "function renderedWidth(width, padding, border, boxSizing) {\n  if (boxSizing === \"border-box\") return width;\n  return width + 2 * padding + 2 * border;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            200,
+            10,
+            1,
+            "content-box"
+          ],
+          "expected": 222
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            200,
+            10,
+            1,
+            "border-box"
+          ],
+          "expected": 200
+        },
+        {
+          "args": [
+            100,
+            0,
+            0,
+            "content-box"
+          ],
+          "expected": 100
+        },
+        {
+          "args": [
+            300,
+            20,
+            2,
+            "border-box"
+          ],
+          "expected": 300
+        },
+        {
+          "args": [
+            50,
+            5,
+            5,
+            "content-box"
+          ],
+          "expected": 70
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`toRem(px, base)` converts pixels to a `rem` string. `base` is the root font size and defaults to `16`.\nRound to at most 4 decimals: `toRem(24)` → `\"1.5rem\"`, `toRem(10, 20)` → `\"0.5rem\"`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toRem",
+      "starterCode": "function toRem(px, base) {\n  return px / 10 + \"rem\";\n}",
+      "referenceSolution": "function toRem(px, base = 16) {\n  return Number((px / base).toFixed(4)) + \"rem\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            24
+          ],
+          "expected": "1.5rem"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            10,
+            20
+          ],
+          "expected": "0.5rem"
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": "0rem"
+        },
+        {
+          "args": [
+            13
+          ],
+          "expected": "0.8125rem"
+        },
+        {
+          "args": [
+            10
+          ],
+          "expected": "0.625rem"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`cssVar(name, fallback)` returns a `var()` reference. Custom property names must start with `--`;\ncallers sometimes pass `\"brand\"` and sometimes `\"--brand\"`. Add the fallback only when one is given:\n`cssVar(\"brand\", \"#333\")` → `\"var(--brand, #333)\"`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cssVar",
+      "starterCode": "function cssVar(name, fallback) {\n  return `var(${name}, ${fallback})`;\n}",
+      "referenceSolution": "function cssVar(name, fallback) {\n  const prop = name.startsWith(\"--\") ? name : `--${name}`;\n  return fallback === undefined || fallback === null ? `var(${prop})` : `var(${prop}, ${fallback})`;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "brand",
+            "#333"
+          ],
+          "expected": "var(--brand, #333)"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "--gap"
+          ],
+          "expected": "var(--gap)"
+        },
+        {
+          "args": [
+            "space-2",
+            "8px"
+          ],
+          "expected": "var(--space-2, 8px)"
+        },
+        {
+          "args": [
+            "--radius",
+            null
+          ],
+          "expected": "var(--radius)"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`hexToRgb(hex)` turns a hex colour into `\"rgb(r, g, b)\"`. It must accept the 3-digit shorthand too\n(`#f80` means `#ff8800`). Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "hexToRgb",
+      "starterCode": "function hexToRgb(hex) {\n  const h = hex.slice(1);\n  const r = parseInt(h.slice(0, 2), 16);\n  const g = parseInt(h.slice(2, 4), 16);\n  const b = parseInt(h.slice(4, 6), 16);\n  return `rgb(${r}, ${g}, ${b})`;\n}",
+      "referenceSolution": "function hexToRgb(hex) {\n  let h = hex.slice(1);\n  if (h.length === 3) h = h.split(\"\").map((c) => c + c).join(\"\");\n  const r = parseInt(h.slice(0, 2), 16);\n  const g = parseInt(h.slice(2, 4), 16);\n  const b = parseInt(h.slice(4, 6), 16);\n  return `rgb(${r}, ${g}, ${b})`;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "#ff8800"
+          ],
+          "expected": "rgb(255, 136, 0)"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "#f80"
+          ],
+          "expected": "rgb(255, 136, 0)"
+        },
+        {
+          "args": [
+            "#000"
+          ],
+          "expected": "rgb(0, 0, 0)"
+        },
+        {
+          "args": [
+            "#1B1F27"
+          ],
+          "expected": "rgb(27, 31, 39)"
+        },
+        {
+          "args": [
+            "#abc"
+          ],
+          "expected": "rgb(170, 187, 204)"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This CSS should centre `.card` horizontally and vertically in the viewport. Mark the lines that stop it working.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": ".page {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  display: block;",
+          "issue": "`justify-content` and `align-items` only work on a flex or grid container; use `display: flex` (or `grid`)."
+        },
+        {
+          "id": "l3",
+          "text": "  justify-content: center;",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  align-items: center;",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  height: 100%;",
+          "issue": "Percentage height resolves against a parent with no set height, so it collapses; use `min-height: 100vh` (or `100dvh`)."
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ".card { padding: 24px; border-radius: 8px; }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-css-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Button styles from a design handoff. Mark the lines that hurt accessibility.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": ".btn {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  padding: 8px 16px;",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  background: #2f6e5b;",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  color: #9fb5ae;",
+          "issue": "Light green-grey text on a dark green background has poor contrast (well under 4.5:1); use white or a much lighter colour."
+        },
+        {
+          "id": "l5",
+          "text": "  border: 0;",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ".btn:focus { outline: none; }",
+          "issue": "Removes the focus indicator with nothing in its place; keyboard users cannot see where they are. Style `:focus-visible` instead."
+        },
+        {
+          "id": "l8",
+          "text": ".btn:hover { background: #255a4a; }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-css-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An element has `width: 300px; padding: 20px; border: 5px solid; box-sizing: border-box`. How wide is it on screen?",
+    "mcq": {
+      "options": [
+        "300px",
+        "350px",
+        "340px",
+        "250px"
+      ],
+      "correctIndex": 0,
+      "explanation": "With `border-box`, `width` includes padding and border, so the box is exactly 300px and the content area shrinks to 250px.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Both rules match `<button id=\"save\" class=\"btn\">`. What colour is the button?\n\n```css\n#save { color: red; }\n.btn { color: blue; }\n```",
+    "mcq": {
+      "options": [
+        "Red, because an id selector is more specific than a class",
+        "Blue, because `.btn` comes later",
+        "Blue, because classes beat ids",
+        "It depends on the order of the attributes in the HTML"
+      ],
+      "correctIndex": 0,
+      "explanation": "Source order only decides between rules of equal specificity. One id (1,0,0) beats one class (0,1,0) wherever the rules sit.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `display: none` and `visibility: hidden`?",
+    "mcq": {
+      "options": [
+        "`display: none` removes the element from layout; `visibility: hidden` hides it but keeps its space",
+        "They are the same",
+        "`visibility: hidden` also removes the element from the DOM",
+        "`display: none` keeps the element's space"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both hide the element from screen readers, but only `display: none` takes it out of the layout, so the content around it moves up.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`compareSpecificity(a, b)` compares two specificities given as `[ids, classes, types]`. Return `1` if\n`a` wins, `-1` if `b` wins, `0` if equal. Specificity is compared column by column, not summed:\none id beats any number of classes.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "compareSpecificity",
+      "starterCode": "function compareSpecificity(a, b) {\n  const sa = a[0] + a[1] + a[2];\n  const sb = b[0] + b[1] + b[2];\n  return sa === sb ? 0 : sa > sb ? 1 : -1;\n}",
+      "referenceSolution": "function compareSpecificity(a, b) {\n  for (let i = 0; i < 3; i++) {\n    if (a[i] !== b[i]) return a[i] > b[i] ? 1 : -1;\n  }\n  return 0;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              0,
+              3,
+              0
+            ]
+          ],
+          "expected": 1
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              0,
+              2,
+              1
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              0,
+              1,
+              5
+            ],
+            [
+              0,
+              2,
+              0
+            ]
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              3
+            ],
+            [
+              0,
+              0,
+              2
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              0,
+              11,
+              0
+            ],
+            [
+              1,
+              0,
+              0
+            ]
+          ],
+          "expected": -1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`mobileFirst(widths)` returns `@media` rules for a mobile-first stylesheet: `min-width` queries in\n**ascending numeric** order, so each larger breakpoint overrides the smaller ones:\n`[1024, 640]` → `[\"@media (min-width: 640px)\", \"@media (min-width: 1024px)\"]`. Drop duplicates.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mobileFirst",
+      "starterCode": "function mobileFirst(widths) {\n  return widths.map(String).sort().map((w) => `@media (min-width: ${w}px)`);\n}",
+      "referenceSolution": "function mobileFirst(widths) {\n  return [...new Set(widths)].sort((a, b) => a - b).map((w) => `@media (min-width: ${w}px)`);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1024,
+              640
+            ]
+          ],
+          "expected": [
+            "@media (min-width: 640px)",
+            "@media (min-width: 1024px)"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1280,
+              768,
+              1024
+            ]
+          ],
+          "expected": [
+            "@media (min-width: 768px)",
+            "@media (min-width: 1024px)",
+            "@media (min-width: 1280px)"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              480,
+              480,
+              960
+            ]
+          ],
+          "expected": [
+            "@media (min-width: 480px)",
+            "@media (min-width: 960px)"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`contrastRatio(l1, l2)` gets two relative luminances (0–1) and returns the WCAG contrast ratio\n`(lighter + 0.05) / (darker + 0.05)`, rounded to 2 decimals. The arguments can come in either order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "contrastRatio",
+      "starterCode": "function contrastRatio(l1, l2) {\n  return Math.round(((l1 + 0.05) / (l2 + 0.05)) * 100) / 100;\n}",
+      "referenceSolution": "function contrastRatio(l1, l2) {\n  const hi = Math.max(l1, l2);\n  const lo = Math.min(l1, l2);\n  return Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1,
+            0
+          ],
+          "expected": 21
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            1
+          ],
+          "expected": 21
+        },
+        {
+          "args": [
+            0.5,
+            0.5
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            0.2,
+            0.9
+          ],
+          "expected": 3.8
+        },
+        {
+          "args": [
+            0.18,
+            0
+          ],
+          "expected": 4.6
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`collapsedMargin(bottom, top)` returns the gap between two stacked blocks, where the first has\n`margin-bottom: bottom` and the next `margin-top: top`. Vertical margins collapse: two positive margins give\nthe larger one, two negative give the more negative one, and a positive with a negative are added.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "collapsedMargin",
+      "starterCode": "function collapsedMargin(bottom, top) {\n  return bottom + top;\n}",
+      "referenceSolution": "function collapsedMargin(bottom, top) {\n  if (bottom >= 0 && top >= 0) return Math.max(bottom, top);\n  if (bottom < 0 && top < 0) return Math.min(bottom, top);\n  return bottom + top;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            20,
+            30
+          ],
+          "expected": 30
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            16,
+            16
+          ],
+          "expected": 16
+        },
+        {
+          "args": [
+            -10,
+            -20
+          ],
+          "expected": -20
+        },
+        {
+          "args": [
+            30,
+            -10
+          ],
+          "expected": 20
+        },
+        {
+          "args": [
+            0,
+            0
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A three-column card grid should become one column on phones. Mark the lines that break it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": ".grid {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  display: grid;",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  grid-template-columns: 1fr 1fr 1fr;",
+          "issue": "Fixed three columns everywhere; mobile-first this should start at `1fr` (or use `repeat(auto-fill, minmax(240px, 1fr))`)."
+        },
+        {
+          "id": "l4",
+          "text": "  gap: 16px;",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": ".card { width: 400px; }",
+          "issue": "A fixed width overflows narrow columns; let the grid size the card (drop the width or use `max-width: 100%`)."
+        },
+        {
+          "id": "l7",
+          "text": "@media (min-width: 768px) {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  .grid { grid-template-columns: repeat(3, 1fr); }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-css-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A mobile-first stylesheet for `.nav`. Put the blocks in the order they should appear in the file so each larger screen overrides the smaller one.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": ".nav { display: none; } /* base: phones */"
+        },
+        {
+          "id": "s2",
+          "label": "@media (min-width: 640px) { .nav { display: flex; flex-direction: column; } }"
+        },
+        {
+          "id": "s3",
+          "label": "@media (min-width: 1024px) { .nav { flex-direction: row; } }"
+        },
+        {
+          "id": "s4",
+          "label": "@media (min-width: 1440px) { .nav { gap: 32px; } }"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "Mobile-first starts with the base (smallest) styles and adds `min-width` queries in ascending order; later rules of equal specificity win, so a smaller query placed later would override a larger one."
+    }
+  },
+  {
+    "id": "eng-css-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Two sibling paragraphs: the first has `margin-bottom: 20px`, the second `margin-top: 30px`. What is the gap between them?",
+    "mcq": {
+      "options": [
+        "30px",
+        "50px",
+        "20px",
+        "25px"
+      ],
+      "correctIndex": 0,
+      "explanation": "Adjacent vertical margins collapse into the larger of the two. Flex and grid items do not collapse margins, which is one reason layouts change when you switch display.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `flex: 1` on every item of a flex row do?",
+    "mcq": {
+      "options": [
+        "Items start from a basis of 0 and share the free space equally, so they end up equal width",
+        "Every item gets `width: 1px`",
+        "Only the first item grows",
+        "Items keep their content width and do not grow"
+      ],
+      "correctIndex": 0,
+      "explanation": "`flex: 1` is `flex: 1 1 0%`: grow 1, shrink 1, basis 0, so all space is shared by the grow factors. `flex: auto` uses the content size as the basis instead.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`html { font-size: 16px }`. A `.child { font-size: 2em }` sits inside `.parent { font-size: 1.5em }`. What is the child's font size?",
+    "mcq": {
+      "options": [
+        "48px",
+        "32px",
+        "24px",
+        "40px"
+      ],
+      "correctIndex": 0,
+      "explanation": "`em` compounds: the parent is 16 × 1.5 = 24px, the child 24 × 2 = 48px. With `rem` it would be 32px because rem always uses the root size.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "`specificity(selector)` returns `[ids, classes, types]` for a selector without `:not()`/`:is()`/`:where()`.\n- ids: `#x`; classes column: `.x`, attribute selectors `[x]`, pseudo-classes `:hover`\n- types column: element names `div` and pseudo-elements `::before`; `*` and combinators count nothing",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "specificity",
+      "starterCode": "function specificity(selector) {\n  const ids = (selector.match(/#[\\w-]+/g) || []).length;\n  return [ids, 0, 0];\n}",
+      "referenceSolution": "function specificity(selector) {\n  let s = selector;\n  const count = (re) => {\n    const m = s.match(re) || [];\n    s = s.replace(re, \" \");\n    return m.length;\n  };\n  const attrs = count(/\\[[^\\]]*\\]/g);\n  const pseudoEls = count(/::[\\w-]+/g);\n  const ids = count(/#[\\w-]+/g);\n  const classes = count(/\\.[\\w-]+/g);\n  const pseudoClasses = count(/:[\\w-]+/g);\n  const types = (s.match(/(^|[\\s>+~])[a-zA-Z][\\w-]*/g) || []).length;\n  return [ids, classes + attrs + pseudoClasses, types + pseudoEls];\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "#nav .item a:hover"
+          ],
+          "expected": [
+            1,
+            2,
+            1
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "ul li"
+          ],
+          "expected": [
+            0,
+            0,
+            2
+          ]
+        },
+        {
+          "args": [
+            "*"
+          ],
+          "expected": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "args": [
+            "input[type=\"text\"]:focus"
+          ],
+          "expected": [
+            0,
+            2,
+            1
+          ]
+        },
+        {
+          "args": [
+            "p::before"
+          ],
+          "expected": [
+            0,
+            0,
+            2
+          ]
+        },
+        {
+          "args": [
+            ".a.b > .c + span"
+          ],
+          "expected": [
+            0,
+            3,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`cascadeWinner(decls)` gets competing declarations for one property, each\n`{ value, important, specificity: [a, b, c], order }` (`order` = position in the stylesheet). Return the winning\n`value`: `!important` beats normal, then higher specificity (column by column), then the later `order`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cascadeWinner",
+      "starterCode": "function cascadeWinner(decls) {\n  return [...decls].sort((x, y) => y.order - x.order)[0].value;\n}",
+      "referenceSolution": "function cascadeWinner(decls) {\n  const cmp = (x, y) => {\n    if (x.important !== y.important) return x.important ? 1 : -1;\n    for (let i = 0; i < 3; i++) if (x.specificity[i] !== y.specificity[i]) return x.specificity[i] - y.specificity[i];\n    return x.order - y.order;\n  };\n  return decls.reduce((best, d) => (cmp(d, best) > 0 ? d : best)).value;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "value": "red",
+                "important": false,
+                "specificity": [
+                  1,
+                  0,
+                  0
+                ],
+                "order": 1
+              },
+              {
+                "value": "blue",
+                "important": false,
+                "specificity": [
+                  0,
+                  1,
+                  0
+                ],
+                "order": 2
+              }
+            ]
+          ],
+          "expected": "red"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "value": "red",
+                "important": false,
+                "specificity": [
+                  1,
+                  0,
+                  0
+                ],
+                "order": 1
+              },
+              {
+                "value": "green",
+                "important": true,
+                "specificity": [
+                  0,
+                  0,
+                  1
+                ],
+                "order": 0
+              }
+            ]
+          ],
+          "expected": "green"
+        },
+        {
+          "args": [
+            [
+              {
+                "value": "a",
+                "important": false,
+                "specificity": [
+                  0,
+                  1,
+                  0
+                ],
+                "order": 1
+              },
+              {
+                "value": "b",
+                "important": false,
+                "specificity": [
+                  0,
+                  1,
+                  0
+                ],
+                "order": 2
+              }
+            ]
+          ],
+          "expected": "b"
+        },
+        {
+          "args": [
+            [
+              {
+                "value": "only",
+                "important": false,
+                "specificity": [
+                  0,
+                  0,
+                  1
+                ],
+                "order": 5
+              }
+            ]
+          ],
+          "expected": "only"
+        },
+        {
+          "args": [
+            [
+              {
+                "value": "x",
+                "important": true,
+                "specificity": [
+                  0,
+                  2,
+                  0
+                ],
+                "order": 3
+              },
+              {
+                "value": "y",
+                "important": true,
+                "specificity": [
+                  0,
+                  1,
+                  0
+                ],
+                "order": 9
+              }
+            ]
+          ],
+          "expected": "x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`flexWidths(container, items)` computes final widths in a flex row with no gaps. Each item is\n`{ basis, grow }`. Free space = container − sum of bases. If it is positive and some item grows, each item gets\n`basis + free * grow / totalGrow`; otherwise items keep their basis (ignore shrinking). Round to 2 decimals.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "flexWidths",
+      "starterCode": "function flexWidths(container, items) {\n  const free = container - items.reduce((s, i) => s + i.basis, 0);\n  return items.map((i) => i.basis + free / items.length);\n}",
+      "referenceSolution": "function flexWidths(container, items) {\n  const free = container - items.reduce((s, i) => s + i.basis, 0);\n  const totalGrow = items.reduce((s, i) => s + i.grow, 0);\n  return items.map((i) => {\n    if (free <= 0 || totalGrow === 0) return i.basis;\n    return Math.round((i.basis + (free * i.grow) / totalGrow) * 100) / 100;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            600,
+            [
+              {
+                "basis": 100,
+                "grow": 1
+              },
+              {
+                "basis": 100,
+                "grow": 3
+              }
+            ]
+          ],
+          "expected": [
+            200,
+            400
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            600,
+            [
+              {
+                "basis": 200,
+                "grow": 0
+              },
+              {
+                "basis": 200,
+                "grow": 0
+              }
+            ]
+          ],
+          "expected": [
+            200,
+            200
+          ]
+        },
+        {
+          "args": [
+            300,
+            [
+              {
+                "basis": 200,
+                "grow": 1
+              },
+              {
+                "basis": 200,
+                "grow": 1
+              }
+            ]
+          ],
+          "expected": [
+            200,
+            200
+          ]
+        },
+        {
+          "args": [
+            1000,
+            [
+              {
+                "basis": 0,
+                "grow": 1
+              },
+              {
+                "basis": 0,
+                "grow": 1
+              },
+              {
+                "basis": 0,
+                "grow": 1
+              }
+            ]
+          ],
+          "expected": [
+            333.33,
+            333.33,
+            333.33
+          ]
+        },
+        {
+          "args": [
+            500,
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`paintOrder(els)` returns element names from bottom to top for siblings in the same stacking context.\nEach has `z`: a number or `\"auto\"` (painted like `0`). Lower z paints first; equal z keeps DOM order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "paintOrder",
+      "starterCode": "function paintOrder(els) {\n  return [...els].sort((a, b) => a.z - b.z).map((e) => e.name);\n}",
+      "referenceSolution": "function paintOrder(els) {\n  const z = (e) => (e.z === \"auto\" ? 0 : e.z);\n  return els\n    .map((e, i) => ({ e, i }))\n    .sort((a, b) => z(a.e) - z(b.e) || a.i - b.i)\n    .map((x) => x.e.name);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "modal",
+                "z": 10
+              },
+              {
+                "name": "page",
+                "z": "auto"
+              },
+              {
+                "name": "bg",
+                "z": -1
+              }
+            ]
+          ],
+          "expected": [
+            "bg",
+            "page",
+            "modal"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "z": "auto"
+              },
+              {
+                "name": "b",
+                "z": 1
+              },
+              {
+                "name": "c",
+                "z": 0
+              }
+            ]
+          ],
+          "expected": [
+            "a",
+            "c",
+            "b"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "x",
+                "z": 2
+              },
+              {
+                "name": "y",
+                "z": 2
+              }
+            ]
+          ],
+          "expected": [
+            "x",
+            "y"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "tip",
+                "z": "auto"
+              },
+              {
+                "name": "under",
+                "z": -5
+              },
+              {
+                "name": "head",
+                "z": "auto"
+              }
+            ]
+          ],
+          "expected": [
+            "under",
+            "tip",
+            "head"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The sticky header scrolls away with the page and the dropdown menu shows *under* the hero image. Mark the lines that cause this.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": ".layout { overflow: hidden; }",
+          "issue": "`position: sticky` sticks to the nearest scrolling ancestor; `overflow: hidden` on a wrapper makes that the wrapper, so the header never sticks."
+        },
+        {
+          "id": "l2",
+          "text": ".header { position: sticky; top: 0; }",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": ".header { z-index: 50; }",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": ".menu { position: absolute; z-index: 9999; }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": ".hero { position: relative; z-index: 100; }",
+          "issue": "The hero sits above the header (100 > 50) in the same stacking context, and the menu's 9999 only counts inside the header's context."
+        },
+        {
+          "id": "l6",
+          "text": ".hero img { width: 100%; }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-css-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A team fighting a specificity war. Mark the rules that make the stylesheet hard to override later.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": ".btn { padding: 8px 12px; }",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "#checkout-form .btn { background: green; }",
+          "issue": "An id in a component selector raises specificity to (1,1,0); every later variant now needs an id too."
+        },
+        {
+          "id": "l3",
+          "text": ".btn--danger { background: red !important; }",
+          "issue": "`!important` on a variant means nothing else can override it without another `!important`."
+        },
+        {
+          "id": "l4",
+          "text": ".card .btn { margin: 0; }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "div.container > div > div > .btn { color: white; }",
+          "issue": "Long, structure-dependent selectors break when markup changes and are hard to override; use a class."
+        },
+        {
+          "id": "l6",
+          "text": ".btn:disabled { opacity: 0.5; }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ".btn--small { padding: 4px 8px; }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-css-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A header has `position: sticky; top: 0` but scrolls away. Which ancestor style is the most likely cause?",
+    "mcq": {
+      "options": [
+        "`overflow: hidden` (or `auto`) on a wrapper around the header",
+        "`display: flex` on `body`",
+        "`margin: 0` on `html`",
+        "`box-sizing: border-box` on all elements"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sticky positioning is relative to the nearest scroll container. An `overflow` other than `visible` on an ancestor creates one, often with no scrolling, so the header has nothing to stick within.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A tooltip has `z-index: 9999` but appears below a sibling card with `z-index: 1`. The tooltip is inside a parent with `transform: translateX(0)`. Why?",
+    "mcq": {
+      "options": [
+        "`transform` creates a stacking context on the parent, so the tooltip's z-index only competes inside it, and the parent itself is below the card",
+        "`z-index` only works on flex items",
+        "9999 is above the maximum z-index",
+        "Tooltips need `position: fixed` to use z-index"
+      ],
+      "correctIndex": 0,
+      "explanation": "`transform`, `opacity < 1`, `filter` and positioned elements with a z-index all create stacking contexts. A child can never escape its parent's context, whatever its own z-index.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the specificity of `:where(#app .nav) a` compared with `:is(#app .nav) a`?",
+    "mcq": {
+      "options": [
+        "`:where(...) a` is (0,0,1); `:is(...) a` is (1,1,1)",
+        "Both are (1,1,1)",
+        "Both are (0,0,1)",
+        "`:where(...) a` is (1,1,1); `:is(...) a` is (0,0,1)"
+      ],
+      "correctIndex": 0,
+      "explanation": "`:where()` always contributes zero specificity, which makes it ideal for overridable defaults. `:is()` takes the specificity of its most specific argument.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`fluidClamp(minPx, maxPx, minVw, maxVw)` returns a fluid `font-size` that is `minPx` at a viewport of\n`minVw` px and `maxPx` at `maxVw` px. With `slope = (maxPx − minPx) / (maxVw − minVw)` and\n`base = minPx − slope * minVw`, output\n`clamp(<minPx/16>rem, <base/16>rem + <slope*100>vw, <maxPx/16>rem)`, each number rounded to 4 decimals.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "fluidClamp",
+      "starterCode": "function fluidClamp(minPx, maxPx, minVw, maxVw) {\n  const slope = (maxPx - minPx) / maxVw;\n  const base = minPx;\n  const r = (n) => Number(n.toFixed(4));\n  return `clamp(${r(minPx / 16)}rem, ${r(base / 16)}rem + ${r(slope * 100)}vw, ${r(maxPx / 16)}rem)`;\n}",
+      "referenceSolution": "function fluidClamp(minPx, maxPx, minVw, maxVw) {\n  const slope = (maxPx - minPx) / (maxVw - minVw);\n  const base = minPx - slope * minVw;\n  const r = (n) => Number(n.toFixed(4));\n  return `clamp(${r(minPx / 16)}rem, ${r(base / 16)}rem + ${r(slope * 100)}vw, ${r(maxPx / 16)}rem)`;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            16,
+            24,
+            320,
+            1280
+          ],
+          "expected": "clamp(1rem, 0.8333rem + 0.8333vw, 1.5rem)"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            16,
+            16,
+            320,
+            1280
+          ],
+          "expected": "clamp(1rem, 1rem + 0vw, 1rem)"
+        },
+        {
+          "args": [
+            20,
+            40,
+            400,
+            1200
+          ],
+          "expected": "clamp(1.25rem, 0.625rem + 2.5vw, 2.5rem)"
+        },
+        {
+          "args": [
+            32,
+            64,
+            0,
+            1600
+          ],
+          "expected": "clamp(2rem, 2rem + 2vw, 4rem)"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`gridAreas(rows)` parses `grid-template-areas` rows (strings like `\"head head\"`) into grid **line** numbers:\n`{ name: { rowStart, rowEnd, colStart, colEnd } }`, where an area covering only column 1 has `colStart: 1, colEnd: 2`.\nIgnore `.` cells. Assume every area is a valid rectangle.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "gridAreas",
+      "starterCode": "function gridAreas(rows) {\n  const out = {};\n  rows.forEach((row, r) => {\n    row.trim().split(/\\s+/).forEach((name, c) => {\n      out[name] = { rowStart: r, rowEnd: r, colStart: c, colEnd: c };\n    });\n  });\n  return out;\n}",
+      "referenceSolution": "function gridAreas(rows) {\n  const out = {};\n  rows.forEach((row, r) => {\n    row.trim().split(/\\s+/).forEach((name, c) => {\n      if (name === \".\" || name === \"\") return;\n      const a = out[name];\n      if (!a) out[name] = { rowStart: r + 1, rowEnd: r + 2, colStart: c + 1, colEnd: c + 2 };\n      else {\n        a.rowStart = Math.min(a.rowStart, r + 1);\n        a.rowEnd = Math.max(a.rowEnd, r + 2);\n        a.colStart = Math.min(a.colStart, c + 1);\n        a.colEnd = Math.max(a.colEnd, c + 2);\n      }\n    });\n  });\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "head head",
+              "nav main"
+            ]
+          ],
+          "expected": {
+            "head": {
+              "rowStart": 1,
+              "rowEnd": 2,
+              "colStart": 1,
+              "colEnd": 3
+            },
+            "nav": {
+              "rowStart": 2,
+              "rowEnd": 3,
+              "colStart": 1,
+              "colEnd": 2
+            },
+            "main": {
+              "rowStart": 2,
+              "rowEnd": 3,
+              "colStart": 2,
+              "colEnd": 3
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "a"
+            ]
+          ],
+          "expected": {
+            "a": {
+              "rowStart": 1,
+              "rowEnd": 2,
+              "colStart": 1,
+              "colEnd": 2
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              ". top",
+              "side main",
+              "side main"
+            ]
+          ],
+          "expected": {
+            "top": {
+              "rowStart": 1,
+              "rowEnd": 2,
+              "colStart": 2,
+              "colEnd": 3
+            },
+            "side": {
+              "rowStart": 2,
+              "rowEnd": 4,
+              "colStart": 1,
+              "colEnd": 2
+            },
+            "main": {
+              "rowStart": 2,
+              "rowEnd": 4,
+              "colStart": 2,
+              "colEnd": 3
+            }
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`mediaMatches(query, width)` evaluates a simple media query against a viewport width in px. The query is\none or more `(min-width: Npx)` / `(max-width: Npx)` conditions joined by `and`. Both bounds are inclusive.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mediaMatches",
+      "starterCode": "function mediaMatches(query, width) {\n  const m = query.match(/\\((min|max)-width:\\s*(\\d+)px\\)/);\n  if (!m) return true;\n  return m[1] === \"min\" ? width >= Number(m[2]) : width <= Number(m[2]);\n}",
+      "referenceSolution": "function mediaMatches(query, width) {\n  const re = /\\((min|max)-width:\\s*(\\d+)px\\)/g;\n  let m;\n  while ((m = re.exec(query))) {\n    const n = Number(m[2]);\n    if (m[1] === \"min\" && width < n) return false;\n    if (m[1] === \"max\" && width > n) return false;\n  }\n  return true;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "(min-width: 600px)",
+            800
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "(min-width: 600px) and (max-width: 899px)",
+            950
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "(min-width: 600px) and (max-width: 899px)",
+            899
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "(max-width: 599px)",
+            600
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "(min-width: 768px) and (max-width: 1023px)",
+            700
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`matchesCompound(selector, el)` checks a compound selector with no combinators, such as\n`button.primary[disabled]` or `#save.btn`, against `el = { tag, id, classes: [], attrs: {} }`.\nEvery part must match: tag (if present), `#id`, each `.class`, and each `[attr]` (presence only).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matchesCompound",
+      "starterCode": "function matchesCompound(selector, el) {\n  const tag = selector.match(/^[a-z][\\w-]*/i);\n  if (tag && tag[0] !== el.tag) return false;\n  const cls = selector.match(/\\.([\\w-]+)/);\n  if (cls && !el.classes.includes(cls[1])) return false;\n  return true;\n}",
+      "referenceSolution": "function matchesCompound(selector, el) {\n  const tag = selector.match(/^[a-z][\\w-]*/i);\n  if (tag && tag[0].toLowerCase() !== el.tag.toLowerCase()) return false;\n  const id = selector.match(/#([\\w-]+)/);\n  if (id && id[1] !== el.id) return false;\n  for (const m of selector.matchAll(/\\.([\\w-]+)/g)) if (!el.classes.includes(m[1])) return false;\n  for (const m of selector.matchAll(/\\[([\\w-]+)\\]/g)) if (!(m[1] in el.attrs)) return false;\n  return true;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "button.primary",
+            {
+              "tag": "button",
+              "id": "",
+              "classes": [
+                "primary"
+              ],
+              "attrs": {}
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "button.primary.large",
+            {
+              "tag": "button",
+              "id": "",
+              "classes": [
+                "primary"
+              ],
+              "attrs": {}
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "#save.btn",
+            {
+              "tag": "a",
+              "id": "cancel",
+              "classes": [
+                "btn"
+              ],
+              "attrs": {}
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "input[disabled]",
+            {
+              "tag": "input",
+              "id": "",
+              "classes": [],
+              "attrs": {
+                "type": "text"
+              }
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "input[disabled]",
+            {
+              "tag": "input",
+              "id": "",
+              "classes": [],
+              "attrs": {
+                "disabled": ""
+              }
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            ".a.b",
+            {
+              "tag": "div",
+              "id": "",
+              "classes": [
+                "b",
+                "a",
+                "c"
+              ],
+              "attrs": {}
+            }
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A notification panel animation stutters on mid-range phones. Mark the lines that cause layout or paint work on every frame.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": ".panel {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  position: fixed;",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  transition: top 300ms ease, height 300ms ease;",
+          "issue": "Animating `top` and `height` triggers layout every frame; animate `transform` (translate/scale) instead."
+        },
+        {
+          "id": "l4",
+          "text": "  box-shadow: 0 8px 24px rgb(0 0 0 / 0.2);",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": ".panel.open { top: 0; height: 320px; }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ".panel * { will-change: transform, opacity; }",
+          "issue": "`will-change` on every descendant creates many layers and eats GPU memory; apply it to the one element that animates, only while it does."
+        },
+        {
+          "id": "l8",
+          "text": ".panel .badge { animation: pulse 1s infinite; }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "@keyframes pulse { 50% { opacity: 0.6; } }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-css-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "After a redesign the article page's Cumulative Layout Shift went from 0.02 to 0.31. The page loads a custom web\nfont, an ad slot above the article body, and article images with only `style=\"width: 100%\"`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "After a redesign the article page's Cumulative Layout Shift went from 0.02 to 0.31. The page loads a custom web\nfont, an ad slot above the article body, and article images with only `style=\"width: 100%\"`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Which change removes the most shift for the images?",
+          "options": [
+            "Give each `<img>` `width`/`height` attributes (CSS keeps `width: 100%; height: auto`)",
+            "Lazy-load every image",
+            "Wrap images in a `div` with `overflow: hidden`",
+            "Convert them to WebP"
+          ],
+          "correctIndex": 0,
+          "explanation": "With intrinsic dimensions the browser computes an aspect ratio and reserves space before the file arrives."
+        },
+        {
+          "id": "q2",
+          "question": "The ad slot loads late and pushes the article down. What is the standard fix?",
+          "options": [
+            "Reserve its space with a `min-height` (or `aspect-ratio`) matching the most common ad size",
+            "Insert the ad with `position: absolute` over the text",
+            "Load the ad before the CSS"
+          ],
+          "correctIndex": 0,
+          "explanation": "Reserving the slot's space keeps content still; an empty reserved box is better than a jump."
+        },
+        {
+          "id": "q3",
+          "question": "Text reflows when the web font arrives. Which CSS reduces that shift?",
+          "options": [
+            "A fallback `@font-face` with `size-adjust`/`ascent-override` tuned to the web font, plus `font-display: swap` or `optional`",
+            "`font-display: block` with a 10 second timeout",
+            "Setting `letter-spacing: 0` on body"
+          ],
+          "correctIndex": 0,
+          "explanation": "Metric overrides make the fallback occupy the same space as the web font, so the swap does not move lines."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-css-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Styles are in cascade layers: `@layer reset, base, components;`. An **unlayered** rule `.btn { color: black }` and a rule in `@layer components { #main .btn { color: blue } }` both match. Which wins (no `!important`)?",
+    "mcq": {
+      "options": [
+        "The unlayered rule, black: unlayered styles beat every layer regardless of specificity",
+        "The layered rule, blue: it has an id",
+        "Whichever comes last in the file",
+        "The `reset` layer"
+      ],
+      "correctIndex": 0,
+      "explanation": "Layer order is checked before specificity. For normal declarations, unlayered styles act as the last, strongest layer. (For `!important` the order reverses.)",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A card component must switch to a horizontal layout when **its own** column is wider than 500px, whatever the viewport. What do you use?",
+    "mcq": {
+      "options": [
+        "`container-type: inline-size` on the wrapper and `@container (min-width: 500px)` on the card",
+        "`@media (min-width: 500px)`",
+        "`resize: horizontal`",
+        "`min-width: 500px` on the card"
+      ],
+      "correctIndex": 0,
+      "explanation": "Container queries respond to the size of an ancestor container, so the same card works in a sidebar and in a main column. Media queries only know the viewport.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-css-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-css",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A long feed page renders slowly. Which CSS lets the browser skip layout and paint of off-screen sections while keeping scroll height stable?",
+    "mcq": {
+      "options": [
+        "`content-visibility: auto` with `contain-intrinsic-size` on each section",
+        "`display: none` on off-screen sections",
+        "`will-change: contents`",
+        "`visibility: hidden` on off-screen sections"
+      ],
+      "correctIndex": 0,
+      "explanation": "`content-visibility: auto` skips rendering work for off-screen content; `contain-intrinsic-size` gives a placeholder size so the scrollbar does not jump. Unlike `display: none`, the content stays findable and accessible.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

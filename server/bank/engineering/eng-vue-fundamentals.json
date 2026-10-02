@@ -1,0 +1,2190 @@
+[
+  {
+    "id": "eng-vue-fundamentals-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A cart page has `const total = computed(() => cartTotal(items.value))`. Fix `cartTotal`: each item is\n`{ price, qty }`, and the total is the sum of `price * qty`, rounded to 2 decimals.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cartTotal",
+      "starterCode": "function cartTotal(items) {\n  return items.reduce((sum, i) => sum + i.price, 0);\n}",
+      "referenceSolution": "function cartTotal(items) {\n  const sum = items.reduce((s, i) => s + i.price * i.qty, 0);\n  return Math.round(sum * 100) / 100;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "price": 10,
+                "qty": 2
+              },
+              {
+                "price": 5,
+                "qty": 1
+              }
+            ]
+          ],
+          "expected": 25
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 0.1,
+                "qty": 3
+              }
+            ]
+          ],
+          "expected": 0.3
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 19.99,
+                "qty": 0
+              },
+              {
+                "price": 4.5,
+                "qty": 2
+              }
+            ]
+          ],
+          "expected": 9
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`visibleTodos(todos, filter)` backs a `computed` used by `v-for`. `filter` is `\"all\"`, `\"active\"` (not done)\nor `\"done\"`. It returns the matching todos and must not change the original array.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "visibleTodos",
+      "starterCode": "function visibleTodos(todos, filter) {\n  if (filter === \"active\") return todos.filter((t) => !t.done);\n  return todos;\n}",
+      "referenceSolution": "function visibleTodos(todos, filter) {\n  if (filter === \"active\") return todos.filter((t) => !t.done);\n  if (filter === \"done\") return todos.filter((t) => t.done);\n  return todos;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              },
+              {
+                "id": 2,
+                "done": false
+              }
+            ],
+            "active"
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "done": false
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              },
+              {
+                "id": 2,
+                "done": false
+              }
+            ],
+            "done"
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              }
+            ],
+            "all"
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "done"
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`classList(base, flags)` mimics what Vue renders for `class=\"btn\" :class=\"{ active: isActive, 'is-error': hasError }\"`:\nthe base class, then every key of `flags` whose value is truthy, separated by spaces.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "classList",
+      "starterCode": "function classList(base, flags) {\n  return [base, ...Object.keys(flags)].join(\" \");\n}",
+      "referenceSolution": "function classList(base, flags) {\n  return [base, ...Object.keys(flags).filter((k) => flags[k])].filter(Boolean).join(\" \");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "btn",
+            {
+              "active": true,
+              "is-error": false
+            }
+          ],
+          "expected": "btn active"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "btn",
+            {
+              "active": false
+            }
+          ],
+          "expected": "btn"
+        },
+        {
+          "args": [
+            "",
+            {
+              "a": 1,
+              "b": 0,
+              "c": "yes"
+            }
+          ],
+          "expected": "a c"
+        },
+        {
+          "args": [
+            "card",
+            {}
+          ],
+          "expected": "card"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A form uses validation rules shaped like `(value) => true | \"message\"`. Fix `required`: an empty string,\n`null`, `undefined` or whitespace-only text returns `\"Required\"`; anything else returns `true`\n(`0` is a valid value).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "required",
+      "starterCode": "function required(value) {\n  return !!value || \"Required\";\n}",
+      "referenceSolution": "function required(value) {\n  if (value === null || value === undefined) return \"Required\";\n  if (typeof value === \"string\" && value.trim() === \"\") return \"Required\";\n  return true;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "Ana"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "   "
+          ],
+          "expected": "Required"
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            null
+          ],
+          "expected": "Required"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": "Required"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A child component that shows a counter it receives from its parent. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<script setup>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "const props = defineProps({ count: Number })",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "function increment() {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  props.count++",
+          "issue": "Props are read-only: mutating one warns and is overwritten on the next parent render. Emit an event (`emit('update:count', props.count + 1)`) instead."
+        },
+        {
+          "id": "l5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "</script>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "<template>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  <button @click=\"increment\">{{ count }}</button>",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "</template>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A list template. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<ul>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  <li v-for=\"user in users\" v-if=\"user.active\">",
+          "issue": "`v-if` and `v-for` on the same element: in Vue 3 `v-if` runs first and cannot see `user`. Filter in a computed (or wrap with `<template v-for>`)."
+        },
+        {
+          "id": "l3",
+          "text": "    {{ user.name }}",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  </li>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "</ul>",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "<TaskRow v-for=\"task in tasks\" :task=\"task\" />",
+          "issue": "No `:key`: Vue reuses rows by position, so row state can attach to the wrong task. Add `:key=\"task.id\"`."
+        },
+        {
+          "id": "l7",
+          "text": "<p v-if=\"!users.length\">No users yet.</p>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In `<script setup>` you have `const count = ref(0)`. How do you increase it in a function?",
+    "mcq": {
+      "options": [
+        "`count.value++`",
+        "`count++`",
+        "`this.count++`",
+        "`setCount(count + 1)`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `ref` wraps the value; in script you read and write `.value`. Templates unwrap refs automatically, so the template uses `{{ count }}`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A panel is toggled open and closed many times a minute. Which directive fits best?",
+    "mcq": {
+      "options": [
+        "`v-show`: it keeps the element and toggles `display`",
+        "`v-if`: it is always faster",
+        "`v-for` with one item",
+        "`v-once`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`v-show` only toggles CSS, so frequent toggling is cheap. `v-if` creates and destroys the element and its children, which suits rarely-shown content.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `<input v-model=\"name\">` do?",
+    "mcq": {
+      "options": [
+        "Binds the input's `value` to `name` and updates `name` on every `input` event",
+        "Sets the input's value once, when the component mounts",
+        "Updates `name` only when the form is submitted",
+        "Makes `name` read-only"
+      ],
+      "correctIndex": 0,
+      "explanation": "`v-model` on a native input is shorthand for `:value` plus an `@input` handler. Modifiers such as `.lazy` (on `change`) and `.trim` change the event or the value.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A Pinia-style cart store is written as a reducer `cart(state, action)`; `state` is an array of `{ id, qty }`.\n- `{ type: \"add\", id }`: add with `qty: 1`, or increase `qty` if already in the cart\n- `{ type: \"remove\", id }`: remove that line\nReturn a new array; do not mutate `state`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cart",
+      "starterCode": "function cart(state, action) {\n  if (action.type === \"add\") return [...state, { id: action.id, qty: 1 }];\n  return state;\n}",
+      "referenceSolution": "function cart(state, action) {\n  if (action.type === \"add\") {\n    if (state.some((l) => l.id === action.id)) {\n      return state.map((l) => (l.id === action.id ? { ...l, qty: l.qty + 1 } : l));\n    }\n    return [...state, { id: action.id, qty: 1 }];\n  }\n  if (action.type === \"remove\") return state.filter((l) => l.id !== action.id);\n  return state;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "qty": 1
+              }
+            ],
+            {
+              "type": "add",
+              "id": "a"
+            }
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "qty": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            {
+              "type": "add",
+              "id": "b"
+            }
+          ],
+          "expected": [
+            {
+              "id": "b",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "qty": 3
+              },
+              {
+                "id": "b",
+                "qty": 1
+              }
+            ],
+            {
+              "type": "remove",
+              "id": "a"
+            }
+          ],
+          "expected": [
+            {
+              "id": "b",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "qty": 1
+              }
+            ],
+            {
+              "type": "remove",
+              "id": "zz"
+            }
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "qty": 1
+              }
+            ],
+            {
+              "type": "noop"
+            }
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "qty": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`matchParams(pattern, path)` reads route params like Vue Router: `matchParams(\"/users/:id\", \"/users/42\")` →\n`{ id: \"42\" }`. Segments without `:` must match exactly, and the segment counts must be equal; otherwise\nreturn `null`. A trailing slash on `path` is ignored.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matchParams",
+      "starterCode": "function matchParams(pattern, path) {\n  const p = pattern.split(\"/\");\n  const s = path.split(\"/\");\n  const params = {};\n  p.forEach((seg, i) => {\n    if (seg.startsWith(\":\")) params[seg.slice(1)] = s[i];\n  });\n  return params;\n}",
+      "referenceSolution": "function matchParams(pattern, path) {\n  const p = pattern.split(\"/\").filter(Boolean);\n  const s = path.split(\"/\").filter(Boolean);\n  if (p.length !== s.length) return null;\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(\":\")) params[p[i].slice(1)] = s[i];\n    else if (p[i] !== s[i]) return null;\n  }\n  return params;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/users/:id/posts/:postId",
+            "/users/7/posts/99"
+          ],
+          "expected": {
+            "id": "7",
+            "postId": "99"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/users/:id",
+            "/teams/7"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/users/:id",
+            "/users/7/edit"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/users/:id",
+            "/users/7/"
+          ],
+          "expected": {
+            "id": "7"
+          }
+        },
+        {
+          "args": [
+            "/about",
+            "/about"
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`emailRule(value)` is a form rule: return `\"Required\"` for an empty or whitespace value,\n`\"Enter a valid email\"` unless it looks like `something@something.tld` (no spaces), else `true`.\nSurrounding spaces are ignored.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "emailRule",
+      "starterCode": "function emailRule(value) {\n  return value.includes(\"@\") || \"Enter a valid email\";\n}",
+      "referenceSolution": "function emailRule(value) {\n  const v = (value || \"\").trim();\n  if (!v) return \"Required\";\n  return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v) || \"Enter a valid email\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "ana@example.com"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": "Required"
+        },
+        {
+          "args": [
+            "ana@"
+          ],
+          "expected": "Enter a valid email"
+        },
+        {
+          "args": [
+            "  bo@x.io  "
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "a b@x.io"
+          ],
+          "expected": "Enter a valid email"
+        },
+        {
+          "args": [
+            "@x.io"
+          ],
+          "expected": "Enter a valid email"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "In Vue Router, `route.query.tag` can be a string, an **array** of strings (`?tag=a&tag=b`), `null`\n(`?tag`) or `undefined`. Fix `firstQuery(query, key)` to always return a string: the value, the first array\nitem, or `\"\"`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "firstQuery",
+      "starterCode": "function firstQuery(query, key) {\n  return query[key] || \"\";\n}",
+      "referenceSolution": "function firstQuery(query, key) {\n  const v = query[key];\n  if (Array.isArray(v)) return v[0] ?? \"\";\n  return typeof v === \"string\" ? v : \"\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "tag": "vue"
+            },
+            "tag"
+          ],
+          "expected": "vue"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "tag": [
+                "a",
+                "b"
+              ]
+            },
+            "tag"
+          ],
+          "expected": "a"
+        },
+        {
+          "args": [
+            {
+              "tag": null
+            },
+            "tag"
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            {},
+            "tag"
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            {
+              "tag": []
+            },
+            "tag"
+          ],
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A search box should reload results whenever the query changes. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const state = reactive({ query: '', results: [] })",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "const { query } = state",
+          "issue": "Destructuring a `reactive` object copies the current value; `query` is a plain string that never updates. Use `toRefs(state)` or read `state.query`."
+        },
+        {
+          "id": "l3",
+          "text": "watch(state.query, async (q) => {",
+          "issue": "`watch` needs a source it can track: pass a getter `() => state.query`, not the current string value."
+        },
+        {
+          "id": "l4",
+          "text": "  state.results = await search(q)",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "})",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "function clear() { state.query = '' }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A custom input used as `<NameInput v-model=\"name\" />`. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<script setup>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "const props = defineProps(['value'])",
+          "issue": "With `v-model` on a component, Vue 3 passes the prop `modelValue`, not `value`."
+        },
+        {
+          "id": "l3",
+          "text": "const emit = defineEmits(['update:modelValue'])",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "</script>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "<template>",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  <input :value=\"props.value\"",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "         @input=\"props.value = $event.target.value\" />",
+          "issue": "Writes to a prop; it should `emit('update:modelValue', $event.target.value)`."
+        },
+        {
+          "id": "l8",
+          "text": "</template>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why is a `computed` usually better than a method for `filteredList` used in a template?",
+    "mcq": {
+      "options": [
+        "A computed is cached and only recalculates when its reactive dependencies change; a method runs on every render",
+        "Methods cannot read reactive state",
+        "Computeds run on the server only",
+        "Methods cannot be used in templates"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both give the same result, but the computed is memoised by dependency, so unrelated re-renders do not repeat the filtering.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `watch` and `watchEffect`?",
+    "mcq": {
+      "options": [
+        "`watch` tracks an explicit source and gives old and new values; `watchEffect` runs immediately and tracks whatever it reads",
+        "`watchEffect` only runs once",
+        "`watch` cannot watch refs",
+        "They are aliases"
+      ],
+      "correctIndex": 0,
+      "explanation": "`watch` is lazy by default and explicit about its source. `watchEffect` runs right away and re-runs when any reactive value it touched changes, which is convenient but less explicit.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`const { count } = useCounterStore()` in a component shows `0` forever, even though the store's count increases. What fixes it?",
+    "mcq": {
+      "options": [
+        "`const { count } = storeToRefs(useCounterStore())`",
+        "`const count = useCounterStore().count`",
+        "Wrap the store call in `reactive()`",
+        "Call `useCounterStore()` inside `onMounted`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A Pinia store is a reactive object; destructuring copies values. `storeToRefs` turns state and getters into refs that stay linked. Actions can be destructured directly.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`paginate(items, page, perPage)` backs a paginated table's computed. Return\n`{ rows, page, totalPages }`. `page` is 1-based and must be **clamped** into `1..totalPages`\n(an empty list has `totalPages: 1`), so deleting the last row of the last page does not show an empty page.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "paginate",
+      "starterCode": "function paginate(items, page, perPage) {\n  const totalPages = Math.ceil(items.length / perPage);\n  const start = (page - 1) * perPage;\n  return { rows: items.slice(start, start + perPage), page, totalPages };\n}",
+      "referenceSolution": "function paginate(items, page, perPage) {\n  const totalPages = Math.max(1, Math.ceil(items.length / perPage));\n  const p = Math.min(Math.max(1, page), totalPages);\n  const start = (p - 1) * perPage;\n  return { rows: items.slice(start, start + perPage), page: p, totalPages };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "rows": [
+              3,
+              4
+            ],
+            "page": 2,
+            "totalPages": 3
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            3,
+            2
+          ],
+          "expected": {
+            "rows": [
+              3,
+              4
+            ],
+            "page": 2,
+            "totalPages": 2
+          }
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": {
+            "rows": [],
+            "page": 1,
+            "totalPages": 1
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0,
+            2
+          ],
+          "expected": {
+            "rows": [
+              1,
+              2
+            ],
+            "page": 1,
+            "totalPages": 2
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "rows": [
+              3
+            ],
+            "page": 2,
+            "totalPages": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An editor store keeps undo history: `{ past: [], present, future: [] }`. Complete `history(state, action)`:\n- `{ type: \"set\", value }`: push `present` onto `past`, set `present`, clear `future`\n- `{ type: \"undo\" }` / `{ type: \"redo\" }`: move one step; do nothing when there is no step\nReturn new objects.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "history",
+      "starterCode": "function history(state, action) {\n  if (action.type === \"set\") {\n    return { past: [...state.past, state.present], present: action.value, future: state.future };\n  }\n  if (action.type === \"undo\") {\n    const prev = state.past[state.past.length - 1];\n    return { past: state.past.slice(0, -1), present: prev, future: [state.present, ...state.future] };\n  }\n  return state;\n}",
+      "referenceSolution": "function history(state, action) {\n  if (action.type === \"set\") {\n    return { past: [...state.past, state.present], present: action.value, future: [] };\n  }\n  if (action.type === \"undo\") {\n    if (!state.past.length) return state;\n    const prev = state.past[state.past.length - 1];\n    return { past: state.past.slice(0, -1), present: prev, future: [state.present, ...state.future] };\n  }\n  if (action.type === \"redo\") {\n    if (!state.future.length) return state;\n    const [next, ...rest] = state.future;\n    return { past: [...state.past, state.present], present: next, future: rest };\n  }\n  return state;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "past": [
+                "a"
+              ],
+              "present": "b",
+              "future": []
+            },
+            {
+              "type": "undo"
+            }
+          ],
+          "expected": {
+            "past": [],
+            "present": "a",
+            "future": [
+              "b"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "past": [],
+              "present": "a",
+              "future": [
+                "b"
+              ]
+            },
+            {
+              "type": "redo"
+            }
+          ],
+          "expected": {
+            "past": [
+              "a"
+            ],
+            "present": "b",
+            "future": []
+          }
+        },
+        {
+          "args": [
+            {
+              "past": [],
+              "present": "a",
+              "future": []
+            },
+            {
+              "type": "undo"
+            }
+          ],
+          "expected": {
+            "past": [],
+            "present": "a",
+            "future": []
+          }
+        },
+        {
+          "args": [
+            {
+              "past": [
+                "a"
+              ],
+              "present": "b",
+              "future": [
+                "c"
+              ]
+            },
+            {
+              "type": "set",
+              "value": "x"
+            }
+          ],
+          "expected": {
+            "past": [
+              "a",
+              "b"
+            ],
+            "present": "x",
+            "future": []
+          }
+        },
+        {
+          "args": [
+            {
+              "past": [
+                "a"
+              ],
+              "present": "b",
+              "future": []
+            },
+            {
+              "type": "redo"
+            }
+          ],
+          "expected": {
+            "past": [
+              "a"
+            ],
+            "present": "b",
+            "future": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A kanban board renders three columns from a computed `byStatus(tasks)`. Return\n`{ todo: [...ids], doing: [...ids], done: [...ids] }` in task order. All three keys must exist even when a\ncolumn is empty (the template does `v-for=\"id in columns.done\"`), and unknown statuses are ignored.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "byStatus",
+      "starterCode": "function byStatus(tasks) {\n  const out = {};\n  for (const t of tasks) {\n    out[t.status] = out[t.status] || [];\n    out[t.status].push(t.id);\n  }\n  return out;\n}",
+      "referenceSolution": "function byStatus(tasks) {\n  const out = { todo: [], doing: [], done: [] };\n  for (const t of tasks) {\n    if (out[t.status]) out[t.status].push(t.id);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "todo"
+              },
+              {
+                "id": 2,
+                "status": "done"
+              }
+            ]
+          ],
+          "expected": {
+            "todo": [
+              1
+            ],
+            "doing": [],
+            "done": [
+              2
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "todo": [],
+            "doing": [],
+            "done": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "archived"
+              },
+              {
+                "id": 2,
+                "status": "doing"
+              }
+            ]
+          ],
+          "expected": {
+            "todo": [],
+            "doing": [
+              2
+            ],
+            "done": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "status": "todo"
+              },
+              {
+                "id": 1,
+                "status": "todo"
+              }
+            ]
+          ],
+          "expected": {
+            "todo": [
+              3,
+              1
+            ],
+            "doing": [],
+            "done": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`resolveRoute(routes, path)` returns `{ name, params }` for the **first** route whose `path` matches, like Vue\nRouter. Patterns use `:param` segments; the route with path `\"/:pathMatch(.*)*\"` is the catch-all and matches\nanything (params `{}`). Return `null` if nothing matches.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "resolveRoute",
+      "starterCode": "function resolveRoute(routes, path) {\n  for (const r of routes) {\n    if (r.path === path) return { name: r.name, params: {} };\n  }\n  return null;\n}",
+      "referenceSolution": "function resolveRoute(routes, path) {\n  const segs = path.split(\"/\").filter(Boolean);\n  for (const r of routes) {\n    if (r.path === \"/:pathMatch(.*)*\") return { name: r.name, params: {} };\n    const p = r.path.split(\"/\").filter(Boolean);\n    if (p.length !== segs.length) continue;\n    const params = {};\n    let ok = true;\n    for (let i = 0; i < p.length; i++) {\n      if (p[i].startsWith(\":\")) params[p[i].slice(1)] = segs[i];\n      else if (p[i] !== segs[i]) { ok = false; break; }\n    }\n    if (ok) return { name: r.name, params };\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "path": "/",
+                "name": "home"
+              },
+              {
+                "path": "/users/:id",
+                "name": "user"
+              }
+            ],
+            "/users/5"
+          ],
+          "expected": {
+            "name": "user",
+            "params": {
+              "id": "5"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "path": "/users/new",
+                "name": "new"
+              },
+              {
+                "path": "/users/:id",
+                "name": "user"
+              }
+            ],
+            "/users/new"
+          ],
+          "expected": {
+            "name": "new",
+            "params": {}
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "path": "/",
+                "name": "home"
+              },
+              {
+                "path": "/:pathMatch(.*)*",
+                "name": "404"
+              }
+            ],
+            "/nope/x"
+          ],
+          "expected": {
+            "name": "404",
+            "params": {}
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "path": "/",
+                "name": "home"
+              }
+            ],
+            "/x"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              {
+                "path": "/",
+                "name": "home"
+              }
+            ],
+            "/"
+          ],
+          "expected": {
+            "name": "home",
+            "params": {}
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A component that tracks window width and polls for notifications. Mark the lines that leak after the component is unmounted.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<script setup>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "import { ref, onMounted, onUnmounted } from 'vue'",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "const width = ref(window.innerWidth)",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "const onResize = () => (width.value = window.innerWidth)",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "onMounted(() => {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  window.addEventListener('resize', onResize)",
+          "issue": "Never removed: add `window.removeEventListener('resize', onResize)` in `onUnmounted`."
+        },
+        {
+          "id": "l7",
+          "text": "  setInterval(fetchNotifications, 30000)",
+          "issue": "The interval id is not kept or cleared, so polling continues forever after unmount; store it and `clearInterval` in `onUnmounted`."
+        },
+        {
+          "id": "l8",
+          "text": "})",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "onUnmounted(() => console.log('bye'))",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "</script>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A product page at `/products/:id`. Clicking a \"related product\" link goes to `/products/42`, the URL changes, but the page still shows the old product. Mark the lines responsible.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const route = useRoute()",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "const product = ref(null)",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "onMounted(async () => {",
+          "issue": "Vue Router reuses the same component instance when only params change, so `onMounted` does not run again."
+        },
+        {
+          "id": "l4",
+          "text": "  product.value = await fetchProduct(route.params.id)",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "})",
+          "issue": "Nothing reacts to `route.params.id`; use `watch(() => route.params.id, load, { immediate: true })`."
+        },
+        {
+          "id": "l6",
+          "text": "const title = computed(() => product.value?.name ?? 'Loading')",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "const related = computed(() => product.value?.related ?? [])",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A component does `provide('theme', theme.value)` where `theme` is a ref. Child components that `inject('theme')` do not update when the theme changes. Why?",
+    "mcq": {
+      "options": [
+        "`theme.value` provides the current plain value; provide the ref itself (`provide('theme', theme)`) to keep it reactive",
+        "`inject` only works one level deep",
+        "Provided values are always frozen",
+        "`provide` must be called in `onMounted`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Provide/inject passes whatever you hand it. Passing the ref (often wrapped in `readonly()`) keeps the link; passing `.value` passes a snapshot.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You hold a 50,000-row array from an API that you only ever replace as a whole. Which is the better container?",
+    "mcq": {
+      "options": [
+        "`shallowRef`: only `.value` replacement is tracked, so Vue does not make every row deeply reactive",
+        "`reactive`, to track every nested field",
+        "`ref`, because it is always cheaper than `reactive`",
+        "A computed with no dependencies"
+      ],
+      "correctIndex": 0,
+      "explanation": "`ref` and `reactive` convert nested objects into proxies lazily on access, which costs memory and time for big read-only data. `shallowRef` tracks only replacement.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "After `items.value.push(x)`, code immediately reads the list's height from the DOM and gets the old value. What fixes it?",
+    "mcq": {
+      "options": [
+        "`await nextTick()` before reading the DOM",
+        "Use `watchEffect` instead of `push`",
+        "Call `forceUpdate()`",
+        "Wrap the push in `setTimeout(fn, 1000)`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Vue batches DOM updates and applies them asynchronously. `nextTick` resolves after the pending update has been flushed; an arbitrary timeout only usually works.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A to-do store updates optimistically. Complete `todos(state, action)` (`state` is an array of `{ id, title, done }`):\n- `{ type: \"toggle\", id }`: flip `done` immediately\n- `{ type: \"rollback\", id, previous }`: the server rejected it; put the saved todo `previous` back in place of `id`\n- `{ type: \"confirm\", id, todo }`: the server answered; replace the item with the server's `todo`\nUnknown ids leave the state unchanged. Return a new array.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "todos",
+      "starterCode": "type Todo = { id: number; title: string; done: boolean };\ntype Action =\n  | { type: \"toggle\"; id: number }\n  | { type: \"rollback\"; id: number; previous: Todo }\n  | { type: \"confirm\"; id: number; todo: Todo };\n\nfunction todos(state: Todo[], action: Action): Todo[] {\n  if (action.type === \"toggle\") {\n    return state.map((t) => (t.id === action.id ? { ...t, done: !t.done } : t));\n  }\n  return state;\n}",
+      "referenceSolution": "type Todo = { id: number; title: string; done: boolean };\ntype Action =\n  | { type: \"toggle\"; id: number }\n  | { type: \"rollback\"; id: number; previous: Todo }\n  | { type: \"confirm\"; id: number; todo: Todo };\n\nfunction todos(state: Todo[], action: Action): Todo[] {\n  switch (action.type) {\n    case \"toggle\":\n      return state.map((t) => (t.id === action.id ? { ...t, done: !t.done } : t));\n    case \"rollback\":\n      return state.map((t) => (t.id === action.id ? action.previous : t));\n    case \"confirm\":\n      return state.map((t) => (t.id === action.id ? action.todo : t));\n    default:\n      return state;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "title": "a",
+                "done": false
+              }
+            ],
+            {
+              "type": "toggle",
+              "id": 1
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "title": "a",
+              "done": true
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "title": "a",
+                "done": true
+              }
+            ],
+            {
+              "type": "rollback",
+              "id": 1,
+              "previous": {
+                "id": 1,
+                "title": "a",
+                "done": false
+              }
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "title": "a",
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "title": "a",
+                "done": true
+              },
+              {
+                "id": 2,
+                "title": "b",
+                "done": false
+              }
+            ],
+            {
+              "type": "confirm",
+              "id": 1,
+              "todo": {
+                "id": 1,
+                "title": "A!",
+                "done": true
+              }
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "title": "A!",
+              "done": true
+            },
+            {
+              "id": 2,
+              "title": "b",
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "title": "a",
+                "done": false
+              }
+            ],
+            {
+              "type": "rollback",
+              "id": 9,
+              "previous": {
+                "id": 9,
+                "title": "x",
+                "done": false
+              }
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "title": "a",
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            {
+              "type": "toggle",
+              "id": 1
+            }
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`formErrors(values, rules)` validates a whole form. `rules` maps a field to rule strings, checked in order;\nthe **first** failing rule gives the field's message and the field appears in the result only if it fails:\n- `\"required\"` → `\"Required\"` for empty/whitespace/missing\n- `\"email\"` → `\"Invalid email\"` unless it matches `x@y.z` (skip when empty)\n- `\"min:N\"` → `\"At least N characters\"` when shorter than N (skip when empty)",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "formErrors",
+      "starterCode": "function formErrors(values: Record<string, string>, rules: Record<string, string[]>): Record<string, string> {\n  const errors: Record<string, string> = {};\n  for (const field of Object.keys(rules)) {\n    const v = values[field] ?? \"\";\n    for (const rule of rules[field]) {\n      if (rule === \"required\" && !v.trim()) errors[field] = \"Required\";\n      if (rule === \"email\" && !/^\\S+@\\S+\\.\\S+$/.test(v)) errors[field] = \"Invalid email\";\n    }\n  }\n  return errors;\n}",
+      "referenceSolution": "function formErrors(values: Record<string, string>, rules: Record<string, string[]>): Record<string, string> {\n  const errors: Record<string, string> = {};\n  for (const field of Object.keys(rules)) {\n    const v = (values[field] ?? \"\").trim();\n    for (const rule of rules[field]) {\n      let msg: string | null = null;\n      if (rule === \"required\" && !v) msg = \"Required\";\n      else if (rule === \"email\" && v && !/^\\S+@\\S+\\.\\S+$/.test(v)) msg = \"Invalid email\";\n      else if (rule.startsWith(\"min:\")) {\n        const n = Number(rule.slice(4));\n        if (v && v.length < n) msg = `At least ${n} characters`;\n      }\n      if (msg) {\n        errors[field] = msg;\n        break;\n      }\n    }\n  }\n  return errors;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "email": "",
+              "name": "Al"
+            },
+            {
+              "email": [
+                "required",
+                "email"
+              ],
+              "name": [
+                "required",
+                "min:3"
+              ]
+            }
+          ],
+          "expected": {
+            "email": "Required",
+            "name": "At least 3 characters"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "email": "a@b.co",
+              "name": "Alice"
+            },
+            {
+              "email": [
+                "required",
+                "email"
+              ],
+              "name": [
+                "required",
+                "min:3"
+              ]
+            }
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {},
+            {
+              "phone": [
+                "email"
+              ]
+            }
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "email": "nope"
+            },
+            {
+              "email": [
+                "required",
+                "email"
+              ]
+            }
+          ],
+          "expected": {
+            "email": "Invalid email"
+          }
+        },
+        {
+          "args": [
+            {
+              "bio": "hi"
+            },
+            {
+              "bio": [
+                "min:5"
+              ]
+            }
+          ],
+          "expected": {
+            "bio": "At least 5 characters"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`<KeepAlive :max=\"max\">` caches component instances and evicts the **least recently used** one when full.\n`keepAliveCache(visits, max)` gets the names of components shown in order and returns the cached names after\nthe last visit, least recently used first.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "keepAliveCache",
+      "starterCode": "function keepAliveCache(visits, max) {\n  const cache = [];\n  for (const v of visits) {\n    if (!cache.includes(v)) cache.push(v);\n    if (cache.length > max) cache.shift();\n  }\n  return cache;\n}",
+      "referenceSolution": "function keepAliveCache(visits, max) {\n  const cache = [];\n  for (const v of visits) {\n    const i = cache.indexOf(v);\n    if (i >= 0) cache.splice(i, 1);\n    cache.push(v);\n    if (cache.length > max) cache.shift();\n  }\n  return cache;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "A",
+              "B",
+              "C"
+            ],
+            2
+          ],
+          "expected": [
+            "B",
+            "C"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "A",
+              "B",
+              "A",
+              "C"
+            ],
+            2
+          ],
+          "expected": [
+            "A",
+            "C"
+          ]
+        },
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "A",
+              "A",
+              "A"
+            ],
+            2
+          ],
+          "expected": [
+            "A"
+          ]
+        },
+        {
+          "args": [
+            [
+              "A",
+              "B",
+              "C",
+              "B",
+              "D"
+            ],
+            3
+          ],
+          "expected": [
+            "C",
+            "B",
+            "D"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A filter panel updates the URL with `router.replace({ query: mergeQuery(route.query, patch) })`. Fix\n`mergeQuery`: apply `patch` over `current`, then **drop** keys whose value is `null`, `undefined`, `\"\"` or an\nempty array, so cleared filters disappear from the URL. Do not mutate `current`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mergeQuery",
+      "starterCode": "function mergeQuery(current, patch) {\n  return Object.assign(current, patch);\n}",
+      "referenceSolution": "function mergeQuery(current, patch) {\n  const merged = { ...current, ...patch };\n  const out = {};\n  for (const [k, v] of Object.entries(merged)) {\n    if (v === null || v === undefined || v === \"\") continue;\n    if (Array.isArray(v) && v.length === 0) continue;\n    out[k] = v;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "q": "shoes",
+              "page": "2"
+            },
+            {
+              "page": null
+            }
+          ],
+          "expected": {
+            "q": "shoes"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "q": "a"
+            },
+            {
+              "tag": [
+                "x",
+                "y"
+              ]
+            }
+          ],
+          "expected": {
+            "q": "a",
+            "tag": [
+              "x",
+              "y"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "q": "a",
+              "tag": [
+                "x"
+              ]
+            },
+            {
+              "tag": [],
+              "q": ""
+            }
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "sort": "price"
+            },
+            {
+              "sort": "name"
+            }
+          ],
+          "expected": {
+            "sort": "name"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A server-rendered page shows hydration mismatch warnings and a flash of different content. Mark the lines that cause it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<script setup>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "const props = defineProps({ post: Object })",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "const isMobile = window.innerWidth < 768",
+          "issue": "`window` does not exist on the server, and the client value can differ from what the server rendered; read it in `onMounted`."
+        },
+        {
+          "id": "l4",
+          "text": "const renderedAt = new Date().toLocaleTimeString()",
+          "issue": "The time differs between server render and client hydration, so the text mismatches; compute it after mount or pass it from the server."
+        },
+        {
+          "id": "l5",
+          "text": "const words = computed(() => props.post.body.split(' ').length)",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "</script>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "<template>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  <article><h1>{{ post.title }}</h1><p>{{ words }} words</p></article>",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  <small>Rendered at {{ renderedAt }}</small>",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "</template>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An admin table renders 5,000 rows with `v-for`, each row with a few computed cells. Typing in a search box\nabove the table freezes the page for ~400ms per key. Data comes from one API call and is replaced as a whole.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An admin table renders 5,000 rows with `v-for`, each row with a few computed cells. Typing in a search box\nabove the table freezes the page for ~400ms per key. Data comes from one API call and is replaced as a whole.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the first change with the biggest effect?",
+          "options": [
+            "Render only the visible rows with a virtual scroller",
+            "Replace `v-for` with `v-show` on each row",
+            "Move the table into a `<Teleport>`",
+            "Add `v-once` to the search input"
+          ],
+          "correctIndex": 0,
+          "explanation": "Thousands of DOM nodes dominate the cost; virtualisation renders a few dozen rows whatever the data size."
+        },
+        {
+          "id": "q2",
+          "question": "The data is held in `ref(rows)`. What reduces reactivity overhead further?",
+          "options": [
+            "Use `shallowRef` (or `markRaw` on rows), since rows are only replaced as a whole",
+            "Use `reactive` instead of `ref`",
+            "Deep-watch the rows"
+          ],
+          "correctIndex": 0,
+          "explanation": "Deep proxies for 5,000 objects cost memory and tracking; shallow tracking is enough when you never mutate rows in place."
+        },
+        {
+          "id": "q3",
+          "question": "Filtering still runs on every key press. What do you add?",
+          "options": [
+            "Debounce the search term and filter in a `computed` from the debounced value",
+            "Filter inside the template with a method call per row",
+            "Run the filter in `onUpdated`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A debounced source means the computed recalculates once the user pauses, not on every key."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A `watch` callback measures an element's size after the watched state changes, but reads stale dimensions. Which option fixes it?",
+    "mcq": {
+      "options": [
+        "`{ flush: 'post' }`, so the callback runs after Vue has updated the DOM",
+        "`{ deep: true }`",
+        "`{ immediate: true }`",
+        "`{ once: true }`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Watchers run before the component re-renders by default (`flush: 'pre'`). `flush: 'post'` (or `watchPostEffect`) runs them after the DOM patch.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In Vue 3.4+, what does `const model = defineModel()` give a child component?",
+    "mcq": {
+      "options": [
+        "A ref that reads the `modelValue` prop and emits `update:modelValue` when you assign to it",
+        "A local copy of the prop that never syncs back",
+        "A Pinia store scoped to the component",
+        "A two-way binding that mutates the parent's prop object directly"
+      ],
+      "correctIndex": 0,
+      "explanation": "`defineModel` is a macro for the prop + emit pair behind `v-model`. Assigning `model.value = x` emits the update; the parent remains the owner of the state.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-vue-fundamentals-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-vue-fundamentals",
+    "trackId": null,
+    "stackId": "stack-vue",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A list item component has expensive rendering, and its parent re-renders often while most items are unchanged. Which template tool skips re-rendering unchanged items?",
+    "mcq": {
+      "options": [
+        "`v-memo=\"[item.id, item.selected]\"` on the item",
+        "`v-once` on the list",
+        "`v-pre` on the item",
+        "`:key=\"Math.random()\"`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`v-memo` skips the update of a subtree unless one of the listed values changed. `v-once` would freeze it forever, and a random key forces a full remount every time.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

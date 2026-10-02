@@ -100,7 +100,8 @@ describe("catalog seed", () => {
       if (s.departmentId === "engineering") {
         for (const m of s.contentModules) expect(REGISTRY_MODULE_IDS.has(m), `${s.id} -> ${m}`).toBe(true);
       } else {
-        expect(s.contentModules, s.id).toEqual([pmBd(s.departmentId, s.levelMin)]);
+        // AI-for-your-role skills point at the department's dedicated AI camp.
+        expect(s.contentModules, s.id).toEqual([s.isAiSkill ? `${s.departmentId}-ai` : pmBd(s.departmentId, s.levelMin)]);
       }
     }
   });

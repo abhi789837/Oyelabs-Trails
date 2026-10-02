@@ -1,0 +1,1566 @@
+[
+  {
+    "id": "eng-jetpack-compose-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A counter composable never shows a number above 0. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun Counter() {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    var count = 0",
+          "issue": "A plain local is not observable state and is re-initialised on every recomposition; use `var count by remember { mutableStateOf(0) }`."
+        },
+        {
+          "id": "l4",
+          "text": "    Column {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        Text(\"Count: $count\")",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "        Button(onClick = { count++ }) { Text(\"Add\") }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A search field loses what the user typed whenever the screen updates. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun SearchBar(onSearch: (String) -> Unit) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    val query = mutableStateOf(\"\")",
+          "issue": "Without `remember`, a new state object is created on each recomposition, so the text resets; use `remember { mutableStateOf(\"\") }`."
+        },
+        {
+          "id": "l4",
+          "text": "    TextField(",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        value = query.value,",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "        onValueChange = { query.value = it },",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "        trailingIcon = { IconButton(onClick = { onSearch(query.value) }) { Icon(Icons.Default.Search, \"Search\") } }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    )",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A chip needs a rounded background, a ripple clipped to the rounded shape, a click area that includes the inner spacing, and 12.dp inner spacing. Put the modifiers in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Modifier.clip(RoundedCornerShape(16.dp))"
+        },
+        {
+          "id": "s2",
+          "label": ".background(MaterialTheme.colorScheme.secondaryContainer)"
+        },
+        {
+          "id": "s3",
+          "label": ".clickable { onClick() }"
+        },
+        {
+          "id": "s4",
+          "label": ".padding(12.dp)"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "Modifiers apply outside-in. Clip first so the background and ripple are rounded; `clickable` before `padding` makes the padded area clickable; padding last spaces the content inside."
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A login form has an email `TextField`. The screen's \"Continue\" button must be enabled only when the email is not blank.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A login form has an email `TextField`. The screen's \"Continue\" button must be enabled only when the email is not blank.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Where should the email text state live?",
+          "options": [
+            "In the screen (or its ViewModel) and passed down: `EmailField(value = email, onValueChange = { email = it })`",
+            "Inside `EmailField` with `remember`, hidden from the screen",
+            "In a global `object`",
+            "In `SharedPreferences`, read on every recomposition"
+          ],
+          "correctIndex": 0,
+          "explanation": "State hoisting: the lowest common owner of the state is the screen, because both the field and the button need it."
+        },
+        {
+          "id": "q2",
+          "question": "How does `EmailField` look after hoisting?",
+          "options": [
+            "A stateless composable taking `value: String` and `onValueChange: (String) -> Unit`",
+            "A composable taking a `MutableState<String>` and writing into it",
+            "A composable that reads the ViewModel itself"
+          ],
+          "correctIndex": 0,
+          "explanation": "Value-plus-callback keeps the child reusable and previewable, with a single source of truth."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A toolbar row. Mark the lines that hurt accessibility.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Row(verticalAlignment = Alignment.CenterVertically) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    Text(\"Inbox\", style = MaterialTheme.typography.titleMedium)",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    Spacer(Modifier.weight(1f))",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    Icon(Icons.Default.Delete, contentDescription = null,",
+          "issue": "An actionable icon with no `contentDescription` is announced as nothing; describe the action (\"Delete\")."
+        },
+        {
+          "id": "l5",
+          "text": "        modifier = Modifier.size(20.dp).clickable { onDelete() })",
+          "issue": "A 20dp touch target is below the 48dp minimum; use `IconButton` (which sizes the target) or `minimumInteractiveComponentSize()`."
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A screen showing 5,000 contacts is slow to open. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun Contacts(contacts: List<Contact>) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    Column(Modifier.verticalScroll(rememberScrollState())) {",
+          "issue": "A scrollable `Column` composes every child up front; use `LazyColumn`, which only composes visible items."
+        },
+        {
+          "id": "l4",
+          "text": "        contacts.forEach { ContactRow(it) }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "@Composable fun ContactRow(c: Contact) { Text(c.name, Modifier.padding(16.dp)) }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `remember { mutableStateOf(0) }` do?",
+    "mcq": {
+      "options": [
+        "Creates observable state once and keeps it across recompositions; writing to it schedules recomposition of readers",
+        "Saves the value to disk",
+        "Makes the value a compile-time constant",
+        "Keeps the value across process death"
+      ],
+      "correctIndex": 0,
+      "explanation": "`mutableStateOf` makes the value observable; `remember` keeps the same object across recompositions. Neither survives configuration change or process death; that needs `rememberSaveable` or a ViewModel.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which unit should `fontSize` use so text respects the user's font-size setting?",
+    "mcq": {
+      "options": [
+        "`sp`",
+        "`dp`",
+        "`px`",
+        "`em` only"
+      ],
+      "correctIndex": 0,
+      "explanation": "`sp` scales with the system font scale; `dp` does not, so text in dp ignores accessibility settings.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `@Composable` on a function mean?",
+    "mcq": {
+      "options": [
+        "It describes UI and can be re-executed (recomposed) by the Compose runtime when the state it reads changes",
+        "It runs only once when the activity starts",
+        "It returns a `View` object",
+        "It runs on a background thread"
+      ],
+      "correctIndex": 0,
+      "explanation": "Composables emit UI into a tree managed by the runtime. They should be side-effect free, because they may run often, in any order, and be skipped.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A note editor loses the draft when the phone is rotated. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun NoteEditor(onSave: (String) -> Unit) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    var draft by remember { mutableStateOf(\"\") }",
+          "issue": "`remember` does not survive configuration changes; use `rememberSaveable` (or keep the draft in a ViewModel / `SavedStateHandle`)."
+        },
+        {
+          "id": "l4",
+          "text": "    OutlinedTextField(value = draft, onValueChange = { draft = it })",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    Button(onClick = { onSave(draft) }) { Text(\"Save\") }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A profile screen keeps reloading and sometimes shows the wrong user. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun ProfileScreen(userId: String, vm: ProfileViewModel = viewModel()) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    vm.load(userId)",
+          "issue": "A side effect in the composable body runs on every recomposition; put it in `LaunchedEffect(userId) { vm.load(userId) }`."
+        },
+        {
+          "id": "l4",
+          "text": "    LaunchedEffect(Unit) { vm.trackView(userId) }",
+          "issue": "Keyed on `Unit`, so it never re-runs when `userId` changes and tracks the old user; key it on `userId`."
+        },
+        {
+          "id": "l5",
+          "text": "    val state by vm.state.collectAsStateWithLifecycle()",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    ProfileContent(state)",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A screen shows live order updates from a `StateFlow<OrdersUiState>` in a ViewModel. The team noticed the\napp keeps collecting (and hitting the network) while it is in the background.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A screen shows live order updates from a `StateFlow<OrdersUiState>` in a ViewModel. The team noticed the\napp keeps collecting (and hitting the network) while it is in the background.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How should the composable collect the flow?",
+          "options": [
+            "`val state by vm.uiState.collectAsStateWithLifecycle()`",
+            "`val state by vm.uiState.collectAsState()`",
+            "`vm.uiState.value` read directly once",
+            "`runBlocking { vm.uiState.first() }`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The lifecycle-aware collector stops collecting below STARTED; `collectAsState` keeps collecting while the composition exists."
+        },
+        {
+          "id": "q2",
+          "question": "The ViewModel builds `uiState` from a repository flow with `stateIn`. Which sharing policy pairs well with that?",
+          "options": [
+            "`SharingStarted.WhileSubscribed(5_000)`",
+            "`SharingStarted.Eagerly`",
+            "`SharingStarted.Lazily`"
+          ],
+          "correctIndex": 0,
+          "explanation": "It stops the upstream when there are no collectors, with a 5 s grace period so rotation does not restart it."
+        },
+        {
+          "id": "q3",
+          "question": "Where should the ViewModel instance come from?",
+          "options": [
+            "`viewModel()` / `hiltViewModel()` at the screen level, passed state down to children",
+            "`ProfileViewModel()` constructed inside the composable",
+            "A `remember { ProfileViewModel() }`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The ViewModel store scopes it to the navigation entry and keeps it across configuration changes."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Put the steps of getting a new build to internal testers on Google Play in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Increase `versionCode` (and `versionName` if needed) in the Gradle config"
+        },
+        {
+          "id": "s2",
+          "label": "Build a signed release Android App Bundle (`./gradlew bundleRelease`)"
+        },
+        {
+          "id": "s3",
+          "label": "Upload the AAB to the internal testing track in Play Console"
+        },
+        {
+          "id": "s4",
+          "label": "Add release notes and roll out to the internal track"
+        },
+        {
+          "id": "s5",
+          "label": "Testers install the update from the Play Store opt-in link"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Play rejects a `versionCode` it has seen; the bundle must be signed with the upload key; a release only reaches testers after rollout."
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "After login, the app flickers and the back stack fills with copies of the home screen. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun LoginScreen(nav: NavController, vm: LoginViewModel) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    val state by vm.state.collectAsStateWithLifecycle()",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    if (state.loggedIn) nav.navigate(\"home\")",
+          "issue": "Navigating from the composable body fires on every recomposition while `loggedIn` is true; do it in `LaunchedEffect(state.loggedIn)`."
+        },
+        {
+          "id": "l5",
+          "text": "    LoginForm(state, onSubmit = vm::submit)",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "@Composable fun AppNav(navController: NavHostController) = NavHost(navController, \"login\") {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    composable(\"login\") { LoginScreen(navController, viewModel()) }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Expanded rows open on the wrong item after the list is re-sorted. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "LazyColumn {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    items(tasks) { task ->",
+          "issue": "No `key`: item state is tied to position, so after sorting the remembered state stays with the slot. Use `items(tasks, key = { it.id })`."
+        },
+        {
+          "id": "l3",
+          "text": "        var expanded by remember { mutableStateOf(false) }",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "        TaskRow(task, expanded, onToggle = { expanded = !expanded })",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "Button(onClick = { tasks = tasks.sortedBy { it.due } }) { Text(\"Sort\") }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `rememberSaveable` add on top of `remember`?",
+    "mcq": {
+      "options": [
+        "The value is saved in the saved-instance-state bundle, so it survives configuration changes and process death (for saveable types)",
+        "The value is shared across all screens",
+        "The value is written to a database",
+        "It makes the value immutable"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only bundle-friendly types (primitives, `Parcelable`, or with a custom `Saver`) can be saved. Large data belongs in a ViewModel or storage.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`LaunchedEffect(key1 = productId) { load(productId) }`. What happens when `productId` changes?",
+    "mcq": {
+      "options": [
+        "The running coroutine is cancelled and the effect restarts with the new id",
+        "Nothing; it only runs on first composition",
+        "A second coroutine starts alongside the first",
+        "The whole screen is recreated"
+      ],
+      "correctIndex": 0,
+      "explanation": "Effect keys define when the effect restarts. The coroutine is also cancelled when the effect leaves the composition.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the conventional signature for a reusable composable?",
+    "mcq": {
+      "options": [
+        "Required params first, then `modifier: Modifier = Modifier` as the first optional param, applied to the root element",
+        "No `modifier` parameter; callers wrap it in a `Box`",
+        "`modifier` as the last required parameter",
+        "A `modifier` applied to the innermost child"
+      ],
+      "correctIndex": 0,
+      "explanation": "Exposing one `modifier` applied to the outermost layout lets callers size, pad and position the component without wrapper boxes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The app shows an ANR on a slow phone when opening a screen and when tapping Export. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class ReportViewModel(private val dao: ReportDao) : ViewModel() {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    val rows: List<Row> = dao.getAllBlocking()",
+          "issue": "A blocking database read in the constructor runs on the main thread; expose a `Flow` from Room or load in `viewModelScope.launch` with a suspending DAO."
+        },
+        {
+          "id": "l3",
+          "text": "    fun export(onDone: (File) -> Unit) {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "        val file = runBlocking { writer.writeCsv(rows) }",
+          "issue": "`runBlocking` on the main thread blocks the UI until the write finishes; launch in `viewModelScope` and switch to `Dispatchers.IO`."
+        },
+        {
+          "id": "l5",
+          "text": "        onDone(file)",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "@Composable fun ReportScreen(vm: ReportViewModel = viewModel()) { ReportTable(vm.rows) }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A list screen with a \"scroll to top\" button recomposes on every scrolled pixel. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "val listState = rememberLazyListState()",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "val showTop = listState.firstVisibleItemIndex > 0",
+          "issue": "Reading the index directly recomposes on every scroll change; use `val showTop by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 } }`."
+        },
+        {
+          "id": "l3",
+          "text": "Box {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    LazyColumn(state = listState) { items(rows, key = { it.id }) { RowItem(it) } }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    Header(Modifier.offset(y = (-listState.firstVisibleItemScrollOffset / 2).dp))",
+          "issue": "Reading scroll offset in composition re-runs composition every frame; use the lambda `Modifier.offset { IntOffset(0, -offset / 2) }` to defer the read to layout."
+        },
+        {
+          "id": "l6",
+          "text": "    if (showTop) ScrollTopButton()",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Layout Inspector shows `OrderRow` recomposing for every row whenever one order changes. `OrderRow(order: Order,\ntags: List<String>, onClick: () -> Unit)`; `Order` is a data class with a `var status`, and the list is passed as\na `List` from a ViewModel.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Layout Inspector shows `OrderRow` recomposing for every row whenever one order changes. `OrderRow(order: Order,\ntags: List<String>, onClick: () -> Unit)`; `Order` is a data class with a `var status`, and the list is passed as\na `List` from a ViewModel.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why can't Compose skip unchanged rows?",
+          "options": [
+            "`Order` has a `var` and `List<String>` is an interface Compose cannot prove immutable, so the parameters are unstable",
+            "Data classes cannot be used in Compose",
+            "`LazyColumn` never skips items"
+          ],
+          "correctIndex": 0,
+          "explanation": "Without strong skipping, a composable with unstable parameters is always re-executed."
+        },
+        {
+          "id": "q2",
+          "question": "Which change makes the parameters stable?",
+          "options": [
+            "Make `Order`'s properties `val` and use an immutable collection (`ImmutableList`) or annotate the model `@Immutable`",
+            "Mark `OrderRow` as `inline`",
+            "Wrap each row in `key(order.id)` only"
+          ],
+          "correctIndex": 0,
+          "explanation": "Immutable models and collections let the compiler mark them stable so equal inputs skip."
+        },
+        {
+          "id": "q3",
+          "question": "The `onClick` lambda captures the order. What keeps it from defeating skipping?",
+          "options": [
+            "Use a stable reference (e.g. `remember(order.id) { { vm.open(order.id) } }`), or rely on strong skipping, which memoises lambdas",
+            "Pass `onClick = null`",
+            "Make the lambda `suspend`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A new lambda instance each recomposition is a changed parameter unless it is remembered."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A screen listens for location updates. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun MapScreen(client: LocationClient) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    var location by remember { mutableStateOf<Location?>(null) }",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    DisposableEffect(client) {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        val listener = LocationListener { location = it }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "        client.addListener(listener)",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "        onDispose { }",
+          "issue": "`onDispose` must undo the setup: `client.removeListener(listener)`; otherwise the listener leaks and keeps updating a dead composition."
+        },
+        {
+          "id": "l8",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "    MapView(location)",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A list screen is janky. Put the investigation steps in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Reproduce on a release (minified) build with a baseline profile, not a debug build"
+        },
+        {
+          "id": "s2",
+          "label": "Use Layout Inspector recomposition counts and a system trace to find what recomposes or blocks frames"
+        },
+        {
+          "id": "s3",
+          "label": "Fix the cause (stable parameters, deferred state reads, keys, moving work off the main thread)"
+        },
+        {
+          "id": "s4",
+          "label": "Verify with a Macrobenchmark (frame timing) and compare against the baseline"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "Debug builds are interpreted and much slower than release, so measuring there misleads. Find the cause before changing code, and confirm the improvement with numbers."
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Users fill a long checkout form, switch to their banking app, and come back to an empty form. It happens on\nlow-memory phones. Form fields live in a ViewModel's `MutableStateFlow`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Users fill a long checkout form, switch to their banking app, and come back to an empty form. It happens on\nlow-memory phones. Form fields live in a ViewModel's `MutableStateFlow`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is happening?",
+          "options": [
+            "The process was killed in the background; the ViewModel did not survive, and nothing restored its state",
+            "Compose clears forms when the app is paused",
+            "The ViewModel is cleared on every configuration change"
+          ],
+          "correctIndex": 0,
+          "explanation": "ViewModels survive configuration changes, not process death."
+        },
+        {
+          "id": "q2",
+          "question": "What is the right fix for the field values?",
+          "options": [
+            "Keep them in `SavedStateHandle` (e.g. `savedStateHandle.getStateFlow(\"email\", \"\")`)",
+            "Write them to a remote server on every keystroke",
+            "Use `remember` in the composables"
+          ],
+          "correctIndex": 0,
+          "explanation": "`SavedStateHandle` is written to the saved-instance-state bundle and restored with the process."
+        },
+        {
+          "id": "q3",
+          "question": "The form also holds a 2 MB attachment preview. Should that go in `SavedStateHandle`?",
+          "options": [
+            "No; the bundle has a small size limit. Save the attachment to disk/DB and keep only its id in saved state",
+            "Yes, everything should be in saved state",
+            "Yes, as a Base64 string"
+          ],
+          "correctIndex": 0,
+          "explanation": "Large bundles throw `TransactionTooLargeException`."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "When is `derivedStateOf` the right tool?",
+    "mcq": {
+      "options": [
+        "When a state changes often but a value computed from it changes rarely (e.g. \"is the list scrolled past item 0\")",
+        "Whenever you compute anything from state",
+        "To run a side effect when state changes",
+        "To save state across process death"
+      ],
+      "correctIndex": 0,
+      "explanation": "`derivedStateOf` only notifies readers when its result changes. For a value that changes as often as its input, plain computation or `remember(key)` is enough.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is `Modifier.offset { IntOffset(x, 0) }` preferred over `Modifier.offset(x.dp)` for a value that changes every frame?",
+    "mcq": {
+      "options": [
+        "The lambda is read during layout, so changes skip recomposition and only re-run layout",
+        "The lambda version is the only one that supports negative values",
+        "The lambda version runs on a background thread",
+        "There is no difference"
+      ],
+      "correctIndex": 0,
+      "explanation": "Deferring state reads to the latest phase (layout or draw) avoids recomposing for animation-like changes. The same idea applies to `graphicsLayer { }` and `drawBehind { }`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does marking a class `@Immutable` tell the Compose compiler?",
+    "mcq": {
+      "options": [
+        "That its public properties never change after construction, so instances with equal values let composables skip",
+        "That Compose will make it immutable at runtime",
+        "That it can be saved with `rememberSaveable`",
+        "That it runs on the main thread"
+      ],
+      "correctIndex": 0,
+      "explanation": "It is a promise, not enforcement. Breaking it (mutating a field) means the UI may not update.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A ViewModel that parses a big feed. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class FeedViewModel(private val api: Api) : ViewModel() {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    fun refresh() {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "        GlobalScope.launch {",
+          "issue": "`GlobalScope` outlives the ViewModel: the work keeps running after the screen is gone and cannot be cancelled. Use `viewModelScope`."
+        },
+        {
+          "id": "l4",
+          "text": "            val json = api.fetchFeed()",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "            val items = withContext(Dispatchers.Main) { parser.parse(json) }",
+          "issue": "Parsing a big JSON on `Dispatchers.Main` blocks the UI; parse on `Dispatchers.Default`."
+        },
+        {
+          "id": "l6",
+          "text": "            _state.value = FeedState(items)",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "        }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "    private val _state = MutableStateFlow(FeedState())",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "    val state: StateFlow<FeedState> = _state",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Version 5.4 (versionCode 540) is at a 20% staged rollout on Google Play. Android vitals show the crash rate tripled\non Android 9 devices since the rollout, in the new photo picker.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Version 5.4 (versionCode 540) is at a 20% staged rollout on Google Play. Android vitals show the crash rate tripled\non Android 9 devices since the rollout, in the new photo picker.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you do first?",
+          "options": [
+            "Halt the staged rollout in Play Console",
+            "Increase the rollout to 100% to gather more data",
+            "Unpublish the app"
+          ],
+          "correctIndex": 0,
+          "explanation": "Halting stops new installs of 540; users already on it keep it."
+        },
+        {
+          "id": "q2",
+          "question": "How do you ship the fix?",
+          "options": [
+            "Build 5.4.1 with a higher `versionCode` (e.g. 541) and roll it out, replacing 540",
+            "Re-upload versionCode 540 with the fix",
+            "Ask affected users to clear app data"
+          ],
+          "correctIndex": 0,
+          "explanation": "Play never accepts a reused `versionCode`; a higher one supersedes the halted release."
+        },
+        {
+          "id": "q3",
+          "question": "How do you lower the risk next time for a feature like this?",
+          "options": [
+            "Gate it behind a remote flag (kill switch) and roll out gradually while watching vitals by OS version",
+            "Only test on the newest Android version",
+            "Skip staged rollouts to save time"
+          ],
+          "correctIndex": 0,
+          "explanation": "A flag disables a broken feature without a release; per-OS vitals catch device-specific crashes early."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Put the steps of a Play Store production release in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Bump `versionCode` and `versionName`"
+        },
+        {
+          "id": "s2",
+          "label": "Build the signed release bundle with R8 and the baseline profile"
+        },
+        {
+          "id": "s3",
+          "label": "Upload the R8 mapping file to the crash reporter"
+        },
+        {
+          "id": "s4",
+          "label": "Smoke-test the release from the internal or closed testing track"
+        },
+        {
+          "id": "s5",
+          "label": "Promote to production with a staged rollout (e.g. 10%)"
+        },
+        {
+          "id": "s6",
+          "label": "Watch Android vitals and crash reports, then increase to 100%"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "explanation": "Without the mapping file, crash stack traces from the obfuscated build are unreadable. Testing the actual release build catches R8/profile issues before users see them."
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A search screen restarts its database query constantly. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun SearchScreen(repo: SearchRepository, query: String) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    val results by repo.search(query).collectAsState(initial = emptyList())",
+          "issue": "`repo.search(query)` builds a new Flow on every recomposition, so collection restarts each time; `remember(query) { repo.search(query) }` (or move it into a ViewModel)."
+        },
+        {
+          "id": "l4",
+          "text": "    val scope = rememberCoroutineScope()",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    scope.launch { analytics.logSearch(query) }",
+          "issue": "Launching from the composable body runs on every recomposition; use `LaunchedEffect(query)`."
+        },
+        {
+          "id": "l6",
+          "text": "    ResultsList(results)",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    Button(onClick = { scope.launch { repo.clearHistory() } }) { Text(\"Clear\") }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A design-system button component. Mark the lines that break Compose API conventions.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Composable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "fun PrimaryButton(",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    text: String,",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    onClick: () -> Unit,",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    vm: CheckoutViewModel,",
+          "issue": "A reusable component should not depend on a screen's ViewModel; pass plain values and callbacks so it can be previewed and reused."
+        },
+        {
+          "id": "l6",
+          "text": "    modifier: Modifier = Modifier,",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ") {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    Button(onClick = onClick, enabled = vm.canPay) {",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "        Text(text, modifier = modifier)",
+          "issue": "The `modifier` parameter should be applied to the root (`Button`), not an inner child; otherwise callers cannot size or pad the button."
+        },
+        {
+          "id": "l10",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-t4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "LeakCanary reports `MainActivity` leaking after rotation. The trace goes through a singleton `ImageLoader`\nwhose `context` field holds the activity, and through `ProfileViewModel.view`, a reference to a `View` set from a\ncomposable via `LocalView.current`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "LeakCanary reports `MainActivity` leaking after rotation. The trace goes through a singleton `ImageLoader`\nwhose `context` field holds the activity, and through `ProfileViewModel.view`, a reference to a `View` set from a\ncomposable via `LocalView.current`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What should the singleton hold instead?",
+          "options": [
+            "`context.applicationContext`",
+            "A `WeakReference` to the activity, used for resources",
+            "Nothing; singletons cannot hold contexts"
+          ],
+          "correctIndex": 0,
+          "explanation": "The application context lives as long as the process, so a singleton holding it leaks nothing."
+        },
+        {
+          "id": "q2",
+          "question": "Why is `ProfileViewModel.view` a leak?",
+          "options": [
+            "The ViewModel survives configuration changes, but the View belongs to the destroyed activity",
+            "Views cannot be passed to Kotlin classes",
+            "ViewModels are destroyed on rotation"
+          ],
+          "correctIndex": 0,
+          "explanation": "Anything tied to an activity (views, activity context, lifecycle owners) must not be stored in a ViewModel."
+        },
+        {
+          "id": "q3",
+          "question": "The ViewModel used the view to show a toast. What is the clean replacement?",
+          "options": [
+            "Expose a one-off event/state (e.g. a `Channel` or a UI state field) and show the message from the composable",
+            "Store the activity in the ViewModel instead",
+            "Show the toast from the repository"
+          ],
+          "correctIndex": 0,
+          "explanation": "The UI layer owns platform UI; the ViewModel only describes what should happen."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A composable writes to a state object it has just read during the same composition (e.g. `count.value = list.size` in the body). What is the risk?",
+    "mcq": {
+      "options": [
+        "A backwards write: the write invalidates the composition that is running, which can cause an infinite recomposition loop",
+        "None; Compose batches it safely",
+        "It throws a compile error",
+        "The write is ignored"
+      ],
+      "correctIndex": 0,
+      "explanation": "Composition should only read state. Writes belong in event callbacks or effects; derived values should be computed, not stored.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does strong skipping mode (default since Kotlin 2.0.20's Compose compiler) change?",
+    "mcq": {
+      "options": [
+        "Composables with unstable parameters can be skipped too (compared by instance equality), and lambdas are remembered automatically",
+        "All composables are skipped forever after first composition",
+        "Stability annotations become required",
+        "Recomposition moves to a background thread"
+      ],
+      "correctIndex": 0,
+      "explanation": "Unstable parameters are compared with `===`, stable ones with `equals`. Mutating an unstable object in place still won't trigger an update, so immutable models remain good practice.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-jetpack-compose-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-jetpack-compose",
+    "trackId": null,
+    "stackId": "stack-kotlin",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why is `stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)` a common choice for UI state?",
+    "mcq": {
+      "options": [
+        "It stops upstream work 5 s after the last collector goes away, which skips restarts during rotation but frees resources in the background",
+        "It caches data for 5 s, then clears the StateFlow",
+        "It retries the upstream every 5 s",
+        "It delays the first emission by 5 s"
+      ],
+      "correctIndex": 0,
+      "explanation": "Rotation recreates the UI within a few seconds, so the grace period keeps the flow hot through it, while backgrounded screens stop collecting.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

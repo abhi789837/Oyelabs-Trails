@@ -1,0 +1,1973 @@
+[
+  {
+    "id": "eng-html-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`fieldMarkup` renders a labelled input from data. Screen readers only announce the label when\n`<label for>` matches the input's `id`. Fix it so the output is\n`<label for=\"ID\">LABEL</label><input id=\"ID\" type=\"TYPE\">`, with `type` defaulting to `text`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "fieldMarkup",
+      "starterCode": "function fieldMarkup(field) {\n  return `<label>${field.label}</label><input type=\"${field.type}\">`;\n}",
+      "referenceSolution": "function fieldMarkup(field) {\n  const type = field.type || \"text\";\n  return `<label for=\"${field.id}\">${field.label}</label><input id=\"${field.id}\" type=\"${type}\">`;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": "email",
+              "label": "Email",
+              "type": "email"
+            }
+          ],
+          "expected": "<label for=\"email\">Email</label><input id=\"email\" type=\"email\">"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": "name",
+              "label": "Full name"
+            }
+          ],
+          "expected": "<label for=\"name\">Full name</label><input id=\"name\" type=\"text\">"
+        },
+        {
+          "args": [
+            {
+              "id": "pw",
+              "label": "Password",
+              "type": "password"
+            }
+          ],
+          "expected": "<label for=\"pw\">Password</label><input id=\"pw\" type=\"password\">"
+        },
+        {
+          "args": [
+            {
+              "id": "q",
+              "label": "Search",
+              "type": "search"
+            }
+          ],
+          "expected": "<label for=\"q\">Search</label><input id=\"q\" type=\"search\">"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`escapeHtml` makes user text safe to put between tags. It only handles `<` and `>`.\nMake it also escape `&` (as `&amp;`) and `\"` (as `&quot;`). Watch the order: `&` must be escaped first.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "escapeHtml",
+      "starterCode": "function escapeHtml(text) {\n  return text.replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\");\n}",
+      "referenceSolution": "function escapeHtml(text) {\n  return text.replace(/&/g, \"&amp;\").replace(/</g, \"&lt;\").replace(/>/g, \"&gt;\").replace(/\"/g, \"&quot;\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "<b>hi</b>"
+          ],
+          "expected": "&lt;b&gt;hi&lt;/b&gt;"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Tom & Jerry"
+          ],
+          "expected": "Tom &amp; Jerry"
+        },
+        {
+          "args": [
+            "say \"hi\""
+          ],
+          "expected": "say &quot;hi&quot;"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "a < b && c"
+          ],
+          "expected": "a &lt; b &amp;&amp; c"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`imgTag(src, alt)` builds an `<img>`. A purely decorative image is passed `alt = null` and must\nstill get an **empty** `alt=\"\"` so screen readers skip it (a missing `alt` makes them read the file name).\nFix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "imgTag",
+      "starterCode": "function imgTag(src, alt) {\n  if (alt === null) return `<img src=\"${src}\">`;\n  return `<img src=\"${src}\" alt=\"${alt}\">`;\n}",
+      "referenceSolution": "function imgTag(src, alt) {\n  return `<img src=\"${src}\" alt=\"${alt === null ? \"\" : alt}\">`;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "logo.png",
+            "Acme logo"
+          ],
+          "expected": "<img src=\"logo.png\" alt=\"Acme logo\">"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "divider.svg",
+            null
+          ],
+          "expected": "<img src=\"divider.svg\" alt=\"\">"
+        },
+        {
+          "args": [
+            "chart.png",
+            "Sales by month"
+          ],
+          "expected": "<img src=\"chart.png\" alt=\"Sales by month\">"
+        },
+        {
+          "args": [
+            "bg.jpg",
+            null
+          ],
+          "expected": "<img src=\"bg.jpg\" alt=\"\">"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A page builder maps a described block to an HTML element. Complete `pickTag` for:\n- `\"site navigation\"` → `nav`, `\"main content\"` → `main`, `\"page footer\"` → `footer`\n- `\"page header\"` → `header`, `\"sidebar\"` → `aside`, `\"blog post\"` → `article`\n- anything else → `div`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pickTag",
+      "starterCode": "function pickTag(description) {\n  const map = { \"site navigation\": \"nav\", \"page footer\": \"footer\" };\n  return map[description] || \"div\";\n}",
+      "referenceSolution": "function pickTag(description) {\n  const map = {\n    \"site navigation\": \"nav\",\n    \"main content\": \"main\",\n    \"page footer\": \"footer\",\n    \"page header\": \"header\",\n    \"sidebar\": \"aside\",\n    \"blog post\": \"article\",\n  };\n  return map[description] || \"div\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "site navigation"
+          ],
+          "expected": "nav"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "main content"
+          ],
+          "expected": "main"
+        },
+        {
+          "args": [
+            "sidebar"
+          ],
+          "expected": "aside"
+        },
+        {
+          "args": [
+            "blog post"
+          ],
+          "expected": "article"
+        },
+        {
+          "args": [
+            "page header"
+          ],
+          "expected": "header"
+        },
+        {
+          "args": [
+            "layout wrapper"
+          ],
+          "expected": "div"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A sign-up form. Mark the lines that make it hard or impossible to use with a screen reader or keyboard.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<form action=\"/signup\" method=\"post\">",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  <span>Email</span>",
+          "issue": "Plain text is not tied to the input; use `<label for=\"email\">`."
+        },
+        {
+          "id": "l3",
+          "text": "  <input id=\"email\" name=\"email\" type=\"email\">",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  <label for=\"pw\">Password</label>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  <input id=\"pw\" name=\"password\" type=\"password\">",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  <div class=\"btn\" onclick=\"submitForm()\">Sign up</div>",
+          "issue": "A clickable `div` cannot be focused or activated with the keyboard; use `<button type=\"submit\">`."
+        },
+        {
+          "id": "l7",
+          "text": "</form>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-html-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The skeleton of a new page. Mark the lines that should change.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<!DOCTYPE html>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "<html>",
+          "issue": "No `lang` attribute: screen readers guess the pronunciation; use `<html lang=\"en\">`."
+        },
+        {
+          "id": "l3",
+          "text": "<head><meta charset=\"utf-8\"><title>Orders</title></head>",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "<body>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  <div class=\"nav\">…links…</div>",
+          "issue": "Site links belong in a `<nav>` landmark, not a styled `div`."
+        },
+        {
+          "id": "l6",
+          "text": "  <main>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    <h1>Your orders</h1>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    <img src=\"empty-box.png\">",
+          "issue": "No `alt`: add a description, or `alt=\"\"` if it is decorative."
+        },
+        {
+          "id": "l9",
+          "text": "  </main>",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "</body>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-html-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which element should wrap the main list of links that moves around the site?",
+    "mcq": {
+      "options": [
+        "`<nav>`",
+        "`<menu>`",
+        "`<header>`",
+        "`<ul role=\"menu\">`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`<nav>` creates a navigation landmark that screen-reader users can jump to. `role=\"menu\"` is for application menus (like a right-click menu) and changes keyboard expectations.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A `<button>` inside a `<form>` has no `type` attribute. What happens when it is clicked?",
+    "mcq": {
+      "options": [
+        "It submits the form",
+        "Nothing, until you add an `onclick`",
+        "It resets the form",
+        "It behaves like `type=\"button\"`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The default `type` of a button in a form is `submit`. A button that should not submit (\"Show password\") needs `type=\"button\"`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Clicking the text of which label focuses the input?",
+    "mcq": {
+      "options": [
+        "`<label for=\"age\">Age</label> <input id=\"age\">`",
+        "`<label name=\"age\">Age</label> <input name=\"age\">`",
+        "`<label>Age</label> <input id=\"age\">`",
+        "`<span for=\"age\">Age</span> <input id=\"age\">`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`for` must match the input's `id` (not `name`). Wrapping the input inside the `<label>` also works, but a sibling label without `for` is not connected.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`headingsOk(levels)` checks a page outline, given heading levels in document order (`[1, 2, 3, 2]`).\nIt is OK when the first heading is `1` and no heading jumps down more than one level\n(`2` → `4` skips a level; going back up any amount is fine). An empty page is OK. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "headingsOk",
+      "starterCode": "function headingsOk(levels) {\n  return levels[0] === 1;\n}",
+      "referenceSolution": "function headingsOk(levels) {\n  if (levels.length === 0) return true;\n  if (levels[0] !== 1) return false;\n  for (let i = 1; i < levels.length; i++) {\n    if (levels[i] > levels[i - 1] + 1) return false;\n  }\n  return true;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              2
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              3
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              2,
+              3
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              2,
+              3,
+              1
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              4
+            ]
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`buildSrcset(name, ext, widths)` should return a `srcset` string with width descriptors, smallest first:\n`buildSrcset(\"hero\", \"jpg\", [640, 320])` → `\"hero-320.jpg 320w, hero-640.jpg 640w\"`. No widths → `\"\"`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "buildSrcset",
+      "starterCode": "function buildSrcset(name, ext, widths) {\n  return widths.map((w) => `${name}-${w}.${ext} ${w}x`).join(\",\");\n}",
+      "referenceSolution": "function buildSrcset(name, ext, widths) {\n  return [...widths]\n    .sort((a, b) => a - b)\n    .map((w) => `${name}-${w}.${ext} ${w}w`)\n    .join(\", \");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "hero",
+            "jpg",
+            [
+              640,
+              320
+            ]
+          ],
+          "expected": "hero-320.jpg 320w, hero-640.jpg 640w"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "card",
+            "webp",
+            [
+              400
+            ]
+          ],
+          "expected": "card-400.webp 400w"
+        },
+        {
+          "args": [
+            "a",
+            "png",
+            []
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "p",
+            "avif",
+            [
+              1200,
+              300,
+              800
+            ]
+          ],
+          "expected": "p-300.avif 300w, p-800.avif 800w, p-1200.avif 1200w"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`formBody(fields)` returns what a browser would submit for a form, as `name=value` pairs joined by `&`\n(values passed through `encodeURIComponent`). Like the browser, it must skip fields that are `disabled`,\nfields with no `name`, and checkboxes that are not `checked`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "formBody",
+      "starterCode": "function formBody(fields) {\n  return fields.map((f) => `${f.name}=${encodeURIComponent(f.value)}`).join(\"&\");\n}",
+      "referenceSolution": "function formBody(fields) {\n  return fields\n    .filter((f) => f.name && !f.disabled && !(f.type === \"checkbox\" && !f.checked))\n    .map((f) => `${f.name}=${encodeURIComponent(f.value)}`)\n    .join(\"&\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "q",
+                "value": "red shoes"
+              },
+              {
+                "name": "page",
+                "value": "2"
+              }
+            ]
+          ],
+          "expected": "q=red%20shoes&page=2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "value": "1",
+                "disabled": true
+              },
+              {
+                "name": "b",
+                "value": "2"
+              }
+            ]
+          ],
+          "expected": "b=2"
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "news",
+                "value": "yes",
+                "type": "checkbox",
+                "checked": false
+              },
+              {
+                "name": "x",
+                "value": "1"
+              }
+            ]
+          ],
+          "expected": "x=1"
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "news",
+                "value": "yes",
+                "type": "checkbox",
+                "checked": true
+              }
+            ]
+          ],
+          "expected": "news=yes"
+        },
+        {
+          "args": [
+            [
+              {
+                "value": "no-name"
+              },
+              {
+                "name": "c",
+                "value": "a&b"
+              }
+            ]
+          ],
+          "expected": "c=a%26b"
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`describedBy(id, hasHint, error)` returns the value for an input's `aria-describedby`:\n`\"<id>-hint\"` when there is a hint, `\"<id>-error\"` when `error` is a non-empty string, both separated by\na space (hint first), or `null` when there is nothing to point at (an empty attribute is worse than none).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "describedBy",
+      "starterCode": "function describedBy(id, hasHint, error) {\n  return `${id}-hint ${id}-error`;\n}",
+      "referenceSolution": "function describedBy(id, hasHint, error) {\n  const ids = [];\n  if (hasHint) ids.push(`${id}-hint`);\n  if (error) ids.push(`${id}-error`);\n  return ids.length ? ids.join(\" \") : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "email",
+            true,
+            "Enter a valid email"
+          ],
+          "expected": "email-hint email-error"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "email",
+            true,
+            ""
+          ],
+          "expected": "email-hint"
+        },
+        {
+          "args": [
+            "zip",
+            false,
+            "Required"
+          ],
+          "expected": "zip-error"
+        },
+        {
+          "args": [
+            "name",
+            false,
+            ""
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "name",
+            false,
+            null
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A price table. Mark the lines that make it hard to understand with a screen reader.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<table>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  <tr><td><b>Plan</b></td><td><b>Price</b></td></tr>",
+          "issue": "Header cells styled bold with `<td><b>` are not headers; use `<th scope=\"col\">` (inside `<thead>`)."
+        },
+        {
+          "id": "l3",
+          "text": "  <tr><td>Starter</td><td>$9</td></tr>",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  <tr><td>Team</td><td>$29</td></tr>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  <tr><td colspan=\"2\"><img src=\"badge.png\"></td></tr>",
+          "issue": "Image with no `alt` text."
+        },
+        {
+          "id": "l6",
+          "text": "</table>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "<p>Prices per month, billed yearly.</p>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-html-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A page `<head>`. Mark the lines that are wrong or missing something important.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<head>",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  <title>Checkout</title>",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\">",
+          "issue": "Disabling zoom blocks low-vision users from enlarging text; drop `maximum-scale` and `user-scalable=no`."
+        },
+        {
+          "id": "l4",
+          "text": "  <link rel=\"stylesheet\" href=\"/app.css\">",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  <script src=\"/analytics.js\"></script>",
+          "issue": "A plain script in the head blocks parsing; add `defer` or `async`."
+        },
+        {
+          "id": "l6",
+          "text": "  <meta charset=\"utf-8\">",
+          "issue": "`charset` should be the first thing in the head (it must be in the first 1024 bytes)."
+        },
+        {
+          "id": "l7",
+          "text": "  <link rel=\"icon\" href=\"/favicon.svg\">",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  <meta name=\"description\" content=\"Pay for your order\">",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "</head>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-html-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You want the browser to skip its built-in validation (`required`, `type=\"email\"`) and let your JavaScript validate instead. What do you add?",
+    "mcq": {
+      "options": [
+        "`novalidate` on the `<form>`",
+        "`required=\"false\"` on each input",
+        "`type=\"text\"` on every input",
+        "`autocomplete=\"off\"` on the form"
+      ],
+      "correctIndex": 0,
+      "explanation": "`novalidate` turns off constraint validation on submit while keeping the semantic types (and the right mobile keyboards). `required=\"false\"` still means required: boolean attributes are on whenever present.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "When is `<section>` a better choice than `<div>`?",
+    "mcq": {
+      "options": [
+        "When the block is a themed part of the page that has its own heading",
+        "Whenever you need a wrapper for flexbox",
+        "Always, because `<div>` is deprecated",
+        "Only inside `<article>`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`<section>` groups thematic content, normally with a heading. A wrapper used only for layout or styling stays a `<div>`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which input gives mobile users a numeric keypad for a card's security code without the spin buttons and rounding of `type=\"number\"`?",
+    "mcq": {
+      "options": [
+        "`<input type=\"text\" inputmode=\"numeric\" autocomplete=\"cc-csc\">`",
+        "`<input type=\"number\">`",
+        "`<input type=\"tel\" pattern=\"*\">`",
+        "`<input type=\"range\">`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`type=\"number\"` is for quantities: it drops leading zeros and adds steppers. Codes, PINs and card numbers are text with `inputmode=\"numeric\"`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`duplicateIds(nodes)` gets the elements on a page as `{ tag, id }` (id may be missing) and returns every\n`id` used more than once, each listed once, sorted. Duplicate ids break `label for` and `aria-*` references.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "duplicateIds",
+      "starterCode": "function duplicateIds(nodes) {\n  const seen = new Set();\n  for (const n of nodes) {\n    if (seen.has(n.id)) return [n.id];\n    seen.add(n.id);\n  }\n  return [];\n}",
+      "referenceSolution": "function duplicateIds(nodes) {\n  const counts = {};\n  for (const n of nodes) {\n    if (!n.id) continue;\n    counts[n.id] = (counts[n.id] || 0) + 1;\n  }\n  return Object.keys(counts).filter((id) => counts[id] > 1).sort();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "tag": "input",
+                "id": "email"
+              },
+              {
+                "tag": "div",
+                "id": "email"
+              },
+              {
+                "tag": "p"
+              }
+            ]
+          ],
+          "expected": [
+            "email"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "tag": "a",
+                "id": "x"
+              },
+              {
+                "tag": "b",
+                "id": "y"
+              },
+              {
+                "tag": "c",
+                "id": "y"
+              },
+              {
+                "tag": "d",
+                "id": "x"
+              },
+              {
+                "tag": "e",
+                "id": "x"
+              }
+            ]
+          ],
+          "expected": [
+            "x",
+            "y"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "tag": "p"
+              },
+              {
+                "tag": "p"
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "tag": "a",
+                "id": "one"
+              },
+              {
+                "tag": "a",
+                "id": "two"
+              }
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`unlabelled(inputs, labelFors)` returns the `id`s of inputs with no accessible label, in input order.\nAn input is labelled when its `id` is in `labelFors` (the `for` values of the page's labels) **or** it has a\nnon-empty `ariaLabel`. Inputs of `type: \"hidden\"` never need a label.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "unlabelled",
+      "starterCode": "function unlabelled(inputs, labelFors) {\n  return inputs.filter((i) => !labelFors.includes(i.id)).map((i) => i.id);\n}",
+      "referenceSolution": "function unlabelled(inputs, labelFors) {\n  return inputs\n    .filter((i) => i.type !== \"hidden\" && !labelFors.includes(i.id) && !i.ariaLabel)\n    .map((i) => i.id);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "type": "text"
+              },
+              {
+                "id": "b",
+                "type": "text"
+              }
+            ],
+            [
+              "a"
+            ]
+          ],
+          "expected": [
+            "b"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "csrf",
+                "type": "hidden"
+              },
+              {
+                "id": "q",
+                "type": "search",
+                "ariaLabel": "Search"
+              }
+            ],
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "q",
+                "type": "search",
+                "ariaLabel": ""
+              }
+            ],
+            []
+          ],
+          "expected": [
+            "q"
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              "x"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "x",
+                "type": "text"
+              },
+              {
+                "id": "y",
+                "type": "email"
+              },
+              {
+                "id": "z",
+                "type": "text"
+              }
+            ],
+            [
+              "y"
+            ]
+          ],
+          "expected": [
+            "x",
+            "z"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`tabOrder(els)` returns the names of focusable elements in the order Tab visits them. Each element has a\n`tabindex` (a number). Rules: elements with a **positive** tabindex come first, ascending, ties in\ndocument order; then every element with `0`, in document order; elements with a negative tabindex are skipped.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "tabOrder",
+      "starterCode": "function tabOrder(els) {\n  return [...els].sort((a, b) => a.tabindex - b.tabindex).map((e) => e.name);\n}",
+      "referenceSolution": "function tabOrder(els) {\n  const positive = els.filter((e) => e.tabindex > 0).sort((a, b) => a.tabindex - b.tabindex);\n  const natural = els.filter((e) => e.tabindex === 0);\n  return [...positive, ...natural].map((e) => e.name);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "tabindex": 0
+              },
+              {
+                "name": "b",
+                "tabindex": 2
+              },
+              {
+                "name": "c",
+                "tabindex": 1
+              }
+            ]
+          ],
+          "expected": [
+            "c",
+            "b",
+            "a"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "tabindex": 0
+              },
+              {
+                "name": "skip",
+                "tabindex": -1
+              },
+              {
+                "name": "b",
+                "tabindex": 0
+              }
+            ]
+          ],
+          "expected": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "x",
+                "tabindex": 1
+              },
+              {
+                "name": "y",
+                "tabindex": 1
+              },
+              {
+                "name": "z",
+                "tabindex": 0
+              }
+            ]
+          ],
+          "expected": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "only",
+                "tabindex": -1
+              }
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`landmarkProblems(tags)` gets the tag names in a page body and returns problem codes, sorted:\n- `\"missing-main\"` when there is no `main`; `\"multiple-main\"` when there is more than one\n- `\"missing-h1\"` when there is no `h1`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "landmarkProblems",
+      "starterCode": "function landmarkProblems(tags) {\n  const out = [];\n  if (!tags.includes(\"main\")) out.push(\"missing-main\");\n  return out;\n}",
+      "referenceSolution": "function landmarkProblems(tags) {\n  const out = [];\n  const mains = tags.filter((t) => t === \"main\").length;\n  if (mains === 0) out.push(\"missing-main\");\n  if (mains > 1) out.push(\"multiple-main\");\n  if (!tags.includes(\"h1\")) out.push(\"missing-h1\");\n  return out.sort();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "header",
+              "main",
+              "h1",
+              "footer"
+            ]
+          ],
+          "expected": []
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "div",
+              "p"
+            ]
+          ],
+          "expected": [
+            "missing-h1",
+            "missing-main"
+          ]
+        },
+        {
+          "args": [
+            [
+              "main",
+              "h1",
+              "main"
+            ]
+          ],
+          "expected": [
+            "multiple-main"
+          ]
+        },
+        {
+          "args": [
+            [
+              "nav",
+              "main"
+            ]
+          ],
+          "expected": [
+            "missing-h1"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": [
+            "missing-h1",
+            "missing-main"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A custom toggle button built from a `div`. Mark the lines that leave it broken for keyboard or screen-reader users.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<div class=\"toggle\"",
+          "issue": "Nothing makes the div focusable; it needs `tabindex=\"0\"` (or be a `<button>`)."
+        },
+        {
+          "id": "l2",
+          "text": "     role=\"button\"",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "     aria-label=\"Dark mode\"",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "     data-on=\"true\"",
+          "issue": "The on/off state lives only in a data attribute and the knob position; expose it with `aria-pressed`."
+        },
+        {
+          "id": "l5",
+          "text": "     onclick=\"toggleDark()\">",
+          "issue": "Only click is handled; `role=\"button\"` promises Enter and Space activation, which needs a keydown handler."
+        },
+        {
+          "id": "l6",
+          "text": "  <span class=\"knob\"></span>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  <span class=\"label\">Dark mode</span>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "</div>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-html-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A confirmation modal. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<div class=\"overlay\">",
+          "issue": "A plain div is not announced as a dialog and does not trap focus; use `<dialog>` with `showModal()` (or `role=\"dialog\" aria-modal=\"true\"`)."
+        },
+        {
+          "id": "l2",
+          "text": "  <h2 id=\"del-title\">Delete project?</h2>",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  <p>This cannot be undone.</p>",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  <button type=\"button\">Cancel</button>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  <button type=\"button\" class=\"danger\">Delete</button>",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  <span class=\"close\" onclick=\"closeModal()\">×</span>",
+          "issue": "The close control is a span: not focusable and announced as \"times\"; use `<button aria-label=\"Close\">`."
+        },
+        {
+          "id": "l7",
+          "text": "</div>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-html-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Your hero image is the Largest Contentful Paint element. Which `<img>` markup loads it fastest?",
+    "mcq": {
+      "options": [
+        "`<img src=\"hero.jpg\" alt=\"…\" fetchpriority=\"high\">`",
+        "`<img src=\"hero.jpg\" alt=\"…\" loading=\"lazy\">`",
+        "`<img data-src=\"hero.jpg\" alt=\"…\">` swapped in by JavaScript",
+        "A CSS `background-image` on the hero section"
+      ],
+      "correctIndex": 0,
+      "explanation": "`loading=\"lazy\"` delays above-the-fold images until layout, and JS or CSS backgrounds hide the image from the preload scanner. `fetchpriority=\"high\"` asks for it early.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does `aria-label` on a plain `<div>` with no `role` usually do for screen-reader users?",
+    "mcq": {
+      "options": [
+        "Nothing reliable: a generic `div` has no role that names are announced for",
+        "It turns the div into a landmark",
+        "It is read instead of the div's text everywhere",
+        "It makes the div focusable"
+      ],
+      "correctIndex": 0,
+      "explanation": "Naming is only supported on roles that take a name (buttons, links, landmarks, inputs…). On a generic `div` most screen readers ignore `aria-label`. Give it a real role or put the text in the content.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An error message appears under a field after submit. Which markup gets it announced without moving focus?",
+    "mcq": {
+      "options": [
+        "Put it in a container that already exists with `aria-live=\"polite\"` (or `role=\"alert\"` for urgent errors) and connect it with `aria-describedby`",
+        "Add `tabindex=\"-1\"` to the message",
+        "Give the message `aria-hidden=\"true\"`",
+        "Use `<strong>` so it is emphasised"
+      ],
+      "correctIndex": 0,
+      "explanation": "Live regions announce changes to their content. They must be in the DOM before the text changes; inserting the region and its text together is often missed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`accessibleName(el, textById)` computes a simplified accessible name. Precedence, first non-empty wins:\n1. `ariaLabelledby` — space-separated ids, each looked up in `textById`, joined by one space (unknown ids skipped)\n2. `ariaLabel`\n3. `labelText` (from an associated `<label>`)\n4. `title`\nOtherwise `\"\"`. Trim the result.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "accessibleName",
+      "starterCode": "function accessibleName(el, textById) {\n  return el.ariaLabel || el.labelText || el.title || \"\";\n}",
+      "referenceSolution": "function accessibleName(el, textById) {\n  if (el.ariaLabelledby) {\n    const name = el.ariaLabelledby\n      .split(/\\s+/)\n      .filter((id) => textById[id] !== undefined)\n      .map((id) => textById[id])\n      .join(\" \")\n      .trim();\n    if (name) return name;\n  }\n  for (const v of [el.ariaLabel, el.labelText, el.title]) {\n    if (v && v.trim()) return v.trim();\n  }\n  return \"\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "ariaLabelledby": "t1 t2",
+              "ariaLabel": "x"
+            },
+            {
+              "t1": "Billing",
+              "t2": "address"
+            }
+          ],
+          "expected": "Billing address"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "ariaLabel": "Close",
+              "labelText": "X"
+            },
+            {}
+          ],
+          "expected": "Close"
+        },
+        {
+          "args": [
+            {
+              "ariaLabelledby": "missing",
+              "labelText": "Email"
+            },
+            {}
+          ],
+          "expected": "Email"
+        },
+        {
+          "args": [
+            {
+              "title": " Help "
+            },
+            {}
+          ],
+          "expected": "Help"
+        },
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            {
+              "ariaLabelledby": "a nope b",
+              "ariaLabel": "ignored"
+            },
+            {
+              "a": "Ship",
+              "b": "to"
+            }
+          ],
+          "expected": "Ship to"
+        },
+        {
+          "args": [
+            {
+              "ariaLabel": "   ",
+              "labelText": "Name"
+            },
+            {}
+          ],
+          "expected": "Name"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`cleanAttrs(attrs)` filters an object of attributes from user HTML before rendering. Remove:\n- every event handler attribute (name starts with `on`, any case)\n- `href`/`src` values that use the `javascript:` scheme, ignoring case and leading whitespace\nKeep everything else.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cleanAttrs",
+      "starterCode": "function cleanAttrs(attrs) {\n  const out = {};\n  for (const [k, v] of Object.entries(attrs)) {\n    if (k.startsWith(\"on\")) continue;\n    if (v.startsWith(\"javascript:\")) continue;\n    out[k] = v;\n  }\n  return out;\n}",
+      "referenceSolution": "function cleanAttrs(attrs) {\n  const out = {};\n  for (const [k, v] of Object.entries(attrs)) {\n    const name = k.toLowerCase();\n    if (name.startsWith(\"on\")) continue;\n    if ((name === \"href\" || name === \"src\") && /^javascript:/i.test(String(v).trim())) continue;\n    out[k] = v;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "href": "/a",
+              "onclick": "steal()"
+            }
+          ],
+          "expected": {
+            "href": "/a"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "href": "  JavaScript:alert(1)",
+              "title": "x"
+            }
+          ],
+          "expected": {
+            "title": "x"
+          }
+        },
+        {
+          "args": [
+            {
+              "ONLOAD": "x()",
+              "src": "/i.png"
+            }
+          ],
+          "expected": {
+            "src": "/i.png"
+          }
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "alt": "javascript: the good parts"
+            }
+          ],
+          "expected": {
+            "alt": "javascript: the good parts"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`pickCandidate(widths, viewportCssPx, dpr)` mimics how a browser picks from a `srcset` with `sizes=\"100vw\"`:\nit needs `viewportCssPx * dpr` device pixels and picks the **smallest** width that is at least that; if none is\nbig enough, the largest. `widths` is unsorted; return the chosen width (or `null` for an empty list).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pickCandidate",
+      "starterCode": "function pickCandidate(widths, viewportCssPx, dpr) {\n  const sorted = [...widths].sort((a, b) => a - b);\n  return sorted.find((w) => w >= viewportCssPx) ?? sorted[sorted.length - 1];\n}",
+      "referenceSolution": "function pickCandidate(widths, viewportCssPx, dpr) {\n  if (widths.length === 0) return null;\n  const need = viewportCssPx * dpr;\n  const sorted = [...widths].sort((a, b) => a - b);\n  return sorted.find((w) => w >= need) ?? sorted[sorted.length - 1];\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              320,
+              640,
+              1280
+            ],
+            375,
+            2
+          ],
+          "expected": 1280
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1280,
+              320,
+              640
+            ],
+            300,
+            1
+          ],
+          "expected": 320
+        },
+        {
+          "args": [
+            [
+              400,
+              800
+            ],
+            1000,
+            1
+          ],
+          "expected": 800
+        },
+        {
+          "args": [
+            [],
+            375,
+            2
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              480,
+              960,
+              1440
+            ],
+            480,
+            3
+          ],
+          "expected": 1440
+        },
+        {
+          "args": [
+            [
+              480,
+              960,
+              1440
+            ],
+            480,
+            1
+          ],
+          "expected": 480
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`preloadTag(r)` builds a `<link rel=\"preload\">` for a resource `{ href, as, type? }`. Fonts are fetched in\nCORS mode, so a font preload **must** carry `crossorigin` or the browser downloads the font twice.\nOutput: `<link rel=\"preload\" href=\"H\" as=\"A\"` + ` type=\"T\"` if given + ` crossorigin` for fonts + `>`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "preloadTag",
+      "starterCode": "function preloadTag(r) {\n  let tag = `<link rel=\"preload\" href=\"${r.href}\" as=\"${r.as}\"`;\n  if (r.type) tag += ` type=\"${r.type}\"`;\n  return tag + \">\";\n}",
+      "referenceSolution": "function preloadTag(r) {\n  let tag = `<link rel=\"preload\" href=\"${r.href}\" as=\"${r.as}\"`;\n  if (r.type) tag += ` type=\"${r.type}\"`;\n  if (r.as === \"font\") tag += \" crossorigin\";\n  return tag + \">\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "href": "/inter.woff2",
+              "as": "font",
+              "type": "font/woff2"
+            }
+          ],
+          "expected": "<link rel=\"preload\" href=\"/inter.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "href": "/hero.avif",
+              "as": "image"
+            }
+          ],
+          "expected": "<link rel=\"preload\" href=\"/hero.avif\" as=\"image\">"
+        },
+        {
+          "args": [
+            {
+              "href": "/f.woff2",
+              "as": "font"
+            }
+          ],
+          "expected": "<link rel=\"preload\" href=\"/f.woff2\" as=\"font\" crossorigin>"
+        },
+        {
+          "args": [
+            {
+              "href": "/app.css",
+              "as": "style",
+              "type": "text/css"
+            }
+          ],
+          "expected": "<link rel=\"preload\" href=\"/app.css\" as=\"style\" type=\"text/css\">"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A tabs widget. Mark the lines that do not follow the ARIA tabs pattern.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<div role=\"tablist\" aria-label=\"Account\">",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  <button role=\"tab\" aria-selected=\"true\" aria-controls=\"p1\" id=\"t1\">Profile</button>",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  <button role=\"tab\" aria-selected=\"false\" aria-controls=\"p2\" id=\"t2\">Billing</button>",
+          "issue": "Inactive tabs should have `tabindex=\"-1\"` so Tab moves into the panel and arrow keys move between tabs (roving tabindex)."
+        },
+        {
+          "id": "l4",
+          "text": "</div>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "<div role=\"tabpanel\" id=\"p1\" aria-labelledby=\"t1\">…</div>",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "<div role=\"tabpanel\" id=\"p2\" aria-labelledby=\"t1\" hidden>…</div>",
+          "issue": "The Billing panel points at the wrong tab; it should be `aria-labelledby=\"t2\"`."
+        },
+        {
+          "id": "l7",
+          "text": "<script>tabs.forEach(t => t.addEventListener('click', select))</script>",
+          "issue": "Only click is handled; the pattern needs Left/Right arrow (and Home/End) keys on the tablist."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-html-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A product page scores badly on Largest Contentful Paint. The LCP element is the hero `<img>`, which is\ninserted by a carousel script after hydration and has `loading=\"lazy\"`. The image is 2400px wide JPEG served to phones.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A product page scores badly on Largest Contentful Paint. The LCP element is the hero `<img>`, which is\ninserted by a carousel script after hydration and has `loading=\"lazy\"`. The image is 2400px wide JPEG served to phones.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the first change with the biggest effect?",
+          "options": [
+            "Render the first slide's `<img>` in the server HTML, without `loading=\"lazy\"`",
+            "Add more JavaScript code splitting",
+            "Switch the font to `font-display: swap`",
+            "Move the carousel script to the footer"
+          ],
+          "correctIndex": 0,
+          "explanation": "The browser cannot start the download until JS runs. Server-rendered markup lets the preload scanner find it."
+        },
+        {
+          "id": "q2",
+          "question": "The image is now in the HTML. What fixes the oversized download on phones?",
+          "options": [
+            "`srcset` with width descriptors plus `sizes`, and a modern format such as AVIF/WebP",
+            "Set `width=\"100%\"` in CSS",
+            "Add `decoding=\"async\"`",
+            "Compress the 2400px JPEG harder and keep one size"
+          ],
+          "correctIndex": 0,
+          "explanation": "CSS scaling still downloads all the pixels; `srcset`/`sizes` lets the browser fetch a phone-sized file."
+        },
+        {
+          "id": "q3",
+          "question": "What else should the hero `<img>` carry so the layout does not jump while it loads?",
+          "options": [
+            "`width` and `height` attributes (or a CSS `aspect-ratio`)",
+            "`fetchpriority=\"low\"`",
+            "`hidden` until loaded"
+          ],
+          "correctIndex": 0,
+          "explanation": "Intrinsic dimensions let the browser reserve space, avoiding a layout shift (CLS)."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-html-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A side drawer is open; the page behind it should be unreachable by Tab and invisible to screen readers. What is the simplest correct markup tool for the background?",
+    "mcq": {
+      "options": [
+        "Add the `inert` attribute to the background container",
+        "Add `aria-hidden=\"true\"` to the background container only",
+        "Set `tabindex=\"-1\"` on the background container",
+        "Set `pointer-events: none` on the background"
+      ],
+      "correctIndex": 0,
+      "explanation": "`inert` removes the subtree from focus, clicks and the accessibility tree in one attribute. `aria-hidden` alone hides it from screen readers but its links can still be tabbed to.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A live region with `aria-live=\"assertive\"` is used for a \"Saved\" message after every autosave. What is the problem?",
+    "mcq": {
+      "options": [
+        "Assertive announcements interrupt whatever the user is hearing; a routine status should be `polite` (or `role=\"status\"`)",
+        "Assertive regions are only read once per page load",
+        "`aria-live` only works on `<p>` elements",
+        "Nothing; assertive is the recommended default"
+      ],
+      "correctIndex": 0,
+      "explanation": "`assertive` cuts off the current speech and is for urgent errors. Frequent status messages belong in a polite `role=\"status\"` region.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-html-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-html",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which statement about `<dialog>` opened with `showModal()` is true?",
+    "mcq": {
+      "options": [
+        "Content outside the dialog becomes inert, Escape closes it, and it renders in the top layer above everything",
+        "It must be given `role=\"dialog\"` and `aria-modal` by hand to be modal",
+        "Focus stays where it was until you call `focus()` yourself",
+        "It is the same as setting the `open` attribute"
+      ],
+      "correctIndex": 0,
+      "explanation": "`showModal()` makes the rest of the page inert, moves focus into the dialog, closes on Escape and uses the top layer (no z-index fights). The `open` attribute shows a non-modal dialog.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

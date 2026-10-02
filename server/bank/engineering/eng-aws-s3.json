@@ -1,0 +1,1662 @@
+[
+  {
+    "id": "eng-aws-s3-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `s3Uri` so it returns `s3://bucket/key`. Keys never start with `/` in S3, so strip any leading slashes from `key` first.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "s3Uri",
+      "starterCode": "function s3Uri(bucket, key) {\n  return \"s3://\" + bucket + \"/\" + key;\n}",
+      "referenceSolution": "function s3Uri(bucket, key) {\n  return \"s3://\" + bucket + \"/\" + key.replace(/^\\/+/, \"\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "assets",
+            "img/logo.png"
+          ],
+          "expected": "s3://assets/img/logo.png"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "docs",
+            "/report.pdf"
+          ],
+          "expected": "s3://docs/report.pdf"
+        },
+        {
+          "args": [
+            "logs",
+            "2024/01/app.log"
+          ],
+          "expected": "s3://logs/2024/01/app.log"
+        },
+        {
+          "args": [
+            "b",
+            "//a/b.txt"
+          ],
+          "expected": "s3://b/a/b.txt"
+        },
+        {
+          "args": [
+            "b",
+            ""
+          ],
+          "expected": "s3://b/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`parse_s3_uri` turns `s3://bucket/key` into `[bucket, key]`. Keys can contain `/`, and `s3://bucket` alone has an empty key. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_s3_uri",
+      "starterCode": "def parse_s3_uri(uri):\n    parts = uri.split(\"/\")\n    return [parts[2], parts[3]]",
+      "referenceSolution": "def parse_s3_uri(uri):\n    rest = uri[len(\"s3://\"):]\n    bucket, _, key = rest.partition(\"/\")\n    return [bucket, key]",
+      "sampleTests": [
+        {
+          "args": [
+            "s3://media/cat.jpg"
+          ],
+          "expected": [
+            "media",
+            "cat.jpg"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "s3://media/photos/2024/cat.jpg"
+          ],
+          "expected": [
+            "media",
+            "photos/2024/cat.jpg"
+          ]
+        },
+        {
+          "args": [
+            "s3://data"
+          ],
+          "expected": [
+            "data",
+            ""
+          ]
+        },
+        {
+          "args": [
+            "s3://logs/app.log"
+          ],
+          "expected": [
+            "logs",
+            "app.log"
+          ]
+        },
+        {
+          "args": [
+            "s3://b/a/b/c.csv"
+          ],
+          "expected": [
+            "b",
+            "a/b/c.csv"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A teammate's notes for putting the marketing site on S3. The site should load at `index.html` with its logo.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the steps that will not work as intended.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Create bucket `acme-site` in `eu-west-1`.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Upload `index.html` with `Content-Type: text/plain`.",
+          "issue": "Browsers will show the HTML as plain text; it must be `text/html`."
+        },
+        {
+          "id": "l3",
+          "text": "Enable static website hosting with `index.html` as the index document.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "Upload `logo.png` and `styles.css` to the bucket root.",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "In the HTML, load the image from `/Logo.png`.",
+          "issue": "S3 keys are case-sensitive: the object is `logo.png`, so `/Logo.png` is a 404."
+        },
+        {
+          "id": "l6",
+          "text": "Set a one-hour `Cache-Control` on `styles.css`.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-s3-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You want to serve a static site from S3 through CloudFront on your own domain.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Create the S3 bucket"
+        },
+        {
+          "id": "s2",
+          "label": "Upload the built site files"
+        },
+        {
+          "id": "s3",
+          "label": "Create a CloudFront distribution with the bucket as origin"
+        },
+        {
+          "id": "s4",
+          "label": "Point the domain's DNS record at the distribution"
+        },
+        {
+          "id": "s5",
+          "label": "After later uploads, invalidate changed paths in CloudFront"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "The bucket and files must exist before the distribution can serve them; DNS goes last so users never hit an empty site; invalidations are for later updates."
+    }
+  },
+  {
+    "id": "eng-aws-s3-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A file you uploaded gives an error in the browser.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You upload `invoice-42.pdf` to a new bucket and open `https://acme-docs.s3.amazonaws.com/invoice-42.pdf`. You get `403 AccessDenied`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the most likely reason?",
+          "options": [
+            "New buckets block public access, so objects are private by default",
+            "The file is too large for S3",
+            "PDFs need a special storage class",
+            "The bucket is in the wrong region"
+          ],
+          "correctIndex": 0,
+          "explanation": "Buckets are private by default and Block Public Access is on; an anonymous browser request is denied."
+        },
+        {
+          "id": "q2",
+          "question": "A client needs this one file for the next 24 hours. What do you do?",
+          "options": [
+            "Generate a presigned GET URL that expires in 24 hours",
+            "Turn off Block Public Access on the whole bucket",
+            "Email the client an access key",
+            "Copy the file to a public bucket forever"
+          ],
+          "correctIndex": 0,
+          "explanation": "A presigned URL grants time-limited access to one object without opening the bucket."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The plan: delete last quarter's `reports/` folder, then create a bucket for uploads.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the commands that will not do what the plan intends.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "`aws s3 ls s3://acme-docs/reports/`",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "`aws s3 rm s3://acme-docs/reports/`",
+          "issue": "Without `--recursive` this targets a single key, not every object under the prefix."
+        },
+        {
+          "id": "l3",
+          "text": "`aws s3 ls s3://acme-docs/reports/` to confirm it is empty",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "`aws s3 mb s3://Acme_Uploads`",
+          "issue": "Bucket names must be lowercase and cannot contain underscores, e.g. `acme-uploads`."
+        },
+        {
+          "id": "l5",
+          "text": "`aws s3 cp welcome.txt s3://acme-uploads/`",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "`aws s3 ls s3://acme-uploads/`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-s3-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Your bucket has objects `photos/2024/a.jpg` and `photos/2024/b.jpg`. What is `photos/2024/` in S3?",
+    "mcq": {
+      "options": [
+        "A prefix: part of the object keys, which tools display as a folder",
+        "A real directory object that must be created first",
+        "A separate bucket inside the bucket",
+        "A tag attached to both objects"
+      ],
+      "correctIndex": 0,
+      "explanation": "S3 is a flat key-value store. \"Folders\" are just shared key prefixes split on `/`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You create a new bucket with default settings and upload a file. Who can read it?",
+    "mcq": {
+      "options": [
+        "Only identities in your account that IAM allows to read it",
+        "Anyone with the URL",
+        "Anyone with an AWS account",
+        "Nobody until you add a lifecycle rule"
+      ],
+      "correctIndex": 0,
+      "explanation": "New buckets have Block Public Access on and objects are private; access comes from IAM or bucket policies.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which is a valid S3 bucket name?",
+    "mcq": {
+      "options": [
+        "acme-invoices-2024",
+        "Acme-Invoices",
+        "acme_invoices",
+        "acme invoices"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bucket names are 3-63 characters of lowercase letters, numbers, dots and hyphens. No capitals, underscores or spaces.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`isExpired(signedAt, expiresIn, now)` checks a presigned URL (all values in epoch **seconds**). The URL works up to and including `signedAt + expiresIn`. SigV4 URLs cannot last longer than 604800 seconds (7 days); treat a longer `expiresIn` as already expired. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "isExpired",
+      "starterCode": "function isExpired(signedAt, expiresIn, now) {\n  return now >= signedAt + expiresIn;\n}",
+      "referenceSolution": "function isExpired(signedAt, expiresIn, now) {\n  if (expiresIn > 604800) return true;\n  return now > signedAt + expiresIn;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1000,
+            3600,
+            2000
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            1000,
+            3600,
+            4601
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1000,
+            3600,
+            4600
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            0,
+            700000,
+            10
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            0,
+            604800,
+            604800
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            500,
+            60,
+            561
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`list_level(keys, prefix)` mimics `ListObjectsV2` with `Delimiter='/'`: it returns the sub-folders directly under `prefix` (as `prefixes`, ending in `/`) and the objects directly under it (as `objects`), both sorted. Each prefix must appear only once. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "list_level",
+      "starterCode": "def list_level(keys, prefix):\n    prefixes, objects = [], []\n    for k in keys:\n        if not k.startswith(prefix):\n            continue\n        rest = k[len(prefix):]\n        if \"/\" in rest:\n            prefixes.append(prefix + rest.split(\"/\")[0] + \"/\")\n        else:\n            objects.append(k)\n    return {\"prefixes\": sorted(prefixes), \"objects\": sorted(objects)}",
+      "referenceSolution": "def list_level(keys, prefix):\n    prefixes, objects = set(), []\n    for k in keys:\n        if not k.startswith(prefix):\n            continue\n        rest = k[len(prefix):]\n        if \"/\" in rest:\n            prefixes.add(prefix + rest.split(\"/\")[0] + \"/\")\n        else:\n            objects.append(k)\n    return {\"prefixes\": sorted(prefixes), \"objects\": sorted(objects)}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "logs/2024/a.log",
+              "logs/x.txt",
+              "img/c.png"
+            ],
+            "logs/"
+          ],
+          "expected": {
+            "prefixes": [
+              "logs/2024/"
+            ],
+            "objects": [
+              "logs/x.txt"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "logs/2024/a.log",
+              "logs/2024/b.log",
+              "logs/2025/c.log"
+            ],
+            "logs/"
+          ],
+          "expected": {
+            "prefixes": [
+              "logs/2024/",
+              "logs/2025/"
+            ],
+            "objects": []
+          }
+        },
+        {
+          "args": [
+            [
+              "a/1",
+              "a/2",
+              "b.txt"
+            ],
+            ""
+          ],
+          "expected": {
+            "prefixes": [
+              "a/"
+            ],
+            "objects": [
+              "b.txt"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              "img/x.png"
+            ],
+            "logs/"
+          ],
+          "expected": {
+            "prefixes": [],
+            "objects": []
+          }
+        },
+        {
+          "args": [
+            [],
+            ""
+          ],
+          "expected": {
+            "prefixes": [],
+            "objects": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This bucket policy is meant to let only your CloudFront distribution read the site files.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that make it broader than intended.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"Sid\": \"AllowCloudFrontRead\",",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "\"Effect\": \"Allow\",",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "\"Principal\": \"*\",",
+          "issue": "Should be the CloudFront service principal (`cloudfront.amazonaws.com`), not everyone."
+        },
+        {
+          "id": "l4",
+          "text": "\"Action\": \"s3:*\",",
+          "issue": "Reading files only needs `s3:GetObject`; `s3:*` also allows writes and deletes."
+        },
+        {
+          "id": "l5",
+          "text": "\"Resource\": \"arn:aws:s3:::acme-site/*\",",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "\"Condition\": { \"StringEquals\": { \"AWS:SourceArn\": \"arn:aws:cloudfront::111122223333:distribution/E1ABC\" } }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-s3-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You deploy a new build of a single-page app hosted on S3 behind CloudFront. File names of JS/CSS contain a content hash; `index.html` does not.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the deploy steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Build the app"
+        },
+        {
+          "id": "s2",
+          "label": "Upload the hashed JS/CSS assets with a long cache lifetime"
+        },
+        {
+          "id": "s3",
+          "label": "Upload `index.html` with `Cache-Control: no-cache`"
+        },
+        {
+          "id": "s4",
+          "label": "Invalidate `/index.html` in CloudFront"
+        },
+        {
+          "id": "s5",
+          "label": "Load the site and check the new version is served"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Assets go up before `index.html` so the new page never references files that do not exist yet; the invalidation makes CloudFront pick up the new `index.html`."
+    }
+  },
+  {
+    "id": "eng-aws-s3-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Browser uploads to S3 are failing.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your web app at `https://app.acme.com` asks the API for a presigned PUT URL, then uploads the file straight from the browser. The console shows: `blocked by CORS policy: No 'Access-Control-Allow-Origin' header`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is missing?",
+          "options": [
+            "A CORS configuration on the bucket that allows the app's origin",
+            "A bucket policy making the bucket public",
+            "A larger expiry on the presigned URL",
+            "A CloudFront distribution in front of the bucket"
+          ],
+          "correctIndex": 0,
+          "explanation": "The browser preflights the cross-origin PUT; the bucket must answer with CORS headers for that origin."
+        },
+        {
+          "id": "q2",
+          "question": "Which CORS rule fits best?",
+          "options": [
+            "AllowedOrigins `https://app.acme.com`, AllowedMethods `PUT`, AllowedHeaders `Content-Type`",
+            "AllowedOrigins `*`, AllowedMethods `GET, PUT, POST, DELETE`, AllowedHeaders `*`",
+            "AllowedOrigins `https://s3.amazonaws.com`, AllowedMethods `PUT`",
+            "No rule; set `Access-Control-Allow-Origin` in the app's HTML"
+          ],
+          "correctIndex": 0,
+          "explanation": "Allow exactly the origin, method and headers the upload needs; nothing more."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A design doc for storing user profile photos in S3.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the decisions that will cause problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Keys look like `avatars/{userId}/{uuid}.jpg`.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "The API returns a presigned PUT URL that expires after 5 minutes.",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "The API checks content type and file size before signing.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "After upload, we save the presigned GET URL in the `users` table and show it on every page.",
+          "issue": "Presigned URLs expire; store the key and sign a fresh URL when needed (or serve via CloudFront)."
+        },
+        {
+          "id": "l5",
+          "text": "The bucket is public so the mobile app can list every user's photos.",
+          "issue": "Exposes every user's photos and the full key list; keep it private and sign per request."
+        },
+        {
+          "id": "l6",
+          "text": "A lifecycle rule deletes objects under `tmp/` after 1 day.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-s3-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An app running under an IAM role whose temporary credentials expire in 1 hour generates a presigned URL with a 12-hour expiry. How long does the URL work?",
+    "mcq": {
+      "options": [
+        "Until the role's temporary credentials expire, so about 1 hour at most",
+        "12 hours, as requested",
+        "7 days, the SigV4 maximum",
+        "It never works; roles cannot sign URLs"
+      ],
+      "correctIndex": 0,
+      "explanation": "A presigned URL is only valid while the credentials that signed it are valid. Temporary credentials cap its life.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A service overwrites `config.json` with a successful PUT and immediately GETs it. What does it read?",
+    "mcq": {
+      "options": [
+        "The new version: S3 has strong read-after-write consistency",
+        "Possibly the old version for a few seconds",
+        "An error until replication finishes",
+        "Both versions merged"
+      ],
+      "correctIndex": 0,
+      "explanation": "Since December 2020 S3 gives strong read-after-write consistency for PUTs and DELETEs, including overwrites.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Audit logs are read about once a quarter, but when someone needs one it must open within milliseconds. Which storage class fits best?",
+    "mcq": {
+      "options": [
+        "S3 Standard-IA",
+        "S3 Standard",
+        "S3 Glacier Deep Archive"
+      ],
+      "correctIndex": 0,
+      "explanation": "Standard-IA is cheaper to store for infrequent access and still serves reads in milliseconds. Deep Archive restores take hours.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`cacheControlFor(key)` picks the `Cache-Control` header when uploading a site build:\n- `.html` files: `no-cache`\n- files with a content hash before the extension (a dot, 8+ lowercase hex characters, a dot, e.g. `app.3f9a1c2b.js`): `public, max-age=31536000, immutable`\n- anything else: `public, max-age=3600`\n\nFix it: unhashed files like `sw.js` must not be cached for a year.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cacheControlFor",
+      "starterCode": "function cacheControlFor(key) {\n  if (key.endsWith(\".html\")) return \"no-cache\";\n  if (key.endsWith(\".js\") || key.endsWith(\".css\")) return \"public, max-age=31536000, immutable\";\n  return \"public, max-age=3600\";\n}",
+      "referenceSolution": "function cacheControlFor(key) {\n  if (key.endsWith(\".html\")) return \"no-cache\";\n  if (/\\.[0-9a-f]{8,}\\.[a-z0-9]+$/.test(key)) return \"public, max-age=31536000, immutable\";\n  return \"public, max-age=3600\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "assets/app.3f9a1c2b.js"
+          ],
+          "expected": "public, max-age=31536000, immutable"
+        },
+        {
+          "args": [
+            "index.html"
+          ],
+          "expected": "no-cache"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "sw.js"
+          ],
+          "expected": "public, max-age=3600"
+        },
+        {
+          "args": [
+            "img/logo.png"
+          ],
+          "expected": "public, max-age=3600"
+        },
+        {
+          "args": [
+            "assets/main.a1b2c3d4e5.css"
+          ],
+          "expected": "public, max-age=31536000, immutable"
+        },
+        {
+          "args": [
+            "about/index.html"
+          ],
+          "expected": "no-cache"
+        },
+        {
+          "args": [
+            "assets/logo.9c0ffee1.svg"
+          ],
+          "expected": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`expires_at(query)` gets the query parameters of a presigned URL as a dict and returns when it expires, as `YYYY-MM-DDTHH:MM:SSZ`. `X-Amz-Date` is like `20240115T093000Z` and `X-Amz-Expires` is a number of **seconds** (as a string). Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "expires_at",
+      "starterCode": "from datetime import datetime, timedelta\n\ndef expires_at(query):\n    signed = datetime.strptime(query[\"X-Amz-Date\"], \"%Y%m%dT%H%M%SZ\")\n    end = signed + timedelta(minutes=int(query[\"X-Amz-Expires\"]))\n    return end.strftime(\"%Y-%m-%dT%H:%M:%SZ\")",
+      "referenceSolution": "from datetime import datetime, timedelta\n\ndef expires_at(query):\n    signed = datetime.strptime(query[\"X-Amz-Date\"], \"%Y%m%dT%H%M%SZ\")\n    end = signed + timedelta(seconds=int(query[\"X-Amz-Expires\"]))\n    return end.strftime(\"%Y-%m-%dT%H:%M:%SZ\")",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "X-Amz-Date": "20240115T093000Z",
+              "X-Amz-Expires": "3600"
+            }
+          ],
+          "expected": "2024-01-15T10:30:00Z"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "X-Amz-Date": "20240115T093000Z",
+              "X-Amz-Expires": "60"
+            }
+          ],
+          "expected": "2024-01-15T09:31:00Z"
+        },
+        {
+          "args": [
+            {
+              "X-Amz-Date": "20231231T235959Z",
+              "X-Amz-Expires": "1"
+            }
+          ],
+          "expected": "2024-01-01T00:00:00Z"
+        },
+        {
+          "args": [
+            {
+              "X-Amz-Date": "20240301T120000Z",
+              "X-Amz-Expires": "604800"
+            }
+          ],
+          "expected": "2024-03-08T12:00:00Z"
+        },
+        {
+          "args": [
+            {
+              "X-Amz-Date": "20240301T120000Z",
+              "X-Amz-Expires": "0",
+              "X-Amz-SignedHeaders": "host"
+            }
+          ],
+          "expected": "2024-03-01T12:00:00Z"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The CI deploy script for the S3 + CloudFront site.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "`npm ci && npm run build`",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "`echo \"Deploying with key $AWS_ACCESS_KEY_ID / $AWS_SECRET_ACCESS_KEY\"`",
+          "issue": "Prints the secret key into the build log."
+        },
+        {
+          "id": "l3",
+          "text": "`aws s3 sync dist/ s3://acme-site --delete --cache-control \"public, max-age=31536000, immutable\"`",
+          "issue": "`index.html` also gets a one-year immutable cache, so browsers keep the old app; upload HTML separately with `no-cache`."
+        },
+        {
+          "id": "l4",
+          "text": "`aws cloudfront create-invalidation --distribution-id E1ABC --paths \"/index.html\"`",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "`curl -fsS https://www.acme.com/ > /dev/null`",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "`echo \"done\"`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-s3-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Images are linked straight from a public S3 bucket. You want them served only through CloudFront and the bucket made private, without broken images.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Create a CloudFront distribution with Origin Access Control pointing at the bucket"
+        },
+        {
+          "id": "s2",
+          "label": "Add a bucket policy allowing that distribution to `s3:GetObject`"
+        },
+        {
+          "id": "s3",
+          "label": "Switch the app's image URLs to the CloudFront domain and deploy"
+        },
+        {
+          "id": "s4",
+          "label": "Watch S3 access logs until direct requests drop to near zero"
+        },
+        {
+          "id": "s5",
+          "label": "Remove the public-read policy and turn on Block Public Access"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "CloudFront must be able to read before anything points at it; cut traffic over, confirm, and only then close public access."
+    }
+  },
+  {
+    "id": "eng-aws-s3-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Someone deleted files they should not have.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A script ran `aws s3 rm s3://acme-contracts/2023/ --recursive` by mistake. Versioning has been enabled on the bucket for a year.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you get the files back?",
+          "options": [
+            "Delete the delete markers the command created, so the previous versions become current",
+            "Restore the bucket from a CloudFront cache",
+            "Open a support ticket; deleted objects are gone",
+            "Re-run the command with `--undo`"
+          ],
+          "correctIndex": 0,
+          "explanation": "On a versioned bucket a delete only adds a delete marker; removing the marker brings back the last version."
+        },
+        {
+          "id": "q2",
+          "question": "Storage cost has crept up since versioning was turned on. What keeps it in check without losing the safety net?",
+          "options": [
+            "A lifecycle rule that expires noncurrent versions after, say, 30 days",
+            "Turning versioning off",
+            "Deleting all versions every night",
+            "Moving the bucket to another region"
+          ],
+          "correctIndex": 0,
+          "explanation": "`NoncurrentVersionExpiration` keeps a recovery window while trimming old versions."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A thumbnail pipeline: when a photo is uploaded, a Lambda function writes a 200px thumbnail.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the parts of the design that will cause failures.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Trigger: `s3:ObjectCreated:*` on bucket `acme-media`, with no prefix filter.",
+          "issue": "Thumbnails are written into the same bucket, so each one triggers the function again: a loop. Filter on `uploads/` or use another bucket."
+        },
+        {
+          "id": "l2",
+          "text": "The function downloads the object and resizes it to 200px wide.",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "It writes the thumbnail to `acme-media/thumbs/{original key}`.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "The role allows `s3:GetObject` on `acme-media/uploads/*` and `s3:PutObject` on `acme-media/thumbs/*`.",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "The object key from the event record is passed as-is to `GetObject`.",
+          "issue": "Keys in S3 event records are URL-encoded (a space arrives as `+`); decode them first."
+        },
+        {
+          "id": "l6",
+          "text": "Failed invocations go to a dead-letter queue.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-s3-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Uploading a 12 GB database dump with a single `PutObject` call fails. Why?",
+    "mcq": {
+      "options": [
+        "A single PUT is limited to 5 GB; larger objects need multipart upload",
+        "S3 objects cannot be larger than 10 GB",
+        "The storage class must be Glacier for large files",
+        "The bucket needs versioning for large files"
+      ],
+      "correctIndex": 0,
+      "explanation": "Single-request uploads max out at 5 GB. Multipart upload handles objects up to 5 TB (and is faster for big files anyway).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Versioning is off, yet the bucket's billed storage is far larger than the sum of its listed objects. What is the likely cause?",
+    "mcq": {
+      "options": [
+        "Incomplete multipart uploads that were never aborted",
+        "S3 bills each object twice for redundancy",
+        "Folder placeholder objects",
+        "Old CloudFront cache entries"
+      ],
+      "correctIndex": 0,
+      "explanation": "Parts of unfinished multipart uploads are stored and billed but do not show in listings. Add an `AbortIncompleteMultipartUpload` lifecycle rule.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A busy service writes every object under the single prefix `events/` and starts getting `503 SlowDown` errors. What helps most?",
+    "mcq": {
+      "options": [
+        "Spread the keys across many prefixes (for example `events/{shard}/...`) and retry with backoff",
+        "Move the bucket to another region",
+        "Turn on versioning",
+        "Switch the bucket to Standard-IA"
+      ],
+      "correctIndex": 0,
+      "explanation": "S3's request rate limits apply per prefix, so more prefixes give more throughput; backoff handles the bursts.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`listAllKeys(pages)` follows `ListObjectsV2` pagination. `pages` maps a token to a page `{ keys, isTruncated, next }`; the first page is `pages.start`. Return every key from every page, skipping zero-byte folder markers (keys ending in `/`). Fix it: the last page is currently lost.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "listAllKeys",
+      "starterCode": "function listAllKeys(pages) {\n  const keys = [];\n  let page = pages.start;\n  while (page.isTruncated) {\n    keys.push(...page.keys);\n    page = pages[page.next];\n  }\n  return keys;\n}",
+      "referenceSolution": "function listAllKeys(pages) {\n  const keys = [];\n  let page = pages.start;\n  while (page) {\n    keys.push(...page.keys.filter((k) => !k.endsWith(\"/\")));\n    page = page.isTruncated ? pages[page.next] : null;\n  }\n  return keys;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "start": {
+                "keys": [
+                  "a.txt",
+                  "b.txt"
+                ],
+                "isTruncated": true,
+                "next": "t1"
+              },
+              "t1": {
+                "keys": [
+                  "c.txt"
+                ],
+                "isTruncated": false
+              }
+            }
+          ],
+          "expected": [
+            "a.txt",
+            "b.txt",
+            "c.txt"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "start": {
+                "keys": [
+                  "only.txt"
+                ],
+                "isTruncated": false
+              }
+            }
+          ],
+          "expected": [
+            "only.txt"
+          ]
+        },
+        {
+          "args": [
+            {
+              "start": {
+                "keys": [],
+                "isTruncated": false
+              }
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "start": {
+                "keys": [
+                  "logs/",
+                  "logs/a"
+                ],
+                "isTruncated": true,
+                "next": "x"
+              },
+              "x": {
+                "keys": [
+                  "logs/b"
+                ],
+                "isTruncated": true,
+                "next": "y"
+              },
+              "y": {
+                "keys": [
+                  "img/",
+                  "img/c"
+                ],
+                "isTruncated": false
+              }
+            }
+          ],
+          "expected": [
+            "logs/a",
+            "logs/b",
+            "img/c"
+          ]
+        },
+        {
+          "args": [
+            {
+              "start": {
+                "keys": [
+                  "1"
+                ],
+                "isTruncated": true,
+                "next": "n"
+              },
+              "n": {
+                "keys": [
+                  "2",
+                  "3"
+                ],
+                "isTruncated": false
+              }
+            }
+          ],
+          "expected": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`cors_allows(rules, origin, method)` decides whether a bucket's CORS rules allow a browser request. A rule matches when one of its `AllowedOrigins` matches and `method` is in its `AllowedMethods`. An origin pattern is either `*`, an exact origin, or contains one `*` wildcard such as `https://*.acme.com`. Fix the wildcard support.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "cors_allows",
+      "starterCode": "def cors_allows(rules, origin, method):\n    for r in rules:\n        origins = r[\"AllowedOrigins\"]\n        if (\"*\" in origins or origin in origins) and method in r[\"AllowedMethods\"]:\n            return True\n    return False",
+      "referenceSolution": "def _match(pattern, origin):\n    if pattern == \"*\":\n        return True\n    if \"*\" in pattern:\n        pre, post = pattern.split(\"*\", 1)\n        return origin.startswith(pre) and origin.endswith(post) and len(origin) >= len(pre) + len(post)\n    return pattern == origin\n\ndef cors_allows(rules, origin, method):\n    for r in rules:\n        if method in r[\"AllowedMethods\"] and any(_match(p, origin) for p in r[\"AllowedOrigins\"]):\n            return True\n    return False",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "AllowedOrigins": [
+                  "https://app.acme.com"
+                ],
+                "AllowedMethods": [
+                  "PUT"
+                ]
+              }
+            ],
+            "https://app.acme.com",
+            "PUT"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "AllowedOrigins": [
+                  "https://*.acme.com"
+                ],
+                "AllowedMethods": [
+                  "GET"
+                ]
+              }
+            ],
+            "https://shop.acme.com",
+            "GET"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              {
+                "AllowedOrigins": [
+                  "https://*.acme.com"
+                ],
+                "AllowedMethods": [
+                  "GET"
+                ]
+              }
+            ],
+            "https://evil.com",
+            "GET"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "AllowedOrigins": [
+                  "https://app.acme.com"
+                ],
+                "AllowedMethods": [
+                  "GET"
+                ]
+              }
+            ],
+            "https://app.acme.com",
+            "PUT"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [],
+            "https://app.acme.com",
+            "GET"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "AllowedOrigins": [
+                  "*"
+                ],
+                "AllowedMethods": [
+                  "GET"
+                ]
+              }
+            ],
+            "https://x.io",
+            "GET"
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "This bucket policy should reject any request to `acme-data` that is not made over HTTPS.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that stop it from working.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"Version\": \"2012-10-17\",",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "\"Sid\": \"DenyInsecureTransport\",",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "\"Effect\": \"Deny\", \"Principal\": \"*\", \"Action\": \"s3:*\",",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "\"Resource\": \"arn:aws:s3:::acme-data\",",
+          "issue": "Only covers the bucket itself; objects need `arn:aws:s3:::acme-data/*` as well."
+        },
+        {
+          "id": "l5",
+          "text": "\"Condition\": { \"Bool\": { \"aws:SecureTransport\": \"true\" } }",
+          "issue": "Inverted: this denies HTTPS requests. It must match `\"false\"`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-s3-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "GitHub secret scanning reports that an access key with write access to your production buckets was pushed to a public repo an hour ago.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the response in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Deactivate the access key"
+        },
+        {
+          "id": "s2",
+          "label": "Search CloudTrail for every call made with that key"
+        },
+        {
+          "id": "s3",
+          "label": "Restore or clean any objects it changed, using object versions"
+        },
+        {
+          "id": "s4",
+          "label": "Give the workload short-lived credentials (a role) instead of a new long-lived key"
+        },
+        {
+          "id": "s5",
+          "label": "Write up the incident and add a guardrail such as pre-commit secret scanning"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Stop the bleeding first, then find out what happened, repair the damage, remove the root cause, and prevent a repeat."
+    }
+  },
+  {
+    "id": "eng-aws-s3-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Two AWS accounts share data through S3.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Account A (111111111111) owns bucket `a-exports`. A role in account B (222222222222) must read and also upload files there.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What does B's role need to read objects?",
+          "options": [
+            "A bucket policy in A allowing B's role, plus an identity policy on the role in B allowing the same actions",
+            "Only a bucket policy in A",
+            "Only an identity policy in B",
+            "Account B's root user must enable cross-account sharing"
+          ],
+          "correctIndex": 0,
+          "explanation": "Cross-account access needs both sides: the resource policy in A and the identity policy in B."
+        },
+        {
+          "id": "q2",
+          "question": "Files uploaded by B cannot be read by A's own users. What fixes it for good?",
+          "options": [
+            "Set Object Ownership to \"Bucket owner enforced\" so ACLs are disabled and A owns every object",
+            "Ask B to re-upload the files every night",
+            "Turn on versioning",
+            "Make the bucket public"
+          ],
+          "correctIndex": 0,
+          "explanation": "With ACLs in play, the uploader owns the object. Bucket owner enforced makes the bucket owner own all objects."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Paid video lessons must be playable only by signed-in subscribers.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Lessons are HLS streams: one playlist plus hundreds of small segment files per lesson, all in a private bucket behind CloudFront.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you authorize the player?",
+          "options": [
+            "CloudFront signed cookies scoped to the lesson's path",
+            "A presigned S3 URL for each segment, generated in the browser",
+            "Make the bucket public but keep the URLs secret",
+            "Basic auth on the S3 bucket"
+          ],
+          "correctIndex": 0,
+          "explanation": "Signed cookies cover many files under one path; per-file signed URLs do not suit HLS, and the browser must never hold signing keys."
+        },
+        {
+          "id": "q2",
+          "question": "Where does the CloudFront private signing key live?",
+          "options": [
+            "In a secret store read only by the backend that issues the cookies",
+            "In the frontend bundle so the player can sign",
+            "In the bucket next to the videos",
+            "In the repo's `.env.example`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Only the backend signs; the key stays in Secrets Manager or similar."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-s3-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Objects are encrypted with SSE-KMS using a customer managed key. A role with `s3:GetObject` on the bucket gets `AccessDenied` on download. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "The role is not allowed `kms:Decrypt` on that KMS key",
+        "SSE-KMS objects can only be read by the root user",
+        "The object needs a presigned URL",
+        "The bucket must use SSE-S3 for reads to work"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reading an SSE-KMS object also requires permission to decrypt with its key, through the key policy or IAM.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "On a versioned bucket you run `aws s3 rm s3://acme-data/report.csv`. What happens?",
+    "mcq": {
+      "options": [
+        "A delete marker becomes the current version; earlier versions remain and are still billed",
+        "All versions are permanently deleted",
+        "The command fails on versioned buckets",
+        "The object moves to Glacier"
+      ],
+      "correctIndex": 0,
+      "explanation": "A simple DELETE on a versioned bucket adds a delete marker. Removing data for good means deleting specific version IDs.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-s3-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-s3",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You add a replication rule to a bucket that already holds 2 million objects. A day later, the destination has only the new uploads. Why?",
+    "mcq": {
+      "options": [
+        "Replication rules apply to new objects; existing ones need S3 Batch Replication",
+        "Replication takes about a week to start",
+        "Replication only copies objects under 5 GB",
+        "The destination bucket must have versioning off"
+      ],
+      "correctIndex": 0,
+      "explanation": "Live replication covers objects written after the rule exists. Batch Replication backfills existing objects.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,2020 @@
+[
+  {
+    "id": "eng-angular-fundamentals-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A `truncate` pipe's `transform(value, limit)` shortens text for a card. Fix it: return `\"\"` for `null`/`undefined`,\nthe text unchanged when it fits in `limit` characters, otherwise the first `limit` characters followed by `…`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "transform",
+      "starterCode": "function transform(value: string | null | undefined, limit: number): string {\n  return value!.slice(0, limit) + \"…\";\n}",
+      "referenceSolution": "function transform(value: string | null | undefined, limit: number): string {\n  if (value == null) return \"\";\n  return value.length <= limit ? value : value.slice(0, limit) + \"…\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "Angular signals",
+            7
+          ],
+          "expected": "Angular…"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Short",
+            10
+          ],
+          "expected": "Short"
+        },
+        {
+          "args": [
+            null,
+            5
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "exact",
+            5
+          ],
+          "expected": "exact"
+        },
+        {
+          "args": [
+            "",
+            3
+          ],
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An `initials` pipe shows avatars' letters: `\"ada lovelace\"` → `\"AL\"`. Fix it to handle extra spaces, use at most\nthe first two words, upper-case the letters, and return `\"\"` for an empty name.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "initials",
+      "starterCode": "function initials(name: string): string {\n  return name.split(\" \").map((w) => w[0]).join(\"\");\n}",
+      "referenceSolution": "function initials(name: string): string {\n  return name\n    .trim()\n    .split(/\\s+/)\n    .filter(Boolean)\n    .slice(0, 2)\n    .map((w) => w[0].toUpperCase())\n    .join(\"\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "ada lovelace"
+          ],
+          "expected": "AL"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "  grace   hopper "
+          ],
+          "expected": "GH"
+        },
+        {
+          "args": [
+            "Mary Ann Smith"
+          ],
+          "expected": "MA"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "linus"
+          ],
+          "expected": "L"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Angular validators return `null` when the control is valid and an error object when it is not. Fix\n`required(value)` to return `{ required: true }` for `null`, `undefined`, `\"\"` or an empty array, and `null`\notherwise (`0` and `false` are values).",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "required",
+      "starterCode": "function required(value: unknown): { required: boolean } | null {\n  return { required: !value };\n}",
+      "referenceSolution": "function required(value: unknown): { required: true } | null {\n  const empty = value === null || value === undefined || value === \"\" || (Array.isArray(value) && value.length === 0);\n  return empty ? { required: true } : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": {
+            "required": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Ana"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "required": true
+          }
+        },
+        {
+          "args": [
+            null
+          ],
+          "expected": {
+            "required": true
+          }
+        },
+        {
+          "args": [
+            false
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A template shows `{{ count }} {{ label }}` for search results. Complete `pluralize(count, one, many)`:\n`pluralize(1, \"item\", \"items\")` → `\"1 item\"`, `0` and anything other than `1` → `\"N items\"`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "pluralize",
+      "starterCode": "function pluralize(count: number, one: string, many: string): string {\n  return `${count} ${count > 1 ? many : one}`;\n}",
+      "referenceSolution": "function pluralize(count: number, one: string, many: string): string {\n  return `${count} ${count === 1 ? one : many}`;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            3,
+            "item",
+            "items"
+          ],
+          "expected": "3 items"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1,
+            "item",
+            "items"
+          ],
+          "expected": "1 item"
+        },
+        {
+          "args": [
+            0,
+            "result",
+            "results"
+          ],
+          "expected": "0 results"
+        },
+        {
+          "args": [
+            2,
+            "child",
+            "children"
+          ],
+          "expected": "2 children"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A user list template. Mark the lines with binding mistakes.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<input [value]=\"filter\" (input)=\"filter = $event\" />",
+          "issue": "`$event` is the DOM event, not the text; use `$any($event.target).value`, or bind with `[(ngModel)]`."
+        },
+        {
+          "id": "l2",
+          "text": "<ul>",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  <li *ngFor=\"let u of users\">",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    <img [src]=\"{{ u.avatar }}\" />",
+          "issue": "Do not mix property binding with interpolation; use `[src]=\"u.avatar\"`."
+        },
+        {
+          "id": "l5",
+          "text": "    {{ u.name }}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    <button (click)=\"remove(u.id)\">Remove</button>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  </li>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "</ul>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A profile card component. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Component({ selector: 'app-profile', standalone: true, templateUrl: './profile.html' })",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "export class ProfileComponent {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  @Input() user!: User;",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  constructor(private api: ApiService) {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    this.api.loadStats(this.user.id).subscribe((s) => (this.stats = s));",
+          "issue": "Inputs are not set yet in the constructor, so `this.user` is undefined; load in `ngOnInit` (or when the input changes)."
+        },
+        {
+          "id": "l6",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  rename(name: string) { this.user.name = name; }",
+          "issue": "Mutating the input object changes the parent's data behind its back; emit an `@Output()` event and let the parent update."
+        },
+        {
+          "id": "l8",
+          "text": "  stats?: Stats;",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which binding syntax gives two-way binding on an input with `FormsModule` imported?",
+    "mcq": {
+      "options": [
+        "`[(ngModel)]=\"name\"`",
+        "`[ngModel]=\"name\"`",
+        "`(ngModel)=\"name\"`",
+        "`{{ ngModel }}`"
+      ],
+      "correctIndex": 0,
+      "explanation": "\"Banana in a box\" `[( )]` combines a property binding `[ngModel]` and an event binding `(ngModelChange)`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Where should a component read its `@Input()` values for the first time, for example to fetch data?",
+    "mcq": {
+      "options": [
+        "`ngOnInit`",
+        "The constructor",
+        "`ngOnDestroy`",
+        "A static block"
+      ],
+      "correctIndex": 0,
+      "explanation": "Angular sets inputs after constructing the component and before the first `ngOnInit`. The constructor is for dependency injection only.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A standalone component's template uses `<app-user-card>` and the `date` pipe. Where are they made available?",
+    "mcq": {
+      "options": [
+        "In the component's own `imports: [UserCardComponent, DatePipe]`",
+        "In `AppModule.declarations`",
+        "Nowhere; Angular finds them automatically",
+        "In `providers`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Standalone components declare their template dependencies in `imports`. `providers` are for services, not components or pipes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A form group validator `passwordsMatch(group)` gets `{ password, confirm }`. Return `{ mismatch: true }` when both\nare filled and differ, otherwise `null`. (When `confirm` is empty, the `required` validator reports it instead.)",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "passwordsMatch",
+      "starterCode": "function passwordsMatch(group: { password: string; confirm: string }): { mismatch: true } | null {\n  return group.password !== group.confirm ? { mismatch: true } : null;\n}",
+      "referenceSolution": "function passwordsMatch(group: { password: string; confirm: string }): { mismatch: true } | null {\n  if (!group.password || !group.confirm) return null;\n  return group.password !== group.confirm ? { mismatch: true } : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "password": "abc12345",
+              "confirm": "abc12346"
+            }
+          ],
+          "expected": {
+            "mismatch": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "password": "abc12345",
+              "confirm": "abc12345"
+            }
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "password": "abc12345",
+              "confirm": ""
+            }
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "password": "",
+              "confirm": ""
+            }
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Simulate RxJS `distinctUntilChanged()` on an array of emitted values: drop a value only when it equals the\n**previous** emission. (A value can come back later.)",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "distinctUntilChanged",
+      "starterCode": "function distinctUntilChanged(values) {\n  return [...new Set(values)];\n}",
+      "referenceSolution": "function distinctUntilChanged(values) {\n  return values.filter((v, i) => i === 0 || v !== values[i - 1]);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "a",
+              "a",
+              "b",
+              "a"
+            ]
+          ],
+          "expected": [
+            "a",
+            "b",
+            "a"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1,
+              1,
+              1
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              "x",
+              "y",
+              "y",
+              "x",
+              "x"
+            ]
+          ],
+          "expected": [
+            "x",
+            "y",
+            "x"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`buildUrl(commands, queryParams)` mimics `router.createUrlTree(['/users', 5, 'edit'], { queryParams })` →\n`\"/users/5/edit?tab=roles\"`. Join commands with `/` (the first one starts with `/`), add query params in the\ngiven key order, skip params that are `null`/`undefined`, encode values with `encodeURIComponent`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "buildUrl",
+      "starterCode": "function buildUrl(commands: (string | number)[], queryParams: Record<string, string | number | null | undefined>): string {\n  const path = commands.join(\"/\");\n  const qs = Object.entries(queryParams).map(([k, v]) => `${k}=${v}`).join(\"&\");\n  return path + \"?\" + qs;\n}",
+      "referenceSolution": "function buildUrl(commands: (string | number)[], queryParams: Record<string, string | number | null | undefined>): string {\n  const path = \"/\" + commands.map(String).map((c) => c.replace(/^\\/+|\\/+$/g, \"\")).filter(Boolean).join(\"/\");\n  const qs = Object.entries(queryParams)\n    .filter(([, v]) => v !== null && v !== undefined)\n    .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)\n    .join(\"&\");\n  return qs ? `${path}?${qs}` : path;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "/users",
+              5,
+              "edit"
+            ],
+            {
+              "tab": "roles"
+            }
+          ],
+          "expected": "/users/5/edit?tab=roles"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "/search"
+            ],
+            {
+              "q": "red shoes",
+              "page": 2
+            }
+          ],
+          "expected": "/search?q=red%20shoes&page=2"
+        },
+        {
+          "args": [
+            [
+              "/users",
+              5
+            ],
+            {}
+          ],
+          "expected": "/users/5"
+        },
+        {
+          "args": [
+            [
+              "/users"
+            ],
+            {
+              "sort": null
+            }
+          ],
+          "expected": "/users"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Angular's `Validators.minLength(n)` passes empty values (that is `required`'s job) and otherwise reports\n`{ minlength: { requiredLength, actualLength } }`. Complete `minLength(min, value)`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "minLength",
+      "starterCode": "function minLength(min: number, value: string | null) {\n  return value!.length < min ? { minlength: true } : null;\n}",
+      "referenceSolution": "function minLength(min: number, value: string | null) {\n  if (value === null || value === \"\") return null;\n  return value.length < min ? { minlength: { requiredLength: min, actualLength: value.length } } : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            3,
+            "ab"
+          ],
+          "expected": {
+            "minlength": {
+              "requiredLength": 3,
+              "actualLength": 2
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            3,
+            "abc"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            3,
+            ""
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            5,
+            null
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            8,
+            "secret"
+          ],
+          "expected": {
+            "minlength": {
+              "requiredLength": 8,
+              "actualLength": 6
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A component that shows live prices. Mark the lines that cause a leak or a bug.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "export class PricesComponent implements OnInit {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  prices: Price[] = [];",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  constructor(private feed: PriceFeedService) {}",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  ngOnInit() {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    this.feed.prices$.subscribe((p) => (this.prices = p));",
+          "issue": "The subscription to a long-lived stream is never ended; use the `async` pipe or `takeUntilDestroyed()`."
+        },
+        {
+          "id": "l6",
+          "text": "    interval(5000).subscribe(() => this.feed.refresh());",
+          "issue": "An `interval` subscription keeps firing after the component is destroyed; it needs the same teardown."
+        },
+        {
+          "id": "l7",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  trackById(_: number, p: Price) { return p.id; }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A service and the component that uses it. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Injectable({ providedIn: 'root' })",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "export class OrdersService {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  constructor(private http: HttpClient) {}",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  load(userId: string) {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    this.http.get<Order[]>(`/api/users/${userId}/orders`).subscribe((o) => (this.orders = o));",
+          "issue": "The service subscribes and stores the result, so callers cannot know when it is ready or handle errors; return the `Observable` instead."
+        },
+        {
+          "id": "l6",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  orders: Order[] = [];",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "// in the component: this.service.load(id); this.rows = this.service.orders;",
+          "issue": "Reads `orders` synchronously right after starting the request, so it is still the empty array."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why is `orders$ | async` in the template often better than subscribing in the class?",
+    "mcq": {
+      "options": [
+        "The `async` pipe subscribes and unsubscribes automatically and marks the view for checking on each value",
+        "It makes the HTTP request faster",
+        "It caches the response forever",
+        "It is the only way to show observable data"
+      ],
+      "correctIndex": 0,
+      "explanation": "The pipe ties the subscription to the view's lifetime, so there is no leak, and it works with `OnPush` change detection.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `@Injectable({ providedIn: 'root' })` mean?",
+    "mcq": {
+      "options": [
+        "One shared instance for the whole app, created on first use and tree-shaken if never injected",
+        "A new instance for every component that injects it",
+        "The service is only available in `AppComponent`",
+        "The service runs on the server only"
+      ],
+      "correctIndex": 0,
+      "explanation": "Root-provided services are application-wide singletons. Providing a service in a component's `providers` gives that component subtree its own instance instead.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A sign-up form needs a cross-field rule (password = confirm) and dynamic fields added at runtime. Which approach fits best?",
+    "mcq": {
+      "options": [
+        "Reactive forms (`FormGroup`/`FormArray` with validators in the class)",
+        "Template-driven forms with `ngModel` only",
+        "Plain inputs read with `document.querySelector` on submit",
+        "A `ControlValueAccessor` for each input"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reactive forms keep the model in code, which makes group validators, `FormArray`s and unit tests straightforward. Template-driven forms suit small, static forms.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A search box uses `switchMap` so that a new query cancels the request in flight. Simulate it:\n`requests` are `{ q, sentAt, doneAt }` sorted by `sentAt`. A response is applied only if it arrives\n(`doneAt`) no later than the next request's `sentAt` — the last request is always applied. Return the applied\n`q` values in the order their responses arrive.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "switchMapResults",
+      "starterCode": "function switchMapResults(requests) {\n  return [...requests].sort((a, b) => a.doneAt - b.doneAt).map((r) => r.q);\n}",
+      "referenceSolution": "function switchMapResults(requests) {\n  return requests\n    .filter((r, i) => i === requests.length - 1 || r.doneAt <= requests[i + 1].sentAt)\n    .sort((a, b) => a.doneAt - b.doneAt)\n    .map((r) => r.q);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "q": "a",
+                "sentAt": 0,
+                "doneAt": 500
+              },
+              {
+                "q": "ab",
+                "sentAt": 100,
+                "doneAt": 300
+              }
+            ]
+          ],
+          "expected": [
+            "ab"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "q": "a",
+                "sentAt": 0,
+                "doneAt": 50
+              },
+              {
+                "q": "ab",
+                "sentAt": 100,
+                "doneAt": 200
+              }
+            ]
+          ],
+          "expected": [
+            "a",
+            "ab"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "q": "x",
+                "sentAt": 0,
+                "doneAt": 900
+              }
+            ]
+          ],
+          "expected": [
+            "x"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "q": "a",
+                "sentAt": 0,
+                "doneAt": 400
+              },
+              {
+                "q": "ab",
+                "sentAt": 100,
+                "doneAt": 600
+              },
+              {
+                "q": "abc",
+                "sentAt": 200,
+                "doneAt": 300
+              }
+            ]
+          ],
+          "expected": [
+            "abc"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Simulate `combineLatest([a$, b$])`: `events` is the merged order of emissions `{ src: \"a\" | \"b\", v }`.\nIt emits `[latestA, latestB]` on every emission, but only once **both** sources have emitted at least once.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "combineLatest",
+      "starterCode": "function combineLatest(events) {\n  let a, b;\n  return events.map((e) => {\n    if (e.src === \"a\") a = e.v;\n    else b = e.v;\n    return [a, b];\n  });\n}",
+      "referenceSolution": "function combineLatest(events) {\n  let a, b;\n  let hasA = false, hasB = false;\n  const out = [];\n  for (const e of events) {\n    if (e.src === \"a\") { a = e.v; hasA = true; }\n    else { b = e.v; hasB = true; }\n    if (hasA && hasB) out.push([a, b]);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "src": "a",
+                "v": 1
+              },
+              {
+                "src": "b",
+                "v": "x"
+              },
+              {
+                "src": "a",
+                "v": 2
+              }
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              "x"
+            ],
+            [
+              2,
+              "x"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "src": "a",
+                "v": 1
+              },
+              {
+                "src": "a",
+                "v": 2
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "src": "b",
+                "v": 0
+              },
+              {
+                "src": "a",
+                "v": 0
+              },
+              {
+                "src": "b",
+                "v": 5
+              }
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              5
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A functional route guard decides access to an admin route. Complete `canActivate(user, requiredRole)`:\nreturn `\"/login\"` when there is no user (`null`), `\"/forbidden\"` when the user's `roles` do not include\n`requiredRole`, otherwise `true`. With no `requiredRole` (`null`), any signed-in user may enter.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "canActivate",
+      "starterCode": "function canActivate(user: { roles: string[] } | null, requiredRole: string | null): true | string {\n  if (!user) return \"/login\";\n  return true;\n}",
+      "referenceSolution": "function canActivate(user: { roles: string[] } | null, requiredRole: string | null): true | string {\n  if (!user) return \"/login\";\n  if (requiredRole && !user.roles.includes(requiredRole)) return \"/forbidden\";\n  return true;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "roles": [
+                "viewer"
+              ]
+            },
+            "admin"
+          ],
+          "expected": "/forbidden"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null,
+            "admin"
+          ],
+          "expected": "/login"
+        },
+        {
+          "args": [
+            {
+              "roles": [
+                "admin"
+              ]
+            },
+            "admin"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "roles": []
+            },
+            null
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "roles": []
+            },
+            "editor"
+          ],
+          "expected": "/forbidden"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "A search box pipes keystrokes through `debounceTime(300)`, `map(trim)`, `filter(len >= 2)`, `distinctUntilChanged()`.\n`keys` are `{ t, value }` (time in ms, ascending). A value passes the debounce when no other key comes within\n300ms after it (`next.t - t >= 300`), or it is the last key. Return the terms that reach the API.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "searchTerms",
+      "starterCode": "function searchTerms(keys) {\n  return keys.map((k) => k.value.trim()).filter((v) => v.length >= 2);\n}",
+      "referenceSolution": "function searchTerms(keys) {\n  const out = [];\n  keys.forEach((k, i) => {\n    const next = keys[i + 1];\n    if (next && next.t - k.t < 300) return;\n    const v = k.value.trim();\n    if (v.length < 2) return;\n    if (out.length && out[out.length - 1] === v) return;\n    out.push(v);\n  });\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "a"
+              },
+              {
+                "t": 100,
+                "value": "an"
+              },
+              {
+                "t": 200,
+                "value": "ang"
+              }
+            ]
+          ],
+          "expected": [
+            "ang"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "ng"
+              },
+              {
+                "t": 500,
+                "value": "ng "
+              }
+            ]
+          ],
+          "expected": [
+            "ng"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "x"
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "rx"
+              },
+              {
+                "t": 400,
+                "value": "rxj"
+              },
+              {
+                "t": 450,
+                "value": "rxjs"
+              }
+            ]
+          ],
+          "expected": [
+            "rx",
+            "rxjs"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An `OnPush` list does not show new items when the user adds one. Mark the lines responsible.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Component({ selector: 'app-tags', changeDetection: ChangeDetectionStrategy.OnPush,",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  template: `<span *ngFor=\"let t of tags\">{{ t }}</span>` })",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "export class TagsComponent { @Input() tags: string[] = []; }",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "// parent component",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "tags = ['angular'];",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "addTag(t: string) { this.tags.push(t); }",
+          "issue": "`push` mutates the same array, so the child's input reference does not change and `OnPush` skips it; assign a new array: `this.tags = [...this.tags, t]`."
+        },
+        {
+          "id": "l7",
+          "text": "clear() { this.tags = []; }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An order page that loads an order and its customer. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "ngOnInit() {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  this.route.paramMap.subscribe((params) => {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    this.api.getOrder(params.get('id')!).subscribe((order) => {",
+          "issue": "Nested subscribe: when the id changes quickly, an older order response can arrive last and overwrite the newer one; use `switchMap` so a new id cancels the previous request."
+        },
+        {
+          "id": "l4",
+          "text": "      this.order = order;",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "      this.api.getCustomer(order.customerId).subscribe((c) => (this.customer = c));",
+          "issue": "A third nested subscribe with no error handling; chain it with `switchMap` in one pipe and handle errors once (`catchError`)."
+        },
+        {
+          "id": "l6",
+          "text": "    });",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  });",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "get total() { return this.order?.lines.reduce((s, l) => s + l.price, 0) ?? 0; }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "With `ChangeDetectionStrategy.OnPush`, which of these does **not** make Angular check the component?",
+    "mcq": {
+      "options": [
+        "Mutating a property of an object that was passed as an `@Input()`",
+        "A new object reference arriving through an `@Input()`",
+        "A DOM event handled in the component's template",
+        "A new value emitted to an `async` pipe in its template"
+      ],
+      "correctIndex": 0,
+      "explanation": "OnPush compares input references. In-place mutation keeps the same reference, so the component is skipped; replacing the object (immutable updates) triggers the check.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Two templates use `user$ | async` on the same HTTP observable. How many requests are made, and how do you make it one?",
+    "mcq": {
+      "options": [
+        "Two; add `shareReplay({ bufferSize: 1, refCount: true })` to the observable",
+        "One; `HttpClient` deduplicates automatically",
+        "Two; use `take(1)`",
+        "None until the user clicks"
+      ],
+      "correctIndex": 0,
+      "explanation": "HTTP observables are cold: each subscription runs the request again. `shareReplay` shares one execution and replays the last value to later subscribers.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does `takeUntilDestroyed()` do when used in a component's constructor or field initialiser?",
+    "mcq": {
+      "options": [
+        "Completes the observable when the component is destroyed, using the injected `DestroyRef`",
+        "Unsubscribes after the first value",
+        "Delays subscription until the view is initialised",
+        "Destroys the component when the observable completes"
+      ],
+      "correctIndex": 0,
+      "explanation": "It needs an injection context (or an explicit `DestroyRef`) and replaces the manual `destroy$` subject pattern.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An NgRx entity state is `{ ids: [], entities: {} }`. Complete `upsertMany(state, items)`: insert new items and\n**merge** fields into existing ones (`{ ...old, ...new }`), then keep `ids` sorted by `name` (the adapter's\n`sortComparer`). Do not mutate `state`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "upsertMany",
+      "starterCode": "type Item = { id: string; name: string; [k: string]: unknown };\ntype State = { ids: string[]; entities: Record<string, Item> };\n\nfunction upsertMany(state: State, items: Item[]): State {\n  const entities = { ...state.entities };\n  const ids = [...state.ids];\n  for (const item of items) {\n    entities[item.id] = item;\n    ids.push(item.id);\n  }\n  return { ids, entities };\n}",
+      "referenceSolution": "type Item = { id: string; name: string; [k: string]: unknown };\ntype State = { ids: string[]; entities: Record<string, Item> };\n\nfunction upsertMany(state: State, items: Item[]): State {\n  const entities = { ...state.entities };\n  for (const item of items) {\n    entities[item.id] = entities[item.id] ? { ...entities[item.id], ...item } : item;\n  }\n  const ids = Object.keys(entities).sort((a, b) => entities[a].name.localeCompare(entities[b].name));\n  return { ids, entities };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "ids": [
+                "1"
+              ],
+              "entities": {
+                "1": {
+                  "id": "1",
+                  "name": "Bo",
+                  "age": 3
+                }
+              }
+            },
+            [
+              {
+                "id": "2",
+                "name": "Al"
+              }
+            ]
+          ],
+          "expected": {
+            "ids": [
+              "2",
+              "1"
+            ],
+            "entities": {
+              "1": {
+                "id": "1",
+                "name": "Bo",
+                "age": 3
+              },
+              "2": {
+                "id": "2",
+                "name": "Al"
+              }
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "ids": [
+                "1"
+              ],
+              "entities": {
+                "1": {
+                  "id": "1",
+                  "name": "Bo",
+                  "age": 3
+                }
+              }
+            },
+            [
+              {
+                "id": "1",
+                "name": "Cy"
+              }
+            ]
+          ],
+          "expected": {
+            "ids": [
+              "1"
+            ],
+            "entities": {
+              "1": {
+                "id": "1",
+                "name": "Cy",
+                "age": 3
+              }
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "ids": [],
+              "entities": {}
+            },
+            []
+          ],
+          "expected": {
+            "ids": [],
+            "entities": {}
+          }
+        },
+        {
+          "args": [
+            {
+              "ids": [],
+              "entities": {}
+            },
+            [
+              {
+                "id": "a",
+                "name": "Zed"
+              },
+              {
+                "id": "b",
+                "name": "Amy"
+              },
+              {
+                "id": "c",
+                "name": "Max"
+              }
+            ]
+          ],
+          "expected": {
+            "ids": [
+              "b",
+              "c",
+              "a"
+            ],
+            "entities": {
+              "a": {
+                "id": "a",
+                "name": "Zed"
+              },
+              "b": {
+                "id": "b",
+                "name": "Amy"
+              },
+              "c": {
+                "id": "c",
+                "name": "Max"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A \"Pay\" button uses `exhaustMap` so double clicks never start a second payment. Simulate it: `clicks` are times in\nms (ascending), each request takes `duration` ms. A click is accepted only when no request is in flight\n(a request started at `t` is in flight until `t + duration`, exclusive). Return the accepted click times.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "exhaustClicks",
+      "starterCode": "function exhaustClicks(clicks, duration) {\n  return clicks;\n}",
+      "referenceSolution": "function exhaustClicks(clicks, duration) {\n  const out = [];\n  let busyUntil = -Infinity;\n  for (const t of clicks) {\n    if (t >= busyUntil) {\n      out.push(t);\n      busyUntil = t + duration;\n    }\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              0,
+              100,
+              200,
+              1200
+            ],
+            1000
+          ],
+          "expected": [
+            0,
+            1200
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            500
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              0,
+              500,
+              1000
+            ],
+            500
+          ],
+          "expected": [
+            0,
+            500,
+            1000
+          ]
+        },
+        {
+          "args": [
+            [
+              10,
+              20,
+              30
+            ],
+            1000
+          ],
+          "expected": [
+            10
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              999,
+              1000,
+              1500
+            ],
+            1000
+          ],
+          "expected": [
+            0,
+            1000
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "An HTTP interceptor adds `Authorization: Bearer <token>` to requests. Fix `authHeaders(url, token, apiOrigin)`:\nonly requests to the app's own API get the token — relative URLs starting with `/api/`, or absolute URLs whose\norigin equals `apiOrigin` exactly. Never send it when `token` is empty. Return the headers object to add.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "authHeaders",
+      "starterCode": "function authHeaders(url: string, token: string, apiOrigin: string): Record<string, string> {\n  return { Authorization: `Bearer ${token}` };\n}",
+      "referenceSolution": "function authHeaders(url: string, token: string, apiOrigin: string): Record<string, string> {\n  if (!token) return {};\n  let ours = false;\n  if (url.startsWith(\"/api/\")) ours = true;\n  else if (/^https?:\\/\\//i.test(url)) ours = new URL(url).origin === apiOrigin;\n  return ours ? { Authorization: `Bearer ${token}` } : {};\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/api/orders",
+            "t0k",
+            "https://app.example.com"
+          ],
+          "expected": {
+            "Authorization": "Bearer t0k"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "https://cdn.other.com/lib.js",
+            "t0k",
+            "https://app.example.com"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "https://app.example.com/api/me",
+            "t0k",
+            "https://app.example.com"
+          ],
+          "expected": {
+            "Authorization": "Bearer t0k"
+          }
+        },
+        {
+          "args": [
+            "https://app.example.com.evil.io/api",
+            "t0k",
+            "https://app.example.com"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "/api/orders",
+            "",
+            "https://app.example.com"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "/assets/logo.svg",
+            "t0k",
+            "https://app.example.com"
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A `retry` with back-off decides what happens after each failed HTTP status. Complete\n`retryDelays(statuses, maxRetries, baseMs)`: walk the statuses of successive attempts; retry only on `0`\n(network error) or `5xx`, waiting `baseMs * 2^n` before retry number `n` (0-based); stop at success (`2xx`),\nany other status, or after `maxRetries` retries. Return the list of delays used.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "retryDelays",
+      "starterCode": "function retryDelays(statuses, maxRetries, baseMs) {\n  return statuses.slice(0, maxRetries).map((_, n) => baseMs * 2 ** n);\n}",
+      "referenceSolution": "function retryDelays(statuses, maxRetries, baseMs) {\n  const delays = [];\n  for (const s of statuses) {\n    const retryable = s === 0 || (s >= 500 && s <= 599);\n    if (!retryable || delays.length >= maxRetries) break;\n    delays.push(baseMs * 2 ** delays.length);\n  }\n  return delays;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              503,
+              503,
+              200
+            ],
+            3,
+            100
+          ],
+          "expected": [
+            100,
+            200
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              404
+            ],
+            3,
+            100
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              500,
+              500,
+              500,
+              500,
+              500
+            ],
+            3,
+            250
+          ],
+          "expected": [
+            250,
+            500,
+            1000
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              401
+            ],
+            5,
+            100
+          ],
+          "expected": [
+            100
+          ]
+        },
+        {
+          "args": [
+            [
+              200
+            ],
+            3,
+            100
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A dashboard with default change detection feels slow; every mouse move makes the CPU spike. Mark the lines that cause the work.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "<div (mousemove)=\"onMove($event)\">",
+          "issue": "Every mousemove handled in the template triggers change detection for the whole tree; listen outside Angular (`runOutsideAngular`) or throttle."
+        },
+        {
+          "id": "l2",
+          "text": "  <app-row *ngFor=\"let r of rows\" [row]=\"r\"></app-row>",
+          "issue": "Without `trackBy` (or `@for (...; track r.id)`), each refresh of `rows` recreates every row's DOM."
+        },
+        {
+          "id": "l3",
+          "text": "  <p>Total: {{ computeTotal() }}</p>",
+          "issue": "A method call in the template runs on every change-detection pass; use a `computed` signal, a pure pipe, or a field updated when rows change."
+        },
+        {
+          "id": "l4",
+          "text": "  <p>Updated {{ updatedAt | date: 'short' }}</p>",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "</div>",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "rows$ = this.api.rows$;",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "ngOnInit() { this.rows$.subscribe((r) => (this.rows = r)); }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "onMove(e: MouseEvent) { this.cursor = { x: e.x, y: e.y }; }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "cursor = { x: 0, y: 0 };",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An Angular 17 app ships a 3.1 MB initial bundle. Every feature (admin, reports with a charting library, settings)\nis imported in `app.routes.ts` with `component:`, and the landing page shows a heavy chart below the fold.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An Angular 17 app ships a 3.1 MB initial bundle. Every feature (admin, reports with a charting library, settings)\nis imported in `app.routes.ts` with `component:`, and the landing page shows a heavy chart below the fold.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the first change?",
+          "options": [
+            "Lazy-load feature routes with `loadComponent` / `loadChildren`",
+            "Turn on `optimization` in `angular.json`",
+            "Switch to `OnPush` everywhere",
+            "Move all services to `providedIn: 'root'`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Eagerly referenced route components land in the main bundle; lazy routes split them into chunks loaded on navigation."
+        },
+        {
+          "id": "q2",
+          "question": "The chart on the landing page still pulls the charting library into the initial load. What fits best?",
+          "options": [
+            "Wrap it in `@defer (on viewport) { <app-chart /> } @placeholder { … }`",
+            "Hide it with `*ngIf=\"false\"` until scroll",
+            "Load the library from a CDN `<script>` in `index.html`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`@defer` splits the deferred component and its dependencies into a separate chunk loaded when the trigger fires."
+        },
+        {
+          "id": "q3",
+          "question": "How do you stop the bundle from growing back unnoticed?",
+          "options": [
+            "Set `budgets` for the initial bundle in `angular.json` so CI fails above a limit",
+            "Ask reviewers to check bundle size by eye",
+            "Disable source maps"
+          ],
+          "correctIndex": 0,
+          "explanation": "Budgets turn size regressions into build warnings or errors, caught on every PR."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "With Angular signals, `const total = computed(() => items().reduce(...))`. When does the reduce run?",
+    "mcq": {
+      "options": [
+        "Lazily when `total()` is read, and again only after `items` has changed (the result is memoised)",
+        "On every change-detection pass",
+        "Once, when the computed is created, and never again",
+        "Every time any signal in the app changes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Computed signals track the signals they read, are lazy, and cache their value until a dependency changes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Where can you call `inject(SomeService)`?",
+    "mcq": {
+      "options": [
+        "In an injection context: a constructor, a field initialiser, a factory or a functional guard/resolver, or inside `runInInjectionContext`",
+        "Anywhere, including inside a `setTimeout` callback in a method",
+        "Only in `ngOnInit`",
+        "Only in modules"
+      ],
+      "correctIndex": 0,
+      "explanation": "`inject()` reads from the current injector, which only exists while Angular is creating something. Calling it later throws NG0203.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-angular-fundamentals-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-angular-fundamentals",
+    "trackId": null,
+    "stackId": "stack-angular",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which statement about `effect()` in Angular signals is right?",
+    "mcq": {
+      "options": [
+        "It is for side effects such as logging or syncing to `localStorage`; deriving state should use `computed` instead",
+        "It is the recommended way to copy one signal into another",
+        "It runs synchronously every time a signal is set",
+        "It runs only once"
+      ],
+      "correctIndex": 0,
+      "explanation": "Effects run asynchronously after their signals change, during change detection. Using them to set other signals creates extra cycles and is discouraged; `computed` expresses derived state directly.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

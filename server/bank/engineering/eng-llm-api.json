@@ -1,0 +1,1894 @@
+[
+  {
+    "id": "eng-llm-api-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `buildMessages(history, text)`: return a **new** array with the user's message appended as `{ role: \"user\", content }`. Trim the text first; if it is empty after trimming, return the history unchanged (an empty user turn is rejected by the API).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "buildMessages",
+      "starterCode": "function buildMessages(history, text) {\n  return [...history, { role: \"user\", content: text }];\n}",
+      "referenceSolution": "function buildMessages(history, text) {\n  const content = (text || \"\").trim();\n  if (!content) return [...history];\n  return [...history, { role: \"user\", content }];\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [],
+            "Hello"
+          ],
+          "expected": [
+            {
+              "role": "user",
+              "content": "Hello"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "role": "user",
+                "content": "Hi"
+              },
+              {
+                "role": "assistant",
+                "content": "Hey!"
+              }
+            ],
+            "  What's up?  "
+          ],
+          "expected": [
+            {
+              "role": "user",
+              "content": "Hi"
+            },
+            {
+              "role": "assistant",
+              "content": "Hey!"
+            },
+            {
+              "role": "user",
+              "content": "What's up?"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "role": "user",
+                "content": "Hi"
+              }
+            ],
+            "   "
+          ],
+          "expected": [
+            {
+              "role": "user",
+              "content": "Hi"
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            "\nSummarise this\n"
+          ],
+          "expected": [
+            {
+              "role": "user",
+              "content": "Summarise this"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A Messages-style response has a `content` list of blocks. Fix `extract_text` so it joins the `text` of **every** block whose `type` is `\"text\"` (in order), skipping other block types. No text blocks means `\"\"`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "extract_text",
+      "starterCode": "def extract_text(response):\n    return response[\"content\"][0][\"text\"]",
+      "referenceSolution": "def extract_text(response):\n    return \"\".join(b[\"text\"] for b in response.get(\"content\", []) if b.get(\"type\") == \"text\")",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Hello!"
+                }
+              ]
+            }
+          ],
+          "expected": "Hello!"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Part one. "
+                },
+                {
+                  "type": "text",
+                  "text": "Part two."
+                }
+              ]
+            }
+          ],
+          "expected": "Part one. Part two."
+        },
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "t1",
+                  "name": "lookup",
+                  "input": {}
+                },
+                {
+                  "type": "text",
+                  "text": "Done"
+                }
+              ]
+            }
+          ],
+          "expected": "Done"
+        },
+        {
+          "args": [
+            {
+              "content": []
+            }
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "t1",
+                  "name": "lookup",
+                  "input": {}
+                }
+              ]
+            }
+          ],
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A teammate shipped a chat widget that calls an LLM API. Here is a summary of the PR.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "The React component calls the LLM provider's API directly with `fetch` from the browser.",
+          "issue": "The browser cannot keep a secret; the call must go through your backend."
+        },
+        {
+          "id": "l2",
+          "text": "The API key is read from `import.meta.env.VITE_LLM_KEY`.",
+          "issue": "`VITE_` variables are bundled into the client JS, so the key ships to every visitor."
+        },
+        {
+          "id": "l3",
+          "text": "The request sets `max_tokens: 1024`.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "A system prompt tells the model it is a support assistant for our product.",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "The widget shows a spinner while waiting for the reply.",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "Errors are shown as a friendly \"Something went wrong, try again\" message.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-llm-api-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are making your first call to an LLM API from a Node backend.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Create an API key in the provider's console"
+        },
+        {
+          "id": "s2",
+          "label": "Store it in an environment variable on the server (not in the repo)"
+        },
+        {
+          "id": "s3",
+          "label": "Install the provider's SDK"
+        },
+        {
+          "id": "s4",
+          "label": "Send one request with a model name, `max_tokens` and a single user message"
+        },
+        {
+          "id": "s5",
+          "label": "Log the response's text and token usage to check it worked"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Get a key, keep it out of the code, install the client, make the smallest possible call, then inspect what came back."
+    }
+  },
+  {
+    "id": "eng-llm-api-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "Your first API call fails.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You call the LLM API from your server and get HTTP `401` back.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the most likely cause?",
+          "options": [
+            "The API key is missing, wrong or not being sent",
+            "The prompt is too long",
+            "The provider is overloaded",
+            "`max_tokens` is too low"
+          ],
+          "correctIndex": 0,
+          "explanation": "401 means the request was not authenticated. Too-long prompts give 400; overload gives 429/5xx."
+        },
+        {
+          "id": "q2",
+          "question": "You find the key is set in your `.env` but the server says it is `undefined`. What do you check?",
+          "options": [
+            "Whether the `.env` file is actually loaded (e.g. `dotenv` or the run script) and the variable name matches",
+            "Raise `max_tokens`",
+            "Switch to a different model",
+            "Add retries with backoff"
+          ],
+          "correctIndex": 0,
+          "explanation": "Retrying or changing the model cannot fix a missing credential; find out why the env var is not reaching the process."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A junior's notes on how they call the LLM API in a background job.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the statements that are wrong or risky.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "We send the conversation as a list of messages with `user` and `assistant` roles.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "We commit the API key in `config.js` so the job always has it.",
+          "issue": "Keys in the repo leak through history, forks and logs; use a secret store or env var."
+        },
+        {
+          "id": "l3",
+          "text": "We set a timeout on the HTTP call so a stuck request does not hang the job.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "We read the token usage from the response to track cost.",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "If the call fails with any error we retry immediately in a tight loop forever.",
+          "issue": "Unbounded instant retries hammer the API and never stop on permanent errors like 400/401; use limited retries with backoff."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-llm-api-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the system prompt (or `system` message) usually used for?",
+    "mcq": {
+      "options": [
+        "Setting the model's role, rules and context for the whole conversation",
+        "Storing the API key",
+        "Choosing which model is called",
+        "Telling the API how many tokens to bill"
+      ],
+      "correctIndex": 0,
+      "explanation": "The system prompt carries standing instructions: who the assistant is, its constraints and background. Keys and model choice are request settings, not prompt content.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The API returns HTTP `429`. What does it mean?",
+    "mcq": {
+      "options": [
+        "You are being rate limited; slow down and retry later",
+        "Your API key is invalid",
+        "The request JSON is malformed",
+        "The model refused the request"
+      ],
+      "correctIndex": 0,
+      "explanation": "429 Too Many Requests is a rate limit. Back off (respect `retry-after` if present) and try again.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why does each request include the earlier messages of a chat?",
+    "mcq": {
+      "options": [
+        "The API is stateless; the model only sees what you send in that request",
+        "To make the response faster",
+        "The provider requires it for billing",
+        "So the model can learn permanently from the user"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chat APIs do not remember previous calls. Your app owns the history and resends what the model should see.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Fix `shouldRetry(status)`. Retry rate limits (`429`) and server errors (`500`-`599`). Do **not** retry other `4xx` errors: the same request will fail again.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "shouldRetry",
+      "starterCode": "function shouldRetry(status) {\n  return status >= 500;\n}",
+      "referenceSolution": "function shouldRetry(status) {\n  return status === 429 || (status >= 500 && status <= 599);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            429
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            429
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            503
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            400
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            401
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            200
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            529
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`total_tokens(usages)` receives the `usage` dict of several calls and returns the total of `input_tokens` plus `output_tokens`. Some older log rows are missing one of the keys; treat a missing key as `0`. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "total_tokens",
+      "starterCode": "def total_tokens(usages):\n    total = 0\n    for u in usages:\n        total += u[\"input_tokens\"] + u[\"output_tokens\"]\n    return total",
+      "referenceSolution": "def total_tokens(usages):\n    total = 0\n    for u in usages:\n        total += u.get(\"input_tokens\", 0) + u.get(\"output_tokens\", 0)\n    return total",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "input_tokens": 100,
+                "output_tokens": 20
+              },
+              {
+                "input_tokens": 50,
+                "output_tokens": 10
+              }
+            ]
+          ],
+          "expected": 180
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "input_tokens": 30
+              }
+            ]
+          ],
+          "expected": 30
+        },
+        {
+          "args": [
+            [
+              {
+                "output_tokens": 7
+              },
+              {
+                "input_tokens": 3,
+                "output_tokens": 1
+              }
+            ]
+          ],
+          "expected": 11
+        },
+        {
+          "args": [
+            [
+              {}
+            ]
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Logging added to an LLM-backed support tool, one log statement per line.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the log lines that should not ship.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "`log.info({ requestId, model, latencyMs })`",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "`log.info({ requestId, usage: res.usage })`",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "`log.debug({ prompt: fullPrompt })` where the prompt contains the customer's email and order history",
+          "issue": "Full prompts carry customer PII into logs; redact or log only ids/lengths."
+        },
+        {
+          "id": "l4",
+          "text": "`log.error({ requestId, status: err.status, type: err.type })`",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "`log.error({ headers: outgoingRequest.headers })` on the outgoing API request",
+          "issue": "The outgoing headers include the API key."
+        },
+        {
+          "id": "l6",
+          "text": "`log.info({ requestId, stopReason: res.stop_reason })`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-llm-api-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Answers are getting cut off.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Users report that long answers from your summariser end mid-sentence. The response's stop reason is `max_tokens`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What does that stop reason tell you?",
+          "options": [
+            "The model hit the output token limit you set before it finished",
+            "The model decided it was done",
+            "The prompt was too long and got truncated",
+            "The API timed out"
+          ],
+          "correctIndex": 0,
+          "explanation": "`max_tokens` as the stop reason means the cap you set on output was reached."
+        },
+        {
+          "id": "q2",
+          "question": "Which fix is the most direct?",
+          "options": [
+            "Raise `max_tokens` for this call (and/or ask for a shorter summary)",
+            "Lower the temperature",
+            "Retry the same request",
+            "Move the instructions to the end of the prompt"
+          ],
+          "correctIndex": 0,
+          "explanation": "Either give it more room or ask for less output. Retrying the same request will usually stop at the same place."
+        },
+        {
+          "id": "q3",
+          "question": "How do you avoid silently showing truncated text in the future?",
+          "options": [
+            "Check the stop reason and handle `max_tokens` (continue, retry with more room, or flag it)",
+            "Always set `max_tokens` to 1",
+            "Hide the last sentence of every answer",
+            "Use streaming"
+          ],
+          "correctIndex": 0,
+          "explanation": "Code that ignores the stop reason cannot tell a complete answer from a cut-off one."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You are adding streaming to an existing non-streaming chat endpoint.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Turn on streaming in the API request"
+        },
+        {
+          "id": "s2",
+          "label": "Read the event stream and append each text delta as it arrives"
+        },
+        {
+          "id": "s3",
+          "label": "Forward the deltas to the browser (e.g. server-sent events)"
+        },
+        {
+          "id": "s4",
+          "label": "On the final event, record stop reason and token usage"
+        },
+        {
+          "id": "s5",
+          "label": "Handle a stream that errors or disconnects half-way"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Enable streaming, consume deltas, pass them on, close out with usage/stop reason, then make the failure path solid."
+    }
+  },
+  {
+    "id": "eng-llm-api-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Choosing settings for an extraction job.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A nightly job asks the model to pull invoice number, date and total from 5,000 emails into JSON.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Which temperature makes most sense?",
+          "options": [
+            "Low (0 or close to it)",
+            "High (1 or above) for variety",
+            "It does not matter for extraction",
+            "Random per email"
+          ],
+          "correctIndex": 0,
+          "explanation": "Extraction wants the same, most likely answer every time, so keep sampling randomness low."
+        },
+        {
+          "id": "q2",
+          "question": "The job sometimes fails on a single email with a `400`. What should the job do?",
+          "options": [
+            "Log that email's id and error, skip it, and carry on",
+            "Retry it forever",
+            "Abort the whole night's run",
+            "Raise the temperature and retry"
+          ],
+          "correctIndex": 0,
+          "explanation": "A 400 is a problem with that request; retrying it as-is will not help, and it should not stop the other 4,999."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which change is most likely to reduce **time to first visible text** in a chat UI?",
+    "mcq": {
+      "options": [
+        "Stream the response and render tokens as they arrive",
+        "Raise `max_tokens`",
+        "Add more examples to the prompt",
+        "Send the full history twice"
+      ],
+      "correctIndex": 0,
+      "explanation": "Streaming does not make the full answer faster, but the user sees text almost immediately instead of waiting for the whole reply.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why might a chat API reject this `messages` array with a `400`?",
+    "mcq": {
+      "options": [
+        "It starts with an `assistant` turn; the conversation is expected to start with `user`",
+        "`content` must always be an array of blocks",
+        "The user message is too short",
+        "A system instruction must be the last message"
+      ],
+      "correctIndex": 0,
+      "explanation": "Chat APIs commonly expect the conversation to start with a user turn and alternate roles. A greeting you showed in the UI does not need to be sent as the first message.",
+      "snippet": "[\n  { \"role\": \"assistant\", \"content\": \"Hi! How can I help?\" },\n  { \"role\": \"user\", \"content\": \"Reset my password\" }\n]",
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Where is the right place to enforce a per-user daily limit on LLM usage?",
+    "mcq": {
+      "options": [
+        "On your server, before calling the provider",
+        "In the system prompt (\"only answer 20 times a day\")",
+        "In the browser with localStorage",
+        "In the provider's model settings"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only your server can reliably count and block calls; prompts and client-side checks are trivially bypassed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Complete `nextDelay(attempt, retryAfterSeconds)` (milliseconds to wait before retry `attempt`, starting at 0). If the server sent `retry-after` (a number of seconds, otherwise `null`), use it. Otherwise use exponential backoff `1000 * 2^attempt`, capped at `30000`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "nextDelay",
+      "starterCode": "function nextDelay(attempt, retryAfterSeconds) {\n  return 1000 * 2 ** attempt;\n}",
+      "referenceSolution": "function nextDelay(attempt, retryAfterSeconds) {\n  if (retryAfterSeconds != null) return retryAfterSeconds * 1000;\n  return Math.min(1000 * 2 ** attempt, 30000);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            0,
+            null
+          ],
+          "expected": 1000
+        },
+        {
+          "args": [
+            2,
+            null
+          ],
+          "expected": 4000
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            3,
+            10
+          ],
+          "expected": 10000
+        },
+        {
+          "args": [
+            6,
+            null
+          ],
+          "expected": 30000
+        },
+        {
+          "args": [
+            10,
+            null
+          ],
+          "expected": 30000
+        },
+        {
+          "args": [
+            1,
+            0
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            4,
+            null
+          ],
+          "expected": 16000
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`trim_history(messages, budget)` must drop the **oldest** messages until the total token count is within `budget`, but always keep the newest message. Tokens are counted with `count_tokens` (given). Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "trim_history",
+      "starterCode": "def count_tokens(text):\n    return len(text.split())\n\ndef trim_history(messages, budget):\n    kept = list(messages)\n    while len(kept) > 1 and sum(count_tokens(m[\"content\"]) for m in kept) > budget:\n        kept.pop()\n    return kept",
+      "referenceSolution": "def count_tokens(text):\n    return len(text.split())\n\ndef trim_history(messages, budget):\n    kept = list(messages)\n    while len(kept) > 1 and sum(count_tokens(m[\"content\"]) for m in kept) > budget:\n        kept.pop(0)\n    return kept",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "role": "user",
+                "content": "a b c"
+              },
+              {
+                "role": "assistant",
+                "content": "d e"
+              },
+              {
+                "role": "user",
+                "content": "f g h"
+              }
+            ],
+            5
+          ],
+          "expected": [
+            {
+              "role": "assistant",
+              "content": "d e"
+            },
+            {
+              "role": "user",
+              "content": "f g h"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "role": "user",
+                "content": "one two"
+              }
+            ],
+            10
+          ],
+          "expected": [
+            {
+              "role": "user",
+              "content": "one two"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "role": "user",
+                "content": "a b c d"
+              },
+              {
+                "role": "user",
+                "content": "e f g h i j"
+              }
+            ],
+            3
+          ],
+          "expected": [
+            {
+              "role": "user",
+              "content": "e f g h i j"
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            10
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "role": "user",
+                "content": "a"
+              },
+              {
+                "role": "assistant",
+                "content": "b"
+              },
+              {
+                "role": "user",
+                "content": "c d e"
+              },
+              {
+                "role": "assistant",
+                "content": "f"
+              }
+            ],
+            4
+          ],
+          "expected": [
+            {
+              "role": "user",
+              "content": "c d e"
+            },
+            {
+              "role": "assistant",
+              "content": "f"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A retry wrapper around the LLM client, one line per segment.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "`for (let attempt = 0; attempt < 5; attempt++) {`",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "`  try { return await client.messages.create(req); }`",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "`  catch (err) {`",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "`    if (err.status === 400 || err.status === 429 || err.status >= 500) {`",
+          "issue": "Retrying a 400 just repeats an invalid request five times."
+        },
+        {
+          "id": "l5",
+          "text": "`      await sleep(1000);`",
+          "issue": "A fixed 1 s delay ignores `retry-after` and does not back off, so a rate-limited client keeps hammering."
+        },
+        {
+          "id": "l6",
+          "text": "`      continue;`",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "`    }`",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "`    throw err;`",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "`  }`",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "`}`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-llm-api-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Hitting rate limits in production.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A new feature makes a burst of LLM calls when users open a report. At peak you see many `429`s and users wait a long time.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you do first?",
+          "options": [
+            "Check the rate limit headers and your request/token volume per minute against the account limits",
+            "Switch every call to the largest model",
+            "Remove all retries",
+            "Raise `max_tokens`"
+          ],
+          "correctIndex": 0,
+          "explanation": "You need to know which limit you are hitting (requests or tokens per minute) before choosing a fix."
+        },
+        {
+          "id": "q2",
+          "question": "It is tokens-per-minute: each call resends a 6,000-token report. What helps most?",
+          "options": [
+            "Send only the sections the question needs, and cache results for the same report",
+            "Retry faster",
+            "Raise the temperature",
+            "Send the report twice for accuracy"
+          ],
+          "correctIndex": 0,
+          "explanation": "Cutting input tokens and avoiding duplicate work reduce tokens per minute directly."
+        },
+        {
+          "id": "q3",
+          "question": "Bursts still happen at 9am. What protects users?",
+          "options": [
+            "A server-side queue with a concurrency limit and backoff that respects `retry-after`",
+            "Let every browser call the API directly",
+            "Show an error on the first 429",
+            "Disable the feature before 10am"
+          ],
+          "correctIndex": 0,
+          "explanation": "Smoothing the burst through a queue keeps you under the limit and turns hard failures into short waits."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A chat endpoint feels slow. It sends a long history every turn and answers are usually short.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the fixes from biggest expected win to smallest.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Stream the response so text appears immediately"
+        },
+        {
+          "id": "s2",
+          "label": "Trim or summarise old history so far fewer input tokens are sent"
+        },
+        {
+          "id": "s3",
+          "label": "Lower `max_tokens` where answers are meant to be short"
+        },
+        {
+          "id": "s4",
+          "label": "Reuse one HTTP client instead of creating a new connection per request"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "Streaming changes perceived latency the most; fewer input tokens cut processing time; capping output helps when answers run long; connection reuse is a small fixed saving."
+    }
+  },
+  {
+    "id": "eng-llm-api-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Moving secrets out of a prototype.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prototype calls the LLM API with a key that has been pasted into several scripts and a shared notebook. You are preparing it for production.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you do with the existing key?",
+          "options": [
+            "Revoke it and create a new one, since it has been copied around",
+            "Keep it and just remove it from the notebook",
+            "Base64-encode it in the code",
+            "Rename the variable"
+          ],
+          "correctIndex": 0,
+          "explanation": "Assume a key that has been pasted around is exposed; rotate it."
+        },
+        {
+          "id": "q2",
+          "question": "Where should the new key live?",
+          "options": [
+            "In the platform's secret store / env vars, read by the server at runtime",
+            "In a `.env` committed to the repo",
+            "In the frontend bundle",
+            "In the system prompt"
+          ],
+          "correctIndex": 0,
+          "explanation": "Secrets belong in a secret manager or environment, never in code, the bundle or prompts."
+        },
+        {
+          "id": "q3",
+          "question": "What else limits the damage if it leaks again?",
+          "options": [
+            "Separate keys per environment and a spend limit/alert on the account",
+            "One shared key for dev and prod",
+            "Logging the key on startup to confirm it loaded",
+            "Rotating it only once a year"
+          ],
+          "correctIndex": 0,
+          "explanation": "Per-environment keys and spend caps contain the blast radius of any single leak."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Your app sends the same 3,000-token instructions and reference document on every call, followed by a short user question. Which provider feature is designed to cut cost and latency here?",
+    "mcq": {
+      "options": [
+        "Prompt caching of the repeated prefix",
+        "Raising temperature",
+        "Setting `max_tokens` to the prompt size",
+        "Streaming"
+      ],
+      "correctIndex": 0,
+      "explanation": "Prompt caching reuses work for a stable prefix across calls. Put the stable content first and the changing question last so the prefix matches.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "`[1000,2000,4000,8000]`",
+        "`[1000,2000,4000,5000]`",
+        "`[1000,1000,1000,1000]`",
+        "`[0,1000,2000,4000]`"
+      ],
+      "correctIndex": 1,
+      "explanation": "Each delay doubles, and `Math.min` caps it at 5000, so the fourth becomes 5000 instead of 8000.",
+      "snippet": "const delays = [0, 1, 2, 3].map((a) => Math.min(1000 * 2 ** a, 5000));\nconsole.log(JSON.stringify(delays));",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-llm-api-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A user's conversation has grown past the model's context window. Which approach keeps the most useful context?",
+    "mcq": {
+      "options": [
+        "Keep the system prompt and recent turns, and replace older turns with a short summary",
+        "Drop the system prompt first since it is the longest",
+        "Cut the newest messages",
+        "Send only the first message of the conversation"
+      ],
+      "correctIndex": 0,
+      "explanation": "Standing instructions and the latest turns matter most; summarising older turns keeps their gist for far fewer tokens.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "The model replied with one or more `tool_use` blocks. Complete `toolResultMessage(response, results)`: return the next user message with one `tool_result` block per `tool_use` block, in order: `{ type: \"tool_result\", tool_use_id, content }`, where `content` is `results[name]`. If a tool has no result, send `content: \"unknown tool\"` and `is_error: true`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toolResultMessage",
+      "starterCode": "function toolResultMessage(response, results) {\n  const call = response.content.find((b) => b.type === \"tool_use\");\n  return {\n    role: \"user\",\n    content: [{ type: \"tool_result\", tool_use_id: call.id, content: results[call.name] }],\n  };\n}",
+      "referenceSolution": "function toolResultMessage(response, results) {\n  const calls = response.content.filter((b) => b.type === \"tool_use\");\n  return {\n    role: \"user\",\n    content: calls.map((call) =>\n      call.name in results\n        ? { type: \"tool_result\", tool_use_id: call.id, content: results[call.name] }\n        : { type: \"tool_result\", tool_use_id: call.id, content: \"unknown tool\", is_error: true }\n    ),\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Checking."
+                },
+                {
+                  "type": "tool_use",
+                  "id": "t1",
+                  "name": "weather",
+                  "input": {
+                    "city": "Pune"
+                  }
+                }
+              ]
+            },
+            {
+              "weather": "31C"
+            }
+          ],
+          "expected": {
+            "role": "user",
+            "content": [
+              {
+                "type": "tool_result",
+                "tool_use_id": "t1",
+                "content": "31C"
+              }
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "a",
+                  "name": "weather",
+                  "input": {}
+                },
+                {
+                  "type": "tool_use",
+                  "id": "b",
+                  "name": "time",
+                  "input": {}
+                }
+              ]
+            },
+            {
+              "weather": "rain",
+              "time": "10:00"
+            }
+          ],
+          "expected": {
+            "role": "user",
+            "content": [
+              {
+                "type": "tool_result",
+                "tool_use_id": "a",
+                "content": "rain"
+              },
+              {
+                "type": "tool_result",
+                "tool_use_id": "b",
+                "content": "10:00"
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "x",
+                  "name": "delete_all",
+                  "input": {}
+                }
+              ]
+            },
+            {}
+          ],
+          "expected": {
+            "role": "user",
+            "content": [
+              {
+                "type": "tool_result",
+                "tool_use_id": "x",
+                "content": "unknown tool",
+                "is_error": true
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "tool_use",
+                  "id": "a",
+                  "name": "time",
+                  "input": {}
+                },
+                {
+                  "type": "tool_use",
+                  "id": "b",
+                  "name": "stock",
+                  "input": {}
+                }
+              ]
+            },
+            {
+              "time": "09:00"
+            }
+          ],
+          "expected": {
+            "role": "user",
+            "content": [
+              {
+                "type": "tool_result",
+                "tool_use_id": "a",
+                "content": "09:00"
+              },
+              {
+                "type": "tool_result",
+                "tool_use_id": "b",
+                "content": "unknown tool",
+                "is_error": true
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "No tools needed."
+                }
+              ]
+            },
+            {}
+          ],
+          "expected": {
+            "role": "user",
+            "content": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`collect_text(events)` rebuilds the reply from a list of streaming events. Only events of type `content_block_delta` whose `delta.type` is `text_delta` carry text. Other events (message start/stop, tool input JSON deltas, pings) must be ignored. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "collect_text",
+      "starterCode": "def collect_text(events):\n    out = \"\"\n    for e in events:\n        if e[\"type\"] == \"content_block_delta\":\n            out += e[\"delta\"][\"text\"]\n    return out",
+      "referenceSolution": "def collect_text(events):\n    out = \"\"\n    for e in events:\n        if e.get(\"type\") == \"content_block_delta\" and e.get(\"delta\", {}).get(\"type\") == \"text_delta\":\n            out += e[\"delta\"][\"text\"]\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "type": "message_start"
+              },
+              {
+                "type": "content_block_delta",
+                "index": 0,
+                "delta": {
+                  "type": "text_delta",
+                  "text": "Hel"
+                }
+              },
+              {
+                "type": "content_block_delta",
+                "index": 0,
+                "delta": {
+                  "type": "text_delta",
+                  "text": "lo"
+                }
+              },
+              {
+                "type": "message_stop"
+              }
+            ]
+          ],
+          "expected": "Hello"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "type": "content_block_delta",
+                "index": 0,
+                "delta": {
+                  "type": "text_delta",
+                  "text": "Let me check. "
+                }
+              },
+              {
+                "type": "content_block_delta",
+                "index": 1,
+                "delta": {
+                  "type": "input_json_delta",
+                  "partial_json": "{\"city\":"
+                }
+              }
+            ]
+          ],
+          "expected": "Let me check. "
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "ping"
+              },
+              {
+                "type": "message_stop"
+              }
+            ]
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "content_block_delta",
+                "index": 1,
+                "delta": {
+                  "type": "input_json_delta",
+                  "partial_json": "{}"
+                }
+              },
+              {
+                "type": "content_block_delta",
+                "index": 2,
+                "delta": {
+                  "type": "text_delta",
+                  "text": "Done"
+                }
+              }
+            ]
+          ],
+          "expected": "Done"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An agent loop that lets the model call tools until it is done.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are serious problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "`while (true) {`",
+          "issue": "No iteration cap: a model that keeps calling tools runs (and bills) forever."
+        },
+        {
+          "id": "l2",
+          "text": "`  const res = await client.messages.create({ model, tools, messages, max_tokens: 1024 });`",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "`  messages.push({ role: \"assistant\", content: res.content });`",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "`  if (res.stop_reason !== \"tool_use\") return res;`",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "`  const results = await Promise.all(calls.map((c) => tools[c.name](c.input)));`",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "`  // the shell tool runs c.input.command with exec() on the API server`",
+          "issue": "Running model-chosen shell commands on the server with no sandbox or allow-list lets a prompt injection execute anything."
+        },
+        {
+          "id": "l7",
+          "text": "`  messages.push({ role: \"user\", content: toToolResults(calls, results) });`",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "`}`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-llm-api-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "You are rolling out an LLM-powered feature to all customers.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Build a small evaluation set of real, anonymised inputs with expected outcomes"
+        },
+        {
+          "id": "s2",
+          "label": "Iterate on the prompt and model choice until the evals pass"
+        },
+        {
+          "id": "s3",
+          "label": "Add per-user rate limits, timeouts and a spend alert"
+        },
+        {
+          "id": "s4",
+          "label": "Ship behind a feature flag to internal users and log failures"
+        },
+        {
+          "id": "s5",
+          "label": "Ramp to a percentage of customers, watching quality, latency and cost"
+        },
+        {
+          "id": "s6",
+          "label": "Roll out to everyone and keep the evals in CI for future prompt changes"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "explanation": "Measure first, tune against the measure, add guardrails, then expose gradually and keep the evals as a regression check."
+    }
+  },
+  {
+    "id": "eng-llm-api-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Provider outage.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your product's main flow depends on one LLM provider. During a 40-minute provider incident every call fails with `5xx` and the whole page errors.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the quickest improvement for the next incident?",
+          "options": [
+            "Degrade gracefully: time out, show a helpful fallback and keep the rest of the page working",
+            "Retry each failing call 20 times",
+            "Cache every possible answer forever",
+            "Show the raw provider error"
+          ],
+          "correctIndex": 0,
+          "explanation": "The page should survive the LLM part failing. Aggressive retries during an outage add load and delay without helping."
+        },
+        {
+          "id": "q2",
+          "question": "You add a second provider as fallback. What must you check before switching traffic automatically?",
+          "options": [
+            "That your prompts and output parsing pass your evals on the fallback model too",
+            "Nothing, models are interchangeable",
+            "That the fallback is cheaper",
+            "That it uses the same API key"
+          ],
+          "correctIndex": 0,
+          "explanation": "Different models follow prompts and formats differently; an untested fallback can produce broken output."
+        },
+        {
+          "id": "q3",
+          "question": "How should the switch be triggered?",
+          "options": [
+            "A circuit breaker: after N consecutive failures, route to the fallback for a while, then probe the primary",
+            "Switch providers randomly per request",
+            "Switch only after a deploy",
+            "Ask users which provider they want"
+          ],
+          "correctIndex": 0,
+          "explanation": "A circuit breaker stops wasting calls on a failing provider and recovers automatically."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A tool call that moves money.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your assistant has a `refund_order` tool. Logs show one order refunded twice: the first call timed out at your HTTP layer, the agent loop retried, and both refunds went through.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the root issue?",
+          "options": [
+            "The tool is not idempotent, so a retry repeats the side effect",
+            "The model chose the wrong tool",
+            "The temperature was too high",
+            "The timeout was too long"
+          ],
+          "correctIndex": 0,
+          "explanation": "Any retry path will repeat a non-idempotent side effect; the model is not the problem here."
+        },
+        {
+          "id": "q2",
+          "question": "What is the best fix?",
+          "options": [
+            "Pass an idempotency key (e.g. derived from the tool_use id) so the payment service ignores duplicates",
+            "Tell the model in the prompt to never call it twice",
+            "Remove retries from the whole app",
+            "Lower `max_tokens`"
+          ],
+          "correctIndex": 0,
+          "explanation": "An idempotency key makes duplicates harmless at the service, which prompts cannot guarantee."
+        },
+        {
+          "id": "q3",
+          "question": "What extra guard fits a money-moving tool?",
+          "options": [
+            "Require human confirmation (or a strict amount limit) before executing",
+            "Hide the tool's description from the model",
+            "Run it in the browser",
+            "Call it in parallel with other tools"
+          ],
+          "correctIndex": 0,
+          "explanation": "High-impact actions should have a confirmation step or hard limits outside the model."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-llm-api-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "The model returns **two** `tool_use` blocks in one response. How should you send the results back?",
+    "mcq": {
+      "options": [
+        "One user message containing both `tool_result` blocks, each with its matching `tool_use_id`",
+        "Two separate user messages, one per result",
+        "Only the first result; the model will ask again for the second",
+        "Put the results in the system prompt"
+      ],
+      "correctIndex": 0,
+      "explanation": "All results for a turn go back together in the next user message, each linked by `tool_use_id`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You want to know whether a prompt change made your summariser better. Which approach is most reliable?",
+    "mcq": {
+      "options": [
+        "Run old and new prompts on the same fixed set of inputs and score both with the same checks",
+        "Try the new prompt on a couple of inputs and see if it looks better",
+        "Ship it and wait for complaints",
+        "Compare token counts only"
+      ],
+      "correctIndex": 0,
+      "explanation": "A fixed evaluation set scored the same way is the only fair comparison; a few hand-picked tries are noise.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-llm-api-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-llm-api",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "For a long-running server process, which client setup is best practice?",
+    "mcq": {
+      "options": [
+        "Create the SDK client once and reuse it, with a request timeout and a small retry limit",
+        "Create a new client for every request with no timeout",
+        "Use one client per user stored in their session",
+        "Disable timeouts so long answers are never cut off"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reusing one client keeps connections warm; explicit timeouts and bounded retries stop hung or failing calls from piling up.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

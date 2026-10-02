@@ -1,0 +1,1568 @@
+[
+  {
+    "id": "eng-kubernetes-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Kubernetes writes CPU as cores (`\"2\"`, `\"1.5\"`) or millicores (`\"500m\"`). Fix `parseCpu` so it returns cores as a number: `\"500m\"` is `0.5`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseCpu",
+      "starterCode": "function parseCpu(q) {\n  return parseFloat(q);\n}",
+      "referenceSolution": "function parseCpu(q) {\n  if (q.endsWith(\"m\")) return parseFloat(q.slice(0, -1)) / 1000;\n  return parseFloat(q);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "500m"
+          ],
+          "expected": 0.5
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2"
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            "250m"
+          ],
+          "expected": 0.25
+        },
+        {
+          "args": [
+            "1.5"
+          ],
+          "expected": 1.5
+        },
+        {
+          "args": [
+            "1000m"
+          ],
+          "expected": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A Service selects a pod when **every** key in the selector is present in the pod's labels with the same value. Fix `matches`. An empty selector matches every pod.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "matches",
+      "starterCode": "def matches(selector, labels):\n    return any(labels.get(k) == v for k, v in selector.items())",
+      "referenceSolution": "def matches(selector, labels):\n    return all(labels.get(k) == v for k, v in selector.items())",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "app": "api"
+            },
+            {
+              "app": "api",
+              "tier": "web"
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "app": "api",
+              "tier": "web"
+            },
+            {
+              "app": "api",
+              "tier": "worker"
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {},
+            {
+              "app": "api"
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "app": "api"
+            },
+            {}
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "app": "api",
+              "tier": "web"
+            },
+            {
+              "app": "api",
+              "tier": "web",
+              "v": "2"
+            }
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A teammate's notes for checking the `api` Deployment in the `staging` namespace.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the commands that will not do what the notes say.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "`kubectl get pods -n staging` (list the api pods)",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "`kubectl logs deploy/api -n staging` (read the logs)",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "`kubectl describe pod api-7d9f -n production` (see why one pod restarted)",
+          "issue": "Wrong namespace: the pod is in `staging`, so this returns NotFound."
+        },
+        {
+          "id": "l4",
+          "text": "`kubectl get svc -n staging` (find the Service)",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "`kubectl delete deploy api -n staging` (restart the pods)",
+          "issue": "Deleting the Deployment removes it for good; use `kubectl rollout restart deploy/api -n staging`."
+        },
+        {
+          "id": "l6",
+          "text": "`kubectl get events -n staging` (recent events)",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-kubernetes-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You changed the code of the `web` Deployment and want the new version running.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Build and push the image with a new tag, e.g. `web:1.4.0`"
+        },
+        {
+          "id": "s2",
+          "label": "Update the image in the Deployment (`kubectl set image deploy/web web=web:1.4.0` or edit the manifest)"
+        },
+        {
+          "id": "s3",
+          "label": "Watch the rollout with `kubectl rollout status deploy/web`"
+        },
+        {
+          "id": "s4",
+          "label": "Check the new pods with `kubectl get pods` and their logs"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "The image must exist in the registry before the Deployment points at it; then watch the rollout and confirm the pods are healthy."
+    }
+  },
+  {
+    "id": "eng-kubernetes-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A pod keeps restarting.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`kubectl get pods` shows `api-5c8f` with status `CrashLoopBackOff` and 6 restarts.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you look at first?",
+          "options": [
+            "`kubectl logs api-5c8f --previous`",
+            "Delete the pod and hope",
+            "Restart the node",
+            "Scale the Deployment to 10"
+          ],
+          "correctIndex": 0,
+          "explanation": "`--previous` shows the output of the container that crashed, which is usually the error."
+        },
+        {
+          "id": "q2",
+          "question": "The log says `DATABASE_URL is not set`. Where is the fix?",
+          "options": [
+            "In the Deployment's env (or the Secret/ConfigMap it references)",
+            "In the Service",
+            "In the node's /etc/hosts",
+            "In the Ingress"
+          ],
+          "correctIndex": 0,
+          "explanation": "Environment variables come from the pod template; fix it there and the rollout replaces the pods."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This Service is meant to send traffic to the `shop` pods, which are labelled `app: shop` and listen on port 8080.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are wrong.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "apiVersion: v1",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "kind: Service",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "metadata:\n  name: shop",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "spec:\n  selector:\n    app: shop-api",
+          "issue": "The pods are labelled `app: shop`; this selector matches nothing, so the Service has no endpoints."
+        },
+        {
+          "id": "l5",
+          "text": "  ports:\n    - port: 80",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "      targetPort: 80",
+          "issue": "The container listens on 8080, so `targetPort` must be 8080."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-kubernetes-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a Pod?",
+    "mcq": {
+      "options": [
+        "The smallest deployable unit: one or more containers sharing a network and storage",
+        "A physical server in the cluster",
+        "A Docker image stored in the cluster",
+        "A load balancer in front of containers"
+      ],
+      "correctIndex": 0,
+      "explanation": "A Pod wraps one or more containers that share an IP and volumes. Nodes are the machines; Services do the load balancing.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Your Deployment has `replicas: 3`. You delete one of its pods by hand. What happens?",
+    "mcq": {
+      "options": [
+        "The ReplicaSet creates a new pod to get back to 3",
+        "The Deployment drops to 2 replicas permanently",
+        "All three pods restart",
+        "The Deployment is deleted"
+      ],
+      "correctIndex": 0,
+      "explanation": "The controller keeps the actual state at the desired state, so a replacement pod is created.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A Service of type `ClusterIP` is reachable from where?",
+    "mcq": {
+      "options": [
+        "Only from inside the cluster",
+        "From the public internet",
+        "Only from the node it runs on",
+        "Only from pods in other namespaces"
+      ],
+      "correctIndex": 0,
+      "explanation": "ClusterIP gives a virtual IP inside the cluster. To reach it from outside you use a NodePort, LoadBalancer or an Ingress.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Memory quantities use binary suffixes: `Ki` = 1024, `Mi` = 1024², `Gi` = 1024³. A bare number is bytes. Fix `parseMemory` so it returns bytes.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseMemory",
+      "starterCode": "function parseMemory(q) {\n  const units = { Ki: 1000, Mi: 1000 ** 2, Gi: 1000 ** 3 };\n  const unit = q.slice(-2);\n  return parseFloat(q) * units[unit];\n}",
+      "referenceSolution": "function parseMemory(q) {\n  const units = { Ki: 1024, Mi: 1024 ** 2, Gi: 1024 ** 3 };\n  const unit = q.slice(-2);\n  if (units[unit]) return parseFloat(q) * units[unit];\n  return parseFloat(q);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "1Gi"
+          ],
+          "expected": 1073741824
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "128Mi"
+          ],
+          "expected": 134217728
+        },
+        {
+          "args": [
+            "1Ki"
+          ],
+          "expected": 1024
+        },
+        {
+          "args": [
+            "512"
+          ],
+          "expected": 512
+        },
+        {
+          "args": [
+            "0Mi"
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`ready_pods` gets pods as dicts like `{\"name\": \"api-1\", \"phase\": \"Running\", \"ready\": true}`. Return the names of pods that can take traffic: phase `Running` **and** ready.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "ready_pods",
+      "starterCode": "def ready_pods(pods):\n    return [p[\"name\"] for p in pods if p[\"phase\"] == \"Running\"]",
+      "referenceSolution": "def ready_pods(pods):\n    return [p[\"name\"] for p in pods if p[\"phase\"] == \"Running\" and p[\"ready\"]]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "phase": "Running",
+                "ready": true
+              },
+              {
+                "name": "b",
+                "phase": "Pending",
+                "ready": false
+              }
+            ]
+          ],
+          "expected": [
+            "a"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "phase": "Running",
+                "ready": false
+              },
+              {
+                "name": "b",
+                "phase": "Running",
+                "ready": true
+              }
+            ]
+          ],
+          "expected": [
+            "b"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "x",
+                "phase": "Succeeded",
+                "ready": false
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "phase": "Running",
+                "ready": true
+              },
+              {
+                "name": "c",
+                "phase": "Running",
+                "ready": true
+              }
+            ]
+          ],
+          "expected": [
+            "a",
+            "c"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A Deployment for a production API.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that will cause trouble in production.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "replicas: 3",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "image: registry.example.com/api:latest",
+          "issue": "`latest` is not a version: you cannot tell what runs, and rollbacks are unreliable. Pin a tag or digest."
+        },
+        {
+          "id": "l3",
+          "text": "ports:\n  - containerPort: 8080",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "env:\n  - name: NODE_ENV\n    value: production",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "# no readinessProbe",
+          "issue": "Without a readiness probe, traffic is sent to pods before the app is listening, causing errors on every rollout."
+        },
+        {
+          "id": "l6",
+          "text": "resources:\n  requests:\n    cpu: 250m\n    memory: 256Mi",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-kubernetes-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A new version is rolling out with the default `RollingUpdate` strategy.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put what Kubernetes does in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "A new ReplicaSet is created for the new pod template"
+        },
+        {
+          "id": "s2",
+          "label": "A new pod starts and runs its readiness probe"
+        },
+        {
+          "id": "s3",
+          "label": "Once the new pod is ready, it is added to the Service's endpoints"
+        },
+        {
+          "id": "s4",
+          "label": "An old pod is removed from the endpoints and terminated"
+        },
+        {
+          "id": "s5",
+          "label": "Repeat until all pods run the new version"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Rolling updates swap pods a few at a time, only removing old pods once new ones are ready, so capacity stays up."
+    }
+  },
+  {
+    "id": "eng-kubernetes-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A pod will not schedule.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "After a deploy, one new pod stays `Pending`. `kubectl describe pod` shows `0/3 nodes are available: 3 Insufficient cpu.`",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What does this mean?",
+          "options": [
+            "No node has enough unrequested CPU for the pod's `requests.cpu`",
+            "The pod is using too much CPU",
+            "The image is too large",
+            "The Service is misconfigured"
+          ],
+          "correctIndex": 0,
+          "explanation": "The scheduler places pods by their requests against each node's allocatable capacity."
+        },
+        {
+          "id": "q2",
+          "question": "The request is `cpu: 4` but the app uses about 300m. What is the best fix?",
+          "options": [
+            "Lower the request to something realistic like `500m`",
+            "Remove all resource requests",
+            "Add `nodeName` to force it onto a node",
+            "Delete other teams' pods"
+          ],
+          "correctIndex": 0,
+          "explanation": "Requests should reflect real use. Removing them hides the problem and makes scheduling unpredictable."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A ConfigMap and the Deployment that uses it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are wrong.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "kind: ConfigMap\nmetadata:\n  name: api-config",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "data:\n  LOG_LEVEL: info",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  DB_PASSWORD: s3cr3t",
+          "issue": "Passwords belong in a Secret (with restricted access), not a ConfigMap anyone can read."
+        },
+        {
+          "id": "l4",
+          "text": "envFrom:\n  - configMapRef:\n      name: api-config",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "image: api:2.3.1",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "imagePullPolicy: IfNotPresent",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-kubernetes-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between a liveness probe and a readiness probe?",
+    "mcq": {
+      "options": [
+        "Failing readiness removes the pod from Service endpoints; failing liveness restarts the container",
+        "Liveness removes the pod from endpoints; readiness restarts it",
+        "They are the same check run at different intervals",
+        "Readiness only runs at startup; liveness runs after"
+      ],
+      "correctIndex": 0,
+      "explanation": "Readiness controls whether traffic is sent; liveness decides whether the container is stuck and must be restarted.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A container has `limits.memory: 512Mi` and its process grows to 600Mi. What happens?",
+    "mcq": {
+      "options": [
+        "The container is killed (`OOMKilled`) and restarted",
+        "It is throttled and slows down",
+        "Kubernetes raises the limit automatically",
+        "The pod moves to a bigger node"
+      ],
+      "correctIndex": 0,
+      "explanation": "Memory cannot be throttled, so going over the limit kills the container. CPU over its limit is throttled instead.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why set `resources.requests` on every container?",
+    "mcq": {
+      "options": [
+        "The scheduler uses requests to decide which node has room for the pod",
+        "Requests cap how much the container can use",
+        "Requests are only used for billing",
+        "Without them the pod cannot get an IP"
+      ],
+      "correctIndex": 0,
+      "explanation": "Requests are what the scheduler reserves. Limits are the cap.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "For a rolling update, `maxSurge` is rounded **up** and `maxUnavailable` **down** when given as a percentage; a plain string like `\"1\"` is an absolute count. Fix `rolloutBounds` to return `[maxPodsDuringRollout, minAvailablePods]`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "rolloutBounds",
+      "starterCode": "function rolloutBounds(replicas, maxSurge, maxUnavailable) {\n  const toCount = (v) => v.endsWith(\"%\") ? Math.round(replicas * parseFloat(v) / 100) : parseInt(v, 10);\n  return [replicas + toCount(maxSurge), replicas - toCount(maxUnavailable)];\n}",
+      "referenceSolution": "function rolloutBounds(replicas, maxSurge, maxUnavailable) {\n  const pct = (v) => replicas * parseFloat(v) / 100;\n  const surge = maxSurge.endsWith(\"%\") ? Math.ceil(pct(maxSurge)) : parseInt(maxSurge, 10);\n  const unavailable = maxUnavailable.endsWith(\"%\") ? Math.floor(pct(maxUnavailable)) : parseInt(maxUnavailable, 10);\n  return [replicas + surge, replicas - unavailable];\n}",
+      "sampleTests": [
+        {
+          "args": [
+            4,
+            "25%",
+            "25%"
+          ],
+          "expected": [
+            5,
+            3
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            10,
+            "25%",
+            "25%"
+          ],
+          "expected": [
+            13,
+            8
+          ]
+        },
+        {
+          "args": [
+            3,
+            "25%",
+            "25%"
+          ],
+          "expected": [
+            4,
+            3
+          ]
+        },
+        {
+          "args": [
+            5,
+            "1",
+            "0"
+          ],
+          "expected": [
+            6,
+            5
+          ]
+        },
+        {
+          "args": [
+            1,
+            "25%",
+            "25%"
+          ],
+          "expected": [
+            2,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A namespace has a CPU quota. `fits_quota(quota, requests)` gets the quota and a list of pod CPU requests (`\"500m\"` or cores like `\"1\"`, `\"1.5\"`) and returns whether their total fits. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "fits_quota",
+      "starterCode": "def fits_quota(quota, requests):\n    def milli(q):\n        return float(q[:-1]) if q.endswith(\"m\") else float(q)\n    return sum(milli(r) for r in requests) <= milli(quota)",
+      "referenceSolution": "def fits_quota(quota, requests):\n    def milli(q):\n        return float(q[:-1]) if q.endswith(\"m\") else float(q) * 1000\n    return sum(milli(r) for r in requests) <= milli(quota)",
+      "sampleTests": [
+        {
+          "args": [
+            "2",
+            [
+              "500m",
+              "1"
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2000m",
+            [
+              "500m",
+              "1",
+              "600m"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "1",
+            []
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "4",
+            [
+              "1.5",
+              "2500m"
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "1",
+            [
+              "1",
+              "1m"
+            ]
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "An HPA and the Deployment it scales.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that will stop autoscaling from working well.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "kind: HorizontalPodAutoscaler",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "minReplicas: 2\nmaxReplicas: 10",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        averageUtilization: 70",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "# Deployment\nreplicas: 3",
+          "issue": "With an HPA, `replicas` in the manifest fights it: every apply resets the count to 3. Leave it out once the HPA owns scaling."
+        },
+        {
+          "id": "l5",
+          "text": "resources:\n  limits:\n    cpu: 1",
+          "issue": "No CPU `requests`: utilization is measured against requests, so set them explicitly for a meaningful target."
+        },
+        {
+          "id": "l6",
+          "text": "readinessProbe:\n  httpGet:\n    path: /healthz\n    port: 8080",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-kubernetes-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Users get 502s from `https://shop.example.com`. Traffic goes Ingress → Service → pods.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the checks from the cheapest, most likely place to look to the last.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "`kubectl get pods -l app=shop`: are pods Running and Ready?"
+        },
+        {
+          "id": "s2",
+          "label": "`kubectl get endpoints shop`: does the Service have any endpoints?"
+        },
+        {
+          "id": "s3",
+          "label": "Compare the Service `targetPort` with the container port"
+        },
+        {
+          "id": "s4",
+          "label": "`kubectl describe ingress shop`: does the backend name and port match the Service?"
+        },
+        {
+          "id": "s5",
+          "label": "Check the ingress controller's logs"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Start where the traffic ends: no ready pods means no endpoints; empty endpoints point to a selector or readiness problem; then ports; then the Ingress and its controller."
+    }
+  },
+  {
+    "id": "eng-kubernetes-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A rollout went bad.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You deployed `api:3.2.0`. Error rate jumped from 0.1% to 8% and the rollout has finished.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the fastest safe action?",
+          "options": [
+            "`kubectl rollout undo deploy/api`",
+            "Fix the bug and deploy 3.2.1",
+            "Delete all the pods",
+            "Scale to 0 and back to 3"
+          ],
+          "correctIndex": 0,
+          "explanation": "Undo returns to the previous ReplicaSet in seconds; debugging can happen once users are safe."
+        },
+        {
+          "id": "q2",
+          "question": "Errors drop after the undo. How do you stop this reaching production next time?",
+          "options": [
+            "Add a readiness probe that checks the app can serve, plus a canary or staged rollout",
+            "Use `latest` so rollbacks are automatic",
+            "Turn off rolling updates",
+            "Increase replicas"
+          ],
+          "correctIndex": 0,
+          "explanation": "A proper readiness probe and a canary would have halted the rollout while only a few pods were bad."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "An RBAC Role for a CI deploy bot that only needs to update Deployments in `shop`.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that grant more than the bot needs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "kind: Role\nmetadata:\n  namespace: shop",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "rules:\n  - apiGroups: [\"apps\"]\n    resources: [\"deployments\"]",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    verbs: [\"get\", \"list\", \"patch\", \"update\"]",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  - apiGroups: [\"\"]\n    resources: [\"secrets\"]\n    verbs: [\"*\"]",
+          "issue": "The bot does not manage Secrets; `*` lets it read and change every secret in the namespace."
+        },
+        {
+          "id": "l5",
+          "text": "kind: RoleBinding\nsubjects:\n  - kind: ServiceAccount\n    name: deploy-bot",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "roleRef:\n  kind: ClusterRole\n  name: cluster-admin",
+          "issue": "Binding to `cluster-admin` ignores the Role above and gives full admin rights in the namespace."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-kubernetes-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You change a value in a ConfigMap that a Deployment reads via `envFrom`. What happens to running pods?",
+    "mcq": {
+      "options": [
+        "Nothing until the pods are restarted; env vars are read at container start",
+        "They pick up the new value within a minute",
+        "They are restarted automatically",
+        "The ConfigMap change is rejected while pods use it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Environment variables are fixed at start. Mounted ConfigMap files update eventually, env vars never do. Use `kubectl rollout restart` or a checksum annotation.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`kubectl get endpoints api` shows `<none>` but three `api` pods are Running. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "The pods are not Ready, or the Service selector does not match their labels",
+        "The Ingress is missing",
+        "The Service type is ClusterIP",
+        "The nodes are out of memory"
+      ],
+      "correctIndex": 0,
+      "explanation": "Endpoints only list ready pods matching the selector; either one failing empties the list.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An app deadlocks but its process keeps running, and the pod has no liveness probe. What does Kubernetes do?",
+    "mcq": {
+      "options": [
+        "Nothing: it only restarts the container if the process exits or a liveness probe fails",
+        "The readiness probe restarts it",
+        "The kubelet kills pods with no CPU use",
+        "It moves the pod to another node"
+      ],
+      "correctIndex": 0,
+      "explanation": "A hung process that keeps running looks healthy without a liveness probe, so it stays up forever.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A PodDisruptionBudget's `minAvailable` is a count (`\"2\"`) or a percentage of expected pods (`\"50%\"`, rounded **up**). Fix `allowedDisruptions(expected, healthy, minAvailable)` to return how many pods may be evicted now (never negative).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "allowedDisruptions",
+      "starterCode": "function allowedDisruptions(expected, healthy, minAvailable) {\n  return healthy - parseInt(minAvailable, 10);\n}",
+      "referenceSolution": "function allowedDisruptions(expected, healthy, minAvailable) {\n  const min = minAvailable.endsWith(\"%\")\n    ? Math.ceil(expected * parseFloat(minAvailable) / 100)\n    : parseInt(minAvailable, 10);\n  return Math.max(0, healthy - min);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            4,
+            4,
+            "50%"
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            5,
+            5,
+            "50%"
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            3,
+            2,
+            "2"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            3,
+            1,
+            "2"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            10,
+            10,
+            "80%"
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            4,
+            4,
+            "1"
+          ],
+          "expected": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An admission check rejects unpinned images. Return the images that have no tag or use `latest`; digests (`@sha256:...`) are pinned. Careful: a registry port (`registry:5000/app`) is not a tag. Fix `unpinned`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "unpinned",
+      "starterCode": "def unpinned(images):\n    return [i for i in images if \":\" not in i or i.endswith(\":latest\")]",
+      "referenceSolution": "def unpinned(images):\n    out = []\n    for image in images:\n        if \"@\" in image:\n            continue\n        last = image.rsplit(\"/\", 1)[-1]\n        if \":\" not in last or last.split(\":\", 1)[1] == \"latest\":\n            out.append(image)\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "nginx",
+              "nginx:1.25",
+              "redis:latest"
+            ]
+          ],
+          "expected": [
+            "nginx",
+            "redis:latest"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "registry:5000/app"
+            ]
+          ],
+          "expected": [
+            "registry:5000/app"
+          ]
+        },
+        {
+          "args": [
+            [
+              "registry:5000/app:1.2",
+              "app@sha256:abc123"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "ghcr.io/org/api:latest",
+              "ghcr.io/org/web:2.0.1"
+            ]
+          ],
+          "expected": [
+            "ghcr.io/org/api:latest"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A pod spec for an internal web service.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are a security risk.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "image: ghcr.io/acme/web:4.1.0",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "securityContext:\n  privileged: true",
+          "issue": "Privileged containers can access the host's devices and escape the container; a web app never needs it."
+        },
+        {
+          "id": "l3",
+          "text": "  runAsNonRoot: true",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  readOnlyRootFilesystem: true",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "volumes:\n  - name: docker\n    hostPath:\n      path: /var/run/docker.sock",
+          "issue": "Mounting the container runtime socket gives full control of the node."
+        },
+        {
+          "id": "l6",
+          "text": "automountServiceAccountToken: false",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "resources:\n  limits:\n    memory: 512Mi",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-kubernetes-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A release renames a database column the old pods still read. You want zero downtime.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the releases.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Migration 1: add the new column (old code ignores it)"
+        },
+        {
+          "id": "s2",
+          "label": "Deploy code that writes both columns and reads the new one with a fallback"
+        },
+        {
+          "id": "s3",
+          "label": "Backfill the new column for existing rows"
+        },
+        {
+          "id": "s4",
+          "label": "Deploy code that only uses the new column"
+        },
+        {
+          "id": "s5",
+          "label": "Migration 2: drop the old column"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Expand and contract: during a rolling update old and new pods run together, so every step must work with both versions."
+    }
+  },
+  {
+    "id": "eng-kubernetes-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A node drain is stuck.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`kubectl drain node-3` hangs with `Cannot evict pod as it would violate the pod's disruption budget`. The `payments` Deployment has 2 replicas, both on node-3, and a PDB with `minAvailable: 2`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why can the drain never finish?",
+          "options": [
+            "`minAvailable` equals the replica count, so zero evictions are ever allowed",
+            "The node is out of disk",
+            "PDBs block all drains by design",
+            "The pods have no liveness probe"
+          ],
+          "correctIndex": 0,
+          "explanation": "With 2 replicas and minAvailable 2, any eviction breaks the budget."
+        },
+        {
+          "id": "q2",
+          "question": "What is the right lasting fix?",
+          "options": [
+            "Run 3 replicas spread across nodes (anti-affinity or topology spread) and keep `minAvailable: 2`",
+            "Delete the PDB",
+            "Drain with `--disable-eviction` every time",
+            "Set `minAvailable: 0`"
+          ],
+          "correctIndex": 0,
+          "explanation": "More replicas spread across nodes lets one be evicted while the budget still protects availability."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Pods are OOMKilled under load.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "During peaks the `search` pods are OOMKilled. The HPA scales on CPU at 70%. Each pod has `requests.memory: 256Mi`, `limits.memory: 512Mi`, and memory use grows with the number of in-flight requests.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why does scaling on CPU not prevent this?",
+          "options": [
+            "Memory hits the limit before CPU reaches the target, so no new pods are added in time",
+            "HPAs cannot add pods during peaks",
+            "OOMKills reset the CPU metric to zero",
+            "Memory limits disable the HPA"
+          ],
+          "correctIndex": 0,
+          "explanation": "The HPA only reacts to the metric it watches."
+        },
+        {
+          "id": "q2",
+          "question": "Which change addresses the cause rather than the symptom?",
+          "options": [
+            "Cap concurrency per pod and scale on a load metric (in-flight requests) or memory, with requests set near real use",
+            "Remove the memory limit",
+            "Set `restartPolicy: Never`",
+            "Pin all pods to one big node"
+          ],
+          "correctIndex": 0,
+          "explanation": "Bounding per-pod work keeps memory predictable, and scaling on the real pressure adds pods before the limit."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-kubernetes-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "During a rolling update some requests fail with connection resets as old pods stop. What fixes it?",
+    "mcq": {
+      "options": [
+        "Handle SIGTERM by draining in-flight requests, and add a short `preStop` sleep so endpoints update before shutdown",
+        "Raise `replicas`",
+        "Remove the readiness probe",
+        "Use `strategy: Recreate`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Endpoint removal and SIGTERM happen in parallel; a short preStop delay and graceful shutdown let traffic move away before the process exits.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A pod sets `requests` equal to `limits` for both CPU and memory on every container. What does that give it?",
+    "mcq": {
+      "options": [
+        "The `Guaranteed` QoS class, the last to be evicted under node memory pressure",
+        "Priority over every other pod in the cluster",
+        "Exemption from OOM kills",
+        "Unlimited CPU bursting"
+      ],
+      "correctIndex": 0,
+      "explanation": "Guaranteed pods are evicted last, but a container can still be OOMKilled if it exceeds its own limit.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-kubernetes-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-kubernetes",
+    "trackId": null,
+    "stackId": "stack-kubernetes",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why run a database like PostgreSQL as a StatefulSet rather than a Deployment?",
+    "mcq": {
+      "options": [
+        "Pods get stable names and each keeps its own PersistentVolumeClaim across restarts",
+        "StatefulSets scale faster",
+        "Deployments cannot mount volumes",
+        "StatefulSets do not need resource requests"
+      ],
+      "correctIndex": 0,
+      "explanation": "Stable identity (`pg-0`, `pg-1`) and per-pod volumes are what replicated databases need; Deployments treat pods as interchangeable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

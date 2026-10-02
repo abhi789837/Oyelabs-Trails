@@ -1,0 +1,1660 @@
+[
+  {
+    "id": "eng-swiftui-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A counter view does not compile. Mark the lines that are wrong.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "struct CounterView: View {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    var count = 0",
+          "issue": "A view's stored properties are immutable from `body`; local state needs `@State private var count = 0`."
+        },
+        {
+          "id": "l3",
+          "text": "    var body: some View {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "        VStack {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "            Text(\"Count: \\(count)\")",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "            Button(\"Add\") { count += 1 }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "        }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A list of team members. Some rows show the wrong person after an edit. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "struct Member { let id: UUID; var name: String }",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "struct TeamView: View {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    let members: [Member]",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    var body: some View {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        List {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "            ForEach(members.map(\\.name), id: \\.self) { name in",
+          "issue": "Identifies rows by name: two members with the same name collide and renaming changes identity. Use `ForEach(members, id: \\.id)` (or make `Member` `Identifiable`)."
+        },
+        {
+          "id": "l7",
+          "text": "                Text(name)",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "            }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "        }",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You want a label with blue padding around the text, rounded corners on that blue background, and a shadow. Put the modifiers in order after `Text(\"New\")`.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": ".padding(8)"
+        },
+        {
+          "id": "s2",
+          "label": ".background(.blue)"
+        },
+        {
+          "id": "s3",
+          "label": ".clipShape(RoundedRectangle(cornerRadius: 8))"
+        },
+        {
+          "id": "s4",
+          "label": ".shadow(radius: 4)"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "Each modifier wraps the view before it. Padding first so the background covers it; clip the background to the rounded shape; the shadow last so it follows the clipped shape."
+    }
+  },
+  {
+    "id": "eng-swiftui-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A profile header has a Follow button whose label switches between \"Follow\" and \"Following\" when tapped.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A profile header has a Follow button whose label switches between \"Follow\" and \"Following\" when tapped.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Where should the `isFollowing` value live if only this header uses it?",
+          "options": [
+            "`@State private var isFollowing = false` in the header view",
+            "A global variable",
+            "A `let` constant in the header",
+            "`UserDefaults`, read in `body`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`@State` is for simple, view-owned values; SwiftUI keeps it across body re-evaluations."
+        },
+        {
+          "id": "q2",
+          "question": "The button moves into a child `FollowButton` view, but the header still needs the value. How does the child receive it?",
+          "options": [
+            "`@Binding var isFollowing: Bool`, passed as `FollowButton(isFollowing: $isFollowing)`",
+            "`@State var isFollowing: Bool` initialised from the parent's value",
+            "A copy passed with `let isFollowing: Bool`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A binding reads and writes the parent's state. A `@State` in the child would be a separate copy that never syncs back."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-swiftui-t1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A settings row. Mark the lines that hurt accessibility.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "HStack {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    Image(systemName: \"bell\")",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    Text(\"Notifications\").font(.system(size: 12))",
+          "issue": "A fixed point size ignores Dynamic Type; use a text style such as `.font(.body)`."
+        },
+        {
+          "id": "l4",
+          "text": "    Spacer()",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    Text(\"On\").foregroundStyle(.secondary)",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ".onTapGesture { openNotificationSettings() }",
+          "issue": "A tap gesture is not announced as a button and has no accessibility action; wrap the row in a `Button` (or add `.accessibilityAddTraits(.isButton)`)."
+        },
+        {
+          "id": "l8",
+          "text": ".padding()",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A card layout that looks right on one iPhone only. Mark the lines that cause it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "VStack(alignment: .leading, spacing: 8) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    Text(title).font(.headline)",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    Text(body).lineLimit(3)",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": ".frame(width: 375, height: 120)",
+          "issue": "Hard-coded to one screen width and a fixed height: text clips on larger Dynamic Type and wastes space on iPad. Use `.frame(maxWidth: .infinity, alignment: .leading)` and let height follow content."
+        },
+        {
+          "id": "l6",
+          "text": ".padding()",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ".background(Color(.secondarySystemBackground))",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": ".offset(y: 44)",
+          "issue": "Offsetting by a guessed status-bar height breaks on other devices; rely on the safe area instead."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `@State` do for a value in a SwiftUI view?",
+    "mcq": {
+      "options": [
+        "SwiftUI stores the value outside the view struct, keeps it across re-renders, and re-renders the view when it changes",
+        "It makes the value a global constant",
+        "It saves the value to disk",
+        "It shares the value with every view in the app"
+      ],
+      "correctIndex": 0,
+      "explanation": "View structs are recreated often; `@State` storage is owned by SwiftUI and tied to the view's identity in the hierarchy. Keep it `private` to the view that owns it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which container overlays its children on top of each other?",
+    "mcq": {
+      "options": [
+        "`ZStack`",
+        "`HStack`",
+        "`VStack`",
+        "`LazyVGrid`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`ZStack` layers along the z-axis; `HStack` and `VStack` arrange horizontally and vertically.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `var body: some View` mean?",
+    "mcq": {
+      "options": [
+        "`body` returns one specific concrete view type that the compiler knows, without you spelling it out",
+        "`body` can return a different type on every call",
+        "`body` returns an optional view",
+        "`body` is computed once and cached forever"
+      ],
+      "correctIndex": 0,
+      "explanation": "`some View` is an opaque return type. Because the type is fixed, branches that return different views need `@ViewBuilder` (which wraps them in a conditional type) rather than plain `return`s.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A parent shows a settings toggle in a child view. Toggling it in the child does not change the parent's preview. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "struct SettingsView: View {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    @State private var isDark = false",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    var body: some View {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "        VStack { PreviewCard(isDark: isDark); DarkToggle(isDark: isDark) }",
+          "issue": "Passes a copy of the value; the child needs a binding: `DarkToggle(isDark: $isDark)`."
+        },
+        {
+          "id": "l5",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "struct DarkToggle: View {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    @State var isDark: Bool",
+          "issue": "`@State` in the child creates its own storage, initialised once and disconnected from the parent; declare `@Binding var isDark: Bool`."
+        },
+        {
+          "id": "l9",
+          "text": "    var body: some View { Toggle(\"Dark mode\", isOn: $isDark) }",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An orders screen that loads data from the network. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "struct OrdersView: View {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    @State private var orders: [Order] = []",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    init() { Task { orders = try await api.fetchOrders() } }",
+          "issue": "Starting work in `init`: views are initialised often, and `@State` is not ready yet in `init`, so the assignment is lost."
+        },
+        {
+          "id": "l4",
+          "text": "    var body: some View {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        List(orders) { OrderRow(order: $0) }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "            .onAppear { Task { orders = try await api.fetchOrders() } }",
+          "issue": "An unstructured `Task` in `onAppear` is not cancelled when the view goes away and errors are swallowed; use `.task { … }`, which is cancelled automatically, and handle errors."
+        },
+        {
+          "id": "l7",
+          "text": "            .refreshable { orders = (try? await api.fetchOrders()) ?? orders }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A `ProfileView` declares `@ObservedObject var model = ProfileModel()`. Whenever its parent re-renders (for example,\na badge count changes), the profile reloads and loses the text the user was typing.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A `ProfileView` declares `@ObservedObject var model = ProfileModel()`. Whenever its parent re-renders (for example,\na badge count changes), the profile reloads and loses the text the user was typing.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why does this happen?",
+          "options": [
+            "`@ObservedObject` does not own the object: each time the parent re-creates `ProfileView`, a new `ProfileModel` is made",
+            "`ObservableObject` resets itself on every publish",
+            "The parent is calling `objectWillChange` on the model"
+          ],
+          "correctIndex": 0,
+          "explanation": "Observed objects are expected to be owned elsewhere. Initialising one inline gives a fresh instance with every view init."
+        },
+        {
+          "id": "q2",
+          "question": "What is the fix (iOS 14–16 style)?",
+          "options": [
+            "Declare it `@StateObject private var model = ProfileModel()` so SwiftUI creates it once per view identity",
+            "Make `model` a `static` property",
+            "Use `@EnvironmentObject` without injecting it"
+          ],
+          "correctIndex": 0,
+          "explanation": "`@StateObject` ties the object's lifetime to the view's identity, like `@State` for reference types."
+        },
+        {
+          "id": "q3",
+          "question": "A child view `ProfileForm` needs the same model. How should it declare it?",
+          "options": [
+            "`@ObservedObject var model: ProfileModel`, passed in from the parent",
+            "`@StateObject var model = ProfileModel()` again",
+            "`@State var model: ProfileModel`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Only the owner uses `@StateObject`; children observe the instance they are given."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-swiftui-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Put the steps of getting a new build to internal TestFlight testers in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Increase the build number (`CFBundleVersion`) for the same marketing version"
+        },
+        {
+          "id": "s2",
+          "label": "Archive the app with the Release configuration in Xcode (or CI)"
+        },
+        {
+          "id": "s3",
+          "label": "Upload the archive to App Store Connect"
+        },
+        {
+          "id": "s4",
+          "label": "Wait for processing and answer the export-compliance question"
+        },
+        {
+          "id": "s5",
+          "label": "Add the build to the internal testing group"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "App Store Connect rejects a build number it has already seen, so bump it first. A build can only be assigned to testers after upload and processing."
+    }
+  },
+  {
+    "id": "eng-swiftui-t2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Swipe-to-delete sometimes crashes with \"Index out of range\". Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "List {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    ForEach(items.indices, id: \\.self) { i in",
+          "issue": "Using indices as identity: after a delete the indices shift and rows may read an index that no longer exists. Iterate the items themselves: `ForEach(items) { item in … }`."
+        },
+        {
+          "id": "l3",
+          "text": "        Text(items[i].title)",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    .onDelete { offsets in",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "        offsets.forEach { items.remove(at: $0) }",
+          "issue": "Removing one by one shifts later offsets; use `items.remove(atOffsets: offsets)`."
+        },
+        {
+          "id": "l7",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Tapping a row shows a detail sheet, but it sometimes crashes or shows the previous item. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@State private var selected: Item?",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "@State private var showSheet = false",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "List(items) { item in",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    Button(item.title) { selected = item; showSheet = true }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": ".sheet(isPresented: $showSheet) {",
+          "issue": "Two separate states can get out of sync; use `.sheet(item: $selected) { item in … }`, which presents exactly when an item is set."
+        },
+        {
+          "id": "l7",
+          "text": "    DetailView(item: selected!)",
+          "issue": "Force-unwrapping an optional that may still be nil when the sheet is built crashes."
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "When should a view use `@StateObject` instead of `@ObservedObject` for an `ObservableObject`?",
+    "mcq": {
+      "options": [
+        "When the view creates and owns the object; `@ObservedObject` is for objects passed in from outside",
+        "When the object has more than one `@Published` property",
+        "Always; `@ObservedObject` is deprecated",
+        "When the object is a struct"
+      ],
+      "correctIndex": 0,
+      "explanation": "`@StateObject` keeps a single instance for the view's lifetime. With `@ObservedObject` an inline-created object is recreated whenever the view struct is.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the advantage of `.task { await load() }` over `.onAppear { Task { await load() } }`?",
+    "mcq": {
+      "options": [
+        "The task is cancelled automatically when the view disappears, and `.task(id:)` restarts it when the id changes",
+        "It runs on a background thread automatically",
+        "It runs only once per app launch",
+        "It retries on failure"
+      ],
+      "correctIndex": 0,
+      "explanation": "`.task` ties structured concurrency to the view's lifetime. The manual `Task` in `onAppear` keeps running after the view is gone.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How does a sheet close itself from inside, without a binding passed in?",
+    "mcq": {
+      "options": [
+        "`@Environment(\\.dismiss) private var dismiss` and call `dismiss()`",
+        "`self.removeFromSuperview()`",
+        "Set `isPresented = false` on a new `@State`",
+        "`UIApplication.shared.dismiss()`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The `dismiss` environment action dismisses the current presentation (a sheet, or pops a navigation destination).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A view model updates the UI from a network callback. Xcode warns \"Publishing changes from background threads is not allowed\". Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "final class FeedModel: ObservableObject {",
+          "issue": "The class is not `@MainActor`, so nothing guarantees `@Published` changes happen on the main thread; annotate it `@MainActor`."
+        },
+        {
+          "id": "l2",
+          "text": "    @Published var posts: [Post] = []",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    func load() {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "        URLSession.shared.dataTask(with: feedURL) { data, _, _ in",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "            self.posts = (try? JSONDecoder().decode([Post].self, from: data ?? Data())) ?? []",
+          "issue": "Assigns a `@Published` property on URLSession's background queue; hop to the main actor (or use `async` `URLSession.data(from:)` in a `@MainActor` method)."
+        },
+        {
+          "id": "l6",
+          "text": "        }.resume()",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A screen migrated to the Observation framework (`@Observable`, iOS 17). Mark the lines that are wrong.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Observable final class CartModel { var items: [Item] = []; var note = \"\" }",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "struct CartScreen: View {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    @StateObject private var cart = CartModel()",
+          "issue": "`@StateObject` requires `ObservableObject`; an `@Observable` class is owned with `@State private var cart = CartModel()`."
+        },
+        {
+          "id": "l4",
+          "text": "    var body: some View { CartList(cart: cart); NoteEditor(cart: cart) }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "struct CartList: View {",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    let cart: CartModel",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    var body: some View { ForEach(cart.items) { ItemRow(item: $0) } }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "struct NoteEditor: View {",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "    @ObservedObject var cart: CartModel",
+          "issue": "Needs a binding to `cart.note`; with Observation use `@Bindable var cart: CartModel`, then `TextField(\"Note\", text: $cart.note)`."
+        },
+        {
+          "id": "l12",
+          "text": "    var body: some View { TextField(\"Note\", text: $cart.note) }",
+          "issue": null
+        },
+        {
+          "id": "l13",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "A messages list in SwiftUI stutters when scrolling 5,000 rows. Each row view formats a date with a new\n`DateFormatter()` inside `body`, rows are wrapped in `AnyView`, and the list is `ForEach(messages, id: \\.self)` on a\n`Hashable` struct whose `isRead` flag changes often.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A messages list in SwiftUI stutters when scrolling 5,000 rows. Each row view formats a date with a new\n`DateFormatter()` inside `body`, rows are wrapped in `AnyView`, and the list is `ForEach(messages, id: \\.self)` on a\n`Hashable` struct whose `isRead` flag changes often.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why does `id: \\.self` hurt here?",
+          "options": [
+            "The identity includes `isRead`, so marking a message read gives it a new identity: SwiftUI destroys and recreates the row instead of updating it",
+            "`\\.self` is not allowed on structs",
+            "It makes the list sort itself"
+          ],
+          "correctIndex": 0,
+          "explanation": "Identity should be stable for the lifetime of the item; use a real `id`."
+        },
+        {
+          "id": "q2",
+          "question": "What is the best change in the row?",
+          "options": [
+            "Use a shared formatter (or `Text(date, style: .time)` / `date.formatted()`) instead of creating a `DateFormatter` per render",
+            "Move the formatter into `onAppear`",
+            "Wrap the row in another `AnyView`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Formatters are expensive to create; `body` runs often."
+        },
+        {
+          "id": "q3",
+          "question": "Why remove `AnyView`?",
+          "options": [
+            "Type erasure hides the view's structure, so SwiftUI cannot diff it efficiently and rebuilds more than needed",
+            "`AnyView` does not support Dark Mode",
+            "`AnyView` is only for macOS"
+          ],
+          "correctIndex": 0,
+          "explanation": "Prefer `@ViewBuilder` and concrete types so SwiftUI keeps structural identity."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-swiftui-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A search model uses Combine. Results never arrive, and when they do the model is never freed. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "final class SearchModel: ObservableObject {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    @Published var query = \"\"",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    @Published var results: [Hit] = []",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    init() {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        _ = $query.debounce(for: .milliseconds(300), scheduler: RunLoop.main)",
+          "issue": "The `AnyCancellable` is discarded with `_ =`, so the subscription is cancelled immediately; store it in a `Set<AnyCancellable>`."
+        },
+        {
+          "id": "l6",
+          "text": "            .sink { q in self.search(q) }",
+          "issue": "The closure captures `self` strongly, and the model would own the subscription: a retain cycle. Use `[weak self]`."
+        },
+        {
+          "id": "l7",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    func search(_ q: String) { /* … */ }",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Put the steps of migrating a screen from `ObservableObject` to `@Observable` in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Raise the deployment target to iOS 17"
+        },
+        {
+          "id": "s2",
+          "label": "Replace `ObservableObject` and `@Published` with the `@Observable` macro on the model"
+        },
+        {
+          "id": "s3",
+          "label": "In the owning view, change `@StateObject` to `@State`"
+        },
+        {
+          "id": "s4",
+          "label": "In child views, change `@ObservedObject` to a plain property (or `@Environment(Model.self)` instead of `@EnvironmentObject`)"
+        },
+        {
+          "id": "s5",
+          "label": "Add `@Bindable` where a child needs `$model.property` bindings"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "The macro needs iOS 17. Owners and observers change once the model compiles as `@Observable`; bindings come last because `@Bindable` only applies to `@Observable` types."
+    }
+  },
+  {
+    "id": "eng-swiftui-t3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A shop app uses `NavigationStack`. Marketing wants push notifications that open a specific product,\nand the app should reopen on the same screen after being killed.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A shop app uses `NavigationStack`. Marketing wants push notifications that open a specific product,\nand the app should reopen on the same screen after being killed.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Which navigation setup supports both?",
+          "options": [
+            "`NavigationStack(path: $path)` with value-based `NavigationLink(value:)` and `.navigationDestination(for:)`",
+            "`NavigationLink(destination:)` with views built inline",
+            "Presenting every product as a `.sheet`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A path of values can be set programmatically (deep links) and saved/restored."
+        },
+        {
+          "id": "q2",
+          "question": "A notification arrives for product 42 while the user is deep in Settings. What do you do with the path?",
+          "options": [
+            "Replace it with `[Route.product(42)]` (or append, per product decision) on the main actor",
+            "Push a new `NavigationStack` inside the current one",
+            "Call `UIApplication.shared.open` with the product URL"
+          ],
+          "correctIndex": 0,
+          "explanation": "Setting the path drives navigation; nesting stacks breaks back navigation."
+        },
+        {
+          "id": "q3",
+          "question": "How do you restore the screen after the app is killed?",
+          "options": [
+            "Make the route type `Codable`, store `NavigationPath.codable` (or the array) in `@SceneStorage`, and decode it on launch",
+            "Store view instances in `UserDefaults`",
+            "Nothing; iOS restores SwiftUI paths automatically"
+          ],
+          "correctIndex": 0,
+          "explanation": "`@SceneStorage` is per-scene state that survives termination; the path must be serialisable."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-swiftui-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A view shows `if isEditing { EditForm() } else { EditForm().disabled(true) }`. Text typed into the form disappears when toggling. Why?",
+    "mcq": {
+      "options": [
+        "The two branches have different structural identity, so SwiftUI treats them as different views and resets their state",
+        "`disabled` clears text fields",
+        "`if` statements are not allowed in `body`",
+        "`EditForm` must be `Equatable`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each `if`/`else` branch is a separate position in the view tree. Keep one view and vary a modifier: `EditForm().disabled(!isEditing)`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does adding `.id(selectedUser.id)` to a view do when `selectedUser` changes?",
+    "mcq": {
+      "options": [
+        "Gives the view a new explicit identity, so SwiftUI discards it (and its `@State`) and creates a fresh one",
+        "Makes the view `Identifiable`",
+        "Only changes the accessibility identifier",
+        "Nothing, unless the view is in a `List`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Changing `.id` is a deliberate reset: useful to clear a form for a new record, harmful if applied to something that changes every render.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why mark a view model `@MainActor`?",
+    "mcq": {
+      "options": [
+        "All of its methods and properties run on the main actor, so UI-driving state is updated on the main thread and the compiler checks it",
+        "It makes network calls faster",
+        "It runs the model on a background thread",
+        "It is required for `Codable`"
+      ],
+      "correctIndex": 0,
+      "explanation": "With `@MainActor`, `await`ed work can still run elsewhere, but assignments to published state happen on the main thread; calling from a background context needs `await`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Photo grid code that freezes and sometimes hangs. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "struct Thumb: View {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    let url: URL",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    var body: some View {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "        let image = UIImage(data: try! Data(contentsOf: url))!",
+          "issue": "Synchronous file/network read and image decode inside `body` on the main thread; load asynchronously (e.g. `AsyncImage` or a `.task` with a downsampled image)."
+        },
+        {
+          "id": "l5",
+          "text": "        Image(uiImage: image).resizable().scaledToFill()",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "func refresh() {",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "    DispatchQueue.main.sync { cache.removeAll() }",
+          "issue": "`DispatchQueue.main.sync` called from the main thread deadlocks; just call it directly (or use `MainActor` isolation)."
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "let columns = [GridItem(.adaptive(minimum: 100))]",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Version 3.2 went to 100% of users. Within an hour the crash-free rate drops from 99.8% to 96%. Crashes are in a new\ncheckout screen, behind no feature flag. Version 3.1 was stable.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Version 3.2 went to 100% of users. Within an hour the crash-free rate drops from 99.8% to 96%. Crashes are in a new\ncheckout screen, behind no feature flag. Version 3.1 was stable.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the fastest way to stop new users getting 3.2?",
+          "options": [
+            "If phased release was on, pause it in App Store Connect; otherwise you cannot pull back installed builds",
+            "Delete the app from the App Store",
+            "Upload 3.1 again with the same build number"
+          ],
+          "correctIndex": 0,
+          "explanation": "Phased release can be paused for up to 30 days. Once a build is at 100%, the only way forward is a new build."
+        },
+        {
+          "id": "q2",
+          "question": "How do you get a fix to users quickly?",
+          "options": [
+            "Ship 3.2.1 with the fix (new build number) and request an expedited review",
+            "Push a new JavaScript bundle",
+            "Ask users to reinstall"
+          ],
+          "correctIndex": 0,
+          "explanation": "Native apps need a new binary; Apple offers expedited review for critical bugs."
+        },
+        {
+          "id": "q3",
+          "question": "What should be standard from now on for risky screens?",
+          "options": [
+            "Ship them behind a remote feature flag (kill switch) and use phased release",
+            "Only release on Fridays",
+            "Disable crash reporting to reduce noise"
+          ],
+          "correctIndex": 0,
+          "explanation": "A remote flag can turn off a broken path in minutes without a release."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-swiftui-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Put the steps of an App Store release in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in order, first at the top.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Bump the marketing version and the build number"
+        },
+        {
+          "id": "s2",
+          "label": "Run the test suite and archive the Release configuration"
+        },
+        {
+          "id": "s3",
+          "label": "Upload to App Store Connect and wait for processing"
+        },
+        {
+          "id": "s4",
+          "label": "Smoke-test the build via TestFlight"
+        },
+        {
+          "id": "s5",
+          "label": "Fill in release notes and privacy details, then submit for review"
+        },
+        {
+          "id": "s6",
+          "label": "Release with phased release and watch crash and performance metrics"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "explanation": "Each step depends on the previous one: a processed build is needed for TestFlight and for submission, and monitoring only makes sense once users get the build."
+    }
+  },
+  {
+    "id": "eng-swiftui-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A dashboard view re-renders constantly and scrolls poorly. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "struct Dashboard: View {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    @State private var now = Date()",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()",
+          "issue": "A 10 Hz timer at the root updates `now` and re-evaluates the whole dashboard; move the clock into its own small view (or use `TimelineView`/`Text(.now, style: .timer)`)."
+        },
+        {
+          "id": "l4",
+          "text": "    var body: some View {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        ScrollView { ChartsSection(); KPIsSection(); Text(now, style: .time) }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "            .onReceive(timer) { now = $0 }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "struct KPIsSection: View {",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "    var body: some View { ForEach(kpis) { KPI(value: NumberFormatter().string(for: $0.value)!) } }",
+          "issue": "Creates a `NumberFormatter` for every item on every render; use a shared formatter or `value.formatted()`."
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Swift 6 strict concurrency reports data races in this cache. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "final class ImageCache {",
+          "issue": "A plain class with mutable state shared across tasks is not `Sendable`; make it an `actor` (or protect the dictionary with a lock)."
+        },
+        {
+          "id": "l2",
+          "text": "    static let shared = ImageCache()",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    private var store: [URL: UIImage] = [:]",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    func image(for url: URL) -> UIImage? { store[url] }",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    func insert(_ image: UIImage, for url: URL) { store[url] = image }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "for url in urls {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    Task.detached { ImageCache.shared.insert(await download(url), for: url) }",
+          "issue": "Many detached tasks write the same dictionary concurrently; with an actor the call becomes `await ImageCache.shared.insert(…)` and is serialised."
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-swiftui-t4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Memory grows each time a user opens and closes the live-scores screen. Instruments shows `ScoresModel` instances are\nnever deallocated. The model starts a `Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in self.refresh() }` in\n`init` and adds a `NotificationCenter` observer with a closure that calls `self.reload()`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Memory grows each time a user opens and closes the live-scores screen. Instruments shows `ScoresModel` instances are\nnever deallocated. The model starts a `Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { _ in self.refresh() }` in\n`init` and adds a `NotificationCenter` observer with a closure that calls `self.reload()`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why are the models never freed?",
+          "options": [
+            "The repeating timer (held by the run loop) and the observer closure capture `self` strongly",
+            "SwiftUI keeps every view model forever",
+            "`@Published` properties leak by design"
+          ],
+          "correctIndex": 0,
+          "explanation": "The run loop retains the timer, the timer's block retains the model, so the model can never reach zero references."
+        },
+        {
+          "id": "q2",
+          "question": "What fixes it?",
+          "options": [
+            "Capture `[weak self]` in both closures and invalidate the timer / remove the observer when the screen goes away",
+            "Make `ScoresModel` a struct",
+            "Call `deinit` manually"
+          ],
+          "correctIndex": 0,
+          "explanation": "Weak captures break the cycle; invalidation stops work that would otherwise keep running."
+        },
+        {
+          "id": "q3",
+          "question": "What is a more SwiftUI-native way to run the polling?",
+          "options": [
+            "A `.task { while !Task.isCancelled { await model.refresh(); try? await Task.sleep(for: .seconds(5)) } }` on the view",
+            "A global `DispatchSourceTimer`",
+            "Polling inside `body`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The task is cancelled automatically when the view disappears, so there is nothing to invalidate."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-swiftui-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "With the Observation framework (`@Observable`), which change causes a view to re-evaluate `body`?",
+    "mcq": {
+      "options": [
+        "A change to a property that this view's `body` actually read",
+        "Any change to any property of the model",
+        "Only changes to properties marked `@Published`",
+        "Only calls to `objectWillChange.send()`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Observation tracks property access per view. With `ObservableObject`, any `@Published` change invalidates every observing view, which is a common source of over-rendering.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A detail view uses `.task(id: productID) { await load(productID) }`. What happens when `productID` changes while a load is running?",
+    "mcq": {
+      "options": [
+        "The running task is cancelled and a new one starts for the new id",
+        "Both loads run and the first to finish wins",
+        "Nothing; `.task` only runs on first appearance",
+        "The view is destroyed and recreated"
+      ],
+      "correctIndex": 0,
+      "explanation": "`task(id:)` restarts when the id changes, cancelling the old task, which avoids showing a stale product if the old request finishes last (as long as `load` checks cancellation).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-swiftui-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-swiftui",
+    "trackId": null,
+    "stackId": "stack-swift",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which statement about `actor` isolation is true?",
+    "mcq": {
+      "options": [
+        "Calls into an actor from outside are `await`ed, and an actor can be re-entered at each `await` inside its own methods, so state may change across a suspension point",
+        "Actors run all their methods on the main thread",
+        "Code inside an actor method never suspends",
+        "Actors make every property thread-safe even when accessed via `nonisolated`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Actors serialise access but are re-entrant: check or re-read state after an `await` inside an actor method instead of assuming it did not change.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]
