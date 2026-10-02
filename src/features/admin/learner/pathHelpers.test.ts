@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { LearningPathView, PathItemView, SkillGapView } from "@shared/builder";
 import type { PriorityEntry } from "@shared/setup";
 
-import { assessedLevel, courseState, groupPath, matchesSkill, pathCounts, truncateWords } from "./pathHelpers";
+import { assessedLevel, courseState, groupPath, isModuleItem, matchesSkill, pathCounts, truncateWords } from "./pathHelpers";
 
 function item(id: string, overrides: Partial<PathItemView> = {}): PathItemView {
   return {
@@ -121,5 +121,33 @@ describe("levels and counts", () => {
     const items = [item("a"), item("b", { source: "generated", available: false })];
     expect(pathCounts(path(items))).toEqual({ courses: 2, generating: 0, needsReview: 1 });
     expect(pathCounts(path(items, { status: "writing" }))).toEqual({ courses: 2, generating: 1, needsReview: 0 });
+  });
+});
+
+describe("curriculum module items", () => {
+  const module = (id: string, overrides: Partial<PathItemView> = {}) =>
+    item(id, { courseId: null, moduleId: `m-${id}`, href: `/track/backend/module/m-${id}`, ...overrides });
+
+  it("is recognised by its module id, not by a missing course id", () => {
+    expect(isModuleItem(module("a"))).toBe(true);
+    expect(isModuleItem(item("b"))).toBe(false);
+    expect(isModuleItem(item("c", { courseId: null }))).toBe(false);
+  });
+
+  it("is always matched, even while a build runs or the module is unavailable", () => {
+    expect(courseState(module("a"), false)).toBe("module");
+    expect(courseState(module("a", { available: false }), true)).toBe("module");
+    expect(courseState(module("a", { source: "generated", available: false }), false)).toBe("module");
+  });
+
+  it("never counts as generating or needing review", () => {
+    const items = [module("a", { available: false }), module("b", { source: "generated", available: false })];
+    expect(pathCounts(path(items, { status: "writing" }))).toEqual({ courses: 2, generating: 0, needsReview: 0 });
+  });
+
+  it("groups under its priority like a course", () => {
+    const grouped = groupPath(path([module("a", { targetSkill: "AWS" })]), priorities, []);
+    expect(grouped.groups[0]?.course?.moduleId).toBe("m-a");
+    expect(grouped.others).toHaveLength(0);
   });
 });

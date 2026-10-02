@@ -39,6 +39,7 @@ const PRIORITY_TONE: Record<Slider, { chip: string; bar: string }> = {
 
 const STATE_VARIANT: Record<CourseState, "success" | "progress" | "outline"> = {
   matched: "success",
+  module: "success",
   reused: "success",
   generated: "success",
   generating: "progress",
@@ -247,7 +248,15 @@ function CourseLine({ item, busy, compact }: { item: PathItemView; busy: boolean
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
-        {item.courseId ? (
+        {item.moduleId && item.href ? (
+          // A curriculum module opens where the learner reads it: there is no course editor for it.
+          <Link
+            to={item.href}
+            className={cn("font-medium underline decoration-trailmark decoration-2 underline-offset-4", compact && "text-sm")}
+          >
+            {item.courseTitle}
+          </Link>
+        ) : item.courseId ? (
           <Link
             to={`/admin/courses/${item.courseId}`}
             className={cn("font-medium underline decoration-trailmark decoration-2 underline-offset-4", compact && "text-sm")}

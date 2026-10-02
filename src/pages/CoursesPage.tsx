@@ -168,12 +168,19 @@ function PathOrder({ path }: { path: LearningPathView }) {
             <div
               className={cn(
                 "rounded-lg border px-4 py-3",
-                !item.available && "border-dashed opacity-70",
+                !item.available && !item.moduleId && "border-dashed opacity-70",
               )}
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-mono text-xs text-muted-foreground tabular">{item.position + 1}</span>
-                {item.available && item.courseId ? (
+                {item.moduleId && item.href ? (
+                  <Link
+                    to={item.href}
+                    className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
+                  >
+                    {item.courseTitle}
+                  </Link>
+                ) : item.available && item.courseId ? (
                   <Link
                     to={`/courses/${item.courseId}`}
                     className="font-medium underline decoration-trailmark decoration-2 underline-offset-4"
@@ -191,7 +198,8 @@ function PathOrder({ path }: { path: LearningPathView }) {
                 )}
                 {/* Said plainly rather than hidden: a learner can see what is coming, and why it
                     is not open yet. */}
-                {!item.available && <Badge variant="outline">waiting to be checked over</Badge>}
+                {item.moduleId && <Badge variant="outline">Matched · curriculum module</Badge>}
+                {!item.available && !item.moduleId && <Badge variant="outline">waiting to be checked over</Badge>}
                 <span className="ml-auto font-mono text-[11px] text-muted-foreground tabular">
                   {item.completedCount}/{item.topicCount}
                 </span>

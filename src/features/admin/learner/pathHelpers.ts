@@ -23,21 +23,29 @@ export function truncateWords(text: string, max = 20): string {
   return `${words.slice(0, max).join(" ").replace(/[,;:.!?-]+$/, "")}…`;
 }
 
-export type CourseState = "matched" | "reused" | "generated" | "generating" | "needs_review";
+export type CourseState = "matched" | "module" | "reused" | "generated" | "generating" | "needs_review";
 
 export const COURSE_STATE_LABELS: Record<CourseState, string> = {
   matched: "matched",
+  module: "Matched · curriculum module",
   reused: "reused",
   generated: "generated",
   generating: "generating",
   needs_review: "needs review",
 };
 
+/** v4: a curriculum module attached in place of a course. It has no course id, and that is fine. */
+export function isModuleItem(item: Pick<PathItemView, "moduleId">): boolean {
+  return Boolean(item.moduleId);
+}
+
 /**
  * What happened to one course. An unpublished generated course is still being written while the
- * run is busy, and waiting for a human once it has stopped.
+ * run is busy, and waiting for a human once it has stopped. A curriculum module is always a match:
+ * it was attached from the skill catalog, so it is never generating, removed or failed.
  */
-export function courseState(item: Pick<PathItemView, "source" | "available">, pathBusy: boolean): CourseState {
+export function courseState(item: Pick<PathItemView, "source" | "available" | "moduleId">, pathBusy: boolean): CourseState {
+  if (isModuleItem(item)) return "module";
   if (item.source === "unlock") return "matched";
   if (item.source === "reuse") return "reused";
   if (item.available) return "generated";
