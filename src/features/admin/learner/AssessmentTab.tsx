@@ -18,7 +18,8 @@ import { adminApi } from "../api";
 import { ApprovalBanner, approvalNote } from "../ApprovalGate";
 import { GenerationLog } from "../GenerationLog";
 import { AdaptivePath, type AdaptiveStep } from "./AdaptivePath";
-import { isV4Detail, useV4Details, V4Results } from "./V4Results";
+import { describeIssued } from "../setup/issued";
+import { isV4Detail, useV4Details, V4Headline, V4Results } from "./V4Results";
 
 /** One served item, as `/api/admin/assessments/:id/answers` returns it. */
 interface AnsweredItem {
@@ -82,7 +83,18 @@ export function AssessmentTab({
   const [openId, setOpenId] = useState<string | null>(null);
   const [logId, setLogId] = useState<string | null>(null);
   const autoOpened = useRef(new Set<string>());
-  const v4 = useV4Details(assessments);
+  const { probes: v4, reload: reloadV4 } = useV4Details(assessments);
+
+  /* v4.1: a personalised assessment is written in the background, ready in about a minute. Check
+     every 5 s while one is, so the tab moves on by itself. */
+  const writingV4 = assessments.some((a) => a.format === "v4" && a.status === "generating");
+  const onChangedRef = useRef(onChanged);
+  onChangedRef.current = onChanged;
+  useEffect(() => {
+    if (!writingV4) return;
+    const timer = window.setInterval(() => void onChangedRef.current(), 5000);
+    return () => window.clearInterval(timer);
+  }, [writingV4]);
 
   /**
    * Cancels an assessment that has not been started.
@@ -115,7 +127,7 @@ export function AssessmentTab({
    * "Issue assessment" seconds ago and would otherwise watch a status badge for several minutes.
    * Remembered per assessment, so closing it does not immediately reopen it on the next refresh.
    */
-  const generatingId = assessments.find((a) => a.status === "generating")?.id ?? null;
+  const generatingId = assessments.find((a) => a.status === "generating" && a.format !== "v4")?.id ?? null;
   useEffect(() => {
     if (!generatingId || autoOpened.current.has(generatingId)) return;
     autoOpened.current.add(generatingId);
@@ -150,13 +162,19 @@ export function AssessmentTab({
     setError(null);
     setNotice(null);
     try {
-      await adminApi.issueAssessment(userId, answers);
+      const issued = await adminApi.issueAssessment(userId, answers);
       await onChanged();
-      setNotice(
-        `Assessment queued. Generation runs in the background and usually takes a few minutes, then it waits ${Math.round(
-          AUTO_APPROVE_AFTER_MS / 60_000,
-        )} minutes for your approval before going out on its own.`,
-      );
+      if (issued.status) {
+        // v4: written in the background (about a minute) or assembled from the bank at once.
+        const { message, notice: reason } = describeIssued(issued);
+        setNotice(reason ? `${message} ${reason}` : message);
+      } else {
+        setNotice(
+          `Assessment queued. Generation runs in the background and usually takes a few minutes, then it waits ${Math.round(
+            AUTO_APPROVE_AFTER_MS / 60_000,
+          )} minutes for your approval before going out on its own.`,
+        );
+      }
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "Could not issue an assessment.");
     } finally {
@@ -252,7 +270,7 @@ export function AssessmentTab({
 
                   <div className="ml-auto flex flex-wrap gap-1">
                     {/* A v4 sitting is assembled from the bank, so there is no generation to log. */}
-                    {!v4Detail && (
+                    {!v4Detail && assessment.format !== "v4" && (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -327,7 +345,17 @@ export function AssessmentTab({
 
                 {v4Detail && (
                   <div className="border-t px-4 py-5">
-                    <V4Results detail={v4Detail} assessmentId={assessment.id} />
+                    <V4Results
+                      detail={v4Detail}
+                      assessmentId={assessment.id}
+                      status={assessment.status}
+                      onChanged={() => reloadV4(assessment.id)}
+                    />
+                  </div>
+                )}
+                {assessment.format === "v4" && assessment.status === "generating" && (
+                  <div className="border-t px-4 py-4">
+                    <V4Headline status="generating" detail={null} />
                   </div>
                 )}
                 {probe && typeof probe === "object" && "error" in probe && (

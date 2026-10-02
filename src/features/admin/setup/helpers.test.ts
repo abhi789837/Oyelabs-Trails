@@ -5,6 +5,9 @@ import type { LearnerSetup } from "@shared/setup";
 
 import {
   addPriority,
+  toUnderstandRequest,
+  understandingKey,
+  understandingReady,
   canMove,
   changeDepartment,
   findSkillToAdd,
@@ -216,5 +219,37 @@ describe("summary", () => {
     expect(listNames(["AWS"])).toBe("AWS");
     expect(listNames(["AWS", "Docker"])).toBe("AWS and Docker");
     expect(listNames(["A", "B", "C", "D", "E"])).toBe("A, B, C and 2 more");
+  });
+});
+
+describe("understanding", () => {
+  const base = initialSetupState(null, "engineering");
+
+  it("waits for a track or a priority", () => {
+    expect(understandingReady(base)).toBe(false);
+    expect(understandingReady({ ...base, trackId: "frontend" })).toBe(true);
+    expect(understandingReady({ ...base, priorities: [{ skillId: "react", slider: 4, position: 0 }] })).toBe(true);
+  });
+
+  it("sends the description trimmed and leaves out hours and settings", () => {
+    const request = toUnderstandRequest({ ...base, trackId: "frontend", description: "  Weak on Excel.  " });
+    expect(request.description).toBe("Weak on Excel.");
+    expect(request).not.toHaveProperty("hoursPerWeek");
+    expect(request).not.toHaveProperty("advanced");
+  });
+
+  it("changes key with the description but not with hours", () => {
+    const key = understandingKey(base);
+    expect(understandingKey({ ...base, hoursPerWeek: 30 })).toBe(key);
+    expect(understandingKey({ ...base, description: "x" })).not.toBe(key);
+  });
+
+  it("round-trips the description and defaults personalisation", () => {
+    const state = initialSetupState(
+      { ...(initialSetupState(null, "engineering") as unknown as LearnerSetup), priorities: [], skip: [], description: "Joined last week.", advanced: { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false } as LearnerSetup["advanced"] },
+      "engineering",
+    );
+    expect(state.description).toBe("Joined last week.");
+    expect(state.advanced.personalisation).toBe("balanced");
   });
 });

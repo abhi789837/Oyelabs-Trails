@@ -1,0 +1,1 @@
+ALTER TABLE `skills` ADD `default_slider` integer;

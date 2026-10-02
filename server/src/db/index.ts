@@ -7,7 +7,7 @@ import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import { ensureCatalogSeed } from "../catalog/repo";
-import { migrateLegacyPriorities } from "../setup/repo";
+import { applyDepartmentDefaults, migrateLegacyPriorities } from "../setup/repo";
 import { ensureBankSeed } from "../bank/repo";
 import type { Env } from "../env";
 import * as schema from "./schema";
@@ -71,6 +71,8 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
     migrateLegacyPriorities(db);
     // v4 question bank: validated seed items, inserted when absent.
     ensureBankSeed(db);
+    // v4.1: department default sliders for learners nobody has set priorities for (once).
+    applyDepartmentDefaults(db);
   }
   return { db, sqlite };
 }

@@ -36,9 +36,11 @@ export interface SetupState {
   skip: string[];
   hoursPerWeek: number | null;
   advanced: SetupAdvanced;
+  /** v4.1: "About this person and what you want" — the profile's notes, which the AI reads. */
+  description: string;
 }
 
-export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false };
+export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced" };
 
 export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment: string): SetupState {
   if (!setup) {
@@ -53,6 +55,7 @@ export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment
       skip: [],
       hoursPerWeek: DEFAULT_HOURS_PER_WEEK,
       advanced: DEFAULT_ADVANCED,
+      description: "",
     };
   }
   return {
@@ -66,7 +69,8 @@ export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment
     priorities: sortPriorities(setup.priorities).map((p, index) => ({ skillId: p.skillId, slider: p.slider, position: index })),
     skip: setup.skip.map((s) => s.skillId),
     hoursPerWeek: setup.hoursPerWeek,
-    advanced: { ...setup.advanced },
+    advanced: { ...DEFAULT_ADVANCED, ...setup.advanced },
+    description: setup.description ?? "",
   };
 }
 
@@ -82,8 +86,37 @@ export function toSaveRequest(state: SetupState, assign: boolean): SaveSetupRequ
     skip: state.skip,
     hoursPerWeek: state.hoursPerWeek ?? DEFAULT_HOURS_PER_WEEK,
     advanced: state.advanced,
+    description: state.description,
     assign,
   };
+}
+
+/**
+ * Whether "How the AI understood this" has enough to read: a department plus a track or at least
+ * one priority. Anything less and the plan is only the track basics, which says nothing.
+ */
+export function understandingReady(state: SetupState): boolean {
+  return Boolean(state.departmentId) && (state.trackId !== null || state.priorities.length > 0);
+}
+
+/** The understand request: the form as it stands, with only what the AI reads. */
+export function toUnderstandRequest(state: SetupState) {
+  const r = toSaveRequest(state, false);
+  return {
+    departmentId: r.departmentId,
+    trackId: r.trackId,
+    stackIds: r.stackIds,
+    experienceBand: r.experienceBand,
+    level: r.level,
+    priorities: r.priorities,
+    skip: r.skip,
+    description: state.description.trim(),
+  };
+}
+
+/** A stable key for the understand request, so the panel refetches only when its input changed. */
+export function understandingKey(state: SetupState): string {
+  return JSON.stringify(toUnderstandRequest(state));
 }
 
 // ---------------------------------------------------------------------------

@@ -47,4 +47,6 @@ export interface SeedSkill {
   language?: SandboxLanguage;
   contentModules: string[];
   isAiSkill?: boolean;
+  /** v4.1: slider the Setup screen pre-selects for a new learner in this department (1-5). */
+  defaultSlider?: 1 | 2 | 3 | 4 | 5;
 }

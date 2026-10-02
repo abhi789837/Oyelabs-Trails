@@ -127,6 +127,20 @@
       "when": 1790925664132,
       "tag": "0017_v4_path_modules",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1790933019854,
+      "tag": "0018_v41_personalise",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "6",
+      "when": 1790934381485,
+      "tag": "0019_v41_default_slider",
+      "breakpoints": true
     }
   ]
 }

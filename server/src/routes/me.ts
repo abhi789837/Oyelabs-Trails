@@ -167,6 +167,8 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
             skills: v4.skills.map((s) => ({ skillName: s.skillName, priority: s.priority, level: s.level, asked: s.asked })),
             strengths: v4.strengths,
             focusFirst: v4.focusFirst,
+            finishedSeconds: v4.finishedSeconds ?? null,
+            estSeconds: v4.estSeconds ?? null,
           },
         },
       };

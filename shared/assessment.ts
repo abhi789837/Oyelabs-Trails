@@ -529,6 +529,9 @@ export interface MyEvaluation {
     skills: { skillName: string; priority: "high" | "medium" | "low" | null; level: number | null; asked: number }[];
     strengths: string[];
     focusFirst: string[];
+    /** v4.1: "Finished in 31:40 (est. 29:00)". */
+    finishedSeconds?: number | null;
+    estSeconds?: number | null;
   };
 }
 

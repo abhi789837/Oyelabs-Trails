@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { estimateSeconds } from "../../../shared/timing";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -120,6 +121,8 @@ export function toColumns(item: BankItem) {
     mcq: item.mcq,
     task: item.task,
     estMinutes: item.estMinutes,
+    tags: item.tags ?? [],
+    estSeconds: estimateSeconds(item),
   };
 }
 
@@ -139,6 +142,7 @@ export function fromRow(row: Row): BankItemRow {
     coding: (row.coding as BankItem["coding"]) ?? null,
     mcq: (row.mcq as BankItem["mcq"]) ?? null,
     task: (row.task as BankItem["task"]) ?? null,
+    tags: row.tags ?? [],
     status: row.status,
     source: row.source,
     timesUsed: row.timesUsed,
@@ -155,7 +159,7 @@ export function activeItems(db: Db, departmentId: string): BankItemRow[] {
   return db
     .select()
     .from(schema.questionBank)
-    .where(and(eq(schema.questionBank.departmentId, departmentId), eq(schema.questionBank.status, "active")))
+    .where(and(eq(schema.questionBank.departmentId, departmentId), eq(schema.questionBank.status, "active"), eq(schema.questionBank.flaggedSlow, false)))
     .all()
     .map(fromRow);
 }

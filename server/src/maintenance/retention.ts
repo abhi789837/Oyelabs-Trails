@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { calibrateTiming } from "../bank/calibrate";
 import { recomputeBankStats } from "../bank/stats";
 import path from "node:path";
 
@@ -159,6 +160,10 @@ export function startDailyMaintenance(options: MaintenanceOptions): () => void {
           }`,
         );
       }
+
+      // v4.1: once a week, calibrate the timing formula from real answer times.
+      const calibration = calibrateTiming(options.db);
+      if (calibration.items || calibration.ratio) options.log?.(`timing calibrated: ${calibration.items} items, ${calibration.flagged} flagged slow, ratio ${calibration.ratio ?? "-"}`);
 
       // v4: item statistics and automatic retirement of items that measure nothing.
       const stats = recomputeBankStats(options.db);

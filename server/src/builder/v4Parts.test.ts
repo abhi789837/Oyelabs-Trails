@@ -7,11 +7,12 @@ import { schema } from "../db";
 import { activeLearner, adminSession, as, createTestApp } from "../test/harness";
 import { buildSpine } from "./priorityPath";
 import { targetsFromPriorities } from "../setup/repo";
+import { sortPriorities } from "../../../shared/setup";
 import { assertV4Order, orderV4Parts } from "./v4Parts";
 
 const skill = (id: string, name: string, extra: Partial<Skill> = {}): Skill => ({
   id, departmentId: "engineering", name, area: "x", aliases: [], tags: [], levelMin: "beginner", levelMax: "expert",
-  trackIds: [], prerequisites: [], stackIds: [], language: null, contentModules: [], isAiSkill: false, status: "active", requestedBy: null, position: 0, ...extra,
+  trackIds: [], prerequisites: [], stackIds: [], language: null, contentModules: [], isAiSkill: false, defaultSlider: null, status: "active", requestedBy: null, position: 0, ...extra,
 });
 
 const skills = new Map<string, Skill>([
@@ -66,6 +67,7 @@ describe("v4 path, end to end", () => {
     };
     const saved = await ctx.app.inject({ method: "PUT", url: `/api/admin/users/${learner.id}/setup`, ...as(admin), payload: setup });
     const id = saved.json().issued.assessmentId as string;
+    await ctx.drainJobs();
     await ctx.app.inject({ method: "POST", url: `/api/assessment/${id}/consent`, ...as(learner.session), payload: { agreed: true } });
     await ctx.app.inject({ method: "POST", url: `/api/assessment/${id}/start`, ...as(learner.session), payload: {} });
     await ctx.app.inject({ method: "POST", url: `/api/assessment/${id}/submit`, ...as(learner.session), payload: {} });
@@ -86,4 +88,37 @@ describe("v4 path, end to end", () => {
     expect(plan.length).toBeGreaterThan(0);
     await ctx.close();
   }, 120_000);
+});
+
+describe("PM path order (v4.1)", () => {
+  test("diagnostic refresh first, then client management and meetings, then Excel, theory last", () => {
+    const pm = (id: string, name: string, extra: Partial<Skill> = {}) => skill(id, name, { departmentId: "pm", trackIds: ["pm-agile"], ...extra });
+    const pmSkills = new Map<string, Skill>([
+      ["refresh", pm("refresh", "Improving your existing PM skills", { tags: ["refresh"] })],
+      ["client", pm("client", "Client management")],
+      ["meetings", pm("meetings", "Client update meetings & presenting")],
+      ["email", pm("email", "Email etiquette & professional writing")],
+      ["excel", pm("excel", "Excel for PMs")],
+      ["theory", pm("theory", "PM foundations and advanced theory", { trackIds: [] })],
+      ["ai", pm("ai", "AI for PMs", { isAiSkill: true })],
+    ]);
+    const entries: PriorityEntry[] = [
+      { skillId: "theory", skillName: "PM foundations and advanced theory", slider: 2, position: 0 },
+      { skillId: "excel", skillName: "Excel for PMs", slider: 4, position: 1 },
+      { skillId: "client", skillName: "Client management", slider: 5, position: 2 },
+      { skillId: "meetings", skillName: "Client update meetings & presenting", slider: 5, position: 3 },
+      { skillId: "email", skillName: "Email etiquette & professional writing", slider: 5, position: 4 },
+    ];
+    const spine = buildSpine({ targets: targetsFromPriorities(sortPriorities(entries)), gaps: [], skip: [] });
+    const items = orderV4Parts({
+      spine, priorities: sortPriorities(entries), skills: pmSkills, trackId: "pm-agile", trackName: "Agile Delivery PM", departmentName: "Project Management",
+      stackIds: [], ownTrackGaps: [], defaultAiSkill: pmSkills.get("ai")!, refreshSkill: pmSkills.get("refresh")!, assessmentFoundGaps: true,
+    });
+    const order = items.map((i) => i.targetSkill ?? i.gap.skill);
+    expect(order[0]).toBe("Improving your existing PM skills");
+    expect(order.slice(1, 4)).toEqual(["Client management", "Client update meetings & presenting", "Email etiquette & professional writing"]);
+    expect(order.indexOf("Excel for PMs")).toBeLessThan(order.indexOf("PM foundations and advanced theory"));
+    expect(order.at(-1)).toBe("PM foundations and advanced theory");
+    expect(assertV4Order(items, sortPriorities(entries))).toEqual([]);
+  });
 });

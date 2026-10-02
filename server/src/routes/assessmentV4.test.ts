@@ -37,11 +37,16 @@ beforeEach(async () => {
   learner = await activeLearner(ctx, admin);
 });
 
+/** Save & assign, then let the background personalisation job finish (it falls back to the bank
+ * with the mock provider, whose generated items never validate). */
 async function assign(): Promise<string> {
   const res = await ctx.app.inject({ method: "PUT", url: `/api/admin/users/${learner.id}/setup`, ...as(admin), payload: { ...setup, assign: true } });
   expect(res.statusCode).toBe(200);
   const issued = res.json().issued;
-  expect(issued.status).toBe("ready");
+  expect(["ready", "generating"]).toContain(issued.status);
+  await ctx.drainJobs();
+  const row = ctx.db.select().from(schema.assessments).where(eq(schema.assessments.id, issued.assessmentId)).get()!;
+  expect(row.status).toBe("ready");
   return issued.assessmentId as string;
 }
 
@@ -67,8 +72,6 @@ describe("v4 assessment", () => {
     expect(sheet.minFinishAt).toBeNull();
     // Hidden tests and answers never reach the browser.
     expect(JSON.stringify(sheet)).not.toMatch(/hiddenTests|correctIndex|referenceSolution/);
-    const calls = ctx.db.select().from(schema.aiCalls).all();
-    expect(calls).toHaveLength(0);
   });
 
   test("the questions are not readable before the clock starts", async () => {

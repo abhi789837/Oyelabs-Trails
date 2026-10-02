@@ -3,7 +3,8 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 import { trackBasics } from "../../../../shared/catalog";
-import { planAssessmentMix, saveSetupRequestSchema, type LearnerSetup } from "../../../../shared/setup";
+import { planAssessmentMix, saveSetupRequestSchema, setupSchema, sortPriorities, type LearnerSetup } from "../../../../shared/setup";
+import { understandSetup } from "../../assessment/personalise/understand";
 import { issueAssessment } from "../../assessment/issue";
 import { requireStaff, staffOnly } from "../../auth/guards";
 import { getCatalog } from "../../catalog/repo";
@@ -36,6 +37,28 @@ export async function registerAdminSetupRoutes(app: FastifyInstance): Promise<vo
     if (user.role !== "learner" && actor.role !== "superadmin" && actor.id !== user.id) throw forbidden();
     return user;
   };
+
+  /**
+   * v4.1: "How the AI understood this" — reads the Setup form as it is now (saved or not) and returns
+   * the intent bullets and the planned split. One small Haiku call, cached by the form's content, so
+   * pressing Save & assign afterwards does not pay for it again. `force` = Regenerate understanding.
+   */
+  app.post("/api/admin/setup/understand", async (request) => {
+    requireStaff(request);
+    const body = parseOrThrow(setupSchema.extend({ force: z.boolean().default(false), userId: z.string().max(64).optional() }), request.body);
+    const catalog = getCatalog(app.db, { departmentId: body.departmentId, includeArchived: true });
+    const byId = new Map(catalog.skills.map((s) => [s.id, s]));
+    const priorities = sortPriorities(
+      body.priorities.filter((p) => byId.has(p.skillId)).map((p, position) => ({ skillId: p.skillId, skillName: byId.get(p.skillId)!.name, slider: p.slider, position })),
+    );
+    const skip = body.skip.filter((id) => byId.has(id)).map((id) => ({ skillId: id, skillName: byId.get(id)!.name }));
+    const { understanding } = await understandSetup(
+      { db: app.db, ai: app.ai },
+      { setup: { departmentId: body.departmentId, trackId: body.trackId, stackIds: body.stackIds, experienceBand: body.experienceBand, level: body.level, priorities, skip }, description: body.description ?? "" },
+      { force: body.force, userId: body.userId },
+    );
+    return { understanding, aiAvailable: app.ai.isConfigured() };
+  });
 
   app.get("/api/admin/users/:userId/setup", async (request) => {
     const actor = requireStaff(request);

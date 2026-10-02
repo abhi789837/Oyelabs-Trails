@@ -72,6 +72,8 @@ export interface Sheet {
   serverNow: number;
   targetMinutes: number;
   maxMinutes: number;
+  /** v4.1: the sheet's designed length, from the per-item estimates. */
+  estSeconds: number;
   items: SheetItem[];
 }
 
@@ -90,6 +92,8 @@ export type ItemResponseV4 = z.infer<typeof itemResponseV4Schema>;
 export const saveDraftRequestSchema = z.object({
   response: itemResponseV4Schema.nullable().optional(),
   flagged: z.boolean().optional(),
+  /** v4.1: milliseconds the learner spent on this item since the last save (visible, focused). */
+  elapsedMs: z.number().int().min(0).max(120_000).optional(),
 });
 
 export const runRequestSchema = z.object({ code: z.string().max(40_000) });
@@ -150,6 +154,9 @@ export interface V4Result {
   pendingWritten: number;
   answered: number;
   total: number;
+  /** v4.1: "Finished in 31:40 (est. 29:00)". Seconds; null when not known. */
+  finishedSeconds?: number | null;
+  estSeconds?: number | null;
 }
 
 /** Level 0–5 from a difficulty-weighted score: roughly "the hardest band you can reliably do". */

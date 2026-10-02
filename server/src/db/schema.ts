@@ -314,6 +314,11 @@ export const assessmentItems = sqliteTable(
     lockedAt: integer("locked_at"),
     /** v4: 0..1 with partial credit; null until graded (a written task waits for its rubric). */
     score: real("score"),
+    /** v4.1: estimated seconds for this item, and the time the learner actually spent on it. */
+    estSeconds: integer("est_seconds"),
+    activeMs: integer("active_ms").notNull().default(0),
+    /** v4.1: where it came from: reused from the bank, generated for this learner, or the fallback. */
+    origin: text("origin").$type<"bank" | "generated" | "fallback">(),
   },
   (t) => [
     index("assessment_items_assessment_idx").on(t.assessmentId),
@@ -713,6 +718,11 @@ export const learnerPriorities = sqliteTable("learner_priorities", {
   daysPerWeek: integer("days_per_week").notNull().default(5),
   /** On: a week starts on the Monday of the week it is generated in, for team-aligned cohorts. */
   weekStartsMonday: integer("week_starts_monday", { mode: "boolean" }).notNull().default(false),
+  /** v4.1: how much of an assessment the AI writes fresh. `balanced` reuses up to ~40% from the bank. */
+  personalisation: text("personalisation").$type<"high" | "balanced" | "low">().notNull().default("balanced"),
+  /** v4.1: the AI's reading of the admin's setup + description, and the hash of the input it read. */
+  understanding: text("understanding", { mode: "json" }).$type<unknown>(),
+  understandingHash: text("understanding_hash"),
   updatedBy: text("updated_by"),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -1186,6 +1196,8 @@ export const skills = sqliteTable(
     contentModules: text("content_modules", { mode: "json" }).$type<string[]>().notNull().default([]),
     /** Part 2 of a path: "AI-driven work for your role". */
     isAiSkill: integer("is_ai_skill", { mode: "boolean" }).notNull().default(false),
+    /** v4.1: the slider the Setup screen pre-selects for a new learner in this department. */
+    defaultSlider: integer("default_slider"),
     /** `pending` is a request waiting for the superadmin. Pending skills can still be prioritised. */
     status: text("status").$type<"active" | "pending" | "archived">().notNull().default("active"),
     requestedBy: text("requested_by"),
@@ -1289,6 +1301,13 @@ export const questionBank = sqliteTable(
     timesScored: integer("times_scored").notNull().default(0),
     scoreSum: real("score_sum").notNull().default(0),
     discrimination: real("discrimination"),
+    /** v4.1: context themes ("international clients", "Laravel", "Keka timesheets") for personalised reuse. */
+    tags: text("tags", { mode: "json" }).$type<string[]>().notNull().default([]),
+    /** v4.1: deterministic time estimate (shared/timing.ts) and the measured median, in seconds. */
+    estSeconds: integer("est_seconds"),
+    medianSeconds: integer("median_seconds"),
+    /** v4.1: median time above 1.5x the estimate; shortened before it is served again. */
+    flaggedSlow: integer("flagged_slow", { mode: "boolean" }).notNull().default(false),
     status: text("status").$type<"draft" | "active" | "retired">().notNull().default("draft"),
     retiredReason: text("retired_reason"),
     source: text("source").$type<"seed" | "generated" | "admin">().notNull().default("seed"),

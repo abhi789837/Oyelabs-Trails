@@ -101,6 +101,8 @@ export const setupAdvancedSchema = z.object({
   /** How many courses one path build may generate with AI. */
   courseCap: z.number().int().min(0).max(20).default(5),
   autoPublish: z.boolean().default(false),
+  /** v4.1: how much of the assessment the AI writes fresh (see shared/personalise.ts). */
+  personalisation: z.enum(["high", "balanced", "low"]).default("balanced"),
 });
 export type SetupAdvanced = z.infer<typeof setupAdvancedSchema>;
 
@@ -117,7 +119,12 @@ export const setupSchema = z.object({
     .default([]),
   skip: z.array(z.string().min(1).max(80)).max(MAX_PRIORITIES).default([]),
   hoursPerWeek: z.number().int().min(1).max(60).default(DEFAULT_HOURS_PER_WEEK),
-  advanced: setupAdvancedSchema.default({ weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false }),
+  advanced: setupAdvancedSchema.default({ weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced" }),
+  /**
+   * v4.1: "About this person and what you want" — the admin's own words, which the AI reads to plan
+   * the assessment. Stored as the profile's notes. Omitted = leave the notes as they are.
+   */
+  description: z.string().max(2000).optional(),
 });
 export type SetupInput = z.infer<typeof setupSchema>;
 
@@ -138,6 +145,7 @@ export interface LearnerSetup {
   skip: { skillId: string; skillName: string }[];
   hoursPerWeek: number;
   advanced: SetupAdvanced;
+  description: string;
 }
 
 // ---------------------------------------------------------------------------

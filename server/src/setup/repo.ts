@@ -130,7 +130,9 @@ export function getSetup(db: Db, userId: string): LearnerSetup {
       deadlineWeeks: settings?.deadlineWeeks ?? null,
       courseCap: settings?.courseCap ?? 5,
       autoPublish: settings?.autoPublish ?? false,
+      personalisation: settings?.personalisation ?? "balanced",
     },
+    description: profile?.adminNotes ?? "",
   };
 }
 
@@ -159,7 +161,7 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
       userId,
       roleTitle: current?.roleTitle ?? null,
       yearsExperience: input.experienceBand ? yearsFromBand(input.experienceBand) : (current?.yearsExperience ?? null),
-      adminNotes: current?.adminNotes ?? "",
+      adminNotes: input.description !== undefined ? input.description : (current?.adminNotes ?? ""),
       claimedSkills: current?.claimedSkills ?? [],
       targetTracks: current?.targetTracks ?? [],
       // The v3 columns, kept in step for one release so nothing that still reads them goes blank.
@@ -183,6 +185,7 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
       deadlineWeeks: input.advanced.deadlineWeeks,
       courseCap: input.advanced.courseCap,
       autoPublish: input.advanced.autoPublish,
+      personalisation: input.advanced.personalisation,
       updatedBy: actorId,
       updatedAt: at,
     };
@@ -311,4 +314,40 @@ export function migrateLegacyPriorities(db: Db): number {
     .onConflictDoNothing()
     .run();
   return migrated;
+}
+
+const DEFAULTS_KEY = "v4.1.department_defaults_applied";
+
+/**
+ * v4.1: gives learners whose admin never set any priority their department's default sliders
+ * (PM: client management, meetings and email Critical; ...), once per database, and queues a path
+ * rebuild for each. A learner with even one slider set is left exactly as the admin left it.
+ */
+export function applyDepartmentDefaults(db: Db): number {
+  if (db.select().from(schema.appMeta).where(eq(schema.appMeta.key, DEFAULTS_KEY)).get()) return 0;
+  const defaults = db.select().from(schema.skills).all().filter((s) => s.defaultSlider != null && s.status === "active");
+  const learners = db
+    .select({ userId: schema.learnerProfiles.userId, departmentId: schema.learnerProfiles.departmentId })
+    .from(schema.learnerProfiles)
+    .innerJoin(schema.users, eq(schema.users.id, schema.learnerProfiles.userId))
+    .where(eq(schema.users.role, "learner"))
+    .all();
+  let applied = 0;
+  for (const learner of learners) {
+    const mine = defaults.filter((s) => s.departmentId === (learner.departmentId ?? "engineering"));
+    if (mine.length === 0) continue;
+    if (listSkillPriorities(db, learner.userId).length > 0) continue;
+    replacePriorities(
+      db,
+      learner.userId,
+      mine.map((s) => ({ skillId: s.id, skillName: s.name, slider: s.defaultSlider as Slider })),
+      listSkip(db, learner.userId),
+    );
+    db.insert(schema.jobs)
+      .values({ id: `${now().toString(36)}-${learner.userId}`.slice(0, 64), type: "path.build", payload: { userId: learner.userId }, status: "queued", attempts: 0, maxAttempts: 3, runAfter: now(), createdAt: now() })
+      .run();
+    applied += 1;
+  }
+  db.insert(schema.appMeta).values({ key: DEFAULTS_KEY, value: String(applied), updatedAt: now() }).onConflictDoNothing().run();
+  return applied;
 }

@@ -44,6 +44,11 @@ export async function gradeWritten(ai: AiService, task: WriteTask, text: string,
     `Task: ${task.prompt}`,
     task.context ? `Context:\n${task.context}` : "",
     `Rubric:\n${task.rubric.map((c) => `- ${c.id} (${c.label}, weight ${c.weight}): ${c.description}`).join("\n")}`,
+    task.variant === "email"
+      ? "Lens: a professional email. Judge structure (purpose, details, ask, deadline), tone for the reader, clarity and a clear ask."
+      : task.variant === "explain"
+        ? "Lens: explaining tech to a client. Judge correctness, simplicity and the absence of jargon; one or two sentences is ideal."
+        : "",
     `Word limit: ${task.wordLimit}. Words used: ${wordCount(text)}.`,
     `Answer:\n"""\n${text.slice(0, 6000)}\n"""`,
   ]
@@ -115,7 +120,12 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
 
   // 3. The report, by skill.
   const setup = getSetup(db, assessment.userId);
-  const result = computeResult(itemsOf(db, assessmentId), setup.priorities);
+  const sheet = itemsOf(db, assessmentId);
+  const result = {
+    ...computeResult(sheet, setup.priorities),
+    finishedSeconds: assessment.startedAt ? Math.round(((assessment.submittedAt ?? now()) - assessment.startedAt) / 1000) : null,
+    estSeconds: sheet.reduce((s, i) => s + (i.estSeconds ?? 0), 0) || null,
+  };
   db.insert(schema.evaluations).values({ id: newId(), assessmentId, result, model, createdAt: now() }).run();
 
   // 4. The library: the modules behind every priority, then the track basics. Skipped skills never.

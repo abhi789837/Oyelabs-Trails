@@ -57,3 +57,55 @@ export function fillDays(
 export function taskLabel(task: string): string {
   return TASK_DEFAULTS[task as AiTask]?.label ?? task.replace(/_/g, " ");
 }
+
+// ---------------------------------------------------------------------------
+// Estimated vs actual time (v4.1)
+// ---------------------------------------------------------------------------
+
+/** One finished assessment from `GET /api/admin/assessments/timing`. */
+export interface TimingRow {
+  assessmentId: string;
+  learner: string;
+  submittedAt: number | null;
+  estSeconds: number;
+  actualSeconds: number;
+  costMicros: number;
+}
+
+export interface TimingChartRow extends TimingRow {
+  /** Positions on the shared axis, 0–100. */
+  estPct: number;
+  actualPct: number;
+  /** Took longer than designed. */
+  over: boolean;
+  date: string;
+}
+
+/**
+ * Lays the rows on one minutes axis that starts at zero and ends on a round 10 minutes past the
+ * longest value, so a 31-minute sitting is not drawn as "twice" a 29-minute one. Also the median of
+ * actual / estimated over rows that have an estimate.
+ */
+export function timingRows(rows: readonly TimingRow[], limit = 20): { rows: TimingChartRow[]; ticks: string[]; medianRatio: number | null } {
+  const shown = rows.slice(0, limit);
+  const longest = Math.max(0, ...shown.map((r) => Math.max(r.estSeconds, r.actualSeconds)));
+  const maxMinutes = Math.max(10, Math.ceil(longest / 60 / 10) * 10);
+  const scale = (seconds: number) => Math.max(0, Math.min(100, (seconds / 60 / maxMinutes) * 100));
+  const ratios = shown
+    .filter((r) => r.estSeconds > 0 && r.actualSeconds > 0)
+    .map((r) => r.actualSeconds / r.estSeconds)
+    .sort((a, b) => a - b);
+  const mid = Math.floor(ratios.length / 2);
+  const medianRatio = ratios.length === 0 ? null : ratios.length % 2 ? ratios[mid] : (ratios[mid - 1] + ratios[mid]) / 2;
+  return {
+    rows: shown.map((r) => ({
+      ...r,
+      estPct: scale(r.estSeconds),
+      actualPct: scale(r.actualSeconds),
+      over: r.estSeconds > 0 && r.actualSeconds > r.estSeconds,
+      date: r.submittedAt ? localDay(new Date(r.submittedAt)) : "",
+    })),
+    ticks: [0, 0.5, 1].map((f) => String(Math.round(maxMinutes * f))),
+    medianRatio,
+  };
+}

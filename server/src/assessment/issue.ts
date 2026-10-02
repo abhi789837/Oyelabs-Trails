@@ -8,6 +8,7 @@ import { badRequest, conflict, notFound } from "../lib/errors";
 import { newId, now } from "../lib/ids";
 import { queueBankFill } from "../bank/fill";
 import { assembleInto } from "./v4";
+import { emptyReport } from "./personalise/job";
 
 export interface IssueInput {
   userId: string;
@@ -19,12 +20,16 @@ export interface IssueInput {
    * `legacy`: the v3 generated, adaptive assessment, kept for one release.
    */
   format?: "v4" | "legacy";
+  /** v4.1: false forces bank-only assembly even with an AI credential. */
+  personalise?: boolean;
 }
 
 export interface IssueResult {
   assessmentId: string;
   jobId: string | null;
   status: "generating" | "ready";
+  /** v4.1: why a bank-only assessment was not personalised. */
+  notice?: string;
   /** v4: skills the bank could not fill, already queued for a one-off gap fill. */
   shortfalls?: { skillId: string; type: string; missing: number }[];
 }
@@ -77,9 +82,23 @@ export function issueAssessment(app: FastifyInstance, input: IssueInput): IssueR
         createdAt: now(),
       })
       .run();
+    /* v4.1: with an AI credential the assessment is written for this person in the background
+       (`assessment.personalise`) and is `ready` shortly after; without one it is assembled from the
+       bank right now, and the admin is told so. */
+    if (app.ai.isConfigured() && input.personalise !== false) {
+      const jobId = enqueue(app.db, { type: "assessment.personalise", payload: { assessmentId }, maxAttempts: 1 });
+      writeAudit(app.db, {
+        actorId: input.actorId,
+        action: "assessment.issued",
+        targetType: "assessment",
+        targetId: assessmentId,
+        details: { userId: input.userId, attemptNo, label: input.label ?? null, format: "v4", personalised: true },
+      });
+      return { assessmentId, jobId, status: "generating" };
+    }
     let config;
     try {
-      config = assembleInto(app.db, assessmentId, input.userId);
+      config = { ...assembleInto(app.db, assessmentId, input.userId), personalisation: emptyReport("No AI credential is set up, so this assessment came from the question bank only.") };
     } catch (error) {
       app.db.delete(schema.assessments).where(eq(schema.assessments.id, assessmentId)).run();
       throw error;
@@ -94,7 +113,7 @@ export function issueAssessment(app: FastifyInstance, input: IssueInput): IssueR
       targetId: assessmentId,
       details: { userId: input.userId, attemptNo, label: input.label ?? null, format: "v4", shortfalls: config.shortfalls.length },
     });
-    return { assessmentId, jobId: null, status: "ready", shortfalls: config.shortfalls };
+    return { assessmentId, jobId: null, status: "ready", shortfalls: config.shortfalls, notice: config.personalisation.fallbackReason ?? undefined };
   }
 
   app.db

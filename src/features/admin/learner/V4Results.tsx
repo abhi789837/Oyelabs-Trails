@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Check, ChevronDown, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AlertTriangle, Check, ChevronDown, RefreshCw, Shuffle, X } from "lucide-react";
 
 import type { AssessmentSummary } from "@shared/assessment";
 import type { ItemResponseV4 } from "@shared/assessmentV4";
@@ -7,10 +7,20 @@ import type { ItemResponseV4 } from "@shared/assessmentV4";
 import { api, ApiRequestError } from "@/api/client";
 import { SkillReport } from "@/components/assessment/SkillReport";
 import { RichText } from "@/components/content/RichText";
+import { useConfirm } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { formatMinutes } from "@shared/timing";
+import { finishedLine } from "@/lib/timing";
+import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import {
+  assessmentHeadline,
+  canReplace,
+  designedSeconds,
   describeFeedback,
+  ORIGIN_LABELS,
+  personalisationCounts,
   describeShortfalls,
   expectedTaskAnswer,
   formatItemScore,
@@ -32,7 +42,11 @@ export function isV4Detail(probe: V4Probe | undefined): probe is V4Detail {
  * Only v4 sittings (the summary's `format`) are asked about; legacy ones keep the older view.
  * Refetched whenever a status changes.
  */
-export function useV4Details(assessments: readonly AssessmentSummary[]): Record<string, V4Probe> {
+export function useV4Details(assessments: readonly AssessmentSummary[]): {
+  probes: Record<string, V4Probe>;
+  /** Refetches one assessment's detail (after a swap or a regenerate). */
+  reload: (assessmentId: string) => Promise<void>;
+} {
   const [probes, setProbes] = useState<Record<string, V4Probe>>({});
   const candidates = useMemo(
     () => assessments.filter((a) => a.format === "v4" && a.status !== "generating"),
@@ -60,7 +74,37 @@ export function useV4Details(assessments: readonly AssessmentSummary[]): Record<
     return () => controller.abort();
   }, [signature]);
 
-  return probes;
+  const reload = useCallback(async (assessmentId: string) => {
+    try {
+      const detail = await api.get<V4Detail>(`/api/admin/assessments/${assessmentId}/v4`);
+      setProbes((current) => ({ ...current, [assessmentId]: detail }));
+    } catch (err) {
+      if (err instanceof ApiRequestError) notify.error(err.message);
+    }
+  }, []);
+
+  return { probes, reload };
+}
+
+/**
+ * The one line above a v4 sitting: "Assessment ready · 25 items · est. 29 min · AI cost $0.03", or
+ * "Writing the assessment…" while it is generated in the background.
+ */
+export function V4Headline({ status, detail }: { status: string; detail: V4Detail | null }) {
+  const line = assessmentHeadline({
+    status,
+    items: detail?.items.length ?? 0,
+    estSeconds: detail ? designedSeconds(detail) : 0,
+    costMicros: detail?.config.personalisation?.costMicros,
+  });
+  return (
+    <p className="text-sm font-medium" role={status === "generating" ? "status" : undefined}>
+      {line}
+      {status === "generating" && (
+        <span className="ml-2 font-normal text-muted-foreground">usually about a minute; this checks every 5 s</span>
+      )}
+    </p>
+  );
 }
 
 /**
@@ -68,9 +112,22 @@ export function useV4Details(assessments: readonly AssessmentSummary[]): Record<
  * the raw score, written answers still waiting for a grade, bank shortfalls — and every question
  * behind an expander, because this view is the answer key.
  */
-export function V4Results({ detail, assessmentId }: { detail: V4Detail; assessmentId: string }) {
+export function V4Results({
+  detail,
+  assessmentId,
+  status,
+  onChanged,
+}: {
+  detail: V4Detail;
+  assessmentId: string;
+  /** The assessment's status: Swap and Regenerate only while it is ready or running. */
+  status: string;
+  onChanged: () => Promise<void>;
+}) {
   const [open, setOpen] = useState(false);
   const { result, items } = detail;
+  const report = detail.config.personalisation;
+  const finished = finishedLine(result.finishedSeconds, result.estSeconds ?? designedSeconds(detail));
   const shortfalls = describeShortfalls(detail.config.shortfalls ?? [], result);
   const sorted = useMemo(() => [...items].sort((a, b) => a.position - b.position), [items]);
   const listId = `v4-questions-${assessmentId}`;
@@ -78,6 +135,10 @@ export function V4Results({ detail, assessmentId }: { detail: V4Detail; assessme
 
   return (
     <div className="space-y-4">
+      <V4Headline status={status} detail={detail} />
+      {finished && !started && <p className="font-mono text-xs text-muted-foreground tabular">{finished}</p>}
+      {report && <PersonalisationSummary report={report} />}
+
       {started && (
         <SkillReport
           report={result}
@@ -119,11 +180,37 @@ export function V4Results({ detail, assessmentId }: { detail: V4Detail; assessme
           {open && (
             <ol id={listId} className="space-y-3 border-t p-3 sm:p-4">
               {sorted.map((item) => (
-                <QuestionCard key={item.id} item={item} />
+                <QuestionCard key={item.id} item={item} assessmentId={assessmentId} status={status} onChanged={onChanged} />
               ))}
             </ol>
           )}
         </div>
+      )}
+    </div>
+  );
+}
+
+/** What the AI took from the setup and where the 25 came from. Compact; the fallback in amber. */
+function PersonalisationSummary({ report }: { report: NonNullable<V4Detail["config"]["personalisation"]> }) {
+  return (
+    <div className="rounded-md border px-3 py-2.5 text-sm">
+      <p className="text-xs text-muted-foreground">
+        Personalisation: {report.level}
+        {report.understandingSource === "rules" ? " · rules only" : ""}
+      </p>
+      {report.intent.length > 0 && (
+        <ul className="mt-1.5 list-disc space-y-0.5 pl-4 marker:text-muted-foreground">
+          {report.intent.slice(0, 5).map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      )}
+      <p className="mt-1.5 font-mono text-xs text-muted-foreground tabular">{personalisationCounts(report)}</p>
+      {report.fallbackReason && (
+        <p className="mt-2 flex items-start gap-1.5 rounded-sm border border-trailmark/40 bg-trailmark/[0.07] px-2 py-1.5 text-xs text-trailmark-strong">
+          <AlertTriangle className="mt-px size-3.5 shrink-0" aria-hidden="true" />
+          {report.fallbackReason}
+        </p>
       )}
     </div>
   );
@@ -140,8 +227,43 @@ function Stat({ label, value, warn }: { label: string; value: string; warn?: boo
 
 const TYPE_LABELS: Record<V4AdminItem["type"], string> = { coding: "coding", mcq: "multiple choice", task: "task" };
 
-function QuestionCard({ item }: { item: V4AdminItem }) {
+function QuestionCard({
+  item,
+  assessmentId,
+  status,
+  onChanged,
+}: {
+  item: V4AdminItem;
+  assessmentId: string;
+  status: string;
+  onChanged: () => Promise<void>;
+}) {
+  const confirm = useConfirm();
+  const [busy, setBusy] = useState<"swap" | "regenerate" | null>(null);
   const submitted = item.state === "submitted";
+  const replaceable = canReplace(status, item);
+
+  const replace = async (action: "swap" | "regenerate") => {
+    const ok = await confirm({
+      title: action === "swap" ? `Swap question ${item.position + 1}?` : `Regenerate question ${item.position + 1}?`,
+      body:
+        action === "swap"
+          ? "It is replaced with another bank item for the same skill and type. Any draft the learner has on it is cleared."
+          : "The AI writes a new one for the same skill and type (one small call). If it fails its checks, the old one is kept. Any draft the learner has on it is cleared.",
+      confirmLabel: action === "swap" ? "Swap it" : "Regenerate it",
+    });
+    if (!ok) return;
+    setBusy(action);
+    try {
+      await api.post(`/api/admin/assessments/${assessmentId}/items/${item.id}/${action}`);
+      notify.success(action === "swap" ? "Question swapped." : "Question regenerated.");
+      await onChanged();
+    } catch (err) {
+      notify.error(err instanceof ApiRequestError ? err.message : "That did not work. Try again.");
+    } finally {
+      setBusy(null);
+    }
+  };
   const response: ItemResponseV4 | null = item.response ?? item.draft;
   const score = formatItemScore(item.score, item.state);
   const feedback = describeFeedback(item.feedback);
@@ -155,11 +277,41 @@ function QuestionCard({ item }: { item: V4AdminItem }) {
         <Badge variant="outline">{TYPE_LABELS[item.type]}</Badge>
         <span>{item.skillName}</span>
         <span>difficulty {item.difficulty}/5</span>
+        {item.origin && (
+          <span
+            className={cn(
+              "rounded-sm border px-1.5 py-px text-[11px]",
+              item.origin === "generated" && "border-ridge/50 text-ridge-strong",
+              item.origin === "fallback" && "border-trailmark/50 text-trailmark-strong",
+            )}
+          >
+            {ORIGIN_LABELS[item.origin]}
+          </span>
+        )}
+        {item.estSeconds ? (
+          <span className="tabular" title="Designed time, and the time they actually spent when known">
+            est. {formatMinutes(item.estSeconds)}
+            {item.activeMs ? ` · took ${formatMinutes(Math.round(item.activeMs / 1000))}` : ""}
+          </span>
+        ) : null}
         {!submitted && response && <span>draft, not submitted</span>}
         <span className={cn("ml-auto tabular", tone)}>{score}</span>
       </div>
 
       <RichText text={item.prompt} className="mt-3" />
+
+      {replaceable && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          <Button variant="ghost" size="sm" loading={busy === "swap"} disabled={busy !== null} onClick={() => void replace("swap")}>
+            <Shuffle aria-hidden="true" />
+            Swap
+          </Button>
+          <Button variant="ghost" size="sm" loading={busy === "regenerate"} disabled={busy !== null} onClick={() => void replace("regenerate")}>
+            <RefreshCw aria-hidden="true" />
+            Regenerate
+          </Button>
+        </div>
+      )}
 
       <div className="mt-3">
         <Response item={item} response={response} />

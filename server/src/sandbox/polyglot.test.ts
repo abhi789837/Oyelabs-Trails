@@ -76,11 +76,12 @@ describe.runIf(pistonUp)("Piston languages", () => {
     expect(result.passedCount).toBe(2);
   });
 
-  test("java program mode compares stdout", async () => {
+  // Retried: a cold JVM can miss the local runner's 3 s run limit while the rest of the suite loads the CPU.
+  test("java program mode compares stdout", { retry: 2, timeout: 30_000 }, async () => {
     const code = `import java.util.*;\npublic class Main { public static void main(String[] a) { Scanner s = new Scanner(System.in); int n = s.nextInt(); System.out.println(n * 2); } }`;
     const result = await runTests(deps, { language: "java", mode: "program", functionName: null, code, tests: [{ stdin: "21", expected: "42" }] });
     expect(result.passedCount).toBe(1);
-  }, 30_000);
+  });
 
   test("sql mode compares rows", async () => {
     const result = await runTests(deps, {

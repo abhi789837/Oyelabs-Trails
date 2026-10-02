@@ -4,6 +4,7 @@ import { Sparkles, Target } from "lucide-react";
 import type { MyEvaluation } from "@shared/assessment";
 import { BUCKET_LABELS } from "@shared/setup";
 
+import { finishedLine } from "@/lib/timing";
 import { cn } from "@/lib/utils";
 
 type Report = NonNullable<MyEvaluation["v4"]>;
@@ -34,6 +35,7 @@ export function SkillReport({
   subtitle?: string;
 }) {
   const headingId = useId();
+  const finished = finishedLine(report.finishedSeconds, report.estSeconds);
   return (
     <section aria-labelledby={headingId} className={cn("rounded-lg border bg-surface", className)}>
       <div className="border-b px-4 py-3 sm:px-5">
@@ -41,6 +43,7 @@ export function SkillReport({
           {title}
         </h2>
         <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p>
+        {finished && <p className="mt-1 font-mono text-xs text-muted-foreground tabular">{finished}</p>}
       </div>
 
       <ul className="divide-y">

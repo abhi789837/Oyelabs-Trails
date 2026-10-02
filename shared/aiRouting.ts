@@ -14,6 +14,9 @@ import type { AiPurpose } from "./enums";
  */
 
 export const AI_TASKS = [
+  "understand",
+  "item_generate",
+  "item_check",
   "grade_written",
   "skill_tagging",
   "week_plan",
@@ -47,6 +50,9 @@ export interface TaskDefault {
 }
 
 export const TASK_DEFAULTS: Record<AiTask, TaskDefault> = {
+  understand: { label: "Understanding the admin's setup (assessment plan)", model: HAIKU, maxTokens: 2500, urgent: true, batch: false, note: "One small call per setup" },
+  item_generate: { label: "Writing personalised assessment items", model: SONNET, maxTokens: 9000, urgent: false, batch: false, note: "2-3 calls per assessment" },
+  item_check: { label: "Checking generated MCQs", model: HAIKU, maxTokens: 1200, urgent: false, batch: false, note: "One call per assessment" },
   grade_written: { label: "Grading written tasks (PM/BD)", model: HAIKU, maxTokens: 400, urgent: true, batch: false, note: "Short rubric, JSON out" },
   skill_tagging: { label: "Skill matching, tagging, short reasons", model: HAIKU, maxTokens: 1500, urgent: false, batch: false, note: "Cheap and frequent" },
   week_plan: { label: "Shaping a learner's week", model: HAIKU, maxTokens: 2000, urgent: false, batch: false, note: "Revises a rules-built week" },
@@ -86,6 +92,12 @@ export function taskForPurpose(purpose: AiPurpose): AiTask {
       return "bank_fill";
     case "grade_written":
       return "grade_written";
+    case "assessment_plan":
+      return "understand";
+    case "item_generate":
+      return "item_generate";
+    case "item_check":
+      return "item_check";
   }
 }
 

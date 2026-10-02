@@ -5,7 +5,7 @@ import type { UserSummary } from "@shared/admin";
 import { yearsFromBand, type SaveSetupRequest } from "@shared/setup";
 
 import { ApiRequestError } from "@/api/client";
-import { Field, FormAlert, PasswordField, TextField } from "@/components/form/Field";
+import { FormAlert, PasswordField, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/features/auth/AuthProvider";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -13,6 +13,7 @@ import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
 import { setupApi } from "./setup/api";
+import { describeIssued } from "./setup/issued";
 import { SetupForm, type SetupFormContext } from "./setup/SetupForm";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
 
@@ -39,7 +40,6 @@ export default function AdminOnboardPage() {
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [roleTitle, setRoleTitle] = useState("");
-  const [notes, setNotes] = useState("");
   const [passwordMode, setPasswordMode] = useState<"generate" | "set">("generate");
   const [password, setPassword] = useState("");
   const [takenUsernames, setTakenUsernames] = useState<Set<string> | null>(null);
@@ -66,14 +66,13 @@ export default function AdminOnboardPage() {
     setUsername("");
     setDisplayName("");
     setRoleTitle("");
-    setNotes("");
     setPassword("");
     setPendingUser(null);
     setFormKey((k) => k + 1);
   };
 
   const createAccount = useCallback(
-    async (experienceBand: SaveSetupRequest["experienceBand"]) => {
+    async (experienceBand: SaveSetupRequest["experienceBand"], description = "") => {
       const result = await adminApi.onboard({
         username: username.trim(),
         displayName,
@@ -82,7 +81,7 @@ export default function AdminOnboardPage() {
         profile: {
           roleTitle: roleTitle.trim() || null,
           yearsExperience: yearsFromBand(experienceBand),
-          adminNotes: notes,
+          adminNotes: description,
           claimedSkills: [],
           targetTracks: [],
         },
@@ -95,7 +94,7 @@ export default function AdminOnboardPage() {
       setTakenUsernames((current) => (current ? new Set(current).add(result.user.username.toLowerCase()) : current));
       return { user: result.user, handedOver: Boolean(toSend) };
     },
-    [username, displayName, role, passwordMode, password, roleTitle, notes],
+    [username, displayName, role, passwordMode, password, roleTitle],
   );
 
   const finish = (user: UserSummary, handedOver: boolean) => {
@@ -111,12 +110,13 @@ export default function AdminOnboardPage() {
     let user = pendingUser;
     let handedOver = created !== null;
     if (!user) {
-      const result = await createAccount(request.experienceBand);
+      const result = await createAccount(request.experienceBand, request.description ?? "");
       user = result.user;
       handedOver = result.handedOver;
     }
+    let saved;
     try {
-      await setupApi.save(user.id, request);
+      saved = await setupApi.save(user.id, request);
     } catch (err) {
       setPendingUser(user);
       const reason = err instanceof ApiRequestError ? err.message : "the server did not answer";
@@ -125,11 +125,9 @@ export default function AdminOnboardPage() {
         { fields: err instanceof ApiRequestError ? err.fields : undefined },
       );
     }
-    notify.success(
-      request.assign
-        ? `${user.displayName} is set up. The assessment is being built and waits for your approval.`
-        : `${user.displayName} is set up.`,
-    );
+    const { message, notice } = describeIssued(saved.issued, user.displayName);
+    notify.success(message);
+    if (notice) notify.info(notice);
     finish(user, handedOver);
   };
 
@@ -233,31 +231,6 @@ export default function AdminOnboardPage() {
     </section>
   );
 
-  const notesField = ({ fields, pending }: SetupFormContext) => (
-    <Field
-      label="Notes"
-      hint="What they have built, where they are strong or struggle. The assessment reads this."
-      error={fields["profile.adminNotes"]}
-    >
-      {({ id, describedBy, invalid }) => (
-        <textarea
-          id={id}
-          aria-describedby={describedBy}
-          aria-invalid={invalid || undefined}
-          rows={5}
-          value={notes}
-          disabled={pending || pendingUser !== null}
-          onChange={(e) => setNotes(e.target.value)}
-          className={cn(
-            "w-full rounded-md border border-input bg-surface px-3 py-2 text-sm leading-relaxed placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
-            invalid && "border-destructive",
-          )}
-          placeholder="Two years on our React dashboards. Comfortable with hooks; async error handling is shaky."
-        />
-      )}
-    </Field>
-  );
-
   return (
     <div className="max-w-6xl px-4 py-8 sm:px-6">
       <h1 className="text-2xl font-bold">Onboard a learner</h1>
@@ -289,7 +262,6 @@ export default function AdminOnboardPage() {
             secondaryLabel={pendingUser ? "Save setup" : "Create"}
             canSubmit={canSubmit}
             leading={accountFields}
-            trailing={notesField}
           />
         ) : (
           <StaffForm

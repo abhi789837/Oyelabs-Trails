@@ -1,5 +1,8 @@
 import type { ItemResponseV4, SheetItem, V4Result } from "@shared/assessmentV4";
+import type { Personalisation } from "@shared/personalise";
 import type { LearnerTask, Task, TaskResponse } from "@shared/tasks";
+
+import { estMinutes, formatCostMicros } from "@/lib/timing";
 
 /**
  * Pure helpers for the admin's view of a v4 sitting (`GET /api/admin/assessments/:id/v4`).
@@ -15,7 +18,31 @@ export type V4AdminItem = SheetItem & {
   /** Grader notes: rubric feedback as text, or the auto-grader's detail as JSON. */
   feedback: string | null;
   answer: { correctIndex: number; explanation: string } | { task: Task } | null;
+  /** v4.1: the designed time for this item, seconds (from the payload). */
+  estSeconds?: number | null;
+  /** v4.1: where it came from. Only present once the admin route exposes it. */
+  origin?: ItemOrigin | null;
+  /** v4.1: time the learner actually spent on it. Only present once the admin route exposes it. */
+  activeMs?: number | null;
 };
+
+export type ItemOrigin = "bank" | "generated" | "fallback";
+
+/** Mirror of `PersonaliseReport` (server/src/assessment/personalise/pipeline.ts). */
+export interface PersonaliseReport {
+  level: Personalisation;
+  understandingSource: "ai" | "rules";
+  intent: string[];
+  themes: string[];
+  reused: number;
+  generated: number;
+  fromBankAfterFailures: number;
+  regenerations: number;
+  rejected: { slot: number; reason: string }[];
+  estSeconds: number;
+  fallbackReason: string | null;
+  costMicros: number;
+}
 
 export interface V4Shortfall {
   skillId: string;
@@ -24,7 +51,7 @@ export interface V4Shortfall {
 }
 
 export interface V4Detail {
-  config: { format: "v4"; shortfalls?: V4Shortfall[] } & Record<string, unknown>;
+  config: { format: "v4"; shortfalls?: V4Shortfall[]; personalisation?: PersonaliseReport } & Record<string, unknown>;
   result: V4Result;
   items: V4AdminItem[];
 }
@@ -99,6 +126,12 @@ export function summariseTaskResponse(task: LearnerTask, response: TaskResponse)
       if (response.explanation.trim()) lines.push(`Why: ${response.explanation.trim()}`);
       return lines;
     }
+    case "excel":
+      return Object.entries(response.cells).filter(([, v]) => v.trim()).map(([ref, v]) => `${ref}: ${v}`);
+    case "allocate":
+      return Object.entries(response.hours).filter(([, v]) => v > 0).map(([k, v]) => `${k}: ${v} h`);
+    case "sim":
+      return [`Flagged ${response.flagged.length} row(s)`, ...Object.entries(response.answers).map(([q, a]) => `${q}: option ${a + 1}`)];
   }
 }
 
@@ -117,6 +150,12 @@ export function expectedTaskAnswer(task: Task): string[] {
       return task.segments.filter((s) => s.issue).map((s) => `• ${s.text} — ${s.issue}`);
     case "write":
       return task.rubric.map((r) => `${r.label} (×${r.weight})`);
+    case "excel":
+      return Object.entries(task.solution).map(([ref, v]) => `${ref}: ${v}`);
+    case "allocate":
+      return task.projects.map((p) => `${p.name}: ${p.need} h covered without over-allocating anyone`);
+    case "sim":
+      return [...task.rows.filter((r) => r.issue).map((r) => `Flag: ${r.cells[0]} — ${r.issue}`), ...task.questions.map((q) => `${q.question} → ${q.options[q.correctIndex]}`)];
   }
 }
 
@@ -124,4 +163,53 @@ export function expectedTaskAnswer(task: Task): string[] {
 export function describeShortfalls(shortfalls: readonly V4Shortfall[], result: Pick<V4Result, "skills">): string[] {
   const names = new Map(result.skills.map((s) => [s.skillId, s.skillName]));
   return shortfalls.map((s) => `${names.get(s.skillId) ?? s.skillId} · ${s.type} · ${s.missing} missing`);
+}
+
+// ---------------------------------------------------------------------------
+// v4.1: the header line, the personalisation summary, per-item origin
+// ---------------------------------------------------------------------------
+
+const STATUS_WORDS: Record<string, string> = {
+  generating: "Writing the assessment…",
+  ready: "Assessment ready",
+  in_progress: "In progress",
+  submitted: "Submitted",
+  evaluating: "Being graded",
+  completed: "Completed",
+  terminated: "Ended early",
+  awaiting_approval: "Awaiting approval",
+  failed: "Failed",
+};
+
+/** The designed length: the report's total, else the sum of the items' estimates. */
+export function designedSeconds(detail: Pick<V4Detail, "config" | "items">): number {
+  const fromItems = detail.items.reduce((sum, item) => sum + (item.estSeconds ?? 0), 0);
+  return fromItems || detail.config.personalisation?.estSeconds || 0;
+}
+
+/** "Assessment ready · 25 items · est. 29 min · AI cost $0.03". */
+export function assessmentHeadline(input: { status: string; items: number; estSeconds: number; costMicros: number | null | undefined }): string {
+  if (input.status === "generating") return STATUS_WORDS.generating;
+  const parts = [STATUS_WORDS[input.status] ?? input.status.replace(/_/g, " ")];
+  if (input.items > 0) parts.push(`${input.items} item${input.items === 1 ? "" : "s"}`);
+  const est = estMinutes(input.estSeconds);
+  if (est) parts.push(est);
+  if (input.costMicros !== null && input.costMicros !== undefined) parts.push(`AI cost ${formatCostMicros(input.costMicros)}`);
+  return parts.join(" · ");
+}
+
+/** "13 written for them · 12 reused from the bank · 2 from the bank after failed checks". */
+export function personalisationCounts(report: PersonaliseReport): string {
+  const parts: string[] = [];
+  parts.push(`${report.generated} written for them`);
+  parts.push(`${report.reused} reused from the bank`);
+  if (report.fromBankAfterFailures > 0) parts.push(`${report.fromBankAfterFailures} from the bank after failed checks`);
+  return parts.join(" · ");
+}
+
+export const ORIGIN_LABELS: Record<ItemOrigin, string> = { bank: "bank", generated: "generated", fallback: "fallback" };
+
+/** Swap and Regenerate are for questions the learner has not submitted, on a sheet still open. */
+export function canReplace(status: string, item: Pick<V4AdminItem, "state">): boolean {
+  return (status === "ready" || status === "in_progress") && item.state !== "submitted";
 }

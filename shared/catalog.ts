@@ -77,6 +77,8 @@ export interface Skill {
   language: SandboxLanguage | null;
   contentModules: string[];
   isAiSkill: boolean;
+  /** v4.1: pre-selected on the Setup screen for a new learner in this department (1-5), or null. */
+  defaultSlider: number | null;
   status: SkillStatus;
   requestedBy: string | null;
   position: number;

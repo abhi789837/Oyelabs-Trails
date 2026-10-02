@@ -19,6 +19,8 @@ import {
 import { planAssessmentMix, sliderToPriority, type AssessmentMix, type MixGroup } from "../../../shared/setup";
 import { gradeTask, toLearnerTask, type Task } from "../../../shared/tasks";
 import { assemble } from "../bank/assemble";
+import { balanceTiming, timingConstants } from "../bank/timing";
+import { estimateSeconds } from "../../../shared/timing";
 import { activeItems, seenItemIds } from "../bank/repo";
 import { getCatalog } from "../catalog/repo";
 import type { Db } from "../db";
@@ -123,33 +125,18 @@ export function assembleInto(db: Db, assessmentId: string, userId: string): V4Co
     throw conflict("The question bank has no items for this department yet. Seed or approve some under Admin → Question bank.");
   }
 
-  const at = now();
-  db.transaction((tx) => {
-    result.items.forEach(({ item, skillId, group }, position) => {
-      const skillName = skills.get(skillId)?.name ?? skills.get(item.skillId)?.name ?? skillId;
-      const { payload, key } = splitItem(item, skillId, skillName, group, `${assessmentId}:${position}`);
-      tx.insert(schema.assessmentItems)
-        .values({
-          id: newId(),
-          assessmentId,
-          area: skillId,
-          difficulty: item.difficulty,
-          kind: item.type === "coding" ? "code" : item.type === "mcq" ? "mcq" : "task",
-          topicIds: [],
-          payload,
-          key,
-          status: "served",
-          servedAt: at,
-          bankItemId: item.id,
-          position,
-        })
-        .run();
-      tx.update(schema.questionBank)
-        .set({ timesUsed: sql`${schema.questionBank.timesUsed} + 1` })
-        .where(eq(schema.questionBank.id, item.id))
-        .run();
-    });
-  });
+  // v4.1: the 25 are balanced to land in 26–32 minutes by swapping bank items of the same skill.
+  const pool = activeItems(db, setup.departmentId);
+  const balanced = balanceTiming(
+    result.items.map(({ item, skillId, group }) => ({ item, skillId, group, origin: "bank" as const, swappable: true })),
+    pool.filter((p) => !seenItemIds(db, userId).has(p.id)),
+    timingConstants(db),
+  );
+  storeItems(
+    db,
+    assessmentId,
+    balanced.map((pick) => ({ ...pick, skillName: skills.get(pick.skillId)?.name ?? skills.get(pick.item.skillId)?.name ?? pick.skillId })),
+  );
 
   return {
     format: "v4",
@@ -160,6 +147,53 @@ export function assembleInto(db: Db, assessmentId: string, userId: string): V4Co
     maxMinutes: V4_MAX_MINUTES,
     shortfalls: result.shortfalls,
   };
+}
+
+export interface StoredPick {
+  item: BankItem;
+  skillId: string;
+  skillName: string;
+  group: MixGroup | "filler";
+  origin: "bank" | "generated" | "fallback";
+  /** Set when the item exists in `question_bank` (reused, or generated and added). */
+  bankItemId?: string | null;
+}
+
+/** Writes the sheet. Shared by bank assembly and the personalised pipeline. */
+export function storeItems(db: Db, assessmentId: string, picks: readonly StoredPick[]): void {
+  const at = now();
+  const constants = timingConstants(db);
+  db.transaction((tx) => {
+    picks.forEach((pick, position) => {
+      const { item, skillId, skillName, group } = pick;
+      const { payload, key } = splitItem(item, skillId, skillName, group, `${assessmentId}:${position}`);
+      const bankItemId = pick.bankItemId === undefined ? item.id : pick.bankItemId;
+      tx.insert(schema.assessmentItems)
+        .values({
+          id: newId(),
+          assessmentId,
+          area: skillId,
+          difficulty: item.difficulty,
+          kind: item.type === "coding" ? "code" : item.type === "mcq" ? "mcq" : "task",
+          topicIds: [],
+          payload: { ...payload, estSeconds: estimateSeconds(item, constants) },
+          key,
+          status: "served",
+          servedAt: at,
+          bankItemId,
+          position,
+          estSeconds: estimateSeconds(item, constants),
+          origin: pick.origin,
+        })
+        .run();
+      if (bankItemId) {
+        tx.update(schema.questionBank)
+          .set({ timesUsed: sql`${schema.questionBank.timesUsed} + 1` })
+          .where(eq(schema.questionBank.id, bankItemId))
+          .run();
+      }
+    });
+  });
 }
 
 /** Same seed → same shuffle; MCQ options are shuffled so position never gives the answer away. */
@@ -175,7 +209,7 @@ function shuffleOrder(length: number, seed: string): number[] {
   return order;
 }
 
-function splitItem(item: BankItem, skillId: string, skillName: string, group: MixGroup | "filler", seed: string) {
+export function splitItem(item: BankItem, skillId: string, skillName: string, group: MixGroup | "filler", seed: string) {
   const base = { type: item.type, skillId, skillName, prompt: item.prompt };
   if (item.type === "coding" && item.coding) {
     const c = item.coding;
@@ -270,6 +304,7 @@ export function buildSheet(db: Db, assessment: AssessmentRow): Sheet {
     serverNow: now(),
     targetMinutes: V4_TARGET_MINUTES,
     maxMinutes: config.maxMinutes ?? V4_MAX_MINUTES,
+    estSeconds: itemsOf(db, assessment.id).reduce((s, i) => s + (i.estSeconds ?? 0), 0),
     items: itemsOf(db, assessment.id).map(toSheetItem),
   };
 }
@@ -278,12 +313,13 @@ export function buildSheet(db: Db, assessment: AssessmentRow): Sheet {
 // Answering
 // ---------------------------------------------------------------------------
 
-export function saveDraft(db: Db, item: ItemRow, patch: { response?: ItemResponseV4 | null; flagged?: boolean }): void {
+export function saveDraft(db: Db, item: ItemRow, patch: { response?: ItemResponseV4 | null; flagged?: boolean; elapsedMs?: number }): void {
   if (item.lockedAt && patch.response !== undefined) throw conflict("This question has already been submitted.");
   db.update(schema.assessmentItems)
     .set({
       ...(patch.response !== undefined ? { draft: patch.response } : {}),
       ...(patch.flagged !== undefined ? { flagged: patch.flagged } : {}),
+      ...(patch.elapsedMs ? { activeMs: sql`${schema.assessmentItems.activeMs} + ${patch.elapsedMs}` } : {}),
     })
     .where(eq(schema.assessmentItems.id, item.id))
     .run();

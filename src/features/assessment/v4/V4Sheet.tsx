@@ -15,6 +15,7 @@ import { Sheet as Drawer, SheetContent, SheetDescription, SheetTitle } from "@/c
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { ProctorController } from "@/features/proctor/useProctor";
 import { HardWarningModal, SoftWarningToasts, StatusStrip, Watermark } from "@/features/proctor/warnings";
+import { aboutMinutes } from "@/lib/timing";
 import { cn } from "@/lib/utils";
 
 import { assessmentApi } from "../api";
@@ -255,6 +256,8 @@ export function V4Sheet({
     if (!ok) return;
     setSubmittingItem(true);
     try {
+      // The draft and the time spent go first; then the answer is locked.
+      await autosave.flush(item.id);
       autosave.forget(item.id);
       const { item: locked } = await sheetApi.submitItem(assessment.id, item.id, response);
       setItems((previous) => previous.map((it) => (it.id === locked.id ? locked : it)));
@@ -266,6 +269,24 @@ export function V4Sheet({
       setSubmittingItem(false);
     }
   };
+
+  // ---- Time actually spent (v4.1): only the item on screen, only while the tab is visible and focused ----
+  const trackedId =
+    item && item.state !== "submitted" && !proctor.needsFullscreen && !proctor.hardWarning && !finishing ? item.id : null;
+  const track = autosave.track;
+  useEffect(() => {
+    const update = () => track(document.visibilityState === "visible" && document.hasFocus() ? trackedId : null);
+    update();
+    window.addEventListener("focus", update);
+    window.addEventListener("blur", update);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      window.removeEventListener("focus", update);
+      window.removeEventListener("blur", update);
+      document.removeEventListener("visibilitychange", update);
+      track(null);
+    };
+  }, [trackedId, track]);
 
   // ---- Navigator ----
   const entries: NavigatorEntry[] = useMemo(
@@ -302,6 +323,7 @@ export function V4Sheet({
     if (!ok) return;
     setFinishing(true);
     try {
+      autosave.track(null);
       await autosave.flush();
       await assessmentApi.submit(assessment.id);
       endedRef.current = true;
@@ -360,6 +382,9 @@ export function V4Sheet({
             </Button>
             <p className="font-display text-sm font-semibold">
               {items.length ? `Question ${current + 1} of ${items.length}` : "Placement assessment"}
+              {aboutMinutes(sheet?.estSeconds) && (
+                <span className="ml-2 font-sans font-normal text-muted-foreground">{aboutMinutes(sheet?.estSeconds)}</span>
+              )}
             </p>
             <p
               className={cn("ml-auto font-mono text-sm tabular", clock?.short ? "text-warning-strong" : "text-foreground")}
@@ -392,7 +417,7 @@ export function V4Sheet({
           <div className="sticky top-44">
             <Navigator entries={entries} current={current} onSelect={go} counts={counts} />
             <p className="mt-5 text-xs leading-relaxed text-muted-foreground">
-              <Kbd>[</Kbd> <Kbd>]</Kbd> previous and next, <Kbd>F</Kbd> flag. Most people take about {sheet?.targetMinutes ?? 30} minutes.
+              <Kbd>[</Kbd> <Kbd>]</Kbd> previous and next, <Kbd>F</Kbd> flag. Designed to take {aboutMinutes(sheet?.estSeconds)?.toLowerCase() ?? `about ${sheet?.targetMinutes ?? 30} minutes`}.
             </p>
           </div>
         </aside>

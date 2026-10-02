@@ -81,6 +81,8 @@ export const bankItemSchema = z
     coding: codingSpecSchema.nullable().default(null),
     mcq: mcqSpecSchema.nullable().default(null),
     task: taskSchema.nullable().default(null),
+    /** v4.1: context themes for personalised reuse ("international clients", "Laravel"). */
+    tags: z.array(z.string().max(40)).max(12).optional(),
   })
   .superRefine((item, ctx) => {
     if (item.type === "coding" && !item.coding) ctx.addIssue({ code: "custom", message: "coding item needs `coding`" });

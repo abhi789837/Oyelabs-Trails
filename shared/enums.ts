@@ -76,6 +76,12 @@ export const aiPurposeSchema = z.enum([
   "bank_fill",
   /** v4: rubric-grading a written PM/BD task. */
   "grade_written",
+  /** v4.1: reading the admin's setup and description into a 25-slot plan. */
+  "assessment_plan",
+  /** v4.1: writing personalised items for one assessment. */
+  "item_generate",
+  /** v4.1: checking a generated text MCQ has exactly one right answer. */
+  "item_check",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 
@@ -138,6 +144,10 @@ export const jobTypeSchema = z.enum([
   "bank.fill",
   /** v4: checks a Message Batches submission and finishes it when it ends. */
   "ai.batch.poll",
+  /** v4.1: writes a learner's personalised assessment after "Save & assign". */
+  "assessment.personalise",
+  /** v4.1: weekly calibration of the timing formula from real answer times. */
+  "timing.calibrate",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 

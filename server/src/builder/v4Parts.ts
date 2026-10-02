@@ -39,6 +39,12 @@ export interface V4PartsInput {
   ownTrackGaps: readonly ScoredGap[];
   /** The department's AI skill for this learner, used when no AI skill was prioritised. */
   defaultAiSkill: Skill | null;
+  /**
+   * v4.1: the department's "refresh your existing skills" course (PM: "Improving your existing PM
+   * skills"). When the assessment found gaps it opens the path, ahead of every priority.
+   */
+  refreshSkill?: Skill | null;
+  assessmentFoundGaps?: boolean;
 }
 
 function synthetic(skill: string, summary: string, severity = 0.6): ScoredGap {
@@ -93,6 +99,21 @@ export function orderV4Parts(input: V4PartsInput): PlannedItem[] {
     });
   };
 
+  // Part 1 opens with the diagnostic refresh when the assessment showed gaps (v4.1, PM first).
+  if (input.refreshSkill && input.assessmentFoundGaps && !input.spine.targets.some((t) => entryFor(t.target.skill)?.skillId === input.refreshSkill!.id)) {
+    items.push({
+      gap: synthetic(
+        input.refreshSkill.name,
+        "Built from your assessment: short refreshers on the gaps it found in your day-to-day work, before anything new.",
+        0.8,
+      ),
+      partNumber: 1,
+      partType: "track",
+      startLevel: "beginner",
+      targetSkill: null,
+      skillId: input.refreshSkill.id,
+    });
+  }
   // Part 1: the priorities that define the role, then the weak own-track basics.
   push(part1, () => 1, "track");
   const claimed = new Set(items.map((i) => i.gap.skill.toLowerCase()));

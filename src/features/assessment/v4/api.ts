@@ -6,7 +6,7 @@ import { api } from "@/api/client";
 export const sheetApi = {
   sheet: (id: string, signal?: AbortSignal) => api.get<Sheet>(`/api/assessment/${id}/sheet`, signal),
 
-  saveDraft: (id: string, itemId: string, body: { response?: ItemResponseV4 | null; flagged?: boolean }) =>
+  saveDraft: (id: string, itemId: string, body: { response?: ItemResponseV4 | null; flagged?: boolean; elapsedMs?: number }) =>
     api.put<{ ok: true }>(`/api/assessment/${id}/items/${itemId}/draft`, body),
 
   run: (id: string, itemId: string, code: string) => api.post<RunResponse>(`/api/assessment/${id}/items/${itemId}/run`, { code }),

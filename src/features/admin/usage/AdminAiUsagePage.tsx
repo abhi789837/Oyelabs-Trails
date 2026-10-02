@@ -16,6 +16,7 @@ import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { InfoTip } from "../catalog/InfoTip";
 import { budgetTone, fillDays, formatUsd, taskLabel } from "./helpers";
+import { TimingChart } from "./TimingChart";
 
 const PERIODS = [
   { value: "7", label: "7 days" },
@@ -94,6 +95,8 @@ export default function AdminAiUsagePage() {
           {me.role === "superadmin" && <BudgetForm budget={report.budget} onSaved={() => void load(period)} />}
 
           <DailyChart days={report.days} count={Number(period)} />
+
+          <TimingChart days={Number(period)} />
 
           <Section title="By task" id="usage-task">
             {report.byTask.length === 0 ? (

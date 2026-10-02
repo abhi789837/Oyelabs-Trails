@@ -78,7 +78,8 @@ export async function registerAdminBankRoutes(app: FastifyInstance): Promise<voi
     const problems = await validateBankItem(runnerDeps(app), item);
     const status: "draft" | "active" | "retired" = problems.length ? "draft" : existing?.status === "retired" ? "retired" : "active";
     const at = now();
-    const values = { ...toColumns(item), status, validatedAt: problems.length ? null : at, updatedAt: at, retiredReason: problems.length ? `invalid: ${problems.join("; ").slice(0, 300)}` : (existing?.retiredReason ?? null) };
+    // An edit is the "shortening" a slow-flagged item was waiting for; it goes back into rotation.
+    const values = { ...toColumns(item), flaggedSlow: false, status, validatedAt: problems.length ? null : at, updatedAt: at, retiredReason: problems.length ? `invalid: ${problems.join("; ").slice(0, 300)}` : (existing?.retiredReason ?? null) };
     if (existing) app.db.update(schema.questionBank).set(values).where(eq(schema.questionBank.id, id)).run();
     else app.db.insert(schema.questionBank).values({ ...values, source: "admin", createdAt: at }).run();
     writeAudit(app.db, { actorId: actor.id, action: existing ? "bank.item_updated" : "bank.item_created", targetType: "bank_item", targetId: id, details: { status, problems: problems.length } });

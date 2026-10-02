@@ -91,7 +91,7 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
 
 export const api = {
   get: <T>(path: string, signal?: AbortSignal) => apiFetch<T>(path, { method: "GET", signal }),
-  post: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "POST", body: body ?? {} }),
+  post: <T>(path: string, body?: unknown, signal?: AbortSignal) => apiFetch<T>(path, { method: "POST", body: body ?? {}, signal }),
   put: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "PUT", body: body ?? {} }),
   /** For a partial update — moving one weekly-plan item rather than replacing the week. */
   patch: <T>(path: string, body?: unknown) => apiFetch<T>(path, { method: "PATCH", body: body ?? {} }),

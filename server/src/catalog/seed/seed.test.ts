@@ -101,6 +101,8 @@ describe("catalog seed", () => {
         for (const m of s.contentModules) expect(REGISTRY_MODULE_IDS.has(m), `${s.id} -> ${m}`).toBe(true);
       } else {
         // AI-for-your-role skills point at the department's dedicated AI camp.
+        // v4.1 agency PM skills have their own camps (`pma-*`); the rest follow the level ladder.
+        if (s.contentModules.some((m) => m.startsWith("pma-")) || s.id === "pm-foundations-theory") continue;
         expect(s.contentModules, s.id).toEqual([s.isAiSkill ? `${s.departmentId}-ai` : pmBd(s.departmentId, s.levelMin)]);
       }
     }

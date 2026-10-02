@@ -57,5 +57,11 @@ export function hasTaskAnswer(value: TaskResponse | null): boolean {
       return Object.keys(value.choices).length > 0;
     case "spot":
       return value.marked.length > 0 || value.explanation.trim().length > 0;
+    case "excel":
+      return Object.values(value.cells).some((v) => v.trim() !== "");
+    case "allocate":
+      return Object.values(value.hours).some((v) => v > 0);
+    case "sim":
+      return value.flagged.length > 0 || Object.keys(value.answers).length > 0;
   }
 }

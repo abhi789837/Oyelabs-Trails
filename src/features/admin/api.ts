@@ -14,6 +14,7 @@ import type { LearnerProfile } from "@shared/profile";
 import type { UserStatus } from "@shared/enums";
 
 import { api } from "@/api/client";
+import type { IssuedAssessment } from "./setup/api";
 
 export const adminApi = {
   listUsers: (signal?: AbortSignal) => api.get<ListUsersResponse>("/api/admin/users", signal),
@@ -67,7 +68,7 @@ export const adminApi = {
    * overrides what the blueprint would have chosen.
    */
   issueAssessment: (userId: string, body: { label?: string; timeLimitMinutes?: number } = {}) =>
-    api.post<{ assessmentId: string }>(`/api/admin/users/${userId}/assessments`, body),
+    api.post<IssuedAssessment>(`/api/admin/users/${userId}/assessments`, body),
 
   /** Cancels one that has not been started. The server refuses anything further along. */
   deleteAssessment: (assessmentId: string) => api.del<{ ok: true }>(`/api/admin/assessments/${assessmentId}`),

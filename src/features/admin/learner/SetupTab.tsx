@@ -1,21 +1,22 @@
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { LoaderCircle } from "lucide-react";
 
 import type { LearnerProfile } from "@shared/profile";
 import type { LearnerSetup, SaveSetupRequest } from "@shared/setup";
 
 import { ApiRequestError } from "@/api/client";
-import { Field, FormAlert, TextField } from "@/components/form/Field";
+import { FormAlert, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/toast";
-import { cn } from "@/lib/utils";
 import { adminApi } from "../api";
 import { setupApi } from "../setup/api";
+import { describeIssued } from "../setup/issued";
 import { SetupForm } from "../setup/SetupForm";
 
 /**
- * The Setup tab: the one place a learner's department, track, priorities and settings are edited,
- * plus the free-text notes and role title the assessment blueprint reads.
+ * The Setup tab: the one place a learner's department, track, priorities and settings are edited.
+ * The description in the form is the profile's notes (v4.1), so the notes are not edited twice here;
+ * only the role title, a profile field, is saved on its own below.
  */
 export function SetupTab({
   userId,
@@ -39,6 +40,8 @@ export function SetupTab({
   const [setup, setSetup] = useState<LearnerSetup | null>(null);
   const [version, setVersion] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const profileRef = useRef(profile);
+  profileRef.current = profile;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -59,14 +62,13 @@ export function SetupTab({
       // Remount the form on the saved record: the server may have dropped an archived stack or skill.
       setVersion((v) => v + 1);
       onSaved();
-      if (result.issued) {
-        notify.success("Setup saved and the assessment is being built. It waits for your approval.");
-        onAssigned();
-      } else {
-        notify.success("Setup saved.");
-      }
+      onProfileSaved({ ...profileRef.current, adminNotes: result.setup.description });
+      const { message, notice } = describeIssued(result.issued);
+      notify.success(message);
+      if (notice) notify.info(notice);
+      if (result.issued) onAssigned();
     },
-    [userId, onSaved, onAssigned],
+    [userId, onSaved, onAssigned, onProfileSaved],
   );
 
   if (error) return <FormAlert>{error}</FormAlert>;
@@ -84,6 +86,7 @@ export function SetupTab({
       <SetupForm
         key={version}
         initial={setup}
+        userId={userId}
         onSave={save}
         primaryLabel="Save & assign assessment"
         secondaryLabel="Save"
@@ -91,26 +94,28 @@ export function SetupTab({
         onAddHandled={onAddHandled}
         showDirty
       />
-      <NotesSection userId={userId} profile={profile} onSaved={onProfileSaved} />
+      <RoleTitleSection userId={userId} profile={profile} description={setup.description} onSaved={onProfileSaved} />
     </div>
   );
 }
 
-/** Role title and notes: free text, saved on their own because they are a different record. */
-function NotesSection({
+/** Role title: a profile field, saved on its own. The notes travel with the setup as its description. */
+function RoleTitleSection({
   userId,
   profile,
+  description,
   onSaved,
 }: {
   userId: string;
   profile: LearnerProfile;
+  /** The saved description, so this save never puts back older notes. */
+  description: string;
   onSaved: (profile: LearnerProfile) => void;
 }) {
   const [roleTitle, setRoleTitle] = useState(profile.roleTitle ?? "");
-  const [notes, setNotes] = useState(profile.adminNotes);
   const [saving, setSaving] = useState(false);
   const [fields, setFields] = useState<Record<string, string>>({});
-  const dirty = roleTitle !== (profile.roleTitle ?? "") || notes !== profile.adminNotes;
+  const dirty = roleTitle.trim() !== (profile.roleTitle ?? "");
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -121,16 +126,16 @@ function NotesSection({
       const result = await adminApi.updateProfile(userId, {
         ...profile,
         roleTitle: roleTitle.trim() || null,
-        adminNotes: notes,
+        adminNotes: description,
       });
       onSaved(result.profile);
-      notify.success("Notes saved.");
+      notify.success("Role title saved.");
     } catch (err) {
       if (err instanceof ApiRequestError) {
         setFields(err.fields ?? {});
         notify.error(err.message);
       } else {
-        notify.error("Could not save the notes.");
+        notify.error("Could not save the role title.");
       }
     } finally {
       setSaving(false);
@@ -138,37 +143,17 @@ function NotesSection({
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate aria-labelledby="notes-heading" className="max-w-3xl space-y-4 border-t pt-8">
-      <h2 id="notes-heading" className="font-display text-base font-semibold">
-        Notes
-      </h2>
+    <form onSubmit={handleSubmit} noValidate aria-label="Role title" className="flex max-w-3xl flex-wrap items-end gap-3 border-t pt-8">
       <TextField
         label="Role title"
         value={roleTitle}
         error={fields["profile.roleTitle"]}
         placeholder="Frontend Engineer"
-        containerClassName="max-w-sm"
+        containerClassName="w-full max-w-sm"
         onChange={(e) => setRoleTitle(e.target.value)}
       />
-      <Field label="What you know about them" hint="The assessment reads this. Nobody else sees it." error={fields["profile.adminNotes"]}>
-        {({ id, describedBy, invalid }) => (
-          <textarea
-            id={id}
-            aria-describedby={describedBy}
-            aria-invalid={invalid || undefined}
-            rows={6}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className={cn(
-              "w-full rounded-md border border-input bg-surface px-3 py-2 text-sm leading-relaxed placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
-              invalid && "border-destructive",
-            )}
-            placeholder="Two years on our React dashboards. Comfortable with hooks; async error handling is shaky."
-          />
-        )}
-      </Field>
       <Button type="submit" variant="outline" loading={saving} disabled={!dirty}>
-        Save notes
+        Save role title
       </Button>
     </form>
   );

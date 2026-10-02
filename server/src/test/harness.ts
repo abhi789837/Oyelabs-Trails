@@ -18,6 +18,7 @@ import { evaluateHandler } from "../assessment/evaluateJob";
 import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
 import { JobWorker } from "../jobs/worker";
 import { bankFillHandler } from "../bank/fillJob";
+import { personaliseHandler } from "../assessment/personalise/job";
 import { buildPathHandler } from "../jobs/handlers/buildPath";
 import { publishGenerationLine } from "../routes/admin/live";
 import { WorkerSandbox } from "../sandbox/workerSandbox";
@@ -60,7 +61,7 @@ function databaseTemplate(env: Env): Buffer {
  * Each call gets its own throwaway data directory, because `loadEnv` writes a dev master key and
  * session secret there; sharing one would let tests leak state into each other.
  */
-export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}): Promise<TestContext> {
+export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}, options: { noAi?: boolean; provider?: MockProvider } = {}): Promise<TestContext> {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "oyelearn-test-"));
   const env = loadEnv({
     NODE_ENV: "test",
@@ -79,7 +80,8 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
     topicIds: content.orderedTopicIds,
     moduleIds: content.manifest.flatMap((t) => t.modules.filter((m) => m.available).map((m) => m.id)),
   });
-  const ai = new AiService(db, env, { mock });
+  // `noAi`: no mock and no stored credential, so `ai.isConfigured()` is false — the no-key deployment.
+  const ai = new AiService(db, env, options.noAi ? {} : { mock: options.provider ?? mock });
   const sandbox = new WorkerSandbox();
 
   // The app is built before the worker so the blueprint job can publish to the admin live feed,
@@ -101,6 +103,7 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
       }),
       "assessment.evaluate": evaluateHandler({ db, ai, content, sandbox, piston: app.piston }),
       "bank.fill": bankFillHandler({ db, ai, sandbox, piston: app.piston }),
+      "assessment.personalise": personaliseHandler({ db, ai, sandbox, piston: app.piston }),
       "path.build": buildPathHandler({ db, env, ai, content }),
     },
   });

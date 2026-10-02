@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type React
 import { LoaderCircle, X } from "lucide-react";
 
 import type { Catalog, Skill } from "@shared/catalog";
+import { DESCRIPTION_MAX, PERSONALISATION_LABELS, PERSONALISATION_LEVELS, type Personalisation } from "@shared/personalise";
 import {
   EXPERIENCE_BANDS,
   EXPERIENCE_LABELS,
@@ -40,11 +41,15 @@ import {
   sameSetup,
   setSlider,
   toSaveRequest,
+  toUnderstandRequest,
+  understandingKey,
+  understandingReady,
   type SetupState,
 } from "./helpers";
 import { PriorityRows } from "./PriorityRows";
 import { SkillPicker } from "./SkillPicker";
 import { StackPicker } from "./StackPicker";
+import { UnderstandingPanel, useUnderstanding } from "./UnderstandingPanel";
 
 export interface SetupFormContext {
   /** Server field errors, keyed the way the server names them. */
@@ -53,6 +58,8 @@ export interface SetupFormContext {
 }
 
 export interface SetupFormProps {
+  /** The learner, when there is one: lets the server log the understanding call against them. */
+  userId?: string;
   /** The saved setup, or null for a new learner. Remount (change `key`) to reset after a save. */
   initial: LearnerSetup | null;
   /** Throw to keep the form as it is and show the message; an `ApiRequestError`'s fields land inline. */
@@ -111,6 +118,7 @@ function SetupFormInner({
   addSkill,
   onAddHandled,
   showDirty,
+  userId,
 }: SetupFormProps & { catalog: Catalog }) {
   const formDialog = useFormDialog();
   const uid = useId();
@@ -136,6 +144,15 @@ function SetupFormInner({
   const trackRef = track ? { id: track.id, name: track.name } : null;
 
   const update = (patch: Partial<SetupState>) => setState((s) => ({ ...s, ...patch }));
+
+  const ready = understandingReady(state);
+  const understandKey = understandingKey(state);
+  /* Rebuilt only when the content (the key) changes, so the debounce is not reset by re-renders. */
+  const understandRequest = useMemo(
+    () => ({ ...(JSON.parse(understandKey) as ReturnType<typeof toUnderstandRequest>), ...(userId ? { userId } : {}) }),
+    [understandKey, userId],
+  );
+  const understanding = useUnderstanding(understandRequest, understandKey, ready);
 
   /* `?add=` from the Path tab's Promote: select it once, at Medium, and say so. Handled even when
      nothing matches, so a stale link does not keep retrying. */
@@ -201,7 +218,12 @@ function SetupFormInner({
     stack: `${uid}-stack`,
     experience: `${uid}-experience`,
     level: `${uid}-level`,
+    description: `${uid}-description`,
+    descriptionCount: `${uid}-description-count`,
+    personalisation: `${uid}-personalisation`,
   };
+  const descriptionLength = state.description.length;
+  const descriptionError = fieldError(fields, "description");
 
   return (
     <form
@@ -247,6 +269,49 @@ function SetupFormInner({
             </div>
           </div>
         </Section>
+
+        <div>
+          <div className="flex items-center gap-1.5">
+            <label htmlFor={ids.description} className="font-display text-base font-semibold">
+              About this person and what you want
+            </label>
+            <InfoTip label="About the description">
+              The AI reads this to write questions in their world: their clients, their tools, what you want them to own.
+              Facts beat adjectives. It is saved as their profile notes; the learner never sees it.
+            </InfoTip>
+            <span
+              id={ids.descriptionCount}
+              className={cn(
+                "ml-auto font-mono text-[11px] tabular",
+                descriptionLength > DESCRIPTION_MAX ? "text-trailmark-strong" : "text-muted-foreground",
+              )}
+            >
+              {descriptionLength}/{DESCRIPTION_MAX}
+            </span>
+          </div>
+          <p className="mt-0.5 text-sm text-muted-foreground">Where they are now, what they handle, what you want next.</p>
+          <textarea
+            id={ids.description}
+            aria-describedby={ids.descriptionCount}
+            aria-invalid={descriptionError ? true : undefined}
+            rows={4}
+            maxLength={2000}
+            value={state.description}
+            disabled={busy}
+            onChange={(e) => update({ description: e.target.value })}
+            placeholder="Joined 2 weeks ago from a small agency. Handles 3 client projects. Weak on client calls and Excel trackers. Wants to own sprint planning by next month."
+            className={cn(
+              "mt-3 w-full rounded-md border border-input bg-surface px-3 py-2 text-sm leading-relaxed placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong disabled:opacity-60",
+              descriptionError && "border-destructive",
+            )}
+          />
+          {descriptionLength > DESCRIPTION_MAX && (
+            <p className="mt-1 text-xs text-trailmark-strong">Over {DESCRIPTION_MAX} characters: shorter reads better.</p>
+          )}
+          <FieldMessage error={descriptionError} />
+        </div>
+
+        <UnderstandingPanel state={understanding} ready={ready} className="lg:hidden" />
 
         <Section
           title={isCoding ? "Stack" : "Tools"}
@@ -444,6 +509,32 @@ function SetupFormInner({
                 />
               )}
             </Field>
+            <div className="sm:col-span-2">
+              <div className="mb-1.5 flex items-center gap-1">
+                <label htmlFor={ids.personalisation} className="text-sm font-medium">
+                  Personalisation
+                </label>
+                <InfoTip label="About personalisation">
+                  How much of the assessment the AI writes fresh for this person. The rest is reused from the question
+                  bank: items already checked, cheaper and quicker. High reuses up to 20%, Balanced up to 40%, Low up to
+                  80%. Without an AI key everything comes from the bank.
+                </InfoTip>
+              </div>
+              <select
+                id={ids.personalisation}
+                value={state.advanced.personalisation}
+                disabled={busy}
+                onChange={(e) => update({ advanced: { ...state.advanced, personalisation: e.target.value as Personalisation } })}
+                className="h-9 w-full max-w-sm rounded-md border border-input bg-surface px-2.5 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
+              >
+                {PERSONALISATION_LEVELS.map((level) => (
+                  <option key={level} value={level}>
+                    {PERSONALISATION_LABELS[level]}
+                  </option>
+                ))}
+              </select>
+              <FieldMessage error={fieldError(fields, "advanced.personalisation")} />
+            </div>
             <Field label="Most AI-generated courses" hint="Per path build. 0 turns generation off." error={fieldError(fields, "advanced.courseCap")}>
               {({ id, describedBy }) => (
                 <NumberInput
@@ -464,7 +555,9 @@ function SetupFormInner({
         {trailing?.(context)}
       </div>
 
-      <SummaryCard
+      {/* `contents` on a phone keeps the summary a sticky bottom bar; on a desktop the column sticks. */}
+      <div className="contents lg:sticky lg:top-6 lg:block lg:max-h-[calc(100dvh-3rem)] lg:space-y-4 lg:overflow-y-auto">
+        <SummaryCard
         total={mix.total}
         handsOn={mix.handsOn}
         mcq={mix.mcq}
@@ -480,7 +573,9 @@ function SetupFormInner({
         primaryLabel={primaryLabel}
         secondaryLabel={secondaryLabel}
         onSubmit={(assign) => void submit(assign)}
-      />
+        />
+        <UnderstandingPanel state={understanding} ready={ready} className="hidden lg:block" />
+      </div>
     </form>
   );
 }
@@ -592,7 +687,7 @@ function SummaryCard({
       aria-label="Summary"
       className={cn(
         "sticky bottom-0 z-20 -mx-4 mt-10 border-t bg-background/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6",
-        "lg:bottom-auto lg:top-6 lg:mx-0 lg:mt-0 lg:rounded-lg lg:border lg:bg-surface lg:p-5 lg:backdrop-blur-none",
+        "lg:static lg:mx-0 lg:mt-0 lg:rounded-lg lg:border lg:bg-surface lg:p-5 lg:backdrop-blur-none",
       )}
     >
       {/* Phone: one line, so the bar stays a bar. */}
