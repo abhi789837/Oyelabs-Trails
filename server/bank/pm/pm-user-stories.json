@@ -1,0 +1,361 @@
+[
+  {
+    "id": "pm-user-stories-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Review these backlog items for a white-label pharmacy app. Mark the ones that are not good user stories.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "As a patient, I want to upload a photo of my prescription so that I don't have to visit the pharmacy.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "As a developer, I want to set up the Postgres database.",
+          "issue": "A technical task, not user value; write it as a task or tie it to the story it enables."
+        },
+        {
+          "id": "p3",
+          "text": "As a pharmacist, I want to see new orders sorted by pickup time so that I can prepare urgent ones first.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Improve the app.",
+          "issue": "No user, no need, no outcome: not a story and not estimable."
+        },
+        {
+          "id": "p5",
+          "text": "As a patient, I want a reminder when my repeat prescription is due so that I don't run out of medicine.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "As a user, I want the whole checkout, payments, invoices, refunds and loyalty system.",
+          "issue": "Far too big to fit in a Sprint; it is an epic that needs splitting."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-user-stories-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put the parts of the standard user story template in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "I want <some goal>"
+        },
+        {
+          "id": "r1",
+          "label": "As a <type of user>"
+        },
+        {
+          "id": "r3",
+          "label": "so that <some reason / benefit>"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "explanation": "Who, what, why: the 'so that' keeps the value visible."
+    }
+  },
+  {
+    "id": "pm-user-stories-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order these from biggest to smallest piece of backlog work.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Task: add the refill API endpoint"
+        },
+        {
+          "id": "r2",
+          "label": "Epic: online prescription refills"
+        },
+        {
+          "id": "r1",
+          "label": "Theme: patient self-service"
+        },
+        {
+          "id": "r3",
+          "label": "User story: request a refill for a saved prescription"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Themes group epics, epics break into stories that fit in a Sprint, and stories break into tasks."
+    }
+  },
+  {
+    "id": "pm-user-stories-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The epic 'As a shopper, I want to check out' is estimated at 40 points, more than one Sprint.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The epic 'As a shopper, I want to check out' is estimated at 40 points, more than one Sprint.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which is the best way to split it?",
+          "options": [
+            "By workflow steps that each deliver value: pay by card, apply a promo code, choose delivery slot",
+            "By technical layer: database, API, UI",
+            "By developer: one story each",
+            "Don't split it; extend the Sprint"
+          ],
+          "correctIndex": 0,
+          "explanation": "Vertical slices that each deliver something usable are the preferred split; layer splits deliver nothing on their own."
+        },
+        {
+          "id": "s2",
+          "question": "Which INVEST quality does a split story most need to keep?",
+          "options": [
+            "Valuable: each slice still delivers something to a user",
+            "Expensive",
+            "Interdependent",
+            "Vague"
+          ],
+          "correctIndex": 0,
+          "explanation": "INVEST: Independent, Negotiable, Valuable, Estimable, Small, Testable."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-user-stories-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write a user story with acceptance criteria.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write one user story for the feature below, in the standard format, with 3–4 acceptance criteria (Given/When/Then or a checklist).",
+      "context": "Client: a gym chain's white-label app. Feature request from the client: 'Members should be able to cancel a class booking, but we lose money on late cancellations, so after a cut-off they should be charged.' The cut-off is 2 hours before class; the late fee is £5.",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "format",
+          "label": "Story format",
+          "description": "Uses As a / I want / so that with a real user (member) and a clear benefit.",
+          "weight": 1
+        },
+        {
+          "id": "rules",
+          "label": "Business rules covered",
+          "description": "Criteria cover cancelling before the 2-hour cut-off (free) and after it (£5 fee).",
+          "weight": 2
+        },
+        {
+          "id": "testable",
+          "label": "Testable criteria",
+          "description": "Each criterion is specific and checkable (times, amounts, what the member sees).",
+          "weight": 1
+        },
+        {
+          "id": "scope",
+          "label": "Right size",
+          "description": "One story; does not drift into unrelated features.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "As a gym member, I want to cancel a class booking in the app so that my place goes to someone else when I can't attend.\n\nAcceptance criteria:\n1. Given a booking more than 2 hours before class starts, when I cancel, then it is cancelled with no charge and I see a confirmation.\n2. Given a booking less than 2 hours before class, when I tap cancel, then I see a warning that a £5 late fee applies and must confirm.\n3. When I confirm a late cancellation, then £5 is charged to my saved card and shown in my payment history.\n4. After any cancellation, the freed place is available to other members."
+    }
+  },
+  {
+    "id": "pm-user-stories-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "INVEST check: a PO scored six stories as pass/fail on 'Small' (fits in one Sprint, up to 8 points for this team). How many stories need splitting, and how many points do the stories that fit add up to?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Story",
+          "Points"
+        ],
+        "rows": [
+          [
+            "Reset password",
+            "3"
+          ],
+          [
+            "Order history",
+            "5"
+          ],
+          [
+            "Live chat with pharmacist",
+            "13"
+          ],
+          [
+            "Push reminders",
+            "8"
+          ],
+          [
+            "Full loyalty programme",
+            "21"
+          ],
+          [
+            "Change language",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "split",
+          "label": "Stories that need splitting",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        },
+        {
+          "id": "fit",
+          "label": "Points of stories that fit",
+          "unit": "points",
+          "answer": 18,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Stories over 8 points (13 and 21) need splitting: 2 stories. The rest add up to 3 + 5 + 8 + 2 = 18 points."
+    }
+  },
+  {
+    "id": "pm-user-stories-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does the 'so that' part of a user story capture?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The benefit or reason, so the team understands the value",
+        "The technical solution",
+        "The deadline",
+        "The developer assigned"
+      ],
+      "correctIndex": 0,
+      "explanation": "The reason helps the team and PO make good trade-offs and find simpler solutions.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-user-stories-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does the 'T' in INVEST stand for?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Testable",
+        "Technical",
+        "Timeboxed",
+        "Tracked"
+      ],
+      "correctIndex": 0,
+      "explanation": "INVEST: Independent, Negotiable, Valuable, Estimable, Small, Testable.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-user-stories-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-user-stories",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why are user stories called 'a placeholder for a conversation'?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The card is short on purpose; details are worked out with the team and client and captured in acceptance criteria",
+        "Because they are never written down",
+        "Because only the client can read them",
+        "Because they replace all meetings"
+      ],
+      "correctIndex": 0,
+      "explanation": "Card, Conversation, Confirmation: the story prompts discussion, and acceptance criteria confirm the agreement.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

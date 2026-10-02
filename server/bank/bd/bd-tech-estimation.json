@@ -1,0 +1,395 @@
+[
+  {
+    "id": "bd-tech-estimation-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Engineering gave hours for a small web app. The blended rate is USD 40 per hour. Work out the ballpark price.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Engineering gave hours for a small web app. The blended rate is USD 40 per hour. Work out the ballpark price.",
+      "table": {
+        "columns": [
+          "Task",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Design",
+            "40"
+          ],
+          [
+            "Frontend",
+            "120"
+          ],
+          [
+            "Backend and API",
+            "100"
+          ],
+          [
+            "QA and testing",
+            "40"
+          ],
+          [
+            "Project management",
+            "30"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Total hours",
+          "unit": "h",
+          "answer": 330,
+          "tolerance": 0
+        },
+        {
+          "id": "price",
+          "label": "Ballpark price",
+          "unit": "USD",
+          "answer": 13200,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Total = 40+120+100+40+30 = 330 h. 330 x 40 = USD 13,200."
+    }
+  },
+  {
+    "id": "bd-tech-estimation-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the steps to give a client a rough estimate, first step first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps to give a client a rough estimate, first step first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Ask engineering for a range of hours per feature"
+        },
+        {
+          "id": "r4",
+          "label": "Add QA, project management and a contingency buffer"
+        },
+        {
+          "id": "r5",
+          "label": "Share the estimate as a range with assumptions and exclusions"
+        },
+        {
+          "id": "r1",
+          "label": "Clarify the main features and users with the client"
+        },
+        {
+          "id": "r2",
+          "label": "Write a short feature list with assumptions"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Understand scope, write it down, get engineering input, add the non-coding work, then present it honestly as a range."
+    }
+  },
+  {
+    "id": "bd-tech-estimation-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the problems in this estimate message a BD rep sent after a 15-minute call.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problems in this estimate message a BD rep sent after a 15-minute call.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Thanks for the call, Ahmed.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Your marketplace app will cost exactly USD 18,500 and take exactly 9 weeks.",
+          "issue": "A precise figure after a short call implies certainty that does not exist; give a range."
+        },
+        {
+          "id": "p3",
+          "text": "This is based on the features we discussed: listings, search, booking and payments.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "I did not check with our engineers, but it should be fine.",
+          "issue": "Estimates must come from or be reviewed by engineering."
+        },
+        {
+          "id": "p5",
+          "text": "We will confirm a detailed quote after a short scoping session.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-estimation-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Engineering gave a low and high estimate per feature. Rates: USD 35/h. Add 15% contingency to both ends. Work out the price range.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Engineering gave a low and high estimate per feature. Rates: USD 35/h. Add 15% contingency to both ends. Work out the price range.",
+      "table": {
+        "columns": [
+          "Feature",
+          "Low hours",
+          "High hours"
+        ],
+        "rows": [
+          [
+            "Auth and profiles",
+            "40",
+            "60"
+          ],
+          [
+            "Product catalogue",
+            "80",
+            "110"
+          ],
+          [
+            "Cart and checkout",
+            "100",
+            "150"
+          ],
+          [
+            "Admin panel",
+            "60",
+            "80"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "low",
+          "label": "Low price with contingency",
+          "unit": "USD",
+          "answer": 11270,
+          "tolerance": 1
+        },
+        {
+          "id": "high",
+          "label": "High price with contingency",
+          "unit": "USD",
+          "answer": 16100,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Low hours = 280, high = 400. Low = 280 x 35 x 1.15 = USD 11,270. High = 400 x 35 x 1.15 = USD 16,100."
+    }
+  },
+  {
+    "id": "bd-tech-estimation-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A project needs a team for 8 weeks at 40 hours per week each. Work out the total hours and cost.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A project needs a team for 8 weeks at 40 hours per week each. Work out the total hours and cost.",
+      "table": {
+        "columns": [
+          "Role",
+          "People",
+          "Rate (USD/h)"
+        ],
+        "rows": [
+          [
+            "Developer",
+            "2",
+            "35"
+          ],
+          [
+            "QA engineer",
+            "1",
+            "25"
+          ],
+          [
+            "Project manager",
+            "0.5 (half time)",
+            "40"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Total team hours",
+          "unit": "h",
+          "answer": 1120,
+          "tolerance": 0
+        },
+        {
+          "id": "cost",
+          "label": "Total cost",
+          "unit": "USD",
+          "answer": 36800,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Weekly hours: devs 80, QA 40, PM 20 = 140/week; 140 x 8 = 1,120 h. Weekly cost: 80x35=2,800 + 40x25=1,000 + 20x40=800 = USD 4,600 per week; x 8 = USD 36,800."
+    }
+  },
+  {
+    "id": "bd-tech-estimation-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client says: 'Another agency quoted half your price for the same app.'",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client says: 'Another agency quoted half your price for the same app.'",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should you do first?",
+          "options": [
+            "End the conversation",
+            "Ask to compare what each quote includes: features, QA, design, project management, support",
+            "Immediately match the price",
+            "Say the other agency is lying"
+          ],
+          "correctIndex": 1,
+          "explanation": "Quotes often differ because scope differs. Comparing inclusions shows whether it really is the same app."
+        },
+        {
+          "id": "s2",
+          "question": "You find the other quote excludes QA, design and post-launch support. What next?",
+          "options": [
+            "Drop QA from yours too, to match",
+            "Tell them they will regret it",
+            "Double your price",
+            "Explain the gaps calmly and offer options, such as a smaller phase 1 that fits their budget with QA included"
+          ],
+          "correctIndex": 3,
+          "explanation": "Showing the real comparison and offering a smaller scope protects quality while respecting their budget."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-estimation-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why should early estimates be given as a range rather than a single number?",
+    "mcq": {
+      "options": [
+        "Because scope and unknowns are not fully clear yet, and a range sets honest expectations",
+        "Because clients prefer confusing numbers",
+        "Because ranges are legally required",
+        "Because single numbers are always too high"
+      ],
+      "correctIndex": 0,
+      "explanation": "A range reflects real uncertainty; a precise number too early becomes a promise you may not keep.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-estimation-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which work is most often forgotten in a beginner's estimate?",
+    "mcq": {
+      "options": [
+        "QA, project management, deployment and bug fixing",
+        "The main features",
+        "The client's name",
+        "The colour scheme"
+      ],
+      "correctIndex": 0,
+      "explanation": "Non-coding work commonly adds a sizeable share of effort; leaving it out leads to underquoting.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-estimation-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-estimation",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client asks to add a 'small' feature mid-estimate: login with three social networks plus email. What is the right move?",
+    "mcq": {
+      "options": [
+        "Add it for free since it is small",
+        "Ignore it until after signing",
+        "Guess a number yourself",
+        "Get engineering to size it and update the estimate, noting the change"
+      ],
+      "correctIndex": 3,
+      "explanation": "Every scope change needs sizing by engineering; 'small' features often hide real work.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

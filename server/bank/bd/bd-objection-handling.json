@@ -1,0 +1,347 @@
+[
+  {
+    "id": "bd-objection-handling-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Handle a price objection on a call, one decision at a time.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a follow-up call for a $60,000 customer-portal build, the operations director says: \"Honestly, your price is too high.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first move?",
+          "options": [
+            "Offer 10% off straight away to keep the deal warm",
+            "Explain your hourly rates and why your team is worth them",
+            "Acknowledge it and ask what they are comparing the price to",
+            "Say price is non-negotiable and move on"
+          ],
+          "correctIndex": 2,
+          "explanation": "You cannot answer an objection you have not understood. \"Too high compared to what?\" turns a feeling into something specific."
+        },
+        {
+          "id": "s2",
+          "question": "They say another agency quoted $40,000. What next?",
+          "options": [
+            "Say the other agency will probably deliver poor quality",
+            "Match the $40,000 to stay in the race",
+            "Ask them to send you the other quote so you can undercut it",
+            "Ask to walk through what each quote includes, line by line"
+          ],
+          "correctIndex": 3,
+          "explanation": "Quotes rarely cover the same scope. Comparing inclusions is fair to both sides and never runs down the competitor."
+        },
+        {
+          "id": "s3",
+          "question": "It turns out the cheaper quote excludes QA, app-store submission and post-launch support. What do you do?",
+          "options": [
+            "Show the like-for-like total and offer a phased option if the budget is truly fixed",
+            "Drop your price to $40,000 and quietly remove QA",
+            "Tell them they are being naive about software",
+            "Insist they take your full scope or nothing"
+          ],
+          "correctIndex": 0,
+          "explanation": "Make the comparison honest, then give them a way to fit a budget by changing scope, not by discounting the same work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-objection-handling-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this reply to a price objection.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A junior rep drafted this reply to: \"Your quote is higher than we expected.\" Mark the sentences that would hurt the deal or the agency.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Thanks for being upfront about the budget, that helps us both.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We can take 20% off if you sign by Friday.",
+          "issue": "Discounting before understanding the objection teaches the client that the first price was padded."
+        },
+        {
+          "id": "p3",
+          "text": "Most agencies at that price cut corners and you'll regret using them.",
+          "issue": "Running down competitors sounds defensive and is usually unverifiable."
+        },
+        {
+          "id": "p4",
+          "text": "Could you share what you were expecting, and what that figure was based on?",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Our process also guarantees zero bugs at launch.",
+          "issue": "A claim no one can honestly make; it creates a promise delivery cannot keep."
+        },
+        {
+          "id": "p6",
+          "text": "If the budget is fixed, we can look at a smaller first phase that still hits your launch goal.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Happy to walk through the estimate on a 20-minute call this week.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-objection-handling-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Put the steps of handling an objection in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for handling an objection on a call, first step at the top.",
+      "items": [
+        {
+          "id": "i5",
+          "label": "Check it is resolved and agree the next step"
+        },
+        {
+          "id": "i1",
+          "label": "Listen to the whole objection without interrupting"
+        },
+        {
+          "id": "i2",
+          "label": "Acknowledge the concern in your own words"
+        },
+        {
+          "id": "i3",
+          "label": "Ask a question to find the real issue behind it"
+        },
+        {
+          "id": "i4",
+          "label": "Respond with evidence aimed at that specific issue"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Listen, acknowledge, explore, respond, confirm. Responding before you have explored answers the wrong objection; skipping the check leaves it unresolved."
+    }
+  },
+  {
+    "id": "bd-objection-handling-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Handle a stall without pushing.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "After a good demo, the founder of a logistics startup says: \"Looks great. Let us think about it and we'll get back to you.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you say?",
+          "options": [
+            "\"Of course. To help you think it through, what would you need to see or know to decide?\"",
+            "\"No problem, I'll check in next week.\"",
+            "\"If you sign today I can hold this price.\"",
+            "\"What is there to think about? It solves your problem.\""
+          ],
+          "correctIndex": 0,
+          "explanation": "A stall usually hides a specific concern. Asking what they need to decide surfaces it without pressure."
+        },
+        {
+          "id": "s2",
+          "question": "They admit the CTO has doubts about maintaining the code afterwards. Next?",
+          "options": [
+            "Send your company brochure",
+            "Offer a short technical call between the CTO and your lead engineer",
+            "Tell them the CTO's doubts are common and not a problem",
+            "Offer a free month of maintenance to close faster"
+          ],
+          "correctIndex": 1,
+          "explanation": "Answer a technical doubt with the person who can address it, rather than a sales asset or a giveaway."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-objection-handling-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Quantify the cost of delay behind a \"not this quarter\" objection.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client says: \"We'll start the order-automation project next quarter, no rush.\" Today, 3 staff each spend 60 hours a month entering orders by hand, at a loaded cost of $25 an hour. Your quote is $45,000 and the system removes that manual work.",
+      "table": null,
+      "fields": [
+        {
+          "id": "monthly",
+          "label": "Current monthly cost of manual order entry",
+          "unit": "$",
+          "answer": 4500,
+          "tolerance": 1
+        },
+        {
+          "id": "delay",
+          "label": "Cost of waiting three more months",
+          "unit": "$",
+          "answer": 13500,
+          "tolerance": 1
+        },
+        {
+          "id": "payback",
+          "label": "Months for the project to pay back from the saving",
+          "unit": "months",
+          "answer": 10,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "Monthly cost = 3 × 60 × $25 = $4500. Three months of waiting = $13500. Payback = 45,000 ÷ 4500 = 10 months. Putting a number on delay turns \"no rush\" into a business choice the client can weigh."
+    }
+  },
+  {
+    "id": "bd-objection-handling-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 3,
+    "prompt": "Reply to a \"we'll just hire a freelancer\" objection.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write a short email reply to the client below. Keep it respectful, do not run down freelancers, and propose a next step.",
+      "context": "From: Priya (Founder)\n\"Thanks for the proposal ($38,000 for the booking app). To be honest, a freelancer quoted us about half that, so we're leaning that way.\"",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "respect",
+          "label": "Respects the client's option",
+          "description": "Acknowledges a freelancer can be a valid choice; no disparaging claims.",
+          "weight": 1
+        },
+        {
+          "id": "compare",
+          "label": "Makes the comparison concrete",
+          "description": "Points to specific differences that matter for this project (QA, design, continuity, support, single point of failure) without exaggeration.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Asks or offers something useful",
+          "description": "Offers to compare scopes or suggests a smaller phase if budget is the issue.",
+          "weight": 1
+        },
+        {
+          "id": "next",
+          "label": "Clear next step",
+          "description": "Ends with a specific, low-pressure next step.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Priya, thanks for telling me, that helps. A good freelancer can be the right call, so it is worth comparing like for like. Our $38,000 covers design, QA on iOS and Android, store submission and 60 days of fixes, with a second engineer who knows the code if anyone is away. If the other quote covers the same, great. If budget is the main concern, we could scope a smaller first release around bookings and payments only. Would a 20-minute call on Thursday to compare the two scopes help?"
+    }
+  },
+  {
+    "id": "bd-objection-handling-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A prospect says: \"We used an agency before and they missed every deadline.\" What is the strongest response?",
+    "mcq": {
+      "options": [
+        "Assure them that will never happen with your team",
+        "Ask what went wrong, then explain how your process handles that specific issue, with evidence",
+        "Point out that agencies vary and you are not like the others",
+        "Offer a penalty discount for every day you are late"
+      ],
+      "correctIndex": 1,
+      "explanation": "Understanding the specific failure lets you answer it with something concrete (weekly demos, a named PM, past on-time data) rather than a promise.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-objection-handling-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client says: \"Our budget is frozen until the next financial year, which starts in five months.\" How should you treat this?",
+    "mcq": {
+      "options": [
+        "As a negotiating tactic to be overcome with a discount",
+        "As a lost deal to close out in the CRM today",
+        "As a real constraint: confirm the timeline, agree when to reconnect, and keep them warm",
+        "As a sign to push for a signature before the freeze takes effect"
+      ],
+      "correctIndex": 2,
+      "explanation": "A fixed budget date is a condition, not an objection. Qualify it, set a reminder and stay useful until the budget opens.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-objection-handling-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-objection-handling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Late in a deal, after a verbal yes, a new finance manager suddenly says the price is too high. What is the most likely cause and response?",
+    "mcq": {
+      "options": [
+        "The champion lied about the budget; escalate to their CEO",
+        "Finance always pushes back; ignore it and send the contract",
+        "The value case never reached this stakeholder; meet them and walk through the business case",
+        "The price really is too high; cut it to protect the deal"
+      ],
+      "correctIndex": 2,
+      "explanation": "Late objections from a new person usually mean they were not part of building the case. Bring them into it before touching price.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

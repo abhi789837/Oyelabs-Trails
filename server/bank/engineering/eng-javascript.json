@@ -1,0 +1,2511 @@
+[
+  {
+    "id": "eng-javascript-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`fullName` should return `\"first last\"`. Some users have no `last` name yet: then return just the first name, with no trailing space.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "fullName",
+      "starterCode": "function fullName(user) {\n  return user.first + \" \" + user.last;\n}",
+      "referenceSolution": "function fullName(user) {\n  return user.last ? user.first + \" \" + user.last : user.first;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "first": "Ana",
+              "last": "Silva"
+            }
+          ],
+          "expected": "Ana Silva"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "first": "Bo",
+              "last": "Lee"
+            }
+          ],
+          "expected": "Bo Lee"
+        },
+        {
+          "args": [
+            {
+              "first": "Cher"
+            }
+          ],
+          "expected": "Cher"
+        },
+        {
+          "args": [
+            {
+              "first": "Dev",
+              "last": ""
+            }
+          ],
+          "expected": "Dev"
+        },
+        {
+          "args": [
+            {
+              "first": "Eli",
+              "last": null
+            }
+          ],
+          "expected": "Eli"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `cartTotal`: each item has `price` and `qty`. Return the sum of `price * qty`. An empty cart totals `0`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cartTotal",
+      "starterCode": "function cartTotal(items) {\n  return items.reduce((sum, item) => sum + item.price);\n}",
+      "referenceSolution": "function cartTotal(items) {\n  return items.reduce((sum, item) => sum + item.price * item.qty, 0);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "price": 10,
+                "qty": 2
+              },
+              {
+                "price": 5,
+                "qty": 1
+              }
+            ]
+          ],
+          "expected": 25
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 3,
+                "qty": 3
+              }
+            ]
+          ],
+          "expected": 9
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 7,
+                "qty": 0
+              },
+              {
+                "price": 1,
+                "qty": 4
+              }
+            ]
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 100,
+                "qty": 1
+              },
+              {
+                "price": 1,
+                "qty": 1
+              },
+              {
+                "price": 2,
+                "qty": 2
+              }
+            ]
+          ],
+          "expected": 105
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`countVowels` returns how many of `a e i o u` are in the text. It should not care about upper or lower case.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "countVowels",
+      "starterCode": "function countVowels(text) {\n  let count = 0;\n  for (const ch of text) {\n    if (\"aeiou\".includes(ch)) count++;\n  }\n  return count;\n}",
+      "referenceSolution": "function countVowels(text) {\n  let count = 0;\n  for (const ch of text.toLowerCase()) {\n    if (\"aeiou\".includes(ch)) count++;\n  }\n  return count;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "hello"
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "HELLO World"
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "rhythm"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "AEIOU aeiou"
+          ],
+          "expected": 10
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`lastItem` should return the last element of the array, or `null` when the array is empty. Fix the bug.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "lastItem",
+      "starterCode": "function lastItem(list) {\n  return list[list.length];\n}",
+      "referenceSolution": "function lastItem(list) {\n  return list.length ? list[list.length - 1] : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": 3
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "a"
+            ]
+          ],
+          "expected": "a"
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ]
+          ],
+          "expected": {
+            "id": 2
+          }
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              7
+            ]
+          ],
+          "expected": 7
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Prices come from the API in cents. `formatPrice(1250)` should return `\"$12.50\"` — always two decimal places.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "formatPrice",
+      "starterCode": "function formatPrice(cents) {\n  return \"$\" + cents / 100;\n}",
+      "referenceSolution": "function formatPrice(cents) {\n  return \"$\" + (cents / 100).toFixed(2);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1250
+          ],
+          "expected": "$12.50"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            999
+          ],
+          "expected": "$9.99"
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": "$0.00"
+        },
+        {
+          "args": [
+            100
+          ],
+          "expected": "$1.00"
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": "$0.05"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`capitalize` should upper-case the first letter and lower-case the rest: `\"hELLO\"` becomes `\"Hello\"`. An empty string stays empty.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "capitalize",
+      "starterCode": "function capitalize(word) {\n  return word[0].toUpperCase() + word.slice(1);\n}",
+      "referenceSolution": "function capitalize(word) {\n  if (!word) return \"\";\n  return word[0].toUpperCase() + word.slice(1).toLowerCase();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "hello"
+          ],
+          "expected": "Hello"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "hELLO"
+          ],
+          "expected": "Hello"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "a"
+          ],
+          "expected": "A"
+        },
+        {
+          "args": [
+            "WORLD"
+          ],
+          "expected": "World"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "3 milk",
+        "2 bread",
+        "3 undefined",
+        "4 milk"
+      ],
+      "correctIndex": 0,
+      "explanation": "`push` adds `milk` to the end, so the array has 3 items and the last one (index `length - 1`) is `milk`.",
+      "snippet": "const cart = [\"apple\", \"bread\"];\ncart.push(\"milk\");\nconsole.log(cart.length, cart[cart.length - 1]);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "53 2",
+        "8 2",
+        "53 NaN",
+        "8 -2"
+      ],
+      "correctIndex": 0,
+      "explanation": "`+` with a string concatenates, giving `\"53\"`. `-` only works on numbers, so `\"5\"` is converted and the result is `2`. Convert form input with `Number()` before adding.",
+      "snippet": "const qty = \"5\";\nconsole.log(qty + 3, qty - 3);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "true false",
+        "false false",
+        "true true",
+        "false true"
+      ],
+      "correctIndex": 0,
+      "explanation": "`==` converts `\"\"` to the number `0` before comparing, so it is `true`. `===` compares type as well, and a number is never equal to a string. Prefer `===`.",
+      "snippet": "console.log(0 == \"\", 0 === \"\");",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Build a query string from an object: `{ page: 2, q: \"red shoes\" }` → `\"page=2&q=red%20shoes\"`.\n\n- Keep key order as given\n- Skip keys whose value is `null` or `undefined` (but keep `0` and `false`)\n- Encode values with `encodeURIComponent`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toQueryString",
+      "starterCode": "function toQueryString(params) {\n  return Object.keys(params)\n    .map((key) => key + \"=\" + params[key])\n    .join(\"&\");\n}",
+      "referenceSolution": "function toQueryString(params) {\n  return Object.keys(params)\n    .filter((key) => params[key] !== null && params[key] !== undefined)\n    .map((key) => key + \"=\" + encodeURIComponent(params[key]))\n    .join(\"&\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "page": 2,
+              "q": "red shoes"
+            }
+          ],
+          "expected": "page=2&q=red%20shoes"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            {
+              "a": null,
+              "b": 1
+            }
+          ],
+          "expected": "b=1"
+        },
+        {
+          "args": [
+            {
+              "offset": 0,
+              "active": false
+            }
+          ],
+          "expected": "offset=0&active=false"
+        },
+        {
+          "args": [
+            {
+              "email": "a&b@x.com"
+            }
+          ],
+          "expected": "email=a%26b%40x.com"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Group order ids by `status`: return an object like `{ pending: [1, 3], shipped: [2] }`. Ids stay in their original order; statuses with no orders do not appear.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "idsByStatus",
+      "starterCode": "function idsByStatus(orders) {\n  const out = {};\n  for (const order of orders) {\n    out[order.status] = [order.id];\n  }\n  return out;\n}",
+      "referenceSolution": "function idsByStatus(orders) {\n  const out = {};\n  for (const order of orders) {\n    (out[order.status] ??= []).push(order.id);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "pending"
+              },
+              {
+                "id": 2,
+                "status": "shipped"
+              },
+              {
+                "id": 3,
+                "status": "pending"
+              }
+            ]
+          ],
+          "expected": {
+            "pending": [
+              1,
+              3
+            ],
+            "shipped": [
+              2
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "status": "done"
+              }
+            ]
+          ],
+          "expected": {
+            "done": [
+              9
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "a"
+              },
+              {
+                "id": 2,
+                "status": "a"
+              },
+              {
+                "id": 3,
+                "status": "a"
+              }
+            ]
+          ],
+          "expected": {
+            "a": [
+              1,
+              2,
+              3
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A sign-up export has duplicate emails typed differently. Return the unique emails, trimmed and lower-cased, in the order they first appear. Skip blank entries.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "uniqueEmails",
+      "starterCode": "function uniqueEmails(emails) {\n  return [...new Set(emails)];\n}",
+      "referenceSolution": "function uniqueEmails(emails) {\n  const seen = new Set();\n  for (const raw of emails) {\n    const email = raw.trim().toLowerCase();\n    if (email) seen.add(email);\n  }\n  return [...seen];\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "a@x.com",
+              " A@x.com ",
+              "b@x.com"
+            ]
+          ],
+          "expected": [
+            "a@x.com",
+            "b@x.com"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "  ",
+              "c@x.com"
+            ]
+          ],
+          "expected": [
+            "c@x.com"
+          ]
+        },
+        {
+          "args": [
+            [
+              "B@X.COM",
+              "a@x.com",
+              "b@x.com"
+            ]
+          ],
+          "expected": [
+            "b@x.com",
+            "a@x.com"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return a new object with only the listed keys. Keys the object does not have are left out (not set to `undefined`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pick",
+      "starterCode": "function pick(obj, keys) {\n  const out = {};\n  for (const key of keys) out[key] = obj[key];\n  return out;\n}",
+      "referenceSolution": "function pick(obj, keys) {\n  const out = {};\n  for (const key of keys) {\n    if (Object.prototype.hasOwnProperty.call(obj, key)) out[key] = obj[key];\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "name": "Ana",
+              "password": "x"
+            },
+            [
+              "id",
+              "name"
+            ]
+          ],
+          "expected": {
+            "id": 1,
+            "name": "Ana"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "expected": {
+            "a": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 0,
+              "b": null
+            },
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "expected": {
+            "a": 0,
+            "b": null
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`paginate(items, page, size)` returns the items for a **1-based** page. Page 1 is the first `size` items. A page past the end returns `[]`. Fix the off-by-one.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "paginate",
+      "starterCode": "function paginate(items, page, size) {\n  return items.slice(page * size, page * size + size);\n}",
+      "referenceSolution": "function paginate(items, page, size) {\n  const start = (page - 1) * size;\n  return items.slice(start, start + size);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            1,
+            2
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            3,
+            2
+          ],
+          "expected": [
+            5
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            2,
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            2,
+            2
+          ],
+          "expected": [
+            "c",
+            "d"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return the whole number of days between two ISO dates (`\"2024-03-01\"`), regardless of which comes first.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "daysBetween",
+      "starterCode": "function daysBetween(a, b) {\n  return (new Date(b) - new Date(a)) / (1000 * 60 * 60);\n}",
+      "referenceSolution": "function daysBetween(a, b) {\n  const ms = Math.abs(new Date(b) - new Date(a));\n  return Math.round(ms / (1000 * 60 * 60 * 24));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "2024-01-01",
+            "2024-01-31"
+          ],
+          "expected": 30
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2024-01-31",
+            "2024-01-01"
+          ],
+          "expected": 30
+        },
+        {
+          "args": [
+            "2024-05-05",
+            "2024-05-05"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "2024-02-28",
+            "2024-03-01"
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            "2023-12-31",
+            "2024-01-01"
+          ],
+          "expected": 1
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "dark false",
+        "dark true",
+        "light false",
+        "light true"
+      ],
+      "correctIndex": 0,
+      "explanation": "Spread makes a *shallow* copy. `theme` is copied, so changing it on `copy` leaves the original alone, but `notify` is the same object in both, so `email` changes for both.",
+      "snippet": "const settings = { theme: \"dark\", notify: { email: true } };\nconst copy = { ...settings };\ncopy.theme = \"light\";\ncopy.notify.email = false;\nconsole.log(settings.theme, settings.notify.email);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "1,10,2,25",
+        "1,2,10,25",
+        "25,10,2,1",
+        "10,1,2,25"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without a compare function, `sort` compares values as strings, so `\"10\"` sorts before `\"2\"`. Use `ids.sort((a, b) => a - b)` for numbers.",
+      "snippet": "const ids = [10, 1, 2, 25];\nids.sort();\nconsole.log(ids.join(\",\"));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "10 0",
+        "0 0",
+        "10 10",
+        "0 10"
+      ],
+      "correctIndex": 0,
+      "explanation": "`||` falls back for any falsy value, including `0`. `??` only falls back for `null` or `undefined`, so a real discount of `0` is kept.",
+      "snippet": "const discount = 0;\nconsole.log(discount || 10, discount ?? 10);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Read a nested value by a dot path: `get(obj, \"user.address.city\", \"n/a\")`. Path parts can be array indexes (`\"items.0.name\"`). Return `fallback` when any step is missing — but a real `0`, `false` or `null` value at the end of the path is returned as is.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "get",
+      "starterCode": "function get(obj, path, fallback) {\n  let value = obj;\n  for (const key of path.split(\".\")) value = value[key];\n  return value || fallback;\n}",
+      "referenceSolution": "function get(obj, path, fallback) {\n  let value = obj;\n  for (const key of path.split(\".\")) {\n    if (value === null || value === undefined) return fallback;\n    value = value[key];\n  }\n  return value === undefined ? fallback : value;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "user": {
+                "address": {
+                  "city": "Lima"
+                }
+              }
+            },
+            "user.address.city",
+            "n/a"
+          ],
+          "expected": "Lima"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "user": {}
+            },
+            "user.address.city",
+            "n/a"
+          ],
+          "expected": "n/a"
+        },
+        {
+          "args": [
+            {
+              "items": [
+                {
+                  "name": "pen"
+                }
+              ]
+            },
+            "items.0.name",
+            null
+          ],
+          "expected": "pen"
+        },
+        {
+          "args": [
+            {
+              "count": 0
+            },
+            "count",
+            5
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            {
+              "a": null
+            },
+            "a.b",
+            "x"
+          ],
+          "expected": "x"
+        },
+        {
+          "args": [
+            {
+              "flag": false
+            },
+            "flag",
+            true
+          ],
+          "expected": false
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Merge user settings over defaults. Nested plain objects merge key by key; arrays and other values from `overrides` replace the default. Neither input may be changed.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mergeSettings",
+      "starterCode": "function mergeSettings(defaults, overrides) {\n  return { ...defaults, ...overrides };\n}",
+      "referenceSolution": "function isPlain(v) {\n  return v !== null && typeof v === \"object\" && !Array.isArray(v);\n}\n\nfunction mergeSettings(defaults, overrides) {\n  const out = { ...defaults };\n  for (const [key, value] of Object.entries(overrides)) {\n    out[key] = isPlain(value) && isPlain(defaults[key]) ? mergeSettings(defaults[key], value) : value;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "theme": "light",
+              "notify": {
+                "email": true,
+                "sms": false
+              }
+            },
+            {
+              "notify": {
+                "sms": true
+              }
+            }
+          ],
+          "expected": {
+            "theme": "light",
+            "notify": {
+              "email": true,
+              "sms": true
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {}
+          ],
+          "expected": {
+            "a": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "tags": [
+                "a",
+                "b"
+              ]
+            },
+            {
+              "tags": [
+                "c"
+              ]
+            }
+          ],
+          "expected": {
+            "tags": [
+              "c"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "x": {
+                "y": {
+                  "z": 1,
+                  "w": 2
+                }
+              }
+            },
+            {
+              "x": {
+                "y": {
+                  "z": 9
+                }
+              }
+            }
+          ],
+          "expected": {
+            "x": {
+              "y": {
+                "z": 9,
+                "w": 2
+              }
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "limit": 10
+            },
+            {
+              "limit": null
+            }
+          ],
+          "expected": {
+            "limit": null
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Compare two versions of a record and report what changed: `{ added: [...], removed: [...], changed: [...] }`, each a list of key names sorted A–Z. Values are compared with `===`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "diffKeys",
+      "starterCode": "function diffKeys(before, after) {\n  const added = Object.keys(after).filter((k) => !(k in before));\n  const removed = Object.keys(before).filter((k) => !(k in after));\n  return { added, removed, changed: [] };\n}",
+      "referenceSolution": "function diffKeys(before, after) {\n  const added = Object.keys(after).filter((k) => !(k in before)).sort();\n  const removed = Object.keys(before).filter((k) => !(k in after)).sort();\n  const changed = Object.keys(after).filter((k) => k in before && before[k] !== after[k]).sort();\n  return { added, removed, changed };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ana",
+              "age": 30
+            },
+            {
+              "name": "Ana",
+              "age": 31,
+              "city": "Rome"
+            }
+          ],
+          "expected": {
+            "added": [
+              "city"
+            ],
+            "removed": [],
+            "changed": [
+              "age"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": {
+            "added": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        {
+          "args": [
+            {
+              "b": 1,
+              "a": 2
+            },
+            {}
+          ],
+          "expected": {
+            "added": [],
+            "removed": [
+              "a",
+              "b"
+            ],
+            "changed": []
+          }
+        },
+        {
+          "args": [
+            {
+              "z": 1,
+              "y": 2
+            },
+            {
+              "z": 2,
+              "y": 3,
+              "x": 0
+            }
+          ],
+          "expected": {
+            "added": [
+              "x"
+            ],
+            "removed": [],
+            "changed": [
+              "y",
+              "z"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "v": null,
+              "w": 1
+            },
+            {
+              "v": false,
+              "w": 1
+            }
+          ],
+          "expected": {
+            "added": [],
+            "removed": [],
+            "changed": [
+              "v"
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Split an array into chunks of `size` (for sending records to an API in batches). The last chunk may be shorter. An empty array gives `[]`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "chunk",
+      "starterCode": "function chunk(items, size) {\n  const out = [];\n  for (let i = 0; i < items.length - size; i += size) {\n    out.push(items.slice(i, i + size));\n  }\n  return out;\n}",
+      "referenceSolution": "function chunk(items, size) {\n  const out = [];\n  for (let i = 0; i < items.length; i += size) {\n    out.push(items.slice(i, i + size));\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            3
+          ],
+          "expected": [
+            [
+              1,
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            5
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            1
+          ],
+          "expected": [
+            [
+              1
+            ],
+            [
+              2
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Normalize an API list into `{ byId, ids }` for a store: `byId` maps id → user, `ids` keeps the original order. If an id appears twice, the later record wins but the id is listed only once (at its first position).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "normalize",
+      "starterCode": "function normalize(users) {\n  const byId = {};\n  const ids = [];\n  for (const user of users) {\n    byId[user.id] = user;\n    ids.push(user.id);\n  }\n  return { byId, ids };\n}",
+      "referenceSolution": "function normalize(users) {\n  const byId = {};\n  const ids = [];\n  for (const user of users) {\n    if (!(user.id in byId)) ids.push(user.id);\n    byId[user.id] = user;\n  }\n  return { byId, ids };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "Ana"
+              },
+              {
+                "id": 2,
+                "name": "Bo"
+              }
+            ]
+          ],
+          "expected": {
+            "byId": {
+              "1": {
+                "id": 1,
+                "name": "Ana"
+              },
+              "2": {
+                "id": 2,
+                "name": "Bo"
+              }
+            },
+            "ids": [
+              1,
+              2
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "byId": {},
+            "ids": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 5,
+                "name": "a"
+              },
+              {
+                "id": 6,
+                "name": "b"
+              },
+              {
+                "id": 5,
+                "name": "c"
+              }
+            ]
+          ],
+          "expected": {
+            "byId": {
+              "5": {
+                "id": 5,
+                "name": "c"
+              },
+              "6": {
+                "id": 6,
+                "name": "b"
+              }
+            },
+            "ids": [
+              5,
+              6
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "name": "x"
+              }
+            ]
+          ],
+          "expected": {
+            "byId": {
+              "3": {
+                "id": 3,
+                "name": "x"
+              }
+            },
+            "ids": [
+              3
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Format a duration in seconds as `\"1h 2m 5s\"`. Leave out parts that are zero (`3600` → `\"1h\"`, `65` → `\"1m 5s\"`); `0` is `\"0s\"`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "formatDuration",
+      "starterCode": "function formatDuration(seconds: number): string {\n  const h = Math.floor(seconds / 3600);\n  const m = Math.floor(seconds / 60);\n  const s = seconds % 60;\n  return h + \"h \" + m + \"m \" + s + \"s\";\n}",
+      "referenceSolution": "function formatDuration(seconds: number): string {\n  const h = Math.floor(seconds / 3600);\n  const m = Math.floor((seconds % 3600) / 60);\n  const s = seconds % 60;\n  const parts: string[] = [];\n  if (h) parts.push(h + \"h\");\n  if (m) parts.push(m + \"m\");\n  if (s) parts.push(s + \"s\");\n  return parts.length ? parts.join(\" \") : \"0s\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            3725
+          ],
+          "expected": "1h 2m 5s"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": "0s"
+        },
+        {
+          "args": [
+            3600
+          ],
+          "expected": "1h"
+        },
+        {
+          "args": [
+            65
+          ],
+          "expected": "1m 5s"
+        },
+        {
+          "args": [
+            7201
+          ],
+          "expected": "2h 1s"
+        },
+        {
+          "args": [
+            59
+          ],
+          "expected": "59s"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "{\"name\":\"Ana\",\"manager\":null,\"total\":null}",
+        "{\"name\":\"Ana\",\"nickname\":null,\"manager\":null,\"total\":null}",
+        "{\"name\":\"Ana\",\"manager\":null,\"total\":NaN}",
+        "{\"name\":\"Ana\",\"nickname\":undefined,\"manager\":null,\"total\":NaN,\"save\":{}}"
+      ],
+      "correctIndex": 0,
+      "explanation": "`JSON.stringify` drops keys whose value is `undefined` or a function, keeps `null`, and turns `NaN` into `null`. Worth knowing before you send a payload to an API.",
+      "snippet": "const payload = { name: \"Ana\", nickname: undefined, manager: null, total: NaN, save: () => {} };\nconsole.log(JSON.stringify(payload));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "false 0.30",
+        "true 0.30",
+        "false 0.3",
+        "true 0.3"
+      ],
+      "correctIndex": 0,
+      "explanation": "Binary floating point cannot store 0.1 and 0.2 exactly, so the sum is `0.30000000000000004` and not `=== 0.3`. `toFixed(2)` returns the string `\"0.30\"`. For money, work in integer cents.",
+      "snippet": "const total = 0.1 + 0.2;\nconsole.log(total === 0.3, total.toFixed(2));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "string",
+        "object",
+        "number",
+        "undefined"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `Date` is serialised as an ISO string and `JSON.parse` does not turn it back into a `Date`. After a JSON round trip (an API response, localStorage) you must call `new Date(value)` yourself.",
+      "snippet": "const saved = JSON.parse(JSON.stringify({ createdAt: new Date(0) }));\nconsole.log(typeof saved.createdAt);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Sort records by several keys, e.g. `[[\"lastName\", \"asc\"], [\"age\", \"desc\"]]`. Strings compare with `localeCompare`, numbers numerically. Records that tie on every key keep their input order, and the input array must not be changed.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "sortBy",
+      "starterCode": "function sortBy(rows, keys) {\n  const [key, dir] = keys[0];\n  return rows.sort((a, b) => (a[key] > b[key] ? 1 : -1) * (dir === \"asc\" ? 1 : -1));\n}",
+      "referenceSolution": "function sortBy(rows, keys) {\n  const cmp = (a, b) => (typeof a === \"string\" ? a.localeCompare(b) : a - b);\n  return [...rows].sort((a, b) => {\n    for (const [key, dir] of keys) {\n      const c = cmp(a[key], b[key]);\n      if (c !== 0) return dir === \"asc\" ? c : -c;\n    }\n    return 0;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "n": "b",
+                "a": 1
+              },
+              {
+                "n": "a",
+                "a": 2
+              },
+              {
+                "n": "b",
+                "a": 3
+              }
+            ],
+            [
+              [
+                "n",
+                "asc"
+              ],
+              [
+                "a",
+                "desc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "n": "a",
+              "a": 2
+            },
+            {
+              "n": "b",
+              "a": 3
+            },
+            {
+              "n": "b",
+              "a": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              [
+                "n",
+                "asc"
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "n": "a",
+                "a": 1
+              },
+              {
+                "n": "a",
+                "a": 3
+              },
+              {
+                "n": "a",
+                "a": 2
+              }
+            ],
+            [
+              [
+                "n",
+                "asc"
+              ],
+              [
+                "a",
+                "desc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "n": "a",
+              "a": 3
+            },
+            {
+              "n": "a",
+              "a": 2
+            },
+            {
+              "n": "a",
+              "a": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "s": 5
+              },
+              {
+                "id": 2,
+                "s": 5
+              },
+              {
+                "id": 3,
+                "s": 1
+              }
+            ],
+            [
+              [
+                "s",
+                "desc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "s": 5
+            },
+            {
+              "id": 2,
+              "s": 5
+            },
+            {
+              "id": 3,
+              "s": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "p": 10
+              },
+              {
+                "p": 9
+              },
+              {
+                "p": 100
+              }
+            ],
+            [
+              [
+                "p",
+                "asc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "p": 9
+            },
+            {
+              "p": 10
+            },
+            {
+              "p": 100
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "c": "x",
+                "d": 2
+              },
+              {
+                "c": "x",
+                "d": 1
+              }
+            ],
+            [
+              [
+                "c",
+                "asc"
+              ],
+              [
+                "d",
+                "asc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "c": "x",
+              "d": 1
+            },
+            {
+              "c": "x",
+              "d": 2
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Parse a URL query string into an object.\n\n- A leading `?` is optional\n- Repeated keys become an array in order: `b=2&b=3` → `{ b: [\"2\", \"3\"] }`\n- A key with no `=` gets `\"\"`\n- Decode `%xx` and treat `+` as a space\n- Empty input gives `{}`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseQuery",
+      "starterCode": "function parseQuery(qs) {\n  const out = {};\n  for (const pair of qs.split(\"&\")) {\n    const [key, value] = pair.split(\"=\");\n    out[key] = value;\n  }\n  return out;\n}",
+      "referenceSolution": "function parseQuery(qs) {\n  const out = {};\n  const text = qs.startsWith(\"?\") ? qs.slice(1) : qs;\n  if (!text) return out;\n  const decode = (s) => decodeURIComponent(s.replace(/\\+/g, \" \"));\n  for (const pair of text.split(\"&\")) {\n    if (!pair) continue;\n    const at = pair.indexOf(\"=\");\n    const key = decode(at === -1 ? pair : pair.slice(0, at));\n    const value = at === -1 ? \"\" : decode(pair.slice(at + 1));\n    if (key in out) out[key] = [].concat(out[key], value);\n    else out[key] = value;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "?q=red+shoes&page=2"
+          ],
+          "expected": {
+            "q": "red shoes",
+            "page": "2"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "?"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "b=2&b=3&b=4"
+          ],
+          "expected": {
+            "b": [
+              "2",
+              "3",
+              "4"
+            ]
+          }
+        },
+        {
+          "args": [
+            "debug&x=1"
+          ],
+          "expected": {
+            "debug": "",
+            "x": "1"
+          }
+        },
+        {
+          "args": [
+            "email=a%40x.com"
+          ],
+          "expected": {
+            "email": "a@x.com"
+          }
+        },
+        {
+          "args": [
+            "t=a%3Db"
+          ],
+          "expected": {
+            "t": "a=b"
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Write `isEqual(a, b)` for JSON-like values (numbers, strings, booleans, `null`, arrays, plain objects) so a form can tell whether anything changed. Object key order does not matter; array order does.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "isEqual",
+      "starterCode": "function isEqual(a, b) {\n  return JSON.stringify(a) === JSON.stringify(b);\n}",
+      "referenceSolution": "function isEqual(a, b) {\n  if (a === b) return true;\n  if (typeof a !== \"object\" || typeof b !== \"object\" || a === null || b === null) return false;\n  if (Array.isArray(a) !== Array.isArray(b)) return false;\n  const ka = Object.keys(a);\n  const kb = Object.keys(b);\n  if (ka.length !== kb.length) return false;\n  return ka.every((k) => Object.prototype.hasOwnProperty.call(b, k) && isEqual(a[k], b[k]));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": [
+                1,
+                2
+              ]
+            },
+            {
+              "a": 1,
+              "b": [
+                1,
+                2
+              ]
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": 2
+            },
+            {
+              "b": 2,
+              "a": 1
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "a": null
+            },
+            {
+              "a": {}
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {},
+            []
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "x": {
+                "y": [
+                  1,
+                  {
+                    "z": 2,
+                    "w": 3
+                  }
+                ]
+              }
+            },
+            {
+              "x": {
+                "y": [
+                  1,
+                  {
+                    "w": 3,
+                    "z": 2
+                  }
+                ]
+              }
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "1",
+            1
+          ],
+          "expected": false
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Flatten a nested object into dot-path keys for an analytics event: `{ user: { id: 1, tags: [\"a\"] } }` → `{ \"user.id\": 1, \"user.tags\": [\"a\"] }`. Arrays and `null` are values (not flattened). An empty nested object is kept as `{}` under its path.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "flatten",
+      "starterCode": "function flatten(obj) {\n  const out = {};\n  for (const [key, value] of Object.entries(obj)) {\n    if (typeof value === \"object\") {\n      for (const [k, v] of Object.entries(value)) out[key + \".\" + k] = v;\n    } else {\n      out[key] = value;\n    }\n  }\n  return out;\n}",
+      "referenceSolution": "function flatten(obj, prefix = \"\", out = {}) {\n  for (const [key, value] of Object.entries(obj)) {\n    const path = prefix ? prefix + \".\" + key : key;\n    const nested = value !== null && typeof value === \"object\" && !Array.isArray(value);\n    if (nested && Object.keys(value).length) flatten(value, path, out);\n    else out[path] = value;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "user": {
+                "id": 1,
+                "tags": [
+                  "a"
+                ]
+              }
+            }
+          ],
+          "expected": {
+            "user.id": 1,
+            "user.tags": [
+              "a"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": {
+                  "c": 1
+                }
+              },
+              "d": 2
+            }
+          ],
+          "expected": {
+            "a.b.c": 1,
+            "d": 2
+          }
+        },
+        {
+          "args": [
+            {
+              "a": null,
+              "b": {
+                "c": null
+              }
+            }
+          ],
+          "expected": {
+            "a": null,
+            "b.c": null
+          }
+        },
+        {
+          "args": [
+            {
+              "meta": {}
+            }
+          ],
+          "expected": {
+            "meta": {}
+          }
+        },
+        {
+          "args": [
+            {
+              "list": [
+                {
+                  "x": 1
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "list": [
+              {
+                "x": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Apply a list of edits to a document **without mutating it**. Each op is `{ op: \"set\", path: \"a.b\", value }` or `{ op: \"delete\", path: \"a.b\" }`. `set` creates missing parent objects. The driver returns the new doc and checks the original is untouched.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "patchDriver",
+      "starterCode": "type Op = { op: \"set\"; path: string; value: unknown } | { op: \"delete\"; path: string };\n\nfunction applyPatch(doc: Record<string, any>, ops: Op[]): Record<string, any> {\n  for (const o of ops) {\n    const keys = o.path.split(\".\");\n    const last = keys.pop()!;\n    let node = doc;\n    for (const k of keys) node = node[k] ??= {};\n    if (o.op === \"set\") node[last] = o.value;\n    else delete node[last];\n  }\n  return doc;\n}\n\n// Test driver (leave as is).\nfunction patchDriver(doc: Record<string, any>, ops: Op[]) {\n  const before = JSON.stringify(doc);\n  const result = applyPatch(doc, ops);\n  return { result, untouched: JSON.stringify(doc) === before };\n}",
+      "referenceSolution": "type Op = { op: \"set\"; path: string; value: unknown } | { op: \"delete\"; path: string };\n\nfunction applyPatch(doc: Record<string, any>, ops: Op[]): Record<string, any> {\n  const setIn = (node: any, keys: string[], o: Op): any => {\n    const [head, ...rest] = keys;\n    const copy = { ...(node ?? {}) };\n    if (rest.length === 0) {\n      if (o.op === \"set\") copy[head] = o.value;\n      else delete copy[head];\n      return copy;\n    }\n    if (o.op === \"delete\" && (copy[head] === undefined || copy[head] === null)) return copy;\n    copy[head] = setIn(copy[head], rest, o);\n    return copy;\n  };\n  return ops.reduce((acc, o) => setIn(acc, o.path.split(\".\"), o), doc);\n}\n\n// Test driver (leave as is).\nfunction patchDriver(doc: Record<string, any>, ops: Op[]) {\n  const before = JSON.stringify(doc);\n  const result = applyPatch(doc, ops);\n  return { result, untouched: JSON.stringify(doc) === before };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "a": {
+                "b": 1
+              }
+            },
+            [
+              {
+                "op": "set",
+                "path": "a.c",
+                "value": 2
+              }
+            ]
+          ],
+          "expected": {
+            "result": {
+              "a": {
+                "b": 1,
+                "c": 2
+              }
+            },
+            "untouched": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            []
+          ],
+          "expected": {
+            "result": {
+              "a": 1
+            },
+            "untouched": true
+          }
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": 1,
+                "c": 2
+              }
+            },
+            [
+              {
+                "op": "delete",
+                "path": "a.b"
+              }
+            ]
+          ],
+          "expected": {
+            "result": {
+              "a": {
+                "c": 2
+              }
+            },
+            "untouched": true
+          }
+        },
+        {
+          "args": [
+            {},
+            [
+              {
+                "op": "set",
+                "path": "x.y.z",
+                "value": true
+              }
+            ]
+          ],
+          "expected": {
+            "result": {
+              "x": {
+                "y": {
+                  "z": true
+                }
+              }
+            },
+            "untouched": true
+          }
+        },
+        {
+          "args": [
+            {
+              "n": 1
+            },
+            [
+              {
+                "op": "set",
+                "path": "n",
+                "value": 2
+              },
+              {
+                "op": "set",
+                "path": "m",
+                "value": 3
+              }
+            ]
+          ],
+          "expected": {
+            "result": {
+              "n": 2,
+              "m": 3
+            },
+            "untouched": true
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-javascript-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A teammate wrote this helper to build an invoice summary. Mark the lines that are bugs.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function invoiceSummary(lines, taxRate) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  lines.sort((a, b) => a.sku > b.sku);",
+          "issue": "Sorts the caller's array in place, and a boolean comparator does not sort reliably; copy and return a number."
+        },
+        {
+          "id": "l3",
+          "text": "  let subtotal = 0;",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  for (let i = 0; i <= lines.length; i++) {",
+          "issue": "`<=` reads one past the end, so `lines[i]` is undefined on the last pass."
+        },
+        {
+          "id": "l5",
+          "text": "    subtotal += lines[i].price * lines[i].qty;",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  const tax = subtotal * taxRate;",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  if (taxRate == \"\") return { subtotal, tax: 0, total: subtotal };",
+          "issue": "`==` makes `0 == \"\"` true; compare with `===` or check for a missing rate explicitly."
+        },
+        {
+          "id": "l9",
+          "text": "  return { subtotal, tax, total: subtotal + tax };",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-javascript-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "0 12 NaN",
+        "NaN 12 NaN",
+        "0 12 12",
+        "NaN NaN NaN"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Number(\"\")` is `0` (an empty field is not NaN), `parseInt` reads digits until the first non-digit, and `Number` rejects the whole string if any part is not numeric. Validate empty inputs explicitly.",
+      "snippet": "console.log(Number(\"\"), parseInt(\"12px\", 10), Number(\"12px\"));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "9 true",
+        "3 false",
+        "9 false",
+        "3 true"
+      ],
+      "correctIndex": 0,
+      "explanation": "`sort` sorts in place and returns the same array, so the original is now `[9, 5, 3]`. To keep the original, use `[...scores].sort(...)` or `scores.toSorted(...)`.",
+      "snippet": "const scores = [3, 9, 5];\nconst ranked = scores.sort((a, b) => b - a);\nconsole.log(scores[0], ranked === scores);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-javascript-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-javascript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "b 3",
+        "a 3",
+        "b 5",
+        "a 5"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Object.freeze` is shallow: `retries` cannot change (the write is silently ignored outside strict mode), but `api` is a separate object that is not frozen, so its `url` changes.",
+      "snippet": "const config = Object.freeze({ api: { url: \"a\" }, retries: 3 });\nconfig.api.url = \"b\";\nconfig.retries = 5;\nconsole.log(config.api.url, config.retries);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  }
+]

@@ -1,0 +1,327 @@
+[
+  {
+    "id": "bd-pipeline-metrics-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Calculate win rate by count and by value.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Last year you sent 60 proposals worth $3,000,000 in total. You won 15 of them, worth $600,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "count",
+          "label": "Win rate by count",
+          "unit": "%",
+          "answer": 25,
+          "tolerance": 0.1
+        },
+        {
+          "id": "value",
+          "label": "Win rate by value",
+          "unit": "%",
+          "answer": 20,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "By count: 15 ÷ 60 = 25%. By value: 600,000 ÷ 3,000,000 = 20%. A lower value win rate means you win the smaller deals more often."
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Calculate weighted pipeline.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your pipeline by stage, with historical stage probabilities, is below.",
+      "table": {
+        "columns": [
+          "Stage",
+          "Value",
+          "Probability"
+        ],
+        "rows": [
+          [
+            "Discovery",
+            "$400,000",
+            "10%"
+          ],
+          [
+            "Proposal",
+            "$300,000",
+            "30%"
+          ],
+          [
+            "Negotiation",
+            "$200,000",
+            "60%"
+          ],
+          [
+            "Verbal yes",
+            "$100,000",
+            "80%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total (unweighted) pipeline",
+          "unit": "$",
+          "answer": 1000000,
+          "tolerance": 1
+        },
+        {
+          "id": "weighted",
+          "label": "Weighted pipeline",
+          "unit": "$",
+          "answer": 330000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Weighted = 40,000 + 90,000 + 120,000 + 80,000 = $330000. Total is $1,000,000, but only about a third of it is likely to close."
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Find the biggest leaks in the funnel.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Stage conversion rates: lead to discovery call 40%; discovery to proposal 50%; proposal to negotiation 30%; negotiation to won 70%. Rank the stage transitions from weakest conversion to strongest.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Negotiation to won (70%)"
+        },
+        {
+          "id": "i1",
+          "label": "Proposal to negotiation (30%)"
+        },
+        {
+          "id": "i2",
+          "label": "Lead to discovery call (40%)"
+        },
+        {
+          "id": "i3",
+          "label": "Discovery to proposal (50%)"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "The weakest step is where improvement usually pays most; here, proposals rarely move forward, so check qualification before proposals and proposal quality."
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Calculate sales velocity.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You have 40 qualified opportunities, a 25% win rate, an average deal size of $50,000 and an average sales cycle of 60 days.",
+      "table": null,
+      "fields": [
+        {
+          "id": "vel",
+          "label": "Sales velocity (revenue per day)",
+          "unit": "$",
+          "answer": 8333.33,
+          "tolerance": 1
+        },
+        {
+          "id": "month",
+          "label": "Equivalent per 30 days",
+          "unit": "$",
+          "answer": 250000,
+          "tolerance": 5
+        }
+      ],
+      "explanation": "Velocity = (40 × 0.25 × 50,000) ÷ 60 = $8333.33 a day, about $250000 per 30 days. Any of the four levers moves it."
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the misleading metrics in this pipeline report.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this monthly pipeline report that are misleading or wrong.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Pipeline: $2.4M across 48 open deals.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "21 of those deals have had no activity for over 180 days but remain open.",
+          "issue": "Stale deals inflate the pipeline; they should be closed out or re-qualified."
+        },
+        {
+          "id": "p3",
+          "text": "Win rate: 60% (excludes deals where the client stopped responding).",
+          "issue": "Excluding lost-by-silence deals inflates the win rate."
+        },
+        {
+          "id": "p4",
+          "text": "Average sales cycle: 52 days, measured from first call to signature.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Forecast: we will hit target because the pipeline is 3x quota.",
+          "issue": "Coverage only helps if the pipeline is real; with stale deals the ratio is overstated."
+        },
+        {
+          "id": "p6",
+          "text": "Average deal size: $48,000, up from $41,000.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Diagnose a change in the metrics.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "This quarter your win rate rose from 22% to 30%, but revenue from new deals fell 15%. The number of proposals was about the same.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the most likely explanation?",
+          "options": [
+            "The sales cycle got shorter",
+            "Average deal size fell: you are winning more, smaller deals",
+            "The data must be wrong",
+            "Clients paid late"
+          ],
+          "correctIndex": 1,
+          "explanation": "With similar volume, more wins and less revenue means each win is smaller."
+        },
+        {
+          "id": "s2",
+          "question": "What would you check next?",
+          "options": [
+            "Number of emails sent",
+            "Office attendance",
+            "Deal size by segment and whether discounting or scope cuts increased",
+            "Website traffic only"
+          ],
+          "correctIndex": 2,
+          "explanation": "Find out why deals are smaller: pricing pressure, segment mix or reduced scope."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How should win rate be calculated?",
+    "mcq": {
+      "options": [
+        "Won deals divided by won deals plus deals still open",
+        "Won deals divided by leads",
+        "Only deals above $50,000",
+        "Won deals divided by all deals that reached a decision, including those lost to silence"
+      ],
+      "correctIndex": 3,
+      "explanation": "Counting every closed opportunity, won or lost, gives an honest win rate.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is annual contract value (ACV)?",
+    "mcq": {
+      "options": [
+        "The average annual value of a contract, excluding one-time fees",
+        "The total value over the whole contract",
+        "The value of the first invoice",
+        "The client's annual budget"
+      ],
+      "correctIndex": 0,
+      "explanation": "ACV normalises contracts of different lengths to a yearly figure.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pipeline-metrics-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why do many teams aim for pipeline of about 3x their target?",
+    "mcq": {
+      "options": [
+        "Because with typical win rates, only a fraction of pipeline closes",
+        "Because it is a legal requirement",
+        "To make reports look better",
+        "Because every deal closes in three months"
+      ],
+      "correctIndex": 0,
+      "explanation": "Coverage reflects win rate; with a 30% win rate you need roughly 3x to hit target. Your own history should set the ratio.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

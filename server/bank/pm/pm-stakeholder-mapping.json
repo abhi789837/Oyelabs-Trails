@@ -1,0 +1,401 @@
+[
+  {
+    "id": "pm-stakeholder-mapping-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the four power/interest grid strategies from the most engagement effort to the least.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Monitor (low power, low interest)"
+        },
+        {
+          "id": "r2",
+          "label": "Keep satisfied (high power, low interest)"
+        },
+        {
+          "id": "r1",
+          "label": "Manage closely (high power, high interest)"
+        },
+        {
+          "id": "r3",
+          "label": "Keep informed (low power, high interest)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "High-power stakeholders need the most attention; among low-power ones, the interested are kept informed and the rest monitored with minimal effort."
+    }
+  },
+  {
+    "id": "pm-stakeholder-mapping-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You scored stakeholders for a hospital appointment-booking app on power and interest (1–10). Count how many fall in each quadrant, using 6 or above as 'high'.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Stakeholder",
+          "Power",
+          "Interest"
+        ],
+        "rows": [
+          [
+            "Hospital CTO",
+            "9",
+            "8"
+          ],
+          [
+            "CFO",
+            "8",
+            "3"
+          ],
+          [
+            "Head of nursing",
+            "6",
+            "9"
+          ],
+          [
+            "Receptionists",
+            "3",
+            "9"
+          ],
+          [
+            "IT support",
+            "4",
+            "7"
+          ],
+          [
+            "Facilities",
+            "2",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "mc",
+          "label": "Manage closely (high power, high interest)",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        },
+        {
+          "id": "ks",
+          "label": "Keep satisfied (high power, low interest)",
+          "unit": "",
+          "answer": 1,
+          "tolerance": 0
+        },
+        {
+          "id": "ki",
+          "label": "Keep informed (low power, high interest)",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        },
+        {
+          "id": "mo",
+          "label": "Monitor (low power, low interest)",
+          "unit": "",
+          "answer": 1,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "High/high: Hospital CTO (9,8), Head of nursing (6,9). High power/low interest: CFO (8,3). Low power/high interest: Receptionists (3,9), IT support (4,7). Monitor: Facilities (2,2)."
+    }
+  },
+  {
+    "id": "pm-stakeholder-mapping-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "On an HR-portal project, the client's CFO (high power) has not attended any meeting. You hear she must approve the phase-2 budget next month.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On an HR-portal project, the client's CFO (high power) has not attended any meeting. You hear she must approve the phase-2 budget next month.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which strategy fits her now?",
+          "options": [
+            "Monitor",
+            "Keep satisfied: short, targeted updates on cost and value",
+            "Invite her to every daily stand-up",
+            "Ignore her until the budget meeting"
+          ],
+          "correctIndex": 1,
+          "explanation": "High power, low interest: keep satisfied with concise updates on what she cares about."
+        },
+        {
+          "id": "s2",
+          "question": "What do you send her?",
+          "options": [
+            "The full sprint backlog",
+            "A one-page monthly summary of budget, value delivered and phase-2 options",
+            "Daily Slack messages",
+            "Nothing; the sponsor will brief her"
+          ],
+          "correctIndex": 1,
+          "explanation": "Match format to the stakeholder: concise, business-focused, on a predictable cadence."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-stakeholder-mapping-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this stakeholder register extract.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client sponsor (Omar, COO) - power high, interest high - weekly 1:1 and steering meeting.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "End users (delivery drivers) - power low, interest high - not included, they are not paying.",
+          "issue": "End users are key stakeholders; keep them informed and involve them in testing even if they do not pay."
+        },
+        {
+          "id": "p3",
+          "text": "Client IT security lead - power high, interest low - keep satisfied, review at security milestones.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Marketing team - interest high - 'someone will update them'.",
+          "issue": "No owner or channel for the engagement."
+        },
+        {
+          "id": "p5",
+          "text": "App-store reviewers - external, monitor guidelines before each submission.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Agency finance - keep informed via monthly budget report.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-stakeholder-mapping-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of a stakeholder analysis at the start of a project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Decide an engagement strategy and channel for each"
+        },
+        {
+          "id": "r2",
+          "label": "Assess each one's power, interest and attitude"
+        },
+        {
+          "id": "r1",
+          "label": "Identify everyone affected by or able to affect the project"
+        },
+        {
+          "id": "r3",
+          "label": "Plot them on a power/interest grid"
+        },
+        {
+          "id": "r5",
+          "label": "Review and update the register as the project changes"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Identify, analyse, prioritise, plan engagement, and keep the register alive."
+    }
+  },
+  {
+    "id": "pm-stakeholder-mapping-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Midway through a CRM rollout, a new VP of Sales joins the client. He is openly sceptical of the project and has a lot of influence with the CEO.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Midway through a CRM rollout, a new VP of Sales joins the client. He is openly sceptical of the project and has a lot of influence with the CEO.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you classify him now?",
+          "options": [
+            "Monitor",
+            "Keep informed",
+            "Manage closely: high power, and his interest is now high",
+            "Not a stakeholder because he joined late"
+          ],
+          "correctIndex": 2,
+          "explanation": "Stakeholders change; a powerful, engaged sceptic needs close management."
+        },
+        {
+          "id": "s2",
+          "question": "What is your first move?",
+          "options": [
+            "Avoid him to prevent conflict",
+            "Book a 1:1 to understand his concerns and goals, then show how the project serves them",
+            "Ask the sponsor to overrule him",
+            "Send him the full project documentation"
+          ],
+          "correctIndex": 1,
+          "explanation": "Understanding concerns first turns resistance into input."
+        },
+        {
+          "id": "s3",
+          "question": "He asks for a sales dashboard not in scope. What do you do?",
+          "options": [
+            "Promise it to win him over",
+            "Capture it, assess it, and route it through the sponsor and change control",
+            "Refuse outright",
+            "Build it in secret"
+          ],
+          "correctIndex": 1,
+          "explanation": "Engaging a powerful stakeholder does not bypass scope governance."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-stakeholder-mapping-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which stakeholder belongs in the 'keep informed' quadrant?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The client's call-centre agents who will use the app daily but do not decide on it",
+        "The client CEO who signs the budget",
+        "The board's regulator",
+        "A competitor"
+      ],
+      "correctIndex": 0,
+      "explanation": "Low power but high interest: users affected daily who do not make the decisions.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-stakeholder-mapping-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why record each stakeholder's attitude (supporter, neutral, resistor) as well as power and interest?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It shows where engagement must change minds, not only share information",
+        "It is required for app-store submission",
+        "It replaces the communication plan",
+        "It decides their salary"
+      ],
+      "correctIndex": 0,
+      "explanation": "Attitude tells you whether you need to inform, involve, or actively win someone over.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-stakeholder-mapping-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-stakeholder-mapping",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A stakeholder register is created at kickoff and never updated. What is the main risk?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "New or changed stakeholders are missed and engaged too late",
+        "The register becomes too long",
+        "Developers lose access to Jira",
+        "The budget doubles automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "Stakeholders join, leave and shift interest during a project; a stale register means the PM misses influential people.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

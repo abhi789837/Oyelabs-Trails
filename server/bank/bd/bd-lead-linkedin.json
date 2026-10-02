@@ -1,0 +1,383 @@
+[
+  {
+    "id": "bd-lead-linkedin-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Review this BD rep's LinkedIn profile. Mark the parts that hurt it as a lead source.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this BD rep's LinkedIn profile. Mark the parts that hurt it as a lead source.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Headline: \"Sales guy | Open to anything\"",
+          "issue": "The headline says nothing about who you help or how; prospects decide in seconds."
+        },
+        {
+          "id": "p2",
+          "text": "Photo: clear, professional headshot.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "About: \"I help healthtech founders ship web and mobile apps faster, from MVP to scale.\"",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Featured section: empty.",
+          "issue": "Featured is free space for case studies or a client result; leaving it empty wastes proof."
+        },
+        {
+          "id": "p5",
+          "text": "Recent activity: shares a short post on an app launch lesson every week.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Contact info: no way to book a call or reach email.",
+          "issue": "Interested prospects need an easy next step."
+        },
+        {
+          "id": "p7",
+          "text": "Experience lists the agency and the services it delivers.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-lead-linkedin-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these LinkedIn signals by how warm they are as a lead, warmest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these LinkedIn signals by how warm they are as a lead, warmest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "A founder in your ICP accepted your connection request but has not replied"
+        },
+        {
+          "id": "r4",
+          "label": "A random account outside your ICP likes one of your posts"
+        },
+        {
+          "id": "r1",
+          "label": "A CTO comments on your post asking how you handled app store review for a similar app"
+        },
+        {
+          "id": "r2",
+          "label": "A founder in your ICP views your profile twice this week after you posted a case study"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "An explicit question shows active need; repeat profile views after a case study show interest; an accepted request is permission, not intent; an off-ICP like is noise."
+    }
+  },
+  {
+    "id": "bd-lead-linkedin-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": "bd-tool-sales-navigator",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A rep tracked a month of LinkedIn outreach. Work out the acceptance rate (of requests sent) and the meeting rate (of accepted connections).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A rep tracked a month of LinkedIn outreach. Work out the acceptance rate (of requests sent) and the meeting rate (of accepted connections).",
+      "table": {
+        "columns": [
+          "Metric",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Connection requests sent",
+            "200"
+          ],
+          [
+            "Requests accepted",
+            "70"
+          ],
+          [
+            "Meetings booked",
+            "7"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "accept",
+          "label": "Acceptance rate",
+          "unit": "%",
+          "answer": 35,
+          "tolerance": 0.1
+        },
+        {
+          "id": "meet",
+          "label": "Meetings per accepted connection",
+          "unit": "%",
+          "answer": 10,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "70 / 200 = 35% accepted; 7 / 70 = 10% of accepted connections booked a meeting."
+    }
+  },
+  {
+    "id": "bd-lead-linkedin-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Two content formats were posted for a month. Work out the inbound conversations per 1,000 impressions for each format.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Two content formats were posted for a month. Work out the inbound conversations per 1,000 impressions for each format.",
+      "table": {
+        "columns": [
+          "Format",
+          "Impressions",
+          "Inbound DMs from ICP prospects"
+        ],
+        "rows": [
+          [
+            "Generic motivational posts",
+            "40000",
+            "4"
+          ],
+          [
+            "Client case-study posts",
+            "12000",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "gen",
+          "label": "Generic: DMs per 1,000 impressions",
+          "unit": "",
+          "answer": 0.1,
+          "tolerance": 0.01
+        },
+        {
+          "id": "case",
+          "label": "Case study: DMs per 1,000 impressions",
+          "unit": "",
+          "answer": 0.5,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Generic: 4 / 40 = 0.1. Case study: 6 / 12 = 0.5. Reach is not the goal; relevant proof produces five times the conversations per view."
+    }
+  },
+  {
+    "id": "bd-lead-linkedin-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A logistics startup founder in your ICP posts that their team is \"drowning in manual dispatch spreadsheets\". You are already connected.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A logistics startup founder in your ICP posts that their team is \"drowning in manual dispatch spreadsheets\". You are already connected.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best first move?",
+          "options": [
+            "Send a DM with your full service deck",
+            "Leave a useful comment that adds an idea on automating dispatch, without pitching",
+            "Tag your CEO on the post",
+            "Do nothing until they message you"
+          ],
+          "correctIndex": 1,
+          "explanation": "A helpful public comment builds familiarity and credibility before any pitch."
+        },
+        {
+          "id": "s2",
+          "question": "They reply to your comment thanking you. What next?",
+          "options": [
+            "DM a short, relevant note with one example of a similar automation and an offer to share how it worked",
+            "Send a calendar link with no context",
+            "Ask for their budget",
+            "Add them to an automated 10-step sequence"
+          ],
+          "correctIndex": 0,
+          "explanation": "A specific, low-pressure follow-up tied to their problem earns the conversation."
+        },
+        {
+          "id": "s3",
+          "question": "They agree to talk. Where should the lead go?",
+          "options": [
+            "Nowhere, LinkedIn is enough",
+            "Into the CRM with source LinkedIn, the trigger post and a booked meeting",
+            "Into a spreadsheet on your desktop",
+            "Forward to delivery directly"
+          ],
+          "correctIndex": 1,
+          "explanation": "Logging source and context in the CRM keeps attribution and history for whoever runs the deal."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-lead-linkedin-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the steps of turning LinkedIn into a steady lead source.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of turning LinkedIn into a steady lead source.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Post useful content and engage on prospects' posts"
+        },
+        {
+          "id": "r4",
+          "label": "Start personalised conversations with engaged ICP contacts"
+        },
+        {
+          "id": "r5",
+          "label": "Move interested prospects to a call and log them in the CRM"
+        },
+        {
+          "id": "r1",
+          "label": "Define the ICP and the personas you want to reach"
+        },
+        {
+          "id": "r2",
+          "label": "Optimise your profile for those buyers"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Targeting first, then a credible profile, then visibility, then conversation, then a tracked meeting."
+    }
+  },
+  {
+    "id": "bd-lead-linkedin-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which LinkedIn headline is most likely to attract the right agency leads?",
+    "mcq": {
+      "options": [
+        "\"Business Development Executive\"",
+        "\"I help logistics startups automate operations with custom web and AI apps\"",
+        "\"Hustler | Dreamer | Achiever\"",
+        "\"Open to opportunities\""
+      ],
+      "correctIndex": 1,
+      "explanation": "A headline naming who you help and the outcome tells an ICP prospect instantly why to connect.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-linkedin-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": "bd-tool-sales-navigator",
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is LinkedIn Sales Navigator mainly used for in BD?",
+    "mcq": {
+      "options": [
+        "Hosting video proposals",
+        "Advanced search and lead lists to find and track prospects that match your ICP",
+        "Sending invoices",
+        "Managing app store listings"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sales Navigator adds filters, saved lead lists and alerts on top of LinkedIn for prospecting.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-linkedin-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-linkedin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Your posts get lots of likes but no leads. What is the most likely fix?",
+    "mcq": {
+      "options": [
+        "Post more often with the same content",
+        "Shift content towards problems and results your ICP cares about, with a clear way to start a conversation",
+        "Buy followers",
+        "Stop posting and only send connection requests"
+      ],
+      "correctIndex": 1,
+      "explanation": "Engagement from the wrong audience does not convert; relevant problem and proof content does.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

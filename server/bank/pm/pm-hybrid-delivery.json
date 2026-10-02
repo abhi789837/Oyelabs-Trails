@@ -1,0 +1,429 @@
+[
+  {
+    "id": "pm-hybrid-delivery-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A fixed-price, agile-built white-label app usually follows a hybrid shape. Order the phases.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "UAT and hardening against agreed acceptance criteria"
+        },
+        {
+          "id": "r2",
+          "label": "Contract: fix budget and date, list Must-haves, agree how scope flexes"
+        },
+        {
+          "id": "r1",
+          "label": "Paid discovery: goals, prioritised scope and estimates"
+        },
+        {
+          "id": "r3",
+          "label": "Sprints: build the highest-priority items first with regular demos"
+        },
+        {
+          "id": "r5",
+          "label": "Launch and warranty period"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Hybrid delivery frontloads enough discovery to fix commercial terms, then builds iteratively inside them."
+    }
+  },
+  {
+    "id": "pm-hybrid-delivery-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A fixed-bid project has a build budget of 1,200 hours. You hold 15% as contingency. Estimates by MoSCoW category are below.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Category",
+          "Item hours"
+        ],
+        "rows": [
+          [
+            "Must",
+            "120, 200, 180, 150, 90"
+          ],
+          [
+            "Should",
+            "100, 140, 80"
+          ],
+          [
+            "Could",
+            "60, 110"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "avail",
+          "label": "Hours available for features after contingency",
+          "unit": "hours",
+          "answer": 1020.0,
+          "tolerance": 0
+        },
+        {
+          "id": "must",
+          "label": "Must-have hours",
+          "unit": "hours",
+          "answer": 740,
+          "tolerance": 0
+        },
+        {
+          "id": "left",
+          "label": "Hours left for Should/Could after Musts",
+          "unit": "hours",
+          "answer": 280.0,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Available = 1,200 × 0.85 = 1020. Musts = 120+200+180+150+90 = 740. Left = 280 hours: not enough for all 320 Should hours, so some Shoulds and every Could must wait or be traded."
+    }
+  },
+  {
+    "id": "pm-hybrid-delivery-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Using DSDM-style guidance that Must-haves should be no more than about 60% of total effort, check this release plan of 1,000 hours.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Category",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Must",
+            "720"
+          ],
+          [
+            "Should",
+            "180"
+          ],
+          [
+            "Could",
+            "100"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "pct",
+          "label": "Must-have share of effort",
+          "unit": "%",
+          "answer": 72.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "over",
+          "label": "Hours of Must-haves above the 60% guideline",
+          "unit": "hours",
+          "answer": 120,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Musts = 720 / 1000 = 72%. The 60% guideline is 600 hours, so 120 hours of Musts are over; the plan has too little room to flex."
+    }
+  },
+  {
+    "id": "pm-hybrid-delivery-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "On a fixed-price logistics platform built in sprints, the client says in sprint 4: 'Agile means we can change anything, right?' and wants to swap a planned reporting module for a driver-rating feature of similar size.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a fixed-price logistics platform built in sprints, the client says in sprint 4: 'Agile means we can change anything, right?' and wants to swap a planned reporting module for a driver-rating feature of similar size.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you respond?",
+          "options": [
+            "Refuse all changes: it's fixed price",
+            "Agree to swap like-for-like if estimates are similar and nothing already built is thrown away, recorded in the change log",
+            "Add the rating feature on top for free",
+            "Charge a full new project fee"
+          ],
+          "correctIndex": 1,
+          "explanation": "Hybrid contracts often allow trading scope of equal size; the swap must be estimated and recorded."
+        },
+        {
+          "id": "s2",
+          "question": "Later they ask to add both features back. What now?",
+          "options": [
+            "Accept quietly",
+            "Raise a change request with the cost and date impact, since it increases total scope",
+            "Drop testing to fit",
+            "Ask the team to work faster"
+          ],
+          "correctIndex": 1,
+          "explanation": "Adding net scope on a fixed bid needs a change request."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-hybrid-delivery-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Mark the weak clauses in this draft hybrid delivery approach for a fixed-budget AI chatbot project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Budget and launch date are fixed; scope is prioritised using MoSCoW.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Every feature in the 80-item wishlist is a Must-have.",
+          "issue": "If everything is a Must, nothing can flex, so the hybrid model collapses into fixed scope at fixed price."
+        },
+        {
+          "id": "p3",
+          "text": "We will demo working software to the client every two weeks.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Changes of equal size may be swapped by agreement and recorded in the change log.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Acceptance testing will happen only once, after all sprints are finished.",
+          "issue": "Leaving acceptance to the end loses the early feedback hybrid delivery depends on; accept per sprint or milestone."
+        },
+        {
+          "id": "p6",
+          "text": "A 10–15% contingency is held for risks and estimate errors.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-hybrid-delivery-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A government client requires a Gantt chart with milestone dates and stage gates, while your team works in two-week sprints.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A government client requires a Gantt chart with milestone dates and stage gates, while your team works in two-week sprints.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you reconcile the two?",
+          "options": [
+            "Abandon sprints and work in waterfall",
+            "Map milestones to release-level goals delivered by groups of sprints, and report sprint progress against those milestones",
+            "Give the client a fake Gantt chart",
+            "Refuse the stage gates"
+          ],
+          "correctIndex": 1,
+          "explanation": "Hybrid governance: the client's gates sit at milestone level; sprints deliver the work inside them."
+        },
+        {
+          "id": "s2",
+          "question": "A stage gate needs a signed design document, but the team usually designs incrementally. What is a reasonable compromise?",
+          "options": [
+            "Write a full detailed design for all features up front",
+            "Provide a high-level architecture and key decisions for the gate, with detailed design done per sprint",
+            "Skip the gate",
+            "Let the client design it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Enough design to satisfy governance and reduce risk, without freezing detail that is better decided later."
+        },
+        {
+          "id": "s3",
+          "question": "Midway, velocity shows the last milestone will slip by three weeks. What do you do?",
+          "options": [
+            "Wait to see if it improves",
+            "Report it early with options: cut Could-haves, add capacity, or move the date, with impacts",
+            "Ask for overtime without telling the client",
+            "Re-baseline silently"
+          ],
+          "correctIndex": 1,
+          "explanation": "Early, option-based reporting is the core of hybrid reporting to a predictive governance layer."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-hybrid-delivery-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "For a fixed date and fixed budget hybrid project, order what should flex first when the team is behind.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Launch date (only as a last resort, by agreement)"
+        },
+        {
+          "id": "r2",
+          "label": "Should-have features"
+        },
+        {
+          "id": "r1",
+          "label": "Could-have features"
+        },
+        {
+          "id": "r3",
+          "label": "Scope detail of Must-haves (simpler version that still meets the need)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Fixing time and cost means scope flexes, starting with the least important; the date moves only by explicit agreement."
+    }
+  },
+  {
+    "id": "pm-hybrid-delivery-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What best describes 'hybrid delivery' in an agency?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Combining predictive planning and commercial controls with iterative, agile building",
+        "Running two projects at once",
+        "Using Jira alongside ClickUp",
+        "Having half the team in the office"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hybrid mixes predictive elements (fixed budget, milestones, stage gates) with adaptive execution (sprints, feedback).",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-hybrid-delivery-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In a fixed-price hybrid contract, which element is usually kept flexible?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The lower-priority scope",
+        "The total price",
+        "The legal entity of the client",
+        "The definition of done"
+      ],
+      "correctIndex": 0,
+      "explanation": "Time and cost are fixed, so prioritised scope (the Shoulds and Coulds) is what flexes.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-hybrid-delivery-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-hybrid-delivery",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client insists both scope and date are fixed and complete, with a fixed budget. As a senior PM, what is the strongest response?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Explain that fixing all three leaves quality as the only variable; propose fixing two and prioritising scope, or adding contingency for the risk",
+        "Accept and plan overtime",
+        "Accept and reduce testing",
+        "Refuse to work with the client"
+      ],
+      "correctIndex": 0,
+      "explanation": "The iron triangle: when scope, time and cost are all locked, quality absorbs the risk. A senior PM makes that trade explicit.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

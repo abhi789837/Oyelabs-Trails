@@ -1,0 +1,362 @@
+[
+  {
+    "id": "bd-upwork-profile-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the lines of this agency Upwork profile overview that should be rewritten.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines of this agency Upwork profile overview that should be rewritten.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Title: Web | Mobile | AI | Blockchain | Games | SEO | Design | Data Entry",
+          "issue": "A title listing everything signals no specialism and matches no search well."
+        },
+        {
+          "id": "p2",
+          "text": "We help healthcare and logistics companies launch AI-powered web and mobile apps in 8-16 weeks.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Recent work: a patient-booking app for a clinic group and a route-planning dashboard for a courier firm.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "We are the best and cheapest agency on Upwork.",
+          "issue": "Unprovable superlatives and 'cheapest' attract price shoppers and erode trust."
+        },
+        {
+          "id": "p5",
+          "text": "Every project has a dedicated project manager and weekly demos.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Contact us for anything at all, we do it all.",
+          "issue": "Weak, unfocused close; invite a specific next step for the client's kind of project."
+        },
+        {
+          "id": "p7",
+          "text": "Message us with your idea and we will reply with a rough plan within one business day.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-upwork-profile-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these portfolio items from most to least useful to feature on an agency profile that targets AI and mobile app buyers.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these portfolio items from most to least useful to feature on an agency profile that targets AI and mobile app buyers.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "A logo design done for a friend's cafe"
+        },
+        {
+          "id": "r4",
+          "label": "An unlabelled screenshot of code with no context"
+        },
+        {
+          "id": "r1",
+          "label": "Case study: AI support chatbot for an e-commerce brand, with screenshots, the problem, the solution and a measured result"
+        },
+        {
+          "id": "r2",
+          "label": "Case study: React Native delivery app with screenshots and app store links"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Outcome-led case studies in the target niche sell best; relevant work without outcomes is next; off-niche and context-free items add noise."
+    }
+  },
+  {
+    "id": "bd-upwork-profile-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You rewrote the profile title and overview at the start of month 2. Calculate the invite rate (invites per 100 profile views) for each month and the percentage change.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "You rewrote the profile title and overview at the start of month 2. Calculate the invite rate (invites per 100 profile views) for each month and the percentage change.",
+      "table": {
+        "columns": [
+          "Month",
+          "Profile views",
+          "Invites to jobs"
+        ],
+        "rows": [
+          [
+            "Month 1 (old profile)",
+            "800",
+            "8"
+          ],
+          [
+            "Month 2 (new profile)",
+            "750",
+            "15"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "m1",
+          "label": "Month 1 invites per 100 views",
+          "unit": "",
+          "answer": 1,
+          "tolerance": 0.01
+        },
+        {
+          "id": "m2",
+          "label": "Month 2 invites per 100 views",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "chg",
+          "label": "Change in invite rate",
+          "unit": "%",
+          "answer": 100,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "8/800 x 100 = 1.0; 15/750 x 100 = 2.0; (2.0 - 1.0) / 1.0 = +100%. Fewer views but double the conversion."
+    }
+  },
+  {
+    "id": "bd-upwork-profile-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your agency profile gets views but few invites. The title is 'Full-Service Software Company'.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your agency profile gets views but few invites. The title is 'Full-Service Software Company'.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best first change?",
+          "options": [
+            "Lower the hourly rate",
+            "Remove all case studies to keep it short",
+            "Add more skills tags until the limit",
+            "Rewrite the title around a specific buyer and outcome, e.g. AI and mobile apps for healthcare startups"
+          ],
+          "correctIndex": 3,
+          "explanation": "The title drives both search match and the first impression; a specific buyer and outcome beats a generic label."
+        },
+        {
+          "id": "s2",
+          "question": "Which change to the overview supports the new title best?",
+          "options": [
+            "A list of every technology the team has used",
+            "The founding story and office photos",
+            "Two or three outcome-led case studies from that niche in the first lines",
+            "A long paragraph about company values"
+          ],
+          "correctIndex": 2,
+          "explanation": "Proof in the chosen niche makes the positioning credible."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upwork-profile-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A completed client left a 3-star review saying 'good code, poor communication'. Your profile has 20 other reviews averaging 4.9.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A completed client left a 3-star review saying 'good code, poor communication'. Your profile has 20 other reviews averaging 4.9.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should you respond on the profile?",
+          "options": [
+            "Ignore it entirely",
+            "Post a short, professional reply that thanks them and names the process change made",
+            "Argue publicly that the client was unclear",
+            "Ask the client to delete it in exchange for a discount"
+          ],
+          "correctIndex": 1,
+          "explanation": "A calm reply showing what changed reassures future buyers more than silence or argument."
+        },
+        {
+          "id": "s2",
+          "question": "What change best protects future reviews?",
+          "options": [
+            "A fixed communication rhythm per project (weekly update and demo) owned by the PM",
+            "Only take short projects",
+            "Stop asking clients for reviews",
+            "Hide the review section"
+          ],
+          "correctIndex": 0,
+          "explanation": "The review named a process gap; fixing the process is what prevents repeats."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upwork-profile-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these profile changes by likely impact on winning larger ($30k+) AI projects, highest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these profile changes by likely impact on winning larger ($30k+) AI projects, highest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Add certifications in a cloud platform"
+        },
+        {
+          "id": "r4",
+          "label": "Update the profile photo to the office building"
+        },
+        {
+          "id": "r1",
+          "label": "Add two detailed AI case studies with business outcomes"
+        },
+        {
+          "id": "r2",
+          "label": "Rewrite the title and overview to target a niche that buys larger projects"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Proof of similar large work moves buyers most, then clear positioning; certifications help a little; photos barely matter."
+    }
+  },
+  {
+    "id": "bd-upwork-profile-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why is a niche-focused agency profile usually better than 'we do everything'?",
+    "mcq": {
+      "options": [
+        "Buyers search and decide by relevance, and a focused profile matches their problem and looks more expert",
+        "Upwork only allows one skill per profile",
+        "Niche profiles always charge lower rates",
+        "It removes the need for case studies"
+      ],
+      "correctIndex": 0,
+      "explanation": "Specialism improves both search matching and perceived expertise.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-profile-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which overview opening is strongest?",
+    "mcq": {
+      "options": [
+        "We help logistics companies cut manual dispatch work with custom web and AI tools, live in 10-14 weeks.",
+        "Welcome to our profile! We are a team of passionate developers.",
+        "We are a software company established with many skilled resources.",
+        "Hire us for any IT work at the lowest price."
+      ],
+      "correctIndex": 0,
+      "explanation": "It names the buyer, the problem, the solution and a concrete expectation in one line.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-profile-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-profile",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Profile views are high but invites are low. What does that most likely point to?",
+    "mcq": {
+      "options": [
+        "Upwork is not showing the profile to anyone",
+        "The rate is too low",
+        "There are too many reviews",
+        "The profile is found in search but fails to convince: positioning, proof or the first lines need work"
+      ],
+      "correctIndex": 3,
+      "explanation": "Views show discoverability is fine; low conversion points at what visitors see once they land.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

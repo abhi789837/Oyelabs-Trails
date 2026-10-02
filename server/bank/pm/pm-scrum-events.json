@@ -1,0 +1,334 @@
+[
+  {
+    "id": "pm-scrum-events-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the Scrum events as they happen within one Sprint.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Sprint Retrospective"
+        },
+        {
+          "id": "r2",
+          "label": "Daily Scrum (every day)"
+        },
+        {
+          "id": "r1",
+          "label": "Sprint Planning"
+        },
+        {
+          "id": "r3",
+          "label": "Sprint Review"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "The Sprint starts with Sprint Planning, Daily Scrums run throughout, the Review inspects the increment, and the Retrospective closes the Sprint."
+    }
+  },
+  {
+    "id": "pm-scrum-events-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The Scrum Guide sets maximum timeboxes for a one-month Sprint: Planning 8 h, Review 4 h, Retrospective 3 h, Daily Scrum 15 min. For shorter Sprints, events are usually shorter. Your team runs 2-week Sprints and scales Planning, Review and Retro to half the monthly maximum. What are their timeboxes?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "plan",
+          "label": "Sprint Planning",
+          "unit": "hours",
+          "answer": 4,
+          "tolerance": 0
+        },
+        {
+          "id": "review",
+          "label": "Sprint Review",
+          "unit": "hours",
+          "answer": 2,
+          "tolerance": 0
+        },
+        {
+          "id": "retro",
+          "label": "Sprint Retrospective",
+          "unit": "hours",
+          "answer": 1.5,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Half of 8, 4 and 3 hours is 4, 2 and 1.5 hours. The Daily Scrum stays at 15 minutes whatever the Sprint length."
+    }
+  },
+  {
+    "id": "pm-scrum-events-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Here is how an agency team describes its Scrum events. Mark the statements that do not match the Scrum Guide.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The Sprint Review is a working session where stakeholders see the increment and discuss what to do next.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The Daily Scrum is a 15-minute status report to the PM.",
+          "issue": "The Daily Scrum is for the Developers to inspect progress toward the Sprint Goal and adapt their plan, not a status report."
+        },
+        {
+          "id": "p3",
+          "text": "The Retrospective plans ways to improve quality and effectiveness.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "When work is not finished, we extend the Sprint by a few days.",
+          "issue": "Sprints have a fixed length; unfinished work returns to the Product Backlog."
+        },
+        {
+          "id": "p5",
+          "text": "Sprint Planning produces a Sprint Goal and a Sprint Backlog.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The Sprint itself is a container for all the other events.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-scrum-events-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Your 2-week Sprint Reviews have become 15-minute demos where the client watches silently and leaves.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your 2-week Sprint Reviews have become 15-minute demos where the client watches silently and leaves.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is missing?",
+          "options": [
+            "Stakeholder collaboration on what to do next, based on what was done",
+            "A longer slide deck",
+            "More features in the demo",
+            "A bigger audience"
+          ],
+          "correctIndex": 0,
+          "explanation": "The Review is a working session to inspect the outcome and adapt the backlog, not a one-way demo."
+        },
+        {
+          "id": "s2",
+          "question": "What change do you make for the next Review?",
+          "options": [
+            "Let the client use the increment, then discuss feedback and adjust the top of the backlog together",
+            "Send a video instead and cancel the meeting",
+            "Have only the PM present",
+            "Add a status report"
+          ],
+          "correctIndex": 0,
+          "explanation": "Hands-on use and backlog discussion turn it into a real inspection and adaptation."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scrum-events-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Mid-Sprint, the client tells the Product Owner that a new regulation makes the Sprint Goal (a new referral programme) pointless.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Mid-Sprint, the client tells the Product Owner that a new regulation makes the Sprint Goal (a new referral programme) pointless.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What can happen to the Sprint?",
+          "options": [
+            "The Product Owner can cancel it because the Sprint Goal is obsolete",
+            "The Scrum Master must extend it",
+            "The Developers must finish it anyway",
+            "The client cancels it directly"
+          ],
+          "correctIndex": 0,
+          "explanation": "Only the Product Owner has the authority to cancel a Sprint, and only if the Sprint Goal becomes obsolete."
+        },
+        {
+          "id": "s2",
+          "question": "What happens next?",
+          "options": [
+            "Done work is reviewed, unfinished items go back to the Product Backlog, and a new Sprint Planning starts",
+            "The team takes a week off",
+            "All work is thrown away",
+            "The old Sprint Backlog is kept unchanged"
+          ],
+          "correctIndex": 0,
+          "explanation": "Cancelling returns undone work to the Product Backlog and the team plans a new Sprint."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scrum-events-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the three topics of Sprint Planning as the Scrum Guide presents them.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "What can be Done this Sprint? (select items)"
+        },
+        {
+          "id": "r1",
+          "label": "Why is this Sprint valuable? (Sprint Goal)"
+        },
+        {
+          "id": "r3",
+          "label": "How will the chosen work get done? (plan the work)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "explanation": "Planning starts with the why (the Sprint Goal), then selects what, then the Developers plan how."
+    }
+  },
+  {
+    "id": "pm-scrum-events-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the purpose of the Sprint Retrospective?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To plan ways to increase quality and effectiveness",
+        "To demo features to the client",
+        "To estimate the backlog",
+        "To assign blame for missed items"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Retrospective inspects how the last Sprint went regarding people, interactions, processes and tools, and identifies improvements.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scrum-events-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Who must attend the Daily Scrum?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The Developers",
+        "The client sponsor",
+        "The whole agency",
+        "Only the Scrum Master"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Daily Scrum is for the Developers; the Scrum Master and Product Owner take part as Developers only if they work on Sprint Backlog items.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scrum-events-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-events",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your team suggests skipping the Retrospective when 'nothing went wrong'. What is the best response?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Keep it; there is always something to improve, and good practices are worth reinforcing",
+        "Skip it to save time",
+        "Replace it with an extra demo",
+        "Hold it only once a quarter"
+      ],
+      "correctIndex": 0,
+      "explanation": "Retrospectives are where the team continuously improves; a good Sprint still offers improvements and practices to keep.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

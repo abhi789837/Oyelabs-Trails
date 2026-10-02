@@ -1,0 +1,319 @@
+[
+  {
+    "id": "bd-ai-personalisation-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the problems in AI-personalised opening lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "An AI tool drafted these opening lines for a batch of cold emails. Mark the ones you must not send as written.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Saw your team is hiring two Flutter developers. Is the mobile roadmap growing this year?",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Congratulations on your Series B!",
+          "issue": "Not verified: the tool may have invented the funding round. Check the source before mentioning it."
+        },
+        {
+          "id": "p3",
+          "text": "Hope your daughter Emma enjoyed her birthday party last weekend.",
+          "issue": "Personal family details from social media are intrusive and irrelevant to a business email."
+        },
+        {
+          "id": "p4",
+          "text": "Hi {{first_name}}, loved your talk on logistics automation.",
+          "issue": "Broken merge field; it shows the email is automated and careless."
+        },
+        {
+          "id": "p5",
+          "text": "Your new store locator page loads slowly on mobile, which we often help retailers fix.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Read your post about cutting support tickets with self-service. Curious what you've tried so far.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order an AI personalisation workflow.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for running AI-personalised outreach responsibly, first at the top.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Check each fact against its source and remove anything unverified"
+        },
+        {
+          "id": "i5",
+          "label": "Send a small batch and compare results against a control group"
+        },
+        {
+          "id": "i1",
+          "label": "Define the ICP and build the prospect list"
+        },
+        {
+          "id": "i2",
+          "label": "Collect public, business-relevant signals for each prospect"
+        },
+        {
+          "id": "i3",
+          "label": "Generate draft first lines with the AI tool"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Personalisation only helps when it is accurate and relevant. The human check comes before sending, and a small test proves it works before you scale."
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Compare reply rates for generic and personalised emails.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Last month you sent 1,000 generic emails (18 replies) and 400 AI-personalised, human-checked emails (22 replies). Checking each personalised email took 2 minutes.",
+      "table": null,
+      "fields": [
+        {
+          "id": "generic",
+          "label": "Generic reply rate",
+          "unit": "%",
+          "answer": 1.8,
+          "tolerance": 0.01
+        },
+        {
+          "id": "personal",
+          "label": "Personalised reply rate",
+          "unit": "%",
+          "answer": 5.5,
+          "tolerance": 0.01
+        },
+        {
+          "id": "review",
+          "label": "Hours spent checking the personalised emails",
+          "unit": "h",
+          "answer": 13.33,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "Generic = 18 ÷ 1,000 = 1.8%. Personalised = 22 ÷ 400 = 5.5%. Review = 400 × 2 ÷ 60 = 13.33 hours. The review time is part of the true cost of personalisation."
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Decide what data your AI tool may use.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A teammate suggests connecting your AI writer to a scraper that collects prospects' personal social media posts, including family photos and comments, to make emails \"feel more human\".",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Try it on a small batch first",
+            "Decline and keep to public, business-relevant signals such as company news, job posts and professional posts",
+            "Use it but don't mention where the details came from",
+            "Use it only for senior prospects"
+          ],
+          "correctIndex": 1,
+          "explanation": "Personal data beyond business context is intrusive and may breach privacy rules and platform terms."
+        },
+        {
+          "id": "s2",
+          "question": "Before uploading your prospect list to a new AI tool, what must you check?",
+          "options": [
+            "Only the tool's price",
+            "Whether colleagues already use it informally",
+            "That company policy approves the tool and its data terms allow processing the list",
+            "Nothing; prospect data is public"
+          ],
+          "correctIndex": 2,
+          "explanation": "Sharing personal data with a new processor is a privacy decision; check policy and, if unclear, ask whoever owns data protection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Respond to an accuracy problem in a live campaign.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect replies: \"We never won that award you mention.\" You check and find roughly 1 in 20 emails in the campaign contains a wrong company fact.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Keep sending; 95% are correct",
+            "Pause the campaign, apologise to that prospect, and sample-check the remaining drafts",
+            "Delete the reply and move on",
+            "Blame the tool in your reply"
+          ],
+          "correctIndex": 1,
+          "explanation": "A known error rate is a reputational risk with every send. Stop, own the mistake, measure the problem."
+        },
+        {
+          "id": "s2",
+          "question": "How do you fix the process before restarting?",
+          "options": [
+            "Switch to a different AI tool and trust it",
+            "Remove all personalisation permanently",
+            "Require a source link for every fact and a human check against it before sending",
+            "Only check emails to senior prospects"
+          ],
+          "correctIndex": 2,
+          "explanation": "Every claim should trace back to a source someone has looked at."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Work out the cost per meeting of an AI-personalised campaign.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A campaign uses an AI tool costing $300 a month and 10 hours of human review at $20 an hour. You send 600 emails a month and 3% turn into meetings.",
+      "table": null,
+      "fields": [
+        {
+          "id": "meetings",
+          "label": "Meetings booked per month",
+          "unit": "",
+          "answer": 18,
+          "tolerance": 0.01
+        },
+        {
+          "id": "cpm",
+          "label": "Cost per meeting",
+          "unit": "$",
+          "answer": 27.78,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "Meetings = 600 × 0.03 = 18. Cost = 300 + 10 × 20 = $500. Cost per meeting = 500 ÷ 18 = $27.78."
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which signal is appropriate to use when personalising a cold email?",
+    "mcq": {
+      "options": [
+        "The company recently posted jobs for mobile developers",
+        "The prospect's holiday photos with their family",
+        "The prospect's home address",
+        "A rumour from a forum that the company is in trouble"
+      ],
+      "correctIndex": 0,
+      "explanation": "Keep to public, business-relevant signals. Personal or unverified information is intrusive or risky.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your AI tool writes: \"Loved your recent webinar on supply chains.\" What should you do before sending?",
+    "mcq": {
+      "options": [
+        "Send it; the tool found it",
+        "Confirm the webinar exists and the prospect spoke at it",
+        "Change it to a vaguer compliment",
+        "Add more detail about the webinar to sound convincing"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI tools can produce plausible but false details. Every specific claim needs a check against a real source.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-personalisation-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-personalisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How do you know whether AI personalisation is actually improving results?",
+    "mcq": {
+      "options": [
+        "Count how many emails the tool wrote",
+        "Compare reply and meeting rates against a similar control group sent without it",
+        "Ask the AI tool to estimate its own impact",
+        "Check whether emails feel more personal to you"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only a fair comparison against a similar list shows whether the extra effort pays for itself.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

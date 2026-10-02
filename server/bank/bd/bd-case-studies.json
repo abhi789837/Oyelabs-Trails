@@ -1,0 +1,333 @@
+[
+  {
+    "id": "bd-case-studies-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this case study draft.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this case study draft that cannot be published as written.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client: a regional home-care provider with 900 caregivers.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Logo and name of the client shown on the cover.",
+          "issue": "Use the client's name and logo only with written permission."
+        },
+        {
+          "id": "p3",
+          "text": "Challenge: shift scheduling was done in spreadsheets, causing missed visits.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Result: revenue grew 300% thanks to our app.",
+          "issue": "Unverified and attributes everything to the app; use measured results the client has confirmed."
+        },
+        {
+          "id": "p5",
+          "text": "We built the scheduling and check-in app in 14 weeks.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Screenshot shows real patient names and addresses.",
+          "issue": "Confidential personal data; use anonymised or dummy data."
+        },
+        {
+          "id": "p7",
+          "text": "Missed visits fell from 6% to 2% in the first three months, according to the client's data.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-case-studies-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order the sections of a case study.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these case study sections from top to bottom.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "What was delivered"
+        },
+        {
+          "id": "i5",
+          "label": "Measured results"
+        },
+        {
+          "id": "i6",
+          "label": "Client quote"
+        },
+        {
+          "id": "i1",
+          "label": "Client and context"
+        },
+        {
+          "id": "i2",
+          "label": "The challenge"
+        },
+        {
+          "id": "i3",
+          "label": "Approach"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "Context, problem, how, what, results, quote. The reader needs the problem before the solution makes sense, and the quote confirms the results."
+    }
+  },
+  {
+    "id": "bd-case-studies-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Get a case study approved.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A fintech client is happy with your work, but their legal team will not allow their name in public material.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you propose?",
+          "options": [
+            "An anonymised case study (\"a UK payments startup\") with details they approve",
+            "Publish with their name anyway",
+            "Drop the case study entirely",
+            "Use their name but not their logo"
+          ],
+          "correctIndex": 0,
+          "explanation": "Anonymised case studies still prove capability for your ICP."
+        },
+        {
+          "id": "s2",
+          "question": "You want to include a result: onboarding time fell from 5 days to 1. What must happen?",
+          "options": [
+            "Nothing; you measured it",
+            "The client confirms the figure and approves the final text",
+            "Round it to look more impressive",
+            "Ask your designer to check it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Published results need the client's confirmation and approval."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-case-studies-t3-4",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Work out the results for a case study.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Before your project, a client's customer onboarding took 4.5 days on average; now it takes 1.5 days. Monthly support tickets fell from 1,200 to 780. Round to two decimals.",
+      "table": null,
+      "fields": [
+        {
+          "id": "onboard",
+          "label": "Reduction in onboarding time",
+          "unit": "%",
+          "answer": 66.67,
+          "tolerance": 0.01
+        },
+        {
+          "id": "tickets",
+          "label": "Reduction in support tickets",
+          "unit": "%",
+          "answer": 35,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Onboarding: (4.5 − 1.5) ÷ 4.5 = 66.67%. Tickets: (1,200 − 780) ÷ 1,200 = 35%. Show before and after values alongside percentages so readers can judge them."
+    }
+  },
+  {
+    "id": "bd-case-studies-t3-5",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Choose which project to write up.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your agency's ICP for next year is mid-size logistics companies. You can write one case study this quarter.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which project should you choose?",
+          "options": [
+            "Your most visually impressive project, a fashion brand's website",
+            "The largest project by revenue, for a bank",
+            "A fleet-tracking app for a mid-size logistics firm with measured results and a willing client",
+            "A personal side project from your team"
+          ],
+          "correctIndex": 2,
+          "explanation": "Case studies work when readers see themselves in them; match your ICP and measured results."
+        },
+        {
+          "id": "s2",
+          "question": "The logistics client agrees but has only anecdotal results. What do you do?",
+          "options": [
+            "Estimate results yourself",
+            "Publish without results",
+            "Use industry averages as their results",
+            "Work with them to pull before-and-after data from their systems before writing"
+          ],
+          "correctIndex": 3,
+          "explanation": "Specific, real numbers are what make a case study credible."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-case-studies-t3-6",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Write the results section of a case study.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write the \"Results\" section of a case study from the confirmed facts below. Keep it factual and specific.",
+      "context": "Confirmed by the client: (1) Missed home-care visits fell from 6% to 2% in the first three months. (2) Schedulers save about 10 hours a week each (4 schedulers). (3) 92% of caregivers used the app daily by month two. Quote approved: \"For the first time we know every visit happened.\" – Operations Director",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "facts",
+          "label": "Uses only confirmed facts",
+          "description": "Includes the confirmed numbers accurately, with no invented results.",
+          "weight": 1
+        },
+        {
+          "id": "specific",
+          "label": "Specific and measurable",
+          "description": "Shows before-and-after values and timeframes, not vague claims.",
+          "weight": 1
+        },
+        {
+          "id": "readable",
+          "label": "Easy to scan",
+          "description": "Short sentences or bullets that a busy reader can take in quickly.",
+          "weight": 1
+        },
+        {
+          "id": "quote",
+          "label": "Uses the approved quote",
+          "description": "Includes the quote as approved, attributed by role.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Results\n- Missed visits fell from 6% to 2% within the first three months.\n- Each of the four schedulers saves about 10 hours a week, around 40 hours across the team.\n- By month two, 92% of caregivers were using the app every day.\n\"For the first time we know every visit happened.\" – Operations Director"
+    }
+  },
+  {
+    "id": "bd-case-studies-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What makes a case study most persuasive to a prospect?",
+    "mcq": {
+      "options": [
+        "Long technical descriptions of the stack",
+        "A similar client, a clear problem and specific, confirmed results",
+        "Many adjectives about the agency's quality",
+        "A list of every feature built"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prospects look for themselves in the story and for evidence that the result is real.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-case-studies-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Before publishing a case study that names a client, what must you have?",
+    "mcq": {
+      "options": [
+        "A verbal OK from your contact months ago",
+        "Nothing, if the project is finished",
+        "The client's written approval of the content and use of their name",
+        "Approval from your own design team"
+      ],
+      "correctIndex": 2,
+      "explanation": "Naming a client and their results requires their explicit approval of the final version.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-case-studies-m3-3",
+    "departmentId": "bd",
+    "skillId": "bd-case-studies",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A client's result was strong, but partly due to their own marketing campaign. How should the case study present it?",
+    "mcq": {
+      "options": [
+        "Attribute the whole result to your work",
+        "Leave out the result",
+        "Inflate it to make up for sharing credit",
+        "Report the result honestly and describe your part in it accurately"
+      ],
+      "correctIndex": 3,
+      "explanation": "Overclaiming is easy to spot and damages credibility; accurate attribution still persuades.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

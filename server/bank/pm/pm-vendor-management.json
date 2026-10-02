@@ -1,0 +1,391 @@
+[
+  {
+    "id": "pm-vendor-management-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "A subcontractor building the Android app for Oyelabs has missed its second milestone by a week. The client launch is in 6 weeks.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A subcontractor building the Android app for Oyelabs has missed its second milestone by a week. The client launch is in 6 weeks.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do first?",
+          "options": [
+            "Meet the vendor to get the facts: what is done, what is blocking, and a credible new date",
+            "Terminate the contract",
+            "Tell the client the vendor is to blame",
+            "Wait for the next milestone"
+          ],
+          "correctIndex": 0,
+          "explanation": "Understand the cause before choosing a remedy."
+        },
+        {
+          "id": "d2",
+          "question": "The vendor's new date leaves only 1 week for QA before launch. What next?",
+          "options": [
+            "Accept the date and squeeze QA",
+            "Take the work in-house overnight",
+            "Agree a recovery plan with weekly demos and earlier test builds, and add the risk to the RAID log",
+            "Ask the client to extend the launch without telling them why"
+          ],
+          "correctIndex": 2,
+          "explanation": "Increase visibility and protect testing; record the risk."
+        },
+        {
+          "id": "d3",
+          "question": "What do you tell the client?",
+          "options": [
+            "Nothing, since it's internal",
+            "Name and blame the vendor",
+            "That the launch is certainly fine",
+            "That a supplier slipped, the impact and your plan; Oyelabs remains accountable for the delivery"
+          ],
+          "correctIndex": 3,
+          "explanation": "The client contracted with Oyelabs; own the problem and the plan."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-vendor-management-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Score two vendors for a design subcontract using weighted criteria (score x weight, summed).",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Score two vendors for a design subcontract using weighted criteria (score x weight, summed).",
+      "table": {
+        "columns": [
+          "Criterion",
+          "Weight",
+          "Vendor A",
+          "Vendor B"
+        ],
+        "rows": [
+          [
+            "Quality of portfolio",
+            "40%",
+            "8",
+            "6"
+          ],
+          [
+            "Price",
+            "30%",
+            "5",
+            "9"
+          ],
+          [
+            "Availability",
+            "20%",
+            "7",
+            "8"
+          ],
+          [
+            "References",
+            "10%",
+            "9",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Weighted score: Vendor A",
+          "unit": "",
+          "answer": 7.0,
+          "tolerance": 0.01
+        },
+        {
+          "id": "b",
+          "label": "Weighted score: Vendor B",
+          "unit": "",
+          "answer": 7.3,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "A: 3.2 + 1.5 + 1.4 + 0.9 = 7.0. B: 2.4 + 2.7 + 1.6 + 0.6 = 7.3."
+    }
+  },
+  {
+    "id": "pm-vendor-management-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "These are terms Oyelabs proposes for a new subcontractor. Mark the ones that expose Oyelabs.",
+    "task": {
+      "kind": "spot",
+      "prompt": "These are terms Oyelabs proposes for a new subcontractor. Mark the ones that expose Oyelabs.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Deliverables and acceptance criteria are defined per milestone.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "IP in work created stays with the subcontractor.",
+          "issue": "Oyelabs must be able to transfer IP to its client; IP should assign to Oyelabs."
+        },
+        {
+          "id": "s3",
+          "text": "The subcontractor may use the client's production data for testing.",
+          "issue": "Exposes client data; use test data and flow down data-protection terms."
+        },
+        {
+          "id": "s4",
+          "text": "Payment 30 days after Oyelabs accepts each milestone.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Confidentiality obligations match those in Oyelabs' contract with the client.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "The subcontractor may further subcontract without notice.",
+          "issue": "Oyelabs loses control over who handles client work."
+        },
+        {
+          "id": "s7",
+          "text": "Weekly status reports and access to the code repository.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Either party may end the agreement with 14 days' notice.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-vendor-management-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the vendor onboarding steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the vendor onboarding steps.",
+      "items": [
+        {
+          "id": "r66caa",
+          "label": "Define the need and evaluation criteria"
+        },
+        {
+          "id": "ra304e",
+          "label": "Shortlist and evaluate vendors"
+        },
+        {
+          "id": "r6e554",
+          "label": "Due diligence: security, references, finances"
+        },
+        {
+          "id": "rdaa81",
+          "label": "Negotiate and sign a contract with flow-down terms"
+        },
+        {
+          "id": "r3cdff",
+          "label": "Onboard: access, tools, communication cadence"
+        },
+        {
+          "id": "r250d9",
+          "label": "Monitor performance against agreed measures"
+        }
+      ],
+      "correctOrder": [
+        "r66caa",
+        "ra304e",
+        "r6e554",
+        "rdaa81",
+        "r3cdff",
+        "r250d9"
+      ],
+      "explanation": "Need, evaluation, diligence, contract, onboard, monitor."
+    }
+  },
+  {
+    "id": "pm-vendor-management-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A vendor agreement has a 5% retention on each milestone, released after warranty. Calculate cash flows.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A vendor agreement has a 5% retention on each milestone, released after warranty. Calculate cash flows.",
+      "table": {
+        "columns": [
+          "Milestone",
+          "Value"
+        ],
+        "rows": [
+          [
+            "M1",
+            "$20,000"
+          ],
+          [
+            "M2",
+            "$30,000"
+          ],
+          [
+            "M3",
+            "$25,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "paid",
+          "label": "Total paid to the vendor before warranty",
+          "unit": "$",
+          "answer": 71250.0,
+          "tolerance": 1
+        },
+        {
+          "id": "held",
+          "label": "Total retention held",
+          "unit": "$",
+          "answer": 3750.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Total 75,000; 95% paid = 71,250; 3,750 retained until the warranty ends."
+    }
+  },
+  {
+    "id": "pm-vendor-management-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A vendor's API, used in a client's AI product, changes its pricing and now costs three times more per call.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A vendor's API, used in a client's AI product, changes its pricing and now costs three times more per call.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is your first step?",
+          "options": [
+            "Quantify the cost impact at current and projected volume and inform the client",
+            "Absorb the cost silently",
+            "Switch vendor immediately",
+            "Turn off the feature"
+          ],
+          "correctIndex": 0,
+          "explanation": "Facts first, then the client decides with you."
+        },
+        {
+          "id": "d2",
+          "question": "Options include caching, an alternative vendor, or passing the cost through. How do you present them?",
+          "options": [
+            "As a single recommendation",
+            "As a technical document only",
+            "By asking the client to choose without analysis",
+            "As options with cost, effort, risk and timing for each, with a recommendation"
+          ],
+          "correctIndex": 3,
+          "explanation": "Decision-ready options let the client weigh trade-offs."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-vendor-management-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does \"flow-down\" mean in a subcontract?",
+    "mcq": {
+      "options": [
+        "Paying the vendor before the client pays you",
+        "Letting the vendor talk to the client directly",
+        "Passing relevant obligations from the client contract (confidentiality, data protection, IP) down to the subcontractor",
+        "Reducing the vendor's price over time"
+      ],
+      "correctIndex": 2,
+      "explanation": "Without flow-down, Oyelabs can be bound to the client by obligations its vendor never agreed to.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-vendor-management-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why should the PM avoid letting a subcontractor manage the client relationship directly?",
+    "mcq": {
+      "options": [
+        "Subcontractors are always less skilled",
+        "Oyelabs remains accountable to the client, so it must control commitments and communication",
+        "Clients do not like vendors",
+        "It breaks every contract by default"
+      ],
+      "correctIndex": 1,
+      "explanation": "The prime contractor owns delivery; uncontrolled direct channels create unpriced commitments.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-vendor-management-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-vendor-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which measure best tracks a development vendor's performance?",
+    "mcq": {
+      "options": [
+        "Hours logged",
+        "Milestones delivered on time and accepted first time, plus defect rates",
+        "Number of meetings attended",
+        "Lines of code written"
+      ],
+      "correctIndex": 1,
+      "explanation": "Outcome measures show whether the vendor delivers usable work; activity measures do not.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

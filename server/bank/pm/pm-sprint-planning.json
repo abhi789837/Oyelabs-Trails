@@ -1,0 +1,417 @@
+[
+  {
+    "id": "pm-sprint-planning-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the three topics that Sprint Planning addresses, as described in the Scrum Guide 2020.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "What can be Done this Sprint? (select backlog items)"
+        },
+        {
+          "id": "r1",
+          "label": "Why is this Sprint valuable? (craft the Sprint Goal)"
+        },
+        {
+          "id": "r3",
+          "label": "How will the chosen work get done? (plan the work, often into tasks of a day or less)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "explanation": "The Scrum Guide 2020 lists Topic One (why, the Sprint Goal), Topic Two (what) and Topic Three (how)."
+    }
+  },
+  {
+    "id": "pm-sprint-planning-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Plan a 2-week (10 working day) sprint. Each person has 6 focus hours per day for sprint work. Work out the team's hours available for sprint work.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Person",
+          "Sprint days",
+          "Days off",
+          "Focus hours/day"
+        ],
+        "rows": [
+          [
+            "Asha (dev)",
+            "10",
+            "0",
+            "6"
+          ],
+          [
+            "Ben (dev)",
+            "10",
+            "2",
+            "6"
+          ],
+          [
+            "Chen (dev)",
+            "10",
+            "0",
+            "6"
+          ],
+          [
+            "Dana (QA)",
+            "10",
+            "1",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Team capacity for the sprint",
+          "unit": "hours",
+          "answer": 222,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Available days × 6 h: Asha 10×6=60, Ben 8×6=48, Chen 10×6=60, Dana 9×6=54. Total = 222 hours."
+    }
+  },
+  {
+    "id": "pm-sprint-planning-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Your team's last three sprints completed the points below. Next sprint one of the five developers is off for 4 of 10 days. Use the average velocity scaled by availability to suggest how many points to plan.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Sprint",
+          "Points completed"
+        ],
+        "rows": [
+          [
+            "Sprint 7",
+            "32"
+          ],
+          [
+            "Sprint 8",
+            "28"
+          ],
+          [
+            "Sprint 9",
+            "30"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "avg",
+          "label": "Average velocity",
+          "unit": "points",
+          "answer": 30.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "plan",
+          "label": "Suggested points for next sprint (avg × availability)",
+          "unit": "points",
+          "answer": 27.6,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Average = (32 + 28 + 30) / 3 = 30. Availability = (50 − 4) / 50 = 0.92. Plan ≈ 30 × 0.92 = 27.6 points."
+    }
+  },
+  {
+    "id": "pm-sprint-planning-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Here is a draft sprint plan for a client's e-commerce app. Mark the parts that break good sprint-planning practice.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Sprint Goal: Shoppers can pay by card and see an order confirmation.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Selected: 6 stories totalling 31 points; our 3-sprint average is 30.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Also selected: 12 more 'stretch' stories (40 points) so the client sees we're ambitious.",
+          "issue": "Loading far beyond proven velocity sets up a failed sprint and false client expectations."
+        },
+        {
+          "id": "p4",
+          "text": "Payment gateway story has no acceptance criteria yet; we'll work them out during the sprint.",
+          "issue": "Items pulled in should be ready; no acceptance criteria means the team cannot know when it is Done."
+        },
+        {
+          "id": "p5",
+          "text": "The PM assigned every task to named developers before the meeting.",
+          "issue": "Developers plan how to do the work and choose who does it; pre-assigning removes their ownership."
+        },
+        {
+          "id": "p6",
+          "text": "Dana's 2 days of leave are subtracted from capacity.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "We'll review progress at each Daily Scrum against the Sprint Goal.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-sprint-planning-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Halfway through Sprint Planning on a fixed-bid marketplace project, the client's product owner asks to add a 'refer a friend' feature (estimated 13 points) to this sprint. The selected work already matches your average velocity.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Halfway through Sprint Planning on a fixed-bid marketplace project, the client's product owner asks to add a 'refer a friend' feature (estimated 13 points) to this sprint. The selected work already matches your average velocity.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do in the meeting?",
+          "options": [
+            "Add it and ask the team to work weekends",
+            "Explain the sprint is full; offer to swap it for work of similar size or put it at the top of the backlog for next sprint",
+            "Refuse to discuss it",
+            "Add it silently and drop testing to fit"
+          ],
+          "correctIndex": 1,
+          "explanation": "The PO can trade scope, but adding 13 points on top of a full sprint just breaks the forecast."
+        },
+        {
+          "id": "s2",
+          "question": "The PO also confirms the feature was not in the signed scope. What else is needed?",
+          "options": [
+            "Nothing, agile means scope is free",
+            "Raise a change request so its cost and timeline impact on the fixed bid are agreed",
+            "Quietly absorb it",
+            "Cancel the sprint"
+          ],
+          "correctIndex": 1,
+          "explanation": "On a fixed bid, new scope needs a change request before it is built, even if prioritised in the backlog."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-sprint-planning-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order these Sprint Planning steps for a mature team.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Developers select items that fit capacity and support the goal"
+        },
+        {
+          "id": "r2",
+          "label": "PO presents the objective and top-ordered, refined backlog items"
+        },
+        {
+          "id": "r1",
+          "label": "Confirm capacity (leave, holidays, meetings)"
+        },
+        {
+          "id": "r3",
+          "label": "Team agrees a Sprint Goal"
+        },
+        {
+          "id": "r5",
+          "label": "Developers break selected items into tasks and check the plan is realistic"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Knowing capacity first keeps selection honest; the goal guides selection; tasks come last as the 'how'."
+    }
+  },
+  {
+    "id": "pm-sprint-planning-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "In the middle of a sprint, the developers discover the 'export to CSV' story is three times bigger than estimated. The Sprint Goal (launch the admin dashboard) does not depend on it.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "In the middle of a sprint, the developers discover the 'export to CSV' story is three times bigger than estimated. The Sprint Goal (launch the admin dashboard) does not depend on it.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the right response?",
+          "options": [
+            "Keep it and hope",
+            "Developers and PO renegotiate the scope of the Sprint Backlog, e.g. move the story back to the Product Backlog",
+            "Cancel the sprint",
+            "Change the Sprint Goal to 'export to CSV'"
+          ],
+          "correctIndex": 1,
+          "explanation": "The Scrum Guide lets scope be clarified and renegotiated with the PO as more is learned, as long as the Sprint Goal is not endangered."
+        },
+        {
+          "id": "s2",
+          "question": "What should you take into the next Sprint Planning?",
+          "options": [
+            "Nothing",
+            "Re-estimate the story with what was learned and split it if possible",
+            "Double every estimate",
+            "Ban CSV features"
+          ],
+          "correctIndex": 1,
+          "explanation": "Use the new knowledge: re-estimate and split so it fits a sprint."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-sprint-planning-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the maximum length of Sprint Planning for a one-month sprint, according to the Scrum Guide?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "2 hours",
+        "4 hours",
+        "8 hours",
+        "There is no limit"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sprint Planning is timeboxed to a maximum of eight hours for a one-month Sprint; shorter Sprints usually take less.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-sprint-planning-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Who selects how many Product Backlog items go into the sprint?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The Developers",
+        "The Scrum Master",
+        "The client's CEO",
+        "The PM, based on the contract"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Product Owner orders the backlog and explains it, but the Developers select how much they can do because they are the ones accountable for the work.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-sprint-planning-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-sprint-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A client asks why the team commits to a Sprint Goal instead of to every story selected. What is the best explanation?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The goal gives a single objective and lets the team flex the detailed scope as they learn, while still delivering value",
+        "Stories are never finished in Scrum",
+        "Goals are only for internal use",
+        "The Scrum Guide forbids selecting stories"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Sprint Goal is the commitment for the Sprint Backlog; it gives focus and flexibility on the exact work needed to reach it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

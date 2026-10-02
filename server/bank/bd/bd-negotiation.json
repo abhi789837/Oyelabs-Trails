@@ -1,0 +1,331 @@
+[
+  {
+    "id": "bd-negotiation-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Work out your walk-away price and the ZOPA.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Delivery cost for a project is $39,000 and your minimum acceptable gross margin is 25%. From discovery you believe the client's maximum budget is $60,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "res",
+          "label": "Your reservation (walk-away) price",
+          "unit": "$",
+          "answer": 52000,
+          "tolerance": 1
+        },
+        {
+          "id": "width",
+          "label": "Width of the ZOPA",
+          "unit": "$",
+          "answer": 8000,
+          "tolerance": 1
+        },
+        {
+          "id": "mid",
+          "label": "Midpoint of the ZOPA",
+          "unit": "$",
+          "answer": 56000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Reservation = 39,000 ÷ (1 − 0.25) = $52000 (not 39,000 × 1.25, which is markup). ZOPA runs from $52000 to $60,000, a width of $8000; midpoint $56000. Your anchor should sit above the ZOPA, with reasons."
+    }
+  },
+  {
+    "id": "bd-negotiation-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Prepare and open a negotiation.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are about to negotiate a $64,000 project. Your walk-away price is $52,000. A late-stage deal with another client could use the same team.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should you know before the call?",
+          "options": [
+            "Your BATNA, your walk-away price and what you can trade",
+            "Only your opening price",
+            "The client's personal interests outside work",
+            "Nothing; respond to what they say"
+          ],
+          "correctIndex": 0,
+          "explanation": "Preparation is mostly about your own alternatives and limits."
+        },
+        {
+          "id": "s2",
+          "question": "The client asks: \"What's the lowest you'd go?\" What do you say?",
+          "options": [
+            "Tell them $52,000",
+            "Restate the value and ask what is driving the question, without revealing your walk-away",
+            "Offer $55,000 immediately",
+            "Refuse to discuss price at all"
+          ],
+          "correctIndex": 1,
+          "explanation": "Revealing your reservation price gives away the whole ZOPA."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-negotiation-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Respond to an aggressive anchor.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your proposal is $80,000. The client's procurement lead opens: \"We'll pay $45,000. That's our number.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first move?",
+          "options": [
+            "Don't counter yet; ask how they arrived at $45,000 and re-anchor on the scope and value",
+            "Counter at $62,500, the midpoint",
+            "Accept to keep the relationship",
+            "End the negotiation"
+          ],
+          "correctIndex": 0,
+          "explanation": "Countering an extreme anchor straight away legitimises it. Explore its basis first."
+        },
+        {
+          "id": "s2",
+          "question": "They say $45,000 is the approved budget. Next?",
+          "options": [
+            "Discount the full scope to $45,000",
+            "Show what $45,000 could deliver as a reduced scope, alongside the full scope at $80,000",
+            "Ask them to find more budget and wait",
+            "Threaten to walk away"
+          ],
+          "correctIndex": 1,
+          "explanation": "Changing scope to fit budget protects your price per unit of value."
+        },
+        {
+          "id": "s3",
+          "question": "They pick the reduced scope but ask for the full scope's support period. What do you do?",
+          "options": [
+            "Give it for free",
+            "Refuse to talk about support",
+            "Trade it: offer it if they commit to the follow-on phase or pay more upfront",
+            "Accept and quietly reduce QA"
+          ],
+          "correctIndex": 2,
+          "explanation": "Every extra is a concession; ask for something in return."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-negotiation-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank your alternatives by BATNA strength.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Before negotiating with a client who wants a big discount, rank your alternatives for the same team, strongest first.",
+      "items": [
+        {
+          "id": "i3",
+          "label": "A proposal sent last week with no reply yet"
+        },
+        {
+          "id": "i4",
+          "label": "Bench time with no other pipeline"
+        },
+        {
+          "id": "i1",
+          "label": "A signed SOW from another client that needs this team next month"
+        },
+        {
+          "id": "i2",
+          "label": "A late-stage deal estimated at 70% likely to close in three weeks"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "A BATNA is only as strong as it is certain. Signed work beats a likely deal, which beats an unanswered proposal, which beats nothing."
+    }
+  },
+  {
+    "id": "bd-negotiation-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the mistakes in this negotiation prep sheet.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this prep sheet that will weaken your position.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Our target price: $72,000 (the original proposal).",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Walk-away price: $38,000.",
+          "issue": "Below the $41,000 delivery cost, so any deal near it loses money."
+        },
+        {
+          "id": "p3",
+          "text": "Opening: tell them our walk-away early to build trust.",
+          "issue": "Disclosing your walk-away hands the client the ZOPA."
+        },
+        {
+          "id": "p4",
+          "text": "BATNA: the team moves to the healthcare project starting in May.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Tradeables: payment terms, phasing, case-study rights, support period.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "If they push back, offer a 10% discount without asking for anything.",
+          "issue": "Unconditional discounts invite more pushing; trade instead."
+        },
+        {
+          "id": "p7",
+          "text": "Delivery cost: $41,000.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-negotiation-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Compare two deal packages on gross profit.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Package A: $100,000 for the build. Package B: $95,000 for the build plus a 24-month maintenance retainer at $2,000 a month. Build delivery cost is $70,000 either way, and the retainer runs at a 35% margin.",
+      "table": null,
+      "fields": [
+        {
+          "id": "a",
+          "label": "Gross profit, package A",
+          "unit": "$",
+          "answer": 30000,
+          "tolerance": 1
+        },
+        {
+          "id": "b",
+          "label": "Gross profit, package B",
+          "unit": "$",
+          "answer": 41800,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "A: 100,000 − 70,000 = $30000. B: 25,000 from the build + 48,000 × 0.35 = 16,800 from the retainer = $41800. A lower headline price can be the better deal when it brings committed follow-on work."
+    }
+  },
+  {
+    "id": "bd-negotiation-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is your BATNA in a client negotiation?",
+    "mcq": {
+      "options": [
+        "The lowest price you will accept",
+        "The client's maximum budget",
+        "The best thing you will do if this deal does not happen",
+        "The midpoint between both opening offers"
+      ],
+      "correctIndex": 2,
+      "explanation": "Your BATNA sets your walk-away point; strengthening it is the best preparation you can do.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-negotiation-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You have good information about the client's budget and the value of the work. Should you make the first offer?",
+    "mcq": {
+      "options": [
+        "No; the first to name a price always loses",
+        "Only if the client insists",
+        "It makes no difference",
+        "Yes; a well-supported first offer anchors the negotiation in your favour"
+      ],
+      "correctIndex": 3,
+      "explanation": "With good information, anchoring first frames the discussion. Without it, let the client speak first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-negotiation-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-negotiation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client says: \"Another agency will do it for 30% less.\" You suspect it is a bluff. What is the best response?",
+    "mcq": {
+      "options": [
+        "Call the bluff and say they are lying",
+        "Match the 30% to be safe",
+        "Withdraw your proposal",
+        "Stay calm, ask what their offer includes, and rely on your value and your own BATNA"
+      ],
+      "correctIndex": 3,
+      "explanation": "You don't need to prove a bluff; a strong BATNA and a clear value case let you hold your position politely.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

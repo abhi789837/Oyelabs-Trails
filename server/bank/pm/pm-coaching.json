@@ -1,0 +1,352 @@
+[
+  {
+    "id": "pm-coaching-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the stages of a GROW coaching conversation.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the stages of a GROW coaching conversation.",
+      "items": [
+        {
+          "id": "r87eac",
+          "label": "Goal: what do you want from this conversation?"
+        },
+        {
+          "id": "r455e6",
+          "label": "Reality: what is happening now?"
+        },
+        {
+          "id": "r1c265",
+          "label": "Options: what could you do?"
+        },
+        {
+          "id": "r6a405",
+          "label": "Way forward: what will you do, and by when?"
+        }
+      ],
+      "correctOrder": [
+        "r87eac",
+        "r455e6",
+        "r1c265",
+        "r6a405"
+      ],
+      "explanation": "GROW moves from aim to current state to possibilities to commitment."
+    }
+  },
+  {
+    "id": "pm-coaching-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A junior PM you coach has knowledge of change control but avoids raising change requests because clients push back.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A junior PM you coach has knowledge of change control but avoids raising change requests because clients push back.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "Which stance fits best?",
+          "options": [
+            "Teach: explain change control again",
+            "Direct: tell them to raise every request",
+            "Take over their client calls",
+            "Coach: ask questions to explore what makes it hard and what they could try"
+          ],
+          "correctIndex": 3,
+          "explanation": "They have the knowledge; the gap is confidence and judgement."
+        },
+        {
+          "id": "d2",
+          "question": "They decide to raise the next change request. How do you support them?",
+          "options": [
+            "Review their draft with questions, and be present but silent on the call unless needed",
+            "Rewrite it for them",
+            "Send it yourself",
+            "Leave them entirely alone"
+          ],
+          "correctIndex": 0,
+          "explanation": "Stretch with a safety net builds capability."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-coaching-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Feedback a senior PM gave a junior PM after a steering meeting. Mark the weak parts.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Feedback a senior PM gave a junior PM after a steering meeting. Mark the weak parts.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "In today's steering meeting, when the sponsor asked about the date, you said \"probably fine\".",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "The effect was that the sponsor left without the risk to UAT that we had discussed.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "You're just not very confident in general.",
+          "issue": "Personal and general; feedback should be about specific behaviour."
+        },
+        {
+          "id": "s4",
+          "text": "Next time, could you state the date with the confidence range and the main risk?",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Also your slides were bad.",
+          "issue": "Vague; say what specifically to change."
+        },
+        {
+          "id": "s6",
+          "text": "What do you think got in the way today?",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Everyone on the team agrees with me about this.",
+          "issue": "Invoking unnamed others undermines trust and adds pressure."
+        },
+        {
+          "id": "s8",
+          "text": "Let's look at your next update together on Thursday.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-coaching-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A PM you mentor asks you to fix a client escalation for them \"because you're better at it\".",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A PM you mentor asks you to fix a client escalation for them \"because you're better at it\".",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the best response?",
+          "options": [
+            "Take over the escalation",
+            "Refuse to help",
+            "Help them plan the conversation and let them lead it, with you available",
+            "Tell the client to call you directly"
+          ],
+          "correctIndex": 2,
+          "explanation": "Rescuing teaches dependence; preparation builds skill."
+        },
+        {
+          "id": "d2",
+          "question": "The client is at serious risk of leaving. Does that change your stance?",
+          "options": [
+            "No; always let them handle it",
+            "Yes; when a relationship is at immediate risk, step in directly, then debrief with the PM",
+            "Yes; take over the account permanently",
+            "No; let the client leave as a lesson"
+          ],
+          "correctIndex": 1,
+          "explanation": "Adapt stance to stakes: direct when the cost of failure is not recoverable."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-coaching-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A new PM joins. Order these development activities for the first few months.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A new PM joins. Order these development activities for the first few months.",
+      "items": [
+        {
+          "id": "r73b8e",
+          "label": "Shadow you on client meetings and steering calls"
+        },
+        {
+          "id": "rafb0a",
+          "label": "Run internal ceremonies (stand-ups, retros) with your feedback"
+        },
+        {
+          "id": "r1061b",
+          "label": "Lead client calls with you present"
+        },
+        {
+          "id": "r33ad8",
+          "label": "Own a small client account with regular one-to-ones"
+        }
+      ],
+      "correctOrder": [
+        "r73b8e",
+        "rafb0a",
+        "r1061b",
+        "r33ad8"
+      ],
+      "explanation": "Observe, practise in low-risk settings, lead with a safety net, then own."
+    }
+  },
+  {
+    "id": "pm-coaching-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You track the junior PMs you coach by what they can do independently. Calculate progress.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You track the junior PMs you coach by what they can do independently. Calculate progress.",
+      "table": {
+        "columns": [
+          "PM",
+          "Skills independent at start",
+          "Skills independent now",
+          "Skills in the framework"
+        ],
+        "rows": [
+          [
+            "Asha",
+            "3",
+            "7",
+            "10"
+          ],
+          [
+            "Ben",
+            "5",
+            "6",
+            "10"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "asha",
+          "label": "Asha: increase in skills now independent",
+          "unit": "skills",
+          "answer": 4,
+          "tolerance": 0
+        },
+        {
+          "id": "ashapct",
+          "label": "Asha: share of the framework now independent",
+          "unit": "%",
+          "answer": 70,
+          "tolerance": 0.5
+        },
+        {
+          "id": "ben",
+          "label": "Ben: share of the framework now independent",
+          "unit": "%",
+          "answer": 60,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Asha moved from 3 to 7 (70%); Ben from 5 to 6 (60%), so Ben may need a different approach."
+    }
+  },
+  {
+    "id": "pm-coaching-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the key difference between coaching and mentoring?",
+    "mcq": {
+      "options": [
+        "Coaching helps the person find their own answers; mentoring shares your experience and advice",
+        "Coaching is only for executives",
+        "Mentoring is always paid",
+        "They are the same"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both are useful; choose based on what the person needs.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-coaching-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does the Situation-Behaviour-Impact (SBI) model help with?",
+    "mcq": {
+      "options": [
+        "Giving specific, behaviour-based feedback that is easier to act on",
+        "Planning sprints",
+        "Estimating effort",
+        "Writing contracts"
+      ],
+      "correctIndex": 0,
+      "explanation": "SBI keeps feedback factual: when, what they did, what effect it had.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-coaching-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-coaching",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How should coaching success best be measured?",
+    "mcq": {
+      "options": [
+        "By hours spent coaching",
+        "By what the coachee can now do independently",
+        "By how many questions the coach asked",
+        "By the coachee's satisfaction score alone"
+      ],
+      "correctIndex": 1,
+      "explanation": "Development is about capability, not activity.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,400 @@
+[
+  {
+    "id": "pm-profitability-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Compare the margin of three projects last quarter.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare the margin of three projects last quarter.",
+      "table": {
+        "columns": [
+          "Project",
+          "Revenue",
+          "Cost"
+        ],
+        "rows": [
+          [
+            "Fixed bid: fitness app",
+            "$80,000",
+            "$62,000"
+          ],
+          [
+            "T&M: logistics portal",
+            "$45,000",
+            "$31,500"
+          ],
+          [
+            "Retainer: e-commerce support",
+            "$24,000",
+            "$14,400"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Margin: fitness app",
+          "unit": "%",
+          "answer": 22.5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "b",
+          "label": "Margin: logistics portal",
+          "unit": "%",
+          "answer": 30.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "c",
+          "label": "Margin: e-commerce retainer",
+          "unit": "%",
+          "answer": 40.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "total",
+          "label": "Blended margin across all three",
+          "unit": "%",
+          "answer": 27.5839,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "22.5%, 30%, 40%; blended (149,000 - 107,900) / 149,000 = 27.6%."
+    }
+  },
+  {
+    "id": "pm-profitability-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A project's margin depends on rate and utilisation. Work out the margin.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A project's margin depends on rate and utilisation. Work out the margin.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Billing rate",
+            "$90/h"
+          ],
+          [
+            "Cost per paid hour",
+            "$50"
+          ],
+          [
+            "Utilisation (billable hours / paid hours)",
+            "75%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Cost per billable hour (cost / utilisation)",
+          "unit": "$",
+          "answer": 66.6667,
+          "tolerance": 0.01
+        },
+        {
+          "id": "margin",
+          "label": "Margin per billable hour",
+          "unit": "%",
+          "answer": 25.9259,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Cost per billable hour = 50 / 0.75 = 66.67. Margin (90 - 66.67) / 90 = 25.9%."
+    }
+  },
+  {
+    "id": "pm-profitability-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank these causes of margin erosion on agency projects, most common and damaging first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these causes of margin erosion on agency projects, most common and damaging first.",
+      "items": [
+        {
+          "id": "rce17b",
+          "label": "Unbilled scope creep"
+        },
+        {
+          "id": "rb5791",
+          "label": "Underestimated work at sale"
+        },
+        {
+          "id": "r5eff8",
+          "label": "Rework from unclear requirements"
+        },
+        {
+          "id": "rb0ee5",
+          "label": "Senior people doing junior work"
+        },
+        {
+          "id": "r61963",
+          "label": "Slow client payment"
+        }
+      ],
+      "correctOrder": [
+        "rce17b",
+        "rb5791",
+        "r5eff8",
+        "rb0ee5",
+        "r61963"
+      ],
+      "explanation": "Many agencies find creep and underestimation do the most damage, then rework and mis-staffing; payment timing affects cash rather than margin."
+    }
+  },
+  {
+    "id": "pm-profitability-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A monthly profitability review for a fixed-bid project. Mark the misleading statements.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A monthly profitability review for a fixed-bid project. Mark the misleading statements.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Revenue recognised: 60% of the contract, matching percentage complete by accepted milestones.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Margin is 45% because we have invoiced 60% and spent 40% of the budget.",
+          "issue": "Invoicing and spend do not measure progress; margin needs a forecast cost to complete."
+        },
+        {
+          "id": "s3",
+          "text": "Forecast cost to complete: 520 hours based on remaining stories and current velocity.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "We excluded PM and QA hours from cost because they are overhead.",
+          "issue": "Excluding delivery roles overstates margin; they are project costs."
+        },
+        {
+          "id": "s5",
+          "text": "Change requests approved: 2, billed $8,400.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Margin at completion forecast: 28%.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "The project is profitable because the client is happy.",
+          "issue": "Satisfaction is not a profitability measure."
+        },
+        {
+          "id": "s8",
+          "text": "Risks to margin: client UAT may slip two weeks.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-profitability-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A key client generates 30% of agency revenue at a 12% margin, while the agency target is 30%.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A key client generates 30% of agency revenue at a 12% margin, while the agency target is 30%.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the first analysis?",
+          "options": [
+            "Raise rates by 20% immediately",
+            "Drop the client",
+            "Cut the team's pay",
+            "Find where margin is lost: rates, staffing mix, scope creep or rework, by project"
+          ],
+          "correctIndex": 3,
+          "explanation": "Diagnose before deciding."
+        },
+        {
+          "id": "d2",
+          "question": "Analysis shows heavy unbilled change requests. What do you propose?",
+          "options": [
+            "Absorb it to protect the relationship",
+            "Re-establish change control with the client and agree how changes are priced from now on",
+            "Bill back all past changes at once",
+            "Stop accepting any change"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fix the mechanism going forward; back-billing usually damages trust."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-profitability-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A fixed-bid project is midway. Forecast its final margin.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A fixed-bid project is midway. Forecast its final margin.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Contract price",
+            "$150,000"
+          ],
+          [
+            "Approved change requests",
+            "$12,000"
+          ],
+          [
+            "Cost to date",
+            "$70,000"
+          ],
+          [
+            "Forecast cost to complete",
+            "$58,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "rev",
+          "label": "Total revenue",
+          "unit": "$",
+          "answer": 162000,
+          "tolerance": 1
+        },
+        {
+          "id": "cost",
+          "label": "Forecast total cost",
+          "unit": "$",
+          "answer": 128000,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Forecast margin at completion",
+          "unit": "%",
+          "answer": 20.9877,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Revenue 150,000 + 12,000 = 162,000. Cost 70,000 + 58,000 = 128,000. Margin 34,000 / 162,000 = 21.0%."
+    }
+  },
+  {
+    "id": "pm-profitability-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is utilisation central to agency profitability?",
+    "mcq": {
+      "options": [
+        "Utilisation sets the client's budget",
+        "Salaries are paid for all hours, but revenue only comes from billable hours",
+        "High utilisation always means high quality",
+        "It replaces time tracking"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unbilled hours still cost money, so the share of billable time drives cost per billable hour.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-profitability-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which is the best leading indicator that a fixed-bid project's margin is at risk?",
+    "mcq": {
+      "options": [
+        "Invoices sent on time",
+        "Team morale surveys",
+        "Hours burned growing faster than accepted scope",
+        "Number of client meetings"
+      ],
+      "correctIndex": 2,
+      "explanation": "Cost rising faster than delivered value predicts margin loss before it shows in accounts.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-profitability-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-profitability",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Revenue is $100,000, direct cost $70,000, and allocated overhead $15,000. What is the contribution margin?",
+    "mcq": {
+      "options": [
+        "15%",
+        "85%",
+        "30%",
+        "70%"
+      ],
+      "correctIndex": 2,
+      "explanation": "Contribution margin = (revenue - direct cost) / revenue = 30%; net margin after overhead would be 15%.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

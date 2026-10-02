@@ -1,0 +1,341 @@
+[
+  {
+    "id": "bd-margins-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Separate margin from markup.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Delivery cost for a project is $60,000. A colleague proposes a \"50% margin\" by adding 50% to cost.",
+      "table": null,
+      "fields": [
+        {
+          "id": "price",
+          "label": "Price with a 50% markup",
+          "unit": "$",
+          "answer": 90000,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Actual gross margin at that price",
+          "unit": "%",
+          "answer": 33.33,
+          "tolerance": 0.01
+        },
+        {
+          "id": "true",
+          "label": "Price needed for a true 50% gross margin",
+          "unit": "$",
+          "answer": 120000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Markup: 60,000 × 1.5 = $90,000, a margin of 30,000 ÷ 90,000 = 33.33%. A 50% margin needs 60,000 ÷ 0.5 = $120,000. Mixing the two underprices deals."
+    }
+  },
+  {
+    "id": "bd-margins-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "See how utilisation changes the cost of a billable hour.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An engineer costs $40 an hour across all paid hours. Only 75% of those hours are billable. You bill $80 an hour.",
+      "table": null,
+      "fields": [
+        {
+          "id": "ecost",
+          "label": "Effective cost per billable hour",
+          "unit": "$",
+          "answer": 53.33,
+          "tolerance": 0.01
+        },
+        {
+          "id": "margin",
+          "label": "Gross margin on billable hours",
+          "unit": "%",
+          "answer": 33.33,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Effective cost = 40 ÷ 0.75 = $53.33. Margin = (80 − 53.33) ÷ 80 = 33.33%, not the 50% you would see ignoring utilisation."
+    }
+  },
+  {
+    "id": "bd-margins-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Check the margin on a fixed bid that includes AI costs.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You are reviewing a $150,000 fixed price for an AI-enabled app. It includes AI API costs during the build ($2,000) and for 12 months after launch, estimated at 30,000 conversations a month at $0.04 each. Labour is in the table. Round percentages to two decimals.",
+      "table": {
+        "columns": [
+          "Role",
+          "Hours",
+          "Cost per hour"
+        ],
+        "rows": [
+          [
+            "Senior engineer",
+            "800",
+            "$40"
+          ],
+          [
+            "Engineer",
+            "1,200",
+            "$25"
+          ],
+          [
+            "QA",
+            "400",
+            "$20"
+          ],
+          [
+            "Project manager",
+            "300",
+            "$35"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Total delivery cost (labour + build AI + 12 months AI)",
+          "unit": "$",
+          "answer": 96900,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Gross margin",
+          "unit": "%",
+          "answer": 35.4,
+          "tolerance": 0.01
+        },
+        {
+          "id": "margin2",
+          "label": "Gross margin if post-launch AI usage doubles",
+          "unit": "%",
+          "answer": 25.8,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Labour = 32,000 + 30,000 + 8,000 + 10,500 = $80500. AI run = 30,000 × 0.04 × 12 = $14400. Cost = $96900; margin = 35.4%. If usage doubles, cost rises by $14400 and margin falls to 25.8%. Usage-driven costs are safer as pass-through or tiers."
+    }
+  },
+  {
+    "id": "bd-margins-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the errors in this deal margin review.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this deal review that are wrong or missing something important.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Price: $120,000 fixed.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Labour cost: $78,000 at estimated hours.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Margin: 53.8% (calculated as 42,000 ÷ 78,000).",
+          "issue": "That is markup on cost; margin is 42,000 ÷ 120,000 = 35%."
+        },
+        {
+          "id": "p4",
+          "text": "AI API costs for the 12-month support period: not included, as the client will \"probably\" use little.",
+          "issue": "Usage costs promised in the price must be costed, or the margin is overstated."
+        },
+        {
+          "id": "p5",
+          "text": "Contingency: none, as the scope is \"very clear\".",
+          "issue": "Fixed bids need contingency for estimate risk."
+        },
+        {
+          "id": "p6",
+          "text": "Payment: 40% upfront, 30% at beta, 30% at launch.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-margins-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Rank deals by gross margin.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these deals from highest to lowest gross margin: Clinic app: revenue $90,000, cost $54,000; Retail portal: revenue $150,000, cost $112,500; AI assistant: revenue $60,000, cost $33,000; Logistics app: revenue $120,000, cost $84,000.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Retail portal (revenue $150,000, cost $112,500)"
+        },
+        {
+          "id": "i1",
+          "label": "AI assistant (revenue $60,000, cost $33,000)"
+        },
+        {
+          "id": "i2",
+          "label": "Clinic app (revenue $90,000, cost $54,000)"
+        },
+        {
+          "id": "i3",
+          "label": "Logistics app (revenue $120,000, cost $84,000)"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Margins: AI assistant 45%, Clinic app 40%, Logistics app 30%, Retail portal 25%. The largest deal is not the most profitable."
+    }
+  },
+  {
+    "id": "bd-margins-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle a deal below the margin floor.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A $100,000 deal comes in at a 22% gross margin. Your floor is 30%. The client is strategically attractive.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Approve it because the client is attractive",
+            "Reject it outright",
+            "Raise the price without telling the client why",
+            "Look for structural fixes: scope, team mix, phasing or payment terms, before considering an exception"
+          ],
+          "correctIndex": 3,
+          "explanation": "Most margin gaps can be closed by changing how the work is structured."
+        },
+        {
+          "id": "s2",
+          "question": "If it still lands below the floor, how should an exception be handled?",
+          "options": [
+            "Approved by leadership with a written reason and a plan to recover margin later",
+            "Approved quietly by the rep",
+            "Hidden by moving costs to another project",
+            "Accepted without anyone being told"
+          ],
+          "correctIndex": 0,
+          "explanation": "Exceptions should be explicit decisions with accountability, not quiet erosion."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-margins-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A deal costs $70,000 to deliver and is priced at $100,000. What is the gross margin?",
+    "mcq": {
+      "options": [
+        "42.9%",
+        "70%",
+        "35%",
+        "30%"
+      ],
+      "correctIndex": 3,
+      "explanation": "(100,000 − 70,000) ÷ 100,000 = 30%. 42.9% is the markup on cost.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-margins-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your team's utilisation drops from 80% to 65% with no change in rates or salaries. What happens to margin?",
+    "mcq": {
+      "options": [
+        "It falls, because each billable hour carries more unbilled cost",
+        "It rises",
+        "It stays the same",
+        "It cannot be known"
+      ],
+      "correctIndex": 0,
+      "explanation": "Salaries are paid on all hours; fewer billable hours means a higher cost per billed hour.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-margins-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-margins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How should variable AI API costs usually be handled to protect margin on a fixed bid?",
+    "mcq": {
+      "options": [
+        "Absorbed in the fixed price with no limits",
+        "Billed as pass-through or in usage tiers with stated assumptions",
+        "Ignored, because they are small",
+        "Charged only if the client complains"
+      ],
+      "correctIndex": 1,
+      "explanation": "Usage scales with the client's adoption; tying it to usage keeps your margin predictable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

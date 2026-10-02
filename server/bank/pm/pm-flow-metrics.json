@@ -1,0 +1,367 @@
+[
+  {
+    "id": "pm-flow-metrics-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Here are the start and finish dates (working day numbers) of five tickets on a support board. Cycle time = finish day − start day + 1. Work out each requested value.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Ticket",
+          "Start day",
+          "Finish day"
+        ],
+        "rows": [
+          [
+            "A",
+            "2",
+            "5"
+          ],
+          [
+            "B",
+            "3",
+            "7"
+          ],
+          [
+            "C",
+            "4",
+            "4"
+          ],
+          [
+            "D",
+            "5",
+            "12"
+          ],
+          [
+            "E",
+            "6",
+            "9"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Cycle time of ticket A",
+          "unit": "days",
+          "answer": 4,
+          "tolerance": 0
+        },
+        {
+          "id": "avg",
+          "label": "Average cycle time of the five tickets",
+          "unit": "days",
+          "answer": 4.4,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "A = 4, B = 5, C = 1, D = 8, E = 4 days. Average = 22 / 5 = 4.4 days."
+    }
+  },
+  {
+    "id": "pm-flow-metrics-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Ten recently finished items had these cycle times (days): 3, 5, 2, 8, 4, 6, 3, 12, 5, 4. Use the nearest-rank method for the percentile (sort, take the value at position ceil(0.85 × n)).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "avg",
+          "label": "Average cycle time",
+          "unit": "days",
+          "answer": 5.2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "p85",
+          "label": "85th percentile cycle time",
+          "unit": "days",
+          "answer": 8,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Average = 52/10 = 5.2. Sorted: 2, 3, 3, 4, 4, 5, 5, 6, 8, 12. Position ceil(8.5) = 9 → 8 days. You could tell a client '85% of items finish within 8 days'."
+    }
+  },
+  {
+    "id": "pm-flow-metrics-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A team's board averages 12 items in progress and finishes about 4 items per week. Use Little's Law (average cycle time = average WIP / average throughput).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "ct",
+          "label": "Average cycle time",
+          "unit": "weeks",
+          "answer": 3.0,
+          "tolerance": 0.01
+        },
+        {
+          "id": "ct2",
+          "label": "Average cycle time if WIP is cut to 6 at the same throughput",
+          "unit": "weeks",
+          "answer": 1.5,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "12 / 4 = 3 weeks. Halving WIP to 6 gives 6 / 4 = 1.5 weeks, which is why limiting WIP shortens cycle time."
+    }
+  },
+  {
+    "id": "pm-flow-metrics-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A PM's notes on a cumulative flow diagram (CFD) for a client's bug-fix board. Mark the wrong interpretations.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The 'In progress' band keeps getting wider week after week.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "A widening in-progress band means WIP is growing and cycle times will likely rise.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "The 'Done' line is flat for two weeks, which means throughput was healthy.",
+          "issue": "A flat Done line means nothing was finished: throughput was zero."
+        },
+        {
+          "id": "p4",
+          "text": "The 'To do' band is growing, so more work is arriving than we finish.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Bands in a CFD can go down, because Done items move back to To do.",
+          "issue": "Cumulative lines never decrease; items reopened appear as new arrivals, not a falling line."
+        },
+        {
+          "id": "p6",
+          "text": "The vertical gap between arrivals and Done approximates current WIP.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-flow-metrics-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Rank these in-progress items by work item age, oldest first, so the stand-up looks at the riskiest items first. Today is day 20.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "PAY-21 started day 17"
+        },
+        {
+          "id": "r2",
+          "label": "PAY-15 started day 9"
+        },
+        {
+          "id": "r1",
+          "label": "PAY-12 started day 6"
+        },
+        {
+          "id": "r3",
+          "label": "PAY-18 started day 14"
+        },
+        {
+          "id": "r5",
+          "label": "PAY-22 started day 19"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Age = today − start: 14, 11, 6, 3, 1 days. Old items in progress are the strongest early warning of a delay."
+    }
+  },
+  {
+    "id": "pm-flow-metrics-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A retainer client complains that 'small' requests take weeks. Throughput is stable at 10 items a week, but WIP has risen from 15 to 40 items.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A retainer client complains that 'small' requests take weeks. Throughput is stable at 10 items a week, but WIP has risen from 15 to 40 items.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do the flow metrics tell you?",
+          "options": [
+            "The team is slower at coding",
+            "With stable throughput, more WIP means longer cycle times (Little's Law); work is waiting, not being done",
+            "The client is sending too few requests",
+            "Nothing; throughput is fine"
+          ],
+          "correctIndex": 1,
+          "explanation": "40/10 = 4 weeks versus 15/10 = 1.5 weeks average cycle time."
+        },
+        {
+          "id": "s2",
+          "question": "What action has the most effect?",
+          "options": [
+            "Add a column called 'Waiting'",
+            "Introduce explicit WIP limits and stop starting before finishing",
+            "Ask developers to multitask more",
+            "Report only throughput to the client"
+          ],
+          "correctIndex": 1,
+          "explanation": "Limiting WIP is the Kanban lever for cycle time."
+        },
+        {
+          "id": "s3",
+          "question": "Which commitment can you give the client once flow is stable?",
+          "options": [
+            "Every item will take exactly 3 days",
+            "A service level expectation, e.g. 85% of small requests finish within N days, based on measured cycle times",
+            "Nothing until the backlog is empty",
+            "Same-day delivery"
+          ],
+          "correctIndex": 1,
+          "explanation": "A probabilistic SLE from actual data is honest and checkable."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-flow-metrics-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In flow metrics, what is throughput?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The number of work items finished per unit of time",
+        "The time from start to finish of one item",
+        "The number of items in progress",
+        "Hours worked per week"
+      ],
+      "correctIndex": 0,
+      "explanation": "Throughput counts finished items per time unit; cycle time is elapsed time per item; WIP is items started but not finished.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-flow-metrics-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is work item age often more useful in a daily meeting than average cycle time?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It flags items that are getting stuck now, while there is still time to act",
+        "It is easier to calculate",
+        "It replaces throughput",
+        "It measures developer productivity"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cycle time is only known after an item finishes; age is a leading indicator on items still in progress.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-flow-metrics-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-flow-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client wants a single average cycle time quoted in the contract. Cycle times range from 1 to 30 days with a long tail. What is the better metric to agree?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A percentile, such as the 85th, because averages hide the long tail",
+        "The minimum cycle time",
+        "The average, rounded down",
+        "Story points per sprint"
+      ],
+      "correctIndex": 0,
+      "explanation": "Skewed distributions make averages misleading; a high percentile gives a commitment the team can usually meet.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

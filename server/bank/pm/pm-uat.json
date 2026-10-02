@@ -1,0 +1,373 @@
+[
+  {
+    "id": "pm-uat-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the UAT steps for a client release.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the UAT steps for a client release.",
+      "items": [
+        {
+          "id": "reeb27",
+          "label": "Agree UAT scope, acceptance criteria and sign-off owner"
+        },
+        {
+          "id": "r7fc2a",
+          "label": "Prepare the UAT environment and test data"
+        },
+        {
+          "id": "r74a9d",
+          "label": "Brief the client's testers with scenarios"
+        },
+        {
+          "id": "r9a1e2",
+          "label": "Client testers execute scenarios and log findings"
+        },
+        {
+          "id": "r5a464",
+          "label": "Triage findings into defects and change requests"
+        },
+        {
+          "id": "rfb966",
+          "label": "Client signs off against the agreed criteria"
+        }
+      ],
+      "correctOrder": [
+        "reeb27",
+        "r7fc2a",
+        "r74a9d",
+        "r9a1e2",
+        "r5a464",
+        "rfb966"
+      ],
+      "explanation": "Agree what passing means before testing, set up, brief, test, triage, then sign off."
+    }
+  },
+  {
+    "id": "pm-uat-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Review this UAT plan. Mark the lines that will cause problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this UAT plan. Mark the lines that will cause problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "UAT runs 10-14 June on the staging environment.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Testers: whoever at the client has time that week.",
+          "issue": "Testers should be named users who know the business process and are committed for the window."
+        },
+        {
+          "id": "s3",
+          "text": "Test data: copied from production, including real customer names and emails.",
+          "issue": "Real personal data in staging raises privacy and compliance issues; use anonymised or synthetic data."
+        },
+        {
+          "id": "s4",
+          "text": "Scenarios: 25 business scenarios mapped to acceptance criteria.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Findings are logged in the shared Jira board with screenshots.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Sign-off: when the client feels comfortable.",
+          "issue": "Sign-off needs objective exit criteria and a named approver."
+        },
+        {
+          "id": "s7",
+          "text": "Daily 15-minute triage call during UAT.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Out of scope: performance testing, covered separately.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-uat-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "UAT exit criteria: at least 95% of scenarios passed, and zero open critical defects. Check the results.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "UAT exit criteria: at least 95% of scenarios passed, and zero open critical defects. Check the results.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Scenarios",
+            "40"
+          ],
+          [
+            "Passed",
+            "37"
+          ],
+          [
+            "Failed",
+            "3"
+          ],
+          [
+            "Open critical defects",
+            "0"
+          ],
+          [
+            "Open minor defects",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "pass",
+          "label": "Pass rate",
+          "unit": "%",
+          "answer": 92.5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "need",
+          "label": "Additional scenarios that must pass to meet 95%",
+          "unit": "",
+          "answer": 1,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "37 / 40 = 92.5%. 95% of 40 is 38, so one more scenario must pass."
+    }
+  },
+  {
+    "id": "pm-uat-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "During UAT the client logs \"the dashboard should show last year's data too\". The agreed acceptance criteria only mention the current year.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "During UAT the client logs \"the dashboard should show last year's data too\". The agreed acceptance criteria only mention the current year.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you classify it?",
+          "options": [
+            "As a critical defect",
+            "As a change request, not a defect, since the build matches the agreed criteria",
+            "As a minor defect",
+            "Ignore it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Defects are deviations from agreed criteria; new expectations are changes."
+        },
+        {
+          "id": "d2",
+          "question": "How do you tell the client?",
+          "options": [
+            "Tell them they should have asked earlier",
+            "Agree to add it before sign-off",
+            "Escalate to your director",
+            "Show the agreed criterion, acknowledge the value of the idea, and offer to estimate it as a change"
+          ],
+          "correctIndex": 3,
+          "explanation": "Firm on the baseline, constructive on the request."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-uat-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "UAT ends Friday. The client has not started testing because their team is busy. Payment of the milestone depends on sign-off.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "UAT ends Friday. The client has not started testing because their team is busy. Payment of the milestone depends on sign-off.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do on Monday of UAT week?",
+          "options": [
+            "Remind the sign-off owner of the window and its effect on launch and milestone, and offer a guided session",
+            "Wait until Friday",
+            "Mark UAT as passed",
+            "Start charging for idle time immediately"
+          ],
+          "correctIndex": 0,
+          "explanation": "Make the impact clear early and make it easy for them to test."
+        },
+        {
+          "id": "d2",
+          "question": "By Friday they have tested 20%. What is the next step?",
+          "options": [
+            "Launch without sign-off",
+            "Extend UAT indefinitely",
+            "Declare the project complete",
+            "Agree a short extension with a new date and its effect on launch, and record it"
+          ],
+          "correctIndex": 3,
+          "explanation": "A dated extension keeps control; open-ended delay erodes the plan."
+        },
+        {
+          "id": "d3",
+          "question": "The contract has a deemed-acceptance clause after 10 business days without feedback. How should you use it?",
+          "options": [
+            "Invoke it immediately to get paid",
+            "Never mention it",
+            "As a backstop you mention calmly in writing, while still working to get real testing done",
+            "Use it to skip UAT altogether"
+          ],
+          "correctIndex": 2,
+          "explanation": "Deemed acceptance protects the agency but real sign-off protects the relationship and quality."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-uat-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "These UAT findings came in on the last day. Rank them for fixing before sign-off, most important first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "These UAT findings came in on the last day. Rank them for fixing before sign-off, most important first.",
+      "items": [
+        {
+          "id": "ra6ec4",
+          "label": "Order confirmation email is not sent for some payment methods"
+        },
+        {
+          "id": "r9cd90",
+          "label": "Refund amount shown to staff is wrong when a discount is applied"
+        },
+        {
+          "id": "r6973a",
+          "label": "Store opening hours show in the wrong time zone"
+        },
+        {
+          "id": "r60803",
+          "label": "Logo is blurry on one Android tablet"
+        }
+      ],
+      "correctOrder": [
+        "ra6ec4",
+        "r9cd90",
+        "r6973a",
+        "r60803"
+      ],
+      "explanation": "Missing transactional emails and wrong refund amounts affect money and trust; wrong hours mislead users; a blurry logo on one device can wait."
+    }
+  },
+  {
+    "id": "pm-uat-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Who should perform UAT?",
+    "mcq": {
+      "options": [
+        "The agency's developers",
+        "Client business users who will use the system, against agreed scenarios",
+        "The agency's QA team only",
+        "An automated test suite"
+      ],
+      "correctIndex": 1,
+      "explanation": "UAT confirms the system works for the business. Agency QA should already have tested it; UAT is the client's check.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-uat-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What should be agreed before UAT starts?",
+    "mcq": {
+      "options": [
+        "The launch party date",
+        "Scope, scenarios, exit criteria and who signs off",
+        "The next project's budget",
+        "Which developers will be on leave"
+      ],
+      "correctIndex": 1,
+      "explanation": "Without agreed exit criteria and a named approver, UAT can never end cleanly.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-uat-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-uat",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why use anonymised or synthetic data in UAT instead of a copy of production?",
+    "mcq": {
+      "options": [
+        "Production personal data in a test environment creates privacy, security and compliance risk",
+        "Synthetic data makes the app run faster",
+        "Production data is always wrong",
+        "Clients prefer fake data"
+      ],
+      "correctIndex": 0,
+      "explanation": "Test environments usually have weaker controls; data-protection rules apply to personal data wherever it is copied.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

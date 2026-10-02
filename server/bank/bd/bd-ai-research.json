@@ -1,0 +1,312 @@
+[
+  {
+    "id": "bd-ai-research-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Check an AI research summary before using it.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You ask an AI tool to research a prospect. It returns: founded 2015, 120 staff, CEO is Jane Doe, recently raised $10M.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do before mentioning any of this to the prospect?",
+          "options": [
+            "Use it all; the tool searched the web",
+            "Use only the funding news",
+            "Check each fact against a reliable source, such as their website or a press release",
+            "Ask the AI if it is sure"
+          ],
+          "correctIndex": 2,
+          "explanation": "AI tools can state wrong facts confidently. Verify before you use them."
+        },
+        {
+          "id": "s2",
+          "question": "You cannot find any source for the $10M funding round. What do you do?",
+          "options": [
+            "Mention it vaguely",
+            "Mention it and see how they react",
+            "Ask the prospect to confirm it in your first email",
+            "Leave it out"
+          ],
+          "correctIndex": 3,
+          "explanation": "Unverified claims should not reach the prospect."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-research-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order an AI-assisted research workflow.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for researching a prospect with AI, first at the top.",
+      "items": [
+        {
+          "id": "i5",
+          "label": "Use the verified points in your outreach or call prep"
+        },
+        {
+          "id": "i1",
+          "label": "Decide what you need to know for this call or email"
+        },
+        {
+          "id": "i2",
+          "label": "Ask the AI tool for a summary from public sources"
+        },
+        {
+          "id": "i3",
+          "label": "Verify key facts against original sources"
+        },
+        {
+          "id": "i4",
+          "label": "Write your own notes with sources in the CRM"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Know what you are looking for, let the tool speed up gathering, then verify and record before using anything."
+    }
+  },
+  {
+    "id": "bd-ai-research-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the errors in this AI-generated research brief.",
+    "task": {
+      "kind": "spot",
+      "prompt": "You checked this AI brief against the prospect's website and LinkedIn. Mark the lines that are wrong, unverified or should not be used.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Company: regional chain of 14 physiotherapy clinics (website lists 14 locations).",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Headcount: about 2,000 employees.",
+          "issue": "Wrong scale: LinkedIn shows about 180; the AI overstated it."
+        },
+        {
+          "id": "p3",
+          "text": "Recently posted a job for a digital product manager (LinkedIn).",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "The CEO's home address and family members' names.",
+          "issue": "Personal information irrelevant to business and inappropriate to collect."
+        },
+        {
+          "id": "p5",
+          "text": "Uses a booking system from a well-known vendor (visible on the website's booking page).",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Reportedly planning layoffs next quarter.",
+          "issue": "Unverified rumour with no source; don't use it."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-ai-research-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Work out the time AI research saves.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Researching a prospect manually took 30 minutes. With an AI tool plus verification, it takes 12 minutes. You research 25 prospects a week.",
+      "table": null,
+      "fields": [
+        {
+          "id": "min",
+          "label": "Minutes saved per week",
+          "unit": "min",
+          "answer": 450,
+          "tolerance": 1
+        },
+        {
+          "id": "hours",
+          "label": "Hours saved per week",
+          "unit": "h",
+          "answer": 7.5,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "(30 − 12) × 25 = 450 minutes = 7.5 hours. The verification time stays in the 12 minutes; skipping it is not a real saving."
+    }
+  },
+  {
+    "id": "bd-ai-research-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Decide what personal data to research.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An AI research tool offers to build profiles including prospects' personal social media, family details and home locations.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you use?",
+          "options": [
+            "Only business-relevant, public professional information",
+            "Everything, since it is publicly available",
+            "Personal details only for senior prospects",
+            "Everything, but don't mention it"
+          ],
+          "correctIndex": 0,
+          "explanation": "Collecting personal details beyond business context is intrusive and may breach privacy rules."
+        },
+        {
+          "id": "s2",
+          "question": "Before using a new research tool with prospect data, what must you check?",
+          "options": [
+            "Only its price",
+            "That it is approved under company policy and its data terms are acceptable",
+            "How many features it has",
+            "Whether competitors use it"
+          ],
+          "correctIndex": 1,
+          "explanation": "New tools that process personal data need approval."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-research-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Estimate the error rate of AI research.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You audited AI research briefs: of 40 facts checked, 6 were wrong. A typical brief contains 12 facts.",
+      "table": null,
+      "fields": [
+        {
+          "id": "rate",
+          "label": "Error rate",
+          "unit": "%",
+          "answer": 15,
+          "tolerance": 0.1
+        },
+        {
+          "id": "perBrief",
+          "label": "Expected wrong facts per brief",
+          "unit": "",
+          "answer": 1.8,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Error rate = 6 ÷ 40 = 15%. Expected errors per brief = 12 × 0.15 = 1.8. Almost every brief contains an error, which is why verification is part of the process."
+    }
+  },
+  {
+    "id": "bd-ai-research-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An AI tool tells you a prospect's company has 500 employees. What should you do before using this?",
+    "mcq": {
+      "options": [
+        "Use it; AI tools are accurate",
+        "Check it against a reliable source like LinkedIn or the company website",
+        "Round it to make it sound safer",
+        "Ask a colleague to guess"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI tools can be confidently wrong; verify key facts before use.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-research-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which research finding is most useful and appropriate for a first outreach email?",
+    "mcq": {
+      "options": [
+        "The CEO's children's school",
+        "An anonymous forum rumour about layoffs",
+        "The company posted jobs for mobile developers last week",
+        "The prospect's personal holiday photos"
+      ],
+      "correctIndex": 2,
+      "explanation": "Recent, public, business-relevant signals are useful and appropriate.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-research-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-research",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What should you record in the CRM alongside AI-assisted research notes?",
+    "mcq": {
+      "options": [
+        "Nothing; the AI output is enough",
+        "The full AI chat history",
+        "Your guess at their budget as fact",
+        "The sources of key facts, so others can check them"
+      ],
+      "correctIndex": 3,
+      "explanation": "Sources make notes trustworthy and reusable by the team.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

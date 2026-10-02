@@ -1,0 +1,2544 @@
+[
+  {
+    "id": "eng-auth-sessions-jwt-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `parseBearer(header)` so it returns the token from an `Authorization: Bearer <token>` header, or `null` when the header is missing, uses another scheme (like `Basic`), or has no token. The scheme name is case-insensitive.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseBearer",
+      "starterCode": "function parseBearer(header) {\n  return header.split(' ')[1];\n}",
+      "referenceSolution": "function parseBearer(header) {\n  if (!header) return null;\n  const m = header.match(/^Bearer\\s+(\\S+)\\s*$/i);\n  return m ? m[1] : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "Bearer abc.def.ghi"
+          ],
+          "expected": "abc.def.ghi"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "Basic dXNlcjpwYXNz"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "bearer xyz"
+          ],
+          "expected": "xyz"
+        },
+        {
+          "args": [
+            "Bearer "
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A decoded JWT's `exp` claim is in **seconds** since the epoch, while `Date.now()` is in milliseconds. Fix `isExpired(payload, nowMs)`: a token is expired at or after `exp`, and a token without `exp` is treated as expired.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "isExpired",
+      "starterCode": "function isExpired(payload, nowMs) {\n  return payload.exp < nowMs;\n}",
+      "referenceSolution": "function isExpired(payload, nowMs) {\n  if (typeof payload.exp !== 'number') return true;\n  return nowMs / 1000 >= payload.exp;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "exp": 1700000000
+            },
+            1700000001000
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "exp": 1700000000
+            },
+            1699999999000
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "exp": 1700000000
+            },
+            1700000000000
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "sub": "1"
+            },
+            0
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "exp": 2000000000
+            },
+            1700000000000
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `sessionCookieOptions(env)` for the session cookie: JavaScript must not be able to read it, it is `Secure` only in `'production'` (local dev runs on plain http), `sameSite` is `'lax'`, `path` is `'/'`, and it lasts 7 days (`maxAge` in ms).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "sessionCookieOptions",
+      "starterCode": "function sessionCookieOptions(env) {\n  return { httpOnly: false, secure: true, sameSite: 'lax', path: '/', maxAge: 7 * 24 * 60 * 60 };\n}",
+      "referenceSolution": "function sessionCookieOptions(env) {\n  return { httpOnly: true, secure: env === 'production', sameSite: 'lax', path: '/', maxAge: 7 * 24 * 60 * 60 * 1000 };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "production"
+          ],
+          "expected": {
+            "httpOnly": true,
+            "secure": true,
+            "sameSite": "lax",
+            "path": "/",
+            "maxAge": 604800000
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "development"
+          ],
+          "expected": {
+            "httpOnly": true,
+            "secure": false,
+            "sameSite": "lax",
+            "path": "/",
+            "maxAge": 604800000
+          }
+        },
+        {
+          "args": [
+            "test"
+          ],
+          "expected": {
+            "httpOnly": true,
+            "secure": false,
+            "sameSite": "lax",
+            "path": "/",
+            "maxAge": 604800000
+          }
+        },
+        {
+          "args": [
+            "production"
+          ],
+          "expected": {
+            "httpOnly": true,
+            "secure": true,
+            "sameSite": "lax",
+            "path": "/",
+            "maxAge": 604800000
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `requireAuth`. When there is no `req.user`, reply `401` with `{ error: 'Authentication required' }`. When the user is `disabled`, reply `403` with `{ error: 'Account disabled' }`. Otherwise call `next()`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function requireAuth(req, res, next) {\n  if (!req.user) return res.status(403).json({ error: 'Forbidden' });\n  next();\n}\n\n// Test driver (leave as is).\nfunction run(user) {\n  const res = makeRes();\n  let nextCalled = false;\n  requireAuth({ user }, res, () => { nextCalled = true; });\n  return { status: res.statusCode, body: res.body, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    json(body) { this.body = body; return this; },\n  };\n}",
+      "referenceSolution": "function requireAuth(req, res, next) {\n  if (!req.user) return res.status(401).json({ error: 'Authentication required' });\n  if (req.user.disabled) return res.status(403).json({ error: 'Account disabled' });\n  next();\n}\n\n// Test driver (leave as is).\nfunction run(user) {\n  const res = makeRes();\n  let nextCalled = false;\n  requireAuth({ user }, res, () => { nextCalled = true; });\n  return { status: res.statusCode, body: res.body, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    json(body) { this.body = body; return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": {
+            "status": 401,
+            "body": {
+              "error": "Authentication required"
+            },
+            "next": false
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1
+            }
+          ],
+          "expected": {
+            "status": 200,
+            "body": null,
+            "next": true
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 2,
+              "disabled": true
+            }
+          ],
+          "expected": {
+            "status": 403,
+            "body": {
+              "error": "Account disabled"
+            },
+            "next": false
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 3,
+              "disabled": false
+            }
+          ],
+          "expected": {
+            "status": 200,
+            "body": null,
+            "next": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `buildSetCookie(name, value, opts)` to produce a `Set-Cookie` header value in this order: `name=<URL-encoded value>`, `Path` (default `/`), `Max-Age` (seconds, only if given), `HttpOnly`, `Secure`, `SameSite` (each only if set). For example `sid=abc; Path=/; Max-Age=3600; HttpOnly; Secure; SameSite=Lax`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "buildSetCookie",
+      "starterCode": "function buildSetCookie(name, value, opts) {\n  let c = name + '=' + value + '; Path=' + (opts.path || '/');\n  if (opts.httpOnly) c += '; HttpOnly';\n  if (opts.secure) c += '; Secure';\n  if (opts.sameSite) c += '; SameSite=' + opts.sameSite;\n  return c;\n}",
+      "referenceSolution": "function buildSetCookie(name, value, opts) {\n  let c = name + '=' + encodeURIComponent(value) + '; Path=' + (opts.path || '/');\n  if (opts.maxAge !== undefined) c += '; Max-Age=' + opts.maxAge;\n  if (opts.httpOnly) c += '; HttpOnly';\n  if (opts.secure) c += '; Secure';\n  if (opts.sameSite) c += '; SameSite=' + opts.sameSite;\n  return c;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "sid",
+            "abc",
+            {
+              "maxAge": 3600,
+              "httpOnly": true,
+              "secure": true,
+              "sameSite": "Lax"
+            }
+          ],
+          "expected": "sid=abc; Path=/; Max-Age=3600; HttpOnly; Secure; SameSite=Lax"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "sid",
+            "",
+            {
+              "maxAge": 0
+            }
+          ],
+          "expected": "sid=; Path=/; Max-Age=0"
+        },
+        {
+          "args": [
+            "theme",
+            "dark mode",
+            {
+              "path": "/app"
+            }
+          ],
+          "expected": "theme=dark%20mode; Path=/app"
+        },
+        {
+          "args": [
+            "sid",
+            "a;b",
+            {
+              "httpOnly": true
+            }
+          ],
+          "expected": "sid=a%3Bb; Path=/; HttpOnly"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Your React app and Express API are served from the same site, and login uses a server-side session.",
+    "task": {
+      "prompt": "Your React app and Express API are served from the same site, and login uses a server-side session.",
+      "kind": "scenario",
+      "steps": [
+        {
+          "id": "store",
+          "question": "Where should the browser keep the session id?",
+          "options": [
+            "In an `HttpOnly`, `Secure`, `SameSite=Lax` cookie set by the server",
+            "In `localStorage`, read by JavaScript and sent in a header",
+            "In the URL as `?sid=…`",
+            "In a global JavaScript variable"
+          ],
+          "correctIndex": 0,
+          "explanation": "An HttpOnly cookie cannot be read by injected scripts and is sent automatically; URLs leak through logs and the Referer header."
+        },
+        {
+          "id": "logout",
+          "question": "The user clicks Log out. What must the server do?",
+          "options": [
+            "Delete the session from the session store and clear the cookie",
+            "Only clear the cookie in the browser",
+            "Nothing; the session will expire on its own",
+            "Redirect to the login page"
+          ],
+          "correctIndex": 0,
+          "explanation": "If the server-side session survives, anyone holding a copy of the old cookie is still logged in."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Who can read the payload of a signed JWT (for example `{ \"sub\": \"42\", \"role\": \"admin\" }`)?",
+    "mcq": {
+      "options": [
+        "Anyone who has the token: the payload is only base64url-encoded, not encrypted",
+        "Only the server that holds the signing secret",
+        "Only the user it was issued to",
+        "Nobody; it is hashed"
+      ],
+      "correctIndex": 0,
+      "explanation": "The signature proves the payload was not changed; it does not hide it. Never put secrets or personal data you would not show the user in a JWT.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A request arrives with an expired access token. Which status should the API return?",
+    "mcq": {
+      "options": [
+        "`401 Unauthorized`",
+        "`403 Forbidden`",
+        "`400 Bad Request`",
+        "`419 Session Expired`"
+      ],
+      "correctIndex": 0,
+      "explanation": "401 tells the client its credentials are missing or no longer valid, which is the cue to refresh the token or log in again. 403 means the identity is known but not allowed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "With classic server-side sessions, what does the server do on each authenticated request?",
+    "mcq": {
+      "options": [
+        "Reads the session id from the cookie and looks the session up in its store (memory, Redis, DB)",
+        "Verifies a signature over the user's data in the cookie, with no lookup",
+        "Asks the browser for the user's password again",
+        "Decodes the user id from the URL"
+      ],
+      "correctIndex": 0,
+      "explanation": "The cookie only carries an opaque id; the data lives server-side. That lookup is the cost, and the benefit is that deleting the session logs the user out immediately.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Fix `verifyClaims(payload, opts)` (the signature is already verified). `opts` has `now` (seconds), `issuer`, `audience` and `leeway` (seconds of allowed clock skew). Check in this order and return `{ valid: false, reason }` for the first failure, else `{ valid: true }`:\n- `'expired'`: `now >= exp + leeway`\n- `'not yet valid'`: `nbf` is set and `now + leeway < nbf`\n- `'wrong issuer'`\n- `'wrong audience'`: `aud` may be a string **or an array**",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "verifyClaims",
+      "starterCode": "function verifyClaims(payload, opts) {\n  if (opts.now >= payload.exp) return { valid: false, reason: 'expired' };\n  if (payload.iss !== opts.issuer) return { valid: false, reason: 'wrong issuer' };\n  if (payload.aud !== opts.audience) return { valid: false, reason: 'wrong audience' };\n  return { valid: true };\n}",
+      "referenceSolution": "function verifyClaims(payload, opts) {\n  const { now, issuer, audience, leeway = 0 } = opts;\n  if (now >= payload.exp + leeway) return { valid: false, reason: 'expired' };\n  if (payload.nbf !== undefined && now + leeway < payload.nbf) return { valid: false, reason: 'not yet valid' };\n  if (payload.iss !== issuer) return { valid: false, reason: 'wrong issuer' };\n  const aud = Array.isArray(payload.aud) ? payload.aud : [payload.aud];\n  if (!aud.includes(audience)) return { valid: false, reason: 'wrong audience' };\n  return { valid: true };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "exp": 1000,
+              "iss": "auth.acme",
+              "aud": "api"
+            },
+            {
+              "now": 900,
+              "issuer": "auth.acme",
+              "audience": "api",
+              "leeway": 0
+            }
+          ],
+          "expected": {
+            "valid": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "exp": 1000,
+              "iss": "auth.acme",
+              "aud": [
+                "web",
+                "api"
+              ]
+            },
+            {
+              "now": 900,
+              "issuer": "auth.acme",
+              "audience": "api",
+              "leeway": 0
+            }
+          ],
+          "expected": {
+            "valid": true
+          }
+        },
+        {
+          "args": [
+            {
+              "exp": 1000,
+              "iss": "auth.acme",
+              "aud": "api"
+            },
+            {
+              "now": 1020,
+              "issuer": "auth.acme",
+              "audience": "api",
+              "leeway": 30
+            }
+          ],
+          "expected": {
+            "valid": true
+          }
+        },
+        {
+          "args": [
+            {
+              "exp": 1000,
+              "iss": "auth.acme",
+              "aud": "api",
+              "nbf": 950
+            },
+            {
+              "now": 900,
+              "issuer": "auth.acme",
+              "audience": "api",
+              "leeway": 10
+            }
+          ],
+          "expected": {
+            "valid": false,
+            "reason": "not yet valid"
+          }
+        },
+        {
+          "args": [
+            {
+              "exp": 1000,
+              "iss": "evil",
+              "aud": "api"
+            },
+            {
+              "now": 1000,
+              "issuer": "auth.acme",
+              "audience": "api",
+              "leeway": 0
+            }
+          ],
+          "expected": {
+            "valid": false,
+            "reason": "expired"
+          }
+        },
+        {
+          "args": [
+            {
+              "exp": 1000,
+              "iss": "auth.acme",
+              "aud": [
+                "web"
+              ]
+            },
+            {
+              "now": 1,
+              "issuer": "auth.acme",
+              "audience": "api",
+              "leeway": 0
+            }
+          ],
+          "expected": {
+            "valid": false,
+            "reason": "wrong audience"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Sessions should use a **sliding** expiry: every successful `get` pushes expiry to `t + ttl`. A session is expired once `t >= expiresAt`, and an expired session is gone. Fix the store; the driver logs `'hit'` or `'miss'` for each `get`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runSessions",
+      "starterCode": "class SessionStore {\n  constructor(ttl) { this.ttl = ttl; this.sessions = new Map(); }\n  create(id, t) { this.sessions.set(id, t + this.ttl); }\n  get(id, t) {\n    const expiresAt = this.sessions.get(id);\n    return expiresAt !== undefined && t < expiresAt;\n  }\n  destroy(id) { this.sessions.delete(id); }\n}\n\n// Test driver (leave as is). ops: [op, id, t]\nfunction runSessions(ttl, ops) {\n  const store = new SessionStore(ttl);\n  const log = [];\n  for (const [op, id, t] of ops) {\n    if (op === 'get') log.push(store.get(id, t) ? 'hit' : 'miss');\n    else store[op](id, t);\n  }\n  return log;\n}",
+      "referenceSolution": "class SessionStore {\n  constructor(ttl) { this.ttl = ttl; this.sessions = new Map(); }\n  create(id, t) { this.sessions.set(id, t + this.ttl); }\n  get(id, t) {\n    const expiresAt = this.sessions.get(id);\n    if (expiresAt === undefined) return false;\n    if (t >= expiresAt) {\n      this.sessions.delete(id);\n      return false;\n    }\n    this.sessions.set(id, t + this.ttl);\n    return true;\n  }\n  destroy(id) { this.sessions.delete(id); }\n}\n\n// Test driver (leave as is). ops: [op, id, t]\nfunction runSessions(ttl, ops) {\n  const store = new SessionStore(ttl);\n  const log = [];\n  for (const [op, id, t] of ops) {\n    if (op === 'get') log.push(store.get(id, t) ? 'hit' : 'miss');\n    else store[op](id, t);\n  }\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            30,
+            [
+              [
+                "create",
+                "s1",
+                0
+              ],
+              [
+                "get",
+                "s1",
+                20
+              ],
+              [
+                "get",
+                "s1",
+                45
+              ]
+            ]
+          ],
+          "expected": [
+            "hit",
+            "hit"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            30,
+            [
+              [
+                "create",
+                "s1",
+                0
+              ],
+              [
+                "get",
+                "s1",
+                30
+              ]
+            ]
+          ],
+          "expected": [
+            "miss"
+          ]
+        },
+        {
+          "args": [
+            30,
+            [
+              [
+                "get",
+                "nope",
+                0
+              ]
+            ]
+          ],
+          "expected": [
+            "miss"
+          ]
+        },
+        {
+          "args": [
+            30,
+            [
+              [
+                "create",
+                "s1",
+                0
+              ],
+              [
+                "get",
+                "s1",
+                29
+              ],
+              [
+                "destroy",
+                "s1",
+                30
+              ],
+              [
+                "get",
+                "s1",
+                31
+              ]
+            ]
+          ],
+          "expected": [
+            "hit",
+            "miss"
+          ]
+        },
+        {
+          "args": [
+            10,
+            [
+              [
+                "create",
+                "a",
+                0
+              ],
+              [
+                "get",
+                "a",
+                9
+              ],
+              [
+                "get",
+                "a",
+                18
+              ],
+              [
+                "get",
+                "a",
+                30
+              ],
+              [
+                "get",
+                "a",
+                31
+              ]
+            ]
+          ],
+          "expected": [
+            "hit",
+            "hit",
+            "miss",
+            "miss"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Fix `extractToken(req)`. Read the token from `Authorization: Bearer <token>` first, then from the `access_token` cookie (`req.cookies`). **Never** accept it from the query string, where it ends up in logs and browser history. Return `null` when there is none.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "extractToken",
+      "starterCode": "function extractToken(req) {\n  return req.query.token || req.cookies.access_token || null;\n}",
+      "referenceSolution": "function extractToken(req) {\n  const auth = (req.headers && req.headers.authorization) || '';\n  const m = auth.match(/^Bearer\\s+(\\S+)$/i);\n  if (m) return m[1];\n  return (req.cookies && req.cookies.access_token) || null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "headers": {
+                "authorization": "Bearer h.t.x"
+              },
+              "cookies": {},
+              "query": {}
+            }
+          ],
+          "expected": "h.t.x"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "headers": {},
+              "cookies": {},
+              "query": {
+                "token": "leaky"
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "headers": {},
+              "cookies": {
+                "access_token": "c.o.k"
+              },
+              "query": {}
+            }
+          ],
+          "expected": "c.o.k"
+        },
+        {
+          "args": [
+            {
+              "headers": {
+                "authorization": "Bearer h"
+              },
+              "cookies": {
+                "access_token": "c"
+              },
+              "query": {}
+            }
+          ],
+          "expected": "h"
+        },
+        {
+          "args": [
+            {
+              "headers": {
+                "authorization": "Basic abc"
+              },
+              "cookies": {},
+              "query": {}
+            }
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Fix `loginLockout(attempts, maxFailures, lockMs)`. Each attempt is `{ t, ok }` for one account; return `'ok'`, `'fail'` or `'locked'` for each.\n- `maxFailures` consecutive failures lock the account until `t + lockMs` (t of the last failure)\n- attempts while locked return `'locked'` and do not extend the lock\n- a successful login resets the failure count, and so does a lock expiring",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "loginLockout",
+      "starterCode": "function loginLockout(attempts, maxFailures, lockMs) {\n  let failures = 0;\n  return attempts.map(({ t, ok }) => {\n    if (failures >= maxFailures) return 'locked';\n    if (ok) return 'ok';\n    failures++;\n    return 'fail';\n  });\n}",
+      "referenceSolution": "function loginLockout(attempts, maxFailures, lockMs) {\n  let failures = 0;\n  let lockedUntil = -1;\n  return attempts.map(({ t, ok }) => {\n    if (t < lockedUntil) return 'locked';\n    if (ok) {\n      failures = 0;\n      return 'ok';\n    }\n    failures++;\n    if (failures >= maxFailures) {\n      lockedUntil = t + lockMs;\n      failures = 0;\n    }\n    return 'fail';\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "ok": false
+              },
+              {
+                "t": 1,
+                "ok": false
+              },
+              {
+                "t": 2,
+                "ok": true
+              }
+            ],
+            2,
+            100
+          ],
+          "expected": [
+            "fail",
+            "fail",
+            "locked"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "ok": false
+              },
+              {
+                "t": 1,
+                "ok": true
+              },
+              {
+                "t": 2,
+                "ok": false
+              },
+              {
+                "t": 3,
+                "ok": true
+              }
+            ],
+            2,
+            100
+          ],
+          "expected": [
+            "fail",
+            "ok",
+            "fail",
+            "ok"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "ok": false
+              },
+              {
+                "t": 1,
+                "ok": false
+              },
+              {
+                "t": 50,
+                "ok": false
+              },
+              {
+                "t": 101,
+                "ok": true
+              }
+            ],
+            2,
+            100
+          ],
+          "expected": [
+            "fail",
+            "fail",
+            "locked",
+            "ok"
+          ]
+        },
+        {
+          "args": [
+            [],
+            3,
+            100
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "ok": false
+              },
+              {
+                "t": 10,
+                "ok": false
+              },
+              {
+                "t": 110,
+                "ok": false
+              }
+            ],
+            2,
+            100
+          ],
+          "expected": [
+            "fail",
+            "fail",
+            "fail"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Before verifying a JWT, check its header's `alg` against an explicit allow-list. Fix `isAllowedAlg(header, allowed)`: reject a missing `alg`, `none` in any letter case, and anything not exactly in `allowed`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "isAllowedAlg",
+      "starterCode": "function isAllowedAlg(header, allowed) {\n  return header.alg !== 'none';\n}",
+      "referenceSolution": "function isAllowedAlg(header, allowed) {\n  const alg = header && header.alg;\n  if (typeof alg !== 'string' || alg.toLowerCase() === 'none') return false;\n  return allowed.includes(alg);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "alg": "RS256",
+              "typ": "JWT"
+            },
+            [
+              "RS256"
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "alg": "NONE"
+            },
+            [
+              "RS256"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "alg": "HS256"
+            },
+            [
+              "RS256"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "typ": "JWT"
+            },
+            [
+              "RS256"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "alg": "ES256"
+            },
+            [
+              "RS256",
+              "ES256"
+            ]
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Review this login route and auth middleware. Mark the lines that are security problems.",
+    "task": {
+      "prompt": "Review this login route and auth middleware. Mark the lines that are security problems.",
+      "kind": "spot",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "app.post('/login', async (req, res) => {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const user = await verifyPassword(req.body.email, req.body.password);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  if (!user) return res.status(401).json({ error: 'Invalid email or password' });",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  const payload = { sub: user.id, role: user.role, passwordHash: user.passwordHash };",
+          "issue": "The payload is readable by anyone holding the token; the password hash must never be in it."
+        },
+        {
+          "id": "l5",
+          "text": "  res.json({ token: jwt.sign(payload, SECRET, { expiresIn: '15m' }) });",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "});",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "function auth(req, res, next) {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  const token = (req.headers.authorization || '').replace('Bearer ', '');",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  req.user = jwt.decode(token);",
+          "issue": "`decode` does not check the signature, so anyone can forge a token; use `jwt.verify` with pinned algorithms."
+        },
+        {
+          "id": "l10",
+          "text": "  if (!req.user) return res.status(401).end();",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "  next();",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": true
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your SPA uses short-lived access tokens and a long-lived refresh token. Where should the browser keep the **refresh** token?",
+    "mcq": {
+      "options": [
+        "In an `HttpOnly`, `Secure`, `SameSite` cookie scoped to the refresh endpoint's path",
+        "In `localStorage`, so it survives reloads",
+        "In `sessionStorage`",
+        "In a JavaScript variable inside the bundle"
+      ],
+      "correctIndex": 0,
+      "explanation": "The refresh token is the most valuable credential; keeping it out of reach of JavaScript means an XSS bug cannot steal it. Scoping the cookie path limits where it is sent.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You use stateless JWT access tokens that expire after 1 hour. A user clicks Log out and you delete the token in the browser. What happens if an attacker had copied the token earlier?",
+    "mcq": {
+      "options": [
+        "It keeps working until it expires, unless the server also checks a denylist or token version",
+        "It stops working immediately",
+        "It works only from the user's IP address",
+        "The signature becomes invalid once the browser deletes it"
+      ],
+      "correctIndex": 0,
+      "explanation": "A stateless token is valid until `exp` wherever it is presented. Keep access tokens short-lived and add server-side revocation (a `jti` denylist or a per-user token version) when you need immediate logout.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your API authenticates with a session cookie. Which attack do you now need to defend against that a header-only Bearer token scheme mostly avoids?",
+    "mcq": {
+      "options": [
+        "Cross-site request forgery (CSRF), because the browser attaches the cookie to requests other sites trigger",
+        "SQL injection",
+        "Brute-forcing the session id",
+        "Clickjacking of the login form"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cookies are sent automatically. Use `SameSite=Lax` or `Strict` plus a CSRF token (or an Origin check) for state-changing requests.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Refresh tokens are rotated: each one can be used **once**. Tokens look like `<family>.<n>` and `families[family]` is `{ current, revoked }`. Fix `refresh(families, token)`:\n- unknown or revoked family, or `n` greater than `current` → `'invalid'`\n- `n === current` → bump `current` and return the new token\n- `n < current` (an old token is being replayed: theft) → revoke the whole family and return `'reuse-detected'`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runRefresh",
+      "starterCode": "function refresh(families, token) {\n  const [family, n] = token.split('.');\n  const f = families[family];\n  if (!f) return 'invalid';\n  f.current++;\n  return family + '.' + f.current;\n}\n\n// Test driver (leave as is). ops: [\"login\", family] | [\"refresh\", token]\nfunction runRefresh(ops) {\n  const families = {};\n  return ops.map(([op, arg]) => {\n    if (op === 'login') {\n      families[arg] = { current: 1, revoked: false };\n      return arg + '.1';\n    }\n    return refresh(families, arg);\n  });\n}",
+      "referenceSolution": "function refresh(families, token) {\n  const [family, raw] = token.split('.');\n  const n = Number(raw);\n  const f = families[family];\n  if (!f || f.revoked || n > f.current) return 'invalid';\n  if (n < f.current) {\n    f.revoked = true;\n    return 'reuse-detected';\n  }\n  f.current++;\n  return family + '.' + f.current;\n}\n\n// Test driver (leave as is). ops: [\"login\", family] | [\"refresh\", token]\nfunction runRefresh(ops) {\n  const families = {};\n  return ops.map(([op, arg]) => {\n    if (op === 'login') {\n      families[arg] = { current: 1, revoked: false };\n      return arg + '.1';\n    }\n    return refresh(families, arg);\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "login",
+                "f"
+              ],
+              [
+                "refresh",
+                "f.1"
+              ],
+              [
+                "refresh",
+                "f.2"
+              ]
+            ]
+          ],
+          "expected": [
+            "f.1",
+            "f.2",
+            "f.3"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "login",
+                "f"
+              ],
+              [
+                "refresh",
+                "f.1"
+              ],
+              [
+                "refresh",
+                "f.1"
+              ],
+              [
+                "refresh",
+                "f.2"
+              ]
+            ]
+          ],
+          "expected": [
+            "f.1",
+            "f.2",
+            "reuse-detected",
+            "invalid"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "refresh",
+                "x.1"
+              ]
+            ]
+          ],
+          "expected": [
+            "invalid"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "login",
+                "a"
+              ],
+              [
+                "refresh",
+                "a.5"
+              ],
+              [
+                "refresh",
+                "a.1"
+              ]
+            ]
+          ],
+          "expected": [
+            "a.1",
+            "invalid",
+            "a.2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Fix `csrfCheck(req, session)` (double-submit token). Safe methods (`GET`, `HEAD`, `OPTIONS`) return `'ok'`. Any other method returns `'ok'` only if there is a session with a `csrfToken` and the `x-csrf-token` header equals it; otherwise `'forbidden'`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "csrfCheck",
+      "starterCode": "function csrfCheck(req, session) {\n  const header = req.headers['x-csrf-token'];\n  if (header && header !== session.csrfToken) return 'forbidden';\n  return 'ok';\n}",
+      "referenceSolution": "function csrfCheck(req, session) {\n  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return 'ok';\n  const header = req.headers['x-csrf-token'];\n  if (!session || !session.csrfToken || !header) return 'forbidden';\n  return header === session.csrfToken ? 'ok' : 'forbidden';\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "method": "POST",
+              "headers": {
+                "x-csrf-token": "t1"
+              }
+            },
+            {
+              "csrfToken": "t1"
+            }
+          ],
+          "expected": "ok"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "method": "POST",
+              "headers": {}
+            },
+            {
+              "csrfToken": "t1"
+            }
+          ],
+          "expected": "forbidden"
+        },
+        {
+          "args": [
+            {
+              "method": "GET",
+              "headers": {}
+            },
+            null
+          ],
+          "expected": "ok"
+        },
+        {
+          "args": [
+            {
+              "method": "DELETE",
+              "headers": {
+                "x-csrf-token": "t1"
+              }
+            },
+            null
+          ],
+          "expected": "forbidden"
+        },
+        {
+          "args": [
+            {
+              "method": "PUT",
+              "headers": {
+                "x-csrf-token": "zz"
+              }
+            },
+            {
+              "csrfToken": "t1"
+            }
+          ],
+          "expected": "forbidden"
+        },
+        {
+          "args": [
+            {
+              "method": "POST",
+              "headers": {
+                "x-csrf-token": ""
+              }
+            },
+            {
+              "csrfToken": ""
+            }
+          ],
+          "expected": "forbidden"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "OAuth access tokens carry a space-separated `scope` string, e.g. `'read:orders write:orders'`. Fix `hasScopes(scope, required)` so every required scope must be present **as a whole word**. A missing scope string grants nothing.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "hasScopes",
+      "starterCode": "function hasScopes(scope, required) {\n  return required.every((r) => scope.includes(r));\n}",
+      "referenceSolution": "function hasScopes(scope, required) {\n  const granted = new Set((scope || '').split(/\\s+/).filter(Boolean));\n  return required.every((r) => granted.has(r));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "read:orders write:orders",
+            [
+              "read:orders"
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "read:orders",
+            [
+              "read:order"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            null,
+            [
+              "read:orders"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            null,
+            []
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "admin:orders  read:users",
+            [
+              "read:users",
+              "admin:orders"
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "write:orders",
+            [
+              "orders"
+            ]
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "When verifying a JWT against a JWKS (the issuer's public keys), pick the key by `kid`. Fix `selectKey(header, jwks)` to return the chosen key's `kid`, or `null`:\n- with a `kid`, use the key with that `kid` (none → `null`, so the caller can refetch the JWKS)\n- without a `kid`, use the only key if there is exactly one\n- if the chosen key declares an `alg`, it must equal `header.alg`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "selectKey",
+      "starterCode": "function selectKey(header, jwks) {\n  return jwks.length ? jwks[0].kid : null;\n}",
+      "referenceSolution": "function selectKey(header, jwks) {\n  let key = null;\n  if (header.kid) key = jwks.find((k) => k.kid === header.kid) || null;\n  else if (jwks.length === 1) key = jwks[0];\n  if (!key) return null;\n  if (key.alg && key.alg !== header.alg) return null;\n  return key.kid;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "alg": "RS256",
+              "kid": "k2"
+            },
+            [
+              {
+                "kid": "k1",
+                "alg": "RS256"
+              },
+              {
+                "kid": "k2",
+                "alg": "RS256"
+              }
+            ]
+          ],
+          "expected": "k2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "alg": "RS256",
+              "kid": "k9"
+            },
+            [
+              {
+                "kid": "k1",
+                "alg": "RS256"
+              }
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "alg": "RS256"
+            },
+            [
+              {
+                "kid": "only"
+              }
+            ]
+          ],
+          "expected": "only"
+        },
+        {
+          "args": [
+            {
+              "alg": "RS256"
+            },
+            [
+              {
+                "kid": "a"
+              },
+              {
+                "kid": "b"
+              }
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "alg": "HS256",
+              "kid": "k1"
+            },
+            [
+              {
+                "kid": "k1",
+                "alg": "RS256"
+              }
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "alg": "RS256",
+              "kid": "k1"
+            },
+            []
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Fix `auditCookies(setCookies)`, which reviews `Set-Cookie` header values for session cookies. For each cookie, in order, report: `'<name>: missing HttpOnly'`, `'<name>: missing Secure'`, `'<name>: missing SameSite'`. Attribute names are case-insensitive. Return all issues in cookie order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "auditCookies",
+      "starterCode": "function auditCookies(setCookies) {\n  const issues = [];\n  for (const c of setCookies) {\n    const name = c.split('=')[0];\n    if (!c.includes('HttpOnly')) issues.push(name + ': missing HttpOnly');\n    if (!c.includes('Secure')) issues.push(name + ': missing Secure');\n  }\n  return issues;\n}",
+      "referenceSolution": "function auditCookies(setCookies) {\n  const issues = [];\n  for (const c of setCookies) {\n    const [first, ...attrs] = c.split(';').map((p) => p.trim());\n    const name = first.split('=')[0];\n    const names = attrs.map((a) => a.split('=')[0].trim().toLowerCase());\n    if (!names.includes('httponly')) issues.push(name + ': missing HttpOnly');\n    if (!names.includes('secure')) issues.push(name + ': missing Secure');\n    if (!names.includes('samesite')) issues.push(name + ': missing SameSite');\n  }\n  return issues;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "sid=abc; Path=/; HttpOnly; Secure; SameSite=Lax"
+            ]
+          ],
+          "expected": []
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "sid=abc; path=/; httponly; secure"
+            ]
+          ],
+          "expected": [
+            "sid: missing SameSite"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a=1",
+              "b=2; Secure; SameSite=Strict"
+            ]
+          ],
+          "expected": [
+            "a: missing HttpOnly",
+            "a: missing Secure",
+            "a: missing SameSite",
+            "b: missing HttpOnly"
+          ]
+        },
+        {
+          "args": [
+            [
+              "SecureToken=x; HttpOnly; SameSite=Lax"
+            ]
+          ],
+          "expected": [
+            "SecureToken: missing Secure"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "An SPA's access token has just expired mid-session. Put the steps of a silent refresh in order.",
+    "task": {
+      "prompt": "An SPA's access token has just expired mid-session. Put the steps of a silent refresh in order.",
+      "kind": "rank",
+      "items": [
+        {
+          "id": "call",
+          "label": "The SPA calls `GET /api/orders` with the expired access token"
+        },
+        {
+          "id": "401",
+          "label": "The API responds `401` because the token's `exp` has passed"
+        },
+        {
+          "id": "refresh",
+          "label": "The SPA calls `POST /auth/refresh`; the browser sends the HttpOnly refresh-token cookie"
+        },
+        {
+          "id": "rotate",
+          "label": "The server checks the refresh token, rotates it (new cookie) and returns a new access token"
+        },
+        {
+          "id": "retry",
+          "label": "The SPA retries `GET /api/orders` with the new access token"
+        }
+      ],
+      "correctOrder": [
+        "call",
+        "401",
+        "refresh",
+        "rotate",
+        "retry"
+      ],
+      "explanation": "The refresh token is only ever sent to the refresh endpoint, and rotating it on every use lets the server detect a stolen, replayed one."
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this show? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "It prints `admin 42`: anyone can read the claims without the secret, even with a bogus signature",
+        "It throws, because the payload is encrypted",
+        "It prints `admin 42` only because the signature is valid",
+        "It prints `undefined undefined`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reading claims needs no key. That is why servers must **verify** the signature before trusting them, and why nothing secret belongs in the payload.",
+      "snippet": "const token =\n  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' +\n  '.eyJzdWIiOiI0MiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc2NzIyNTYwMH0' +\n  '.not-a-real-signature';\n\nconst payload = JSON.parse(atob(token.split('.')[1]));\nconsole.log(payload.role, payload.sub);",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Ten microservices need to verify tokens issued by your auth service. Why prefer RS256 (or ES256) over HS256 here?",
+    "mcq": {
+      "options": [
+        "With an asymmetric algorithm the services only hold the public key, so a compromised service cannot mint tokens",
+        "RS256 tokens are smaller",
+        "HS256 tokens cannot carry an expiry",
+        "RS256 encrypts the payload"
+      ],
+      "correctIndex": 0,
+      "explanation": "HS256 uses one shared secret for signing and verifying, so every verifier can also forge tokens. Asymmetric keys keep signing power in one place, and a JWKS endpoint makes key rotation easy.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A user changes their password because they think their account was compromised. With server-side sessions, what should happen?",
+    "mcq": {
+      "options": [
+        "Invalidate all of the user's other sessions (and refresh tokens), keeping or re-issuing only the current one",
+        "Nothing; old sessions will expire on their own",
+        "Only clear the cookie in the current browser",
+        "Ask the user to clear their browser cache"
+      ],
+      "correctIndex": 0,
+      "explanation": "If the attacker already has a session, a new password alone does not log them out. Delete the user's sessions in the store (or bump a token version) on password change.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Complete `authenticate(payload, users, now)` (signature already verified, `now` in seconds). Check in order and return `{ ok: false, reason }` for the first failure:\n- `'expired'`: `now >= exp`\n- `'unknown user'`: no `users[payload.sub]`\n- `'disabled'`\n- `'revoked'`: the token's `tv` differs from the user's `tokenVersion` (bumped on logout-everywhere or password change)\n\nOtherwise `{ ok: true, userId, role }` with the role from the **user record**, not the token.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "authenticate",
+      "starterCode": "function authenticate(payload, users, now) {\n  if (now >= payload.exp) return { ok: false, reason: 'expired' };\n  const user = users[payload.sub];\n  if (!user) return { ok: false, reason: 'unknown user' };\n  return { ok: true, userId: payload.sub, role: payload.role };\n}",
+      "referenceSolution": "function authenticate(payload, users, now) {\n  if (now >= payload.exp) return { ok: false, reason: 'expired' };\n  const user = users[payload.sub];\n  if (!user) return { ok: false, reason: 'unknown user' };\n  if (user.disabled) return { ok: false, reason: 'disabled' };\n  if (payload.tv !== user.tokenVersion) return { ok: false, reason: 'revoked' };\n  return { ok: true, userId: payload.sub, role: user.role };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "sub": "u1",
+              "exp": 100,
+              "tv": 1,
+              "role": "user"
+            },
+            {
+              "u1": {
+                "role": "user",
+                "tokenVersion": 1
+              }
+            },
+            50
+          ],
+          "expected": {
+            "ok": true,
+            "userId": "u1",
+            "role": "user"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "sub": "u1",
+              "exp": 100,
+              "tv": 1
+            },
+            {
+              "u1": {
+                "role": "user",
+                "tokenVersion": 2
+              }
+            },
+            50
+          ],
+          "expected": {
+            "ok": false,
+            "reason": "revoked"
+          }
+        },
+        {
+          "args": [
+            {
+              "sub": "u1",
+              "exp": 100,
+              "tv": 1
+            },
+            {
+              "u1": {
+                "role": "user",
+                "tokenVersion": 1,
+                "disabled": true
+              }
+            },
+            50
+          ],
+          "expected": {
+            "ok": false,
+            "reason": "disabled"
+          }
+        },
+        {
+          "args": [
+            {
+              "sub": "u1",
+              "exp": 100,
+              "tv": 1,
+              "role": "admin"
+            },
+            {
+              "u1": {
+                "role": "user",
+                "tokenVersion": 1
+              }
+            },
+            50
+          ],
+          "expected": {
+            "ok": true,
+            "userId": "u1",
+            "role": "user"
+          }
+        },
+        {
+          "args": [
+            {
+              "sub": "u9",
+              "exp": 100,
+              "tv": 1
+            },
+            {},
+            100
+          ],
+          "expected": {
+            "ok": false,
+            "reason": "expired"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Strict refresh-token rotation logs users out when two browser tabs refresh at the same moment. Add a **grace window**: right after a rotation, the immediately previous token is still accepted for `grace` ms and returns the **same** current token (no new rotation). Fix `refresh(f, n, t, grace)` for one family `f = { current, rotatedAt, revoked }`:\n- revoked, or `n > current` → `'invalid'`\n- `n === current` → rotate (bump `current`, set `rotatedAt = t`), return `'f.<current>'`\n- `n === current - 1` and `t - rotatedAt <= grace` → return `'f.<current>'`\n- any other older token → revoke, `'reuse-detected'`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runRefresh",
+      "starterCode": "function refresh(f, n, t, grace) {\n  if (f.revoked || n > f.current) return 'invalid';\n  if (n === f.current) {\n    f.current++;\n    f.rotatedAt = t;\n    return 'f.' + f.current;\n  }\n  f.revoked = true;\n  return 'reuse-detected';\n}\n\n// Test driver (leave as is). calls: [n, t]\nfunction runRefresh(grace, calls) {\n  const f = { current: 1, rotatedAt: 0, revoked: false };\n  return calls.map(([n, t]) => refresh(f, n, t, grace));\n}",
+      "referenceSolution": "function refresh(f, n, t, grace) {\n  if (f.revoked || n > f.current) return 'invalid';\n  if (n === f.current) {\n    f.current++;\n    f.rotatedAt = t;\n    return 'f.' + f.current;\n  }\n  if (n === f.current - 1 && t - f.rotatedAt <= grace) return 'f.' + f.current;\n  f.revoked = true;\n  return 'reuse-detected';\n}\n\n// Test driver (leave as is). calls: [n, t]\nfunction runRefresh(grace, calls) {\n  const f = { current: 1, rotatedAt: 0, revoked: false };\n  return calls.map(([n, t]) => refresh(f, n, t, grace));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1000,
+            [
+              [
+                1,
+                5000
+              ],
+              [
+                1,
+                5200
+              ]
+            ]
+          ],
+          "expected": [
+            "f.2",
+            "f.2"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1000,
+            [
+              [
+                1,
+                5000
+              ],
+              [
+                1,
+                7000
+              ]
+            ]
+          ],
+          "expected": [
+            "f.2",
+            "reuse-detected"
+          ]
+        },
+        {
+          "args": [
+            1000,
+            [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                100
+              ],
+              [
+                1,
+                200
+              ]
+            ]
+          ],
+          "expected": [
+            "f.2",
+            "f.3",
+            "reuse-detected"
+          ]
+        },
+        {
+          "args": [
+            1000,
+            [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                500
+              ],
+              [
+                2,
+                600
+              ],
+              [
+                3,
+                700
+              ]
+            ]
+          ],
+          "expected": [
+            "f.2",
+            "f.2",
+            "f.3",
+            "f.4"
+          ]
+        },
+        {
+          "args": [
+            0,
+            [
+              [
+                2,
+                0
+              ]
+            ]
+          ],
+          "expected": [
+            "invalid"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Sessions have an **idle** timeout (no request for `idle` minutes) and an **absolute** timeout (`absolute` minutes after login, however active). Fix `runSession(idle, absolute, events)`: events are `['login', t]` or `['request', t]` (t in minutes). For each request output `'ok'`, `'absolute-timeout'` (checked first), `'idle-timeout'`, or `'no-session'`. A timeout ends the session; a timeout is reached when the elapsed time is `>=` the limit.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runSession",
+      "starterCode": "function runSession(idle, absolute, events) {\n  let session = null;\n  const out = [];\n  for (const [type, t] of events) {\n    if (type === 'login') {\n      session = { lastSeen: t };\n      continue;\n    }\n    if (!session) out.push('no-session');\n    else if (t - session.lastSeen >= idle) out.push('idle-timeout');\n    else {\n      session.lastSeen = t;\n      out.push('ok');\n    }\n  }\n  return out;\n}",
+      "referenceSolution": "function runSession(idle, absolute, events) {\n  let session = null;\n  const out = [];\n  for (const [type, t] of events) {\n    if (type === 'login') {\n      session = { lastSeen: t, createdAt: t };\n      continue;\n    }\n    if (!session) out.push('no-session');\n    else if (t - session.createdAt >= absolute) {\n      session = null;\n      out.push('absolute-timeout');\n    } else if (t - session.lastSeen >= idle) {\n      session = null;\n      out.push('idle-timeout');\n    } else {\n      session.lastSeen = t;\n      out.push('ok');\n    }\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            30,
+            480,
+            [
+              [
+                "login",
+                0
+              ],
+              [
+                "request",
+                10
+              ],
+              [
+                "request",
+                45
+              ]
+            ]
+          ],
+          "expected": [
+            "ok",
+            "idle-timeout"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            30,
+            480,
+            [
+              [
+                "login",
+                0
+              ],
+              [
+                "request",
+                20
+              ],
+              [
+                "request",
+                40
+              ],
+              [
+                "request",
+                60
+              ]
+            ]
+          ],
+          "expected": [
+            "ok",
+            "ok",
+            "ok"
+          ]
+        },
+        {
+          "args": [
+            30,
+            100,
+            [
+              [
+                "login",
+                0
+              ],
+              [
+                "request",
+                25
+              ],
+              [
+                "request",
+                50
+              ],
+              [
+                "request",
+                75
+              ],
+              [
+                "request",
+                100
+              ],
+              [
+                "request",
+                101
+              ]
+            ]
+          ],
+          "expected": [
+            "ok",
+            "ok",
+            "ok",
+            "absolute-timeout",
+            "no-session"
+          ]
+        },
+        {
+          "args": [
+            30,
+            480,
+            [
+              [
+                "request",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            "no-session"
+          ]
+        },
+        {
+          "args": [
+            30,
+            480,
+            [
+              [
+                "login",
+                0
+              ],
+              [
+                "request",
+                40
+              ],
+              [
+                "request",
+                41
+              ],
+              [
+                "login",
+                50
+              ],
+              [
+                "request",
+                60
+              ]
+            ]
+          ],
+          "expected": [
+            "idle-timeout",
+            "no-session",
+            "ok"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Your API caches the issuer's JWKS. When a token arrives with an unknown `kid` (the issuer rotated keys), refetch the JWKS, but **at most once per `cooldown` ms**, so a flood of junk tokens cannot hammer the issuer. Fix `verifyKids(cached, remote, events, cooldown)`: events are `[kid, t]`; a fetch replaces the cache with `remote`. Return `{ results, fetches }` with `'ok'` or `'unknown-kid'` per event.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "verifyKids",
+      "starterCode": "function verifyKids(cached, remote, events, cooldown) {\n  let keys = cached;\n  let fetches = 0;\n  const results = events.map(([kid, t]) => {\n    if (!keys.includes(kid)) {\n      keys = remote;\n      fetches++;\n    }\n    return keys.includes(kid) ? 'ok' : 'unknown-kid';\n  });\n  return { results, fetches };\n}",
+      "referenceSolution": "function verifyKids(cached, remote, events, cooldown) {\n  let keys = cached;\n  let fetches = 0;\n  let lastFetch = null;\n  const results = events.map(([kid, t]) => {\n    if (!keys.includes(kid) && (lastFetch === null || t - lastFetch >= cooldown)) {\n      keys = remote;\n      fetches++;\n      lastFetch = t;\n    }\n    return keys.includes(kid) ? 'ok' : 'unknown-kid';\n  });\n  return { results, fetches };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "k1"
+            ],
+            [
+              "k1",
+              "k2"
+            ],
+            [
+              [
+                "k2",
+                0
+              ],
+              [
+                "k2",
+                10
+              ]
+            ],
+            60000
+          ],
+          "expected": {
+            "results": [
+              "ok",
+              "ok"
+            ],
+            "fetches": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "k1"
+            ],
+            [
+              "k1"
+            ],
+            [
+              [
+                "junk1",
+                0
+              ],
+              [
+                "junk2",
+                100
+              ],
+              [
+                "junk3",
+                200
+              ]
+            ],
+            60000
+          ],
+          "expected": {
+            "results": [
+              "unknown-kid",
+              "unknown-kid",
+              "unknown-kid"
+            ],
+            "fetches": 1
+          }
+        },
+        {
+          "args": [
+            [
+              "k1"
+            ],
+            [
+              "k1"
+            ],
+            [
+              [
+                "x",
+                0
+              ],
+              [
+                "y",
+                60000
+              ]
+            ],
+            60000
+          ],
+          "expected": {
+            "results": [
+              "unknown-kid",
+              "unknown-kid"
+            ],
+            "fetches": 2
+          }
+        },
+        {
+          "args": [
+            [
+              "k1"
+            ],
+            [
+              "k2"
+            ],
+            [
+              [
+                "k1",
+                0
+              ]
+            ],
+            1000
+          ],
+          "expected": {
+            "results": [
+              "ok"
+            ],
+            "fetches": 0
+          }
+        },
+        {
+          "args": [
+            [
+              "k1"
+            ],
+            [
+              "k1",
+              "k3"
+            ],
+            [
+              [
+                "bad",
+                0
+              ],
+              [
+                "k3",
+                500
+              ],
+              [
+                "k3",
+                1500
+              ]
+            ],
+            1000
+          ],
+          "expected": {
+            "results": [
+              "unknown-kid",
+              "ok",
+              "ok"
+            ],
+            "fetches": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "After login the app redirects to `?next=…`. Fix `safeRedirect(next, allowedHosts)` to prevent open redirects. Allow:\n- a relative path starting with a single `/` (not `//` or `/\\`, which browsers treat as another host)\n- an `https://` URL whose host is exactly in `allowedHosts` (no `user@host` tricks)\n\nAnything else, including a missing value, returns `'/'`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "safeRedirect",
+      "starterCode": "function safeRedirect(next, allowedHosts) {\n  return next && next.startsWith('/') ? next : '/';\n}",
+      "referenceSolution": "function safeRedirect(next, allowedHosts) {\n  if (typeof next !== 'string' || !next) return '/';\n  if (next.startsWith('/')) {\n    return next.startsWith('//') || next.startsWith('/\\\\') ? '/' : next;\n  }\n  const m = next.match(/^https:\\/\\/([^/?#]+)([/?#].*)?$/i);\n  if (!m) return '/';\n  const host = m[1].toLowerCase();\n  if (host.includes('@') || !allowedHosts.includes(host)) return '/';\n  return next;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/dashboard?tab=2",
+            [
+              "app.example.com"
+            ]
+          ],
+          "expected": "/dashboard?tab=2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "//evil.com/login",
+            [
+              "app.example.com"
+            ]
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            "https://app.example.com/billing",
+            [
+              "app.example.com"
+            ]
+          ],
+          "expected": "https://app.example.com/billing"
+        },
+        {
+          "args": [
+            "https://app.example.com@evil.com/",
+            [
+              "app.example.com"
+            ]
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            "javascript:alert(1)",
+            [
+              "app.example.com"
+            ]
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            null,
+            [
+              "app.example.com"
+            ]
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            "/\\evil.com",
+            [
+              "app.example.com"
+            ]
+          ],
+          "expected": "/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Your HS256 JWT signing secret was committed to a public GitHub repo two hours ago. Access tokens live 15 minutes; refresh tokens are opaque, stored server-side, and live 30 days.",
+    "task": {
+      "prompt": "Your HS256 JWT signing secret was committed to a public GitHub repo two hours ago. Access tokens live 15 minutes; refresh tokens are opaque, stored server-side, and live 30 days.",
+      "kind": "scenario",
+      "steps": [
+        {
+          "id": "first",
+          "question": "What do you do first?",
+          "options": [
+            "Generate a new secret, deploy it, and stop accepting tokens signed with the old one",
+            "Delete the commit from GitHub history",
+            "Email users to change their passwords",
+            "Wait for the access tokens to expire"
+          ],
+          "correctIndex": 0,
+          "explanation": "Anyone with the secret can mint tokens for any user right now. Rewriting history does not un-leak it."
+        },
+        {
+          "id": "sessions",
+          "question": "What about existing logged-in users?",
+          "options": [
+            "Revoke all refresh tokens issued before the rotation (or bump every user's token version) and audit logs for tokens minted with the old key",
+            "Nothing; their refresh tokens are still valid and opaque",
+            "Force every user to reset their password",
+            "Extend access-token lifetime so users are not disrupted"
+          ],
+          "correctIndex": 0,
+          "explanation": "Forged access tokens could have been used to act as users or create new sessions, so you invalidate what may have been issued and look for abuse."
+        },
+        {
+          "id": "prevent",
+          "question": "Which change best limits the damage of a future leak?",
+          "options": [
+            "Move signing to an asymmetric key (RS256/ES256) kept in a secrets manager, with `kid`-based rotation via JWKS",
+            "Make the HS256 secret longer",
+            "Encrypt the JWT payload",
+            "Store tokens in localStorage"
+          ],
+          "correctIndex": 0,
+          "explanation": "Verifiers then hold only public keys, the private key lives in one guarded place, and rotation is routine instead of an emergency."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Security requires that disabling a user cuts off their access within seconds, and you have 50 API instances. Which design meets that most simply?",
+    "mcq": {
+      "options": [
+        "Opaque session ids looked up in a shared store such as Redis (or short-lived JWTs plus a shared revocation check), so a delete takes effect everywhere at once",
+        "1-hour stateless JWTs with no server-side check",
+        "Per-instance in-memory sessions with sticky load balancing",
+        "Long-lived JWTs that are rotated daily"
+      ],
+      "correctIndex": 0,
+      "explanation": "Immediate revocation needs shared state somewhere. A Redis lookup is cheap; a stateless token stays valid until it expires.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your session cookie is `SameSite=Lax`. A malicious site auto-submits a hidden `<form method=\"POST\">` to `https://bank.example.com/transfer`. Is the cookie sent?",
+    "mcq": {
+      "options": [
+        "No: Lax cookies are sent on cross-site top-level GET navigations, but not on cross-site POSTs",
+        "Yes: Lax only blocks cookies in iframes",
+        "Yes: forms always send cookies",
+        "No: SameSite cookies are never sent cross-site, including links"
+      ],
+      "correctIndex": 0,
+      "explanation": "Lax blocks the classic CSRF form POST while keeping normal link navigation logged in. It is a strong default, but keep CSRF tokens for anything sensitive and never change state on GET.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-auth-sessions-jwt-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-auth-sessions-jwt",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A service verifies tokens with `jwt.verify(token, publicKey)` and does not pass an `algorithms` option. An attacker sends a token with header `alg: HS256`, signed using your RSA **public** key as the HMAC secret. What is the risk, and the fix?",
+    "mcq": {
+      "options": [
+        "Some libraries will verify it as HMAC with the public key and accept a forged token; always pin `algorithms: ['RS256']`",
+        "No risk, because the public key is public anyway",
+        "The token fails because HS256 needs a longer key",
+        "Only the token's expiry is affected"
+      ],
+      "correctIndex": 0,
+      "explanation": "This is algorithm confusion: the attacker picks the algorithm. Never let the token's header decide; pin the expected algorithm (and key type) when verifying.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

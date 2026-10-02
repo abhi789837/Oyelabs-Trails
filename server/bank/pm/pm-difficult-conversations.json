@@ -1,0 +1,388 @@
+[
+  {
+    "id": "pm-difficult-conversations-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the parts of a call where you tell a client that launch will slip by two weeks.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Offer options and your recommendation"
+        },
+        {
+          "id": "r2",
+          "label": "Explain the cause briefly and factually"
+        },
+        {
+          "id": "r1",
+          "label": "State the news plainly at the start"
+        },
+        {
+          "id": "r3",
+          "label": "Describe the impact and what you are doing about it"
+        },
+        {
+          "id": "r5",
+          "label": "Agree next steps and confirm in writing"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Lead with the news (no long build-up), then cause, impact and plan, then options and agreed next steps."
+    }
+  },
+  {
+    "id": "pm-difficult-conversations-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this opening a PM plans for a call delivering bad news.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Thanks for making time today.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "So, how was your weekend? Lovely weather, wasn't it? Anyway, lots of good progress this sprint...",
+          "issue": "Burying the news after small talk and good news makes the client feel managed; get to the point."
+        },
+        {
+          "id": "p3",
+          "text": "I need to share some bad news: the launch will move from 3 to 17 June.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "It's mainly because your team was late with the content, as usual.",
+          "issue": "Blaming and 'as usual' makes it personal and defensive; state facts without blame."
+        },
+        {
+          "id": "p5",
+          "text": "Here's what we're doing to protect the new date.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Let's agree the next steps before we finish.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-difficult-conversations-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client refuses to pay an invoice for a change request they verbally approved on a call but never signed. The amount is $6,000.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client refuses to pay an invoice for a change request they verbally approved on a call but never signed. The amount is $6,000.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you open the conversation?",
+          "options": [
+            "Threaten to stop work",
+            "Restate the shared facts calmly (call date, what was discussed, the work delivered) and ask for their view",
+            "Apologise and waive the invoice",
+            "Send the call recording without comment"
+          ],
+          "correctIndex": 1,
+          "explanation": "Start from facts and listen; it keeps the conversation about resolving it rather than winning."
+        },
+        {
+          "id": "s2",
+          "question": "They say they understood it was included in the original price. What next?",
+          "options": [
+            "Insist they are wrong",
+            "Acknowledge the misunderstanding, show the original scope and the CR, and look for a fair resolution (e.g. payment terms or a partial split) with your manager",
+            "Write off the $6,000 immediately",
+            "Escalate to lawyers"
+          ],
+          "correctIndex": 1,
+          "explanation": "Acknowledging their view and looking for a fair outcome preserves the relationship; involve your manager for commercial concessions."
+        },
+        {
+          "id": "s3",
+          "question": "What process change prevents this?",
+          "options": [
+            "No more change requests",
+            "No work on any change until the CR is approved in writing",
+            "Only verbal approvals",
+            "Charge double for CRs"
+          ],
+          "correctIndex": 1,
+          "explanation": "Written approval before work is the standard protection."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-difficult-conversations-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A senior developer has missed code-review deadlines for three sprints and the team is starting to complain.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A senior developer has missed code-review deadlines for three sprints and the team is starting to complain.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you raise it?",
+          "options": [
+            "In the sprint retro in front of everyone",
+            "Privately, with specific examples and the impact on the team, then ask what is going on",
+            "By email to their line manager only",
+            "Wait for them to notice"
+          ],
+          "correctIndex": 1,
+          "explanation": "Private, specific, impact-focused, and curious about the cause."
+        },
+        {
+          "id": "s2",
+          "question": "They explain they are overloaded with support tickets from another client. What do you do?",
+          "options": [
+            "Tell them to work harder",
+            "Agree a fix together: review time-boxes, and raise the competing load with the resource manager",
+            "Remove them from the project immediately",
+            "Ignore the reason"
+          ],
+          "correctIndex": 1,
+          "explanation": "The cause is a system issue; solve it together and escalate the capacity conflict."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-difficult-conversations-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A client wants a 15% discount after a two-week delay. Your contract value is $80,000 and planned margin is 30%. Work out what the discount would do to the margin.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Input",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Contract value",
+            "$80,000"
+          ],
+          [
+            "Planned margin",
+            "30%"
+          ],
+          [
+            "Discount asked",
+            "15%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "disc",
+          "label": "Discount amount",
+          "unit": "$",
+          "answer": 12000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "cost",
+          "label": "Planned delivery cost",
+          "unit": "$",
+          "answer": 56000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "newm",
+          "label": "Margin after the discount",
+          "unit": "%",
+          "answer": 17.6,
+          "tolerance": 0.2
+        }
+      ],
+      "explanation": "Discount = $12,000. Cost = 70% of $80,000 = $56,000. New revenue $68,000, margin = (68,000 − 56,000) / 68,000 = 17.6%. Knowing this before the conversation lets you negotiate (e.g. offer added value instead)."
+    }
+  },
+  {
+    "id": "pm-difficult-conversations-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "In a steering meeting, the client's COO angrily says your agency 'always overpromises' and threatens to move the project to another vendor.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "In a steering meeting, the client's COO angrily says your agency 'always overpromises' and threatens to move the project to another vendor.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your immediate response?",
+          "options": [
+            "Defend the agency point by point",
+            "Stay calm, acknowledge the frustration, and ask what specifically has gone wrong for them",
+            "Agree that the agency is bad",
+            "Leave the meeting"
+          ],
+          "correctIndex": 1,
+          "explanation": "De-escalate first; you cannot solve a problem you have not understood."
+        },
+        {
+          "id": "s2",
+          "question": "The COO lists three missed dates. Two were caused by late client inputs. How do you handle that?",
+          "options": [
+            "Point out it was mostly their fault",
+            "Own the one that was yours, show the facts on the other two neutrally, and propose a joint fix for the dependency process",
+            "Accept blame for all three",
+            "Ignore the history"
+          ],
+          "correctIndex": 1,
+          "explanation": "Owning your part makes the facts on the others credible; a joint fix moves the conversation forward."
+        },
+        {
+          "id": "s3",
+          "question": "What do you send after the meeting?",
+          "options": [
+            "Nothing",
+            "A written summary of concerns raised, agreed actions with owners and dates, and the next check-in",
+            "A formal complaint",
+            "A discount offer"
+          ],
+          "correctIndex": 1,
+          "explanation": "Following up in writing shows you heard them and makes commitments visible."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-difficult-conversations-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the main reason to deliver bad news to a client early rather than wait?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "They have more options when they hear early, and trust is kept",
+        "It is cheaper to send an email",
+        "Clients prefer surprises",
+        "It avoids the need for a plan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Early news leaves time for choices (scope, budget, date); late news removes options and damages trust.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-difficult-conversations-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which phrase is best when declining a client request outside the contract?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "'That's not our problem.'",
+        "'I can see why that matters. It's outside the current scope; here's what it would take to add it.'",
+        "'Maybe later.'",
+        "'The developers won't do it.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "Acknowledge, be clear about the boundary, and offer a path forward.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-difficult-conversations-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-difficult-conversations",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "During a tense negotiation, the client makes a demand you cannot accept. What is a good technique?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Ask about the interest behind the demand to find other ways to meet it",
+        "Accept it to end the tension",
+        "Refuse and end the meeting",
+        "Reply with a counter-demand twice as big"
+      ],
+      "correctIndex": 0,
+      "explanation": "Focusing on interests rather than positions opens up options both sides can accept.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

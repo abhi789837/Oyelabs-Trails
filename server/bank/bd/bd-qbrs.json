@@ -1,0 +1,327 @@
+[
+  {
+    "id": "bd-qbrs-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order a QBR agenda.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these items for a quarterly business review agenda, first at the top.",
+      "items": [
+        {
+          "id": "i6",
+          "label": "Agreed actions, owners and dates"
+        },
+        {
+          "id": "i1",
+          "label": "Recap of the goals agreed last quarter"
+        },
+        {
+          "id": "i2",
+          "label": "Results against those goals, with data"
+        },
+        {
+          "id": "i3",
+          "label": "What went well, what didn't, and what we changed"
+        },
+        {
+          "id": "i4",
+          "label": "The client's priorities for next quarter"
+        },
+        {
+          "id": "i5",
+          "label": "Recommendations and proposed roadmap"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "Start from what was agreed, show results honestly, listen to their priorities, then recommend and agree actions. Recommendations before priorities look like a sales pitch."
+    }
+  },
+  {
+    "id": "bd-qbrs-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this QBR deck outline.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the slides in this QBR outline that will weaken the review.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Slide 1: our new AI services and pricing.",
+          "issue": "Opening with a pitch signals the review is about selling, not the client's results."
+        },
+        {
+          "id": "p2",
+          "text": "Slide 2: goals agreed last quarter.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Slides 3–20: every ticket closed this quarter, one per row.",
+          "issue": "Activity dumps hide results; summarise outcomes against goals."
+        },
+        {
+          "id": "p4",
+          "text": "Slide 21: SLA results (we missed the 95% target, shown in an appendix).",
+          "issue": "Hiding a missed target damages trust when the client finds it; address it openly with the cause and fix."
+        },
+        {
+          "id": "p5",
+          "text": "Slide 22: client priorities for next quarter (discussion).",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Slide 23: agreed actions and owners.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-qbrs-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Prepare service metrics for a QBR.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "This quarter the client raised 120 support tickets; 108 were resolved within the SLA. In the last month, the app had 86 minutes of downtime out of 43,200 minutes. Round to two decimals.",
+      "table": null,
+      "fields": [
+        {
+          "id": "sla",
+          "label": "Tickets resolved within SLA",
+          "unit": "%",
+          "answer": 90,
+          "tolerance": 0.01
+        },
+        {
+          "id": "uptime",
+          "label": "Uptime last month",
+          "unit": "%",
+          "answer": 99.8,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "SLA = 108 ÷ 120 = 90%. Uptime = (43,200 − 86) ÷ 43,200 = 99.8%. If the target was 95% SLA, say so plainly and explain the plan."
+    }
+  },
+  {
+    "id": "bd-qbrs-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle frustration that surfaces in a QBR.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Halfway through a QBR, the client's VP says: \"Honestly, we feel releases have been slow and nobody told us why.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you respond in the room?",
+          "options": [
+            "Move on to the next slide and discuss it later",
+            "Thank them, ask for specific examples, and acknowledge the communication gap without getting defensive",
+            "Show data proving releases were on time",
+            "Blame the client's slow approvals"
+          ],
+          "correctIndex": 1,
+          "explanation": "Listening first in the room matters more than being right; you can review the facts together after."
+        },
+        {
+          "id": "s2",
+          "question": "What do you commit to before the meeting ends?",
+          "options": [
+            "A general promise to communicate better",
+            "A discount on next quarter",
+            "A specific change, such as a weekly release note, with an owner and a date to review it",
+            "Nothing until you have investigated"
+          ],
+          "correctIndex": 2,
+          "explanation": "Concrete, owned actions turn a complaint into a sign that the relationship works."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-qbrs-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Write a QBR summary email.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write the follow-up email after the QBR described below. Keep it short, factual and action-focused.",
+      "context": "QBR with a retail client. Results: checkout conversion up from 2.1% to 2.5%; 108 of 120 tickets within SLA (90%, target 95%) because of a two-week staff gap, now filled. Client priorities next quarter: loyalty programme, faster releases. Agreed: weekly release notes from your PM starting Monday; loyalty scoping workshop on 14 May; SLA back to 95% by end of next quarter.",
+      "wordLimit": 180,
+      "rubric": [
+        {
+          "id": "results",
+          "label": "States results honestly",
+          "description": "Includes the conversion gain and the missed SLA with its cause, without spin.",
+          "weight": 1
+        },
+        {
+          "id": "priorities",
+          "label": "Reflects the client's priorities",
+          "description": "Mentions the loyalty programme and faster releases.",
+          "weight": 1
+        },
+        {
+          "id": "actions",
+          "label": "Lists agreed actions",
+          "description": "Each action has an owner and a date.",
+          "weight": 1
+        },
+        {
+          "id": "concise",
+          "label": "Concise and scannable",
+          "description": "Short paragraphs or bullets; no sales pitch.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Anna, thanks for the review today. Summary:\nResults: checkout conversion rose from 2.1% to 2.5%. Support: 108 of 120 tickets were resolved within SLA (90% against a 95% target), caused by a two-week staffing gap that is now filled.\nYour priorities next quarter: the loyalty programme and faster releases.\nAgreed actions:\n- Weekly release notes from Raj (PM), starting Monday.\n- Loyalty scoping workshop on 14 May (our team and your marketing lead).\n- SLA back to 95% by the end of next quarter; we'll report it monthly.\nLet me know if I've missed anything."
+    }
+  },
+  {
+    "id": "bd-qbrs-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Show the value delivered against spend.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client spent $45,000 on your retainer this quarter. Your work cut support tickets by 300 a month (each costs them about $5 to handle) and added $120,000 of revenue this quarter at a 40% gross margin.",
+      "table": null,
+      "fields": [
+        {
+          "id": "support",
+          "label": "Support saving this quarter",
+          "unit": "$",
+          "answer": 4500,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total quarterly benefit (saving + gross profit)",
+          "unit": "$",
+          "answer": 52500,
+          "tolerance": 1
+        },
+        {
+          "id": "ratio",
+          "label": "Benefit per dollar spent",
+          "unit": "",
+          "answer": 1.17,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Support = 300 × $5 × 3 = $4500. Gross profit = 120,000 × 0.4 = $48,000. Total = $52500; ratio = 52500 ÷ 45,000 = 1.17. Use gross profit, not revenue, so the comparison with spend is fair."
+    }
+  },
+  {
+    "id": "bd-qbrs-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a QBR?",
+    "mcq": {
+      "options": [
+        "To present new services to sell",
+        "To review results against agreed goals and align on the client's next priorities",
+        "To list all tickets closed",
+        "To renegotiate the contract"
+      ],
+      "correctIndex": 1,
+      "explanation": "A QBR is a strategic check-in; growth opportunities follow from it, not the other way round.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-qbrs-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Who should ideally attend a QBR from the client side?",
+    "mcq": {
+      "options": [
+        "Only the developer who files tickets",
+        "Only their finance team",
+        "The business sponsor and key decision-makers, not only day-to-day contacts",
+        "Nobody; send the deck by email"
+      ],
+      "correctIndex": 2,
+      "explanation": "Decision-makers need to see results and shape priorities; that keeps the account strategic.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-qbrs-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-qbrs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "The quarter's main goal was missed. How should the QBR handle it?",
+    "mcq": {
+      "options": [
+        "Leave it out and focus on successes",
+        "Mention it briefly at the end",
+        "Present it early and plainly, with the cause and a concrete recovery plan",
+        "Blame external factors"
+      ],
+      "correctIndex": 2,
+      "explanation": "Owning a miss with a plan builds more trust than a polished deck that avoids it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

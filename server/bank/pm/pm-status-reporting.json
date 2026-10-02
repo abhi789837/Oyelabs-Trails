@@ -1,0 +1,371 @@
+[
+  {
+    "id": "pm-status-reporting-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Read this weekly status report sent to a client. Mark the lines that are weak or misleading.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Overall status: GREEN.",
+          "issue": "Green is wrong when a milestone is slipping and a key dependency is blocked; this should be Amber."
+        },
+        {
+          "id": "p2",
+          "text": "Done this week: login, signup and profile screens passed QA.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Payment gateway integration is blocked: we're still waiting for your Stripe keys.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Things are going well generally and the team is working hard.",
+          "issue": "Vague filler with no information; status reports should be specific."
+        },
+        {
+          "id": "p5",
+          "text": "Next week: product listing and search.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Milestone 2 (beta) will move from 14 to 21 June.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "No decisions needed from you this week.",
+          "issue": "Wrong: the client must provide the Stripe keys; the ask should be explicit with a date."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-status-reporting-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You run four client projects. Rank them from healthiest (clearly Green) to most at risk (clearly Red) for this week's portfolio report.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Project D: launch date missed and budget 25% over; needs a sponsor decision"
+        },
+        {
+          "id": "r2",
+          "label": "Project B: on schedule; one new risk logged with a mitigation already in place"
+        },
+        {
+          "id": "r1",
+          "label": "Project A: on schedule, on budget, no open blockers"
+        },
+        {
+          "id": "r3",
+          "label": "Project C: a milestone is one week late, recoverable by swapping out a Could-have feature"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "A is Green, B is still Green with a managed risk, C is Amber (off track but recoverable), D is Red (needs escalation and a decision)."
+    }
+  },
+  {
+    "id": "pm-status-reporting-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "For the status report, work out progress and budget burn for a fixed-price project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Total scope",
+            "140 points"
+          ],
+          [
+            "Done",
+            "84 points"
+          ],
+          [
+            "Budget",
+            "$50,000"
+          ],
+          [
+            "Spent",
+            "$33,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "prog",
+          "label": "Scope complete (story points)",
+          "unit": "%",
+          "answer": 60.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "burn",
+          "label": "Budget spent",
+          "unit": "%",
+          "answer": 66.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "gap",
+          "label": "Budget spent minus scope complete",
+          "unit": "% points",
+          "answer": 6.0,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "84/140 = 60% done; $33k/$50k = 66% spent. Spending is running 6 points ahead of progress: a reason to flag the budget as Amber."
+    }
+  },
+  {
+    "id": "pm-status-reporting-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "On Thursday you learn the app-store submission will slip a week because a third-party SDK has a bug. Your weekly report goes out Friday.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On Thursday you learn the app-store submission will slip a week because a third-party SDK has a bug. Your weekly report goes out Friday.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When do you tell the client?",
+          "options": [
+            "In Friday's report",
+            "Now, with a short message and the impact; then cover details in the report",
+            "After you've fixed it",
+            "Only if they ask"
+          ],
+          "correctIndex": 1,
+          "explanation": "Significant bad news should not wait for the scheduled report; no surprises."
+        },
+        {
+          "id": "s2",
+          "question": "What RAG status does the schedule get?",
+          "options": [
+            "Green, since it's not our fault",
+            "Amber or Red depending on whether the launch date is at risk, with the recovery plan",
+            "Blank",
+            "Green with a footnote"
+          ],
+          "correctIndex": 1,
+          "explanation": "RAG reflects the project's state, not who is at fault."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-status-reporting-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The client's CEO says your two-page weekly report is too long and nobody reads it.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client's CEO says your two-page weekly report is too long and nobody reads it.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What change do you make?",
+          "options": [
+            "Stop sending it",
+            "Lead with a 3-line summary (RAG, key progress, asks) and link the detail",
+            "Send it daily instead",
+            "Add more charts"
+          ],
+          "correctIndex": 1,
+          "explanation": "Executives need the headline and the asks; detail can sit behind a link."
+        },
+        {
+          "id": "s2",
+          "question": "The client's PO still wants the detail. What do you do?",
+          "options": [
+            "Refuse",
+            "Keep the detailed section for the PO, with the summary on top for the CEO",
+            "Send two different versions with different facts",
+            "Give the PO Jira access instead of a report"
+          ],
+          "correctIndex": 1,
+          "explanation": "One report, layered for different audiences, with the same facts."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-status-reporting-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write a weekly status update for the client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write this week's status update email for the client from the notes. Include an overall RAG status, progress, next steps, risks, and any decision or action you need from them.",
+      "context": "Project: Bloom florist white-label app. Week 6 of 12.\n- Done: product catalogue and cart passed QA; push notifications set up.\n- In progress: checkout (70%).\n- Blocker: client has not sent delivery-zone data (needed for checkout) — 4 days late.\n- If data arrives by Wed, beta date 28 June holds; otherwise slips ~1 week.\n- Budget: 48% spent, 50% of scope done.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "rag",
+          "label": "Honest RAG",
+          "description": "Gives an overall status that matches the facts (Amber because of the blocker), with a one-line reason.",
+          "weight": 1
+        },
+        {
+          "id": "progress",
+          "label": "Progress and next steps",
+          "description": "States what was done and what's next, specifically.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Clear client ask",
+          "description": "Asks for the delivery-zone data with a concrete deadline (Wednesday) and the consequence of missing it.",
+          "weight": 2
+        },
+        {
+          "id": "concise",
+          "label": "Concise and readable",
+          "description": "Short, scannable, professional; no filler.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Subject: Bloom app – week 6 status: AMBER\n\nHi Priya,\n\nOverall: AMBER. We're on budget (48% spent, 50% done), but the beta date depends on one item from you.\n\nDone this week: product catalogue and cart passed QA; push notifications are set up.\nNext week: finish checkout (70% done) and start order tracking.\n\nAction needed: please send the delivery-zone data by Wednesday. Checkout can't be completed without it. If it arrives by then, the 28 June beta holds; if not, beta moves about one week.\n\nRisks: none beyond the above.\n\nThanks,\nSam"
+    }
+  },
+  {
+    "id": "pm-status-reporting-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does 'Amber' usually mean in a RAG status?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "There are issues or risks that need attention, but the project can still recover",
+        "The project is on track",
+        "The project has failed",
+        "The client has not paid"
+      ],
+      "correctIndex": 0,
+      "explanation": "Green = on track, Amber = at risk but recoverable with action, Red = serious problem needing escalation or decisions.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-status-reporting-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which line belongs in a client status report?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Waiting on your App Store account access (requested 3 June); needed by 12 June to keep the launch date",
+        "Dev team very busy",
+        "Lots of progress",
+        "Some bugs"
+      ],
+      "correctIndex": 0,
+      "explanation": "Good status lines are specific: what, since when, needed by when, and the impact.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-status-reporting-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-status-reporting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your project has been Green for 8 weeks; in week 9 it suddenly goes Red. What does this most often reveal?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Earlier reports were too optimistic ('watermelon status': green outside, red inside)",
+        "Red is normal at week 9",
+        "The client changed the RAG scale",
+        "Nothing; it happens"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sudden jumps from Green to Red usually mean warning signs weren't reported. Amber exists to show risk early.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

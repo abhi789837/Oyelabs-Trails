@@ -1,0 +1,366 @@
+[
+  {
+    "id": "pm-deployment-basics-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of a typical CI/CD pipeline after a developer merges code.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "The build is deployed to staging"
+        },
+        {
+          "id": "r2",
+          "label": "CI builds the app"
+        },
+        {
+          "id": "r1",
+          "label": "Code is merged into the main branch"
+        },
+        {
+          "id": "r3",
+          "label": "Automated tests run"
+        },
+        {
+          "id": "r5",
+          "label": "After approval, it is deployed to production"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Merge triggers the build, tests gate the build, staging is checked, then production."
+    }
+  },
+  {
+    "id": "pm-deployment-basics-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps for releasing a new version of a client's iOS app.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Monitor crash reports and reviews"
+        },
+        {
+          "id": "r4",
+          "label": "Apple approves the build"
+        },
+        {
+          "id": "r2",
+          "label": "Prepare release notes and store screenshots"
+        },
+        {
+          "id": "r1",
+          "label": "Finish QA and client UAT on a TestFlight build"
+        },
+        {
+          "id": "r3",
+          "label": "Submit the build for App Store review"
+        },
+        {
+          "id": "r5",
+          "label": "Release to users (manually or phased)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Test, prepare store assets, submit, wait for approval, release, then monitor."
+    }
+  },
+  {
+    "id": "pm-deployment-basics-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this go-live plan for a web platform.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Deploy at 10:00 Tuesday when the whole team is online.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Back up the database before the deploy.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "No rollback plan needed, we tested it on staging.",
+          "issue": "Staging cannot catch everything; always know how to roll back."
+        },
+        {
+          "id": "p4",
+          "text": "Smoke test login, search and checkout right after deploy.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Tell the client after the release is live, if it goes well.",
+          "issue": "The client should know the release time in advance and be told the outcome either way."
+        },
+        {
+          "id": "p6",
+          "text": "Watch error monitoring for two hours after release.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-deployment-basics-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A web app's release log is shown. Work out the change failure rate and the average time to restore after a failed release.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Metric",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Deployments this quarter",
+            "20"
+          ],
+          [
+            "Deployments that caused an incident",
+            "3"
+          ],
+          [
+            "Restore times for those incidents",
+            "30, 90 and 60 minutes"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cfr",
+          "label": "Change failure rate",
+          "unit": "%",
+          "answer": 15.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "mttr",
+          "label": "Average time to restore",
+          "unit": "min",
+          "answer": 60.0,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "3 of 20 deployments failed: 3 / 20 = 15%. Restore times 30 + 90 + 60 = 180 minutes over 3 incidents: 60 minutes on average."
+    }
+  },
+  {
+    "id": "pm-deployment-basics-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "Right after a release, users report they cannot log in. The previous version worked.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Right after a release, users report they cannot log in. The previous version worked.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is usually the quickest safe action?",
+          "options": [
+            "Roll back to the previous version, then investigate",
+            "Write a fix live in production",
+            "Wait for more reports",
+            "Ask users to reinstall"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rolling back restores service fast; the fix can then be made and tested properly."
+        },
+        {
+          "id": "s2",
+          "question": "What do you tell the client?",
+          "options": [
+            "Nothing until it's fixed",
+            "That there was an issue with the release, it is rolled back, and when you will update them",
+            "That users are doing it wrong",
+            "That it was the hosting provider"
+          ],
+          "correctIndex": 1,
+          "explanation": "Prompt, factual communication with the next update time keeps trust."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-deployment-basics-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The client wants a new feature live for a marketing campaign on Monday, but QA is not finished. The team suggests releasing the code behind a feature flag.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client wants a new feature live for a marketing campaign on Monday, but QA is not finished. The team suggests releasing the code behind a feature flag.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What does a feature flag allow?",
+          "options": [
+            "Deploying code with the feature switched off, then turning it on later without a new release",
+            "Skipping all testing",
+            "Releasing only to Android",
+            "Hiding bugs permanently"
+          ],
+          "correctIndex": 0,
+          "explanation": "Flags separate deploying code from releasing a feature to users."
+        },
+        {
+          "id": "s2",
+          "question": "What is a sensible plan?",
+          "options": [
+            "Deploy with the flag off, finish QA on production with the flag on for internal users, then switch it on for everyone",
+            "Switch it on for all users immediately",
+            "Delay the deploy a month",
+            "Release without the flag and hope"
+          ],
+          "correctIndex": 0,
+          "explanation": "Flags let you test safely in production and turn the feature on when it is ready."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-deployment-basics-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a hotfix?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "An urgent fix released to production outside the normal release schedule",
+        "A new feature",
+        "A design change",
+        "A backup of the database"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hotfixes address urgent production problems without waiting for the next planned release.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-deployment-basics-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why can't an agency promise the exact day a mobile app update reaches the App Store?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Apple's review takes a variable amount of time and can reject builds",
+        "Developers cannot upload on weekdays",
+        "Apps update themselves",
+        "Deployments are random"
+      ],
+      "correctIndex": 0,
+      "explanation": "Store review is outside the agency's control, so plan a buffer and avoid promising the exact day.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-deployment-basics-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-deployment-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the main benefit of a phased (staged) rollout to 10% of users first?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Problems affect fewer users and can be caught before everyone gets the update",
+        "It makes the app faster",
+        "It avoids app-store review",
+        "It removes the need for QA"
+      ],
+      "correctIndex": 0,
+      "explanation": "Phased rollouts limit the blast radius of a bad release.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

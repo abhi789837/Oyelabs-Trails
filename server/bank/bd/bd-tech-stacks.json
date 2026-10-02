@@ -1,0 +1,347 @@
+[
+  {
+    "id": "bd-tech-stacks-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A BD rep explained a proposed stack to a non-technical client. Mark the statements that are wrong or misleading.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A BD rep explained a proposed stack to a non-technical client. Mark the statements that are wrong or misleading.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "We will build the mobile app in Flutter, so one codebase covers iPhone and Android.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The backend runs on Node.js and stores data in PostgreSQL.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "PostgreSQL is a design tool for making screens.",
+          "issue": "PostgreSQL is a database, not a design tool."
+        },
+        {
+          "id": "p4",
+          "text": "We will host it on a cloud provider like AWS, so it can scale as users grow.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Because we use React, the app will never have bugs.",
+          "issue": "No framework prevents bugs; quality comes from testing and process."
+        },
+        {
+          "id": "p6",
+          "text": "The admin dashboard is a web app built in React.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-stacks-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these ways to explain 'Why Flutter?' to a startup founder, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these ways to explain 'Why Flutter?' to a startup founder, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "It is what our developers like most"
+        },
+        {
+          "id": "r4",
+          "label": "Because it is trendy right now"
+        },
+        {
+          "id": "r1",
+          "label": "One codebase for iOS and Android, so phase 1 ships faster and costs less to maintain"
+        },
+        {
+          "id": "r2",
+          "label": "Flutter uses the Dart language and a widget tree compiled ahead of time"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Founders care about speed, cost and maintenance. Technical detail is secondary, and personal or trend reasons do not answer their concern."
+    }
+  },
+  {
+    "id": "bd-tech-stacks-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client with an existing Laravel (PHP) web app asks you to build a new customer portal. Your team works in both Laravel and Node.js.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client with an existing Laravel (PHP) web app asks you to build a new customer portal. Your team works in both Laravel and Node.js.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should guide the backend choice?",
+          "options": [
+            "Random choice",
+            "Fit with their existing system and team, so the portal is easy to integrate and maintain",
+            "Whatever is newest",
+            "Whatever is cheapest to host this month"
+          ],
+          "correctIndex": 1,
+          "explanation": "Reusing the existing stack reduces integration work and keeps maintenance simple for their team."
+        },
+        {
+          "id": "s2",
+          "question": "The client asks: 'Is PHP outdated?' How do you answer?",
+          "options": [
+            "Agree it is outdated and push a rewrite",
+            "Say you do not know",
+            "Change the subject",
+            "Explain that Laravel is widely used and actively maintained, and that matching their current system lowers cost and risk"
+          ],
+          "correctIndex": 3,
+          "explanation": "A calm, factual answer tied to their interests builds trust; pushing a rewrite they do not need does not."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-stacks-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client needs a marketing site that must rank well on Google, plus a logged-in dashboard. Rank these frontend approaches for the marketing pages, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A client needs a marketing site that must rank well on Google, plus a logged-in dashboard. Rank these frontend approaches for the marketing pages, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "A pure client-side single-page app with no server rendering"
+        },
+        {
+          "id": "r4",
+          "label": "A native mobile app"
+        },
+        {
+          "id": "r1",
+          "label": "Server-rendered or statically generated pages (e.g. Next.js)"
+        },
+        {
+          "id": "r2",
+          "label": "A content management system site with good SEO plugins"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Server-rendered or static pages are fast and easily indexed; a CMS also works well for marketing; a client-only SPA is weaker for SEO; a mobile app does not rank on Google at all."
+    }
+  },
+  {
+    "id": "bd-tech-stacks-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client's CTO joins the call and asks why you propose React Native instead of two native apps.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client's CTO joins the call and asks why you propose React Native instead of two native apps.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the strongest answer?",
+          "options": [
+            "Because it is easier for our sales team to explain",
+            "Shared code means faster delivery and one team, and native modules can still be added for device-specific features",
+            "React Native is always faster than native in every case",
+            "Native apps are obsolete"
+          ],
+          "correctIndex": 1,
+          "explanation": "An honest trade-off answer works with a CTO: shared code and speed, with native escape hatches."
+        },
+        {
+          "id": "s2",
+          "question": "The CTO asks when you would recommend fully native instead. What do you say?",
+          "options": [
+            "Never",
+            "Only when the client pays more",
+            "When the app has a login screen",
+            "When the app depends heavily on advanced device features or top graphics performance, such as AR or complex games"
+          ],
+          "correctIndex": 3,
+          "explanation": "Showing when the other option wins shows judgement, not just a sales preference."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-stacks-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the problems in this 'Technology' section of a proposal for a small business owner.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problems in this 'Technology' section of a proposal for a small business owner.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Mobile app: Flutter, one codebase for iOS and Android.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Backend: Microservices on Kubernetes with event sourcing, CQRS and a service mesh.",
+          "issue": "Heavy architecture for a small business adds cost and complexity it does not need, and the jargon is unexplained."
+        },
+        {
+          "id": "p3",
+          "text": "Database: PostgreSQL.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Hosting: managed cloud hosting, with backups.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "You will own the code and all hosting accounts.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Stack may change at any time without notice to you.",
+          "issue": "Major stack changes should be agreed with the client; this undermines trust."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-stacks-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client asks what a 'backend' is. Which explanation is best?",
+    "mcq": {
+      "options": [
+        "The part users do not see: the server, database and logic that store data and run the app's rules",
+        "The app's colour scheme",
+        "The App Store listing",
+        "The login screen"
+      ],
+      "correctIndex": 0,
+      "explanation": "The backend handles data, business rules and integrations behind the screens users see.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-stacks-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "When explaining a tech stack to a non-technical founder, what should you focus on?",
+    "mcq": {
+      "options": [
+        "What each choice means for cost, speed, scaling and maintenance",
+        "The full list of libraries and versions",
+        "Which language your developers prefer",
+        "Benchmarks from programming forums"
+      ],
+      "correctIndex": 0,
+      "explanation": "Founders decide on business impact; translate tech choices into those terms.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-stacks-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-stacks",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client insists on a stack your team rarely uses because a friend recommended it. What is the best response?",
+    "mcq": {
+      "options": [
+        "Agree and quietly learn it on their budget",
+        "Refuse the project",
+        "Say the friend is wrong without explaining",
+        "Explain the trade-offs honestly, including your team's experience, and recommend the option that serves their goals"
+      ],
+      "correctIndex": 3,
+      "explanation": "Honest trade-offs let the client make an informed choice; hiding a skills gap leads to delays and lost trust.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

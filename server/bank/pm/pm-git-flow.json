@@ -1,0 +1,372 @@
+[
+  {
+    "id": "pm-git-flow-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps a developer follows to get a feature into the main codebase.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "A teammate reviews and approves it"
+        },
+        {
+          "id": "r2",
+          "label": "Commit the changes on the branch"
+        },
+        {
+          "id": "r1",
+          "label": "Create a feature branch from main"
+        },
+        {
+          "id": "r3",
+          "label": "Open a pull request"
+        },
+        {
+          "id": "r5",
+          "label": "Merge the pull request into main"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Branch, commit, open a PR, get it reviewed, then merge."
+    }
+  },
+  {
+    "id": "pm-git-flow-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this team's working agreement on Git.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Every ticket gets its own branch named after the ticket, e.g. feature/APP-142-login.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Developers push straight to main when they're in a hurry.",
+          "issue": "Skips review and can break the shared codebase; main should only change through reviewed PRs."
+        },
+        {
+          "id": "p3",
+          "text": "Every pull request needs one approving review before merge.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Pull requests should be as large as possible to save review time.",
+          "issue": "Large PRs are slow to review and hide bugs; keep them small."
+        },
+        {
+          "id": "p5",
+          "text": "Automated tests must pass before a PR can be merged.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The PR description links to the Jira ticket.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-git-flow-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Your team tracks pull-request review time. Work out the average time from PR opened to approved, and how many PRs missed the 24-hour target.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "PR",
+          "Hours to approval"
+        ],
+        "rows": [
+          [
+            "PR-1",
+            "6"
+          ],
+          [
+            "PR-2",
+            "30"
+          ],
+          [
+            "PR-3",
+            "12"
+          ],
+          [
+            "PR-4",
+            "48"
+          ],
+          [
+            "PR-5",
+            "4"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "avg",
+          "label": "Average review time",
+          "unit": "h",
+          "answer": 20.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "miss",
+          "label": "PRs over 24 hours",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Average = (6 + 30 + 12 + 48 + 4) / 5 = 100 / 5 = 20 hours. PR-2 (30 h) and PR-4 (48 h) missed the target."
+    }
+  },
+  {
+    "id": "pm-git-flow-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A developer says their feature is finished, but the Jira ticket shows the pull request has been waiting for review for three days. Sprint review is tomorrow.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A developer says their feature is finished, but the Jira ticket shows the pull request has been waiting for review for three days. Sprint review is tomorrow.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Mark the story as done",
+            "Raise it at stand-up and ask who can review it today",
+            "Merge it yourself",
+            "Move it to next sprint without asking"
+          ],
+          "correctIndex": 1,
+          "explanation": "Unreviewed work is not done; unblock the review by making the wait visible."
+        },
+        {
+          "id": "s2",
+          "question": "This keeps happening. What process change helps?",
+          "options": [
+            "Remove code review",
+            "Agree a review turnaround (e.g. same day) and limit work in progress so people review before starting new work",
+            "Have the PM review all code",
+            "Only review at the end of the sprint"
+          ],
+          "correctIndex": 1,
+          "explanation": "An explicit review agreement and WIP limits keep PRs moving."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-git-flow-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A critical bug is found in production while the main branch already contains half-finished features for the next release.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A critical bug is found in production while the main branch already contains half-finished features for the next release.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should the fix be made?",
+          "options": [
+            "Fix it on main and release everything",
+            "Create a hotfix branch from the production release, fix, test and release just that",
+            "Wait for the next release",
+            "Edit the code directly on the server"
+          ],
+          "correctIndex": 1,
+          "explanation": "A hotfix branch from what is in production ships the fix without unfinished features."
+        },
+        {
+          "id": "s2",
+          "question": "After the hotfix is released, what must happen?",
+          "options": [
+            "Nothing",
+            "Merge the fix back into main so it is not lost in the next release",
+            "Delete the main branch",
+            "Revert the hotfix"
+          ],
+          "correctIndex": 1,
+          "explanation": "Otherwise the next release from main would bring the bug back."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-git-flow-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this pull request description.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Title: APP-208 Add password reset by email",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "What: adds the forgot-password screen and the reset email.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Also includes a refactor of the whole payments module and the new dashboard.",
+          "issue": "Unrelated changes in one PR make review hard and risky; split them."
+        },
+        {
+          "id": "p4",
+          "text": "How to test: request a reset for test@demo.com on staging and follow the link.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Tests: none added, will do later.",
+          "issue": "New behaviour without tests; add them before merging."
+        },
+        {
+          "id": "p6",
+          "text": "Screenshots attached for the new screens.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-git-flow-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a pull request?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A request to merge changes from one branch into another, where the code is reviewed",
+        "A request to download the app",
+        "A bug report",
+        "A request for a client meeting"
+      ],
+      "correctIndex": 0,
+      "explanation": "A PR proposes changes and gives the team a place to review and discuss them before merging.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-git-flow-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a merge conflict?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Git cannot combine two changes automatically because they edited the same lines",
+        "Two developers arguing in a review",
+        "A failed deployment",
+        "A duplicate Jira ticket"
+      ],
+      "correctIndex": 0,
+      "explanation": "When two branches change the same lines, a developer must decide which version to keep.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-git-flow-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-git-flow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why do PMs ask developers to include the ticket ID in branch names and PR titles?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It links code changes to tickets, so progress and release contents can be traced",
+        "Git requires it",
+        "It makes the code run faster",
+        "It replaces testing"
+      ],
+      "correctIndex": 0,
+      "explanation": "Traceability lets Jira show linked PRs and helps build release notes.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

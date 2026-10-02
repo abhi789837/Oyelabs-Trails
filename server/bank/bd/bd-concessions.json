@@ -1,0 +1,370 @@
+[
+  {
+    "id": "bd-concessions-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank concessions by what they cost the agency.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these concessions from cheapest for the agency to give to most expensive, for an $80,000 project with a $24,000 expected profit.",
+      "items": [
+        {
+          "id": "i3",
+          "label": "An extra month of post-launch support"
+        },
+        {
+          "id": "i4",
+          "label": "A 10% discount on the price"
+        },
+        {
+          "id": "i5",
+          "label": "Fixing the price on the still-undefined AI features"
+        },
+        {
+          "id": "i1",
+          "label": "Weekly status calls instead of fortnightly"
+        },
+        {
+          "id": "i2",
+          "label": "Payment terms moved from 30 to 45 days"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Process changes cost almost nothing; payment terms cost a little cash flow; extra support costs team time; a discount comes straight off profit ($8,000); fixing price on unknown scope is an open-ended risk."
+    }
+  },
+  {
+    "id": "bd-concessions-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "See what a discount does to margin.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A project is priced at $80,000 with a delivery cost of $56,000. The client asks for 10% off. Round to two decimals.",
+      "table": null,
+      "fields": [
+        {
+          "id": "m0",
+          "label": "Gross margin at full price",
+          "unit": "%",
+          "answer": 30,
+          "tolerance": 0.01
+        },
+        {
+          "id": "m1",
+          "label": "Gross margin after 10% off",
+          "unit": "%",
+          "answer": 22.22,
+          "tolerance": 0.01
+        },
+        {
+          "id": "drop",
+          "label": "Share of the profit lost",
+          "unit": "%",
+          "answer": 33.33,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Full price: 24,000 ÷ 80,000 = 30%. After 10% off: 16,000 ÷ 72,000 = 22.22%. Profit falls from $24,000 to $16,000, a 33.33% cut: a 10% discount here costs a third of the profit."
+    }
+  },
+  {
+    "id": "bd-concessions-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Trade a discount instead of giving it.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks for 15% off a $60,000 project.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first response?",
+          "options": [
+            "Agree to keep goodwill",
+            "Ask what they could offer in return, such as upfront payment, a longer commitment or a case study",
+            "Refuse outright",
+            "Offer 10% instead without asking for anything"
+          ],
+          "correctIndex": 1,
+          "explanation": "Give-get: every concession should buy something."
+        },
+        {
+          "id": "s2",
+          "question": "They offer 50% upfront. What is a sensible counter?",
+          "options": [
+            "The full 15% for 50% upfront",
+            "Nothing, since upfront payment has no value",
+            "A smaller discount, such as 5%, for 50% upfront, and more only with a further commitment",
+            "20% to close quickly"
+          ],
+          "correctIndex": 2,
+          "explanation": "Price the concession to what you receive; cash upfront is worth something but rarely 15% of the deal."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-concessions-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle a third request for a concession.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You have already given a client two concessions: $4,000 off, then $2,000 off. They now ask for another $3,000.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you respond?",
+          "options": [
+            "Give the $3,000 to close",
+            "Give $4,000 to show goodwill",
+            "Signal you are at your limit; anything further needs a scope reduction",
+            "Withdraw the earlier concessions"
+          ],
+          "correctIndex": 2,
+          "explanation": "Concessions should shrink and stop. A bigger third one says your limit is further away."
+        },
+        {
+          "id": "s2",
+          "question": "They accept the scope route. What do you put in writing?",
+          "options": [
+            "Only the final price",
+            "Nothing until kickoff",
+            "A note that further discounts may follow",
+            "The final price, the removed scope and the concessions already agreed"
+          ],
+          "correctIndex": 3,
+          "explanation": "Writing down the trade stops it being reopened later."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-concessions-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this concession log.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the entries in this negotiation log that broke good concession practice.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Round 1: client asked for 10% off; we offered 4% in return for 40% upfront.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Round 2: client asked again; we gave a further 6% with nothing in return.",
+          "issue": "Larger second concession with no trade; it signals the limit is far away."
+        },
+        {
+          "id": "p3",
+          "text": "Round 3: we added unlimited design revisions to show goodwill.",
+          "issue": "Open-ended concession on a fixed scope; its cost has no ceiling."
+        },
+        {
+          "id": "p4",
+          "text": "Round 4: client agreed to be a named case study; we extended support by two weeks.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Each round was summarised in an email the same day.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Final price: $66,000 for the scope in Appendix A.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-concessions-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Decide whether a rate cut for a commitment pays off.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A T&M client uses about 100 hours a month at $60 an hour; your cost is $35 an hour. They offer to commit to 160 hours a month for 12 months if you cut the rate to $54.",
+      "table": null,
+      "fields": [
+        {
+          "id": "now",
+          "label": "Monthly gross profit today",
+          "unit": "$",
+          "answer": 2500,
+          "tolerance": 1
+        },
+        {
+          "id": "deal",
+          "label": "Monthly gross profit with the deal",
+          "unit": "$",
+          "answer": 3040,
+          "tolerance": 1
+        },
+        {
+          "id": "be",
+          "label": "Minimum committed hours at $54 to match today's profit",
+          "unit": "h",
+          "answer": 131.58,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Today: 100 × (60 − 35) = $2500. Deal: 160 × (54 − 35) = $3040. Break-even: 2500 ÷ 19 = 131.58 hours. The commitment is worth it as long as the hours are guaranteed, not just expected."
+    }
+  },
+  {
+    "id": "bd-concessions-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Write a counter-offer that trades concessions.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write a short email reply to the client below that keeps value on both sides. Do not give anything without getting something.",
+      "context": "From: Tom (COO)\n\"We're keen to go ahead with the $90,000 build, but we need 15% off and 60-day payment terms to get it approved this month.\"",
+      "wordLimit": 160,
+      "rubric": [
+        {
+          "id": "tone",
+          "label": "Positive and clear",
+          "description": "Acknowledges their wish to proceed and keeps a constructive tone.",
+          "weight": 1
+        },
+        {
+          "id": "trade",
+          "label": "Trades rather than gives",
+          "description": "Every concession offered is tied to something in return (upfront payment, longer commitment, phasing, case study).",
+          "weight": 1
+        },
+        {
+          "id": "limits",
+          "label": "Protects margin",
+          "description": "Does not concede the full 15% plus 60 days with nothing back; any discount is smaller and conditional.",
+          "weight": 1
+        },
+        {
+          "id": "next",
+          "label": "Specific next step",
+          "description": "Proposes a concrete next step to close this month.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Tom, great to hear you'd like to go ahead this month. I can't do 15% and 60-day terms on the same scope, but here are two options. Option 1: 5% off ($85,500) with 40% on signature and the balance on our standard 30-day terms. Option 2: the full $90,000 on 60-day terms, with the analytics module moved into a second phase so the first invoice is smaller. Either way we can start on the 15th. Shall we pick one on a 15-minute call on Thursday so it reaches your approval meeting?"
+    }
+  },
+  {
+    "id": "bd-concessions-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the core rule for trading concessions?",
+    "mcq": {
+      "options": [
+        "Never give a concession without getting something in return",
+        "Always concede on price first",
+        "Give the biggest concession early to build trust",
+        "Never concede anything"
+      ],
+      "correctIndex": 0,
+      "explanation": "Give-get keeps the deal balanced and stops concessions from being expected.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-concessions-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why should successive concessions get smaller?",
+    "mcq": {
+      "options": [
+        "It makes the maths easier",
+        "It signals you are approaching your limit",
+        "It is required by procurement rules",
+        "It speeds up invoicing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shrinking concessions tell the other side there is little left to gain by pushing.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-concessions-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-concessions",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client wants a discount. Which \"get\" is usually most valuable to the agency in return?",
+    "mcq": {
+      "options": [
+        "A thank-you email",
+        "A signed 12-month commitment with a larger upfront payment",
+        "A promise to consider you for future work",
+        "A faster reply to emails"
+      ],
+      "correctIndex": 1,
+      "explanation": "Committed revenue and cash upfront reduce real risk; vague promises do not.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

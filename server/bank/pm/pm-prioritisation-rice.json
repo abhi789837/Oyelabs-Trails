@@ -1,0 +1,412 @@
+[
+  {
+    "id": "pm-prioritisation-rice-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Calculate the RICE score (Reach x Impact x Confidence / Effort) for this feature.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate the RICE score (Reach x Impact x Confidence / Effort) for this feature.",
+      "table": {
+        "columns": [
+          "Factor",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Reach (users per quarter)",
+            "2,000"
+          ],
+          [
+            "Impact",
+            "2 (high)"
+          ],
+          [
+            "Confidence",
+            "80%"
+          ],
+          [
+            "Effort (person-months)",
+            "4"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "score",
+          "label": "RICE score",
+          "unit": "",
+          "answer": 800.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "2,000 x 2 x 0.8 / 4 = 800."
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Score these backlog items with RICE (Reach x Impact x Confidence / Effort).",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Score these backlog items with RICE (Reach x Impact x Confidence / Effort).",
+      "table": {
+        "columns": [
+          "Feature",
+          "Reach/qtr",
+          "Impact",
+          "Confidence",
+          "Effort (pm)"
+        ],
+        "rows": [
+          [
+            "Saved addresses",
+            "5,000",
+            "1",
+            "100%",
+            "2"
+          ],
+          [
+            "AI order suggestions",
+            "3,000",
+            "2",
+            "50%",
+            "6"
+          ],
+          [
+            "Reorder button",
+            "4,000",
+            "1",
+            "80%",
+            "1"
+          ],
+          [
+            "Loyalty tiers",
+            "1,500",
+            "3",
+            "80%",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "saved",
+          "label": "Saved addresses",
+          "unit": "",
+          "answer": 2500.0,
+          "tolerance": 1
+        },
+        {
+          "id": "ai",
+          "label": "AI order suggestions",
+          "unit": "",
+          "answer": 500.0,
+          "tolerance": 1
+        },
+        {
+          "id": "reorder",
+          "label": "Reorder button",
+          "unit": "",
+          "answer": 3200.0,
+          "tolerance": 1
+        },
+        {
+          "id": "tiers",
+          "label": "Loyalty tiers",
+          "unit": "",
+          "answer": 720.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Saved addresses 2,500; AI suggestions 500; Reorder 3,200; Loyalty tiers 720."
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Using the RICE data below, rank the features from highest to lowest score.\n\n| Feature | Reach/qtr | Impact | Confidence | Effort (pm) |\n|---|---|---|---|---|\n| Saved addresses | 5,000 | 1 | 100% | 2 |\n| AI order suggestions | 3,000 | 2 | 50% | 6 |\n| Reorder button | 4,000 | 1 | 80% | 1 |\n| Loyalty tiers | 1,500 | 3 | 80% | 5 |",
+    "task": {
+      "kind": "rank",
+      "prompt": "Using the RICE data below, rank the features from highest to lowest score.\n\n| Feature | Reach/qtr | Impact | Confidence | Effort (pm) |\n|---|---|---|---|---|\n| Saved addresses | 5,000 | 1 | 100% | 2 |\n| AI order suggestions | 3,000 | 2 | 50% | 6 |\n| Reorder button | 4,000 | 1 | 80% | 1 |\n| Loyalty tiers | 1,500 | 3 | 80% | 5 |",
+      "items": [
+        {
+          "id": "r6d4c4",
+          "label": "Reorder button"
+        },
+        {
+          "id": "rdef86",
+          "label": "Saved addresses"
+        },
+        {
+          "id": "r279fa",
+          "label": "Loyalty tiers"
+        },
+        {
+          "id": "rf2d9d",
+          "label": "AI order suggestions"
+        }
+      ],
+      "correctOrder": [
+        "r6d4c4",
+        "rdef86",
+        "r279fa",
+        "rf2d9d"
+      ],
+      "explanation": "Scores: Reorder 3,200; Saved addresses 2,500; Loyalty tiers 720; AI suggestions 500."
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The client's analytics show the AI feature's reach was overstated: real reach is 1,200 users a quarter, not 3,000, but a prototype raised confidence from 50% to 80%. Recalculate.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The client's analytics show the AI feature's reach was overstated: real reach is 1,200 users a quarter, not 3,000, but a prototype raised confidence from 50% to 80%. Recalculate.",
+      "table": {
+        "columns": [
+          "Factor",
+          "Before",
+          "After"
+        ],
+        "rows": [
+          [
+            "Reach",
+            "3,000",
+            "1,200"
+          ],
+          [
+            "Impact",
+            "2",
+            "2"
+          ],
+          [
+            "Confidence",
+            "50%",
+            "80%"
+          ],
+          [
+            "Effort (pm)",
+            "6",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "before",
+          "label": "RICE before",
+          "unit": "",
+          "answer": 500.0,
+          "tolerance": 1
+        },
+        {
+          "id": "after",
+          "label": "RICE after",
+          "unit": "",
+          "answer": 320.0,
+          "tolerance": 1
+        },
+        {
+          "id": "change",
+          "label": "Change in score (after minus before)",
+          "unit": "",
+          "answer": -180.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Before 3,000 x 2 x 0.5 / 6 = 500. After 1,200 x 2 x 0.8 / 6 = 320. Down 180: the reach correction outweighs the confidence gain."
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A product owner explains their RICE scoring in a backlog review. Mark the statements that misuse RICE.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A product owner explains their RICE scoring in a backlog review. Mark the statements that misuse RICE.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Reach is the number of users who will use the feature per quarter, from analytics.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "I gave the CEO's idea 100% confidence because he is sure about it.",
+          "issue": "Confidence should reflect evidence (data, research, prototypes), not seniority."
+        },
+        {
+          "id": "s3",
+          "text": "Impact uses the agreed scale: 3 massive, 2 high, 1 medium, 0.5 low, 0.25 minimal.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Effort counts only development time; design and QA are excluded.",
+          "issue": "Effort should include all team time (design, build, test), or small-dev items look artificially cheap."
+        },
+        {
+          "id": "s5",
+          "text": "We re-score items when new data arrives.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "The top score always goes first, even if it depends on an unbuilt API.",
+          "issue": "RICE is an input; dependencies, commitments and strategy can override the raw order."
+        },
+        {
+          "id": "s7",
+          "text": "Scores are compared only within this product's backlog.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Reach for the admin feature counts the 12 internal admins who use it.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Your RICE list puts \"bulk CSV import\" at the top, but the client's account manager says their biggest customer will churn next month without an SSO integration, which scores mid-table.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your RICE list puts \"bulk CSV import\" at the top, but the client's account manager says their biggest customer will churn next month without an SSO integration, which scores mid-table.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do?",
+          "options": [
+            "Follow the RICE order strictly",
+            "Move SSO to the top without discussion",
+            "Treat the churn risk as information: re-check SSO's reach and impact with the revenue at risk, and raise it with the product owner",
+            "Ask the developers to vote"
+          ],
+          "correctIndex": 2,
+          "explanation": "RICE is a decision aid. New information about impact should update the score or justify an explicit override."
+        },
+        {
+          "id": "d2",
+          "question": "The product owner moves SSO first. How do you record it?",
+          "options": [
+            "Change the SSO scores until it ranks first",
+            "Note the override and its reason next to the scores so the decision is visible later",
+            "Do not record it",
+            "Delete the RICE sheet"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fudging the numbers hides the reasoning; a recorded override keeps the model honest."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In RICE, what does a confidence of 50% signal?",
+    "mcq": {
+      "options": [
+        "The estimates of reach and impact rest on weak evidence, so the score is discounted",
+        "Half the users will use the feature",
+        "The feature is half built",
+        "The team is 50% available"
+      ],
+      "correctIndex": 0,
+      "explanation": "Confidence discounts the score when reach or impact are guesses, which stops exciting but unproven ideas jumping the queue.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Two features have equal Reach x Impact x Confidence. One takes 2 person-months, the other 8. What does RICE suggest?",
+    "mcq": {
+      "options": [
+        "They score the same",
+        "The 2-month feature scores four times higher",
+        "The 8-month feature scores higher because it is bigger",
+        "Effort is ignored when impact is equal"
+      ],
+      "correctIndex": 1,
+      "explanation": "Effort is the divisor, so the cheaper item gets four times the score for the same value.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prioritisation-rice-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-rice",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which is the biggest weakness of RICE in agency client work?",
+    "mcq": {
+      "options": [
+        "Reach and impact are often guesses made without the client's real usage data",
+        "It cannot handle more than ten items",
+        "It ignores effort",
+        "It only works for B2B products"
+      ],
+      "correctIndex": 0,
+      "explanation": "The formula is simple; the inputs are the problem. Push the client for analytics before scoring, or lower confidence.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

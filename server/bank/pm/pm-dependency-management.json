@@ -1,0 +1,359 @@
+[
+  {
+    "id": "pm-dependency-management-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "These tasks for launching an app update depend on each other. Put them in a valid order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "These tasks for launching an app update depend on each other. Put them in a valid order.",
+      "items": [
+        {
+          "id": "r11e57",
+          "label": "Client provides production API credentials"
+        },
+        {
+          "id": "r52f62",
+          "label": "Backend integrates with the production API"
+        },
+        {
+          "id": "r43045",
+          "label": "QA runs end-to-end tests on staging"
+        },
+        {
+          "id": "re0baf",
+          "label": "Submit the build to the App Store"
+        },
+        {
+          "id": "r6a2fb",
+          "label": "Release to users after approval"
+        }
+      ],
+      "correctOrder": [
+        "r11e57",
+        "r52f62",
+        "r43045",
+        "re0baf",
+        "r6a2fb"
+      ],
+      "explanation": "Each step needs the previous one: credentials enable integration, integration enables testing, testing precedes submission, approval precedes release."
+    }
+  },
+  {
+    "id": "pm-dependency-management-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the earliest finish of this plan. Tasks with no dependency start on day 0.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Find the earliest finish of this plan. Tasks with no dependency start on day 0.",
+      "table": {
+        "columns": [
+          "Task",
+          "Duration (days)",
+          "Depends on"
+        ],
+        "rows": [
+          [
+            "A: Design",
+            "5",
+            "-"
+          ],
+          [
+            "B: API build",
+            "8",
+            "-"
+          ],
+          [
+            "C: Front-end build",
+            "6",
+            "A"
+          ],
+          [
+            "D: Integration",
+            "3",
+            "B, C"
+          ],
+          [
+            "E: QA",
+            "4",
+            "D"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "d",
+          "label": "Earliest finish of D (Integration)",
+          "unit": "day",
+          "answer": 14,
+          "tolerance": 0
+        },
+        {
+          "id": "e",
+          "label": "Earliest finish of E (project end)",
+          "unit": "day",
+          "answer": 18,
+          "tolerance": 0
+        },
+        {
+          "id": "slack",
+          "label": "Days of slack on B (API build)",
+          "unit": "days",
+          "answer": 3,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "C finishes day 11 (5 + 6), B day 8, so D starts day 11 and ends day 14; E ends day 18. B has 3 days of slack; the critical path is A-C-D-E."
+    }
+  },
+  {
+    "id": "pm-dependency-management-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A dependency board for a three-team client programme has these cards. Mark the cards that are badly defined.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A dependency board for a three-team client programme has these cards. Mark the cards that are badly defined.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Mobile team needs the loyalty API v2 from Platform team by 14 June for sprint 6 integration.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Need stuff from the backend.",
+          "issue": "No provider, deliverable or date."
+        },
+        {
+          "id": "s3",
+          "text": "Data team needs read-only DB access from client IT by 3 June. Owner: client IT lead.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Design system tokens from the brand agency, date TBC, no owner.",
+          "issue": "Without a date and owner nobody can chase or plan around it."
+        },
+        {
+          "id": "s5",
+          "text": "QA needs test devices from client ops by 10 June.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Web team needs the payment SDK sandbox key from the client's finance team by 1 June.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-dependency-management-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Your team needs a third-party SMS vendor to whitelist your sender ID before OTP login can be tested. The vendor says \"two to four weeks\". Testing is planned in three weeks.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your team needs a third-party SMS vendor to whitelist your sender ID before OTP login can be tested. The vendor says \"two to four weeks\". Testing is planned in three weeks.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do now?",
+          "options": [
+            "Wait and see",
+            "Record the dependency with the vendor contact, request the whitelist today, and plan a fallback such as email OTP for testing",
+            "Move testing to week 5 without telling anyone",
+            "Remove OTP from scope"
+          ],
+          "correctIndex": 1,
+          "explanation": "Start long lead-time requests immediately and keep work moving with a fallback."
+        },
+        {
+          "id": "d2",
+          "question": "At week 2 there is no update. What next?",
+          "options": [
+            "Chase with the vendor and ask the client, who owns the vendor contract, to escalate",
+            "Keep waiting",
+            "Switch SMS vendor on your own authority",
+            "Tell the client testing is done"
+          ],
+          "correctIndex": 0,
+          "explanation": "The contract owner has the leverage; escalate through them."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-dependency-management-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank these dependencies by how soon they need action, most urgent first. Today is week 2.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these dependencies by how soon they need action, most urgent first. Today is week 2.",
+      "items": [
+        {
+          "id": "r0e580",
+          "label": "App Store developer account (client), needed week 4, takes about 2 weeks to approve"
+        },
+        {
+          "id": "rbe843",
+          "label": "Production SSL certificate (client IT), needed week 10, takes 2 days"
+        },
+        {
+          "id": "r0a6af",
+          "label": "Analytics SDK licence (client), needed week 6, takes 1 week"
+        },
+        {
+          "id": "rf8b00",
+          "label": "Brand illustrations (agency designer), needed week 8, takes 1 week"
+        }
+      ],
+      "correctOrder": [
+        "r0e580",
+        "rbe843",
+        "r0a6af",
+        "rf8b00"
+      ],
+      "explanation": "Latest safe start = need date minus lead time: week 2, week 5, week 7 and week 10. Act in that order."
+    }
+  },
+  {
+    "id": "pm-dependency-management-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "On a programme with two vendors, the other vendor's backend is late, blocking your mobile app. The client's PM asks you to \"just build mock endpoints and carry on\".",
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a programme with two vendors, the other vendor's backend is late, blocking your mobile app. The client's PM asks you to \"just build mock endpoints and carry on\".",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "Is mocking a good idea?",
+          "options": [
+            "No, never build against mocks",
+            "Yes, and stop worrying about integration",
+            "Yes, if mocks follow the agreed API contract, and the integration risk is logged because mocks will not catch real-behaviour differences",
+            "Only if the client pays twice"
+          ],
+          "correctIndex": 2,
+          "explanation": "Contract-based mocks keep work moving, but integration with the real service remains a risk to plan for."
+        },
+        {
+          "id": "d2",
+          "question": "What do you agree with the client about the date?",
+          "options": [
+            "Your original date stands regardless",
+            "You will hit the date by working weekends",
+            "The mobile release date now depends on the backend date plus an integration window, and you state that in writing",
+            "Dates are the other vendor's problem"
+          ],
+          "correctIndex": 2,
+          "explanation": "Make the dependency and its schedule effect explicit."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-dependency-management-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is a finish-to-start dependency?",
+    "mcq": {
+      "options": [
+        "Task B cannot finish until task A starts",
+        "Both tasks must start on the same day",
+        "Task A and B can run in any order",
+        "Task B cannot start until task A finishes"
+      ],
+      "correctIndex": 3,
+      "explanation": "Finish-to-start is the most common type, e.g. testing cannot start until the build is finished.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-dependency-management-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which tool best shows cross-team dependencies in a multi-team programme?",
+    "mcq": {
+      "options": [
+        "Each team's sprint burndown",
+        "A dependency board or programme board showing which team needs what from whom, by when",
+        "The client's org chart",
+        "A list of risks only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Seeing the links between teams and dates on one board is what makes dependencies manageable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-dependency-management-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-dependency-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An external dependency has slipped twice. What is the strongest response?",
+    "mcq": {
+      "options": [
+        "Keep chasing weekly",
+        "Reduce reliance on it: decouple the design, find an alternative, or re-sequence work",
+        "Remove the dependency from the plan",
+        "Assume it will arrive next time"
+      ],
+      "correctIndex": 1,
+      "explanation": "Repeated slips mean the dependency is unreliable; reducing exposure beats more chasing.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

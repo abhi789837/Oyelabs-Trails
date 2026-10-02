@@ -1,0 +1,1864 @@
+[
+  {
+    "id": "eng-php-oop-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `Rectangle::area()` so it returns width × height. `rectArea` is the test driver — leave it as is.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "rectArea",
+      "starterCode": "<?php\n\nclass Rectangle\n{\n    public function __construct(private int $width, private int $height) {}\n\n    public function area(): int\n    {\n        return $this->width + $this->height;\n    }\n}\n\n// Test driver (leave as is)\nfunction rectArea(int $w, int $h): int\n{\n    return (new Rectangle($w, $h))->area();\n}\n",
+      "referenceSolution": "<?php\n\nclass Rectangle\n{\n    public function __construct(private int $width, private int $height) {}\n\n    public function area(): int\n    {\n        return $this->width * $this->height;\n    }\n}\n\nfunction rectArea(int $w, int $h): int\n{\n    return (new Rectangle($w, $h))->area();\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            3,
+            4
+          ],
+          "expected": 12
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            2,
+            2
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            0,
+            9
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            10,
+            1
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            7,
+            3
+          ],
+          "expected": 21
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`Counter::increment()` never changes the counter. Fix it so `value()` reflects every call. `countTo` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "countTo",
+      "starterCode": "<?php\n\nclass Counter\n{\n    private int $count = 0;\n\n    public function increment(): void\n    {\n        $count = $this->count + 1;\n    }\n\n    public function value(): int\n    {\n        return $this->count;\n    }\n}\n\n// Test driver (leave as is)\nfunction countTo(int $n): int\n{\n    $c = new Counter();\n    for ($i = 0; $i < $n; $i++) {\n        $c->increment();\n    }\n    return $c->value();\n}\n",
+      "referenceSolution": "<?php\n\nclass Counter\n{\n    private int $count = 0;\n\n    public function increment(): void\n    {\n        $this->count++;\n    }\n\n    public function value(): int\n    {\n        return $this->count;\n    }\n}\n\nfunction countTo(int $n): int\n{\n    $c = new Counter();\n    for ($i = 0; $i < $n; $i++) {\n        $c->increment();\n    }\n    return $c->value();\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            3
+          ],
+          "expected": 3
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            10
+          ],
+          "expected": 10
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `Temperature::fahrenheit()` (°F = °C × 9/5 + 32). `cToF` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "cToF",
+      "starterCode": "<?php\n\nclass Temperature\n{\n    public function __construct(private float $celsius) {}\n\n    public function fahrenheit(): float\n    {\n        return $this->celsius * 9 / 5;\n    }\n}\n\n// Test driver (leave as is)\nfunction cToF(float $c): float\n{\n    return (new Temperature($c))->fahrenheit();\n}\n",
+      "referenceSolution": "<?php\n\nclass Temperature\n{\n    public function __construct(private float $celsius) {}\n\n    public function fahrenheit(): float\n    {\n        return $this->celsius * 9 / 5 + 32;\n    }\n}\n\nfunction cToF(float $c): float\n{\n    return (new Temperature($c))->fahrenheit();\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            100
+          ],
+          "expected": 212
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": 32
+        },
+        {
+          "args": [
+            -40
+          ],
+          "expected": -40
+        },
+        {
+          "args": [
+            37
+          ],
+          "expected": 98.6
+        },
+        {
+          "args": [
+            20
+          ],
+          "expected": 68
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`Money::fromString(\"12.50\")` should store `1250` cents, but it stores `1200`. Fix the static factory. `parseMoney` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "parseMoney",
+      "starterCode": "<?php\n\nclass Money\n{\n    private function __construct(public readonly int $cents) {}\n\n    public static function fromString(string $amount): self\n    {\n        return new self((int) $amount * 100);\n    }\n}\n\n// Test driver (leave as is)\nfunction parseMoney(string $amount): int\n{\n    return Money::fromString($amount)->cents;\n}\n",
+      "referenceSolution": "<?php\n\nclass Money\n{\n    private function __construct(public readonly int $cents) {}\n\n    public static function fromString(string $amount): self\n    {\n        return new self((int) round((float) $amount * 100));\n    }\n}\n\nfunction parseMoney(string $amount): int\n{\n    return Money::fromString($amount)->cents;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "12.50"
+          ],
+          "expected": 1250
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "0"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "3"
+          ],
+          "expected": 300
+        },
+        {
+          "args": [
+            "0.99"
+          ],
+          "expected": 99
+        },
+        {
+          "args": [
+            "19.99"
+          ],
+          "expected": 1999
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `User::__toString()`: return `\"Last, First\"`, or just the first name when the last name is empty. `displayName` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "displayName",
+      "starterCode": "<?php\n\nclass User\n{\n    public function __construct(private string $first, private string $last) {}\n\n    public function __toString(): string\n    {\n        return $this->last . \", \" . $this->first;\n    }\n}\n\n// Test driver (leave as is)\nfunction displayName(string $first, string $last): string\n{\n    return (string) new User($first, $last);\n}\n",
+      "referenceSolution": "<?php\n\nclass User\n{\n    public function __construct(private string $first, private string $last) {}\n\n    public function __toString(): string\n    {\n        if ($this->last === \"\") {\n            return $this->first;\n        }\n        return $this->last . \", \" . $this->first;\n    }\n}\n\nfunction displayName(string $first, string $last): string\n{\n    return (string) new User($first, $last);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "Ada",
+            "Lovelace"
+          ],
+          "expected": "Lovelace, Ada"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Cher",
+            ""
+          ],
+          "expected": "Cher"
+        },
+        {
+          "args": [
+            "Alan",
+            "Turing"
+          ],
+          "expected": "Turing, Alan"
+        },
+        {
+          "args": [
+            "",
+            "Solo"
+          ],
+          "expected": "Solo, "
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`Cat` should say `Meow`, but it inherits the default sound. Override `sound()` in `Cat`. `soundsOf` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "soundsOf",
+      "starterCode": "<?php\n\nclass Animal\n{\n    public function sound(): string\n    {\n        return \"...\";\n    }\n}\n\nclass Dog extends Animal\n{\n    public function sound(): string\n    {\n        return \"Woof\";\n    }\n}\n\nclass Cat extends Animal\n{\n}\n\n// Test driver (leave as is)\nfunction soundsOf(array $kinds): array\n{\n    $map = ['dog' => Dog::class, 'cat' => Cat::class, 'animal' => Animal::class];\n    return array_map(fn ($k) => (new $map[$k]())->sound(), $kinds);\n}\n",
+      "referenceSolution": "<?php\n\nclass Animal\n{\n    public function sound(): string\n    {\n        return \"...\";\n    }\n}\n\nclass Dog extends Animal\n{\n    public function sound(): string\n    {\n        return \"Woof\";\n    }\n}\n\nclass Cat extends Animal\n{\n    public function sound(): string\n    {\n        return \"Meow\";\n    }\n}\n\nfunction soundsOf(array $kinds): array\n{\n    $map = ['dog' => Dog::class, 'cat' => Cat::class, 'animal' => Animal::class];\n    return array_map(fn ($k) => (new $map[$k]())->sound(), $kinds);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "dog",
+              "cat"
+            ]
+          ],
+          "expected": [
+            "Woof",
+            "Meow"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "cat"
+            ]
+          ],
+          "expected": [
+            "Meow"
+          ]
+        },
+        {
+          "args": [
+            [
+              "animal",
+              "cat",
+              "dog"
+            ]
+          ],
+          "expected": [
+            "...",
+            "Meow",
+            "Woof"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`2`",
+        "`1`",
+        "An error",
+        "`null`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Objects are passed and assigned by **handle**: `$a` and `$b` point at the same object, so changing `$b->value` is visible through `$a`. Use `clone` to get a separate copy.",
+      "snippet": "<?php\n\nclass Box\n{\n    public int $value = 1;\n}\n\n$a = new Box();\n$b = $a;\n$b->value = 2;\necho $a->value;\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`Error`",
+        "`secret`",
+        "`NULL`",
+        "Nothing — it is a warning only"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reading a `private` property from outside the class throws an `Error` (\"Cannot access private property\"). Expose it through a public method if callers need it.",
+      "snippet": "<?php\n\nclass Account\n{\n    private string $token = 'secret';\n}\n\ntry {\n    echo (new Account())->token;\n} catch (Error $e) {\n    echo get_class($e);\n}\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does constructor property promotion do in `public function __construct(private int $id) {}`?",
+    "mcq": {
+      "options": [
+        "Declares a private `$id` property and assigns the argument to it",
+        "Only type-checks the argument; you still have to assign `$this->id = $id`",
+        "Makes `$id` a static property shared by every instance",
+        "Creates a public getter `id()` automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "Promotion (PHP 8.0) declares the property with the given visibility and type and assigns the constructor argument to it, replacing three lines of boilerplate. It does not generate getters or make anything static.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-php-oop-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Both shapes implement `Shape`, but the total area is wrong. Fix the bug. `totalArea` is the test driver (rounds to 2 decimals).",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "totalArea",
+      "starterCode": "<?php\n\ninterface Shape\n{\n    public function area(): float;\n}\n\nclass Circle implements Shape\n{\n    public function __construct(private float $r) {}\n\n    public function area(): float\n    {\n        return M_PI * $this->r ** 2;\n    }\n}\n\nclass Square implements Shape\n{\n    public function __construct(private float $side) {}\n\n    public function area(): float\n    {\n        return $this->side * 4;\n    }\n}\n\n// Test driver (leave as is)\nfunction totalArea(array $specs): float\n{\n    $total = 0.0;\n    foreach ($specs as [$kind, $size]) {\n        $shape = $kind === 'circle' ? new Circle($size) : new Square($size);\n        $total += $shape->area();\n    }\n    return round($total, 2);\n}\n",
+      "referenceSolution": "<?php\n\ninterface Shape\n{\n    public function area(): float;\n}\n\nclass Circle implements Shape\n{\n    public function __construct(private float $r) {}\n\n    public function area(): float\n    {\n        return M_PI * $this->r ** 2;\n    }\n}\n\nclass Square implements Shape\n{\n    public function __construct(private float $side) {}\n\n    public function area(): float\n    {\n        return $this->side ** 2;\n    }\n}\n\nfunction totalArea(array $specs): float\n{\n    $total = 0.0;\n    foreach ($specs as [$kind, $size]) {\n        $shape = $kind === 'circle' ? new Circle($size) : new Square($size);\n        $total += $shape->area();\n    }\n    return round($total, 2);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "square",
+                3
+              ]
+            ]
+          ],
+          "expected": 9
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              [
+                "circle",
+                1
+              ],
+              [
+                "square",
+                2
+              ]
+            ]
+          ],
+          "expected": 7.14
+        },
+        {
+          "args": [
+            [
+              [
+                "square",
+                1
+              ]
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              [
+                "circle",
+                2
+              ]
+            ]
+          ],
+          "expected": 12.57
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`SmsNotifier` must truncate the message body to 20 characters (the abstract `send()` adds the prefix). Implement `format()` in `SmsNotifier`. `notify` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "notify",
+      "starterCode": "<?php\n\nabstract class Notifier\n{\n    abstract protected function prefix(): string;\n\n    protected function format(string $message): string\n    {\n        return $message;\n    }\n\n    public function send(string $message): string\n    {\n        return $this->prefix() . $this->format($message);\n    }\n}\n\nclass EmailNotifier extends Notifier\n{\n    protected function prefix(): string\n    {\n        return \"[email] \";\n    }\n}\n\nclass SmsNotifier extends Notifier\n{\n    protected function prefix(): string\n    {\n        return \"[sms] \";\n    }\n}\n\n// Test driver (leave as is)\nfunction notify(string $channel, string $message): string\n{\n    $notifier = $channel === 'sms' ? new SmsNotifier() : new EmailNotifier();\n    return $notifier->send($message);\n}\n",
+      "referenceSolution": "<?php\n\nabstract class Notifier\n{\n    abstract protected function prefix(): string;\n\n    protected function format(string $message): string\n    {\n        return $message;\n    }\n\n    public function send(string $message): string\n    {\n        return $this->prefix() . $this->format($message);\n    }\n}\n\nclass EmailNotifier extends Notifier\n{\n    protected function prefix(): string\n    {\n        return \"[email] \";\n    }\n}\n\nclass SmsNotifier extends Notifier\n{\n    protected function prefix(): string\n    {\n        return \"[sms] \";\n    }\n\n    protected function format(string $message): string\n    {\n        return substr($message, 0, 20);\n    }\n}\n\nfunction notify(string $channel, string $message): string\n{\n    $notifier = $channel === 'sms' ? new SmsNotifier() : new EmailNotifier();\n    return $notifier->send($message);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "sms",
+            "Your code is 482913, valid 5 min"
+          ],
+          "expected": "[sms] Your code is 482913,"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "email",
+            "Your order has shipped today"
+          ],
+          "expected": "[email] Your order has shipped today"
+        },
+        {
+          "args": [
+            "sms",
+            "Hi"
+          ],
+          "expected": "[sms] Hi"
+        },
+        {
+          "args": [
+            "sms",
+            ""
+          ],
+          "expected": "[sms] "
+        },
+        {
+          "args": [
+            "sms",
+            "12345678901234567890X"
+          ],
+          "expected": "[sms] 12345678901234567890"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The `HasSlug` trait is shared by `Post` and `Page`. Fix `slug()` so it lowercases the title and turns every run of non-alphanumeric characters into a single `-`, with no leading or trailing dash. `slugFor` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "slugFor",
+      "starterCode": "<?php\n\ntrait HasSlug\n{\n    public function slug(): string\n    {\n        return str_replace(\" \", \"-\", $this->title);\n    }\n}\n\nclass Post\n{\n    use HasSlug;\n\n    public function __construct(public string $title) {}\n}\n\nclass Page\n{\n    use HasSlug;\n\n    public function __construct(public string $title) {}\n}\n\n// Test driver (leave as is)\nfunction slugFor(string $type, string $title): string\n{\n    return ($type === 'page' ? new Page($title) : new Post($title))->slug();\n}\n",
+      "referenceSolution": "<?php\n\ntrait HasSlug\n{\n    public function slug(): string\n    {\n        $slug = preg_replace('/[^a-z0-9]+/', '-', strtolower($this->title));\n        return trim($slug, '-');\n    }\n}\n\nclass Post\n{\n    use HasSlug;\n\n    public function __construct(public string $title) {}\n}\n\nclass Page\n{\n    use HasSlug;\n\n    public function __construct(public string $title) {}\n}\n\nfunction slugFor(string $type, string $title): string\n{\n    return ($type === 'page' ? new Page($title) : new Post($title))->slug();\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "post",
+            "Hello World"
+          ],
+          "expected": "hello-world"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "page",
+            "About Us!"
+          ],
+          "expected": "about-us"
+        },
+        {
+          "args": [
+            "post",
+            "  PHP 8.2: What's New?  "
+          ],
+          "expected": "php-8-2-what-s-new"
+        },
+        {
+          "args": [
+            "post",
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "page",
+            "a--b"
+          ],
+          "expected": "a-b"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`BankAccount::withdraw()` must refuse (return `false`, balance unchanged) when there is not enough money. Fix it. `runOps` is the test driver and returns the final balance.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "runOps",
+      "starterCode": "<?php\n\nclass BankAccount\n{\n    private int $balance = 0;\n\n    public function deposit(int $amount): void\n    {\n        $this->balance += $amount;\n    }\n\n    public function withdraw(int $amount): bool\n    {\n        $this->balance -= $amount;\n        return true;\n    }\n\n    public function balance(): int\n    {\n        return $this->balance;\n    }\n}\n\n// Test driver (leave as is)\nfunction runOps(array $ops): int\n{\n    $account = new BankAccount();\n    foreach ($ops as [$op, $amount]) {\n        $op === 'deposit' ? $account->deposit($amount) : $account->withdraw($amount);\n    }\n    return $account->balance();\n}\n",
+      "referenceSolution": "<?php\n\nclass BankAccount\n{\n    private int $balance = 0;\n\n    public function deposit(int $amount): void\n    {\n        $this->balance += $amount;\n    }\n\n    public function withdraw(int $amount): bool\n    {\n        if ($amount > $this->balance) {\n            return false;\n        }\n        $this->balance -= $amount;\n        return true;\n    }\n\n    public function balance(): int\n    {\n        return $this->balance;\n    }\n}\n\nfunction runOps(array $ops): int\n{\n    $account = new BankAccount();\n    foreach ($ops as [$op, $amount]) {\n        $op === 'deposit' ? $account->deposit($amount) : $account->withdraw($amount);\n    }\n    return $account->balance();\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "deposit",
+                100
+              ],
+              [
+                "withdraw",
+                30
+              ]
+            ]
+          ],
+          "expected": 70
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              [
+                "withdraw",
+                10
+              ]
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              [
+                "deposit",
+                50
+              ],
+              [
+                "withdraw",
+                80
+              ],
+              [
+                "withdraw",
+                50
+              ]
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              [
+                "deposit",
+                20
+              ],
+              [
+                "withdraw",
+                20
+              ],
+              [
+                "deposit",
+                5
+              ]
+            ]
+          ],
+          "expected": 5
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`Point::withX()` should return a **new** point and leave the original untouched (an immutable \"wither\"). Fix it. `movePoint` returns `[original x, new x]`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "movePoint",
+      "starterCode": "<?php\n\nclass Point\n{\n    public function __construct(public int $x, public int $y) {}\n\n    public function withX(int $x): static\n    {\n        $this->x = $x;\n        return $this;\n    }\n}\n\n// Test driver (leave as is)\nfunction movePoint(int $x, int $newX): array\n{\n    $p = new Point($x, 0);\n    $q = $p->withX($newX);\n    return [$p->x, $q->x];\n}\n",
+      "referenceSolution": "<?php\n\nclass Point\n{\n    public function __construct(public int $x, public int $y) {}\n\n    public function withX(int $x): static\n    {\n        $copy = clone $this;\n        $copy->x = $x;\n        return $copy;\n    }\n}\n\nfunction movePoint(int $x, int $newX): array\n{\n    $p = new Point($x, 0);\n    $q = $p->withX($newX);\n    return [$p->x, $q->x];\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            1,
+            5
+          ],
+          "expected": [
+            1,
+            5
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            0
+          ],
+          "expected": [
+            0,
+            0
+          ]
+        },
+        {
+          "args": [
+            -3,
+            3
+          ],
+          "expected": [
+            -3,
+            3
+          ]
+        },
+        {
+          "args": [
+            10,
+            2
+          ],
+          "expected": [
+            10,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`Product` implements `JsonSerializable`. The API must expose `price` in dollars as a float (`1999` cents → `19.99`), not cents. Fix `jsonSerialize()`. `productJson` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "productJson",
+      "starterCode": "<?php\n\nclass Product implements JsonSerializable\n{\n    public function __construct(private string $name, private int $priceCents) {}\n\n    public function jsonSerialize(): array\n    {\n        return ['name' => $this->name, 'price' => $this->priceCents];\n    }\n}\n\n// Test driver (leave as is)\nfunction productJson(string $name, int $cents): array\n{\n    return json_decode(json_encode(new Product($name, $cents)), true);\n}\n",
+      "referenceSolution": "<?php\n\nclass Product implements JsonSerializable\n{\n    public function __construct(private string $name, private int $priceCents) {}\n\n    public function jsonSerialize(): array\n    {\n        return ['name' => $this->name, 'price' => $this->priceCents / 100];\n    }\n}\n\nfunction productJson(string $name, int $cents): array\n{\n    return json_decode(json_encode(new Product($name, $cents)), true);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "Mug",
+            1999
+          ],
+          "expected": {
+            "name": "Mug",
+            "price": 19.99
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Free",
+            0
+          ],
+          "expected": {
+            "name": "Free",
+            "price": 0
+          }
+        },
+        {
+          "args": [
+            "Pen",
+            150
+          ],
+          "expected": {
+            "name": "Pen",
+            "price": 1.5
+          }
+        },
+        {
+          "args": [
+            "Desk",
+            25000
+          ],
+          "expected": {
+            "name": "Desk",
+            "price": 250
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`base`",
+        "`child`",
+        "An error",
+        "Nothing"
+      ],
+      "correctIndex": 0,
+      "explanation": "When a child class defines its own constructor, the parent's constructor is **not** called automatically. `$name` keeps its default `'base'`. Call `parent::__construct()` in the child's constructor.",
+      "snippet": "<?php\n\nclass Base\n{\n    protected string $name = 'base';\n\n    public function __construct()\n    {\n        $this->name = 'child';\n    }\n\n    public function name(): string\n    {\n        return $this->name;\n    }\n}\n\nclass Child extends Base\n{\n    public function __construct()\n    {\n        // forgot parent::__construct();\n    }\n}\n\necho (new Child())->name();\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`Error`",
+        "An empty string",
+        "`NULL`",
+        "`string`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A typed property with no default starts **uninitialized**, not `null`. Reading it before assignment throws an `Error` (\"must not be accessed before initialization\"). Give it a default, make it nullable with `= null`, or set it in the constructor.",
+      "snippet": "<?php\n\nclass Customer\n{\n    public string $email;\n}\n\ntry {\n    $c = new Customer();\n    echo $c->email;\n} catch (Error $e) {\n    echo get_class($e);\n}\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A `PaymentGateway` needs `Refundable` and `Loggable` behaviour from two unrelated contracts. Why would you model these as interfaces rather than abstract classes?",
+    "mcq": {
+      "options": [
+        "A class can implement many interfaces but extend only one class",
+        "Interfaces run faster than abstract classes",
+        "Abstract classes cannot declare methods with type hints",
+        "Interfaces can hold state, abstract classes cannot"
+      ],
+      "correctIndex": 0,
+      "explanation": "PHP has single inheritance: one `extends`, but any number of `implements`. Interfaces describe capabilities a class can mix and match. (It is abstract classes that can hold state and shared code; for shared code without a parent class, use a trait.)",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-php-oop-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`Model::create()` should return an instance of the class it was **called on** (`Post::create()` gives a `Post`). It always returns a `Model`. Fix it. `createdClass` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "createdClass",
+      "starterCode": "<?php\n\nclass Model\n{\n    public static function create(): self\n    {\n        return new self();\n    }\n}\n\nclass Post extends Model {}\n\nclass Comment extends Model {}\n\n// Test driver (leave as is)\nfunction createdClass(string $kind): string\n{\n    $class = ['post' => Post::class, 'comment' => Comment::class, 'model' => Model::class][$kind];\n    return get_class($class::create());\n}\n",
+      "referenceSolution": "<?php\n\nclass Model\n{\n    public static function create(): static\n    {\n        return new static();\n    }\n}\n\nclass Post extends Model {}\n\nclass Comment extends Model {}\n\nfunction createdClass(string $kind): string\n{\n    $class = ['post' => Post::class, 'comment' => Comment::class, 'model' => Model::class][$kind];\n    return get_class($class::create());\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "post"
+          ],
+          "expected": "Post"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "comment"
+          ],
+          "expected": "Comment"
+        },
+        {
+          "args": [
+            "model"
+          ],
+          "expected": "Model"
+        },
+        {
+          "args": [
+            "post"
+          ],
+          "expected": "Post"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`OrderService` receives a `TaxCalculator` through its constructor but ignores it. Fix the service to use the injected calculator. `orderTotal` is the test driver (amounts in cents).",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "orderTotal",
+      "starterCode": "<?php\n\ninterface TaxCalculator\n{\n    public function tax(int $subtotal): int;\n}\n\nclass UsTax implements TaxCalculator\n{\n    public function tax(int $subtotal): int\n    {\n        return intdiv($subtotal * 8, 100);\n    }\n}\n\nclass EuTax implements TaxCalculator\n{\n    public function tax(int $subtotal): int\n    {\n        return intdiv($subtotal * 20, 100);\n    }\n}\n\nclass NoTax implements TaxCalculator\n{\n    public function tax(int $subtotal): int\n    {\n        return 0;\n    }\n}\n\nclass OrderService\n{\n    private TaxCalculator $tax;\n\n    public function __construct(TaxCalculator $tax)\n    {\n        $this->tax = new UsTax();\n    }\n\n    public function total(int $subtotal): int\n    {\n        return $subtotal + $this->tax->tax($subtotal);\n    }\n}\n\n// Test driver (leave as is)\nfunction orderTotal(int $subtotal, string $region): int\n{\n    $calc = match ($region) { 'us' => new UsTax(), 'eu' => new EuTax(), default => new NoTax() };\n    return (new OrderService($calc))->total($subtotal);\n}\n",
+      "referenceSolution": "<?php\n\ninterface TaxCalculator\n{\n    public function tax(int $subtotal): int;\n}\n\nclass UsTax implements TaxCalculator\n{\n    public function tax(int $subtotal): int\n    {\n        return intdiv($subtotal * 8, 100);\n    }\n}\n\nclass EuTax implements TaxCalculator\n{\n    public function tax(int $subtotal): int\n    {\n        return intdiv($subtotal * 20, 100);\n    }\n}\n\nclass NoTax implements TaxCalculator\n{\n    public function tax(int $subtotal): int\n    {\n        return 0;\n    }\n}\n\nclass OrderService\n{\n    public function __construct(private TaxCalculator $tax) {}\n\n    public function total(int $subtotal): int\n    {\n        return $subtotal + $this->tax->tax($subtotal);\n    }\n}\n\nfunction orderTotal(int $subtotal, string $region): int\n{\n    $calc = match ($region) { 'us' => new UsTax(), 'eu' => new EuTax(), default => new NoTax() };\n    return (new OrderService($calc))->total($subtotal);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            1000,
+            "eu"
+          ],
+          "expected": 1200
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1000,
+            "us"
+          ],
+          "expected": 1080
+        },
+        {
+          "args": [
+            1000,
+            "other"
+          ],
+          "expected": 1000
+        },
+        {
+          "args": [
+            0,
+            "eu"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            250,
+            "eu"
+          ],
+          "expected": 300
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A tiny service container: `bind()` registers a factory that runs on every `make()`; `singleton()` must run its factory **once** and return the same instance afterwards. Fix `singleton`. `sameInstance` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "sameInstance",
+      "starterCode": "<?php\n\nclass Container\n{\n    private array $factories = [];\n\n    public function bind(string $id, Closure $factory): void\n    {\n        $this->factories[$id] = $factory;\n    }\n\n    public function singleton(string $id, Closure $factory): void\n    {\n        $this->factories[$id] = $factory;\n    }\n\n    public function make(string $id): object\n    {\n        return ($this->factories[$id])();\n    }\n}\n\n// Test driver (leave as is): is make() twice the same object?\nfunction sameInstance(bool $useSingleton): bool\n{\n    $c = new Container();\n    $factory = fn () => new stdClass();\n    $useSingleton ? $c->singleton('cache', $factory) : $c->bind('cache', $factory);\n    return $c->make('cache') === $c->make('cache');\n}\n",
+      "referenceSolution": "<?php\n\nclass Container\n{\n    private array $factories = [];\n\n    public function bind(string $id, Closure $factory): void\n    {\n        $this->factories[$id] = $factory;\n    }\n\n    public function singleton(string $id, Closure $factory): void\n    {\n        $instance = null;\n        $this->factories[$id] = function () use (&$instance, $factory) {\n            return $instance ??= $factory();\n        };\n    }\n\n    public function make(string $id): object\n    {\n        return ($this->factories[$id])();\n    }\n}\n\nfunction sameInstance(bool $useSingleton): bool\n{\n    $c = new Container();\n    $factory = fn () => new stdClass();\n    $useSingleton ? $c->singleton('cache', $factory) : $c->bind('cache', $factory);\n    return $c->make('cache') === $c->make('cache');\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            false
+          ],
+          "expected": false
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            true
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            false
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            true
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`Email` is a value object: it should normalise (trim + lowercase) and reject invalid addresses with `InvalidArgumentException`. `sameEmail` returns `\"same\"`, `\"different\"` or `\"invalid\"`. Fix the constructor.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "sameEmail",
+      "starterCode": "<?php\n\nfinal class Email\n{\n    public readonly string $value;\n\n    public function __construct(string $value)\n    {\n        $this->value = $value;\n    }\n\n    public function equals(Email $other): bool\n    {\n        return $this->value === $other->value;\n    }\n}\n\n// Test driver (leave as is)\nfunction sameEmail(string $a, string $b): string\n{\n    try {\n        return (new Email($a))->equals(new Email($b)) ? 'same' : 'different';\n    } catch (InvalidArgumentException $e) {\n        return 'invalid';\n    }\n}\n",
+      "referenceSolution": "<?php\n\nfinal class Email\n{\n    public readonly string $value;\n\n    public function __construct(string $value)\n    {\n        $value = strtolower(trim($value));\n        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {\n            throw new InvalidArgumentException(\"Invalid email: $value\");\n        }\n        $this->value = $value;\n    }\n\n    public function equals(Email $other): bool\n    {\n        return $this->value === $other->value;\n    }\n}\n\nfunction sameEmail(string $a, string $b): string\n{\n    try {\n        return (new Email($a))->equals(new Email($b)) ? 'same' : 'different';\n    } catch (InvalidArgumentException $e) {\n        return 'invalid';\n    }\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "Ada@Example.com ",
+            "ada@example.com"
+          ],
+          "expected": "same"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "a@x.io",
+            "b@x.io"
+          ],
+          "expected": "different"
+        },
+        {
+          "args": [
+            "not-an-email",
+            "a@x.io"
+          ],
+          "expected": "invalid"
+        },
+        {
+          "args": [
+            "a@x.io",
+            ""
+          ],
+          "expected": "invalid"
+        },
+        {
+          "args": [
+            "X@Y.IO",
+            "x@y.io"
+          ],
+          "expected": "same"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`statusLabel` gets a raw status from the database. Unknown values must produce `\"Unknown\"` instead of throwing a `ValueError`. Fix it (hint: `tryFrom`).",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "statusLabel",
+      "starterCode": "<?php\n\nenum OrderStatus: string\n{\n    case Pending = 'pending';\n    case Shipped = 'shipped';\n    case Cancelled = 'cancelled';\n\n    public function label(): string\n    {\n        return match ($this) {\n            self::Pending => 'Awaiting payment',\n            self::Shipped => 'On its way',\n            self::Cancelled => 'Cancelled',\n        };\n    }\n}\n\nfunction statusLabel(string $raw): string\n{\n    return OrderStatus::from($raw)->label();\n}\n",
+      "referenceSolution": "<?php\n\nenum OrderStatus: string\n{\n    case Pending = 'pending';\n    case Shipped = 'shipped';\n    case Cancelled = 'cancelled';\n\n    public function label(): string\n    {\n        return match ($this) {\n            self::Pending => 'Awaiting payment',\n            self::Shipped => 'On its way',\n            self::Cancelled => 'Cancelled',\n        };\n    }\n}\n\nfunction statusLabel(string $raw): string\n{\n    return OrderStatus::tryFrom($raw)?->label() ?? 'Unknown';\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "shipped"
+          ],
+          "expected": "On its way"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "refunded"
+          ],
+          "expected": "Unknown"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": "Unknown"
+        },
+        {
+          "args": [
+            "pending"
+          ],
+          "expected": "Awaiting payment"
+        },
+        {
+          "args": [
+            "SHIPPED"
+          ],
+          "expected": "Unknown"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`Collection::filter()` should return a **new** collection and leave the original alone, but it mutates `$this`. Fix it. `filterCounts` returns `[count of original, count of filtered]`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "filterCounts",
+      "starterCode": "<?php\n\nclass Collection implements Countable, IteratorAggregate\n{\n    public function __construct(private array $items = []) {}\n\n    public function filter(callable $fn): static\n    {\n        $this->items = array_values(array_filter($this->items, $fn));\n        return $this;\n    }\n\n    public function count(): int\n    {\n        return count($this->items);\n    }\n\n    public function getIterator(): ArrayIterator\n    {\n        return new ArrayIterator($this->items);\n    }\n}\n\n// Test driver (leave as is)\nfunction filterCounts(array $xs, int $min): array\n{\n    $all = new Collection($xs);\n    $big = $all->filter(fn ($x) => $x >= $min);\n    return [count($all), count($big)];\n}\n",
+      "referenceSolution": "<?php\n\nclass Collection implements Countable, IteratorAggregate\n{\n    public function __construct(private array $items = []) {}\n\n    public function filter(callable $fn): static\n    {\n        return new static(array_values(array_filter($this->items, $fn)));\n    }\n\n    public function count(): int\n    {\n        return count($this->items);\n    }\n\n    public function getIterator(): ArrayIterator\n    {\n        return new ArrayIterator($this->items);\n    }\n}\n\nfunction filterCounts(array $xs, int $min): array\n{\n    $all = new Collection($xs);\n    $big = $all->filter(fn ($x) => $x >= $min);\n    return [count($all), count($big)];\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              5,
+              10
+            ],
+            5
+          ],
+          "expected": [
+            3,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            1
+          ],
+          "expected": [
+            0,
+            0
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            10
+          ],
+          "expected": [
+            2,
+            0
+          ]
+        },
+        {
+          "args": [
+            [
+              7,
+              8,
+              9
+            ],
+            0
+          ],
+          "expected": [
+            3,
+            3
+          ]
+        },
+        {
+          "args": [
+            [
+              3,
+              4,
+              5,
+              6
+            ],
+            5
+          ],
+          "expected": [
+            4,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`A`",
+        "`B`",
+        "An error",
+        "`static`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`self` always refers to the class where the method is **written** (`A`), even when called as `B::make()`. Use `new static()` for late static binding, which resolves to the class that was called.",
+      "snippet": "<?php\n\nclass A\n{\n    public static function make(): A\n    {\n        return new self();\n    }\n}\n\nclass B extends A {}\n\necho get_class(B::make());\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`Error`",
+        "`20`",
+        "`10`",
+        "`TypeError`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `readonly` property can be set once, from inside the class. Any later write throws an `Error` (\"Cannot modify readonly property\"). To \"change\" it, return a new instance.",
+      "snippet": "<?php\n\nfinal class Price\n{\n    public function __construct(public readonly int $amount) {}\n}\n\n$p = new Price(10);\ntry {\n    $p->amount = 20;\n    echo $p->amount;\n} catch (Error $e) {\n    echo get_class($e);\n}\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`Changed`",
+        "`Original`",
+        "An error",
+        "Nothing"
+      ],
+      "correctIndex": 0,
+      "explanation": "`clone` is **shallow**: the copy gets its own properties, but an object stored in a property is still the same object. Changing `$copy->address->city` changes the original's address too. Implement `__clone()` to deep-copy nested objects.",
+      "snippet": "<?php\n\nclass Address\n{\n    public string $city = 'Original';\n}\n\nclass Customer\n{\n    public Address $address;\n\n    public function __construct()\n    {\n        $this->address = new Address();\n    }\n}\n\n$a = new Customer();\n$copy = clone $a;\n$copy->address->city = 'Changed';\necho $a->address->city;\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`Dispatcher::dispatch()` must call listeners for an event in **priority order** (higher first; equal priorities in registration order) and return their results. It ignores priority. Fix it. `dispatchLog` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "dispatchLog",
+      "starterCode": "<?php\n\nclass Dispatcher\n{\n    private array $listeners = [];\n\n    public function listen(string $event, callable $listener, int $priority = 0): void\n    {\n        $this->listeners[$event][] = ['fn' => $listener, 'priority' => $priority];\n    }\n\n    public function dispatch(string $event): array\n    {\n        $results = [];\n        foreach ($this->listeners[$event] ?? [] as $l) {\n            $results[] = ($l['fn'])();\n        }\n        return $results;\n    }\n}\n\n// Test driver (leave as is): each listener is [event, priority, label]\nfunction dispatchLog(array $listeners, string $event): array\n{\n    $d = new Dispatcher();\n    foreach ($listeners as [$name, $priority, $label]) {\n        $d->listen($name, fn () => $label, $priority);\n    }\n    return $d->dispatch($event);\n}\n",
+      "referenceSolution": "<?php\n\nclass Dispatcher\n{\n    private array $listeners = [];\n\n    public function listen(string $event, callable $listener, int $priority = 0): void\n    {\n        $this->listeners[$event][] = ['fn' => $listener, 'priority' => $priority];\n    }\n\n    public function dispatch(string $event): array\n    {\n        $listeners = $this->listeners[$event] ?? [];\n        usort($listeners, fn ($a, $b) => $b['priority'] <=> $a['priority']);\n        $results = [];\n        foreach ($listeners as $l) {\n            $results[] = ($l['fn'])();\n        }\n        return $results;\n    }\n}\n\nfunction dispatchLog(array $listeners, string $event): array\n{\n    $d = new Dispatcher();\n    foreach ($listeners as [$name, $priority, $label]) {\n        $d->listen($name, fn () => $label, $priority);\n    }\n    return $d->dispatch($event);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "saved",
+                0,
+                "log"
+              ],
+              [
+                "saved",
+                10,
+                "audit"
+              ]
+            ],
+            "saved"
+          ],
+          "expected": [
+            "audit",
+            "log"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "saved"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "saved",
+                5,
+                "a"
+              ],
+              [
+                "deleted",
+                9,
+                "x"
+              ],
+              [
+                "saved",
+                5,
+                "b"
+              ]
+            ],
+            "saved"
+          ],
+          "expected": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "e",
+                -1,
+                "late"
+              ],
+              [
+                "e",
+                0,
+                "mid"
+              ],
+              [
+                "e",
+                3,
+                "first"
+              ],
+              [
+                "e",
+                0,
+                "mid2"
+              ]
+            ],
+            "e"
+          ],
+          "expected": [
+            "first",
+            "mid",
+            "mid2",
+            "late"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "saved",
+                1,
+                "a"
+              ]
+            ],
+            "missing"
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "This middleware `Pipeline` (Laravel-style onion) should run stages in the order given: `['a', 'b']` passes the value through `a` first, then `b`. It runs them backwards. Fix `then()`. `runPipeline` is the test driver; each stage appends its name.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "runPipeline",
+      "starterCode": "<?php\n\nclass Pipeline\n{\n    private array $stages = [];\n\n    public function through(array $stages): static\n    {\n        $this->stages = $stages;\n        return $this;\n    }\n\n    public function then(string $input, Closure $destination): string\n    {\n        $next = $destination;\n        foreach ($this->stages as $stage) {\n            $next = fn ($value) => $stage($value, $next);\n        }\n        return $next($input);\n    }\n}\n\n// Test driver (leave as is)\nfunction runPipeline(string $input, array $names): string\n{\n    $stages = array_map(fn ($name) => fn ($value, $next) => $next($value . $name), $names);\n    return (new Pipeline())->through($stages)->then($input, fn ($value) => $value . '!');\n}\n",
+      "referenceSolution": "<?php\n\nclass Pipeline\n{\n    private array $stages = [];\n\n    public function through(array $stages): static\n    {\n        $this->stages = $stages;\n        return $this;\n    }\n\n    public function then(string $input, Closure $destination): string\n    {\n        $next = $destination;\n        foreach (array_reverse($this->stages) as $stage) {\n            $next = fn ($value) => $stage($value, $next);\n        }\n        return $next($input);\n    }\n}\n\nfunction runPipeline(string $input, array $names): string\n{\n    $stages = array_map(fn ($name) => fn ($value, $next) => $next($value . $name), $names);\n    return (new Pipeline())->through($stages)->then($input, fn ($value) => $value . '!');\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "x",
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "expected": "xab!"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "",
+            []
+          ],
+          "expected": "!"
+        },
+        {
+          "args": [
+            "go",
+            [
+              "1"
+            ]
+          ],
+          "expected": "go1!"
+        },
+        {
+          "args": [
+            "",
+            [
+              "a",
+              "b",
+              "c"
+            ]
+          ],
+          "expected": "abc!"
+        },
+        {
+          "args": [
+            "q",
+            [
+              "z",
+              "y"
+            ]
+          ],
+          "expected": "qzy!"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`CachedRates` decorates a slow `RateProvider` and should call it only once per currency. It currently never caches. Fix it. `providerCalls` is the test driver and returns how many times the real provider was hit.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "providerCalls",
+      "starterCode": "<?php\n\ninterface RateProvider\n{\n    public function rate(string $currency): float;\n}\n\nclass SlowProvider implements RateProvider\n{\n    public int $calls = 0;\n\n    public function rate(string $currency): float\n    {\n        $this->calls++;\n        return strlen($currency) / 10;\n    }\n}\n\nclass CachedRates implements RateProvider\n{\n    private array $cache = [];\n\n    public function __construct(private RateProvider $inner) {}\n\n    public function rate(string $currency): float\n    {\n        if (isset($this->cache[$currency])) {\n            return $this->cache[$currency];\n        }\n        return $this->inner->rate($currency);\n    }\n}\n\n// Test driver (leave as is)\nfunction providerCalls(array $currencies): int\n{\n    $slow = new SlowProvider();\n    $rates = new CachedRates($slow);\n    foreach ($currencies as $c) {\n        $rates->rate($c);\n    }\n    return $slow->calls;\n}\n",
+      "referenceSolution": "<?php\n\ninterface RateProvider\n{\n    public function rate(string $currency): float;\n}\n\nclass SlowProvider implements RateProvider\n{\n    public int $calls = 0;\n\n    public function rate(string $currency): float\n    {\n        $this->calls++;\n        return strlen($currency) / 10;\n    }\n}\n\nclass CachedRates implements RateProvider\n{\n    private array $cache = [];\n\n    public function __construct(private RateProvider $inner) {}\n\n    public function rate(string $currency): float\n    {\n        return $this->cache[$currency] ??= $this->inner->rate($currency);\n    }\n}\n\nfunction providerCalls(array $currencies): int\n{\n    $slow = new SlowProvider();\n    $rates = new CachedRates($slow);\n    foreach ($currencies as $c) {\n        $rates->rate($c);\n    }\n    return $slow->calls;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "USD",
+              "USD",
+              "EUR"
+            ]
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              "GBP"
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              "USD",
+              "EUR",
+              "USD",
+              "EUR",
+              "JPY"
+            ]
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              "X",
+              "X",
+              "X"
+            ]
+          ],
+          "expected": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`Money` is an immutable value object. `add()` must refuse to add different currencies by throwing `DomainException`. Fix it. `addMoney` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "addMoney",
+      "starterCode": "<?php\n\nfinal class Money\n{\n    public function __construct(public readonly int $amount, public readonly string $currency) {}\n\n    public function add(Money $other): Money\n    {\n        return new Money($this->amount + $other->amount, $this->currency);\n    }\n}\n\n// Test driver (leave as is)\nfunction addMoney(array $a, array $b): array|string\n{\n    try {\n        $sum = (new Money(...$a))->add(new Money(...$b));\n        return ['amount' => $sum->amount, 'currency' => $sum->currency];\n    } catch (DomainException $e) {\n        return 'error: ' . $e->getMessage();\n    }\n}\n",
+      "referenceSolution": "<?php\n\nfinal class Money\n{\n    public function __construct(public readonly int $amount, public readonly string $currency) {}\n\n    public function add(Money $other): Money\n    {\n        if ($other->currency !== $this->currency) {\n            throw new DomainException('currency mismatch');\n        }\n        return new Money($this->amount + $other->amount, $this->currency);\n    }\n}\n\nfunction addMoney(array $a, array $b): array|string\n{\n    try {\n        $sum = (new Money(...$a))->add(new Money(...$b));\n        return ['amount' => $sum->amount, 'currency' => $sum->currency];\n    } catch (DomainException $e) {\n        return 'error: ' . $e->getMessage();\n    }\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              500,
+              "USD"
+            ],
+            [
+              250,
+              "USD"
+            ]
+          ],
+          "expected": {
+            "amount": 750,
+            "currency": "USD"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              500,
+              "USD"
+            ],
+            [
+              250,
+              "EUR"
+            ]
+          ],
+          "expected": "error: currency mismatch"
+        },
+        {
+          "args": [
+            [
+              0,
+              "EUR"
+            ],
+            [
+              0,
+              "EUR"
+            ]
+          ],
+          "expected": {
+            "amount": 0,
+            "currency": "EUR"
+          }
+        },
+        {
+          "args": [
+            [
+              100,
+              "GBP"
+            ],
+            [
+              -30,
+              "GBP"
+            ]
+          ],
+          "expected": {
+            "amount": 70,
+            "currency": "GBP"
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              "usd"
+            ],
+            [
+              1,
+              "USD"
+            ]
+          ],
+          "expected": "error: currency mismatch"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`QueryBuilder` supports Laravel-style dynamic wheres via `__call`: `whereEmail('a@x.io')` becomes `['email', 'a@x.io']`. Multi-word names must be snake_cased (`whereCreatedAt` → `created_at`). Fix `__call`. `buildWheres` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "buildWheres",
+      "starterCode": "<?php\n\nclass QueryBuilder\n{\n    public array $wheres = [];\n\n    public function __call(string $method, array $args): static\n    {\n        if (str_starts_with($method, 'where')) {\n            $column = strtolower(substr($method, 5));\n            $this->wheres[] = [$column, $args[0]];\n            return $this;\n        }\n        throw new BadMethodCallException(\"Method $method does not exist.\");\n    }\n}\n\n// Test driver (leave as is): each call is [method, value]\nfunction buildWheres(array $calls): array\n{\n    $q = new QueryBuilder();\n    foreach ($calls as [$method, $value]) {\n        $q->$method($value);\n    }\n    return $q->wheres;\n}\n",
+      "referenceSolution": "<?php\n\nclass QueryBuilder\n{\n    public array $wheres = [];\n\n    public function __call(string $method, array $args): static\n    {\n        if (str_starts_with($method, 'where')) {\n            $column = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', substr($method, 5)));\n            $this->wheres[] = [$column, $args[0]];\n            return $this;\n        }\n        throw new BadMethodCallException(\"Method $method does not exist.\");\n    }\n}\n\nfunction buildWheres(array $calls): array\n{\n    $q = new QueryBuilder();\n    foreach ($calls as [$method, $value]) {\n        $q->$method($value);\n    }\n    return $q->wheres;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "whereEmail",
+                "a@x.io"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              "email",
+              "a@x.io"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "whereCreatedAt",
+                "2024-01-01"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              "created_at",
+              "2024-01-01"
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "whereStatus",
+                "paid"
+              ],
+              [
+                "whereCustomerId",
+                7
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              "status",
+              "paid"
+            ],
+            [
+              "customer_id",
+              7
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "whereIsActiveFlag",
+                true
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              "is_active_flag",
+              true
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The `Role` enum decides permissions. An `admin` can do **everything** (a `*` wildcard), an `editor` can `edit` and `publish`, a `viewer` can only `view`. `rolesThatCan` lists the roles allowed a permission. Admin is missing from the results — fix `can()`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "rolesThatCan",
+      "starterCode": "<?php\n\nenum Role: string\n{\n    case Admin = 'admin';\n    case Editor = 'editor';\n    case Viewer = 'viewer';\n\n    public function permissions(): array\n    {\n        return match ($this) {\n            self::Admin => ['*'],\n            self::Editor => ['view', 'edit', 'publish'],\n            self::Viewer => ['view'],\n        };\n    }\n\n    public function can(string $permission): bool\n    {\n        return in_array($permission, $this->permissions(), true);\n    }\n}\n\nfunction rolesThatCan(string $permission): array\n{\n    $roles = array_filter(Role::cases(), fn (Role $r) => $r->can($permission));\n    return array_values(array_map(fn (Role $r) => $r->value, $roles));\n}\n",
+      "referenceSolution": "<?php\n\nenum Role: string\n{\n    case Admin = 'admin';\n    case Editor = 'editor';\n    case Viewer = 'viewer';\n\n    public function permissions(): array\n    {\n        return match ($this) {\n            self::Admin => ['*'],\n            self::Editor => ['view', 'edit', 'publish'],\n            self::Viewer => ['view'],\n        };\n    }\n\n    public function can(string $permission): bool\n    {\n        $perms = $this->permissions();\n        return in_array('*', $perms, true) || in_array($permission, $perms, true);\n    }\n}\n\nfunction rolesThatCan(string $permission): array\n{\n    $roles = array_filter(Role::cases(), fn (Role $r) => $r->can($permission));\n    return array_values(array_map(fn (Role $r) => $r->value, $roles));\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "view"
+          ],
+          "expected": [
+            "admin",
+            "editor",
+            "viewer"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "publish"
+          ],
+          "expected": [
+            "admin",
+            "editor"
+          ]
+        },
+        {
+          "args": [
+            "delete"
+          ],
+          "expected": [
+            "admin"
+          ]
+        },
+        {
+          "args": [
+            "edit"
+          ],
+          "expected": [
+            "admin",
+            "editor"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-oop-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "`Repository::find(int $id): ?Model` is declared in a parent class. Which override in a child class is allowed?",
+    "mcq": {
+      "options": [
+        "`public function find(int $id): ?User` (where `User extends Model`)",
+        "`public function find(int $id): Model|string`",
+        "`protected function find(int $id): ?Model`",
+        "`public function find(string $id): ?Model`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Return types are **covariant**: a child may return a narrower type (`?User`). It may not widen the return type (`Model|string`), reduce visibility (`protected`), or narrow a parameter type (`int` → `string` is not contravariant). These rules keep a child usable wherever the parent is expected (Liskov).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-php-oop-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`1`",
+        "`3`",
+        "`2`",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "A static property declared in a trait is copied into **each class** that uses the trait, so `A` and `B` keep separate counters. `B::next()` starts from 0 and returns 1.",
+      "snippet": "<?php\n\ntrait CountsInstances\n{\n    private static int $count = 0;\n\n    public static function next(): int\n    {\n        return ++self::$count;\n    }\n}\n\nclass A { use CountsInstances; }\nclass B { use CountsInstances; }\n\nA::next();\nA::next();\necho B::next();\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-oop-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php-oop",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "`PdfReport` and `CsvReport` share how data is loaded and filtered, but differ only in how the result is written out. More formats are coming. Which design keeps this easiest to extend and test?",
+    "mcq": {
+      "options": [
+        "One `Report` class that receives a `ReportWriter` interface (strategy); each format is a small writer class",
+        "A deep inheritance chain: `Report` → `FileReport` → `PdfReport` / `CsvReport`",
+        "One `Report` class with a `switch ($format)` inside `export()`",
+        "A trait per format, all used by the same `Report` class"
+      ],
+      "correctIndex": 0,
+      "explanation": "The varying part (the writer) sits behind an interface and is injected, so a new format is a new class, not a change to `Report`, and each writer can be tested alone. Deep inheritance couples formats to the loading code, a `switch` must be edited for every format, and traits mixed into one class collide.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,427 @@
+[
+  {
+    "id": "bd-linkedin-outreach-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the parts of this LinkedIn connection request that will hurt the acceptance rate.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the parts of this LinkedIn connection request that will hurt the acceptance rate.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Priya,",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "I saw your post about launching the clinic-booking app in Pune last week.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "We are a top-rated software agency with 200+ projects, 50 developers and offices in three countries.",
+          "issue": "Credentials dump about the sender; the request should be about her, not the agency."
+        },
+        {
+          "id": "p4",
+          "text": "Can we jump on a 30-minute call this Thursday to discuss your tech roadmap?",
+          "issue": "Asking for a meeting before she has even accepted the connection is a hard pitch that gets ignored."
+        },
+        {
+          "id": "p5",
+          "text": "Would be glad to connect and follow how the launch goes.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-linkedin-outreach-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these LinkedIn profiles by how well they fit a target of 'funded startup founders who need a mobile app built', best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these LinkedIn profiles by how well they fit a target of 'funded startup founders who need a mobile app built', best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Marketing manager at a large bank, interested in 'digital transformation'"
+        },
+        {
+          "id": "r4",
+          "label": "Student building a side project, asked for free advice in a group"
+        },
+        {
+          "id": "r1",
+          "label": "Co-founder of a seed-funded fitness startup, posted last week that their app is 'coming soon', no CTO listed"
+        },
+        {
+          "id": "r2",
+          "label": "CTO at a Series A logistics company with an in-house team of 12 engineers, posted about hiring"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "The founder with funding, an imminent app and no technical lead has a clear need and authority. The CTO has budget but an in-house team, so is a weaker fit. The bank marketer is far from the buying decision, and the student has no budget."
+    }
+  },
+  {
+    "id": "bd-linkedin-outreach-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": "bd-tool-sales-navigator",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your LinkedIn outreach last month, from a Sales Navigator list. Work out the rates.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your LinkedIn outreach last month, from a Sales Navigator list. Work out the rates.",
+      "table": {
+        "columns": [
+          "Metric",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Connection requests sent",
+            "400"
+          ],
+          [
+            "Requests accepted",
+            "140"
+          ],
+          [
+            "Replies to first DM",
+            "28"
+          ],
+          [
+            "Calls booked",
+            "7"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "acc",
+          "label": "Acceptance rate",
+          "unit": "%",
+          "answer": 35,
+          "tolerance": 0.5
+        },
+        {
+          "id": "reply",
+          "label": "Reply rate (of accepted connections)",
+          "unit": "%",
+          "answer": 20,
+          "tolerance": 0.5
+        },
+        {
+          "id": "book",
+          "label": "Calls booked per 100 requests sent",
+          "unit": "",
+          "answer": 1.75,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Acceptance = 140/400 = 35%. Reply rate = 28/140 = 20%. Calls per 100 requests = 7/400 x 100 = 1.75."
+    }
+  },
+  {
+    "id": "bd-linkedin-outreach-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A VP of Operations at a mid-size logistics company accepted your connection request two days ago. Her recent post complains that drivers still use paper delivery sheets.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A VP of Operations at a mid-size logistics company accepted your connection request two days ago. Her recent post complains that drivers still use paper delivery sheets.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should your first DM do?",
+          "options": [
+            "Pitch your agency's full service list with a link to your deck",
+            "Reference her post and ask one short question about how the paper sheets affect her team",
+            "Send a calendar link for a 30-minute call",
+            "Wait a month so you do not look eager"
+          ],
+          "correctIndex": 1,
+          "explanation": "A relevant, low-effort question opens a conversation; a pitch or calendar link this early reads as spam."
+        },
+        {
+          "id": "s2",
+          "question": "She replies that sheets get lost and billing is delayed by a week. What next?",
+          "options": [
+            "Send a quote for a driver app immediately",
+            "Ask what the billing delay costs them and share a short example of a similar delivery app you built",
+            "Tell her paper is outdated and she must digitise",
+            "Ask her to introduce you to the CEO"
+          ],
+          "correctIndex": 1,
+          "explanation": "Exploring the cost of the problem and offering a relevant proof point earns the right to suggest a call."
+        },
+        {
+          "id": "s3",
+          "question": "She says it costs them real cash flow and the example looks relevant. What is the best ask?",
+          "options": [
+            "A 20-minute call next week with two time options, to see whether a similar approach fits",
+            "A signed NDA before any further talk",
+            "A request that she post a recommendation for you",
+            "An open-ended 'let me know if you are ever interested'"
+          ],
+          "correctIndex": 0,
+          "explanation": "A specific, short, low-commitment meeting ask with times turns interest into a next step."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-linkedin-outreach-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Write a first LinkedIn DM to this new connection. Goal: start a conversation, not close a deal.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a first LinkedIn DM to this new connection. Goal: start a conversation, not close a deal.",
+      "context": "Connection: Daniel, founder of a 15-person property-management startup. He accepted your request yesterday. Last week he posted: 'Tenants still email us maintenance requests and half get lost.' Your agency builds web and mobile apps, including a tenant portal for a property client.",
+      "wordLimit": 80,
+      "rubric": [
+        {
+          "id": "personal",
+          "label": "Personal and relevant",
+          "description": "References his post or situation specifically, not a template opener.",
+          "weight": 1
+        },
+        {
+          "id": "brief",
+          "label": "Short and readable",
+          "description": "A few sentences, easy to read on a phone, no wall of text.",
+          "weight": 1
+        },
+        {
+          "id": "value",
+          "label": "Relevant proof without a pitch",
+          "description": "Mentions the similar tenant-portal work briefly, without a service list or credentials dump.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Low-friction ask",
+          "description": "Ends with one easy question or soft offer, not a demand for a 30-60 minute call.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Thanks for connecting, Daniel. Your post about lost maintenance emails stuck with me: we built a tenant portal for a property client with the same problem, and request tracking was the part their team valued most. Out of curiosity, are requests lost mostly in the inbox, or once they reach the maintenance team?"
+    }
+  },
+  {
+    "id": "bd-linkedin-outreach-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order a LinkedIn outreach sequence for a cold prospect, first touch first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order a LinkedIn outreach sequence for a cold prospect, first touch first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "After acceptance, send a DM with a relevant question tied to their situation"
+        },
+        {
+          "id": "r4",
+          "label": "Share a short case study or insight relevant to their reply"
+        },
+        {
+          "id": "r5",
+          "label": "Propose a specific, short call with two time options"
+        },
+        {
+          "id": "r1",
+          "label": "View the profile and engage genuinely with one of their recent posts"
+        },
+        {
+          "id": "r2",
+          "label": "Send a short connection request with a personal reason, no pitch"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Warm up with engagement, connect without a pitch, start a conversation, add value, then ask for the meeting."
+    }
+  },
+  {
+    "id": "bd-linkedin-outreach-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "This is a 6-step automated LinkedIn sequence an SDR set up. Mark the steps that are problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "This is a 6-step automated LinkedIn sequence an SDR set up. Mark the steps that are problems.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Day 0: connection request with a note referencing the prospect's company and role",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Day 0 (10 minutes after accepting): long DM with the agency deck PDF attached and a pricing table",
+          "issue": "Pitching with attachments minutes after acceptance feels automated and kills trust."
+        },
+        {
+          "id": "p3",
+          "text": "Day 3: 'Just bumping this up!' with no new content",
+          "issue": "A bump with no new value gives the prospect no reason to reply."
+        },
+        {
+          "id": "p4",
+          "text": "Day 7: share a short relevant case study and one question",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Day 14: polite final message offering to reconnect later",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Sequence sends 300 requests a day from one account",
+          "issue": "Very high volume per account risks LinkedIn restricting it and signals spam."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-linkedin-outreach-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a LinkedIn connection request note to a cold prospect?",
+    "mcq": {
+      "options": [
+        "To get the connection accepted by giving a genuine, relevant reason",
+        "To present the full service offering and pricing",
+        "To book a meeting immediately",
+        "To ask for a referral to their boss"
+      ],
+      "correctIndex": 0,
+      "explanation": "The note only has to earn the acceptance. Pitching or asking for meetings in it lowers acceptance and comes across as spam.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-linkedin-outreach-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect accepted your request but did not reply to two thoughtful DMs over three weeks. What is the best next move?",
+    "mcq": {
+      "options": [
+        "Send one final short message with something useful and leave the door open, then pause",
+        "Message them daily until they respond",
+        "Remove them and send a new connection request",
+        "Message their colleagues to ask why they have not replied"
+      ],
+      "correctIndex": 0,
+      "explanation": "A respectful final touch with value keeps the relationship intact; pestering damages your reputation and your account.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-linkedin-outreach-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-linkedin-outreach",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Your LinkedIn acceptance rate is high (45%) but replies to your first DM are near zero. Where is the problem most likely?",
+    "mcq": {
+      "options": [
+        "The first DM: it is probably a pitch or generic rather than a relevant conversation starter",
+        "The targeting: you are connecting with the wrong people",
+        "The profile photo",
+        "The connection note is too personal"
+      ],
+      "correctIndex": 0,
+      "explanation": "People are accepting, so the profile and connection note are working. The drop happens at the first DM, which is the thing to rewrite.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

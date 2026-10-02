@@ -1,0 +1,367 @@
+[
+  {
+    "id": "pm-business-case-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client is considering an AI support assistant. Calculate the simple financials for the first three years.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client is considering an AI support assistant. Calculate the simple financials for the first three years.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Build cost (year 0)",
+            "$120,000"
+          ],
+          [
+            "Running cost per year (model usage, hosting, maintenance)",
+            "$40,000"
+          ],
+          [
+            "Benefit per year (agent time saved)",
+            "$110,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "net",
+          "label": "Net benefit per year",
+          "unit": "$",
+          "answer": 70000,
+          "tolerance": 1
+        },
+        {
+          "id": "payback",
+          "label": "Payback period",
+          "unit": "years",
+          "answer": 1.7143,
+          "tolerance": 0.05
+        },
+        {
+          "id": "roi",
+          "label": "3-year ROI ((total net benefit - build cost) / build cost)",
+          "unit": "%",
+          "answer": 75.0,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Net 70,000 a year; payback 1.71 years; 3-year ROI (210,000 - 120,000) / 120,000 = 75%."
+    }
+  },
+  {
+    "id": "pm-business-case-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Calculate the net present value of this investment at a 10% discount rate. Year 0 is today and is not discounted.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate the net present value of this investment at a 10% discount rate. Year 0 is today and is not discounted.",
+      "table": {
+        "columns": [
+          "Year",
+          "Cash flow"
+        ],
+        "rows": [
+          [
+            "0",
+            "-$100,000"
+          ],
+          [
+            "1",
+            "$50,000"
+          ],
+          [
+            "2",
+            "$50,000"
+          ],
+          [
+            "3",
+            "$50,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "npv",
+          "label": "NPV",
+          "unit": "$",
+          "answer": 24342.5995,
+          "tolerance": 50
+        }
+      ],
+      "explanation": "50,000/1.1 + 50,000/1.21 + 50,000/1.331 - 100,000 = 45,455 + 41,322 + 37,566 - 100,000 = 24,343. Positive, so it beats the 10% alternative."
+    }
+  },
+  {
+    "id": "pm-business-case-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Write the recommendation summary of a business case for the client's leadership, based on the context.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write the recommendation summary of a business case for the client's leadership, based on the context.",
+      "context": "Client: online furniture retailer. Problem: 18,000 support tickets a month, 40% about order status. Options: (A) do nothing; (B) self-service order tracking page: $35k build, deflects about 25% of tickets; (C) AI support assistant with order lookup: $110k build plus $36k/year running costs, deflects about 45% of tickets in pilots elsewhere, accuracy risk on returns policy. Cost per ticket handled by an agent: $4.",
+      "wordLimit": 180,
+      "rubric": [
+        {
+          "id": "rec",
+          "label": "Clear recommendation",
+          "description": "Names the recommended option and why in the first lines.",
+          "weight": 1
+        },
+        {
+          "id": "numbers",
+          "label": "Uses the numbers",
+          "description": "Compares options with figures derived from the context, e.g. tickets deflected and annual savings.",
+          "weight": 1
+        },
+        {
+          "id": "risk",
+          "label": "States risks and assumptions",
+          "description": "Notes the AI accuracy risk, the pilot-based estimate, and how they will be managed or tested.",
+          "weight": 1
+        },
+        {
+          "id": "next",
+          "label": "Next step",
+          "description": "Proposes a decision or a staged next step such as a pilot with success criteria.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Recommendation: build the order-tracking page now (Option B) and run a 3-month pilot of the AI assistant (Option C) before committing to a full rollout.\n\nWhy: Option B deflects about 4,500 tickets a month (25% of 18,000), saving about $18,000 a month ($216k a year) for $35k. It pays back in about two months with low risk.\n\nOption C could deflect about 8,100 tickets a month (45%), saving roughly $389k a year against $110k build and $36k a year running cost. However, the 45% comes from other companies' pilots, and errors on returns policy could create complaints and refunds.\n\nAssumptions: $4 per ticket; deflection rates as stated; Option C's savings overlap with B's on order status.\n\nNext step: approve B now; approve a pilot of C limited to order status, with success criteria of 35% deflection and under 2% escalations from wrong answers, before deciding on full rollout."
+    }
+  },
+  {
+    "id": "pm-business-case-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Extracts from a business case for an AI feature. Mark the statements a reviewer should challenge.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Extracts from a business case for an AI feature. Mark the statements a reviewer should challenge.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Options compared: do nothing, a rules-based tool, and the AI feature.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Costs: build $90k. No ongoing costs are expected.",
+          "issue": "AI features have running costs: model usage, monitoring, evaluation and maintenance."
+        },
+        {
+          "id": "s3",
+          "text": "Benefit: a 50% reduction in handling time, estimated by the sponsor.",
+          "issue": "Benefit estimated by the project's advocate with no baseline or evidence; needs a baseline and independent check."
+        },
+        {
+          "id": "s4",
+          "text": "Baseline: current handling time 9.5 minutes per ticket, from 3 months of data.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "ROI is calculated over 10 years.",
+          "issue": "A long period inflates ROI; state a realistic horizon given model and platform change."
+        },
+        {
+          "id": "s6",
+          "text": "Benefit owner: head of customer support.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "The case will be reviewed at each phase gate.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Risks: model accuracy, data-protection review, user adoption.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-business-case-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the sections of a business case.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the sections of a business case.",
+      "items": [
+        {
+          "id": "r20e72",
+          "label": "Problem or opportunity and strategic fit"
+        },
+        {
+          "id": "rc6f7a",
+          "label": "Options considered, including doing nothing"
+        },
+        {
+          "id": "r73568",
+          "label": "Costs and benefits of each option"
+        },
+        {
+          "id": "re5ec3",
+          "label": "Risks and assumptions"
+        },
+        {
+          "id": "r285b0",
+          "label": "Recommendation and next steps"
+        }
+      ],
+      "correctOrder": [
+        "r20e72",
+        "rc6f7a",
+        "r73568",
+        "re5ec3",
+        "r285b0"
+      ],
+      "explanation": "Why, what alternatives, what each is worth, what could go wrong, what to do."
+    }
+  },
+  {
+    "id": "pm-business-case-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "At a phase gate, the AI feature's pilot shows half the expected benefit and higher running costs. The business case now shows a negative NPV.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "At a phase gate, the AI feature's pilot shows half the expected benefit and higher running costs. The business case now shows a negative NPV.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should the PM recommend?",
+          "options": [
+            "Continue as planned",
+            "Present the revised case honestly with options: re-scope, change approach, or stop",
+            "Adjust assumptions until NPV is positive",
+            "Delay the gate review"
+          ],
+          "correctIndex": 1,
+          "explanation": "A business case is a living document; gates exist to stop or reshape work."
+        },
+        {
+          "id": "d2",
+          "question": "The sponsor wants to continue for strategic reasons. What should happen?",
+          "options": [
+            "Refuse to continue",
+            "Hide the negative NPV",
+            "Record the decision and its rationale, and set new measures for the next gate",
+            "Continue without changing anything"
+          ],
+          "correctIndex": 2,
+          "explanation": "Strategic overrides are legitimate when explicit and measured."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-business-case-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why include a do-nothing option in a business case?",
+    "mcq": {
+      "options": [
+        "Clients like having more options",
+        "It is the baseline every other option must beat",
+        "It is required by law",
+        "It makes the recommendation look better"
+      ],
+      "correctIndex": 1,
+      "explanation": "Without the cost of inaction, there is nothing to compare benefits against.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-business-case-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the main weakness of payback period as a measure?",
+    "mcq": {
+      "options": [
+        "It is hard to calculate",
+        "It always favours large projects",
+        "It ignores benefits after payback and the time value of money",
+        "It needs a discount rate"
+      ],
+      "correctIndex": 2,
+      "explanation": "Two projects with the same payback can differ hugely afterwards; use NPV too.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-business-case-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-business-case",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A positive NPV at the company's cost of capital means:",
+    "mcq": {
+      "options": [
+        "The project will pay back in a year",
+        "The project has no risk",
+        "The investment is expected to earn more than the alternative use of that money",
+        "Benefits exceed costs before discounting only"
+      ],
+      "correctIndex": 2,
+      "explanation": "NPV above zero means the discounted benefits exceed the discounted costs.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

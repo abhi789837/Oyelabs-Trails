@@ -1,0 +1,356 @@
+[
+  {
+    "id": "pm-ai-prds-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Claude drafted user stories from discovery notes. The notes mention: customers book appointments, get SMS reminders, and staff see a daily schedule. Mark the stories that add things nobody asked for.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Claude drafted user stories from discovery notes. The notes mention: customers book appointments, get SMS reminders, and staff see a daily schedule. Mark the stories that add things nobody asked for.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "As a customer, I want to book an appointment so I can choose a time that suits me.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "As a customer, I want an SMS reminder the day before so I don't forget.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "As a customer, I want to pay a deposit with Apple Pay when booking.",
+          "issue": "Payments were never mentioned; invented scope."
+        },
+        {
+          "id": "s4",
+          "text": "As staff, I want to see today's schedule so I can prepare.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "As a manager, I want AI forecasts of next month's demand.",
+          "issue": "Not in the notes; invented scope."
+        },
+        {
+          "id": "s6",
+          "text": "As a customer, I want to cancel a booking so the slot frees up.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-prds-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of drafting a PRD with Claude.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of drafting a PRD with Claude.",
+      "items": [
+        {
+          "id": "r9e073",
+          "label": "Confirm the tool is approved for this client's material"
+        },
+        {
+          "id": "r085f9",
+          "label": "Give Claude the template, discovery notes and instructions to use only that material"
+        },
+        {
+          "id": "r854b8",
+          "label": "Ask it to list open questions and assumptions separately"
+        },
+        {
+          "id": "r65ce3",
+          "label": "Check every requirement, metric and date against the source"
+        },
+        {
+          "id": "r772d7",
+          "label": "Have the client confirm decisions before the PRD is shared"
+        }
+      ],
+      "correctOrder": [
+        "r9e073",
+        "r085f9",
+        "r854b8",
+        "r65ce3",
+        "r772d7"
+      ],
+      "explanation": "Permission, grounded input, explicit uncertainty, verification, and owner confirmation."
+    }
+  },
+  {
+    "id": "pm-ai-prds-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Claude's PRD draft includes the success metric \"Reduce churn by 15% in 6 months\". The client never mentioned churn.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Claude's PRD draft includes the success metric \"Reduce churn by 15% in 6 months\". The client never mentioned churn.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do with it?",
+          "options": [
+            "Keep it; it's a good metric",
+            "Move it to open questions as a suggestion and ask the client what success means to them",
+            "Delete it without a word",
+            "Change it to 10% to be safe"
+          ],
+          "correctIndex": 1,
+          "explanation": "Plausible but invented details are the most dangerous; let the client decide."
+        },
+        {
+          "id": "d2",
+          "question": "How do you change your prompt?",
+          "options": [
+            "Ask for more metrics",
+            "Stop using AI for PRDs",
+            "Tell Claude to include metrics only where the source states them, and mark anything inferred",
+            "Ask it to sound more certain"
+          ],
+          "correctIndex": 2,
+          "explanation": "Grounding instructions reduce invented content."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-prds-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A PM's prompt for drafting acceptance criteria. Mark the parts that weaken it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's prompt for drafting acceptance criteria. Mark the parts that weaken it.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "You are helping write acceptance criteria for the stories below.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Write them in Given/When/Then form, testable by QA.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Use only the behaviour described in each story and the attached notes.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Where behaviour is unclear, invent sensible defaults and don't mention them.",
+          "issue": "Hidden invented behaviour will surprise the client; list assumptions instead."
+        },
+        {
+          "id": "s5",
+          "text": "Flag any story that seems too large to test in one sprint.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Include the client's API keys so the criteria are realistic.",
+          "issue": "Secrets must never go into prompts."
+        },
+        {
+          "id": "s7",
+          "text": "Return a table: story, criteria, assumptions.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Keep each story to at most 5 criteria.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-prds-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "You review an AI-drafted PRD with 40 requirements against the discovery transcript.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You review an AI-drafted PRD with 40 requirements against the discovery transcript.",
+      "table": {
+        "columns": [
+          "Finding",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Requirements supported by the transcript",
+            "31"
+          ],
+          [
+            "Requirements partly supported (detail added)",
+            "6"
+          ],
+          [
+            "Requirements with no support",
+            "3"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ok",
+          "label": "Share fully supported",
+          "unit": "%",
+          "answer": 77.5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "fix",
+          "label": "Requirements needing changes or client confirmation",
+          "unit": "",
+          "answer": 9,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "31 / 40 = 77.5% fully supported; 9 need correction or confirmation before the PRD is shared."
+    }
+  },
+  {
+    "id": "pm-ai-prds-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client asks: \"Did you use AI to write our PRD?\"",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks: \"Did you use AI to write our PRD?\"",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you answer?",
+          "options": [
+            "Deny it",
+            "Honestly: yes, Claude helped draft it from our notes, and the PM verified every requirement",
+            "Say it was mostly AI and you didn't check much",
+            "Change the subject"
+          ],
+          "correctIndex": 1,
+          "explanation": "Transparency builds trust; human verification is the point."
+        },
+        {
+          "id": "d2",
+          "question": "They ask whether their data was used to train the model. What do you say?",
+          "options": [
+            "Guess that it's fine",
+            "Say AI tools never train on data",
+            "Explain which approved tool and account terms were used, and offer to share the policy",
+            "Tell them it's confidential"
+          ],
+          "correctIndex": 2,
+          "explanation": "Answer from the actual terms, not assumptions."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-prds-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why is an \"Open questions\" section valuable in an AI-drafted PRD?",
+    "mcq": {
+      "options": [
+        "It makes the PRD longer",
+        "Clients like questions",
+        "It replaces requirements",
+        "It gives the model a place for uncertainty instead of inventing answers"
+      ],
+      "correctIndex": 3,
+      "explanation": "Allowing uncertainty reduces hallucinated detail.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-prds-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which AI-generated detail deserves the most suspicion?",
+    "mcq": {
+      "options": [
+        "A heading that matches your template",
+        "A requirement copied from the notes",
+        "A clearly marked assumption",
+        "A plausible-sounding number or date that is not in your notes"
+      ],
+      "correctIndex": 3,
+      "explanation": "Plausible errors pass a quick skim; check every specific against the source.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-prds-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-prds",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What should happen before an AI-drafted PRD is shared with the wider client team?",
+    "mcq": {
+      "options": [
+        "Run it through a second AI",
+        "The PM verifies it and decision owners confirm their decisions",
+        "Nothing; drafts are fine to share",
+        "Send it to developers only"
+      ],
+      "correctIndex": 1,
+      "explanation": "The PM is the author; the AI is a drafting aid.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

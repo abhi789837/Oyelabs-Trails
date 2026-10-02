@@ -1,0 +1,391 @@
+[
+  {
+    "id": "pm-commercial-fixed-bid-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Oyelabs quoted a fixed price for a booking app. Work out the planned margin.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Oyelabs quoted a fixed price for a booking app. Work out the planned margin.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Fixed price",
+            "$60,000"
+          ],
+          [
+            "Estimated hours",
+            "500"
+          ],
+          [
+            "Internal cost per hour",
+            "$70"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Planned internal cost",
+          "unit": "$",
+          "answer": 35000,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Planned margin",
+          "unit": "%",
+          "answer": 41.6667,
+          "tolerance": 0.1
+        },
+        {
+          "id": "be",
+          "label": "Break-even hours (price / cost rate)",
+          "unit": "h",
+          "answer": 857.1429,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Cost 500 x 70 = 35,000. Margin (60,000 - 35,000) / 60,000 = 41.7%. Break-even 60,000 / 70 = 857 hours."
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The same project now looks like it will take 680 hours. Recalculate.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The same project now looks like it will take 680 hours. Recalculate.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Fixed price",
+            "$60,000"
+          ],
+          [
+            "Forecast hours",
+            "680"
+          ],
+          [
+            "Internal cost per hour",
+            "$70"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Forecast internal cost",
+          "unit": "$",
+          "answer": 47600,
+          "tolerance": 1
+        },
+        {
+          "id": "profit",
+          "label": "Forecast profit",
+          "unit": "$",
+          "answer": 12400,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Forecast margin",
+          "unit": "%",
+          "answer": 20.6667,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Cost 47,600; profit 12,400; margin 20.7%. A 36% overrun in hours halves the margin."
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "These lines are from a fixed-bid proposal for an AI chatbot. Mark the lines that put the agency at unpriced risk.",
+    "task": {
+      "kind": "spot",
+      "prompt": "These lines are from a fixed-bid proposal for an AI chatbot. Mark the lines that put the agency at unpriced risk.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Price: $48,000, payable 30% at kick-off, 40% at UAT start, 30% at go-live.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Scope: chatbot answers questions from the client's FAQ (up to 200 entries) in English.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "The bot will integrate with any CRM the client chooses during the project.",
+          "issue": "Open-ended integration scope in a fixed price; name the system and operations."
+        },
+        {
+          "id": "s4",
+          "text": "Accuracy: 90% correct on an agreed 150-question evaluation set.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Unlimited revisions to the chat widget design.",
+          "issue": "Unlimited rework under a fixed price has no cost ceiling; cap revision rounds."
+        },
+        {
+          "id": "s6",
+          "text": "Change requests are estimated and priced separately.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Model API usage costs during the project are included in the price, with no cap.",
+          "issue": "Uncapped pass-through costs; cap them or bill at cost."
+        },
+        {
+          "id": "s8",
+          "text": "Warranty: 30 days of defect fixes after go-live.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client wants a fixed price for an app that includes an AI document-extraction feature. Nobody knows yet how accurate extraction can be on their documents.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client wants a fixed price for an app that includes an AI document-extraction feature. Nobody knows yet how accurate extraction can be on their documents.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you structure the commercials?",
+          "options": [
+            "A paid, fixed-price discovery and prototype phase first, then a fixed price for the build once accuracy is known",
+            "One fixed price for everything with a large hidden buffer",
+            "Pure T&M with no estimate",
+            "Refuse the project"
+          ],
+          "correctIndex": 0,
+          "explanation": "Split the uncertain part out so the main price rests on evidence."
+        },
+        {
+          "id": "d2",
+          "question": "The client insists on one fixed price now. What protects the agency best?",
+          "options": [
+            "A lower price to win the deal",
+            "Promising 100% accuracy",
+            "Explicit assumptions and acceptance criteria for the AI feature, plus a change mechanism if those assumptions fail",
+            "Leaving the AI feature vague"
+          ],
+          "correctIndex": 2,
+          "explanation": "Written assumptions turn unknowns into change requests rather than losses."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank these fixed-bid risks by how much they typically threaten margin, highest first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these fixed-bid risks by how much they typically threaten margin, highest first.",
+      "items": [
+        {
+          "id": "re2705",
+          "label": "Vague scope with no out-of-scope list"
+        },
+        {
+          "id": "r4a95a",
+          "label": "No change-control clause"
+        },
+        {
+          "id": "r5eb57",
+          "label": "Client-side delays with no provision for the agency's idle time"
+        },
+        {
+          "id": "r4fff6",
+          "label": "Payment terms of net 60 days"
+        }
+      ],
+      "correctOrder": [
+        "re2705",
+        "r4a95a",
+        "r5eb57",
+        "r4fff6"
+      ],
+      "explanation": "Vague scope and missing change control let work grow without pay; client delays cost time; slow payment hurts cash flow but not margin directly."
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A fixed-bid quote should include contingency. Calculate the price.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A fixed-bid quote should include contingency. Calculate the price.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Estimated hours",
+            "600"
+          ],
+          [
+            "Contingency",
+            "20% of hours"
+          ],
+          [
+            "Internal cost per hour",
+            "$65"
+          ],
+          [
+            "Target margin on price",
+            "35%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hrs",
+          "label": "Hours including contingency",
+          "unit": "h",
+          "answer": 720.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "cost",
+          "label": "Cost including contingency",
+          "unit": "$",
+          "answer": 46800,
+          "tolerance": 1
+        },
+        {
+          "id": "price",
+          "label": "Price for a 35% margin (cost / 0.65)",
+          "unit": "$",
+          "answer": 72000.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "720 hours x 65 = 46,800. For a 35% margin on price: 46,800 / 0.65 = 72,000."
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Under a fixed-price contract, who mainly carries the risk that the estimate is wrong?",
+    "mcq": {
+      "options": [
+        "The client (buyer)",
+        "Both equally by default",
+        "The developers personally",
+        "The agency (seller)"
+      ],
+      "correctIndex": 3,
+      "explanation": "The client pays the agreed price whatever the effort; overruns come out of the agency's margin.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which kind of project suits a fixed bid best?",
+    "mcq": {
+      "options": [
+        "An R&D project to see if AI can do a task",
+        "A product whose features change weekly",
+        "Well-understood scope with stable requirements, such as a rebuild of an existing app",
+        "Ongoing support with unknown demand"
+      ],
+      "correctIndex": 2,
+      "explanation": "Fixed bids need predictable scope; uncertainty belongs in discovery, T&M or retainers.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-commercial-fixed-bid-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-fixed-bid",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A fixed-bid client asks for many small extras \"to keep goodwill\". What is the sound approach?",
+    "mcq": {
+      "options": [
+        "Do them all for free",
+        "Log them, agree a small goodwill allowance in writing, and price the rest as changes",
+        "Refuse every request",
+        "Do them but add the hours to the timesheet of another client"
+      ],
+      "correctIndex": 1,
+      "explanation": "A visible, bounded allowance keeps goodwill without silently eroding margin; misallocating hours is dishonest.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

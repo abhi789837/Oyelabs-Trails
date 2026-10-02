@@ -1,0 +1,413 @@
+[
+  {
+    "id": "bd-spin-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "\"What happens to your renewals when claims take a week to process?\" Which type of SPIN question is this?",
+    "mcq": {
+      "options": [
+        "Problem",
+        "Need-payoff",
+        "Implication",
+        "Situation"
+      ],
+      "correctIndex": 2,
+      "explanation": "It explores the consequence of a known problem. A problem question would ask whether claims are slow; a need-payoff question would ask what faster claims would be worth.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-spin-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why should you keep situation questions to a minimum on a discovery call?",
+    "mcq": {
+      "options": [
+        "They always offend the buyer",
+        "SPIN does not include situation questions",
+        "Buyers find them tedious, and most of the facts can be researched beforehand",
+        "They are illegal in some countries"
+      ],
+      "correctIndex": 2,
+      "explanation": "Situation questions are necessary but low-value for the buyer. Research the basics so the call can focus on problems and implications.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-spin-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why are implication questions especially important in larger agency deals?",
+    "mcq": {
+      "options": [
+        "They replace the need for a proposal",
+        "They make the cost of the problem explicit, which the buyer needs to justify a big spend to others",
+        "They are the quickest way to get a budget number",
+        "They let you skip the problem stage"
+      ],
+      "correctIndex": 1,
+      "explanation": "Rackham's research found implication questions matter most in large sales, where the buyer has to build an internal case for the spend.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-spin-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which is a well-formed need-payoff question for a clinic whose staff spend hours on phone bookings?",
+    "mcq": {
+      "options": [
+        "\"You need our booking app, right?\"",
+        "\"If patients could book online and reminders went out automatically, what would that free your front desk to do?\"",
+        "\"How many front-desk staff do you have?\"",
+        "\"Do phone bookings ever cause problems?\""
+      ],
+      "correctIndex": 1,
+      "explanation": "Need-payoff questions invite the buyer to state the value of a solution in their own words. Headcount is situation, \"cause problems\" is a problem question, and the last is a leading close.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-spin-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Put these discovery questions for a logistics client in SPIN order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these discovery questions for a logistics client in SPIN order.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "\"When deliveries are assigned late, what does that cost you in missed slots or overtime?\""
+        },
+        {
+          "id": "r4",
+          "label": "\"If assignments happened automatically in seconds, what would that mean for peak season?\""
+        },
+        {
+          "id": "r1",
+          "label": "\"How do you assign deliveries to drivers today?\""
+        },
+        {
+          "id": "r2",
+          "label": "\"Where does that process break down during peak weeks?\""
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Situation (current process), Problem (where it breaks), Implication (cost of the breakdown), Need-payoff (value of fixing it)."
+    }
+  },
+  {
+    "id": "bd-spin-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A rep's planned SPIN question list for an e-commerce client is below. Mark the questions that are mislabelled or poorly formed.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A rep's planned SPIN question list for an e-commerce client is below. Mark the questions that are mislabelled or poorly formed.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Situation: \"Which platform does your store run on today?\"",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Problem: \"Where do customers drop off in checkout?\"",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Implication: \"How many people work in your marketing team?\"",
+          "issue": "This is a situation question; it does not explore the consequence of a problem."
+        },
+        {
+          "id": "p4",
+          "text": "Implication: \"What does a 2% checkout drop-off cost you each month?\"",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Need-payoff: \"You agree our checkout redesign is what you need, don't you?\"",
+          "issue": "A leading close, not a question that lets the buyer state the value in their own words."
+        },
+        {
+          "id": "p6",
+          "text": "Need-payoff: \"If checkout completion rose, how would that change your growth plans?\"",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-spin-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "On a discovery call, a property-management company says tenants complain that maintenance requests get lost in email.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a discovery call, a property-management company says tenants complain that maintenance requests get lost in email.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your best next question?",
+          "options": [
+            "\"How often does a request get lost, and what happens when it does?\"",
+            "\"Great, our ticketing app solves that. Want a demo?\"",
+            "\"How many properties do you manage?\""
+          ],
+          "correctIndex": 0,
+          "explanation": "Move from problem to implication before pitching; the third is a situation question you could research."
+        },
+        {
+          "id": "s2",
+          "question": "They say lost requests lead to bad reviews and two lost contracts last year. What next?",
+          "options": [
+            "Move on to ask about their office hours",
+            "Ask what those lost contracts were worth and how it affects renewals",
+            "Immediately quote a price"
+          ],
+          "correctIndex": 1,
+          "explanation": "Quantifying the implication builds the business case."
+        },
+        {
+          "id": "s3",
+          "question": "How do you close this part of the conversation?",
+          "options": [
+            "Tell them what they need",
+            "End the call and email a brochure",
+            "Ask a need-payoff question such as what a tracked request system would mean for renewals"
+          ],
+          "correctIndex": 2,
+          "explanation": "Let the buyer voice the value; it becomes the language of your proposal."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-spin-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "During implication questions, a client shares these numbers about manual order entry. Calculate the annual cost of the problem you can quote back in the proposal.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "During implication questions, a client shares these numbers about manual order entry. Calculate the annual cost of the problem you can quote back in the proposal.",
+      "table": {
+        "columns": [
+          "Fact from the call",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Orders entered manually per week",
+            "1,200"
+          ],
+          [
+            "Minutes per order",
+            "4"
+          ],
+          [
+            "Loaded staff cost per hour",
+            "$30"
+          ],
+          [
+            "Error rate on manual orders",
+            "2%"
+          ],
+          [
+            "Average cost to fix one error",
+            "$25"
+          ],
+          [
+            "Working weeks per year",
+            "50"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "labour",
+          "label": "Annual labour cost",
+          "unit": "$",
+          "answer": 120000,
+          "tolerance": 1
+        },
+        {
+          "id": "errors",
+          "label": "Annual cost of errors",
+          "unit": "$",
+          "answer": 30000,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total annual cost of the problem",
+          "unit": "$",
+          "answer": 150000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Labour: 1,200 x 4 min = 4,800 min = 80 h/week x $30 = $2,400/week x 50 = $120,000. Errors: 1,200 x 2% = 24/week x $25 = $600 x 50 = $30,000. Total $150,000 a year."
+    }
+  },
+  {
+    "id": "bd-spin-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are 15 minutes into a discovery call with a hospital's operations director about an AI scheduling tool. You have asked 10 situation questions and the director sounds impatient.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are 15 minutes into a discovery call with a hospital's operations director about an AI scheduling tool. You have asked 10 situation questions and the director sounds impatient.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do now?",
+          "options": [
+            "Acknowledge it, summarise what you know, and move to a problem question about where scheduling breaks",
+            "Keep going through your situation checklist",
+            "Jump straight to a demo"
+          ],
+          "correctIndex": 0,
+          "explanation": "Too many situation questions bore buyers; move on to problems."
+        },
+        {
+          "id": "s2",
+          "question": "The director describes nurses leaving because of last-minute shift changes. What do you ask?",
+          "options": [
+            "\"Do you like your current vendor?\"",
+            "\"What does losing a nurse cost you in hiring and agency cover?\"",
+            "\"Which scheduling software do you use?\""
+          ],
+          "correctIndex": 1,
+          "explanation": "An implication question that quantifies the problem."
+        },
+        {
+          "id": "s3",
+          "question": "Near the end, what should you send after the call?",
+          "options": [
+            "A generic brochure",
+            "Nothing until they reply",
+            "A same-day recap with their problems and implications in their words, success criteria and dated next steps"
+          ],
+          "correctIndex": 2,
+          "explanation": "The recap turns SPIN answers into a shared business case."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-spin-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-spin",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A rep found a problem and wants to build urgency. Rank these follow-up questions by how well they develop the implication, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A rep found a problem and wants to build urgency. Rank these follow-up questions by how well they develop the implication, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "\"Is onboarding slow?\""
+        },
+        {
+          "id": "r4",
+          "label": "\"How many people are on your onboarding team?\""
+        },
+        {
+          "id": "r1",
+          "label": "\"When onboarding takes three weeks, how many new customers churn before they go live, and what is each worth?\""
+        },
+        {
+          "id": "r2",
+          "label": "\"What does slow onboarding do to your support team's workload?\""
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "The best ties the problem to a quantifiable revenue loss; next is a real implication but less financial; the third is a problem question; the last is situation."
+    }
+  }
+]

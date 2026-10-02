@@ -1,0 +1,389 @@
+[
+  {
+    "id": "bd-lead-inbound-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Four website enquiries arrived this morning. Rank them by who to respond to first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Four website enquiries arrived this morning. Rank them by who to respond to first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Student: \"Can you help with my final-year project?\""
+        },
+        {
+          "id": "r4",
+          "label": "Vendor: \"We offer SEO services, interested?\""
+        },
+        {
+          "id": "r1",
+          "label": "Head of Ops at a 200-person clinic chain: \"Need a patient booking app, budget approved, want to start next month\""
+        },
+        {
+          "id": "r2",
+          "label": "Startup founder: \"Building an AI tutoring MVP, have funding, can we talk this week?\""
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Prioritise by fit and readiness: approved budget and timeline first, then a funded founder; a student project is off-ICP and vendor pitches are not leads."
+    }
+  },
+  {
+    "id": "bd-lead-inbound-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": "bd-tool-hubspot",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Review how this inbound lead was handled. Mark the steps that were mistakes.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Review how this inbound lead was handled. Mark the steps that were mistakes.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Contact form submitted Monday 10:05 with a detailed project brief.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "First reply sent Thursday afternoon.",
+          "issue": "Days of delay lets the lead cool and contact competitors; reply within hours."
+        },
+        {
+          "id": "p3",
+          "text": "Reply thanked them and asked two questions about their timeline and users.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Lead was not logged in the CRM because \"it's in my inbox\".",
+          "issue": "Unlogged leads have no source attribution and get lost if the rep is away."
+        },
+        {
+          "id": "p5",
+          "text": "A calendar link was offered to book a call.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Lead source recorded as \"Website - contact form\" after the call.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-lead-inbound-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Work out the inbound funnel conversion rates for last quarter.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Work out the inbound funnel conversion rates for last quarter.",
+      "table": {
+        "columns": [
+          "Stage",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Website visitors",
+            "20000"
+          ],
+          [
+            "Enquiries submitted",
+            "100"
+          ],
+          [
+            "Qualified leads",
+            "40"
+          ],
+          [
+            "Deals won",
+            "8"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "visit",
+          "label": "Visitor to enquiry",
+          "unit": "%",
+          "answer": 0.5,
+          "tolerance": 0.01
+        },
+        {
+          "id": "qual",
+          "label": "Enquiry to qualified",
+          "unit": "%",
+          "answer": 40,
+          "tolerance": 0.1
+        },
+        {
+          "id": "win",
+          "label": "Qualified to won",
+          "unit": "%",
+          "answer": 20,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "100 / 20,000 = 0.5%; 40 / 100 = 40%; 8 / 40 = 20%."
+    }
+  },
+  {
+    "id": "bd-lead-inbound-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Leads were grouped by how quickly someone replied. Work out the meeting-booked rate for each group.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Leads were grouped by how quickly someone replied. Work out the meeting-booked rate for each group.",
+      "table": {
+        "columns": [
+          "First reply time",
+          "Leads",
+          "Meetings booked"
+        ],
+        "rows": [
+          [
+            "Under 1 hour",
+            "40",
+            "18"
+          ],
+          [
+            "Over 24 hours",
+            "60",
+            "9"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "fast",
+          "label": "Under 1 hour: meeting rate",
+          "unit": "%",
+          "answer": 45,
+          "tolerance": 0.1
+        },
+        {
+          "id": "slow",
+          "label": "Over 24 hours: meeting rate",
+          "unit": "%",
+          "answer": 15,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "18 / 40 = 45%; 9 / 60 = 15%. Fast response tripled the meeting rate in this sample."
+    }
+  },
+  {
+    "id": "bd-lead-inbound-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": "bd-tool-calendly",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A Friday evening enquiry reads: \"We run 30 gyms and want a member app with class booking and payments. Who can I talk to?\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A Friday evening enquiry reads: \"We run 30 gyms and want a member app with class booking and payments. Who can I talk to?\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best first response?",
+          "options": [
+            "Wait until Monday's team meeting to decide who owns it",
+            "Send a quick personal reply acknowledging the brief with a booking link for early next week",
+            "Send a generic auto-reply only",
+            "Send a full proposal tonight"
+          ],
+          "correctIndex": 1,
+          "explanation": "A fast, personal acknowledgement with an easy next step holds the lead's attention."
+        },
+        {
+          "id": "s2",
+          "question": "They book a call. What should you prepare?",
+          "options": [
+            "A fixed price quote",
+            "A contract",
+            "Nothing, it's discovery",
+            "Research their brand, existing app or website, and two relevant examples; draft a few discovery questions"
+          ],
+          "correctIndex": 3,
+          "explanation": "Light research and relevant proof make the first call useful for the buyer."
+        },
+        {
+          "id": "s3",
+          "question": "After the call, the lead is qualified. What updates the CRM?",
+          "options": [
+            "Only their email address",
+            "Source, company, contact role, needs, budget/timeline signals and the dated next step",
+            "Nothing until they sign",
+            "A note saying \"good call\""
+          ],
+          "correctIndex": 1,
+          "explanation": "A complete record lets anyone pick up the deal and keeps source reporting accurate."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-lead-inbound-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the inbound lead handling process.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the inbound lead handling process.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Qualify fit and book a discovery call"
+        },
+        {
+          "id": "r4",
+          "label": "Run discovery and send a recap"
+        },
+        {
+          "id": "r5",
+          "label": "Move to proposal or politely disqualify"
+        },
+        {
+          "id": "r1",
+          "label": "Enquiry arrives and is routed to an owner"
+        },
+        {
+          "id": "r2",
+          "label": "Owner replies quickly and logs the lead with its source"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Route, respond and log, qualify, discover, then decide — each step depends on the one before."
+    }
+  },
+  {
+    "id": "bd-lead-inbound-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why is lead response time so important for inbound enquiries?",
+    "mcq": {
+      "options": [
+        "Interest is highest right after enquiring and the buyer is often contacting several agencies",
+        "It is a legal requirement",
+        "Slow replies lower the project price",
+        "Search engines rank fast responders higher"
+      ],
+      "correctIndex": 0,
+      "explanation": "Buyers shortlist whoever engages first and well; delay hands the conversation to a competitor.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-inbound-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": "bd-tool-hubspot",
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is the main reason to record the lead source for every inbound lead in the CRM?",
+    "mcq": {
+      "options": [
+        "To fill in a mandatory field",
+        "To send the lead a newsletter",
+        "To calculate the project estimate",
+        "To know which channels actually produce revenue and where to invest"
+      ],
+      "correctIndex": 3,
+      "explanation": "Source attribution shows which channels convert, guiding marketing spend and effort.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-inbound-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-inbound",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Inbound volume doubled but won deals stayed flat. What should you check first?",
+    "mcq": {
+      "options": [
+        "How many emails reps send per day",
+        "The office location",
+        "Whether the new leads match the ICP and how qualification is going",
+        "The website's colour scheme"
+      ],
+      "correctIndex": 2,
+      "explanation": "More leads that do not fit, or that are qualified poorly, raise volume without raising wins.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

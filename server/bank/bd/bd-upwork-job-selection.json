@@ -1,0 +1,386 @@
+[
+  {
+    "id": "bd-upwork-job-selection-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these Upwork job posts from best to worst fit for an agency that builds web and mobile apps with AI features (typical projects $15k-$80k).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these Upwork job posts from best to worst fit for an agency that builds web and mobile apps with AI features (typical projects $15k-$80k).",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Payment unverified, $25k budget, 'clone of a popular delivery app', no other details"
+        },
+        {
+          "id": "r4",
+          "label": "Payment verified, $150 fixed budget, 'build full Uber clone with admin panel in 1 week'"
+        },
+        {
+          "id": "r1",
+          "label": "Payment verified, $40k fixed budget, detailed spec for a telehealth app with an AI symptom checker, client has hired 6 times with 4.9 rating"
+        },
+        {
+          "id": "r2",
+          "label": "Payment verified, hourly, 'need a team to build a marketplace MVP', short brief, client new to Upwork but posted a clear timeline"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Verified payment, realistic budget and hiring history beat everything; a vague but serious new client is next; unverified payment is risky; a $150 'Uber clone' is unrealistic and a waste of bids."
+    }
+  },
+  {
+    "id": "bd-upwork-job-selection-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the signals in this job post summary that are red flags for an agency deciding whether to bid.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the signals in this job post summary that are red flags for an agency deciding whether to bid.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client location: United States; member for 3 years.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Payment method: not verified.",
+          "issue": "Unverified payment means no confirmed way to pay; higher risk of wasted effort or non-payment."
+        },
+        {
+          "id": "p3",
+          "text": "Budget: $500 fixed for a 'complete social media app like Instagram with AI filters'.",
+          "issue": "Budget is wildly below the scope described; signals unrealistic expectations."
+        },
+        {
+          "id": "p4",
+          "text": "Client has posted 12 jobs and hired 5 freelancers.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "\"Please do a free sample screen before we decide.\"",
+          "issue": "Asking for free work before hiring is a common red flag."
+        },
+        {
+          "id": "p6",
+          "text": "Average review left by the client: 4.8 stars.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Proposals so far: 5 to 10.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-upwork-job-selection-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You find a job: payment verified, $30k budget, 'React Native app for a fitness studio chain with class booking and payments'. The client has hired twice before but left one 2-star review for a previous freelancer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You find a job: payment verified, $30k budget, 'React Native app for a fitness studio chain with class booking and payments'. The client has hired twice before but left one 2-star review for a previous freelancer.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Should the single 2-star review stop you from bidding?",
+          "options": [
+            "Yes, any low review means the client is difficult",
+            "No, read what the review and the freelancer's reply say before deciding",
+            "Only bid if you can contact the previous freelancer first",
+            "Bid, but double the price to cover the risk"
+          ],
+          "correctIndex": 1,
+          "explanation": "One review is a data point, not a verdict; reading it tells you if the issue was the client or the freelancer."
+        },
+        {
+          "id": "s2",
+          "question": "The review says the freelancer missed deadlines and the client replied politely. What now?",
+          "options": [
+            "Bid, and in the proposal briefly show how you manage timelines (milestones, weekly demos)",
+            "Ask the client to remove the review first",
+            "Skip the job",
+            "Bid without a proposal message"
+          ],
+          "correctIndex": 0,
+          "explanation": "The client looks reasonable and the pain point is reliability; addressing it directly makes the proposal stronger."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upwork-job-selection-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your team scores jobs before bidding. Fit (0-10) is weighted 50%, client quality (0-10) 30% and budget realism (0-10) 20%. Bid only if the weighted score is 7 or higher. Calculate the weighted score for Job A and Job B.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your team scores jobs before bidding. Fit (0-10) is weighted 50%, client quality (0-10) 30% and budget realism (0-10) 20%. Bid only if the weighted score is 7 or higher. Calculate the weighted score for Job A and Job B.",
+      "table": {
+        "columns": [
+          "Job",
+          "Fit",
+          "Client quality",
+          "Budget realism"
+        ],
+        "rows": [
+          [
+            "A",
+            "9",
+            "6",
+            "5"
+          ],
+          [
+            "B",
+            "6",
+            "9",
+            "8"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Job A weighted score",
+          "unit": "",
+          "answer": 7.3,
+          "tolerance": 0.01
+        },
+        {
+          "id": "b",
+          "label": "Job B weighted score",
+          "unit": "",
+          "answer": 7.3,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "A: 9x0.5 + 6x0.3 + 5x0.2 = 4.5 + 1.8 + 1.0 = 7.3. B: 6x0.5 + 9x0.3 + 8x0.2 = 3.0 + 2.7 + 1.6 = 7.3. Both pass; a tie means the qualitative read decides."
+    }
+  },
+  {
+    "id": "bd-upwork-job-selection-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Last quarter the team bid on two job types. Calculate the win rate (%) for each, and the average revenue won per bid for each.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Last quarter the team bid on two job types. Calculate the win rate (%) for each, and the average revenue won per bid for each.",
+      "table": {
+        "columns": [
+          "Job type",
+          "Bids",
+          "Wins",
+          "Revenue won"
+        ],
+        "rows": [
+          [
+            "Verified, client hired before",
+            "40",
+            "6",
+            "$180,000"
+          ],
+          [
+            "Unverified or first-time client",
+            "60",
+            "3",
+            "$45,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "wr1",
+          "label": "Win rate, verified/hired before",
+          "unit": "%",
+          "answer": 15,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wr2",
+          "label": "Win rate, unverified/first-time",
+          "unit": "%",
+          "answer": 5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "rpb1",
+          "label": "Revenue per bid, verified/hired before",
+          "unit": "$",
+          "answer": 4500,
+          "tolerance": 1
+        },
+        {
+          "id": "rpb2",
+          "label": "Revenue per bid, unverified/first-time",
+          "unit": "$",
+          "answer": 750,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "6/40 = 15%, 3/60 = 5%. $180,000/40 = $4,500 per bid vs $45,000/60 = $750. Bidding effort belongs on the first group."
+    }
+  },
+  {
+    "id": "bd-upwork-job-selection-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A job appeared 20 minutes ago: payment verified, client with 10 hires, 'AI chatbot for an e-commerce store, integrate with Shopify and our helpdesk'. Budget field says $5k, but the description lists six integrations and a custom admin dashboard.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A job appeared 20 minutes ago: payment verified, client with 10 hires, 'AI chatbot for an e-commerce store, integrate with Shopify and our helpdesk'. Budget field says $5k, but the description lists six integrations and a custom admin dashboard.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you treat the budget mismatch?",
+          "options": [
+            "Skip it: the budget is too low",
+            "Bid at $5k and cut corners later",
+            "Bid anyway, and propose a phased approach: a $5k first phase with the core chatbot, the rest priced separately",
+            "Bid $50k with no explanation"
+          ],
+          "correctIndex": 2,
+          "explanation": "A strong client with an under-sized budget is worth a phased offer that fits the budget and opens the larger scope."
+        },
+        {
+          "id": "s2",
+          "question": "What should the proposal lead with?",
+          "options": [
+            "The agency's founding story",
+            "A request to move the conversation off Upwork immediately",
+            "A long list of every technology the agency uses",
+            "A specific observation about their store and helpdesk setup plus a relevant chatbot case study"
+          ],
+          "correctIndex": 3,
+          "explanation": "Specific relevance and proof win attention; pushing the conversation off-platform early erodes trust and can breach marketplace terms."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upwork-job-selection-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which job post is generally the safest bet for an agency's limited bidding budget?",
+    "mcq": {
+      "options": [
+        "Very short post asking for the cheapest rate",
+        "Post requiring a free test project before interview",
+        "Payment verified, client has a hiring history and good reviews, clear scope",
+        "Large budget, payment unverified, posted by a brand-new account"
+      ],
+      "correctIndex": 2,
+      "explanation": "Verified payment, hiring history and a clear scope all reduce the risk that the bid is wasted.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-job-selection-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A job already has 50+ proposals and was posted four days ago with no interviews. What does that usually suggest?",
+    "mcq": {
+      "options": [
+        "The client will definitely hire the last proposal received",
+        "The budget must be very large",
+        "The client may be inactive or undecided, so the odds of winning a new bid are low",
+        "It is the best job to bid on because demand is high"
+      ],
+      "correctIndex": 2,
+      "explanation": "Lots of proposals with no client activity after several days points to low engagement; bids there rarely convert.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-job-selection-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-job-selection",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Your win rate is high on small jobs but those clients rarely grow. What is the best adjustment to job selection?",
+    "mcq": {
+      "options": [
+        "Lower your rates further to win more small jobs",
+        "Shift bids toward clients and scopes that match your ideal project size, even if win rate drops slightly",
+        "Bid on every job to maximise volume",
+        "Only bid on jobs with no other proposals"
+      ],
+      "correctIndex": 1,
+      "explanation": "Selection should optimise revenue and fit per bid, not win rate alone; a few right-sized wins beat many small ones.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

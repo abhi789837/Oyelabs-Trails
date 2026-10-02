@@ -1,0 +1,362 @@
+[
+  {
+    "id": "bd-closing-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Move a stuck verbal yes to a signature.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client said yes to a $72,000 build two weeks ago, but the SOW is still unsigned and replies are slow.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Send a \"just checking in\" email",
+            "Tell them the price goes up if not signed this week",
+            "Send a short mutual close plan with the remaining steps, owners and dates, and ask what is left on their side",
+            "Start the project anyway to show goodwill"
+          ],
+          "correctIndex": 2,
+          "explanation": "Making the remaining steps visible usually reveals the blocker. Pressure tactics and unsigned work both create risk."
+        },
+        {
+          "id": "s2",
+          "question": "They reply that their legal team has not reviewed the MSA yet. Next?",
+          "options": [
+            "Tell them your MSA is standard and doesn't need review",
+            "Edit the legal terms yourself to remove anything they might object to",
+            "Wait until legal gets round to it",
+            "Offer a call between their legal contact and yours and send the documents in editable form"
+          ],
+          "correctIndex": 3,
+          "explanation": "Help legal move, but do not change or interpret legal terms yourself; route redlines to your own counsel."
+        },
+        {
+          "id": "s3",
+          "question": "Then the client asks for 10% off to sign this week. What is the best response?",
+          "options": [
+            "Only trade it for something of value, such as 50% upfront or a case-study agreement",
+            "Agree, since it gets the deal closed",
+            "Refuse and stop talking about price",
+            "Offer 15% to make sure they sign"
+          ],
+          "correctIndex": 0,
+          "explanation": "A discount for nothing teaches the client that deadlines extract discounts. Give-get keeps value on both sides."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-closing-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order what happens after the client says yes.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these steps in order, from the client's verbal yes to the project starting.",
+      "items": [
+        {
+          "id": "i5",
+          "label": "Hold the client kickoff meeting"
+        },
+        {
+          "id": "i1",
+          "label": "Confirm final scope, price and payment terms in writing"
+        },
+        {
+          "id": "i2",
+          "label": "Get the SOW signed by the client's authorised signatory"
+        },
+        {
+          "id": "i3",
+          "label": "Raise the deposit invoice under the agreed payment terms"
+        },
+        {
+          "id": "i4",
+          "label": "Run the internal sales-to-delivery handoff"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Agree the terms, get the signature from someone who can sign, invoice the deposit, brief delivery, then kick off. Starting before signature or deposit puts unpaid work at risk."
+    }
+  },
+  {
+    "id": "bd-closing-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this mutual close plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Your colleague drafted this close plan for a client who must launch by 1 June. Mark the lines that are wrong or risky.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "3 Mar: final scope review call with Head of Ops and our PM.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "7 Mar: revised SOW sent to client.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "14 Mar: contract signed (signer to be confirmed).",
+          "issue": "No named signer with authority; deals stall when the person who can sign is unknown."
+        },
+        {
+          "id": "p4",
+          "text": "15 Mar: kickoff with the full team, before the deposit is paid.",
+          "issue": "Starting work before the deposit is received exposes the agency to unpaid work."
+        },
+        {
+          "id": "p5",
+          "text": "20 Mar: client legal review of the MSA.",
+          "issue": "Legal review is scheduled after the signature date, so the plan cannot work as written."
+        },
+        {
+          "id": "p6",
+          "text": "Weekly: 15-minute status call until signature.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Target go-live: 1 June.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-closing-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Work out the payment schedule you will put in the contract.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The agreed price is $72,000: a 30% deposit on signature, with the rest split equally across 3 milestones. The client then offers to pay 50% upfront if you give a 10% discount.",
+      "table": null,
+      "fields": [
+        {
+          "id": "deposit",
+          "label": "Deposit on signature",
+          "unit": "$",
+          "answer": 21600,
+          "tolerance": 1
+        },
+        {
+          "id": "milestone",
+          "label": "Each of the 3 milestone payments",
+          "unit": "$",
+          "answer": 16800,
+          "tolerance": 1
+        },
+        {
+          "id": "discounted",
+          "label": "Discounted total price",
+          "unit": "$",
+          "answer": 64800,
+          "tolerance": 1
+        },
+        {
+          "id": "upfront",
+          "label": "Upfront payment under the discounted offer",
+          "unit": "$",
+          "answer": 32400,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Deposit = 30% × 72,000 = $21600. Remaining $50400 ÷ 3 = $16800 per milestone. Discounted price = $64800; 50% upfront = $32400. Whether the trade is worth it depends on how much cash-flow certainty is worth to you versus $7200 of margin."
+    }
+  },
+  {
+    "id": "bd-closing-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Close a deal where all criteria are met.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a final call, the client confirms the scope, timeline and team all meet their requirements.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you close?",
+          "options": [
+            "Summarise what they confirmed and ask directly whether they are ready to go ahead",
+            "Keep presenting more features to build excitement",
+            "Wait for them to bring up next steps",
+            "Say the offer expires tonight"
+          ],
+          "correctIndex": 0,
+          "explanation": "A summary close reflects their own words back and makes the ask clear."
+        },
+        {
+          "id": "s2",
+          "question": "They say: \"Yes, but our CFO must sign off.\" Next?",
+          "options": [
+            "Send the CFO the full 40-page proposal",
+            "Offer to prepare the CFO conversation together, ideally joining it, with a one-page business case",
+            "Ask the client to forward your email and wait",
+            "Offer a discount so the CFO approves faster"
+          ],
+          "correctIndex": 1,
+          "explanation": "Equip the champion for the approval conversation, ideally by being in it."
+        },
+        {
+          "id": "s3",
+          "question": "The CFO asks for 60-day payment terms instead of your standard 30. What is the best response?",
+          "options": [
+            "Accept immediately to keep momentum",
+            "Refuse because terms are never negotiable",
+            "Consider it in exchange for something, such as a larger deposit or a longer commitment",
+            "Agree but quietly raise the price"
+          ],
+          "correctIndex": 2,
+          "explanation": "Payment terms have a cost; trade them openly rather than giving them away or hiding the cost."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-closing-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Compare a discount to sign now with waiting for full price.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client will sign a $50,000 project today if you give 8% off. If you hold full price, your best estimate is a 70% chance they sign in six weeks.",
+      "table": null,
+      "fields": [
+        {
+          "id": "now",
+          "label": "Value of signing today at the discount",
+          "unit": "$",
+          "answer": 46000,
+          "tolerance": 1
+        },
+        {
+          "id": "wait",
+          "label": "Probability-weighted value of waiting",
+          "unit": "$",
+          "answer": 35000,
+          "tolerance": 1
+        },
+        {
+          "id": "diff",
+          "label": "Difference in favour of signing today",
+          "unit": "$",
+          "answer": 11000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Today: 50,000 × 0.92 = $46000. Waiting: 50,000 × 0.70 = $35000. Signing now is worth $11000 more on expected value, before counting six weeks of earlier cash and freed capacity. The probability is an estimate, so revisit it if the client's signals change."
+    }
+  },
+  {
+    "id": "bd-closing-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client emails: \"Looks good, send over the contract.\" What should you do?",
+    "mcq": {
+      "options": [
+        "Wait a few days so you don't look too eager",
+        "Send it the same day with a one-paragraph summary of what's included and propose a date to sign",
+        "Send it with a reminder that prices rise next month",
+        "Call first to re-pitch the main benefits"
+      ],
+      "correctIndex": 1,
+      "explanation": "Momentum matters most at this point. A prompt contract with a clear summary and a proposed date removes friction.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-closing-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why put an expiry date on a proposal or quote?",
+    "mcq": {
+      "options": [
+        "It is legally required for every quote",
+        "It forces clients to sign quickly",
+        "Rates, team availability and scope assumptions change, so the price is only valid for a set period",
+        "It lets you raise the price whenever you want"
+      ],
+      "correctIndex": 2,
+      "explanation": "An expiry date protects you when capacity or costs change and gives a natural, honest reason to revisit the decision.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-closing-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-closing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A prospect went silent for ten days after receiving the final contract. Which follow-up is best?",
+    "mcq": {
+      "options": [
+        "\"Just checking in on the contract.\"",
+        "A long email repeating the whole proposal",
+        "A short message naming the start date at risk and asking directly whether priorities have changed",
+        "A message saying you will assume they are no longer interested"
+      ],
+      "correctIndex": 2,
+      "explanation": "A specific consequence and a direct, easy-to-answer question gets a reply; generic check-ins do not.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

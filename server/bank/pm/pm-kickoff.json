@@ -1,0 +1,432 @@
+[
+  {
+    "id": "pm-kickoff-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the agenda items of an external client kickoff meeting for a new app project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Next steps and immediate client actions"
+        },
+        {
+          "id": "r4",
+          "label": "Timeline, milestones and how we will work (sprints, demos)"
+        },
+        {
+          "id": "r2",
+          "label": "Project goals and what success looks like"
+        },
+        {
+          "id": "r1",
+          "label": "Introductions and roles on both sides"
+        },
+        {
+          "id": "r3",
+          "label": "Scope summary: what is in and what is out"
+        },
+        {
+          "id": "r5",
+          "label": "Communication plan, tools and escalation contacts"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Start with people, then why, what, when and how, and finish with concrete next steps."
+    }
+  },
+  {
+    "id": "pm-kickoff-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order these kickoff preparation steps for the PM.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Run the client kickoff meeting"
+        },
+        {
+          "id": "r2",
+          "label": "Hold the internal kickoff with the delivery team"
+        },
+        {
+          "id": "r1",
+          "label": "Read the signed SOW and sales handover notes"
+        },
+        {
+          "id": "r3",
+          "label": "Agree the kickoff agenda with the client sponsor"
+        },
+        {
+          "id": "r5",
+          "label": "Send the kickoff summary and set up recurring meetings"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Understand the deal, align the internal team before meeting the client, agree the agenda, run it, then follow up in writing."
+    }
+  },
+  {
+    "id": "pm-kickoff-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this kickoff deck outline for a fixed-bid e-learning platform.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Slide 1: Team introductions with photos and roles",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Slide 2: Project goal: launch the course platform for 5,000 learners by 1 September",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Slide 3: Scope: 'everything discussed in the sales calls'",
+          "issue": "Scope must reference the signed SOW and list in/out items; sales-call discussions are not agreed scope."
+        },
+        {
+          "id": "p4",
+          "text": "Slide 4: Milestones and payment dates from the SOW",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Slide 5: Change requests: we'll be flexible and add things as we go",
+          "issue": "Sets the wrong expectation on a fixed bid; explain the change-request process instead."
+        },
+        {
+          "id": "p6",
+          "text": "Slide 6: Client responsibilities: content upload, test accounts, timely feedback (48 h)",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Slide 7: Next steps with owners and dates",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-kickoff-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "During the kickoff, the client's product lead mentions that 'of course' the platform will support Arabic with right-to-left layouts. The SOW says English only.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "During the kickoff, the client's product lead mentions that 'of course' the platform will support Arabic with right-to-left layouts. The SOW says English only.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you respond in the meeting?",
+          "options": [
+            "Agree, to keep the kickoff positive",
+            "Note it as a gap against the SOW and say you'll follow up with impact and options",
+            "Say no firmly in front of everyone",
+            "Ignore it and hope it goes away"
+          ],
+          "correctIndex": 1,
+          "explanation": "The kickoff is exactly when misunderstandings should surface; log it and follow up with facts rather than agreeing or rejecting on the spot."
+        },
+        {
+          "id": "s2",
+          "question": "What do you do after the kickoff?",
+          "options": [
+            "Add Arabic to the backlog silently",
+            "Send a summary listing the gap and a change request with effort and cost for the client to decide",
+            "Tell the sales team to handle it",
+            "Wait to see if they mention it again"
+          ],
+          "correctIndex": 1,
+          "explanation": "Put the gap in writing and give the client a costed decision."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-kickoff-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The SOW for a project has a 16-week timeline starting with a kickoff on Monday of week 1. Milestone payments are tied to phases. Work out the payment amounts.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Contract value",
+          "Kickoff",
+          "Beta",
+          "Launch"
+        ],
+        "rows": [
+          [
+            "$96,000",
+            "20%",
+            "40%",
+            "remainder"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "m1",
+          "label": "Payment at kickoff (20%)",
+          "unit": "$",
+          "answer": 19200.0,
+          "tolerance": 1
+        },
+        {
+          "id": "m2",
+          "label": "Payment at beta (40%)",
+          "unit": "$",
+          "answer": 38400.0,
+          "tolerance": 1
+        },
+        {
+          "id": "m3",
+          "label": "Payment at launch (remaining)",
+          "unit": "$",
+          "answer": 38400.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "20% of $96,000 = $19,200; 40% = $38,400; the remaining 40% = $38,400."
+    }
+  },
+  {
+    "id": "pm-kickoff-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "You are taking over a project that sales sold to a client last week. The sales handover note is two lines long, and the kickoff is in three days.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are taking over a project that sales sold to a client last week. The sales handover note is two lines long, and the kickoff is in three days.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Run the kickoff with what you have",
+            "Book a handover call with the salesperson and read the SOW and proposal in full",
+            "Ask the client to explain the project from scratch at kickoff",
+            "Postpone the kickoff by a month"
+          ],
+          "correctIndex": 1,
+          "explanation": "A proper handover from sales is the cheapest way to learn the promises and assumptions behind the deal."
+        },
+        {
+          "id": "s2",
+          "question": "You find the proposal promised 'unlimited design revisions' but the SOW says 'two rounds'. What do you do?",
+          "options": [
+            "Follow the proposal",
+            "Follow the SOW silently",
+            "Raise it internally with sales and your manager now, and agree how to address it with the client at or before kickoff",
+            "Mention it only if the client asks for a third round"
+          ],
+          "correctIndex": 2,
+          "explanation": "Contract conflicts must be resolved before they become a dispute; align internally first, then clarify with the client early."
+        },
+        {
+          "id": "s3",
+          "question": "At kickoff, how do you confirm the revision limit?",
+          "options": [
+            "Leave it out of the deck",
+            "State it on the scope slide and in the written kickoff summary",
+            "Mention it only verbally",
+            "Put it in the footnotes of the contract"
+          ],
+          "correctIndex": 1,
+          "explanation": "Stating limits openly and in writing at kickoff prevents later arguments."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-kickoff-t2-5",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write the kickoff summary email.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write the follow-up email sent to the client after kickoff, from the notes below. Include the key agreements, client actions with dates, and the meeting rhythm.",
+      "context": "Kickoff for 'Pawly' pet-care booking app (client: Nina, founder).\n- Launch target: 30 Sept, 3 milestones as in SOW.\n- Sprints: 2 weeks, demo every other Thursday 15:00.\n- Tools: Jira (client has view access), Slack shared channel.\n- Client actions: brand guidelines by 5 June; vet-partner API docs by 7 June; name a backup approver.\n- Out of scope reminder: web admin dashboard is phase 2.",
+      "wordLimit": 160,
+      "rubric": [
+        {
+          "id": "agreements",
+          "label": "Key agreements",
+          "description": "Launch date, milestones, sprint/demo rhythm and tools are stated.",
+          "weight": 1
+        },
+        {
+          "id": "actions",
+          "label": "Client actions with dates",
+          "description": "All three client actions listed with dates.",
+          "weight": 2
+        },
+        {
+          "id": "scope",
+          "label": "Scope reminder",
+          "description": "States clearly that the web admin dashboard is phase 2.",
+          "weight": 1
+        },
+        {
+          "id": "clarity",
+          "label": "Clear and scannable",
+          "description": "Structured, short, friendly and professional.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Subject: Pawly kickoff summary and next steps\n\nHi Nina,\n\nThanks for a great kickoff today. Here is what we agreed.\n\nPlan\n- Launch target: 30 September, with the three milestones in the SOW.\n- Two-week sprints, with a demo every other Thursday at 15:00.\n- Jira (you have view access) and our shared Slack channel for day-to-day questions.\n\nScope reminder: the web admin dashboard is phase 2 and not part of this launch.\n\nYour actions\n1. Brand guidelines by 5 June.\n2. Vet-partner API documentation by 7 June.\n3. Name a backup approver for when you're away.\n\nI'll send the demo invites today. Any questions, just ask.\n\nBest,\nAnna"
+    }
+  },
+  {
+    "id": "pm-kickoff-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of an internal kickoff held before the client kickoff?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Align the delivery team on scope, risks, roles and the plan before facing the client",
+        "Write the code for the first sprint",
+        "Negotiate the contract price",
+        "Replace the client kickoff"
+      ],
+      "correctIndex": 0,
+      "explanation": "The team should share one understanding of the deal and the plan before the client meets them.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-kickoff-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which item is most important to agree at kickoff to avoid delays later?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The client's responsibilities and turnaround times for feedback and approvals",
+        "The office seating plan",
+        "The font of the status report",
+        "The developers' holiday plans for next year"
+      ],
+      "correctIndex": 0,
+      "explanation": "Client dependencies (content, access, approvals) are the most common cause of agency delays; agreeing them early makes them visible and owned.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-kickoff-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-kickoff",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "At kickoff, the client says success means 'users love it'. What is the best follow-up?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Accept it as the success criterion",
+        "Work with them to turn it into measurable criteria, such as app-store rating or weekly active users",
+        "Ignore success criteria for agile projects",
+        "Use the number of features delivered"
+      ],
+      "correctIndex": 1,
+      "explanation": "Measurable success criteria make acceptance and later conversations objective.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

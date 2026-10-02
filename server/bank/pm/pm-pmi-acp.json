@@ -1,0 +1,353 @@
+[
+  {
+    "id": "pm-pmi-acp-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "ACP-style situation: a stakeholder complains that the team's increments do not meet their needs, though each sprint's stories were accepted by the product owner.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "ACP-style situation: a stakeholder complains that the team's increments do not meet their needs, though each sprint's stories were accepted by the product owner.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the most likely cause?",
+          "options": [
+            "The team's velocity is too low",
+            "Sprints are too long",
+            "The product owner is not representing that stakeholder's needs in the backlog",
+            "The Definition of Done is too strict"
+          ],
+          "correctIndex": 2,
+          "explanation": "Value problems usually come from how needs reach the backlog."
+        },
+        {
+          "id": "d2",
+          "question": "What should the agile practitioner do?",
+          "options": [
+            "Invite the stakeholder to sprint reviews and help the product owner incorporate their feedback",
+            "Tell the stakeholder to talk to management",
+            "Add their requests directly to the sprint",
+            "Ignore the complaint"
+          ],
+          "correctIndex": 0,
+          "explanation": "Frequent feedback loops with real stakeholders are central to agile value delivery."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-pmi-acp-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "ACP-style situation: two senior developers disagree strongly about an architecture choice, and the team is stuck.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "ACP-style situation: two senior developers disagree strongly about an architecture choice, and the team is stuck.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the best first approach?",
+          "options": [
+            "Facilitate a discussion where both explain trade-offs, and help the team decide, perhaps with a quick spike",
+            "Decide for them as the leader",
+            "Escalate to the CTO",
+            "Let the more senior person win"
+          ],
+          "correctIndex": 0,
+          "explanation": "Agile leaders facilitate team decisions and use experiments to reduce uncertainty."
+        },
+        {
+          "id": "d2",
+          "question": "The spike shows both options work. How should the team decide?",
+          "options": [
+            "Use an agreed decision method, such as consensus with a fallback, and record the decision",
+            "Flip a coin",
+            "Delay until one person leaves",
+            "Implement both"
+          ],
+          "correctIndex": 0,
+          "explanation": "Clear decision rules prevent the same argument returning."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-pmi-acp-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the life of a feature on an agile team, from idea to feedback.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the life of a feature on an agile team, from idea to feedback.",
+      "items": [
+        {
+          "id": "re7845",
+          "label": "Capture it as a user story with acceptance criteria"
+        },
+        {
+          "id": "rf95f7",
+          "label": "Refine and size it with the team"
+        },
+        {
+          "id": "r36d68",
+          "label": "The team pulls it into an iteration"
+        },
+        {
+          "id": "r563ac",
+          "label": "Build and test it within the iteration"
+        },
+        {
+          "id": "r90e7d",
+          "label": "Demo it at the review and gather stakeholder feedback"
+        }
+      ],
+      "correctOrder": [
+        "re7845",
+        "rf95f7",
+        "r36d68",
+        "r563ac",
+        "r90e7d"
+      ],
+      "explanation": "Agile work flows from a clear story through team refinement and a pulled commitment to built-and-tested work, closing the loop with feedback."
+    }
+  },
+  {
+    "id": "pm-pmi-acp-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A team's working agreement draft. Mark the lines that conflict with agile principles.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A team's working agreement draft. Mark the lines that conflict with agile principles.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "We deliver working software every two weeks.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "The PM assigns tasks to each developer each morning.",
+          "issue": "Agile teams self-organise; work is pulled by the team, not assigned daily."
+        },
+        {
+          "id": "s3",
+          "text": "We hold a retrospective every sprint and act on one improvement.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "The product owner orders the backlog by value.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Testing happens in a separate phase after three sprints.",
+          "issue": "Testing should be continuous within each sprint to produce done increments."
+        },
+        {
+          "id": "s6",
+          "text": "We keep a sustainable pace; overtime is the exception.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Stakeholders see a demo at each sprint review.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Changes to priorities are not allowed after the project starts.",
+          "issue": "Agile welcomes changing requirements, managed through the backlog."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-pmi-acp-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "ACP topics include agile metrics. A team's cycle times (days) for the last 7 finished items are below.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "ACP topics include agile metrics. A team's cycle times (days) for the last 7 finished items are below.",
+      "table": {
+        "columns": [
+          "Item",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "rows": [
+          [
+            "Days",
+            "2",
+            "3",
+            "3",
+            "4",
+            "5",
+            "5",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "avg",
+          "label": "Average cycle time of these 7 items",
+          "unit": "days",
+          "answer": 4.0,
+          "tolerance": 0.05
+        },
+        {
+          "id": "median",
+          "label": "Median cycle time",
+          "unit": "days",
+          "answer": 4,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Sum 28 / 7 = 4.0 days; median is the 4th value, 4."
+    }
+  },
+  {
+    "id": "pm-pmi-acp-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "ACP-style situation: the team keeps carrying unfinished stories to the next sprint.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "ACP-style situation: the team keeps carrying unfinished stories to the next sprint.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should the team look at first?",
+          "options": [
+            "Lengthen the sprint",
+            "Stop estimating",
+            "Assign stories to individuals",
+            "Story size and work in progress: split stories smaller and limit how many are started at once"
+          ],
+          "correctIndex": 3,
+          "explanation": "Large stories and too much WIP are the usual causes of carry-over."
+        },
+        {
+          "id": "d2",
+          "question": "Which metric would show improvement?",
+          "options": [
+            "More story points committed",
+            "More hours logged",
+            "Shorter cycle time and fewer stories carried over",
+            "More meetings held"
+          ],
+          "correctIndex": 2,
+          "explanation": "Flow metrics show whether work finishes sooner."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-pmi-acp-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does PMI-ACP test, compared with PMP?",
+    "mcq": {
+      "options": [
+        "Agile mindset, leadership, product and delivery practices across frameworks",
+        "Only Scrum terminology",
+        "Only predictive scheduling",
+        "Programming skills"
+      ],
+      "correctIndex": 0,
+      "explanation": "ACP is framework-agnostic agile; PMP covers predictive, agile and hybrid.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-pmi-acp-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In an ACP-style question, what does servant leadership usually look like?",
+    "mcq": {
+      "options": [
+        "Assigning tasks and checking hours",
+        "Making all technical decisions",
+        "Removing impediments and coaching so the team can do its best work",
+        "Reporting team problems to management"
+      ],
+      "correctIndex": 2,
+      "explanation": "Servant leaders enable the team rather than direct it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-pmi-acp-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-pmi-acp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a sprint review in agile delivery?",
+    "mcq": {
+      "options": [
+        "To approve the team's timesheets",
+        "To assign blame for missed stories",
+        "To inspect the increment with stakeholders and adapt the backlog",
+        "To plan the next sprint's tasks in detail"
+      ],
+      "correctIndex": 2,
+      "explanation": "Reviews gather feedback that shapes what comes next.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

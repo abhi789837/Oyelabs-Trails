@@ -1,0 +1,389 @@
+[
+  {
+    "id": "pm-change-requests-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Put the steps of handling a client change request in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps of handling a client change request in order.",
+      "items": [
+        {
+          "id": "r34faf",
+          "label": "Log the request with the client's description and date"
+        },
+        {
+          "id": "r5c96d",
+          "label": "Assess impact on scope, schedule, cost and risk with the team"
+        },
+        {
+          "id": "r989eb",
+          "label": "Send the client the impact and options"
+        },
+        {
+          "id": "r5b122",
+          "label": "Get written approval or rejection from the authorised client contact"
+        },
+        {
+          "id": "rcfe02",
+          "label": "Update the plan, backlog and change log"
+        }
+      ],
+      "correctOrder": [
+        "r34faf",
+        "r5c96d",
+        "r989eb",
+        "r5b122",
+        "rcfe02"
+      ],
+      "explanation": "Log first so nothing is lost; assess before quoting; decide with the authorised person; only then change the baseline."
+    }
+  },
+  {
+    "id": "pm-change-requests-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Price this change request on a fixed-bid project. The agency's blended rate is $85/hour and policy adds 15% contingency to change estimates.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Price this change request on a fixed-bid project. The agency's blended rate is $85/hour and policy adds 15% contingency to change estimates.",
+      "table": {
+        "columns": [
+          "Work",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Design",
+            "12"
+          ],
+          [
+            "Development",
+            "40"
+          ],
+          [
+            "QA",
+            "10"
+          ],
+          [
+            "PM",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Total estimated hours",
+          "unit": "h",
+          "answer": 68,
+          "tolerance": 0.1
+        },
+        {
+          "id": "base",
+          "label": "Cost before contingency",
+          "unit": "$",
+          "answer": 5780,
+          "tolerance": 1
+        },
+        {
+          "id": "price",
+          "label": "Price with 15% contingency",
+          "unit": "$",
+          "answer": 6647.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "68 hours x $85 = $5,780; x 1.15 = $6,647."
+    }
+  },
+  {
+    "id": "pm-change-requests-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write the summary section of a change request for the client, based on the context. Keep it factual and decision-ready.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write the summary section of a change request for the client, based on the context. Keep it factual and decision-ready.",
+      "context": "Project: fixed-price white-label fitness app, launch 30 June. The client's head of marketing asked on a call (3 May) to add Apple Health and Google Fit sync. The team estimates 70 hours (rate $90/h = $6,300) and 1.5 weeks of extra calendar time because both integrations need store-review permission changes. Option B: ship Apple Health only for launch (40 hours, $3,600, no date change) and add Google Fit in the next release.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "what",
+          "label": "What and why",
+          "description": "States the requested change, who asked and when, without editorialising.",
+          "weight": 1
+        },
+        {
+          "id": "impact",
+          "label": "Impact",
+          "description": "Gives cost, effort and schedule impact with the figures from the context.",
+          "weight": 1
+        },
+        {
+          "id": "options",
+          "label": "Options",
+          "description": "Presents both options clearly so the client can choose.",
+          "weight": 1
+        },
+        {
+          "id": "decision",
+          "label": "Decision needed",
+          "description": "Asks for a decision by a date from the authorised approver, and says nothing changes until approval.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Change request CR-07: health-data sync\n\nRequest: On 3 May, the head of marketing asked to add Apple Health and Google Fit sync to the launch scope.\n\nImpact:\n- Option A (both integrations): 70 hours, $6,300. Launch moves from 30 June to about 10 July, because both need store-review permission changes.\n- Option B (Apple Health only at launch): 40 hours, $3,600. Launch stays 30 June; Google Fit follows in the next release (estimated separately).\n\nDecision needed: please confirm Option A, Option B or no change by 10 May, approved by the project sponsor. Until then the current plan and launch date stand."
+    }
+  },
+  {
+    "id": "pm-change-requests-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A junior PM wrote this change request. Mark the lines that make it weak or risky.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A junior PM wrote this change request. Mark the lines that make it weak or risky.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "CR-12: add a referral programme to the customer app.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Requested by: the client's marketing team.",
+          "issue": "No named requester or date; the decision trail needs a person."
+        },
+        {
+          "id": "s3",
+          "text": "Estimate: should be fine, the team thinks it's small.",
+          "issue": "No hours, cost or schedule impact; the client cannot decide on \"small\"."
+        },
+        {
+          "id": "s4",
+          "text": "Impact on launch date: none, we will work faster.",
+          "issue": "Assumes extra speed instead of assessing the real schedule impact."
+        },
+        {
+          "id": "s5",
+          "text": "Dependencies: requires a promo-code service already in scope.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Approval: approved verbally by the client's intern on Slack.",
+          "issue": "Approval must come from the contractually authorised contact, in writing."
+        },
+        {
+          "id": "s7",
+          "text": "Acceptance criteria: referrer and referee each get a $5 credit after the referee's first order.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Risk: referral fraud; mitigation is one credit per device and payment card.",
+          "issue": null
+        },
+        {
+          "id": "s9",
+          "text": "Out of scope: referral leaderboards.",
+          "issue": null
+        },
+        {
+          "id": "s10",
+          "text": "Target release: v1.2.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-change-requests-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client asks for \"a small tweak\": the AI meal planner should also handle allergies. The team says that means a new data model, prompt changes and a fresh evaluation set, about 2 sprints. The contract is fixed-price with a change-control clause.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks for \"a small tweak\": the AI meal planner should also handle allergies. The team says that means a new data model, prompt changes and a fresh evaluation set, about 2 sprints. The contract is fixed-price with a change-control clause.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do first?",
+          "options": [
+            "Log it as a change request and assess impact with the team",
+            "Agree on the call since it sounds small",
+            "Tell the client it is impossible",
+            "Ask the team to fit it in the current sprint"
+          ],
+          "correctIndex": 0,
+          "explanation": "Changes go through the agreed process before anyone commits to them."
+        },
+        {
+          "id": "d2",
+          "question": "The client says it should have been obvious and refuses to pay. What is your next move?",
+          "options": [
+            "Walk through the signed scope and acceptance criteria with them, and offer options: pay, swap out equal scope, or defer",
+            "Do it free to keep the relationship",
+            "Stop all work until they pay",
+            "Escalate straight to lawyers"
+          ],
+          "correctIndex": 0,
+          "explanation": "The baseline settles what was agreed; options keep the relationship constructive."
+        },
+        {
+          "id": "d3",
+          "question": "They choose to swap out an equal-sized feature. What must happen next?",
+          "options": [
+            "Nothing, since cost is unchanged",
+            "Record the swap as an approved change with the removed scope named, and update plan and acceptance criteria",
+            "Update the backlog only",
+            "Mention it in the next status report"
+          ],
+          "correctIndex": 1,
+          "explanation": "Zero-cost swaps are still changes; without a record the removed feature returns at UAT as a dispute."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-change-requests-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Five change requests are waiting. You can assess two this week. Rank them, most urgent first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Five change requests are waiting. You can assess two this week. Rank them, most urgent first.",
+      "items": [
+        {
+          "id": "r1dc10",
+          "label": "Legal requires a cookie-consent change before a launch in 10 days"
+        },
+        {
+          "id": "rc563a",
+          "label": "Payment provider deprecates the API version the app uses in 6 weeks"
+        },
+        {
+          "id": "rfa330",
+          "label": "Client wants a new onboarding flow for a campaign in 2 months"
+        },
+        {
+          "id": "re9fba",
+          "label": "Sales asked for a demo-only feature for a prospect, no date"
+        },
+        {
+          "id": "rf648e",
+          "label": "Designer suggests a new icon set"
+        }
+      ],
+      "correctOrder": [
+        "r1dc10",
+        "rc563a",
+        "rfa330",
+        "re9fba",
+        "rf648e"
+      ],
+      "explanation": "Legal and deadline-driven changes first, then externally forced technical change, then dated business requests; undated nice-to-haves last."
+    }
+  },
+  {
+    "id": "pm-change-requests-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Who should approve a change request that increases the price of a fixed-bid project?",
+    "mcq": {
+      "options": [
+        "Any client stakeholder who attends the sprint review",
+        "The agency's tech lead",
+        "The client contact authorised in the contract to approve changes",
+        "The PM, if the change is under 10% of the budget"
+      ],
+      "correctIndex": 2,
+      "explanation": "Commercial changes need an authorised approver; otherwise the agency risks unpaid work and disputes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-change-requests-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why keep a change log even for rejected change requests?",
+    "mcq": {
+      "options": [
+        "Rejected requests can be billed later",
+        "It shows the client what was asked and decided, which prevents the same item reappearing as a dispute later",
+        "It is required for every project by law",
+        "It improves velocity"
+      ],
+      "correctIndex": 1,
+      "explanation": "The decision trail protects both sides. Rejected items are often re-raised at UAT as \"we always expected that\".",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-change-requests-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-change-requests",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "On a T&M project with a monthly cap, the client keeps adding stories. What is the role of change control here?",
+    "mcq": {
+      "options": [
+        "None; T&M projects have no change control",
+        "Refusing all new stories",
+        "Showing how new work affects the cap and the forecast end date, so the client can decide what to trade",
+        "Billing each new story separately"
+      ],
+      "correctIndex": 2,
+      "explanation": "T&M shifts cost risk to the client but the client still needs to see the effect on the cap and the date to decide.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

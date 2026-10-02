@@ -1,0 +1,377 @@
+[
+  {
+    "id": "bd-tech-apis-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A BD rep explained APIs to a client in these sentences. Mark the incorrect ones.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A BD rep explained APIs to a client in these sentences. Mark the incorrect ones.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "An API lets two pieces of software talk to each other in an agreed way.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Using a payment provider's API means we do not have to build card processing ourselves.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Once an API is integrated, it can never change or break.",
+          "issue": "Third-party APIs change versions and have outages; integrations need maintenance and monitoring."
+        },
+        {
+          "id": "p4",
+          "text": "Many third-party APIs charge per use, such as per SMS or per map request.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Any two systems can be connected instantly with zero effort.",
+          "issue": "Integration effort depends on the API's quality, documentation and data mapping."
+        },
+        {
+          "id": "p6",
+          "text": "We usually need the client to create accounts and share API keys for services they will own.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-apis-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client wants these integrations in a booking app. Rank them from usually least to most integration effort.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A client wants these integrations in a booking app. Rank them from usually least to most integration effort.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Take card payments through a standard payment gateway"
+        },
+        {
+          "id": "r4",
+          "label": "Two-way sync with the client's 15-year-old in-house ERP that has no documentation"
+        },
+        {
+          "id": "r1",
+          "label": "Embed a Google Map showing the venue location"
+        },
+        {
+          "id": "r2",
+          "label": "Send booking confirmation emails through an email service"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Map embeds are simple; transactional email is routine; payments add security, webhooks and testing; undocumented legacy systems are the hardest and riskiest."
+    }
+  },
+  {
+    "id": "bd-tech-apis-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client asks you to add 'login with Google and SMS verification codes' to their app.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks you to add 'login with Google and SMS verification codes' to their app.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should you tell them about SMS codes?",
+          "options": [
+            "SMS is free forever",
+            "SMS needs no third-party service",
+            "SMS cannot be used in apps",
+            "They go through an SMS provider's API, which usually charges per message, so costs grow with users"
+          ],
+          "correctIndex": 3,
+          "explanation": "SMS verification relies on a paid third-party API; the client should budget for usage."
+        },
+        {
+          "id": "s2",
+          "question": "Who should own the accounts for these third-party services?",
+          "options": [
+            "A freelancer's personal email",
+            "The client, with access shared to the agency team",
+            "The agency's personal accounts, permanently",
+            "No one; they work without accounts"
+          ],
+          "correctIndex": 1,
+          "explanation": "Client-owned accounts avoid lock-in and billing confusion and keep control with the business."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-apis-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A delivery app uses a maps API and an SMS API. Monthly usage and prices are below. Work out the monthly third-party cost.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A delivery app uses a maps API and an SMS API. Monthly usage and prices are below. Work out the monthly third-party cost.",
+      "table": {
+        "columns": [
+          "Service",
+          "Monthly volume",
+          "Price"
+        ],
+        "rows": [
+          [
+            "Map route lookups",
+            "20,000",
+            "USD 5 per 1,000"
+          ],
+          [
+            "SMS notifications",
+            "8,000",
+            "USD 0.02 each"
+          ],
+          [
+            "Free tier on route lookups",
+            "first 5,000 free",
+            "-"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "maps",
+          "label": "Maps cost per month",
+          "unit": "USD",
+          "answer": 75,
+          "tolerance": 0.5
+        },
+        {
+          "id": "sms",
+          "label": "SMS cost per month",
+          "unit": "USD",
+          "answer": 160,
+          "tolerance": 0.5
+        },
+        {
+          "id": "total",
+          "label": "Total third-party cost per month",
+          "unit": "USD",
+          "answer": 235,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Billable lookups = 20,000 - 5,000 = 15,000, so 15 x 5 = USD 75. SMS = 8,000 x 0.02 = USD 160. Total = USD 235."
+    }
+  },
+  {
+    "id": "bd-tech-apis-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "During discovery, a retail client mentions their online store must 'sync stock with our warehouse system'.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "During discovery, a retail client mentions their online store must 'sync stock with our warehouse system'.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the most useful question to ask?",
+          "options": [
+            "What colour is the warehouse system's logo?",
+            "Can we skip the sync?",
+            "Do you like APIs?",
+            "Does the warehouse system have an API or export, and can we see its documentation?"
+          ],
+          "correctIndex": 3,
+          "explanation": "Whether an API exists, and how good it is, decides the integration's effort and risk."
+        },
+        {
+          "id": "s2",
+          "question": "They say there is no API, only a nightly CSV export. What does that mean for the proposal?",
+          "options": [
+            "Nothing changes",
+            "Stock can sync once a day from the file, so near-real-time stock is not possible without more work",
+            "Real-time sync is still easy",
+            "Integration is impossible"
+          ],
+          "correctIndex": 1,
+          "explanation": "A nightly file gives daily sync. If they need real-time stock, it needs extra work or a vendor change, and the proposal must say so."
+        },
+        {
+          "id": "s3",
+          "question": "How should this appear in the estimate?",
+          "options": [
+            "Hidden inside general development",
+            "Left out until the project starts",
+            "As a free extra",
+            "As a separate line item with assumptions and a risk note"
+          ],
+          "correctIndex": 3,
+          "explanation": "Integrations with unknowns should be visible, with stated assumptions, so scope changes are fair."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-apis-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the risky lines in this proposal's integration section.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the risky lines in this proposal's integration section.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "We will integrate a payment gateway for card payments.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We will integrate with your CRM; effort is included in the fixed price regardless of which CRM or its API limits.",
+          "issue": "Fixing the price without knowing the CRM or its API creates unbounded risk; state assumptions."
+        },
+        {
+          "id": "p3",
+          "text": "Third-party usage fees (SMS, maps) are paid by the client directly to the providers.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Integration testing will use each provider's sandbox environment.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Third-party outages will be fixed by us within 1 hour, guaranteed.",
+          "issue": "The agency cannot control a provider's outage; promise monitoring and response, not their uptime."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-apis-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "In plain terms, what is an API?",
+    "mcq": {
+      "options": [
+        "A programming language",
+        "A design file",
+        "A defined way for one piece of software to request data or actions from another",
+        "A type of database"
+      ],
+      "correctIndex": 2,
+      "explanation": "An API is an agreed interface between systems, like a menu of requests one system can make of another.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-apis-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why do many apps use a third-party payment gateway instead of building card processing?",
+    "mcq": {
+      "options": [
+        "Building it yourself is not allowed in any case",
+        "It removes the need for testing",
+        "It is faster, cheaper and handles security and compliance that is hard to build",
+        "Payment gateways are always free"
+      ],
+      "correctIndex": 2,
+      "explanation": "Gateways handle card security and compliance, which would be costly and risky to build from scratch.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-apis-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-apis",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client asks for a price to integrate their custom internal system. Their IT team has not shared any documentation. What should you do?",
+    "mcq": {
+      "options": [
+        "Refuse to work with the client",
+        "Give a range with clear assumptions, or propose a small paid investigation first",
+        "Give a single fixed price now",
+        "Promise it will take one day"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unknown integrations carry risk; a range with assumptions or a short discovery protects both sides.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

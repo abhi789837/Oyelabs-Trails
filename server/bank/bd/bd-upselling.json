@@ -1,0 +1,314 @@
+[
+  {
+    "id": "bd-upselling-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Spot and raise an upsell.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client on a $4,000 a month maintenance retainer has doubled its user base in six months. Response times have slowed at peak hours.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best way to raise an upsell?",
+          "options": [
+            "Tell them they must upgrade or the app will fail",
+            "Show the performance data and propose a higher tier that adds performance work and monitoring",
+            "Wait for them to complain",
+            "Offer a big package of unrelated services"
+          ],
+          "correctIndex": 1,
+          "explanation": "Upsells land when they solve a problem the client can see in their own data."
+        },
+        {
+          "id": "s2",
+          "question": "They ask what changes if they upgrade. What do you give them?",
+          "options": [
+            "A list of technologies you would use",
+            "Only the new price",
+            "A short comparison of what each tier includes and the expected effect on response times",
+            "A promise that problems will disappear"
+          ],
+          "correctIndex": 2,
+          "explanation": "Make the trade clear: what they get, what it costs, and what result to expect."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upselling-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Value an upsell.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client upgrades from a $4,000 a month retainer to $6,500 a month. Your gross margin on retainer work is 40%.",
+      "table": null,
+      "fields": [
+        {
+          "id": "rev",
+          "label": "Extra monthly revenue",
+          "unit": "$",
+          "answer": 2500,
+          "tolerance": 1
+        },
+        {
+          "id": "gp",
+          "label": "Extra monthly gross profit",
+          "unit": "$",
+          "answer": 1000,
+          "tolerance": 1
+        },
+        {
+          "id": "annual",
+          "label": "Extra annual gross profit",
+          "unit": "$",
+          "answer": 12000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Extra revenue = 6,500 − 4,000 = $2,500. GP = 40% = $1000 a month, $12000 a year."
+    }
+  },
+  {
+    "id": "bd-upselling-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this upsell email.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this upsell email that would hurt the relationship or the deal.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Lee, following yesterday's outage, we wanted to tell you about our Premium tier.",
+          "issue": "Pitching right after an outage, before the outage has been explained and fixed, looks opportunistic."
+        },
+        {
+          "id": "p2",
+          "text": "Premium adds 24/7 monitoring and a 1-hour response for critical issues.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "This price is only available until Friday.",
+          "issue": "False urgency pressures the client and damages trust."
+        },
+        {
+          "id": "p4",
+          "text": "We also recommend our new blockchain module.",
+          "issue": "Unrelated to the client's goals or problems."
+        },
+        {
+          "id": "p5",
+          "text": "Your peak traffic doubled this year, and monitoring would catch issues before users do.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Happy to walk through the numbers on a short call.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-upselling-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank upsell opportunities by strength.",
+    "task": {
+      "kind": "rank",
+      "prompt": "For a live e-commerce client, rank these upsell opportunities from strongest to weakest.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Performance work tied to a measured 4-second page load that is hurting conversion"
+        },
+        {
+          "id": "i3",
+          "label": "Admin panel redesign that staff mildly complain about"
+        },
+        {
+          "id": "i4",
+          "label": "AI chatbot the client has never mentioned"
+        },
+        {
+          "id": "i1",
+          "label": "Subscriptions feature the client asked about, with budget already approved"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Strong upsells start from the client's stated priorities and measured problems. Ideas they never raised are the hardest to sell."
+    }
+  },
+  {
+    "id": "bd-upselling-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Time an upsell well.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client in a tough quarter has frozen new spend. You see a clear opportunity for a feature that would cut their costs.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Push for a signature before the freeze ends",
+            "Say nothing until next year",
+            "Offer to build it for free",
+            "Share the cost-saving idea with numbers and ask when it would make sense to revisit"
+          ],
+          "correctIndex": 3,
+          "explanation": "Plant the idea with a business case; let the client decide the timing."
+        },
+        {
+          "id": "s2",
+          "question": "They say: \"Interesting, maybe next quarter.\" Next?",
+          "options": [
+            "Agree a date to revisit and send a one-page case they can share internally",
+            "Keep asking every week",
+            "Drop it entirely",
+            "Offer a steep discount to start now"
+          ],
+          "correctIndex": 0,
+          "explanation": "Make it easy for your champion to sell internally when the budget opens."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upselling-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Estimate the value of an upsell pipeline.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your account team has 10 upsell proposals open, averaging $25,000 each. Historically 40% of upsell proposals are won, and gross margin on this work is 45%.",
+      "table": null,
+      "fields": [
+        {
+          "id": "rev",
+          "label": "Expected revenue",
+          "unit": "$",
+          "answer": 100000,
+          "tolerance": 1
+        },
+        {
+          "id": "gp",
+          "label": "Expected gross profit",
+          "unit": "$",
+          "answer": 45000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Expected revenue = 10 × 25,000 × 0.4 = $100,000. GP = 45% = $45,000. Upsell win rates are usually higher than new business, because trust already exists."
+    }
+  },
+  {
+    "id": "bd-upselling-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the difference between upselling and cross-selling?",
+    "mcq": {
+      "options": [
+        "They are the same thing",
+        "Upselling is for new clients; cross-selling for existing ones",
+        "Upselling increases what the client buys of the same service; cross-selling adds a different service",
+        "Cross-selling always means a discount"
+      ],
+      "correctIndex": 2,
+      "explanation": "For example, a bigger retainer tier is an upsell; adding QA automation to a development client is a cross-sell.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-upselling-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the strongest basis for an upsell proposal?",
+    "mcq": {
+      "options": [
+        "Your sales target for the quarter",
+        "A new service you want to promote",
+        "What a competitor offers",
+        "The client's own goals and data showing a problem or opportunity"
+      ],
+      "correctIndex": 3,
+      "explanation": "Upsells grounded in the client's outcomes are easier to approve and to deliver well.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-upselling-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-upselling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "When should you hold back an upsell?",
+    "mcq": {
+      "options": [
+        "When the client has a healthy budget",
+        "When the client is growing",
+        "When the champion is enthusiastic",
+        "When there are unresolved delivery problems on the current work"
+      ],
+      "correctIndex": 3,
+      "explanation": "Selling more on top of an open problem erodes trust; fix delivery first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

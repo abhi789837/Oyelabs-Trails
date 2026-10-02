@@ -1,0 +1,2685 @@
+[
+  {
+    "id": "eng-js-closures-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `makeGreeter` so it returns a function that greets a name with the remembered greeting: `makeGreeter(\"Hi\")(\"Ana\")` → `\"Hi, Ana!\"`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "greetAll",
+      "starterCode": "function makeGreeter(greeting) {\n  return function (name) {\n    // use greeting here\n  };\n}\n\n// Test driver (leave as is).\nfunction greetAll(greeting, names) {\n  const greet = makeGreeter(greeting);\n  return names.map((n) => greet(n));\n}",
+      "referenceSolution": "function makeGreeter(greeting) {\n  return function (name) {\n    return greeting + \", \" + name + \"!\";\n  };\n}\n\n// Test driver (leave as is).\nfunction greetAll(greeting, names) {\n  const greet = makeGreeter(greeting);\n  return names.map((n) => greet(n));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "Hi",
+            [
+              "Ana"
+            ]
+          ],
+          "expected": [
+            "Hi, Ana!"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Hello",
+            [
+              "Bo",
+              "Cy"
+            ]
+          ],
+          "expected": [
+            "Hello, Bo!",
+            "Hello, Cy!"
+          ]
+        },
+        {
+          "args": [
+            "Hey",
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "Hi",
+            [
+              ""
+            ]
+          ],
+          "expected": [
+            "Hi, !"
+          ]
+        },
+        {
+          "args": [
+            "Welcome back",
+            [
+              "Dee"
+            ]
+          ],
+          "expected": [
+            "Welcome back, Dee!"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`makeMultiplier(factor)` returns a function that multiplies its argument by `factor`. Complete it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "applyAll",
+      "starterCode": "function makeMultiplier(factor) {\n  return (n) => n;\n}\n\n// Test driver (leave as is).\nfunction applyAll(factor, nums) {\n  const times = makeMultiplier(factor);\n  return nums.map(times);\n}",
+      "referenceSolution": "function makeMultiplier(factor) {\n  return (n) => n * factor;\n}\n\n// Test driver (leave as is).\nfunction applyAll(factor, nums) {\n  const times = makeMultiplier(factor);\n  return nums.map(times);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            3,
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": [
+            3,
+            6
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            2,
+            [
+              5,
+              10
+            ]
+          ],
+          "expected": [
+            10,
+            20
+          ]
+        },
+        {
+          "args": [
+            0,
+            [
+              7
+            ]
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "args": [
+            1,
+            [
+              4,
+              5
+            ]
+          ],
+          "expected": [
+            4,
+            5
+          ]
+        },
+        {
+          "args": [
+            -1,
+            [
+              3
+            ]
+          ],
+          "expected": [
+            -3
+          ]
+        },
+        {
+          "args": [
+            5,
+            []
+          ],
+          "expected": []
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`makeTotal()` returns an `add(n)` function that keeps a running total and returns it after each call. Fix it so the total is remembered between calls.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runningTotals",
+      "starterCode": "function makeTotal() {\n  return function add(n) {\n    let total = 0;\n    total += n;\n    return total;\n  };\n}\n\n// Test driver (leave as is).\nfunction runningTotals(amounts) {\n  const add = makeTotal();\n  return amounts.map((n) => add(n));\n}",
+      "referenceSolution": "function makeTotal() {\n  let total = 0;\n  return function add(n) {\n    total += n;\n    return total;\n  };\n}\n\n// Test driver (leave as is).\nfunction runningTotals(amounts) {\n  const add = makeTotal();\n  return amounts.map((n) => add(n));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              5,
+              10,
+              2
+            ]
+          ],
+          "expected": [
+            5,
+            15,
+            17
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              3,
+              -3,
+              4
+            ]
+          ],
+          "expected": [
+            3,
+            0,
+            4
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              7
+            ]
+          ],
+          "expected": [
+            0,
+            0,
+            7
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`makeToggle(initial)` returns a function that flips a remembered boolean and returns the new value. Complete it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toggleTimes",
+      "starterCode": "function makeToggle(initial) {\n  return () => !initial;\n}\n\n// Test driver (leave as is).\nfunction toggleTimes(initial, n) {\n  const toggle = makeToggle(initial);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(toggle());\n  return out;\n}",
+      "referenceSolution": "function makeToggle(initial) {\n  let on = initial;\n  return () => {\n    on = !on;\n    return on;\n  };\n}\n\n// Test driver (leave as is).\nfunction toggleTimes(initial, n) {\n  const toggle = makeToggle(initial);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(toggle());\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            false,
+            3
+          ],
+          "expected": [
+            true,
+            false,
+            true
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            true,
+            2
+          ],
+          "expected": [
+            false,
+            true
+          ]
+        },
+        {
+          "args": [
+            false,
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            true,
+            1
+          ],
+          "expected": [
+            false
+          ]
+        },
+        {
+          "args": [
+            false,
+            4
+          ],
+          "expected": [
+            true,
+            false,
+            true,
+            false
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`makeIdGenerator(prefix)` returns a function that hands out ids `prefix-1`, `prefix-2`, … Each generator counts on its own.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "ids",
+      "starterCode": "let count = 0;\n\nfunction makeIdGenerator(prefix) {\n  return () => {\n    count++;\n    return prefix + \"-\" + count;\n  };\n}\n\n// Test driver (leave as is): calls two generators in turn.\nfunction ids(a, b, n) {\n  const genA = makeIdGenerator(a);\n  const genB = makeIdGenerator(b);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(genA(), genB());\n  return out;\n}",
+      "referenceSolution": "function makeIdGenerator(prefix) {\n  let count = 0;\n  return () => {\n    count++;\n    return prefix + \"-\" + count;\n  };\n}\n\n// Test driver (leave as is): calls two generators in turn.\nfunction ids(a, b, n) {\n  const genA = makeIdGenerator(a);\n  const genB = makeIdGenerator(b);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(genA(), genB());\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "user",
+            "order",
+            1
+          ],
+          "expected": [
+            "user-1",
+            "order-1"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "u",
+            "o",
+            2
+          ],
+          "expected": [
+            "u-1",
+            "o-1",
+            "u-2",
+            "o-2"
+          ]
+        },
+        {
+          "args": [
+            "x",
+            "y",
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "a",
+            "a",
+            2
+          ],
+          "expected": [
+            "a-1",
+            "a-1",
+            "a-2",
+            "a-2"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`buildHandlers(n)` builds `n` click handlers; handler `i` should return `i`. Right now every handler returns `n`. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "callHandlers",
+      "starterCode": "function buildHandlers(n) {\n  const handlers = [];\n  for (var i = 0; i < n; i++) {\n    handlers.push(() => i);\n  }\n  return handlers;\n}\n\n// Test driver (leave as is).\nfunction callHandlers(n) {\n  return buildHandlers(n).map((h) => h());\n}",
+      "referenceSolution": "function buildHandlers(n) {\n  const handlers = [];\n  for (let i = 0; i < n; i++) {\n    handlers.push(() => i);\n  }\n  return handlers;\n}\n\n// Test driver (leave as is).\nfunction callHandlers(n) {\n  return buildHandlers(n).map((h) => h());\n}",
+      "sampleTests": [
+        {
+          "args": [
+            3
+          ],
+          "expected": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "15",
+        "5",
+        "NaN",
+        "ReferenceError: base is not defined"
+      ],
+      "correctIndex": 0,
+      "explanation": "`inner` closes over `base`, so it can still read it after `outer` has returned. `10 + 5` is `15`.",
+      "snippet": "function outer() {\n  const base = 10;\n  return function inner(n) {\n    return base + n;\n  };\n}\nconst addBase = outer();\nconsole.log(addBase(5));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "idle",
+        "loading",
+        "undefined",
+        "SyntaxError"
+      ],
+      "correctIndex": 0,
+      "explanation": "`let` is block-scoped: the inner `status` is a different variable that only exists inside the braces. The outer one is unchanged.",
+      "snippet": "let status = \"idle\";\n{\n  let status = \"loading\";\n}\nconsole.log(status);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "7 15",
+        "7 17",
+        "5 5",
+        "NaN NaN"
+      ],
+      "correctIndex": 0,
+      "explanation": "`add(5)` returns a function that remembers `a = 5`. Each call adds its own `b` to that same `5`; nothing accumulates.",
+      "snippet": "const add = (a) => (b) => a + b;\nconst add5 = add(5);\nconsole.log(add5(2), add5(10));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write `once(fn)`: the wrapped function calls `fn` the first time only; later calls return the first result without calling `fn` again.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "onceDriver",
+      "starterCode": "function once(fn) {\n  return (...args) => fn(...args);\n}\n\n// Test driver (leave as is): wraps a function that doubles and counts calls.\nfunction onceDriver(inputs) {\n  let calls = 0;\n  const init = once((x) => {\n    calls++;\n    return x * 2;\n  });\n  const results = inputs.map((x) => init(x));\n  return { results, calls };\n}",
+      "referenceSolution": "function once(fn) {\n  let called = false;\n  let result;\n  return (...args) => {\n    if (!called) {\n      called = true;\n      result = fn(...args);\n    }\n    return result;\n  };\n}\n\n// Test driver (leave as is): wraps a function that doubles and counts calls.\nfunction onceDriver(inputs) {\n  let calls = 0;\n  const init = once((x) => {\n    calls++;\n    return x * 2;\n  });\n  const results = inputs.map((x) => init(x));\n  return { results, calls };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              3,
+              4
+            ]
+          ],
+          "expected": {
+            "results": [
+              6,
+              6
+            ],
+            "calls": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "results": [],
+            "calls": 0
+          }
+        },
+        {
+          "args": [
+            [
+              1
+            ]
+          ],
+          "expected": {
+            "results": [
+              2
+            ],
+            "calls": 1
+          }
+        },
+        {
+          "args": [
+            [
+              0,
+              5,
+              9
+            ]
+          ],
+          "expected": {
+            "results": [
+              0,
+              0,
+              0
+            ],
+            "calls": 1
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write `memoize(fn)` for a one-argument function: repeat calls with the same argument return the cached result without calling `fn` again.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "memoDriver",
+      "starterCode": "function memoize(fn) {\n  return (x) => {\n    const cache = {};\n    if (x in cache) return cache[x];\n    cache[x] = fn(x);\n    return cache[x];\n  };\n}\n\n// Test driver (leave as is): memoizes a slow square and counts real calls.\nfunction memoDriver(inputs) {\n  let calls = 0;\n  const square = memoize((x) => {\n    calls++;\n    return x * x;\n  });\n  return { results: inputs.map(square), calls };\n}",
+      "referenceSolution": "function memoize(fn) {\n  const cache = new Map();\n  return (x) => {\n    if (!cache.has(x)) cache.set(x, fn(x));\n    return cache.get(x);\n  };\n}\n\n// Test driver (leave as is): memoizes a slow square and counts real calls.\nfunction memoDriver(inputs) {\n  let calls = 0;\n  const square = memoize((x) => {\n    calls++;\n    return x * x;\n  });\n  return { results: inputs.map(square), calls };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              2,
+              3,
+              2
+            ]
+          ],
+          "expected": {
+            "results": [
+              4,
+              9,
+              4
+            ],
+            "calls": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "results": [],
+            "calls": 0
+          }
+        },
+        {
+          "args": [
+            [
+              5,
+              5,
+              5,
+              5
+            ]
+          ],
+          "expected": {
+            "results": [
+              25,
+              25,
+              25,
+              25
+            ],
+            "calls": 1
+          }
+        },
+        {
+          "args": [
+            [
+              0,
+              1,
+              0,
+              1
+            ]
+          ],
+          "expected": {
+            "results": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "calls": 2
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`makeCounter(start)` returns `{ inc, dec, reset, value }`. `reset` goes back to `start`. The count must be private (not a property on the returned object).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runCounter",
+      "starterCode": "function makeCounter(start) {\n  let count = start;\n  return {\n    inc: () => count++,\n    dec: () => count--,\n    reset: () => {\n      count = 0;\n    },\n    value: () => count,\n  };\n}\n\n// Test driver (leave as is): runs commands and records value() after each.\nfunction runCounter(start, commands) {\n  const c = makeCounter(start);\n  return commands.map((cmd) => {\n    c[cmd]();\n    return c.value();\n  });\n}",
+      "referenceSolution": "function makeCounter(start) {\n  let count = start;\n  return {\n    inc: () => ++count,\n    dec: () => --count,\n    reset: () => {\n      count = start;\n    },\n    value: () => count,\n  };\n}\n\n// Test driver (leave as is): runs commands and records value() after each.\nfunction runCounter(start, commands) {\n  const c = makeCounter(start);\n  return commands.map((cmd) => {\n    c[cmd]();\n    return c.value();\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            0,
+            [
+              "inc",
+              "inc",
+              "dec"
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            1
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            5,
+            [
+              "reset"
+            ]
+          ],
+          "expected": [
+            5
+          ]
+        },
+        {
+          "args": [
+            10,
+            [
+              "inc",
+              "reset",
+              "dec"
+            ]
+          ],
+          "expected": [
+            11,
+            10,
+            9
+          ]
+        },
+        {
+          "args": [
+            0,
+            []
+          ],
+          "expected": []
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`allowFirst(limit)` returns a function that returns `true` for the first `limit` calls and `false` after that (a simple \"max 3 clicks\" guard).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "tryTimes",
+      "starterCode": "function allowFirst(limit) {\n  let used = 0;\n  return () => {\n    used++;\n    return used < limit;\n  };\n}\n\n// Test driver (leave as is).\nfunction tryTimes(limit, n) {\n  const allow = allowFirst(limit);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(allow());\n  return out;\n}",
+      "referenceSolution": "function allowFirst(limit) {\n  let used = 0;\n  return () => {\n    if (used >= limit) return false;\n    used++;\n    return true;\n  };\n}\n\n// Test driver (leave as is).\nfunction tryTimes(limit, n) {\n  const allow = allowFirst(limit);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(allow());\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2,
+            3
+          ],
+          "expected": [
+            true,
+            true,
+            false
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            2
+          ],
+          "expected": [
+            false,
+            false
+          ]
+        },
+        {
+          "args": [
+            1,
+            1
+          ],
+          "expected": [
+            true
+          ]
+        },
+        {
+          "args": [
+            3,
+            5
+          ],
+          "expected": [
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`makeCache()` returns `{ get, set, has, size }` backed by a private store. `get` of a missing key returns `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runCache",
+      "starterCode": "function makeCache() {\n  return {\n    store: {},\n    get(key) {\n      return this.store[key];\n    },\n    set(key, value) {\n      this.store[key] = value;\n    },\n    has(key) {\n      return key in this.store;\n    },\n    size() {\n      return Object.keys(this.store).length;\n    },\n  };\n}\n\n// Test driver (leave as is): methods are called detached, like callbacks often are.\nfunction runCache(ops) {\n  const cache = makeCache();\n  const { get, set, has, size } = cache;\n  const out = [];\n  for (const [op, key, value] of ops) {\n    if (op === \"set\") set(key, value);\n    if (op === \"get\") out.push(get(key));\n    if (op === \"has\") out.push(has(key));\n    if (op === \"size\") out.push(size());\n  }\n  out.push(\"store\" in cache);\n  return out;\n}",
+      "referenceSolution": "function makeCache() {\n  const store = new Map();\n  return {\n    get: (key) => (store.has(key) ? store.get(key) : null),\n    set: (key, value) => {\n      store.set(key, value);\n    },\n    has: (key) => store.has(key),\n    size: () => store.size,\n  };\n}\n\n// Test driver (leave as is): methods are called detached, like callbacks often are.\nfunction runCache(ops) {\n  const cache = makeCache();\n  const { get, set, has, size } = cache;\n  const out = [];\n  for (const [op, key, value] of ops) {\n    if (op === \"set\") set(key, value);\n    if (op === \"get\") out.push(get(key));\n    if (op === \"has\") out.push(has(key));\n    if (op === \"size\") out.push(size());\n  }\n  out.push(\"store\" in cache);\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "set",
+                "a",
+                1
+              ],
+              [
+                "get",
+                "a"
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            false
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "get",
+                "x"
+              ]
+            ]
+          ],
+          "expected": [
+            null,
+            false
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "set",
+                "a",
+                1
+              ],
+              [
+                "set",
+                "a",
+                2
+              ],
+              [
+                "size"
+              ],
+              [
+                "has",
+                "a"
+              ],
+              [
+                "has",
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            true,
+            false,
+            false
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": [
+            false
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`makeAccount(balance)` returns `{ deposit, withdraw, balance }`. `withdraw` must refuse (return `false`, change nothing) when funds are short; otherwise it returns `true`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runAccount",
+      "starterCode": "function makeAccount(balance) {\n  return {\n    deposit(n) {\n      balance += n;\n    },\n    withdraw(n) {\n      balance -= n;\n      return true;\n    },\n    balance: () => balance,\n  };\n}\n\n// Test driver (leave as is).\nfunction runAccount(start, ops) {\n  const acc = makeAccount(start);\n  const results = ops.map(([op, n]) => acc[op](n) ?? null);\n  return { results, balance: acc.balance() };\n}",
+      "referenceSolution": "function makeAccount(balance) {\n  return {\n    deposit(n) {\n      balance += n;\n    },\n    withdraw(n) {\n      if (n > balance) return false;\n      balance -= n;\n      return true;\n    },\n    balance: () => balance,\n  };\n}\n\n// Test driver (leave as is).\nfunction runAccount(start, ops) {\n  const acc = makeAccount(start);\n  const results = ops.map(([op, n]) => acc[op](n) ?? null);\n  return { results, balance: acc.balance() };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            100,
+            [
+              [
+                "withdraw",
+                30
+              ]
+            ]
+          ],
+          "expected": {
+            "results": [
+              true
+            ],
+            "balance": 70
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            10,
+            [
+              [
+                "withdraw",
+                20
+              ]
+            ]
+          ],
+          "expected": {
+            "results": [
+              false
+            ],
+            "balance": 10
+          }
+        },
+        {
+          "args": [
+            0,
+            [
+              [
+                "deposit",
+                5
+              ],
+              [
+                "withdraw",
+                5
+              ],
+              [
+                "withdraw",
+                1
+              ]
+            ]
+          ],
+          "expected": {
+            "results": [
+              null,
+              true,
+              false
+            ],
+            "balance": 0
+          }
+        },
+        {
+          "args": [
+            50,
+            []
+          ],
+          "expected": {
+            "results": [],
+            "balance": 50
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "3 3 3",
+        "0 1 2",
+        "undefined undefined undefined",
+        "2 2 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "`var` gives one `i` shared by the whole function. The callbacks run after the loop has finished, when `i` is `3`. With `let`, each iteration gets its own `i` and you get `0 1 2`.",
+      "snippet": "for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "3 1",
+        "3 4",
+        "1 1",
+        "3 3"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each call to `counter()` creates a new `n`. `a` has been called three times; `b` has its own `n`, called once.",
+      "snippet": "function counter() {\n  let n = 0;\n  return () => ++n;\n}\nconst a = counter();\nconst b = counter();\na();\na();\nconsole.log(a(), b());",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "published",
+        "draft",
+        "undefined",
+        "ReferenceError"
+      ],
+      "correctIndex": 0,
+      "explanation": "A closure captures the *variable*, not a copy of its value at creation time. When `getLabel` runs, it reads the current value of `label`.",
+      "snippet": "let label = \"draft\";\nconst getLabel = () => label;\nlabel = \"published\";\nconsole.log(getLabel());",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Write `debounce(fn, wait, clock)`: the wrapped function waits until `wait` ms pass with no new call, then calls `fn` once with the latest arguments. Use `clock.setTimeout` / `clock.clearTimeout` (a fake clock the driver advances). The driver returns `[time, value]` for each real call.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runDebounce",
+      "starterCode": "function debounce(fn, wait, clock) {\n  return (...args) => fn(...args);\n}\n\n// Fake clock (leave as is): timers only fire when the driver advances time.\nfunction fakeClock() {\n  let now = 0;\n  let timers = [];\n  let nextId = 1;\n  return {\n    now: () => now,\n    setTimeout(cb, ms) {\n      const id = nextId++;\n      timers.push({ id, at: now + ms, cb });\n      return id;\n    },\n    clearTimeout(id) {\n      timers = timers.filter((t) => t.id !== id);\n    },\n    advance(to) {\n      for (;;) {\n        const due = timers.filter((t) => t.at <= to).sort((a, b) => a.at - b.at || a.id - b.id)[0];\n        if (!due) break;\n        timers = timers.filter((t) => t !== due);\n        now = due.at;\n        due.cb();\n      }\n      now = to;\n    },\n  };\n}\n\n// Test driver (leave as is): calls = [[time, value], ...]\nfunction runDebounce(wait, calls) {\n  const clock = fakeClock();\n  const log = [];\n  const handler = debounce((v) => log.push([clock.now(), v]), wait, clock);\n  for (const [t, v] of calls) {\n    clock.advance(t);\n    handler(v);\n  }\n  clock.advance(1e9);\n  return log;\n}",
+      "referenceSolution": "function debounce(fn, wait, clock) {\n  let timer = null;\n  return (...args) => {\n    if (timer !== null) clock.clearTimeout(timer);\n    timer = clock.setTimeout(() => {\n      timer = null;\n      fn(...args);\n    }, wait);\n  };\n}\n\n// Fake clock (leave as is): timers only fire when the driver advances time.\nfunction fakeClock() {\n  let now = 0;\n  let timers = [];\n  let nextId = 1;\n  return {\n    now: () => now,\n    setTimeout(cb, ms) {\n      const id = nextId++;\n      timers.push({ id, at: now + ms, cb });\n      return id;\n    },\n    clearTimeout(id) {\n      timers = timers.filter((t) => t.id !== id);\n    },\n    advance(to) {\n      for (;;) {\n        const due = timers.filter((t) => t.at <= to).sort((a, b) => a.at - b.at || a.id - b.id)[0];\n        if (!due) break;\n        timers = timers.filter((t) => t !== due);\n        now = due.at;\n        due.cb();\n      }\n      now = to;\n    },\n  };\n}\n\n// Test driver (leave as is): calls = [[time, value], ...]\nfunction runDebounce(wait, calls) {\n  const clock = fakeClock();\n  const log = [];\n  const handler = debounce((v) => log.push([clock.now(), v]), wait, clock);\n  for (const [t, v] of calls) {\n    clock.advance(t);\n    handler(v);\n  }\n  clock.advance(1e9);\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                50,
+                "ab"
+              ],
+              [
+                120,
+                "abc"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              220,
+              "abc"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            100,
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                200,
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              100,
+              "a"
+            ],
+            [
+              300,
+              "b"
+            ]
+          ]
+        },
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                100,
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              100,
+              "a"
+            ],
+            [
+              200,
+              "b"
+            ]
+          ]
+        },
+        {
+          "args": [
+            50,
+            [
+              [
+                0,
+                1
+              ],
+              [
+                10,
+                2
+              ],
+              [
+                20,
+                3
+              ],
+              [
+                30,
+                4
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              80,
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Build a tiny store: `createStore(reducer, initial)` returns `{ getState, dispatch, subscribe }`. `subscribe(fn)` returns an `unsubscribe` function; listeners run after every dispatch.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runStore",
+      "starterCode": "function createStore(reducer, initial) {\n  let state = initial;\n  const listeners = [];\n  return {\n    getState: () => state,\n    dispatch(action) {\n      reducer(state, action);\n      listeners.forEach((l) => l());\n    },\n    subscribe(fn) {\n      listeners.push(fn);\n      return () => {};\n    },\n  };\n}\n\n// Test driver (leave as is): a counter reducer; one listener records the state\n// and unsubscribes after it has seen stopAfter updates.\nfunction runStore(actions, stopAfter) {\n  const reducer = (s, a) => (a === \"inc\" ? s + 1 : a === \"dec\" ? s - 1 : s);\n  const store = createStore(reducer, 0);\n  const seen = [];\n  const unsubscribe = store.subscribe(() => {\n    seen.push(store.getState());\n    if (seen.length === stopAfter) unsubscribe();\n  });\n  actions.forEach((a) => store.dispatch(a));\n  return { final: store.getState(), seen };\n}",
+      "referenceSolution": "function createStore(reducer, initial) {\n  let state = initial;\n  let listeners = [];\n  return {\n    getState: () => state,\n    dispatch(action) {\n      state = reducer(state, action);\n      listeners.forEach((l) => l());\n    },\n    subscribe(fn) {\n      listeners.push(fn);\n      return () => {\n        listeners = listeners.filter((l) => l !== fn);\n      };\n    },\n  };\n}\n\n// Test driver (leave as is): a counter reducer; one listener records the state\n// and unsubscribes after it has seen stopAfter updates.\nfunction runStore(actions, stopAfter) {\n  const reducer = (s, a) => (a === \"inc\" ? s + 1 : a === \"dec\" ? s - 1 : s);\n  const store = createStore(reducer, 0);\n  const seen = [];\n  const unsubscribe = store.subscribe(() => {\n    seen.push(store.getState());\n    if (seen.length === stopAfter) unsubscribe();\n  });\n  actions.forEach((a) => store.dispatch(a));\n  return { final: store.getState(), seen };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "inc",
+              "inc",
+              "dec"
+            ],
+            10
+          ],
+          "expected": {
+            "final": 1,
+            "seen": [
+              1,
+              2,
+              1
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            1
+          ],
+          "expected": {
+            "final": 0,
+            "seen": []
+          }
+        },
+        {
+          "args": [
+            [
+              "inc",
+              "inc",
+              "inc"
+            ],
+            2
+          ],
+          "expected": {
+            "final": 3,
+            "seen": [
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              "noop",
+              "dec"
+            ],
+            5
+          ],
+          "expected": {
+            "final": -1,
+            "seen": [
+              0,
+              -1
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`createLogger(prefix, sink)` returns `{ log, child }`. `log(msg)` pushes `\"[prefix] msg\"` into `sink`. `child(name)` returns a logger with prefix `prefix:name` writing to the same sink.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runLogger",
+      "starterCode": "function createLogger(prefix, sink) {\n  return {\n    log: (msg) => sink.push(\"[\" + prefix + \"] \" + msg),\n    child: (name) => createLogger(name, []),\n  };\n}\n\n// Test driver (leave as is): steps = [[path, msg]] where path is the list of child names.\nfunction runLogger(prefix, steps) {\n  const sink = [];\n  const root = createLogger(prefix, sink);\n  for (const [path, msg] of steps) {\n    let logger = root;\n    for (const name of path) logger = logger.child(name);\n    logger.log(msg);\n  }\n  return sink;\n}",
+      "referenceSolution": "function createLogger(prefix, sink) {\n  return {\n    log: (msg) => sink.push(\"[\" + prefix + \"] \" + msg),\n    child: (name) => createLogger(prefix + \":\" + name, sink),\n  };\n}\n\n// Test driver (leave as is): steps = [[path, msg]] where path is the list of child names.\nfunction runLogger(prefix, steps) {\n  const sink = [];\n  const root = createLogger(prefix, sink);\n  for (const [path, msg] of steps) {\n    let logger = root;\n    for (const name of path) logger = logger.child(name);\n    logger.log(msg);\n  }\n  return sink;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "app",
+            [
+              [
+                [],
+                "start"
+              ],
+              [
+                [
+                  "db"
+                ],
+                "connected"
+              ]
+            ]
+          ],
+          "expected": [
+            "[app] start",
+            "[app:db] connected"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "app",
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "api",
+            [
+              [
+                [
+                  "auth",
+                  "jwt"
+                ],
+                "expired"
+              ]
+            ]
+          ],
+          "expected": [
+            "[api:auth:jwt] expired"
+          ]
+        },
+        {
+          "args": [
+            "x",
+            [
+              [
+                [
+                  "a"
+                ],
+                "1"
+              ],
+              [
+                [],
+                "2"
+              ],
+              [
+                [
+                  "a"
+                ],
+                "3"
+              ]
+            ]
+          ],
+          "expected": [
+            "[x:a] 1",
+            "[x] 2",
+            "[x:a] 3"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Write `partial(fn, ...preset)`: it returns a function that calls `fn` with the preset arguments first, then the ones given later. `this` handling is not needed.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "partialDriver",
+      "starterCode": "function partial(fn, ...preset) {\n  return (...later) => fn(...later, ...preset);\n}\n\n// Test driver (leave as is): fn collects its arguments into an array.\nfunction partialDriver(preset, later) {\n  const collect = (...args) => args;\n  return partial(collect, ...preset)(...later);\n}",
+      "referenceSolution": "function partial(fn, ...preset) {\n  return (...later) => fn(...preset, ...later);\n}\n\n// Test driver (leave as is): fn collects its arguments into an array.\nfunction partialDriver(preset, later) {\n  const collect = (...args) => args;\n  return partial(collect, ...preset)(...later);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "GET"
+            ],
+            [
+              "/users"
+            ]
+          ],
+          "expected": [
+            "GET",
+            "/users"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            []
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ],
+          "expected": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ]
+        },
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": []
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`createHistory(initial)` returns `{ set, undo, redo, value }` for an editor. `set` records a new value and clears the redo list. `undo` / `redo` do nothing when there is nothing to undo / redo.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runHistory",
+      "starterCode": "function createHistory(initial) {\n  let past = [];\n  let present = initial;\n  let future = [];\n  return {\n    set(v) {\n      past.push(present);\n      present = v;\n    },\n    undo() {\n      future.push(present);\n      present = past.pop();\n    },\n    redo() {\n      past.push(present);\n      present = future.pop();\n    },\n    value: () => present,\n  };\n}\n\n// Test driver (leave as is): ops like [\"set\", \"b\"], [\"undo\"], [\"redo\"]; records value() after each.\nfunction runHistory(initial, ops) {\n  const h = createHistory(initial);\n  return ops.map(([op, v]) => {\n    h[op](v);\n    return h.value();\n  });\n}",
+      "referenceSolution": "function createHistory(initial) {\n  const past = [];\n  let present = initial;\n  let future = [];\n  return {\n    set(v) {\n      past.push(present);\n      present = v;\n      future = [];\n    },\n    undo() {\n      if (!past.length) return;\n      future.push(present);\n      present = past.pop();\n    },\n    redo() {\n      if (!future.length) return;\n      past.push(present);\n      present = future.pop();\n    },\n    value: () => present,\n  };\n}\n\n// Test driver (leave as is): ops like [\"set\", \"b\"], [\"undo\"], [\"redo\"]; records value() after each.\nfunction runHistory(initial, ops) {\n  const h = createHistory(initial);\n  return ops.map(([op, v]) => {\n    h[op](v);\n    return h.value();\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "a",
+            [
+              [
+                "set",
+                "b"
+              ],
+              [
+                "undo"
+              ],
+              [
+                "redo"
+              ]
+            ]
+          ],
+          "expected": [
+            "b",
+            "a",
+            "b"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "a",
+            [
+              [
+                "undo"
+              ]
+            ]
+          ],
+          "expected": [
+            "a"
+          ]
+        },
+        {
+          "args": [
+            "a",
+            [
+              [
+                "redo"
+              ]
+            ]
+          ],
+          "expected": [
+            "a"
+          ]
+        },
+        {
+          "args": [
+            "a",
+            [
+              [
+                "set",
+                "b"
+              ],
+              [
+                "undo"
+              ],
+              [
+                "set",
+                "c"
+              ],
+              [
+                "redo"
+              ]
+            ]
+          ],
+          "expected": [
+            "b",
+            "a",
+            "c",
+            "c"
+          ]
+        },
+        {
+          "args": [
+            "x",
+            [
+              [
+                "set",
+                "y"
+              ],
+              [
+                "set",
+                "z"
+              ],
+              [
+                "undo"
+              ],
+              [
+                "undo"
+              ],
+              [
+                "undo"
+              ]
+            ]
+          ],
+          "expected": [
+            "y",
+            "z",
+            "y",
+            "x",
+            "x"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Write `createEmitter()` returning `{ on, emit }`. `on(event, fn)` returns an `off` function. `emit(event, payload)` calls that event's listeners in the order they were added. Calling `off` twice is harmless.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "runEmitter",
+      "starterCode": "type Listener = (payload: unknown) => void;\n\nfunction createEmitter() {\n  const listeners: Record<string, Listener[]> = {};\n  return {\n    on(event: string, fn: Listener) {\n      (listeners[event] ??= []).push(fn);\n      return () => {\n        listeners[event].pop();\n      };\n    },\n    emit(event: string, payload: unknown) {\n      (listeners[event] ?? []).forEach((fn) => fn(payload));\n    },\n  };\n}\n\n// Test driver (leave as is). steps: [\"on\", event, name] | [\"off\", name] | [\"emit\", event, payload]\nfunction runEmitter(steps: [string, string, unknown?][]) {\n  const bus = createEmitter();\n  const offs: Record<string, () => void> = {};\n  const log: string[] = [];\n  for (const [op, a, b] of steps) {\n    if (op === \"on\") offs[b as string] = bus.on(a, (p) => log.push(b + \":\" + p));\n    if (op === \"off\") offs[a]();\n    if (op === \"emit\") bus.emit(a, b);\n  }\n  return log;\n}",
+      "referenceSolution": "type Listener = (payload: unknown) => void;\n\nfunction createEmitter() {\n  const listeners: Record<string, Listener[]> = {};\n  return {\n    on(event: string, fn: Listener) {\n      (listeners[event] ??= []).push(fn);\n      return () => {\n        listeners[event] = (listeners[event] ?? []).filter((l) => l !== fn);\n      };\n    },\n    emit(event: string, payload: unknown) {\n      [...(listeners[event] ?? [])].forEach((fn) => fn(payload));\n    },\n  };\n}\n\n// Test driver (leave as is). steps: [\"on\", event, name] | [\"off\", name] | [\"emit\", event, payload]\nfunction runEmitter(steps: [string, string, unknown?][]) {\n  const bus = createEmitter();\n  const offs: Record<string, () => void> = {};\n  const log: string[] = [];\n  for (const [op, a, b] of steps) {\n    if (op === \"on\") offs[b as string] = bus.on(a, (p) => log.push(b + \":\" + p));\n    if (op === \"off\") offs[a]();\n    if (op === \"emit\") bus.emit(a, b);\n  }\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "on",
+                "save",
+                "A"
+              ],
+              [
+                "on",
+                "save",
+                "B"
+              ],
+              [
+                "emit",
+                "save",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            "A:1",
+            "B:1"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "emit",
+                "x",
+                1
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "on",
+                "s",
+                "A"
+              ],
+              [
+                "on",
+                "s",
+                "B"
+              ],
+              [
+                "off",
+                "A"
+              ],
+              [
+                "emit",
+                "s",
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            "B:2"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "on",
+                "s",
+                "A"
+              ],
+              [
+                "on",
+                "t",
+                "B"
+              ],
+              [
+                "off",
+                "A"
+              ],
+              [
+                "off",
+                "A"
+              ],
+              [
+                "emit",
+                "t",
+                3
+              ],
+              [
+                "emit",
+                "s",
+                4
+              ]
+            ]
+          ],
+          "expected": [
+            "B:3"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "dev",
+        "prod",
+        "undefined",
+        "TypeError"
+      ],
+      "correctIndex": 0,
+      "explanation": "The inner function closes over the parameter `c`, which was bound to the *first* object. Reassigning the outer `config` variable points it at a new object but does not change `c`.",
+      "snippet": "let config = { env: \"dev\" };\nconst getEnv = ((c) => () => c.env)(config);\nconfig = { env: \"prod\" };\nconsole.log(getEnv());",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "0 3",
+        "2 3",
+        "0 1",
+        "3 3"
+      ],
+      "correctIndex": 0,
+      "explanation": "`n` in the returned object is a copy of the number at creation time (`0`). `inc` updates the private `n` inside the closure, which is now `3` after the third call. Expose a getter, not the raw value.",
+      "snippet": "const counter = (function () {\n  let n = 0;\n  return { inc: () => ++n, n };\n})();\ncounter.inc();\ncounter.inc();\nconsole.log(counter.n, counter.inc());",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "3,3,3",
+        "0,1,2",
+        "2,2,2",
+        "undefined,undefined,undefined"
+      ],
+      "correctIndex": 0,
+      "explanation": "The per-iteration binding only happens when `let` is declared *in the loop header*. Here `i` is declared once outside, so every function reads the same variable, which ends at `3`.",
+      "snippet": "const fns = [];\nlet i;\nfor (i = 0; i < 3; i++) {\n  fns.push(() => i);\n}\nconsole.log(fns.map((f) => f()).join(\",\"));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Write `throttle(fn, wait, clock)` with leading **and** trailing calls:\n\n- The first call runs `fn` immediately\n- Calls within `wait` ms of the last run are not run immediately; when the window ends, `fn` runs once more with the **latest** arguments (if any call was skipped)\n\nUse `clock.now()`, `clock.setTimeout`, `clock.clearTimeout`. The driver returns `[time, value]` for each real call.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runThrottle",
+      "starterCode": "function throttle(fn, wait, clock) {\n  let last = -Infinity;\n  return (...args) => {\n    if (clock.now() - last >= wait) {\n      last = clock.now();\n      fn(...args);\n    }\n  };\n}\n\n// Fake clock (leave as is): timers only fire when the driver advances time.\nfunction fakeClock() {\n  let now = 0;\n  let timers = [];\n  let nextId = 1;\n  return {\n    now: () => now,\n    setTimeout(cb, ms) {\n      const id = nextId++;\n      timers.push({ id, at: now + ms, cb });\n      return id;\n    },\n    clearTimeout(id) {\n      timers = timers.filter((t) => t.id !== id);\n    },\n    advance(to) {\n      for (;;) {\n        const due = timers.filter((t) => t.at <= to).sort((a, b) => a.at - b.at || a.id - b.id)[0];\n        if (!due) break;\n        timers = timers.filter((t) => t !== due);\n        now = due.at;\n        due.cb();\n      }\n      now = to;\n    },\n  };\n}\n\n// Test driver (leave as is): calls = [[time, value], ...]\nfunction runThrottle(wait, calls) {\n  const clock = fakeClock();\n  const log = [];\n  const handler = throttle((v) => log.push([clock.now(), v]), wait, clock);\n  for (const [t, v] of calls) {\n    clock.advance(t);\n    handler(v);\n  }\n  clock.advance(1e9);\n  return log;\n}",
+      "referenceSolution": "function throttle(fn, wait, clock) {\n  let last = -Infinity;\n  let timer = null;\n  let pending = null;\n  const run = (args) => {\n    last = clock.now();\n    fn(...args);\n  };\n  return (...args) => {\n    const elapsed = clock.now() - last;\n    if (elapsed >= wait && timer === null) {\n      run(args);\n      return;\n    }\n    pending = args;\n    if (timer === null) {\n      timer = clock.setTimeout(() => {\n        timer = null;\n        const a = pending;\n        pending = null;\n        run(a);\n      }, wait - elapsed);\n    }\n  };\n}\n\n// Fake clock (leave as is): timers only fire when the driver advances time.\nfunction fakeClock() {\n  let now = 0;\n  let timers = [];\n  let nextId = 1;\n  return {\n    now: () => now,\n    setTimeout(cb, ms) {\n      const id = nextId++;\n      timers.push({ id, at: now + ms, cb });\n      return id;\n    },\n    clearTimeout(id) {\n      timers = timers.filter((t) => t.id !== id);\n    },\n    advance(to) {\n      for (;;) {\n        const due = timers.filter((t) => t.at <= to).sort((a, b) => a.at - b.at || a.id - b.id)[0];\n        if (!due) break;\n        timers = timers.filter((t) => t !== due);\n        now = due.at;\n        due.cb();\n      }\n      now = to;\n    },\n  };\n}\n\n// Test driver (leave as is): calls = [[time, value], ...]\nfunction runThrottle(wait, calls) {\n  const clock = fakeClock();\n  const log = [];\n  const handler = throttle((v) => log.push([clock.now(), v]), wait, clock);\n  for (const [t, v] of calls) {\n    clock.advance(t);\n    handler(v);\n  }\n  clock.advance(1e9);\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                30,
+                "b"
+              ],
+              [
+                60,
+                "c"
+              ],
+              [
+                250,
+                "d"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              "a"
+            ],
+            [
+              100,
+              "c"
+            ],
+            [
+              250,
+              "d"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            100,
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "x"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              "x"
+            ]
+          ]
+        },
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                100,
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              "a"
+            ],
+            [
+              100,
+              "b"
+            ]
+          ]
+        },
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                10,
+                "b"
+              ],
+              [
+                110,
+                "c"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              0,
+              "a"
+            ],
+            [
+              100,
+              "b"
+            ],
+            [
+              200,
+              "c"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Write `memoizeTTL(fn, ttl, now)`: cache results per argument, but an entry older than `ttl` ms is recomputed. `now()` returns the current time (the driver controls it).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runTTL",
+      "starterCode": "function memoizeTTL(fn, ttl, now) {\n  const cache = new Map();\n  return (key) => {\n    if (cache.has(key)) return cache.get(key);\n    const value = fn(key);\n    cache.set(key, value);\n    return value;\n  };\n}\n\n// Test driver (leave as is): calls = [[time, key]]; fn returns key + \"@\" + the time it really ran.\nfunction runTTL(ttl, calls) {\n  let time = 0;\n  const getRate = memoizeTTL((key) => key + \"@\" + time, ttl, () => time);\n  return calls.map(([t, key]) => {\n    time = t;\n    return getRate(key);\n  });\n}",
+      "referenceSolution": "function memoizeTTL(fn, ttl, now) {\n  const cache = new Map();\n  return (key) => {\n    const hit = cache.get(key);\n    if (hit && now() - hit.at < ttl) return hit.value;\n    const value = fn(key);\n    cache.set(key, { value, at: now() });\n    return value;\n  };\n}\n\n// Test driver (leave as is): calls = [[time, key]]; fn returns key + \"@\" + the time it really ran.\nfunction runTTL(ttl, calls) {\n  let time = 0;\n  const getRate = memoizeTTL((key) => key + \"@\" + time, ttl, () => time);\n  return calls.map(([t, key]) => {\n    time = t;\n    return getRate(key);\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1000,
+            [
+              [
+                0,
+                "usd"
+              ],
+              [
+                500,
+                "usd"
+              ],
+              [
+                1200,
+                "usd"
+              ]
+            ]
+          ],
+          "expected": [
+            "usd@0",
+            "usd@0",
+            "usd@1200"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1000,
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                0,
+                "b"
+              ],
+              [
+                50,
+                "a"
+              ],
+              [
+                99,
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            "a@0",
+            "b@0",
+            "a@0",
+            "b@0"
+          ]
+        },
+        {
+          "args": [
+            100,
+            [
+              [
+                0,
+                "a"
+              ],
+              [
+                100,
+                "a"
+              ]
+            ]
+          ],
+          "expected": [
+            "a@0",
+            "a@100"
+          ]
+        },
+        {
+          "args": [
+            0,
+            [
+              [
+                5,
+                "a"
+              ],
+              [
+                5,
+                "a"
+              ]
+            ]
+          ],
+          "expected": [
+            "a@5",
+            "a@5"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Write `createLRU(limit)` returning `{ get, put }`. `get` returns the value or `-1` and marks the key as recently used. `put` adds/updates a key; when over `limit`, evict the least recently used key.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runLRU",
+      "starterCode": "function createLRU(limit) {\n  const map = new Map();\n  return {\n    get: (key) => (map.has(key) ? map.get(key) : -1),\n    put(key, value) {\n      map.set(key, value);\n      if (map.size > limit) map.delete(map.keys().next().value);\n    },\n  };\n}\n\n// Test driver (leave as is): ops = [\"put\", k, v] | [\"get\", k]; returns the get results.\nfunction runLRU(limit, ops) {\n  const cache = createLRU(limit);\n  const out = [];\n  for (const [op, k, v] of ops) {\n    if (op === \"put\") cache.put(k, v);\n    else out.push(cache.get(k));\n  }\n  return out;\n}",
+      "referenceSolution": "function createLRU(limit) {\n  const map = new Map();\n  return {\n    get(key) {\n      if (!map.has(key)) return -1;\n      const value = map.get(key);\n      map.delete(key);\n      map.set(key, value);\n      return value;\n    },\n    put(key, value) {\n      map.delete(key);\n      map.set(key, value);\n      if (map.size > limit) map.delete(map.keys().next().value);\n    },\n  };\n}\n\n// Test driver (leave as is): ops = [\"put\", k, v] | [\"get\", k]; returns the get results.\nfunction runLRU(limit, ops) {\n  const cache = createLRU(limit);\n  const out = [];\n  for (const [op, k, v] of ops) {\n    if (op === \"put\") cache.put(k, v);\n    else out.push(cache.get(k));\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2,
+            [
+              [
+                "put",
+                "a",
+                1
+              ],
+              [
+                "put",
+                "b",
+                2
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "put",
+                "c",
+                3
+              ],
+              [
+                "get",
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            -1
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1,
+            [
+              [
+                "get",
+                "x"
+              ]
+            ]
+          ],
+          "expected": [
+            -1
+          ]
+        },
+        {
+          "args": [
+            2,
+            [
+              [
+                "put",
+                "a",
+                1
+              ],
+              [
+                "put",
+                "b",
+                2
+              ],
+              [
+                "put",
+                "a",
+                9
+              ],
+              [
+                "put",
+                "c",
+                3
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "get",
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            9,
+            -1
+          ]
+        },
+        {
+          "args": [
+            2,
+            [
+              [
+                "put",
+                "a",
+                1
+              ],
+              [
+                "put",
+                "b",
+                2
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "put",
+                "c",
+                3
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "get",
+                "c"
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            1,
+            3
+          ]
+        },
+        {
+          "args": [
+            1,
+            [
+              [
+                "put",
+                "a",
+                1
+              ],
+              [
+                "put",
+                "b",
+                2
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "get",
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            -1,
+            2
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Write `memoizeBy(fn, keyFn)` for multi-argument functions. The cache key is `keyFn(...args)`; when `keyFn` is not given, use `JSON.stringify(args)`. Results that are `undefined` must be cached too.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runMemoBy",
+      "starterCode": "function memoizeBy(fn, keyFn) {\n  const cache = new Map();\n  return (...args) => {\n    const key = keyFn ? keyFn(...args) : args[0];\n    if (cache.get(key)) return cache.get(key);\n    const value = fn(...args);\n    cache.set(key, value);\n    return value;\n  };\n}\n\n// Test driver (leave as is): fn looks up a price (undefined when not found) and counts calls.\n// byUserOnly = true passes a keyFn that ignores the second argument.\nfunction runMemoBy(calls, byUserOnly) {\n  const prices = { a: 10, b: 0 };\n  let calls_ = 0;\n  const price = memoizeBy(\n    (sku, currency) => {\n      calls_++;\n      return prices[sku] === undefined ? undefined : prices[sku] + \":\" + currency;\n    },\n    byUserOnly ? (sku) => sku : undefined,\n  );\n  const results = calls.map(([sku, cur]) => price(sku, cur) ?? null);\n  return { results, calls: calls_ };\n}",
+      "referenceSolution": "function memoizeBy(fn, keyFn) {\n  const cache = new Map();\n  return (...args) => {\n    const key = keyFn ? keyFn(...args) : JSON.stringify(args);\n    if (cache.has(key)) return cache.get(key);\n    const value = fn(...args);\n    cache.set(key, value);\n    return value;\n  };\n}\n\n// Test driver (leave as is): fn looks up a price (undefined when not found) and counts calls.\n// byUserOnly = true passes a keyFn that ignores the second argument.\nfunction runMemoBy(calls, byUserOnly) {\n  const prices = { a: 10, b: 0 };\n  let calls_ = 0;\n  const price = memoizeBy(\n    (sku, currency) => {\n      calls_++;\n      return prices[sku] === undefined ? undefined : prices[sku] + \":\" + currency;\n    },\n    byUserOnly ? (sku) => sku : undefined,\n  );\n  const results = calls.map(([sku, cur]) => price(sku, cur) ?? null);\n  return { results, calls: calls_ };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                "usd"
+              ],
+              [
+                "a",
+                "usd"
+              ]
+            ],
+            false
+          ],
+          "expected": {
+            "results": [
+              "10:usd",
+              "10:usd"
+            ],
+            "calls": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                "usd"
+              ],
+              [
+                "a",
+                "eur"
+              ]
+            ],
+            false
+          ],
+          "expected": {
+            "results": [
+              "10:usd",
+              "10:eur"
+            ],
+            "calls": 2
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "z",
+                "usd"
+              ],
+              [
+                "z",
+                "usd"
+              ]
+            ],
+            false
+          ],
+          "expected": {
+            "results": [
+              null,
+              null
+            ],
+            "calls": 1
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                "usd"
+              ],
+              [
+                "a",
+                "eur"
+              ]
+            ],
+            true
+          ],
+          "expected": {
+            "results": [
+              "10:usd",
+              "10:usd"
+            ],
+            "calls": 1
+          }
+        },
+        {
+          "args": [
+            [],
+            false
+          ],
+          "expected": {
+            "results": [],
+            "calls": 0
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Write `batcher(send, size)` for an analytics client: `add(event)` collects events and calls `send(batch)` as soon as `size` events are queued; `flush()` sends whatever is left (and does nothing if the queue is empty).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runBatcher",
+      "starterCode": "function batcher(send, size) {\n  const queue = [];\n  return {\n    add(event) {\n      queue.push(event);\n      if (queue.length === size) send(queue);\n    },\n    flush() {\n      send(queue);\n    },\n  };\n}\n\n// Test driver (leave as is): ops = [\"add\", e] | [\"flush\"]; returns every batch sent.\nfunction runBatcher(size, ops) {\n  const sent = [];\n  const b = batcher((batch) => sent.push(batch), size);\n  for (const [op, e] of ops) b[op](e);\n  return sent;\n}",
+      "referenceSolution": "function batcher(send, size) {\n  let queue = [];\n  const drain = () => {\n    const batch = queue;\n    queue = [];\n    send(batch);\n  };\n  return {\n    add(event) {\n      queue.push(event);\n      if (queue.length >= size) drain();\n    },\n    flush() {\n      if (queue.length) drain();\n    },\n  };\n}\n\n// Test driver (leave as is): ops = [\"add\", e] | [\"flush\"]; returns every batch sent.\nfunction runBatcher(size, ops) {\n  const sent = [];\n  const b = batcher((batch) => sent.push(batch), size);\n  for (const [op, e] of ops) b[op](e);\n  return sent;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2,
+            [
+              [
+                "add",
+                1
+              ],
+              [
+                "add",
+                2
+              ],
+              [
+                "add",
+                3
+              ],
+              [
+                "flush"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            3,
+            [
+              [
+                "flush"
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            2,
+            [
+              [
+                "add",
+                "a"
+              ],
+              [
+                "add",
+                "b"
+              ],
+              [
+                "add",
+                "c"
+              ],
+              [
+                "add",
+                "d"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        },
+        {
+          "args": [
+            5,
+            [
+              [
+                "add",
+                1
+              ],
+              [
+                "flush"
+              ],
+              [
+                "flush"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1
+            ]
+          ]
+        },
+        {
+          "args": [
+            1,
+            [
+              [
+                "add",
+                "x"
+              ],
+              [
+                "add",
+                "y"
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              "x"
+            ],
+            [
+              "y"
+            ]
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "This module powers a live price widget. Mark the lines that leak memory or behave wrongly because of how closures capture variables.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines with closure-related bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const cache = {};",
+          "issue": "Module-level cache keyed by every symbol ever seen grows forever; it needs a size limit or TTL."
+        },
+        {
+          "id": "l2",
+          "text": "export function watchPrices(symbols, render) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  for (var i = 0; i < symbols.length; i++) {",
+          "issue": "`var` shares one `i`; the async callbacks below all read `symbols[symbols.length]` (undefined). Use `let` or `for...of`."
+        },
+        {
+          "id": "l4",
+          "text": "    fetchPrice(symbols[i]).then((p) => { cache[symbols[i]] = p; render(symbols[i], p); });",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  const id = setInterval(() => refresh(symbols, render), 5000);",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  return () => {};",
+          "issue": "The returned cleanup never calls `clearInterval(id)`, so the interval (and everything it closes over) lives forever after unmount."
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-js-closures-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "0 1 2",
+        "3 3 3",
+        "2 2 2",
+        "undefined undefined undefined"
+      ],
+      "correctIndex": 0,
+      "explanation": "The IIFE runs immediately on each pass and binds the current `i` to its own parameter `j`, so each timer closes over a different `j`. This is the pre-`let` fix for the classic loop bug.",
+      "snippet": "for (var i = 0; i < 3; i++) {\n  ((j) => setTimeout(() => console.log(j), 0))(i);\n}",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "1",
+        "2",
+        "undefined",
+        "ReferenceError"
+      ],
+      "correctIndex": 0,
+      "explanation": "Scope is lexical: `read` sees the variables where it was *written*, not where it is *called*. The `x` inside `run` is invisible to it.",
+      "snippet": "let x = 1;\nfunction read() {\n  return x;\n}\nfunction run() {\n  let x = 2;\n  return read();\n}\nconsole.log(run());",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-closures-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Bo",
+        "Ana",
+        "undefined",
+        "TypeError: Cannot read properties of undefined"
+      ],
+      "correctIndex": 0,
+      "explanation": "Neither method uses `this`; both close over the same `name` variable. Destructuring `getName` does not break it, and `setName` changed the shared variable, so it reads `Bo`.",
+      "snippet": "function makeUser(name) {\n  return {\n    getName() { return name; },\n    setName(n) { name = n; },\n  };\n}\nconst user = makeUser(\"Ana\");\nconst { getName } = user;\nuser.setName(\"Bo\");\nconsole.log(getName());",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  }
+]

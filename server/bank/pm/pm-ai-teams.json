@@ -1,0 +1,363 @@
+[
+  {
+    "id": "pm-ai-teams-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A draft team guideline for AI coding assistants. Mark the weak rules.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A draft team guideline for AI coding assistants. Mark the weak rules.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Use only company-approved AI tools and accounts for client code.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "AI-generated code needs the same review and tests as any other code.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Paste production secrets into prompts when debugging if needed.",
+          "issue": "Never put secrets in prompts."
+        },
+        {
+          "id": "s4",
+          "text": "Juniors should use AI for everything so they ship faster.",
+          "issue": "Juniors need to build understanding; protect learning, not just output."
+        },
+        {
+          "id": "s5",
+          "text": "Check each client's contract for AI restrictions before use.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Productivity is measured by the number of AI suggestions accepted.",
+          "issue": "An activity measure; use delivery outcomes."
+        },
+        {
+          "id": "s7",
+          "text": "AI-generated code is included in security review.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Tell clients how AI is used on their project when they ask.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-teams-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Since adopting AI assistants, the team opens many more pull requests, and review queues are growing.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Since adopting AI assistants, the team opens many more pull requests, and review queues are growing.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is happening?",
+          "options": [
+            "Reviewers are lazy",
+            "AI code needs no review",
+            "The bottleneck has moved from writing code to reviewing and integrating it",
+            "The team is too small to use AI"
+          ],
+          "correctIndex": 2,
+          "explanation": "More code per hour means more review load."
+        },
+        {
+          "id": "d2",
+          "question": "What helps most?",
+          "options": [
+            "Skip reviews for AI-generated code",
+            "Ban AI tools",
+            "Smaller PRs, WIP limits, and treating review as planned capacity",
+            "Add more PRs per developer"
+          ],
+          "correctIndex": 2,
+          "explanation": "Flow practices keep review from becoming the constraint."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-teams-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the rollout of AI coding tools on a client team.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the rollout of AI coding tools on a client team.",
+      "items": [
+        {
+          "id": "rca882",
+          "label": "Check contracts and get client approval where required"
+        },
+        {
+          "id": "reabb4",
+          "label": "Agree team norms: review, security, what not to share"
+        },
+        {
+          "id": "r390a6",
+          "label": "Record baseline delivery measures"
+        },
+        {
+          "id": "r6e458",
+          "label": "Pilot on suitable task types"
+        },
+        {
+          "id": "r3e67a",
+          "label": "Compare measures and adjust estimates and norms"
+        }
+      ],
+      "correctOrder": [
+        "rca882",
+        "reabb4",
+        "r390a6",
+        "r6e458",
+        "r3e67a"
+      ],
+      "explanation": "Permission, norms, baseline, pilot, measure."
+    }
+  },
+  {
+    "id": "pm-ai-teams-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A junior developer's AI-assisted code passes tests, but in review they cannot explain how it works.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A junior developer's AI-assisted code passes tests, but in review they cannot explain how it works.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should the team lead or PM do?",
+          "options": [
+            "Merge it; tests pass",
+            "Ban the developer from AI tools",
+            "Rewrite it themselves",
+            "Require the developer to understand and explain code before merging, with pairing to help"
+          ],
+          "correctIndex": 3,
+          "explanation": "Accountability includes understanding what you ship."
+        },
+        {
+          "id": "d2",
+          "question": "How do you protect learning on the team?",
+          "options": [
+            "Let AI write everything",
+            "Avoid giving juniors complex work",
+            "Set norms that juniors write some work without AI and explain AI output in reviews",
+            "Stop code review for juniors"
+          ],
+          "correctIndex": 2,
+          "explanation": "Deliberate practice keeps skills growing."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-teams-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Estimate the review capacity needed after AI adoption.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Estimate the review capacity needed after AI adoption.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "PRs per sprint before",
+            "40"
+          ],
+          [
+            "PRs per sprint after",
+            "60"
+          ],
+          [
+            "Average review time per PR",
+            "45 min"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "before",
+          "label": "Review hours per sprint before",
+          "unit": "h",
+          "answer": 30,
+          "tolerance": 0.1
+        },
+        {
+          "id": "after",
+          "label": "Review hours per sprint after",
+          "unit": "h",
+          "answer": 45,
+          "tolerance": 0.1
+        },
+        {
+          "id": "extra",
+          "label": "Extra review hours to plan for",
+          "unit": "h",
+          "answer": 15,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "40 x 45 min = 30 h; 60 x 45 min = 45 h; plan 15 extra review hours per sprint."
+    }
+  },
+  {
+    "id": "pm-ai-teams-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A PM's message to a client about AI use on their project. Mark the problematic claims.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's message to a client about AI use on their project. Mark the problematic claims.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Our engineers use approved AI coding assistants under our company account.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "All AI-generated code is reviewed and tested by our engineers.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "AI makes us 50% faster, so expect everything in half the time.",
+          "issue": "Unmeasured claim that sets unrealistic expectations."
+        },
+        {
+          "id": "s4",
+          "text": "No client data or secrets are shared with the tools beyond the code needed.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "The AI is responsible for any bugs it creates.",
+          "issue": "Accountability stays with the team; a tool cannot be responsible."
+        },
+        {
+          "id": "s6",
+          "text": "We'll share measured delivery data after the first month.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-teams-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Who is accountable for code an AI assistant wrote?",
+    "mcq": {
+      "options": [
+        "The engineer who merged it and the team that reviewed it",
+        "The AI vendor",
+        "Nobody",
+        "The client"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tools do not carry accountability; people do.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-teams-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why include AI-generated code in security review?",
+    "mcq": {
+      "options": [
+        "AI code is always insecure",
+        "Clients require it by law",
+        "It can introduce insecure patterns or dependencies like any other code",
+        "It makes reviews faster"
+      ],
+      "correctIndex": 2,
+      "explanation": "Treat AI code as untrusted input until reviewed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-teams-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-teams",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the best way to set expectations with a client about AI-assisted delivery?",
+    "mcq": {
+      "options": [
+        "Promise big savings up front",
+        "Say nothing",
+        "Be transparent about how AI is used and share measured results over time",
+        "Claim AI does most of the work"
+      ],
+      "correctIndex": 2,
+      "explanation": "Evidence and transparency avoid over-promising.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

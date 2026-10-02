@@ -1,0 +1,351 @@
+[
+  {
+    "id": "bd-forecasting-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Build a weighted forecast.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Deals expected to close this quarter, with your probability estimates, are below.",
+      "table": {
+        "columns": [
+          "Deal",
+          "Value",
+          "Probability"
+        ],
+        "rows": [
+          [
+            "Clinic app",
+            "$120,000",
+            "90%"
+          ],
+          [
+            "Logistics portal",
+            "$80,000",
+            "60%"
+          ],
+          [
+            "AI assistant",
+            "$150,000",
+            "30%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "forecast",
+          "label": "Weighted forecast",
+          "unit": "$",
+          "answer": 201000,
+          "tolerance": 1
+        },
+        {
+          "id": "best",
+          "label": "Best case (all three close)",
+          "unit": "$",
+          "answer": 350000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Weighted = 108,000 + 48,000 + 45,000 = $201000. Best case = $350,000. Report both, with the weighted figure as the forecast."
+    }
+  },
+  {
+    "id": "bd-forecasting-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Check pipeline coverage against quota.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your quarterly quota is $300,000 and your open pipeline for the quarter is $750,000. Your team's history suggests you need 3x coverage.",
+      "table": null,
+      "fields": [
+        {
+          "id": "cov",
+          "label": "Current coverage ratio",
+          "unit": "x",
+          "answer": 2.5,
+          "tolerance": 0.01
+        },
+        {
+          "id": "need",
+          "label": "Additional pipeline needed to reach 3x",
+          "unit": "$",
+          "answer": 150000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Coverage = 750,000 ÷ 300,000 = 2.5x. 3x = $900,000, so $150000 more is needed."
+    }
+  },
+  {
+    "id": "bd-forecasting-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Categorise deals for the forecast.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are preparing your forecast categories (commit, best case, pipeline).",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "A deal has a verbal yes, signed-off budget and the contract is with the client's legal team. Which category?",
+          "options": [
+            "Best case",
+            "Commit",
+            "Pipeline",
+            "Omitted"
+          ],
+          "correctIndex": 1,
+          "explanation": "Commit means you would stake your forecast on it: decision made, budget approved, paperwork underway."
+        },
+        {
+          "id": "s2",
+          "question": "A deal has a strong champion but the CFO has not yet seen the proposal. Which category?",
+          "options": [
+            "Commit",
+            "Closed won",
+            "Best case",
+            "Omitted"
+          ],
+          "correctIndex": 2,
+          "explanation": "Without the budget holder's approval it can happen, but it is not yet certain."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-forecasting-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this forecast.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this quarter's forecast call notes that should not be in \"commit\" or are poor forecasting practice.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Commit: Clinic app, $120,000, contract signed by both parties last week.",
+          "issue": "Already signed: it is closed won, not a forecast; double-counting it in commit inflates the number."
+        },
+        {
+          "id": "p2",
+          "text": "Commit: Retail portal, $90,000, close date moved three times; no contact with the decision-maker.",
+          "issue": "Repeated slips and no access to the decision-maker are not commit signals."
+        },
+        {
+          "id": "p3",
+          "text": "Commit: Logistics app, $80,000, budget approved, MSA with their legal, signature expected on the 20th.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Best case: AI assistant, $150,000, champion strong, CFO meeting booked.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Total commit: $290,000.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "We will add a few deals to commit to match the board target.",
+          "issue": "A forecast must reflect evidence, not the target."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-forecasting-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Measure forecast accuracy.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Over four quarters your forecasts were $400k, $350k, $500k and $450k. Actual results were $340k, $360k, $430k and $405k.",
+      "table": {
+        "columns": [
+          "Quarter",
+          "Forecast",
+          "Actual"
+        ],
+        "rows": [
+          [
+            "Q1",
+            "$400,000",
+            "$340,000"
+          ],
+          [
+            "Q2",
+            "$350,000",
+            "$360,000"
+          ],
+          [
+            "Q3",
+            "$500,000",
+            "$430,000"
+          ],
+          [
+            "Q4",
+            "$450,000",
+            "$405,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "q1",
+          "label": "Q1 error as % of forecast (absolute)",
+          "unit": "%",
+          "answer": 15,
+          "tolerance": 0.1
+        },
+        {
+          "id": "total",
+          "label": "Total actual as % of total forecast",
+          "unit": "%",
+          "answer": 90.29,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Q1: 60 ÷ 400 = 15%. Total: 1,535 ÷ 1,700 = 90.29%. You land below forecast in three of four quarters, a consistent optimism bias to correct."
+    }
+  },
+  {
+    "id": "bd-forecasting-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle pressure to inflate the forecast.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your CEO asks you to raise the quarterly forecast from $280,000 to $350,000 because the board expects it.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Keep the evidence-based forecast and show what would need to happen to reach $350,000",
+            "Raise it to $350,000",
+            "Raise it to $320,000 as a compromise",
+            "Refuse to share a forecast"
+          ],
+          "correctIndex": 0,
+          "explanation": "A forecast is a prediction, not a target. Give leadership the gap and the plan."
+        },
+        {
+          "id": "s2",
+          "question": "What plan supports closing the gap?",
+          "options": [
+            "Ask the team to work harder",
+            "Name the specific best-case deals that could move, with the actions and help needed",
+            "Offer large discounts on every deal",
+            "Push next quarter's deals into this quarter's forecast"
+          ],
+          "correctIndex": 1,
+          "explanation": "Specific deals and actions turn a target into a plan leadership can support."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-forecasting-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a sales forecast?",
+    "mcq": {
+      "options": [
+        "To predict revenue accurately so the business can plan hiring, cash and capacity",
+        "To motivate the team",
+        "To show the board an optimistic number",
+        "To set individual quotas"
+      ],
+      "correctIndex": 0,
+      "explanation": "Accuracy matters more than optimism; the business makes real decisions on the forecast.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-forecasting-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which deal belongs in \"commit\"?",
+    "mcq": {
+      "options": [
+        "A strong champion but no budget yet",
+        "Budget approved, decision-maker agreed, contract in legal review with a date",
+        "A first call went well",
+        "A proposal sent last week with no reply"
+      ],
+      "correctIndex": 1,
+      "explanation": "Commit needs evidence on every key element: decision, budget and process.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-forecasting-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A deal's close date has slipped three quarters in a row. What should you do in the forecast?",
+    "mcq": {
+      "options": [
+        "Keep it in commit; it will close eventually",
+        "Re-qualify it and move it out of commit until there is new evidence",
+        "Increase its probability",
+        "Delete it from the CRM"
+      ],
+      "correctIndex": 1,
+      "explanation": "Repeated slips are a strong signal; re-qualify rather than carry it forward on hope.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

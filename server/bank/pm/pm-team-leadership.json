@@ -1,0 +1,373 @@
+[
+  {
+    "id": "pm-team-leadership-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A new cross-functional team (iOS, Android, backend, QA, designer) starts on a client project. In week two, the iOS and Android developers build the same screen differently.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A new cross-functional team (iOS, Android, backend, QA, designer) starts on a client project. In week two, the iOS and Android developers build the same screen differently.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Pick one version yourself",
+            "Bring them together with the designer to agree shared patterns and a single source of truth for designs",
+            "Tell them to stop talking to each other",
+            "Escalate to their line managers"
+          ],
+          "correctIndex": 1,
+          "explanation": "Facilitate the people who own the work to agree a standard; you remove the cause, not just the symptom."
+        },
+        {
+          "id": "s2",
+          "question": "How do you keep it from recurring?",
+          "options": [
+            "Daily individual check-ins",
+            "Add 'design reviewed for both platforms' to the Definition of Done",
+            "Have the PM approve every screen",
+            "Assign one platform per sprint"
+          ],
+          "correctIndex": 1,
+          "explanation": "Building the check into the Definition of Done makes it a team habit."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-team-leadership-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this PM's notes for a one-on-one with a developer.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Ask how they're finding the project and the workload.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Tell them their code is sloppy.",
+          "issue": "Vague and personal; give specific examples and their impact."
+        },
+        {
+          "id": "p3",
+          "text": "Discuss the two PRs that went back for the same validation bug, and agree a fix.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Ask what support or learning would help them.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Remind them that others on the team are much better than them.",
+          "issue": "Comparisons demotivate and do not help them improve."
+        },
+        {
+          "id": "p6",
+          "text": "Agree one action each and follow up next week.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-team-leadership-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Your team's planned utilisation for next sprint is shown. The agency's healthy maximum is 85% of available hours. Who is overloaded and by how much is the team over?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Person",
+          "Available hours (2 weeks)",
+          "Planned hours"
+        ],
+        "rows": [
+          [
+            "Sara",
+            "80",
+            "76"
+          ],
+          [
+            "Ken",
+            "80",
+            "72"
+          ],
+          [
+            "Leo",
+            "80",
+            "60"
+          ],
+          [
+            "Ana",
+            "80",
+            "64"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "over",
+          "label": "Number of people over 85%",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        },
+        {
+          "id": "hours",
+          "label": "Total planned hours above the 85% line (sum over overloaded people)",
+          "unit": "h",
+          "answer": 12,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "85% of 80 h = 68 h. Sara (76 h, 95%) and Ken (72 h, 90%) are over: 8 + 4 = 12 hours to rebalance. Leo (60 h) and Ana (64 h) have room."
+    }
+  },
+  {
+    "id": "pm-team-leadership-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Two senior developers disagree strongly about whether to use GraphQL or REST for a new client API. The debate has blocked progress for four days.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Two senior developers disagree strongly about whether to use GraphQL or REST for a new client API. The debate has blocked progress for four days.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Decide yourself to end it",
+            "Time-box a decision: each writes a one-page trade-off against the project's criteria, the tech lead decides by Friday",
+            "Let them keep debating",
+            "Ask the client to choose"
+          ],
+          "correctIndex": 1,
+          "explanation": "A time-boxed, criteria-based decision with a clear decider respects expertise and unblocks the team."
+        },
+        {
+          "id": "s2",
+          "question": "The tech lead picks REST. The other developer is unhappy. What next?",
+          "options": [
+            "Ignore it",
+            "Acknowledge their input, record the decision and its reasons, and ask for commitment",
+            "Move them off the project",
+            "Reopen the debate next sprint"
+          ],
+          "correctIndex": 1,
+          "explanation": "'Disagree and commit' works when people feel heard and the reasoning is recorded."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-team-leadership-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Morale on a long white-label project has dropped. Velocity has fallen 20% over three sprints, two people mention burnout, and the client keeps adding urgent requests.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Morale on a long white-label project has dropped. Velocity has fallen 20% over three sprints, two people mention burnout, and the client keeps adding urgent requests.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you look at first?",
+          "options": [
+            "Who is the weakest performer",
+            "The causes: workload, interruptions from urgent requests, and overtime trends",
+            "The team's social media",
+            "Whether to replace the team"
+          ],
+          "correctIndex": 1,
+          "explanation": "Lower velocity with burnout signals is usually a system problem; find the causes first."
+        },
+        {
+          "id": "s2",
+          "question": "Urgent client requests interrupt the sprint several times a week. What change helps most?",
+          "options": [
+            "Accept all requests to keep the client happy",
+            "Agree with the client a single intake path and a small, fixed buffer for urgent items; everything else goes to the backlog",
+            "Ban all urgent requests",
+            "Ask the team to work weekends"
+          ],
+          "correctIndex": 1,
+          "explanation": "A clear intake rule protects focus while still handling genuine urgencies."
+        },
+        {
+          "id": "s3",
+          "question": "How do you check the change worked?",
+          "options": [
+            "Ask the client only",
+            "Track interruptions, overtime and velocity for the next sprints and check in with the team in the retro",
+            "Assume it worked",
+            "Count lines of code"
+          ],
+          "correctIndex": 1,
+          "explanation": "Measure the things you changed and ask the people affected."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-team-leadership-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order Tuckman's stages of team development as a new project team typically goes through them.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Performing: the team works effectively with little steering"
+        },
+        {
+          "id": "r2",
+          "label": "Storming: disagreements over approach and roles"
+        },
+        {
+          "id": "r1",
+          "label": "Forming: polite, unsure of roles"
+        },
+        {
+          "id": "r3",
+          "label": "Norming: shared ways of working emerge"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Forming, storming, norming, performing; the PM's style shifts from directing to supporting as the team matures."
+    }
+  },
+  {
+    "id": "pm-team-leadership-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does servant leadership mean for a PM on a delivery team?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Removing blockers and creating conditions for the team to do its best work",
+        "Doing all the team's tasks personally",
+        "Making every technical decision",
+        "Reporting only to the client"
+      ],
+      "correctIndex": 0,
+      "explanation": "Servant leaders serve the team: they clear obstacles, protect focus and help people grow.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-team-leadership-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A strong developer quietly stops contributing in meetings. What is the best first step?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Have a private conversation to ask how they are doing",
+        "Mention it in the retro",
+        "Report it to HR",
+        "Ignore it, output is still fine"
+      ],
+      "correctIndex": 0,
+      "explanation": "A private, open check-in surfaces the cause early, whether it is workload, conflict or something personal.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-team-leadership-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "As PM you have no line authority over the developers on your project. How do you best influence them?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Build trust, explain the why, involve them in decisions and recognise good work",
+        "Threaten to report them to their managers",
+        "Copy their managers on every message",
+        "Set personal targets for each developer"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without formal authority, influence comes from trust, shared purpose and involvement.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

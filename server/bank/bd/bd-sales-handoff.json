@@ -1,0 +1,386 @@
+[
+  {
+    "id": "bd-sales-handoff-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the problems in this sales-to-delivery handoff note for a signed $45k mobile app project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problems in this sales-to-delivery handoff note for a signed $45k mobile app project.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client: regional pharmacy chain; signer is the COO, day-to-day contact is the operations manager.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Scope: see the chat history, it's all in there somewhere.",
+          "issue": "Delivery needs the signed SOW and a clear scope summary, not a pointer to chat logs."
+        },
+        {
+          "id": "p3",
+          "text": "Key goal: cut phone prescription-refill requests by letting customers reorder in the app.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "I told them we could probably add a loyalty programme for free later.",
+          "issue": "An undocumented verbal promise creates scope conflict; record it or correct it with the client."
+        },
+        {
+          "id": "p5",
+          "text": "Launch date: the client has a marketing campaign starting 1 March, so launch must be before then.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Risks: their pharmacy system's API documentation has not been shared yet.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Budget: whatever they need, they seemed flexible.",
+          "issue": "Delivery needs the signed price and payment milestones, not an impression."
+        },
+        {
+          "id": "p8",
+          "text": "Kickoff call booked for next Tuesday with the operations manager and the PM.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-sales-handoff-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these handoff items by how critical they are for the delivery team on day one, most critical first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these handoff items by how critical they are for the delivery team on day one, most critical first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Promises or concessions made during the sale"
+        },
+        {
+          "id": "r4",
+          "label": "Stakeholders: who signs, who decides, who is day-to-day"
+        },
+        {
+          "id": "r5",
+          "label": "Rep's notes on the client's preferred communication style"
+        },
+        {
+          "id": "r1",
+          "label": "Signed SOW with scope, out-of-scope and acceptance criteria"
+        },
+        {
+          "id": "r2",
+          "label": "Client's business goal and how they will judge success"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "The contract scope comes first, then why they bought, then any promises that could cause conflict, then the people; style notes are helpful but least critical."
+    }
+  },
+  {
+    "id": "bd-sales-handoff-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You closed a deal yesterday. The PM asks for a handoff meeting; you are busy with three new proposals.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You closed a deal yesterday. The PM asks for a handoff meeting; you are busy with three new proposals.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Hold a 30-minute handoff with the PM, using a written handoff doc, before kickoff",
+            "Ask the PM to read the CRM and call the client directly",
+            "Wait until the client complains",
+            "Forward the email thread and skip the meeting"
+          ],
+          "correctIndex": 0,
+          "explanation": "A short structured handoff prevents weeks of rediscovery and keeps the client from repeating themselves."
+        },
+        {
+          "id": "s2",
+          "question": "The client asks you, not the PM, a delivery question after kickoff. What do you do?",
+          "options": [
+            "Reply warmly, loop in the PM, and point future delivery questions to them",
+            "Answer it yourself and keep being the main contact",
+            "Ignore the message",
+            "Tell the client you no longer work with them"
+          ],
+          "correctIndex": 0,
+          "explanation": "Stay friendly but transfer ownership; two parallel channels cause conflicting answers."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-sales-handoff-t2-4",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Track the cost of poor handoffs. Calculate the average number of client 'repeat' questions per project, and how many PM hours were spent rediscovering requirements per project, for each group.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Track the cost of poor handoffs. Calculate the average number of client 'repeat' questions per project, and how many PM hours were spent rediscovering requirements per project, for each group.",
+      "table": {
+        "columns": [
+          "Group",
+          "Projects",
+          "Repeat questions",
+          "PM rediscovery hours"
+        ],
+        "rows": [
+          [
+            "With written handoff",
+            "10",
+            "20",
+            "30"
+          ],
+          [
+            "Without handoff",
+            "8",
+            "56",
+            "96"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "qa",
+          "label": "Repeat questions per project, with handoff",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "qb",
+          "label": "Repeat questions per project, without",
+          "unit": "",
+          "answer": 7,
+          "tolerance": 0.01
+        },
+        {
+          "id": "ha",
+          "label": "Rediscovery hours per project, with handoff",
+          "unit": "h",
+          "answer": 3,
+          "tolerance": 0.01
+        },
+        {
+          "id": "hb",
+          "label": "Rediscovery hours per project, without",
+          "unit": "h",
+          "answer": 12,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "20/10 = 2 and 56/8 = 7 repeat questions; 30/10 = 3 h and 96/8 = 12 h of PM rediscovery per project."
+    }
+  },
+  {
+    "id": "bd-sales-handoff-t2-5",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Put these handoff steps in order, first to last.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these handoff steps in order, first to last.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Internal handoff meeting: BD, PM and tech lead"
+        },
+        {
+          "id": "r4",
+          "label": "Client kickoff call, BD introduces the PM"
+        },
+        {
+          "id": "r5",
+          "label": "BD steps back to a relationship role"
+        },
+        {
+          "id": "r1",
+          "label": "Deal marked closed-won with signed SOW attached in the CRM"
+        },
+        {
+          "id": "r2",
+          "label": "BD fills in the handoff template"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Record the win, write it down, brief the team internally, introduce the client to the PM, then step back."
+    }
+  },
+  {
+    "id": "bd-sales-handoff-t2-6",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "During the internal handoff, the tech lead notices the SOW says 'integrate with the client's ERP' but the ERP has no public API.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "During the internal handoff, the tech lead notices the SOW says 'integrate with the client's ERP' but the ERP has no public API.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the right next step?",
+          "options": [
+            "Start the project and hope the API exists",
+            "Quietly drop the integration",
+            "Blame the client for not mentioning it",
+            "Flag it before kickoff and agree with the client how the integration will be done or re-scoped"
+          ],
+          "correctIndex": 3,
+          "explanation": "Surfacing a feasibility gap early lets you re-scope with the client while goodwill is high."
+        },
+        {
+          "id": "s2",
+          "question": "The fix will add roughly two weeks. How do you raise it with the client?",
+          "options": [
+            "Explain what was found, offer options (change request, alternative such as file import, or phase 2), and agree in writing",
+            "Tell them only at launch",
+            "Absorb it silently"
+          ],
+          "correctIndex": 0,
+          "explanation": "Clear options and written agreement keep trust and protect margin."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-sales-handoff-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is the main goal of a sales-to-delivery handoff?",
+    "mcq": {
+      "options": [
+        "Collect the first payment",
+        "Transfer everything the client said and was promised so delivery does not make them repeat themselves",
+        "Let BD stop talking to the client entirely",
+        "Re-negotiate the price"
+      ],
+      "correctIndex": 1,
+      "explanation": "A handoff preserves context: goals, scope, promises, stakeholders and risks.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-sales-handoff-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A rep promised a client 'a couple of small extras' verbally. What should happen at handoff?",
+    "mcq": {
+      "options": [
+        "Add the extras to the price without telling the client",
+        "Record the promise and agree with delivery whether to honour it or clarify it with the client",
+        "Say nothing and let delivery find out",
+        "Tell the client the promise is cancelled"
+      ],
+      "correctIndex": 1,
+      "explanation": "Hidden promises become disputes; surfacing them lets the team decide openly.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-sales-handoff-m2-3",
+    "departmentId": "bd",
+    "skillId": "bd-sales-handoff",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Who should usually be in the internal handoff meeting?",
+    "mcq": {
+      "options": [
+        "Only the client",
+        "The BD owner, the project manager and the technical lead",
+        "Only the BD owner",
+        "The whole company"
+      ],
+      "correctIndex": 1,
+      "explanation": "These three own the sale context, the plan and the technical feasibility.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

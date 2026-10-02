@@ -1,0 +1,392 @@
+[
+  {
+    "id": "pm-sow-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Review this extract from a statement of work for a white-label delivery app. Mark the clauses that are vague or risky for Oyelabs.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this extract from a statement of work for a white-label delivery app. Mark the clauses that are vague or risky for Oyelabs.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Deliverables: iOS and Android customer apps, a web admin panel, and a driver app.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "The apps will be modern and user-friendly.",
+          "issue": "Subjective; nothing to accept or reject."
+        },
+        {
+          "id": "s3",
+          "text": "Integrations: Stripe payments and Google Maps.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "The client will provide brand assets and copy by week 2.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Timeline: launch in 12 weeks.",
+          "issue": "No link to client dependencies; if assets are late the date should move."
+        },
+        {
+          "id": "s6",
+          "text": "Acceptance: the client will test within 5 business days of each milestone; silence counts as acceptance.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Support: Oyelabs will fix all issues after launch.",
+          "issue": "Unbounded support; define a warranty period and what counts as a defect."
+        },
+        {
+          "id": "s8",
+          "text": "Payment: 25% on signing, 25% on design sign-off, 30% on UAT start, 20% on launch.",
+          "issue": null
+        },
+        {
+          "id": "s9",
+          "text": "Change requests follow the process in Appendix C.",
+          "issue": null
+        },
+        {
+          "id": "s10",
+          "text": "Hosting costs: paid by the client directly to AWS.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-sow-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Put these SOW sections in a sensible order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these SOW sections in a sensible order.",
+      "items": [
+        {
+          "id": "re8d70",
+          "label": "Background and objectives"
+        },
+        {
+          "id": "reb401",
+          "label": "Scope and deliverables"
+        },
+        {
+          "id": "r34019",
+          "label": "Out of scope"
+        },
+        {
+          "id": "r8c711",
+          "label": "Assumptions and client responsibilities"
+        },
+        {
+          "id": "rc0bbf",
+          "label": "Timeline and milestones"
+        },
+        {
+          "id": "rc95d0",
+          "label": "Acceptance criteria and process"
+        },
+        {
+          "id": "rcb3bd",
+          "label": "Fees and payment schedule"
+        },
+        {
+          "id": "ra0faf",
+          "label": "Change control"
+        }
+      ],
+      "correctOrder": [
+        "re8d70",
+        "reb401",
+        "r34019",
+        "r8c711",
+        "rc0bbf",
+        "rc95d0",
+        "rcb3bd",
+        "ra0faf"
+      ],
+      "explanation": "From why, to what, to what not, to what we rely on, to when, to how it is accepted, to money and how changes work."
+    }
+  },
+  {
+    "id": "pm-sow-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 3,
+    "prompt": "Write the \"Assumptions and client responsibilities\" section of an SOW for the project in the context. Use bullets.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write the \"Assumptions and client responsibilities\" section of an SOW for the project in the context. Use bullets.",
+      "context": "Project: AI-assisted claims intake for an insurance client. Oyelabs builds a web form and an AI step that extracts data from uploaded documents into the client's claims system via its REST API. Timeline 14 weeks. The client must provide 300 anonymised sample documents for training and evaluation, API sandbox access, and a product owner available 4 hours a week. Hosting is in the client's Azure tenant.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "specific",
+          "label": "Specific obligations",
+          "description": "Lists the concrete things the client must provide (sample documents, sandbox access, product owner time, Azure access) with quantities or dates.",
+          "weight": 1
+        },
+        {
+          "id": "consequence",
+          "label": "Consequence if unmet",
+          "description": "States that delays or failures in client responsibilities may affect timeline and cost through change control.",
+          "weight": 1
+        },
+        {
+          "id": "assumptions",
+          "label": "Clear assumptions",
+          "description": "Makes technical assumptions explicit, e.g. the API supports the operations needed and documents are of readable quality.",
+          "weight": 1
+        },
+        {
+          "id": "data",
+          "label": "Data handling",
+          "description": "Addresses data appropriately, e.g. documents are anonymised and the client confirms it may share them.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Assumptions and client responsibilities\n\n- By week 2, the client provides 300 anonymised sample claim documents representative of live claims, and confirms it is permitted to share them with Oyelabs.\n- By week 1, the client provides sandbox access to the claims system REST API, with documentation and test credentials.\n- The claims API supports creating and updating claims with the fields listed in Appendix A.\n- The client names a product owner available at least 4 hours a week for questions, reviews and decisions within 2 business days.\n- The client provides Oyelabs access to the agreed Azure tenant and resource group by week 2.\n- Documents are legible scans or digital PDFs; handwritten forms are out of scope.\n- If any responsibility is late or an assumption proves wrong, Oyelabs will assess the impact and timeline or fees may change through the change-control process."
+    }
+  },
+  {
+    "id": "pm-sow-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client's procurement team returns your SOW with edits: they deleted the out-of-scope list and changed acceptance to \"to the client's satisfaction\".",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client's procurement team returns your SOW with edits: they deleted the out-of-scope list and changed acceptance to \"to the client's satisfaction\".",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you respond to removing out-of-scope?",
+          "options": [
+            "Explain it protects both sides from surprises and propose keeping a shortened list of the items most likely to be assumed",
+            "Accept it to close the deal",
+            "Walk away from the deal",
+            "Add the out-of-scope items back without telling them"
+          ],
+          "correctIndex": 0,
+          "explanation": "Negotiate openly; the list is cheap insurance against disputes."
+        },
+        {
+          "id": "d2",
+          "question": "How do you respond to \"to the client's satisfaction\"?",
+          "options": [
+            "Accept it; satisfaction is the goal",
+            "Ask for a higher price instead",
+            "Remove acceptance from the SOW",
+            "Propose objective acceptance criteria per milestone, with a test period and a defect definition"
+          ],
+          "correctIndex": 3,
+          "explanation": "Subjective acceptance means payment can be withheld indefinitely."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-sow-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Check the milestone payment plan against the planned cost curve. The SOW price is $90,000.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Check the milestone payment plan against the planned cost curve. The SOW price is $90,000.",
+      "table": {
+        "columns": [
+          "Milestone",
+          "Payment %",
+          "Cumulative planned cost at milestone"
+        ],
+        "rows": [
+          [
+            "Signing",
+            "20%",
+            "$0"
+          ],
+          [
+            "Design sign-off",
+            "20%",
+            "$15,000"
+          ],
+          [
+            "Build complete",
+            "30%",
+            "$48,000"
+          ],
+          [
+            "Launch",
+            "30%",
+            "$62,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "p1",
+          "label": "Cumulative cash received at build complete",
+          "unit": "$",
+          "answer": 63000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "gap",
+          "label": "Cash received minus cost at build complete",
+          "unit": "$",
+          "answer": 15000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Planned margin on the whole SOW",
+          "unit": "%",
+          "answer": 31.1111,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "By build complete 70% = 63,000 received against 48,000 cost, so cash-positive by 15,000. Margin (90,000 - 62,000) / 90,000 = 31.1%."
+    }
+  },
+  {
+    "id": "pm-sow-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank these SOW weaknesses by the size of the dispute they usually cause, largest first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these SOW weaknesses by the size of the dispute they usually cause, largest first.",
+      "items": [
+        {
+          "id": "r286e4",
+          "label": "No acceptance criteria"
+        },
+        {
+          "id": "r6aacb",
+          "label": "No out-of-scope list"
+        },
+        {
+          "id": "r75493",
+          "label": "Client dependencies not linked to the timeline"
+        },
+        {
+          "id": "rd4e26",
+          "label": "Payment terms of net 45 instead of net 30"
+        }
+      ],
+      "correctOrder": [
+        "r286e4",
+        "r6aacb",
+        "r75493",
+        "rd4e26"
+      ],
+      "explanation": "Without acceptance criteria, nothing can be signed off; without out-of-scope, everything is arguable; unlinked dependencies blame the agency for client delays; payment days are a cash issue."
+    }
+  },
+  {
+    "id": "pm-sow-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of an out-of-scope section in an SOW?",
+    "mcq": {
+      "options": [
+        "To state what the client should not expect, so later requests are clearly changes",
+        "To list features the agency might do for free",
+        "To reduce the price",
+        "To meet a legal formality"
+      ],
+      "correctIndex": 0,
+      "explanation": "Explicit exclusions remove ambiguity, which is the main source of fixed-bid disputes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-sow-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why tie milestone payments to deliverables rather than dates?",
+    "mcq": {
+      "options": [
+        "It makes invoices smaller",
+        "Clients refuse date-based payments",
+        "Payments then reflect progress, and client delays do not force the agency to deliver before being paid",
+        "It removes the need for acceptance"
+      ],
+      "correctIndex": 2,
+      "explanation": "Deliverable-based payments align cash with value; date-based payments can be disputed if work is late, or unfair if the client caused the delay.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-sow-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-sow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your SOW draft says \"the AI assistant will answer customer questions accurately\". What is the best fix?",
+    "mcq": {
+      "options": [
+        "Delete the sentence",
+        "Change it to \"very accurately\"",
+        "Promise 100% accuracy to win the deal",
+        "Define accuracy as a measurable target on an agreed evaluation set, plus what happens below that target"
+      ],
+      "correctIndex": 3,
+      "explanation": "AI quality must be defined in testable terms, or acceptance becomes a matter of opinion.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

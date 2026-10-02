@@ -1,0 +1,394 @@
+[
+  {
+    "id": "pm-portfolio-management-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Score these candidate initiatives: strategic fit 40%, financial return 30%, risk/feasibility 30% (higher is better).",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Score these candidate initiatives: strategic fit 40%, financial return 30%, risk/feasibility 30% (higher is better).",
+      "table": {
+        "columns": [
+          "Initiative",
+          "Fit",
+          "Return",
+          "Feasibility"
+        ],
+        "rows": [
+          [
+            "Reusable AI component library",
+            "8",
+            "9",
+            "6"
+          ],
+          [
+            "SOC 2 readiness",
+            "6",
+            "7",
+            "9"
+          ],
+          [
+            "New CMS for marketing site",
+            "4",
+            "3",
+            "8"
+          ],
+          [
+            "Client: telehealth app",
+            "9",
+            "5",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Weighted score: AI component library",
+          "unit": "",
+          "answer": 7.7,
+          "tolerance": 0.01
+        },
+        {
+          "id": "b",
+          "label": "Weighted score: SOC 2 readiness",
+          "unit": "",
+          "answer": 7.2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "c",
+          "label": "Weighted score: new CMS",
+          "unit": "",
+          "answer": 4.9,
+          "tolerance": 0.01
+        },
+        {
+          "id": "d",
+          "label": "Weighted score: telehealth app",
+          "unit": "",
+          "answer": 6.6,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Library 3.2 + 2.7 + 1.8 = 7.7; SOC 2 2.4 + 2.1 + 2.7 = 7.2; CMS 1.6 + 0.9 + 2.4 = 4.9; telehealth 3.6 + 1.5 + 1.5 = 6.6."
+    }
+  },
+  {
+    "id": "pm-portfolio-management-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Using the same weights (fit 40%, return 30%, feasibility 30%), rank these initiatives, highest score first.\n\n| Initiative | Fit | Return | Feasibility |\n|---|---|---|---|\n| Reusable AI component library | 8 | 9 | 6 |\n| SOC 2 readiness | 6 | 7 | 9 |\n| New CMS for marketing site | 4 | 3 | 8 |\n| Client: telehealth app | 9 | 5 | 5 |",
+    "task": {
+      "kind": "rank",
+      "prompt": "Using the same weights (fit 40%, return 30%, feasibility 30%), rank these initiatives, highest score first.\n\n| Initiative | Fit | Return | Feasibility |\n|---|---|---|---|\n| Reusable AI component library | 8 | 9 | 6 |\n| SOC 2 readiness | 6 | 7 | 9 |\n| New CMS for marketing site | 4 | 3 | 8 |\n| Client: telehealth app | 9 | 5 | 5 |",
+      "items": [
+        {
+          "id": "rbeef6",
+          "label": "Reusable AI component library"
+        },
+        {
+          "id": "r4de37",
+          "label": "SOC 2 readiness"
+        },
+        {
+          "id": "r9f361",
+          "label": "Client: telehealth app"
+        },
+        {
+          "id": "r7692a",
+          "label": "New CMS for marketing site"
+        }
+      ],
+      "correctOrder": [
+        "rbeef6",
+        "r4de37",
+        "r9f361",
+        "r7692a"
+      ],
+      "explanation": "Scores 7.7, 7.2, 6.6 and 4.9."
+    }
+  },
+  {
+    "id": "pm-portfolio-management-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Notes from a quarterly portfolio review at an agency. Mark the weak practices.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Notes from a quarterly portfolio review at an agency. Mark the weak practices.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "All 14 active initiatives continue; none were stopped.",
+          "issue": "A portfolio that never stops work cannot free capacity for better work."
+        },
+        {
+          "id": "s2",
+          "text": "Initiatives are scored against the published strategy and capacity.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "A new initiative was approved because the CEO likes it, without scoring.",
+          "issue": "Bypassing the criteria undermines the process; at least score it and make the override explicit."
+        },
+        {
+          "id": "s4",
+          "text": "Work in progress is capped at 6 internal initiatives at once.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Each initiative has a named owner and a benefit measure.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Capacity is not checked because each project manages its own team.",
+          "issue": "Portfolio decisions must reflect shared capacity, especially specialists."
+        },
+        {
+          "id": "s7",
+          "text": "Next review in three months, or earlier if a major deal lands.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "The scoring weights were agreed by the leadership team.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-portfolio-management-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The agency has capacity for two internal initiatives this quarter. Three are proposed: a reusable component library, SOC 2 readiness, and an internal AI tool. Sales says two enterprise prospects require SOC 2.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The agency has capacity for two internal initiatives this quarter. Three are proposed: a reusable component library, SOC 2 readiness, and an internal AI tool. Sales says two enterprise prospects require SOC 2.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "Which consideration should weigh most?",
+          "options": [
+            "Which idea is most exciting",
+            "Which team asked first",
+            "Strategic fit and value, including the revenue SOC 2 unlocks, against the capacity each needs",
+            "Which is cheapest"
+          ],
+          "correctIndex": 2,
+          "explanation": "Portfolio selection balances value, strategy and capacity."
+        },
+        {
+          "id": "d2",
+          "question": "SOC 2 and the library are chosen. The AI tool's sponsor objects. What do you do?",
+          "options": [
+            "Start it anyway in spare time",
+            "Cancel the library to make room",
+            "Explain the criteria and scores, and record the AI tool for re-assessment next quarter",
+            "Ignore the sponsor"
+          ],
+          "correctIndex": 2,
+          "explanation": "Transparent criteria make a no acceptable and keep the backlog alive."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-portfolio-management-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Check the portfolio's WIP against capacity.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Check the portfolio's WIP against capacity.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Developer capacity for internal work per quarter",
+            "1,800 h"
+          ],
+          [
+            "Library",
+            "900 h"
+          ],
+          [
+            "SOC 2",
+            "600 h"
+          ],
+          [
+            "AI tool",
+            "700 h"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "all",
+          "label": "Total demand if all three run",
+          "unit": "h",
+          "answer": 2200,
+          "tolerance": 1
+        },
+        {
+          "id": "over",
+          "label": "Hours over capacity if all three run",
+          "unit": "h",
+          "answer": 400,
+          "tolerance": 1
+        },
+        {
+          "id": "two",
+          "label": "Hours left if only the library and SOC 2 run",
+          "unit": "h",
+          "answer": 300,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "All three need 2,200 hours, 400 over capacity. Library + SOC 2 = 1,500, leaving 300."
+    }
+  },
+  {
+    "id": "pm-portfolio-management-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Mid-quarter, a large enterprise deal closes that needs 4 of the agency's 6 senior engineers for three months. Two internal portfolio initiatives are running with those engineers.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Mid-quarter, a large enterprise deal closes that needs 4 of the agency's 6 senior engineers for three months. Two internal portfolio initiatives are running with those engineers.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the right forum for deciding what gives way?",
+          "options": [
+            "A portfolio review with leadership, using the agreed criteria and the capacity picture",
+            "The PM of the new deal decides alone",
+            "The engineers choose what they prefer",
+            "Whoever started first keeps the people"
+          ],
+          "correctIndex": 0,
+          "explanation": "Shared-capacity conflicts across initiatives are portfolio decisions."
+        },
+        {
+          "id": "d2",
+          "question": "Leadership pauses one internal initiative. What should be recorded?",
+          "options": [
+            "Nothing; it can restart whenever",
+            "The pause decision, its reason, the state of the work, and the condition for restarting",
+            "Only the new deal's start date",
+            "A note in the team chat"
+          ],
+          "correctIndex": 1,
+          "explanation": "Explicit pause records preserve the investment and make restarting a deliberate decision."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-portfolio-management-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why limit work in progress at portfolio level?",
+    "mcq": {
+      "options": [
+        "Fewer concurrent initiatives finish sooner and deliver value earlier than many running in parallel",
+        "It keeps people busy",
+        "It reduces the number of meetings",
+        "It makes budgets larger"
+      ],
+      "correctIndex": 0,
+      "explanation": "WIP limits work for portfolios as for teams: less in progress means faster flow and earlier value.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-portfolio-management-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In SAFe's Lean Portfolio Management, how are epics typically prioritised?",
+    "mcq": {
+      "options": [
+        "By the order they were proposed",
+        "By the size of the budget requested",
+        "With weighted shortest job first (WSJF)",
+        "By a vote of all employees"
+      ],
+      "correctIndex": 2,
+      "explanation": "LPM uses WSJF, cost of delay divided by job size, to sequence epics.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-portfolio-management-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-portfolio-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A portfolio review shows one initiative far behind and its business case no longer valid. What should happen?",
+    "mcq": {
+      "options": [
+        "Continue because money has been spent",
+        "Stop or reshape it and move its capacity to higher-value work",
+        "Double its budget",
+        "Hide it from the next review"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sunk cost is not a reason to continue; the portfolio's job is to fund what is worth doing now.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

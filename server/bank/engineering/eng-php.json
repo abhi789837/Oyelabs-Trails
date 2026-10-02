@@ -1,0 +1,2121 @@
+[
+  {
+    "id": "eng-php-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `greet` so it trims the name and capitalises its first letter. An empty (or blank) name greets `guest`.\n\n- `greet(\"ada\")` → `\"Hello, Ada!\"`\n- `greet(\"  \")` → `\"Hello, guest!\"`",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "greet",
+      "starterCode": "<?php\n\nfunction greet(string $name): string\n{\n    return \"Hello, \" . $name . \"!\";\n}\n",
+      "referenceSolution": "<?php\n\nfunction greet(string $name): string\n{\n    $name = trim($name);\n    if ($name === \"\") {\n        return \"Hello, guest!\";\n    }\n    return \"Hello, \" . ucfirst($name) . \"!\";\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "ada"
+          ],
+          "expected": "Hello, Ada!"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "  bob "
+          ],
+          "expected": "Hello, Bob!"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": "Hello, guest!"
+        },
+        {
+          "args": [
+            "   "
+          ],
+          "expected": "Hello, guest!"
+        },
+        {
+          "args": [
+            "Zoe"
+          ],
+          "expected": "Hello, Zoe!"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`sumEven` should add up only the even numbers in the array. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "sumEven",
+      "starterCode": "<?php\n\nfunction sumEven(array $nums): int\n{\n    $total = 0;\n    foreach ($nums as $n) {\n        $total += $n;\n    }\n    return $total;\n}\n",
+      "referenceSolution": "<?php\n\nfunction sumEven(array $nums): int\n{\n    $total = 0;\n    foreach ($nums as $n) {\n        if ($n % 2 === 0) {\n            $total += $n;\n        }\n    }\n    return $total;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "expected": 6
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              1,
+              3,
+              5
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              -2,
+              7,
+              10
+            ]
+          ],
+          "expected": 8
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              2
+            ]
+          ],
+          "expected": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Fix `countWords` so it counts words separated by any amount of whitespace. An empty or blank string has `0` words.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "countWords",
+      "starterCode": "<?php\n\nfunction countWords(string $text): int\n{\n    return count(explode(\" \", $text));\n}\n",
+      "referenceSolution": "<?php\n\nfunction countWords(string $text): int\n{\n    $text = trim($text);\n    if ($text === \"\") {\n        return 0;\n    }\n    return count(preg_split('/\\s+/', $text));\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "hello big world"
+          ],
+          "expected": 3
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "   "
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "  two   words "
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            "one"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "tabs\tand\nlines"
+          ],
+          "expected": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`grade` maps a score to a letter: 90 and above is `A`, 80+ is `B`, 70+ is `C`, anything lower is `F`. Scores on the boundary come out wrong — fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "grade",
+      "starterCode": "<?php\n\nfunction grade(int $score): string\n{\n    if ($score > 90) return \"A\";\n    if ($score > 80) return \"B\";\n    if ($score > 70) return \"C\";\n    return \"F\";\n}\n",
+      "referenceSolution": "<?php\n\nfunction grade(int $score): string\n{\n    if ($score >= 90) return \"A\";\n    if ($score >= 80) return \"B\";\n    if ($score >= 70) return \"C\";\n    return \"F\";\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            95
+          ],
+          "expected": "A"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            90
+          ],
+          "expected": "A"
+        },
+        {
+          "args": [
+            80
+          ],
+          "expected": "B"
+        },
+        {
+          "args": [
+            79
+          ],
+          "expected": "C"
+        },
+        {
+          "args": [
+            70
+          ],
+          "expected": "C"
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": "F"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `initials`: return the uppercase first letter of each word in a full name.\n\n- `initials(\"ada lovelace\")` → `\"AL\"`",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "initials",
+      "starterCode": "<?php\n\nfunction initials(string $fullName): string\n{\n    // return the initials, e.g. \"AL\"\n    return \"\";\n}\n",
+      "referenceSolution": "<?php\n\nfunction initials(string $fullName): string\n{\n    $out = \"\";\n    foreach (preg_split('/\\s+/', trim($fullName)) as $word) {\n        if ($word !== \"\") {\n            $out .= strtoupper($word[0]);\n        }\n    }\n    return $out;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "ada lovelace"
+          ],
+          "expected": "AL"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Grace Brewster Hopper"
+          ],
+          "expected": "GBH"
+        },
+        {
+          "args": [
+            "linus"
+          ],
+          "expected": "L"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "  alan   turing "
+          ],
+          "expected": "AT"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`largest` should return the biggest number in the array, or `null` when the array is empty. In PHP 8 the current version throws on an empty array — fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "largest",
+      "starterCode": "<?php\n\nfunction largest(array $xs): ?int\n{\n    return max($xs);\n}\n",
+      "referenceSolution": "<?php\n\nfunction largest(array $xs): ?int\n{\n    if ($xs === []) {\n        return null;\n    }\n    return max($xs);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              3,
+              9,
+              2
+            ]
+          ],
+          "expected": 9
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              -5,
+              -2,
+              -9
+            ]
+          ],
+          "expected": -2
+        },
+        {
+          "args": [
+            [
+              7
+            ]
+          ],
+          "expected": 7
+        },
+        {
+          "args": [
+            [
+              4,
+              4
+            ]
+          ],
+          "expected": 4
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`10 55`",
+        "`55 10`",
+        "`10 10`",
+        "`55 55`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`+` is arithmetic, so the numeric strings are converted and added (`10`). `.` is string concatenation, so `\"5\" . \"5\"` is `\"55\"`.",
+      "snippet": "<?php\n\n$a = \"5\";\n$b = \"5\";\necho $a + $b, \" \", $a . $b;\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`bool(false)`",
+        "`bool(true)`",
+        "`int(1)`",
+        "A TypeError"
+      ],
+      "correctIndex": 0,
+      "explanation": "`===` compares value **and** type. `\"1\"` is a string and `1` is an int, so the strict comparison is `false`. `==` would have returned `true`.",
+      "snippet": "<?php\n\nvar_dump(\"1\" === 1);\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `count()` return here?",
+    "mcq": {
+      "options": [
+        "`3`",
+        "`4`",
+        "`2`",
+        "`5`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`count()` is not recursive by default: the array has three elements, one of which happens to be an array. `count($a, COUNT_RECURSIVE)` would return 5.",
+      "snippet": "<?php\n\n$a = [1, [2, 3], 4];\necho count($a);\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`formatPrice` takes an amount in cents and returns a dollar string with two decimals and thousands separators.\n\n- `formatPrice(1250)` → `\"$12.50\"`\n- `formatPrice(123456789)` → `\"$1,234,567.89\"`",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "formatPrice",
+      "starterCode": "<?php\n\nfunction formatPrice(int $cents): string\n{\n    return \"$\" . ($cents / 100);\n}\n",
+      "referenceSolution": "<?php\n\nfunction formatPrice(int $cents): string\n{\n    return \"$\" . number_format($cents / 100, 2);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            1250
+          ],
+          "expected": "$12.50"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": "$0.00"
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": "$0.05"
+        },
+        {
+          "args": [
+            123456789
+          ],
+          "expected": "$1,234,567.89"
+        },
+        {
+          "args": [
+            100000
+          ],
+          "expected": "$1,000.00"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `groupByFirstLetter`: group words by their lowercase first letter, keeping the words' original order inside each group.\n\n- `[\"Apple\", \"bean\", \"avocado\"]` → `{\"a\": [\"Apple\", \"avocado\"], \"b\": [\"bean\"]}`",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "groupByFirstLetter",
+      "starterCode": "<?php\n\nfunction groupByFirstLetter(array $words): array\n{\n    $groups = [];\n    foreach ($words as $word) {\n        $groups[$word[0]] = [$word];\n    }\n    return $groups;\n}\n",
+      "referenceSolution": "<?php\n\nfunction groupByFirstLetter(array $words): array\n{\n    $groups = [];\n    foreach ($words as $word) {\n        if ($word === \"\") {\n            continue;\n        }\n        $groups[strtolower($word[0])][] = $word;\n    }\n    return $groups;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "Apple",
+              "bean",
+              "avocado"
+            ]
+          ],
+          "expected": {
+            "a": [
+              "Apple",
+              "avocado"
+            ],
+            "b": [
+              "bean"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "cat",
+              "Cow",
+              "dog",
+              "cup"
+            ]
+          ],
+          "expected": {
+            "c": [
+              "cat",
+              "Cow",
+              "cup"
+            ],
+            "d": [
+              "dog"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              "x"
+            ]
+          ],
+          "expected": {
+            "x": [
+              "x"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              "Bob",
+              "",
+              "bee"
+            ]
+          ],
+          "expected": {
+            "b": [
+              "Bob",
+              "bee"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`uniqueSorted` should return the distinct numbers in ascending order as a plain list (`[1, 2, 3]`, not `{\"0\": 1, \"2\": 2}`). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "uniqueSorted",
+      "starterCode": "<?php\n\nfunction uniqueSorted(array $xs): array\n{\n    return array_unique($xs);\n}\n",
+      "referenceSolution": "<?php\n\nfunction uniqueSorted(array $xs): array\n{\n    $unique = array_unique($xs);\n    sort($unique);\n    return $unique;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              3,
+              1,
+              3,
+              2
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              5,
+              5,
+              5
+            ]
+          ],
+          "expected": [
+            5
+          ]
+        },
+        {
+          "args": [
+            [
+              2,
+              1
+            ]
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              -1,
+              4,
+              -1,
+              0
+            ]
+          ],
+          "expected": [
+            -1,
+            0,
+            4
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`parseQuery` turns a query string into an associative array. Values must be URL-decoded (`Ada%20L` → `Ada L`) and an empty string gives an empty array. Fix it — PHP has a built-in for this.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "parseQuery",
+      "starterCode": "<?php\n\nfunction parseQuery(string $qs): array\n{\n    $out = [];\n    foreach (explode(\"&\", $qs) as $pair) {\n        [$key, $value] = explode(\"=\", $pair);\n        $out[$key] = $value;\n    }\n    return $out;\n}\n",
+      "referenceSolution": "<?php\n\nfunction parseQuery(string $qs): array\n{\n    parse_str($qs, $out);\n    return $out;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "page=2&sort=name"
+          ],
+          "expected": {
+            "page": "2",
+            "sort": "name"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "name=Ada%20L"
+          ],
+          "expected": {
+            "name": "Ada L"
+          }
+        },
+        {
+          "args": [
+            "q=a%2Bb&x=1"
+          ],
+          "expected": {
+            "q": "a+b",
+            "x": "1"
+          }
+        },
+        {
+          "args": [
+            "tag=php"
+          ],
+          "expected": {
+            "tag": "php"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Complete `wordFrequency`: count how often each word appears, case-insensitively, ignoring the punctuation `. , ! ?`. Return `word => count`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "wordFrequency",
+      "starterCode": "<?php\n\nfunction wordFrequency(string $text): array\n{\n    $counts = [];\n    foreach (explode(\" \", $text) as $word) {\n        $counts[$word] = ($counts[$word] ?? 0) + 1;\n    }\n    return $counts;\n}\n",
+      "referenceSolution": "<?php\n\nfunction wordFrequency(string $text): array\n{\n    $clean = strtolower(str_replace([\".\", \",\", \"!\", \"?\"], \"\", $text));\n    $counts = [];\n    foreach (preg_split('/\\s+/', trim($clean)) as $word) {\n        if ($word === \"\") {\n            continue;\n        }\n        $counts[$word] = ($counts[$word] ?? 0) + 1;\n    }\n    return $counts;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "The cat. The dog!"
+          ],
+          "expected": {
+            "the": 2,
+            "cat": 1,
+            "dog": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "Hi hi HI"
+          ],
+          "expected": {
+            "hi": 3
+          }
+        },
+        {
+          "args": [
+            "yes, no, yes?"
+          ],
+          "expected": {
+            "yes": 2,
+            "no": 1
+          }
+        },
+        {
+          "args": [
+            "  spaced   out  "
+          ],
+          "expected": {
+            "spaced": 1,
+            "out": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`safeDivide` should return the quotient rounded to 2 decimals, or `null` when dividing by zero (PHP 8 throws `DivisionByZeroError`). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "safeDivide",
+      "starterCode": "<?php\n\nfunction safeDivide(int $a, int $b): ?float\n{\n    return $a / $b;\n}\n",
+      "referenceSolution": "<?php\n\nfunction safeDivide(int $a, int $b): ?float\n{\n    if ($b === 0) {\n        return null;\n    }\n    return round($a / $b, 2);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            10,
+            4
+          ],
+          "expected": 2.5
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1,
+            0
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            1,
+            3
+          ],
+          "expected": 0.33
+        },
+        {
+          "args": [
+            0,
+            5
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            -7,
+            2
+          ],
+          "expected": -3.5
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`{\"0\":1,\"2\":2,\"4\":3}`",
+        "`[1,2,3]`",
+        "`[1,0,2,0,3]`",
+        "`{\"1\":1,\"2\":2,\"3\":3}`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`array_filter` removes falsy values but **keeps the original keys** (0, 2, 4). An array whose keys are not `0..n-1` is encoded as a JSON object. Wrap it in `array_values()` to get a list.",
+      "snippet": "<?php\n\n$a = array_filter([1, 0, 2, 0, 3]);\necho json_encode($a);\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`0 5`",
+        "`5 5`",
+        "`0 0`",
+        "`5 0`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`??` only falls back when the value is `null` or missing, so `0` is kept. `?:` falls back when the value is falsy, and `0` is falsy, so it gives `5`.",
+      "snippet": "<?php\n\n$settings = ['retries' => 0];\necho $settings['retries'] ?? 5, \" \", $settings['retries'] ?: 5;\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`bool(true) 1,2,3`",
+        "`1,2,3 1,2,3`",
+        "`bool(true) 3,1,2`",
+        "`NULL 1,2,3`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`sort()` sorts the array **in place** and returns `true`, not the sorted array. A common bug is `$sorted = sort($a);`.",
+      "snippet": "<?php\n\n$a = [3, 1, 2];\n$result = sort($a);\nvar_dump($result);\necho \" \" . implode(\",\", $a);\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`paginate` returns one page of items (pages start at 1). It currently skips the first page. Fix it; a page past the end returns `[]`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "paginate",
+      "starterCode": "<?php\n\nfunction paginate(array $items, int $page, int $perPage): array\n{\n    return array_slice($items, $page * $perPage, $perPage);\n}\n",
+      "referenceSolution": "<?php\n\nfunction paginate(array $items, int $page, int $perPage): array\n{\n    if ($page < 1 || $perPage < 1) {\n        return [];\n    }\n    return array_slice($items, ($page - 1) * $perPage, $perPage);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            1,
+            2
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            3,
+            2
+          ],
+          "expected": [
+            5
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            4,
+            2
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            2,
+            2
+          ],
+          "expected": [
+            "c"
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            0,
+            2
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`flatten` should flatten arrays nested to **any** depth into one list. It only handles one level. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "flatten",
+      "starterCode": "<?php\n\nfunction flatten(array $xs): array\n{\n    $out = [];\n    foreach ($xs as $x) {\n        if (is_array($x)) {\n            $out = array_merge($out, $x);\n        } else {\n            $out[] = $x;\n        }\n    }\n    return $out;\n}\n",
+      "referenceSolution": "<?php\n\nfunction flatten(array $xs): array\n{\n    $out = [];\n    foreach ($xs as $x) {\n        if (is_array($x)) {\n            $out = array_merge($out, flatten($x));\n        } else {\n            $out[] = $x;\n        }\n    }\n    return $out;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              [
+                2,
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1,
+              [
+                2,
+                [
+                  3,
+                  [
+                    4
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                []
+              ],
+              5
+            ]
+          ],
+          "expected": [
+            5
+          ]
+        },
+        {
+          "args": [
+            [
+              "a",
+              [
+                "b"
+              ],
+              [
+                [
+                  "c"
+                ]
+              ]
+            ]
+          ],
+          "expected": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`indexBy` turns a list of rows into an array keyed by the given column (later rows win on duplicates). It ignores `$key`. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "indexBy",
+      "starterCode": "<?php\n\nfunction indexBy(array $rows, string $key): array\n{\n    $out = [];\n    foreach ($rows as $row) {\n        $out[$row['id']] = $row;\n    }\n    return $out;\n}\n",
+      "referenceSolution": "<?php\n\nfunction indexBy(array $rows, string $key): array\n{\n    $out = [];\n    foreach ($rows as $row) {\n        if (array_key_exists($key, $row)) {\n            $out[$row[$key]] = $row;\n        }\n    }\n    return $out;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "sku": "A1"
+              },
+              {
+                "id": 2,
+                "sku": "B2"
+              }
+            ],
+            "sku"
+          ],
+          "expected": {
+            "A1": {
+              "id": 1,
+              "sku": "A1"
+            },
+            "B2": {
+              "id": 2,
+              "sku": "B2"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "sku"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "email": "a@x.io"
+              }
+            ],
+            "email"
+          ],
+          "expected": {
+            "a@x.io": {
+              "id": 1,
+              "email": "a@x.io"
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "sku": "A"
+              },
+              {
+                "id": 2,
+                "sku": "A"
+              }
+            ],
+            "sku"
+          ],
+          "expected": {
+            "A": {
+              "id": 2,
+              "sku": "A"
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "sku": "A"
+              },
+              {
+                "id": 2
+              }
+            ],
+            "sku"
+          ],
+          "expected": {
+            "A": {
+              "id": 1,
+              "sku": "A"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`cleanEmails` takes a comma-separated string and returns the valid addresses, trimmed, lowercased and de-duplicated, in first-seen order. Spaces after commas currently make every address invalid. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "cleanEmails",
+      "starterCode": "<?php\n\nfunction cleanEmails(string $csv): array\n{\n    $out = [];\n    foreach (explode(\",\", $csv) as $email) {\n        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {\n            $out[] = $email;\n        }\n    }\n    return $out;\n}\n",
+      "referenceSolution": "<?php\n\nfunction cleanEmails(string $csv): array\n{\n    $out = [];\n    foreach (explode(\",\", $csv) as $email) {\n        $email = strtolower(trim($email));\n        if (filter_var($email, FILTER_VALIDATE_EMAIL) && !in_array($email, $out, true)) {\n            $out[] = $email;\n        }\n    }\n    return $out;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "a@x.io, B@x.io"
+          ],
+          "expected": [
+            "a@x.io",
+            "b@x.io"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "nope, ok@y.com"
+          ],
+          "expected": [
+            "ok@y.com"
+          ]
+        },
+        {
+          "args": [
+            "A@x.io,a@x.io , a@X.io"
+          ],
+          "expected": [
+            "a@x.io"
+          ]
+        },
+        {
+          "args": [
+            "one@a.io"
+          ],
+          "expected": [
+            "one@a.io"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`daysBetween` returns the whole number of days between two `Y-m-d` dates, regardless of which comes first. Fix it using `DateTime`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "daysBetween",
+      "starterCode": "<?php\n\nfunction daysBetween(string $from, string $to): int\n{\n    return (strtotime($to) - strtotime($from)) / 86400;\n}\n",
+      "referenceSolution": "<?php\n\nfunction daysBetween(string $from, string $to): int\n{\n    $a = new DateTime($from);\n    $b = new DateTime($to);\n    return $a->diff($b)->days;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "2024-01-01",
+            "2024-01-31"
+          ],
+          "expected": 30
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2024-03-10",
+            "2024-03-01"
+          ],
+          "expected": 9
+        },
+        {
+          "args": [
+            "2024-05-05",
+            "2024-05-05"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "2023-12-31",
+            "2024-01-01"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "2024-02-01",
+            "2024-03-01"
+          ],
+          "expected": 29
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`mergeConfig` overlays user settings on defaults. Nested sections must be merged, not replaced: overriding `db.host` must keep `db.port`. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "mergeConfig",
+      "starterCode": "<?php\n\nfunction mergeConfig(array $defaults, array $overrides): array\n{\n    return array_merge($defaults, $overrides);\n}\n",
+      "referenceSolution": "<?php\n\nfunction mergeConfig(array $defaults, array $overrides): array\n{\n    return array_replace_recursive($defaults, $overrides);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "db": {
+                "host": "localhost",
+                "port": 5432
+              }
+            },
+            {
+              "db": {
+                "host": "db.internal"
+              }
+            }
+          ],
+          "expected": {
+            "db": {
+              "host": "db.internal",
+              "port": 5432
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "debug": false
+            },
+            {}
+          ],
+          "expected": {
+            "debug": false
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1,
+              "cache": {
+                "ttl": 60,
+                "driver": "file"
+              }
+            },
+            {
+              "cache": {
+                "driver": "redis"
+              },
+              "b": 2
+            }
+          ],
+          "expected": {
+            "a": 1,
+            "b": 2,
+            "cache": {
+              "ttl": 60,
+              "driver": "redis"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "mail": {
+                "from": {
+                  "name": "App",
+                  "address": "a@x.io"
+                }
+              }
+            },
+            {
+              "mail": {
+                "from": {
+                  "name": "Shop"
+                }
+              }
+            }
+          ],
+          "expected": {
+            "mail": {
+              "from": {
+                "name": "Shop",
+                "address": "a@x.io"
+              }
+            }
+          }
+        },
+        {
+          "args": [
+            {},
+            {
+              "x": 1
+            }
+          ],
+          "expected": {
+            "x": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`a=1 b=2 c=4`",
+        "`a=1 b=3 c=4`",
+        "`b=3 c=4`",
+        "`a=1 b=2`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The `+` union operator keeps the **left** array's value when a key exists in both, and only adds missing keys from the right. `array_merge` would let the right side win (`b=3`).",
+      "snippet": "<?php\n\n$a = ['a' => 1, 'b' => 2] + ['b' => 3, 'c' => 4];\nforeach ($a as $k => $v) echo \"$k=$v \";\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`1,2,3`",
+        "`2,4,6`",
+        "`1,2,6`",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "`foreach ($a as $v)` iterates over copies of the values, so changing `$v` does not change `$a`. To modify in place, use `foreach ($a as &$v)` (and `unset($v)` afterwards) or `array_map`.",
+      "snippet": "<?php\n\n$a = [1, 2, 3];\nforeach ($a as $v) {\n    $v = $v * 2;\n}\necho implode(\",\", $a);\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`string`",
+        "`int`",
+        "`none`",
+        "An `UnhandledMatchError`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`match` compares with `===`, so the string `\"1\"` does not match the int arm `1` but does match the string arm. A `switch` uses loose comparison and would hit `int` first.",
+      "snippet": "<?php\n\n$value = \"1\";\necho match ($value) {\n    1 => 'int',\n    '1' => 'string',\n    default => 'none',\n};\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "`backoffDelays` returns the retry delays for exponential backoff: `base, base*2, base*4, …`, one per attempt, but **no delay may exceed `$capMs`**. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "backoffDelays",
+      "starterCode": "<?php\n\nfunction backoffDelays(int $attempts, int $baseMs, int $capMs): array\n{\n    $delays = [];\n    for ($i = 0; $i < $attempts; $i++) {\n        $delays[] = $baseMs * (2 ** $i);\n    }\n    return $delays;\n}\n",
+      "referenceSolution": "<?php\n\nfunction backoffDelays(int $attempts, int $baseMs, int $capMs): array\n{\n    $delays = [];\n    for ($i = 0; $i < $attempts; $i++) {\n        $delays[] = min($capMs, $baseMs * (2 ** $i));\n    }\n    return $delays;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            3,
+            100,
+            10000
+          ],
+          "expected": [
+            100,
+            200,
+            400
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            100,
+            1000
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            5,
+            100,
+            500
+          ],
+          "expected": [
+            100,
+            200,
+            400,
+            500,
+            500
+          ]
+        },
+        {
+          "args": [
+            1,
+            50,
+            10
+          ],
+          "expected": [
+            10
+          ]
+        },
+        {
+          "args": [
+            4,
+            1000,
+            8000
+          ],
+          "expected": [
+            1000,
+            2000,
+            4000,
+            8000
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`csvToRows` parses CSV text (first line is the header) into a list of associative rows. Quoted fields may contain commas (`\"Lovelace, Ada\"`). Empty input returns `[]`. Fix the parsing.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "csvToRows",
+      "starterCode": "<?php\n\nfunction csvToRows(string $csv): array\n{\n    $lines = explode(\"\\n\", trim($csv));\n    $header = explode(\",\", array_shift($lines));\n    $rows = [];\n    foreach ($lines as $line) {\n        $rows[] = array_combine($header, explode(\",\", $line));\n    }\n    return $rows;\n}\n",
+      "referenceSolution": "<?php\n\nfunction csvToRows(string $csv): array\n{\n    $csv = trim($csv);\n    if ($csv === \"\") {\n        return [];\n    }\n    $lines = explode(\"\\n\", $csv);\n    $header = str_getcsv(array_shift($lines));\n    $rows = [];\n    foreach ($lines as $line) {\n        if (trim($line) === \"\") {\n            continue;\n        }\n        $rows[] = array_combine($header, str_getcsv($line));\n    }\n    return $rows;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "id,name\n1,Ada"
+          ],
+          "expected": [
+            {
+              "id": "1",
+              "name": "Ada"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "id,name\n1,\"Lovelace, Ada\"\n2,Bob"
+          ],
+          "expected": [
+            {
+              "id": "1",
+              "name": "Lovelace, Ada"
+            },
+            {
+              "id": "2",
+              "name": "Bob"
+            }
+          ]
+        },
+        {
+          "args": [
+            "sku,qty\n"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "a,b\n\"x,y\",\"z\""
+          ],
+          "expected": [
+            {
+              "a": "x,y",
+              "b": "z"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`batchByWeight` splits job weights into consecutive batches whose total never exceeds `$max` (an item heavier than `$max` gets a batch of its own). The current version lets batches go over the limit. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "batchByWeight",
+      "starterCode": "<?php\n\nfunction batchByWeight(array $weights, int $max): array\n{\n    $batches = [];\n    $current = [];\n    $sum = 0;\n    foreach ($weights as $w) {\n        $current[] = $w;\n        $sum += $w;\n        if ($sum > $max) {\n            $batches[] = $current;\n            $current = [];\n            $sum = 0;\n        }\n    }\n    if ($current) {\n        $batches[] = $current;\n    }\n    return $batches;\n}\n",
+      "referenceSolution": "<?php\n\nfunction batchByWeight(array $weights, int $max): array\n{\n    $batches = [];\n    $current = [];\n    $sum = 0;\n    foreach ($weights as $w) {\n        if ($current && $sum + $w > $max) {\n            $batches[] = $current;\n            $current = [];\n            $sum = 0;\n        }\n        $current[] = $w;\n        $sum += $w;\n    }\n    if ($current) {\n        $batches[] = $current;\n    }\n    return $batches;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              3,
+              3,
+              3
+            ],
+            6
+          ],
+          "expected": [
+            [
+              3,
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            5
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            5
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3
+            ],
+            [
+              4
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              9,
+              1
+            ],
+            5
+          ],
+          "expected": [
+            [
+              9
+            ],
+            [
+              1
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              5,
+              5
+            ],
+            5
+          ],
+          "expected": [
+            [
+              5
+            ],
+            [
+              5
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              1,
+              1
+            ],
+            10
+          ],
+          "expected": [
+            [
+              1,
+              1,
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`renderTemplate` replaces `{{ name }}` placeholders (spaces inside the braces are optional) with **HTML-escaped** values; unknown placeholders become an empty string. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "renderTemplate",
+      "starterCode": "<?php\n\nfunction renderTemplate(string $tpl, array $vars): string\n{\n    foreach ($vars as $key => $value) {\n        $tpl = str_replace(\"{{ $key }}\", $value, $tpl);\n    }\n    return $tpl;\n}\n",
+      "referenceSolution": "<?php\n\nfunction renderTemplate(string $tpl, array $vars): string\n{\n    return preg_replace_callback('/\\{\\{\\s*(\\w+)\\s*\\}\\}/', function ($m) use ($vars) {\n        return htmlspecialchars((string) ($vars[$m[1]] ?? ''), ENT_QUOTES);\n    }, $tpl);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "Hi {{ name }}!",
+            {
+              "name": "Ada"
+            }
+          ],
+          "expected": "Hi Ada!"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "{{name}} / {{ name }}",
+            {
+              "name": "Bo"
+            }
+          ],
+          "expected": "Bo / Bo"
+        },
+        {
+          "args": [
+            "<p>{{ bio }}</p>",
+            {
+              "bio": "<script>x</script>"
+            }
+          ],
+          "expected": "<p>&lt;script&gt;x&lt;/script&gt;</p>"
+        },
+        {
+          "args": [
+            "Hello {{ missing }}.",
+            {}
+          ],
+          "expected": "Hello ."
+        },
+        {
+          "args": [
+            "no placeholders",
+            {
+              "a": "1"
+            }
+          ],
+          "expected": "no placeholders"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`diffAssoc` compares two versions of a record and returns `added`, `removed` and `changed` key lists, each sorted. Values are compared **strictly** (`\"1\"` → `1` counts as changed). The current version never reports removed keys and misses type changes. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "diffAssoc",
+      "starterCode": "<?php\n\nfunction diffAssoc(array $old, array $new): array\n{\n    $added = [];\n    $changed = [];\n    foreach ($new as $key => $value) {\n        if (!array_key_exists($key, $old)) {\n            $added[] = $key;\n        } elseif ($old[$key] != $value) {\n            $changed[] = $key;\n        }\n    }\n    return ['added' => $added, 'removed' => [], 'changed' => $changed];\n}\n",
+      "referenceSolution": "<?php\n\nfunction diffAssoc(array $old, array $new): array\n{\n    $added = array_keys(array_diff_key($new, $old));\n    $removed = array_keys(array_diff_key($old, $new));\n    $changed = [];\n    foreach ($new as $key => $value) {\n        if (array_key_exists($key, $old) && $old[$key] !== $value) {\n            $changed[] = $key;\n        }\n    }\n    sort($added);\n    sort($removed);\n    sort($changed);\n    return ['added' => $added, 'removed' => $removed, 'changed' => $changed];\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": 2
+            },
+            {
+              "a": 1,
+              "b": 3,
+              "c": 4
+            }
+          ],
+          "expected": {
+            "added": [
+              "c"
+            ],
+            "removed": [],
+            "changed": [
+              "b"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": {
+            "added": [],
+            "removed": [],
+            "changed": []
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "age": 36
+            },
+            {
+              "name": "Ada"
+            }
+          ],
+          "expected": {
+            "added": [],
+            "removed": [
+              "age"
+            ],
+            "changed": []
+          }
+        },
+        {
+          "args": [
+            {
+              "qty": "1"
+            },
+            {
+              "qty": 1
+            }
+          ],
+          "expected": {
+            "added": [],
+            "removed": [],
+            "changed": [
+              "qty"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "z": 1,
+              "a": 1
+            },
+            {
+              "y": 2,
+              "b": 2
+            }
+          ],
+          "expected": {
+            "added": [
+              "b",
+              "y"
+            ],
+            "removed": [
+              "a",
+              "z"
+            ],
+            "changed": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`topScorers` returns the names of the top `$n` players: highest score first, and **alphabetical by name when scores tie**. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "topScorers",
+      "starterCode": "<?php\n\nfunction topScorers(array $scores, int $n): array\n{\n    arsort($scores);\n    return array_slice(array_keys($scores), 0, $n);\n}\n",
+      "referenceSolution": "<?php\n\nfunction topScorers(array $scores, int $n): array\n{\n    $names = array_map('strval', array_keys($scores));\n    usort($names, function ($a, $b) use ($scores) {\n        return [$scores[$b], $a] <=> [$scores[$a], $b];\n    });\n    return array_slice($names, 0, $n);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "ann": 5,
+              "bob": 9,
+              "cy": 7
+            },
+            2
+          ],
+          "expected": [
+            "bob",
+            "cy"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "zed": 10,
+              "amy": 10,
+              "kim": 8
+            },
+            2
+          ],
+          "expected": [
+            "amy",
+            "zed"
+          ]
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            5
+          ],
+          "expected": [
+            "a"
+          ]
+        },
+        {
+          "args": [
+            {
+              "dan": 3,
+              "eve": 3,
+              "bea": 3
+            },
+            3
+          ],
+          "expected": [
+            "bea",
+            "dan",
+            "eve"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-php-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You need to import a 2 GB CSV line by line. Why is a generator (`yield`) a good fit for the reader function?",
+    "mcq": {
+      "options": [
+        "It produces one row at a time, so memory stays flat no matter how big the file is",
+        "It runs the reading in a background thread, so the import finishes sooner",
+        "It caches every row, so the file only has to be read once",
+        "It makes `foreach` skip malformed lines automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "A generator is lazy: each `yield` hands one row to the caller and pauses. Only the current row is held in memory, unlike building and returning a 2 GB array. It is not concurrent and does not cache anything.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-php-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`3`",
+        "`1`",
+        "`0`",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `static` variable inside a function keeps its value between calls (it is initialised once). The third call increments it to 3. This is handy for a per-request memo, but it is shared state, so use it sparingly.",
+      "snippet": "<?php\n\nfunction nextId(): int\n{\n    static $id = 0;\n    return ++$id;\n}\nnextId();\nnextId();\necho nextId();\n",
+      "snippetLanguage": "php"
+    }
+  },
+  {
+    "id": "eng-php-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-php",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "With `declare(strict_types=1);` at the top of the file, what does this print?",
+    "mcq": {
+      "options": [
+        "`TypeError`",
+        "`10`",
+        "`55`",
+        "`ValueError`"
+      ],
+      "correctIndex": 0,
+      "explanation": "In strict mode, scalar type declarations are not coerced: passing the string `\"5\"` to an `int` parameter throws a `TypeError`. Without `strict_types`, PHP would silently convert it and return `10`.",
+      "snippet": "<?php\n\ndeclare(strict_types=1);\n\nfunction add(int $a, int $b): int\n{\n    return $a + $b;\n}\n\ntry {\n    echo add(\"5\", 5);\n} catch (TypeError $e) {\n    echo get_class($e);\n}\n",
+      "snippetLanguage": "php"
+    }
+  }
+]

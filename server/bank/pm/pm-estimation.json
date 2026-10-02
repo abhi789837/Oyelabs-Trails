@@ -1,0 +1,375 @@
+[
+  {
+    "id": "pm-estimation-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order these stories from smallest to largest relative effort for a typical mobile app team.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Build an in-app chat between buyer and seller"
+        },
+        {
+          "id": "r2",
+          "label": "Add a 'forgot password' email link"
+        },
+        {
+          "id": "r1",
+          "label": "Change the colour of the 'Buy' button"
+        },
+        {
+          "id": "r3",
+          "label": "Add a product reviews list with star ratings"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Relative sizing compares effort, complexity and uncertainty: a style tweak < an email flow < a list with ratings < real-time chat."
+    }
+  },
+  {
+    "id": "pm-estimation-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "In planning poker for 'export invoices to PDF', the votes are 3, 3, 3, 13 and 5.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "In planning poker for 'export invoices to PDF', the votes are 3, 3, 3, 13 and 5.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What happens next?",
+          "options": [
+            "Take the average and move on",
+            "Ask the 13 and the lowest voter to explain their reasoning, then vote again",
+            "Use the PM's estimate",
+            "Take the highest number to be safe"
+          ],
+          "correctIndex": 1,
+          "explanation": "Outliers often know something others don't. Discussing and re-voting is the point of planning poker."
+        },
+        {
+          "id": "s2",
+          "question": "The 13 voter explains that PDFs must support Arabic right-to-left text. The team re-votes 8, 8, 8, 8, 5. What now?",
+          "options": [
+            "Record 8 and note the RTL requirement in the acceptance criteria",
+            "Record 5",
+            "Vote again until it's unanimous",
+            "Split nothing and record 13"
+          ],
+          "correctIndex": 0,
+          "explanation": "Near-consensus is enough; capturing the discovered requirement in AC stops it being lost."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-estimation-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A developer gives a three-point estimate for integrating a payment gateway: optimistic 4 days, most likely 6 days, pessimistic 14 days. Use the PERT (beta) formula (O + 4M + P) / 6.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate the PERT estimate.",
+      "table": null,
+      "fields": [
+        {
+          "id": "pert",
+          "label": "PERT estimate",
+          "unit": "days",
+          "answer": 7.0,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "(4 + 4×6 + 14) / 6 = 42 / 6 = 7 days."
+    }
+  },
+  {
+    "id": "pm-estimation-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The remaining backlog for a client's MVP is estimated at 120 story points. The team's average velocity is 24 points per 2-week sprint.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "sprints",
+          "label": "Sprints needed",
+          "unit": "sprints",
+          "answer": 5.0,
+          "tolerance": 0.01
+        },
+        {
+          "id": "weeks",
+          "label": "Calendar weeks needed",
+          "unit": "weeks",
+          "answer": 10.0,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "120 / 24 = 5 sprints; 5 × 2 = 10 weeks."
+    }
+  },
+  {
+    "id": "pm-estimation-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A PM sent this note about estimation to a client. Mark the statements that misuse story points.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Our team estimates in story points, which compare the relative size of stories.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "One point equals exactly 4 hours for every developer, so 30 points is 120 hours.",
+          "issue": "Points are relative and team-specific; fixing a points-to-hours rate turns them back into hour estimates with false precision."
+        },
+        {
+          "id": "p3",
+          "text": "We'll forecast using the velocity we actually achieve over several sprints.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "We'll compare our velocity with the other agency team's velocity to see who is faster.",
+          "issue": "Points are not comparable across teams; each team has its own scale."
+        },
+        {
+          "id": "p5",
+          "text": "Large, uncertain items get bigger numbers so the uncertainty is visible.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "We'll pay developers a bonus per point completed.",
+          "issue": "Rewarding points causes estimate inflation and destroys their usefulness for forecasting."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-estimation-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A prospect asks for a fixed price on an AI-powered document-search platform. All you have is a one-page brief, and sales wants a number by Friday.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect asks for a fixed price on an AI-powered document-search platform. All you have is a one-page brief, and sales wants a number by Friday.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What estimation approach fits?",
+          "options": [
+            "A detailed bottom-up estimate of every task",
+            "A ranged, top-down estimate (e.g. T-shirt sizes per epic compared with past projects) with stated assumptions",
+            "Copy the last project's price",
+            "Refuse to give any number"
+          ],
+          "correctIndex": 1,
+          "explanation": "Early on, analogous/T-shirt estimates with a range and assumptions are honest and quick."
+        },
+        {
+          "id": "s2",
+          "question": "The range is 900–1,600 hours. What do you recommend for the contract?",
+          "options": [
+            "Quote 900 to win the deal",
+            "A paid discovery phase first, then fix the price on a refined scope, or quote with a contingency and clear assumptions",
+            "Quote the midpoint with no assumptions",
+            "Quote 1,600 with no explanation"
+          ],
+          "correctIndex": 1,
+          "explanation": "Discovery reduces uncertainty before committing to a fixed price; otherwise assumptions and contingency protect both sides."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-estimation-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Put the most common planning poker sequence values in ascending order (modified Fibonacci).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "13"
+        },
+        {
+          "id": "r4",
+          "label": "5"
+        },
+        {
+          "id": "r2",
+          "label": "2"
+        },
+        {
+          "id": "r1",
+          "label": "1"
+        },
+        {
+          "id": "r3",
+          "label": "3"
+        },
+        {
+          "id": "r5",
+          "label": "8"
+        },
+        {
+          "id": "r7",
+          "label": "20"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "explanation": "The modified Fibonacci deck goes 1, 2, 3, 5, 8, 13, 20 (then 40, 100). Growing gaps reflect growing uncertainty."
+    }
+  },
+  {
+    "id": "pm-estimation-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why do agile teams usually estimate in relative sizes rather than hours?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "People compare sizes more reliably than they predict absolute time, and velocity calibrates the result",
+        "Hours are forbidden by the Scrum Guide",
+        "Clients prefer not to know about time",
+        "Relative sizes are always smaller"
+      ],
+      "correctIndex": 0,
+      "explanation": "Relative sizing is quicker and more consistent; actual velocity turns it into a forecast. Scrum itself does not prescribe any estimation technique.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-estimation-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In planning poker, why does everyone reveal their card at the same time?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To avoid anchoring on the first or most senior person's number",
+        "To save time",
+        "So the PM can pick the highest",
+        "Because the cards are numbered"
+      ],
+      "correctIndex": 0,
+      "explanation": "Simultaneous reveal prevents anchoring and surfaces different assumptions to discuss.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-estimation-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-estimation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A story has been estimated at 21 points and the team's velocity is 25. What is the best next step?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Split it into smaller stories before pulling it into a sprint",
+        "Pull it in as is",
+        "Re-estimate it to 8 so it fits",
+        "Give it to the most senior developer"
+      ],
+      "correctIndex": 0,
+      "explanation": "An item that consumes nearly all of a sprint is risky and hard to track; splitting gives earlier feedback and safer flow.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

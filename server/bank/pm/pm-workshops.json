@@ -1,0 +1,379 @@
+[
+  {
+    "id": "pm-workshops-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the parts of a 2-hour discovery workshop with a new client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Recap decisions, owners and next steps"
+        },
+        {
+          "id": "r4",
+          "label": "Brainstorm and group ideas"
+        },
+        {
+          "id": "r2",
+          "label": "Agree the problem and success measures"
+        },
+        {
+          "id": "r1",
+          "label": "Introductions, goal of the session and agenda"
+        },
+        {
+          "id": "r3",
+          "label": "Map the current user journey on the whiteboard"
+        },
+        {
+          "id": "r5",
+          "label": "Vote to prioritise the ideas"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Set context, agree the problem, understand today's journey, diverge with ideas, converge by voting, and close with owners."
+    }
+  },
+  {
+    "id": "pm-workshops-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Build a user story map for a food-delivery app: order the backbone activities left to right as a customer experiences them.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Track the order"
+        },
+        {
+          "id": "r2",
+          "label": "Choose dishes"
+        },
+        {
+          "id": "r1",
+          "label": "Find a restaurant"
+        },
+        {
+          "id": "r3",
+          "label": "Check out and pay"
+        },
+        {
+          "id": "r5",
+          "label": "Rate the delivery"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "A story map's backbone follows the user's journey in time order; stories hang under each activity and release slices cut across them."
+    }
+  },
+  {
+    "id": "pm-workshops-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Here is a junior PM's plan for a remote Miro workshop with eight client stakeholders. Mark the parts that will hurt the session.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Share the Miro board link and a 1-line agenda the day before.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Invite everyone with edit rights and no template prepared.",
+          "issue": "Without a prepared board and frames people waste time and the board turns chaotic."
+        },
+        {
+          "id": "p3",
+          "text": "Timebox each exercise and show a visible timer.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Let the most senior client talk first on every topic.",
+          "issue": "Senior voices anchor everyone else; use silent writing or round-robin before discussion."
+        },
+        {
+          "id": "p5",
+          "text": "Use dot voting to prioritise ideas.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Write up the outcomes and send them within 24 hours.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Skip a parking lot; every off-topic point is discussed when raised.",
+          "issue": "Off-topic points derail the timebox; a parking lot captures them for later."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-workshops-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "After dot voting in a workshop, each of 6 participants had 3 dots. The votes are below. How many dots were used, and what share did the top idea get?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Idea",
+          "Dots"
+        ],
+        "rows": [
+          [
+            "Saved searches",
+            "7"
+          ],
+          [
+            "Price alerts",
+            "5"
+          ],
+          [
+            "Map view",
+            "3"
+          ],
+          [
+            "Dark mode",
+            "2"
+          ],
+          [
+            "Share listing",
+            "1"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "dots",
+          "label": "Dots used",
+          "unit": "",
+          "answer": 18,
+          "tolerance": 0
+        },
+        {
+          "id": "top",
+          "label": "Top idea's share of dots",
+          "unit": "%",
+          "answer": 38.9,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "6 × 3 = 18 dots available; 7 + 5 + 3 + 2 + 1 = 18 used. Saved searches got 7 / 18 = 38.9%."
+    }
+  },
+  {
+    "id": "pm-workshops-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Halfway through a requirements workshop, the client's CTO and head of sales start a heated argument about whether to build for web or mobile first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Halfway through a requirements workshop, the client's CTO and head of sales start a heated argument about whether to build for web or mobile first.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do in the moment?",
+          "options": [
+            "Let them argue until one wins",
+            "Acknowledge both views, park the decision with an owner and date, and move to the next agenda item",
+            "End the workshop",
+            "Decide for them"
+          ],
+          "correctIndex": 1,
+          "explanation": "Parking keeps the session productive and ensures the decision is made by the right people, outside the room if needed."
+        },
+        {
+          "id": "s2",
+          "question": "After the workshop, how do you help them decide?",
+          "options": [
+            "Prepare a short comparison (users, cost, time, risk) and set up a decision call with the sponsor",
+            "Wait for them to raise it again",
+            "Ask the developers to vote",
+            "Build both"
+          ],
+          "correctIndex": 0,
+          "explanation": "Giving decision-makers the facts and a time to decide closes the parked item."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-workshops-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "You are running a remote workshop and three participants have said nothing in the first 30 minutes.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are running a remote workshop and three participants have said nothing in the first 30 minutes.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which technique helps bring them in?",
+          "options": [
+            "Silent writing on sticky notes, then each person reads theirs out",
+            "Asking 'any thoughts?' to the whole group",
+            "Moving on faster",
+            "Turning off their cameras"
+          ],
+          "correctIndex": 0,
+          "explanation": "Silent individual work before discussion gives everyone an equal voice."
+        },
+        {
+          "id": "s2",
+          "question": "One of them adds a great idea to the board. What next?",
+          "options": [
+            "Ask them to talk it through and thank them for it",
+            "Read it out yourself and move on",
+            "Ignore it until the end",
+            "Merge it into someone else's idea"
+          ],
+          "correctIndex": 0,
+          "explanation": "Inviting them to explain builds confidence and gets the full context."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-workshops-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a parking lot in a workshop?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Capturing off-topic points so they are not lost and do not derail the agenda",
+        "Listing who attended",
+        "Recording the final decisions",
+        "Storing the Miro board backups"
+      ],
+      "correctIndex": 0,
+      "explanation": "A parking lot keeps the session on track while respecting the point raised; each item gets an owner afterwards.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-workshops-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why prepare a Miro board with frames and templates before a client workshop?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "So participants know where to work and time goes on content, not setup",
+        "Because Miro requires it",
+        "To stop the client from editing",
+        "To make the board look full"
+      ],
+      "correctIndex": 0,
+      "explanation": "Prepared frames reduce confusion and keep each exercise on time.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-workshops-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-workshops",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "After a story-mapping workshop, how do you choose the first release?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Draw a horizontal slice across the backbone with the smallest set of stories that gives a usable end-to-end journey",
+        "Pick the five most popular stories regardless of journey",
+        "Build the whole first column completely",
+        "Let developers pick what they like"
+      ],
+      "correctIndex": 0,
+      "explanation": "A release slice covers each step of the journey thinly, so the first version is usable end to end.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

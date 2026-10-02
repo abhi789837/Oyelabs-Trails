@@ -1,0 +1,335 @@
+[
+  {
+    "id": "bd-challenger-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Teach an insight instead of pitching.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A retailer asks you to rebuild their native app. Their own analytics (shared with you) show 70% of mobile sessions are on the mobile website, which converts poorly.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you open the next meeting?",
+          "options": [
+            "Present your app portfolio",
+            "Agree to rebuild the app as requested",
+            "Tell them their strategy is wrong",
+            "Share the insight from their own data: most customers never open the app, so the mobile site may be the bigger lever"
+          ],
+          "correctIndex": 3,
+          "explanation": "A challenger teaches something about the client's business they had not seen, using their own evidence."
+        },
+        {
+          "id": "s2",
+          "question": "The marketing head says: \"But the app has our best customers.\" What next?",
+          "options": [
+            "Agree it matters, and tailor: show how improving the mobile site feeds more customers into the app",
+            "Insist the app is unimportant",
+            "Drop the insight and quote the app",
+            "Ask for a different stakeholder"
+          ],
+          "correctIndex": 0,
+          "explanation": "Tailor the insight to what each stakeholder cares about rather than winning an argument."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-challenger-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this challenger-style pitch.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this pitch outline that misuse the challenger approach.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Studies show 90% of apps fail in the first year.",
+          "issue": "Unsourced statistic; teaching must be grounded in real, citable evidence."
+        },
+        {
+          "id": "p2",
+          "text": "Your checkout data shows 38% of mobile users drop off at the address step.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Frankly, your team doesn't understand mobile.",
+          "issue": "Challenging the thinking is not insulting the people."
+        },
+        {
+          "id": "p4",
+          "text": "Retailers who simplified that step typically recovered part of the drop-off; here is one example we can share.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Every business needs AI now.",
+          "issue": "Generic claim, not an insight specific to this client."
+        },
+        {
+          "id": "p6",
+          "text": "We propose a two-week test of a one-step address form.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-challenger-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of a commercial teaching pitch.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of a challenger-style teaching pitch, first at the top.",
+      "items": [
+        {
+          "id": "i3",
+          "label": "Rational drowning: back the reframe with data"
+        },
+        {
+          "id": "i4",
+          "label": "Emotional impact: make it real for their team"
+        },
+        {
+          "id": "i5",
+          "label": "A new way: describe the better approach"
+        },
+        {
+          "id": "i6",
+          "label": "Your solution: show how you deliver that approach"
+        },
+        {
+          "id": "i1",
+          "label": "Warmer: show you understand their situation"
+        },
+        {
+          "id": "i2",
+          "label": "Reframe: present a new way of seeing the problem"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "The insight comes before the solution. Leading with your product turns the reframe into a sales pitch."
+    }
+  },
+  {
+    "id": "bd-challenger-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Use the client's numbers to reframe their request.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A store has 120,000 mobile sessions a month: 70% on the mobile website (converting at 1.2%) and 30% in the app (3%). Average order value is $60. They want a $150,000 app rebuild.",
+      "table": null,
+      "fields": [
+        {
+          "id": "web",
+          "label": "Orders per month from the mobile website",
+          "unit": "",
+          "answer": 1008,
+          "tolerance": 0.5
+        },
+        {
+          "id": "app",
+          "label": "Orders per month from the app",
+          "unit": "",
+          "answer": 1080,
+          "tolerance": 0.5
+        },
+        {
+          "id": "extra",
+          "label": "Extra monthly revenue if mobile-web conversion rises to 1.8%",
+          "unit": "$",
+          "answer": 30240,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Web: 84,000 × 1.2% = 1008 orders. App: 36,000 × 3% = 1080. A rise to 1.8% on web adds 84,000 × 0.6% = 504 orders × $60 = $30240 a month. The insight: the website is nearly half the orders and the bigger lever."
+    }
+  },
+  {
+    "id": "bd-challenger-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Take control of the process respectfully.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect wants a fixed quote within 24 hours for a complex logistics platform and says they will not do a discovery session.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the challenger response?",
+          "options": [
+            "Send a quick fixed quote to stay in the race",
+            "Explain plainly why a quote without discovery would be a guess, and offer a short paid discovery or a ranged estimate",
+            "Decline to engage",
+            "Agree, then pad the quote heavily"
+          ],
+          "correctIndex": 1,
+          "explanation": "Taking control means steering the process toward what will actually work, and saying why."
+        },
+        {
+          "id": "s2",
+          "question": "They agree to a ranged estimate but want it to be the lowest in the market. What next?",
+          "options": [
+            "Cut the range in half",
+            "Promise to match any lower quote",
+            "Hold to an honest range and tie it to the outcomes it buys",
+            "Leave pricing out"
+          ],
+          "correctIndex": 2,
+          "explanation": "Being comfortable discussing money is part of taking control; matching blindly is not."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-challenger-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Tailor one insight to a CFO.",
+    "task": {
+      "kind": "write",
+      "prompt": "Rewrite the insight below as a short message for the client's CFO. Keep the facts; change the framing to what a CFO cares about.",
+      "context": "Insight (as told to the marketing head): \"Your mobile website gets 70% of mobile traffic but converts at 1.2% against 3% in the app. Fixing the mobile checkout could add about 500 orders a month at $60 each.\"",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "facts",
+          "label": "Keeps the facts accurate",
+          "description": "Uses the same numbers without exaggeration.",
+          "weight": 1
+        },
+        {
+          "id": "frame",
+          "label": "Frames for a CFO",
+          "description": "Talks in revenue, cost, payback or risk rather than brand or engagement.",
+          "weight": 1
+        },
+        {
+          "id": "compare",
+          "label": "Compares with the planned spend",
+          "description": "Relates the opportunity to the $150,000 app rebuild or investment choice.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Ends with a clear ask",
+          "description": "Proposes a specific, low-risk next step.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Laura, a quick look at your mobile numbers before the app decision. 70% of mobile sessions are on the website, which converts at 1.2% against 3% in the app. Raising the site to 1.8% would add about 500 orders a month, roughly $30,000 in monthly revenue, for a fraction of the planned $150,000 rebuild. I suggest a two-week checkout test to confirm the lift before committing the larger budget. Could we take 20 minutes next week to agree how we'd measure it?"
+    }
+  },
+  {
+    "id": "bd-challenger-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In challenger selling, what does \"teach\" mean?",
+    "mcq": {
+      "options": [
+        "Sharing an insight that changes how the client sees their own problem",
+        "Training the client's staff on your product",
+        "Explaining your hourly rates",
+        "Lecturing the client on best practice"
+      ],
+      "correctIndex": 0,
+      "explanation": "The insight should be new to them and lead naturally toward what you do well.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-challenger-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does \"tailor\" mean in the challenger model?",
+    "mcq": {
+      "options": [
+        "Changing the facts for each audience",
+        "Framing the same insight around what each stakeholder cares about",
+        "Offering each stakeholder a different price",
+        "Customising the code"
+      ],
+      "correctIndex": 1,
+      "explanation": "The CFO hears cost and payback, operations hears time saved; the facts stay the same.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-challenger-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-challenger",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which behaviour is \"taking control\" in the challenger sense?",
+    "mcq": {
+      "options": [
+        "Insisting on your price and ending the call",
+        "Respectfully pushing back on a request that would hurt the client's outcome, and explaining why",
+        "Telling the client they are wrong in front of their team",
+        "Accepting every request to avoid conflict"
+      ],
+      "correctIndex": 1,
+      "explanation": "Control means being comfortable with tension about money and process, while staying respectful.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,368 @@
+[
+  {
+    "id": "pm-delivery-forecasting-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "60 backlog items remain on a client's MVP. Weekly throughput over the last six weeks was 6, 9, 7, 8, 5 and 10 items.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "avg",
+          "label": "Average weekly throughput",
+          "unit": "items/week",
+          "answer": 7.5,
+          "tolerance": 0.01
+        },
+        {
+          "id": "wk",
+          "label": "Weeks to finish at the average",
+          "unit": "weeks",
+          "answer": 8.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "slow",
+          "label": "Weeks to finish at the slowest week's rate",
+          "unit": "weeks",
+          "answer": 12.0,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Average = 45/6 = 7.5. 60/7.5 = 8 weeks. At the slowest (5/week) 60/5 = 12 weeks: a useful pessimistic bound."
+    }
+  },
+  {
+    "id": "pm-delivery-forecasting-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A Monte Carlo simulation of 1,000 runs for the remaining work produced these completion results. Read the forecast off the cumulative counts.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Finished by end of week",
+          "Runs (cumulative)"
+        ],
+        "rows": [
+          [
+            "8",
+            "300"
+          ],
+          [
+            "9",
+            "620"
+          ],
+          [
+            "10",
+            "820"
+          ],
+          [
+            "11",
+            "940"
+          ],
+          [
+            "12",
+            "1000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "p50",
+          "label": "Week by which at least 50% of runs finish",
+          "unit": "week",
+          "answer": 9,
+          "tolerance": 0
+        },
+        {
+          "id": "p85",
+          "label": "Week by which at least 85% of runs finish",
+          "unit": "week",
+          "answer": 11,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Cumulative: wk8 = 300, wk9 = 620, wk10 = 820, wk11 = 940, wk12 = 1000. 50% (500) is first reached at week 9; 85% (850) at week 11."
+    }
+  },
+  {
+    "id": "pm-delivery-forecasting-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The team splits epics into stories as they go. Historically each remaining epic becomes 1.5× as many items as first listed. There are 40 items listed now and throughput averages 8 items a week.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "items",
+          "label": "Expected total items after splitting",
+          "unit": "items",
+          "answer": 60.0,
+          "tolerance": 0
+        },
+        {
+          "id": "weeks",
+          "label": "Forecast weeks",
+          "unit": "weeks",
+          "answer": 7.5,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "40 × 1.5 = 60 items; 60 / 8 = 7.5 weeks. Ignoring split/growth is the most common cause of optimistic forecasts."
+    }
+  },
+  {
+    "id": "pm-delivery-forecasting-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A PM's forecast email to a client. Mark the statements that are poor forecasting practice.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Based on the last 8 weeks of throughput, we forecast completion between 14 and 18 June.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "There's an 85% likelihood we finish by 18 June.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "This is a guaranteed date; nothing can change it.",
+          "issue": "Forecasts are probabilistic; presenting one as a guarantee sets up a broken promise."
+        },
+        {
+          "id": "p4",
+          "text": "The forecast assumes the remaining scope stays at about 45 items.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "We'll update the forecast every week as new data comes in.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "We based it on the single fastest week we've ever had, so it's achievable.",
+          "issue": "Using the best week ignores variability; use the distribution of throughput instead."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-delivery-forecasting-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order these steps for producing a throughput-based Monte Carlo forecast.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Read completion dates at chosen percentiles (50%, 85%)"
+        },
+        {
+          "id": "r2",
+          "label": "Count the remaining items (adjusted for expected splitting)"
+        },
+        {
+          "id": "r1",
+          "label": "Collect recent weekly throughput (e.g. last 8–12 weeks)"
+        },
+        {
+          "id": "r3",
+          "label": "Simulate many futures by randomly sampling past weekly throughputs until the items are done"
+        },
+        {
+          "id": "r5",
+          "label": "Share a range with confidence levels and refresh it regularly"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Data, scope, simulation, percentiles, then communicate and refresh."
+    }
+  },
+  {
+    "id": "pm-delivery-forecasting-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client's CEO asks: 'When will the white-label app be done? I need one date for the board.' Your Monte Carlo gives 50% by 3 March and 85% by 24 March.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client's CEO asks: 'When will the white-label app be done? I need one date for the board.' Your Monte Carlo gives 50% by 3 March and 85% by 24 March.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which date do you give for a board commitment?",
+          "options": [
+            "3 March, it's more attractive",
+            "24 March, stating it's the 85% confidence date",
+            "A date before 3 March to impress",
+            "No date at all"
+          ],
+          "correctIndex": 1,
+          "explanation": "A public commitment needs high confidence; explain the percentile so the board understands the risk."
+        },
+        {
+          "id": "s2",
+          "question": "The CEO says the board needs 3 March. What do you offer?",
+          "options": [
+            "Promise 3 March and hope",
+            "Options: reduce scope to what fits by 3 March at 85% confidence, or accept 50% odds knowingly",
+            "Ask the team for overtime without telling anyone",
+            "Refuse to discuss"
+          ],
+          "correctIndex": 1,
+          "explanation": "Show the trade-off between scope and confidence rather than overpromising."
+        },
+        {
+          "id": "s3",
+          "question": "Two weeks later, scope grows by 15 items. What do you do?",
+          "options": [
+            "Keep the old forecast",
+            "Re-run the forecast with the new scope and communicate the new dates promptly",
+            "Remove the items from Jira",
+            "Wait until the end to mention it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Forecasts are refreshed with new data; prompt updates preserve trust."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-delivery-forecasting-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does an '85% forecast of 24 March' mean?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "In 85% of simulated outcomes the work finished on or before 24 March",
+        "85% of the work will be done on 24 March",
+        "The team works at 85% speed",
+        "The date is 85% of the way through the project"
+      ],
+      "correctIndex": 0,
+      "explanation": "A percentile forecast gives the share of possible outcomes that finish by that date.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-delivery-forecasting-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why do flow-based forecasts use throughput (item counts) rather than adding up story points?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Item counts need no estimating and, with similarly sized items, forecast about as well using real delivery data",
+        "Story points are banned in Kanban",
+        "Throughput is always higher",
+        "Clients prefer counts"
+      ],
+      "correctIndex": 0,
+      "explanation": "Counting finished items uses actual data, avoids estimation effort, and works when items are right-sized.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-delivery-forecasting-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-forecasting",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your forecast data comes from a period when the team had 6 developers; next quarter it will have 4. What should you do?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Treat the old throughput as unrepresentative: adjust or rebuild the forecast as new data arrives, and widen the range meanwhile",
+        "Use the old data unchanged",
+        "Multiply throughput by 6/4",
+        "Stop forecasting"
+      ],
+      "correctIndex": 0,
+      "explanation": "Monte Carlo assumes the future resembles the sampled past; when the system changes, the data must be adjusted and the uncertainty acknowledged.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

@@ -1,0 +1,404 @@
+[
+  {
+    "id": "bd-pipeline-management-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Work out the total and the weighted pipeline value (deal value x stage probability) for these open deals.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Work out the total and the weighted pipeline value (deal value x stage probability) for these open deals.",
+      "table": {
+        "columns": [
+          "Deal",
+          "Stage",
+          "Value ($)",
+          "Stage probability"
+        ],
+        "rows": [
+          [
+            "Clinic booking app",
+            "Proposal sent",
+            "40000",
+            "40%"
+          ],
+          [
+            "Fleet dashboard",
+            "Negotiation",
+            "25000",
+            "70%"
+          ],
+          [
+            "AI support bot",
+            "Discovery done",
+            "60000",
+            "20%"
+          ],
+          [
+            "Retail loyalty app",
+            "Qualified",
+            "30000",
+            "10%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total unweighted pipeline",
+          "unit": "$",
+          "answer": 155000,
+          "tolerance": 1
+        },
+        {
+          "id": "weighted",
+          "label": "Weighted pipeline",
+          "unit": "$",
+          "answer": 48500,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Weighted: 16,000 + 17,500 + 12,000 + 3,000 = 48,500. Unweighted total 155,000."
+    }
+  },
+  {
+    "id": "bd-pipeline-management-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "In a weekly pipeline review you have time to discuss deals in depth. Rank which to discuss first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "In a weekly pipeline review you have time to discuss deals in depth. Rank which to discuss first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "$20k deal in discovery, call booked for tomorrow"
+        },
+        {
+          "id": "r4",
+          "label": "$5k deal closed won yesterday"
+        },
+        {
+          "id": "r1",
+          "label": "$80k deal in negotiation; the client's legal review has gone silent for two weeks"
+        },
+        {
+          "id": "r2",
+          "label": "$50k deal at proposal, close date this month, no reply since the proposal"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Spend review time where value is high and the deal is at risk; a booked next step is on track and a won deal needs no rescue."
+    }
+  },
+  {
+    "id": "bd-pipeline-management-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your quarterly target is $200k. The CRM shows $600k of open pipeline, mostly in early stages, and the quarter ends in 6 weeks.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your quarterly target is $200k. The CRM shows $600k of open pipeline, mostly in early stages, and the quarter ends in 6 weeks.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Is the 3x coverage reassuring?",
+          "options": [
+            "Only if every deal is over $50k",
+            "Yes, 3x coverage always means the target is safe",
+            "Not on its own: check stage mix, close dates and historical win rates",
+            "No, coverage never matters"
+          ],
+          "correctIndex": 2,
+          "explanation": "Coverage built from early-stage deals with unrealistic dates is weaker than it looks."
+        },
+        {
+          "id": "s2",
+          "question": "Many deals have close dates this quarter but no next step. What do you do?",
+          "options": [
+            "Confirm each with the buyer and move dates or stages to reality",
+            "Change all dates to the last day of the quarter",
+            "Delete them",
+            "Leave the dates"
+          ],
+          "correctIndex": 0,
+          "explanation": "An honest pipeline is the only one you can plan from."
+        },
+        {
+          "id": "s3",
+          "question": "After cleaning, weighted pipeline closing this quarter is $120k. What is the best action?",
+          "options": [
+            "Wait to see what happens",
+            "Report $600k anyway",
+            "Flag the gap early and focus on accelerating late-stage deals and adding qualified pipeline",
+            "Discount every deal by 50%"
+          ],
+          "correctIndex": 2,
+          "explanation": "Early, honest forecasts allow a plan; discounting everything just erodes margin."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pipeline-management-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Work out how much new qualified pipeline you must create to hit next quarter's target, given the historical win rate and what already exists.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Work out how much new qualified pipeline you must create to hit next quarter's target, given the historical win rate and what already exists.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Next quarter revenue target",
+            "$300,000"
+          ],
+          [
+            "Historical win rate on qualified pipeline",
+            "25%"
+          ],
+          [
+            "Qualified pipeline already expected to close next quarter",
+            "$800,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "needed",
+          "label": "Total qualified pipeline needed",
+          "unit": "$",
+          "answer": 1200000,
+          "tolerance": 1
+        },
+        {
+          "id": "gap",
+          "label": "New qualified pipeline still to create",
+          "unit": "$",
+          "answer": 400000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "300,000 / 0.25 = 1,200,000 needed. 1,200,000 - 800,000 = 400,000 still to create."
+    }
+  },
+  {
+    "id": "bd-pipeline-management-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Compute pipeline velocity: (qualified deals x win rate x average deal size) / average sales cycle in days.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compute pipeline velocity: (qualified deals x win rate x average deal size) / average sales cycle in days.",
+      "table": {
+        "columns": [
+          "Metric",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Qualified deals in pipeline",
+            "40"
+          ],
+          [
+            "Win rate",
+            "25%"
+          ],
+          [
+            "Average deal size",
+            "$30,000"
+          ],
+          [
+            "Average sales cycle",
+            "60 days"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "vel",
+          "label": "Pipeline velocity",
+          "unit": "$/day",
+          "answer": 5000,
+          "tolerance": 1
+        },
+        {
+          "id": "vel2",
+          "label": "Velocity if the cycle shortens to 40 days",
+          "unit": "$/day",
+          "answer": 7500,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "40 x 0.25 x 30,000 = 300,000; / 60 = 5,000 per day. At 40 days: 7,500 per day. Shortening the cycle lifts velocity as much as a higher win rate would."
+    }
+  },
+  {
+    "id": "bd-pipeline-management-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A rep's forecast note for the month is below. Mark the statements that are unreliable forecasting.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A rep's forecast note for the month is below. Mark the statements that are unreliable forecasting.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Fleet dashboard ($25k): signed SOW received, kickoff booked.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "AI support bot ($60k): commit, the contact said they \"love it\".",
+          "issue": "Enthusiasm from a contact is not commitment; no economic buyer or paper process is confirmed."
+        },
+        {
+          "id": "p3",
+          "text": "Clinic app ($40k): proposal reviewed with the COO and CFO, verbal yes, contract in legal.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Retail app ($30k): commit, close date pushed three times already.",
+          "issue": "A deal that keeps slipping should not be in commit without new evidence."
+        },
+        {
+          "id": "p5",
+          "text": "Loyalty bot ($12k): best case, waiting on budget approval next quarter.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Total commit is the sum of every open deal in the CRM.",
+          "issue": "Commit should include only deals with strong evidence, not the whole pipeline."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-pipeline-management-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is weighted pipeline?",
+    "mcq": {
+      "options": [
+        "Each deal's value multiplied by its probability of closing, summed",
+        "The number of deals per stage",
+        "Revenue already invoiced",
+        "The total value of all open deals"
+      ],
+      "correctIndex": 0,
+      "explanation": "Weighting by stage or deal probability gives a more realistic expected value than the raw total.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-pipeline-management-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Deals pile up at the proposal stage and rarely move. What is the most useful first check?",
+    "mcq": {
+      "options": [
+        "Whether the CRM colour for that stage is right",
+        "How many emails were sent last week",
+        "Whether to cut all prices by 20%",
+        "Whether proposals go to people without authority or before needs are clear"
+      ],
+      "correctIndex": 3,
+      "explanation": "A proposal-stage bottleneck usually means weak qualification or discovery before the proposal.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-pipeline-management-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pipeline-management",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A large deal has sat in negotiation for 90 days, triple your usual cycle, with no buyer reply. How should it be treated in the forecast?",
+    "mcq": {
+      "options": [
+        "Raise its value",
+        "Move it back to discovery without telling anyone",
+        "Keep it as commit",
+        "Downgrade it, attempt a direct re-engagement, and close it lost with a reason if there is no response"
+      ],
+      "correctIndex": 3,
+      "explanation": "Aged, silent deals inflate forecasts; an honest downgrade and a clear break-up attempt give the real picture.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

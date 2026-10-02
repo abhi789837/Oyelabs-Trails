@@ -1,0 +1,390 @@
+[
+  {
+    "id": "bd-tech-delivery-process-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Put these stages of a typical agency software project in the order they usually happen, first at the top.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these stages of a typical agency software project in the order they usually happen, first at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Development sprints with regular demos"
+        },
+        {
+          "id": "r4",
+          "label": "QA testing and user acceptance testing (UAT)"
+        },
+        {
+          "id": "r5",
+          "label": "Launch / deployment to production"
+        },
+        {
+          "id": "r6",
+          "label": "Warranty period and ongoing maintenance"
+        },
+        {
+          "id": "r1",
+          "label": "Discovery and requirements workshop"
+        },
+        {
+          "id": "r2",
+          "label": "UI/UX design and clickable prototype sign-off"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Requirements come first, designs are approved before heavy build, sprints produce testable work, QA and UAT gate the launch, and support follows release."
+    }
+  },
+  {
+    "id": "bd-tech-delivery-process-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A new BD rep wrote this explanation of the delivery process for a prospect. Mark the sentences that would set wrong expectations.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A new BD rep wrote this explanation of the delivery process for a prospect. Mark the sentences that would set wrong expectations.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "We work in two-week sprints, and you will see a demo of working features at the end of each one.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Once development starts, you can add any new feature at no extra cost or time.",
+          "issue": "Scope changes go through a change request; they affect cost or timeline."
+        },
+        {
+          "id": "p3",
+          "text": "A project manager is your single point of contact for day-to-day questions.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "QA is optional, so we usually skip it to launch faster.",
+          "issue": "QA is a standard part of delivery; skipping it shifts bugs onto the client's users."
+        },
+        {
+          "id": "p5",
+          "text": "Before launch you will test the app yourself in a staging environment (UAT).",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "After launch there is a warranty period for bugs, and maintenance can be covered by a separate plan.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-delivery-process-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A first-time founder on a call asks: \"What happens after I sign? I've never built software before.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A first-time founder on a call asks: \"What happens after I sign? I've never built software before.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best first thing to explain?",
+          "options": [
+            "That the app will be live within a week of signing",
+            "That we start with discovery to confirm scope and priorities before design and build",
+            "That they do not need to be involved until launch",
+            "The exact programming languages the developers will use"
+          ],
+          "correctIndex": 1,
+          "explanation": "Non-technical founders need the shape of the process; discovery is the first step and sets expectations."
+        },
+        {
+          "id": "s2",
+          "question": "The founder asks how they will know the project is on track. What do you say?",
+          "options": [
+            "We send a final report when the contract ends",
+            "They will see everything at launch",
+            "Sprint demos every couple of weeks and a shared board showing progress",
+            "They can email the developers directly whenever they like"
+          ],
+          "correctIndex": 2,
+          "explanation": "Regular demos and a visible backlog give the client real evidence of progress."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-delivery-process-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client wants a launch date. The backlog is estimated at 180 story points, the team completes about 30 points per two-week sprint, and the plan adds one extra sprint at the end for QA hardening and UAT. How many sprints, and how many weeks, until launch?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client wants a launch date. The backlog is estimated at 180 story points, the team completes about 30 points per two-week sprint, and the plan adds one extra sprint at the end for QA hardening and UAT. How many sprints, and how many weeks, until launch?",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Backlog",
+            "180 points"
+          ],
+          [
+            "Velocity",
+            "30 points per sprint"
+          ],
+          [
+            "Sprint length",
+            "2 weeks"
+          ],
+          [
+            "Hardening/UAT sprints",
+            "1"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "sprints",
+          "label": "Total sprints",
+          "unit": "sprints",
+          "answer": 7,
+          "tolerance": 0
+        },
+        {
+          "id": "weeks",
+          "label": "Weeks until launch",
+          "unit": "weeks",
+          "answer": 14,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "180 / 30 = 6 build sprints, plus 1 hardening sprint = 7 sprints; 7 x 2 weeks = 14 weeks."
+    }
+  },
+  {
+    "id": "bd-tech-delivery-process-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mid-project, a client emails BD directly: \"Can you add a loyalty-points feature? It's small, should be quick.\" The signed scope does not include it.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Mid-project, a client emails BD directly: \"Can you add a loyalty-points feature? It's small, should be quick.\" The signed scope does not include it.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should BD do first?",
+          "options": [
+            "Tell the client new features are impossible once a project starts",
+            "Ask a developer privately to squeeze it in",
+            "Loop in the project manager and treat it as a change request to be estimated",
+            "Promise it will be done this sprint to keep the client happy"
+          ],
+          "correctIndex": 2,
+          "explanation": "Change requests are estimated by delivery and agreed in writing; BD should not commit on delivery's behalf."
+        },
+        {
+          "id": "s2",
+          "question": "The estimate comes back at one extra sprint. What is the best way to present it?",
+          "options": [
+            "Hide the cost inside the next invoice",
+            "Only offer to add it at full cost with no alternatives",
+            "Offer options: add a sprint and cost, swap it for an equal-sized item, or schedule it for phase 2",
+            "Drop the request quietly"
+          ],
+          "correctIndex": 2,
+          "explanation": "Trade-off options keep the client in control of scope, budget and timeline."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-delivery-process-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A bug is found in production after launch. Rank these responses from most to least appropriate.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A bug is found in production after launch. Rank these responses from most to least appropriate.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Tell the client it passed UAT so it is their responsibility"
+        },
+        {
+          "id": "r4",
+          "label": "Ignore it until the client complains a second time"
+        },
+        {
+          "id": "r1",
+          "label": "Log it, have QA reproduce it, assess severity, and fix under the warranty or maintenance plan"
+        },
+        {
+          "id": "r2",
+          "label": "Ask the client for steps to reproduce, then fix it whenever the team is free"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "A structured triage under the agreed support terms is best; vague timing is weaker; blaming UAT damages trust; ignoring it is worst."
+    }
+  },
+  {
+    "id": "bd-tech-delivery-process-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is UAT in a software project?",
+    "mcq": {
+      "options": [
+        "The agency's internal code review",
+        "A security audit done after launch",
+        "The client testing the finished features in a staging environment before launch",
+        "Automated tests developers write for each function"
+      ],
+      "correctIndex": 2,
+      "explanation": "User acceptance testing is the client confirming the software does what they need before it goes live.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-delivery-process-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why do agencies demo working software at the end of each sprint?",
+    "mcq": {
+      "options": [
+        "To replace QA testing",
+        "So the client can approve the final design for the first time",
+        "So the client sees real progress and can give feedback early",
+        "Because contracts require a demo before every invoice in all countries"
+      ],
+      "correctIndex": 2,
+      "explanation": "Frequent demos surface misunderstandings while they are cheap to fix and build client trust.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-delivery-process-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client asks why the quote includes a separate maintenance plan after the warranty. What is the best explanation?",
+    "mcq": {
+      "options": [
+        "Apps never need changes after launch, so maintenance is optional padding",
+        "Warranty covers defects in what was delivered; maintenance covers OS and library updates, monitoring and small changes over time",
+        "Maintenance is only needed if the code was written badly",
+        "Warranty and maintenance are the same thing billed twice"
+      ],
+      "correctIndex": 1,
+      "explanation": "Software keeps changing around the app (OS releases, dependency and security updates), which is ongoing work beyond fixing original defects.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-delivery-process-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-delivery-process",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which explanation of agile is most useful for a non-technical buyer?",
+    "mcq": {
+      "options": [
+        "Agile guarantees the project finishes early",
+        "We build in short cycles, show you working features often, and re-prioritise the remaining work with you as we learn",
+        "Agile means there is no plan or fixed scope",
+        "Agile means the developers decide what to build"
+      ],
+      "correctIndex": 1,
+      "explanation": "Agile is short iterations with frequent feedback and reprioritisation, not the absence of a plan.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

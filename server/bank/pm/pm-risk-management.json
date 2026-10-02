@@ -1,0 +1,407 @@
+[
+  {
+    "id": "pm-risk-management-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Calculate the expected monetary value (EMV = probability x impact) of each risk and the total contingency reserve.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate the expected monetary value (EMV = probability x impact) of each risk and the total contingency reserve.",
+      "table": {
+        "columns": [
+          "Risk",
+          "Probability",
+          "Impact"
+        ],
+        "rows": [
+          [
+            "Payment API change",
+            "20%",
+            "$10,000"
+          ],
+          [
+            "App Store rejection",
+            "30%",
+            "$6,000"
+          ],
+          [
+            "Data migration overrun",
+            "50%",
+            "$8,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "EMV: payment API change",
+          "unit": "$",
+          "answer": 2000,
+          "tolerance": 1
+        },
+        {
+          "id": "b",
+          "label": "EMV: App Store rejection",
+          "unit": "$",
+          "answer": 1800,
+          "tolerance": 1
+        },
+        {
+          "id": "c",
+          "label": "EMV: migration overrun",
+          "unit": "$",
+          "answer": 4000,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total contingency reserve",
+          "unit": "$",
+          "answer": 7800,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "0.2 x 10,000 = 2,000; 0.3 x 6,000 = 1,800; 0.5 x 8,000 = 4,000; total 7,800."
+    }
+  },
+  {
+    "id": "pm-risk-management-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of the risk management process.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of the risk management process.",
+      "items": [
+        {
+          "id": "rcd6ea",
+          "label": "Identify risks with the team and client"
+        },
+        {
+          "id": "r9565e",
+          "label": "Analyse probability and impact"
+        },
+        {
+          "id": "r59eba",
+          "label": "Plan a response and assign an owner"
+        },
+        {
+          "id": "r6014f",
+          "label": "Implement the response"
+        },
+        {
+          "id": "r4e1da",
+          "label": "Monitor triggers and review regularly"
+        }
+      ],
+      "correctOrder": [
+        "rcd6ea",
+        "r9565e",
+        "r59eba",
+        "r6014f",
+        "r4e1da"
+      ],
+      "explanation": "Identify, analyse, plan, implement, monitor: the standard cycle, repeated through the project."
+    }
+  },
+  {
+    "id": "pm-risk-management-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "For each risk on an AI document-processing project, choose the best response strategy.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "For each risk on an AI document-processing project, choose the best response strategy.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "The client's legacy OCR vendor might shut down mid-project. A cloud OCR service with a stable API exists.",
+          "options": [
+            "Avoid: design around the cloud OCR service from the start",
+            "Accept: do nothing and hope",
+            "Transfer: buy insurance",
+            "Exploit: increase reliance on the legacy vendor"
+          ],
+          "correctIndex": 0,
+          "explanation": "Changing the plan to remove the cause is avoidance."
+        },
+        {
+          "id": "d2",
+          "question": "A rare surge of documents at year-end could overload processing. Auto-scaling is already configured.",
+          "options": [
+            "Avoid by refusing year-end documents",
+            "Accept, with a contingency plan to add a temporary queue if the surge exceeds limits",
+            "Transfer to the client's IT team",
+            "Mitigate by rewriting the whole pipeline"
+          ],
+          "correctIndex": 1,
+          "explanation": "Low-probability risk with existing controls: accept actively with a contingency."
+        },
+        {
+          "id": "d3",
+          "question": "Model accuracy on handwritten forms is uncertain.",
+          "options": [
+            "Mitigate: build an evaluation set early and route low-confidence results to human review",
+            "Accept and fix complaints after launch",
+            "Transfer the risk to the model provider",
+            "Avoid by removing all forms"
+          ],
+          "correctIndex": 0,
+          "explanation": "Reducing probability and impact through early testing and fallbacks is mitigation."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-risk-management-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Review this risk register extract. Mark the entries that would not help anyone manage the risk.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this risk register extract. Mark the entries that would not help anyone manage the risk.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "R1: Because the client's SSO is untested with our auth library, login may fail in staging, delaying UAT by a week. Owner: tech lead. Response: spike in sprint 1.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "R2: Scope creep.",
+          "issue": "Generic label, no cause, effect, owner or response."
+        },
+        {
+          "id": "s3",
+          "text": "R3: Because two features depend on one iOS developer, illness could stall mobile work. Owner: PM. Response: pair a second developer on iOS from sprint 2.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "R4: Probability high, impact high, owner TBC.",
+          "issue": "No description of the risk itself, and no owner."
+        },
+        {
+          "id": "s5",
+          "text": "R5: Because the model provider may deprecate the model version we use, prompts may need re-tuning. Owner: AI engineer. Trigger: deprecation notice.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "R6: The project might fail.",
+          "issue": "Too broad to act on; break it into specific causes."
+        },
+        {
+          "id": "s7",
+          "text": "R7: Because the client approves designs fortnightly, rework may pile up. Owner: PM. Response: weekly design check-ins agreed.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "R8: Because hosting is in the client's account, we may lack access for incidents. Owner: client IT. Response: break-glass access agreed.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-risk-management-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A risk response costs money to implement. Decide whether each is worth it by comparing EMV before and after with the response cost.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A risk response costs money to implement. Decide whether each is worth it by comparing EMV before and after with the response cost.",
+      "table": {
+        "columns": [
+          "Risk",
+          "Prob. before",
+          "Prob. after",
+          "Impact",
+          "Response cost"
+        ],
+        "rows": [
+          [
+            "Data breach in staging",
+            "10%",
+            "2%",
+            "$80,000",
+            "$3,000"
+          ],
+          [
+            "Store rejection",
+            "30%",
+            "20%",
+            "$6,000",
+            "$2,500"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Net benefit of the staging-security response (EMV reduction minus cost)",
+          "unit": "$",
+          "answer": 3400.0,
+          "tolerance": 1
+        },
+        {
+          "id": "b",
+          "label": "Net benefit of the store-rejection response",
+          "unit": "$",
+          "answer": -1900.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Staging: (0.10 - 0.02) x 80,000 = 6,400 reduction - 3,000 = +3,400, worth doing. Store: 0.10 x 6,000 = 600 - 2,500 = -1,900, not worth it on cost alone."
+    }
+  },
+  {
+    "id": "pm-risk-management-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Midway through a fixed-price build, the client's new security officer says all AI features must pass a third-party penetration test before go-live. It was not in the contract. The test takes 3 weeks to book and findings may need fixes.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Midway through a fixed-price build, the client's new security officer says all AI features must pass a third-party penetration test before go-live. It was not in the contract. The test takes 3 weeks to book and findings may need fixes.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you treat this?",
+          "options": [
+            "Absorb it quietly to keep the client happy",
+            "Refuse because it is not in the contract",
+            "As a new requirement with schedule and cost impact: raise a change request and add a schedule risk for fix time",
+            "Book the test after go-live"
+          ],
+          "correctIndex": 2,
+          "explanation": "It changes scope and creates a new risk; both need recording and a client decision."
+        },
+        {
+          "id": "d2",
+          "question": "To reduce schedule impact, what is the best response?",
+          "options": [
+            "Wait until everything is finished before booking",
+            "Ask the testers to skip the AI features",
+            "Plan to release without fixing findings",
+            "Book the test now for the earliest feature-complete date and run an internal security review first to catch obvious findings"
+          ],
+          "correctIndex": 3,
+          "explanation": "Early booking and an internal pass shorten the critical path and reduce fix volume."
+        },
+        {
+          "id": "d3",
+          "question": "The pen test finds two high-severity issues a week before launch. What do you do?",
+          "options": [
+            "Launch anyway and fix later without telling the client",
+            "Present the findings, fix time and options (delay, or launch with features disabled) to the client for a decision",
+            "Hide the report until after launch",
+            "Blame the testers"
+          ],
+          "correctIndex": 1,
+          "explanation": "A known high-severity issue is the client's risk decision, made with full information."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-risk-management-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is a risk trigger?",
+    "mcq": {
+      "options": [
+        "The person who raised the risk",
+        "A warning sign that the risk is about to happen or has happened",
+        "The cost of the risk response",
+        "The date the risk register is reviewed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Triggers tell the owner when to put the response into action, e.g. no test accounts by sprint 4.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-risk-management-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which is an example of a positive risk (opportunity) on an agency project?",
+    "mcq": {
+      "options": [
+        "A developer might leave",
+        "The client might delay approvals",
+        "Hosting costs might rise",
+        "A new SDK release might let the team cut two weeks off the integration"
+      ],
+      "correctIndex": 3,
+      "explanation": "Risks can be uncertain events with upside. Opportunities get responses too: exploit, enhance, share or accept.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-risk-management-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-risk-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "The sponsor wants a single \"risk score\" for the whole project in the steering pack. What is the main problem with that?",
+    "mcq": {
+      "options": [
+        "It is too precise",
+        "Steering groups never look at risks",
+        "Risk scores can only be calculated by auditors",
+        "It hides which specific risks need decisions, so show the top risks with owners and responses instead"
+      ],
+      "correctIndex": 3,
+      "explanation": "Aggregates feel tidy but drive no action. Steering groups need the few risks that need their decision.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

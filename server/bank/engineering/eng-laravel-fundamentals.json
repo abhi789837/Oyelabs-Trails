@@ -1,0 +1,2259 @@
+[
+  {
+    "id": "eng-laravel-fundamentals-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`Route::resource('photos', PhotoController::class)` registers seven routes. `resourceRoute` should return `[HTTP method, URI]` for an action, but two verbs are wrong. Fix them.\n\n- `index` → `[\"GET\", \"/photos\"]`\n- `show` → `[\"GET\", \"/photos/{photo}\"]`",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "resourceRoute",
+      "starterCode": "<?php\n\nfunction resourceRoute(string $action, string $resource): array\n{\n    $param = '{' . rtrim($resource, 's') . '}';\n    return match ($action) {\n        'index' => ['GET', \"/$resource\"],\n        'create' => ['GET', \"/$resource/create\"],\n        'store' => ['GET', \"/$resource\"],\n        'show' => ['GET', \"/$resource/$param\"],\n        'edit' => ['GET', \"/$resource/$param/edit\"],\n        'update' => ['PUT', \"/$resource/$param\"],\n        'destroy' => ['POST', \"/$resource/$param\"],\n    };\n}\n",
+      "referenceSolution": "<?php\n\nfunction resourceRoute(string $action, string $resource): array\n{\n    $param = '{' . rtrim($resource, 's') . '}';\n    return match ($action) {\n        'index' => ['GET', \"/$resource\"],\n        'create' => ['GET', \"/$resource/create\"],\n        'store' => ['POST', \"/$resource\"],\n        'show' => ['GET', \"/$resource/$param\"],\n        'edit' => ['GET', \"/$resource/$param/edit\"],\n        'update' => ['PUT', \"/$resource/$param\"],\n        'destroy' => ['DELETE', \"/$resource/$param\"],\n    };\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "index",
+            "photos"
+          ],
+          "expected": [
+            "GET",
+            "/photos"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "store",
+            "photos"
+          ],
+          "expected": [
+            "POST",
+            "/photos"
+          ]
+        },
+        {
+          "args": [
+            "destroy",
+            "posts"
+          ],
+          "expected": [
+            "DELETE",
+            "/posts/{post}"
+          ]
+        },
+        {
+          "args": [
+            "edit",
+            "photos"
+          ],
+          "expected": [
+            "GET",
+            "/photos/{photo}/edit"
+          ]
+        },
+        {
+          "args": [
+            "update",
+            "posts"
+          ],
+          "expected": [
+            "PUT",
+            "/posts/{post}"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`limit` mimics `Str::limit()`: return the string unchanged if it fits in `$limit` characters, otherwise cut it to `$limit` characters, trim trailing spaces and append `...`. It currently always appends `...`. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "limit",
+      "starterCode": "<?php\n\nfunction limit(string $value, int $limit): string\n{\n    return rtrim(substr($value, 0, $limit)) . '...';\n}\n",
+      "referenceSolution": "<?php\n\nfunction limit(string $value, int $limit): string\n{\n    if (strlen($value) <= $limit) {\n        return $value;\n    }\n    return rtrim(substr($value, 0, $limit)) . '...';\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "The quick brown fox",
+            9
+          ],
+          "expected": "The quick..."
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Short",
+            10
+          ],
+          "expected": "Short"
+        },
+        {
+          "args": [
+            "",
+            5
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "Exactly10!",
+            10
+          ],
+          "expected": "Exactly10!"
+        },
+        {
+          "args": [
+            "Hello world",
+            6
+          ],
+          "expected": "Hello..."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`routeIs` mimics `request()->routeIs('admin.*')`: a pattern ending in `.*` matches any route name with that prefix; otherwise the name must match exactly. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "routeIs",
+      "starterCode": "<?php\n\nfunction routeIs(string $current, string $pattern): bool\n{\n    return $current === $pattern;\n}\n",
+      "referenceSolution": "<?php\n\nfunction routeIs(string $current, string $pattern): bool\n{\n    if (str_ends_with($pattern, '.*')) {\n        return str_starts_with($current, substr($pattern, 0, -1));\n    }\n    return $current === $pattern;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "admin.users.index",
+            "admin.*"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "posts.show",
+            "posts.show"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "administrator.home",
+            "admin.*"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "posts.index",
+            "admin.*"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "admin.settings",
+            "admin.*"
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`missingFields` mimics the `required` rule: a field is missing when it is absent, `null`, an empty or whitespace-only string, or an empty array. Return the missing names in the order given. Empty strings currently slip through — fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "missingFields",
+      "starterCode": "<?php\n\nfunction missingFields(array $input, array $required): array\n{\n    $missing = [];\n    foreach ($required as $field) {\n        if (!isset($input[$field])) {\n            $missing[] = $field;\n        }\n    }\n    return $missing;\n}\n",
+      "referenceSolution": "<?php\n\nfunction missingFields(array $input, array $required): array\n{\n    $missing = [];\n    foreach ($required as $field) {\n        $value = $input[$field] ?? null;\n        if ($value === null || (is_string($value) && trim($value) === '') || $value === []) {\n            $missing[] = $field;\n        }\n    }\n    return $missing;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "email": ""
+            },
+            [
+              "name",
+              "email"
+            ]
+          ],
+          "expected": [
+            "email"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            [
+              "name"
+            ]
+          ],
+          "expected": [
+            "name"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "  ",
+              "tags": []
+            },
+            [
+              "name",
+              "tags"
+            ]
+          ],
+          "expected": [
+            "name",
+            "tags"
+          ]
+        },
+        {
+          "args": [
+            {
+              "age": 0,
+              "ok": false
+            },
+            [
+              "age",
+              "ok"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "a": "x"
+            },
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`configGet` mimics `config('app.name', $default)` with dot notation over nested arrays. It only looks one level deep. Fix it; a missing key returns `$default`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "configGet",
+      "starterCode": "<?php\n\nfunction configGet(array $config, string $key, mixed $default = null): mixed\n{\n    return $config[$key] ?? $default;\n}\n",
+      "referenceSolution": "<?php\n\nfunction configGet(array $config, string $key, mixed $default = null): mixed\n{\n    $value = $config;\n    foreach (explode('.', $key) as $segment) {\n        if (!is_array($value) || !array_key_exists($segment, $value)) {\n            return $default;\n        }\n        $value = $value[$segment];\n    }\n    return $value;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "app": {
+                "name": "Shop"
+              }
+            },
+            "app.name",
+            null
+          ],
+          "expected": "Shop"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "app": {
+                "name": "Shop"
+              }
+            },
+            "app.url",
+            "http://localhost"
+          ],
+          "expected": "http://localhost"
+        },
+        {
+          "args": [
+            {
+              "db": {
+                "connections": {
+                  "mysql": {
+                    "port": 3306
+                  }
+                }
+              }
+            },
+            "db.connections.mysql.port",
+            null
+          ],
+          "expected": 3306
+        },
+        {
+          "args": [
+            {
+              "debug": false
+            },
+            "debug",
+            true
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "app": "x"
+            },
+            "app.name",
+            "d"
+          ],
+          "expected": "d"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put the steps of a Laravel HTTP request in the order they happen.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A browser requests `GET /orders/42`. Order what happens, first to last.",
+      "items": [
+        {
+          "id": "index",
+          "label": "The web server hands the request to `public/index.php`"
+        },
+        {
+          "id": "boot",
+          "label": "The application is bootstrapped and service providers are registered and booted"
+        },
+        {
+          "id": "middleware",
+          "label": "Global and route middleware run (sessions, auth, CSRF…)"
+        },
+        {
+          "id": "router",
+          "label": "The router matches `/orders/{order}` and binds the `Order` model"
+        },
+        {
+          "id": "controller",
+          "label": "`OrderController@show` runs and returns a view"
+        },
+        {
+          "id": "response",
+          "label": "The response travels back out through the middleware and is sent"
+        }
+      ],
+      "correctOrder": [
+        "index",
+        "boot",
+        "middleware",
+        "router",
+        "controller",
+        "response"
+      ],
+      "explanation": "Every request enters through `public/index.php`, which boots the app (providers). The HTTP kernel then sends it through middleware to the router, which matches the route and resolves bindings before calling the controller. The response passes back out through the middleware stack."
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which Artisan command creates `app/Http/Controllers/PostController.php` with the seven resource methods stubbed?",
+    "mcq": {
+      "options": [
+        "`php artisan make:controller PostController --resource`",
+        "`php artisan new:controller PostController`",
+        "`php artisan route:controller PostController --all`",
+        "`php artisan make:model PostController`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`make:controller` generates a controller; `--resource` adds `index`, `create`, `store`, `show`, `edit`, `update` and `destroy`. `make:model Post -mcr` would create a model with a migration and resource controller.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In a Blade view, a user's bio contains `<script>alert(1)</script>`. What is the difference between `{{ $user->bio }}` and `{!! $user->bio !!}`?",
+    "mcq": {
+      "options": [
+        "`{{ }}` escapes HTML so the script shows as text; `{!! !!}` outputs it raw and the script runs",
+        "Both escape HTML; `{!! !!}` also strips tags",
+        "`{{ }}` outputs raw HTML; `{!! !!}` escapes it",
+        "They are identical; `{!! !!}` is the older syntax"
+      ],
+      "correctIndex": 0,
+      "explanation": "`{{ }}` passes the value through `htmlspecialchars` (via `e()`), which protects against XSS. `{!! !!}` prints it unescaped — only use it for HTML you generated or sanitised yourself.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In a standard Laravel app with API routes installed, where do you define a stateless JSON endpoint so it is served at `/api/orders`?",
+    "mcq": {
+      "options": [
+        "`routes/api.php` — routes there get the `/api` prefix and the `api` middleware group",
+        "`routes/web.php` — every route there is automatically prefixed with `/api`",
+        "`routes/console.php`",
+        "`app/Http/Kernel.php`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`routes/api.php` is loaded with the `/api` prefix and the stateless `api` middleware group (no sessions or CSRF). `routes/web.php` gets sessions and CSRF protection; `routes/console.php` defines Artisan commands.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`validate` checks rules written as `'required|min:3|max:10'` (min/max are string lengths) and returns `field => [failed rule names]`. Two bugs: `min` rejects values of exactly the minimum length, and `min`/`max` run on fields that are not present (only `required` should report those). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "validate",
+      "starterCode": "<?php\n\nfunction validate(array $data, array $rules): array\n{\n    $errors = [];\n    foreach ($rules as $field => $ruleString) {\n        $value = $data[$field] ?? null;\n        foreach (explode('|', $ruleString) as $rule) {\n            [$name, $arg] = array_pad(explode(':', $rule, 2), 2, null);\n            $failed = match ($name) {\n                'required' => $value === null || $value === '',\n                'min' => strlen((string) $value) <= (int) $arg,\n                'max' => strlen((string) $value) > (int) $arg,\n                default => false,\n            };\n            if ($failed) {\n                $errors[$field][] = $name;\n            }\n        }\n    }\n    return $errors;\n}\n",
+      "referenceSolution": "<?php\n\nfunction validate(array $data, array $rules): array\n{\n    $errors = [];\n    foreach ($rules as $field => $ruleString) {\n        $value = $data[$field] ?? null;\n        $present = $value !== null && $value !== '';\n        foreach (explode('|', $ruleString) as $rule) {\n            [$name, $arg] = array_pad(explode(':', $rule, 2), 2, null);\n            $failed = match ($name) {\n                'required' => !$present,\n                'min' => $present && strlen((string) $value) < (int) $arg,\n                'max' => $present && strlen((string) $value) > (int) $arg,\n                default => false,\n            };\n            if ($failed) {\n                $errors[$field][] = $name;\n            }\n        }\n    }\n    return $errors;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Al"
+            },
+            {
+              "name": "required|min:3"
+            }
+          ],
+          "expected": {
+            "name": [
+              "min"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "Ada"
+            },
+            {
+              "name": "required|min:3|max:10"
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {},
+            {
+              "name": "required|min:3"
+            }
+          ],
+          "expected": {
+            "name": [
+              "required"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "bio": ""
+            },
+            {
+              "bio": "min:5"
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "code": "ABCDEFG"
+            },
+            {
+              "code": "required|max:5"
+            }
+          ],
+          "expected": {
+            "code": [
+              "max"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "a": "xy",
+              "b": ""
+            },
+            {
+              "a": "min:2",
+              "b": "required"
+            }
+          ],
+          "expected": {
+            "b": [
+              "required"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`route()` fills `{param}` segments from `$params`; any params **not** used in the URI are appended as a query string, like Laravel's `route('posts.show', ['post' => 5, 'tab' => 'comments'])` → `/posts/5?tab=comments`. Extra params are currently dropped. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "routeUrl",
+      "starterCode": "<?php\n\nfunction routeUrl(string $uri, array $params): string\n{\n    foreach ($params as $key => $value) {\n        $uri = str_replace('{' . $key . '}', (string) $value, $uri);\n    }\n    return $uri;\n}\n",
+      "referenceSolution": "<?php\n\nfunction routeUrl(string $uri, array $params): string\n{\n    $extra = [];\n    foreach ($params as $key => $value) {\n        $placeholder = '{' . $key . '}';\n        if (str_contains($uri, $placeholder)) {\n            $uri = str_replace($placeholder, (string) $value, $uri);\n        } else {\n            $extra[$key] = $value;\n        }\n    }\n    return $extra ? $uri . '?' . http_build_query($extra) : $uri;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "/posts/{post}",
+            {
+              "post": 5,
+              "tab": "comments"
+            }
+          ],
+          "expected": "/posts/5?tab=comments"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/posts/{post}",
+            {
+              "post": 7
+            }
+          ],
+          "expected": "/posts/7"
+        },
+        {
+          "args": [
+            "/users/{user}/orders/{order}",
+            {
+              "user": 1,
+              "order": 9,
+              "page": 2
+            }
+          ],
+          "expected": "/users/1/orders/9?page=2"
+        },
+        {
+          "args": [
+            "/search",
+            {
+              "q": "red shoes"
+            }
+          ],
+          "expected": "/search?q=red+shoes"
+        },
+        {
+          "args": [
+            "/",
+            {}
+          ],
+          "expected": "/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`failingMiddleware` returns the first middleware in the list that would reject the user (or `null`). `auth` needs an `id`, `verified` needs `verified: true`, and `role:admin,editor` needs one of the listed roles. The role check is ignored — fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "failingMiddleware",
+      "starterCode": "<?php\n\nfunction failingMiddleware(array $user, array $middleware): ?string\n{\n    foreach ($middleware as $m) {\n        $ok = match (true) {\n            $m === 'auth' => isset($user['id']),\n            $m === 'verified' => ($user['verified'] ?? false) === true,\n            default => true,\n        };\n        if (!$ok) {\n            return $m;\n        }\n    }\n    return null;\n}\n",
+      "referenceSolution": "<?php\n\nfunction failingMiddleware(array $user, array $middleware): ?string\n{\n    foreach ($middleware as $m) {\n        $ok = match (true) {\n            $m === 'auth' => isset($user['id']),\n            $m === 'verified' => ($user['verified'] ?? false) === true,\n            str_starts_with($m, 'role:') => in_array($user['role'] ?? null, explode(',', substr($m, 5)), true),\n            default => true,\n        };\n        if (!$ok) {\n            return $m;\n        }\n    }\n    return null;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "verified": true,
+              "role": "viewer"
+            },
+            [
+              "auth",
+              "role:admin,editor"
+            ]
+          ],
+          "expected": "role:admin,editor"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "verified": true,
+              "role": "editor"
+            },
+            [
+              "auth",
+              "verified",
+              "role:admin,editor"
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {},
+            [
+              "auth",
+              "role:admin"
+            ]
+          ],
+          "expected": "auth"
+        },
+        {
+          "args": [
+            {
+              "id": 2,
+              "verified": false,
+              "role": "admin"
+            },
+            [
+              "auth",
+              "verified"
+            ]
+          ],
+          "expected": "verified"
+        },
+        {
+          "args": [
+            {
+              "id": 3
+            },
+            [
+              "role:admin"
+            ]
+          ],
+          "expected": "role:admin"
+        },
+        {
+          "args": [
+            {
+              "id": 3
+            },
+            []
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`paginationMeta` builds the `meta` block of a paginated API response. `last_page` rounds down and `from`/`to` are wrong for an empty result (they should be `null`, with `last_page` 1). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "paginationMeta",
+      "starterCode": "<?php\n\nfunction paginationMeta(int $total, int $perPage, int $page): array\n{\n    return [\n        'current_page' => $page,\n        'last_page' => intdiv($total, $perPage),\n        'from' => ($page - 1) * $perPage + 1,\n        'to' => min($page * $perPage, $total),\n        'total' => $total,\n    ];\n}\n",
+      "referenceSolution": "<?php\n\nfunction paginationMeta(int $total, int $perPage, int $page): array\n{\n    $from = ($page - 1) * $perPage + 1;\n    $empty = $total === 0 || $from > $total;\n    return [\n        'current_page' => $page,\n        'last_page' => max(1, (int) ceil($total / $perPage)),\n        'from' => $empty ? null : $from,\n        'to' => $empty ? null : min($page * $perPage, $total),\n        'total' => $total,\n    ];\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            45,
+            10,
+            1
+          ],
+          "expected": {
+            "current_page": 1,
+            "last_page": 5,
+            "from": 1,
+            "to": 10,
+            "total": 45
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            45,
+            10,
+            5
+          ],
+          "expected": {
+            "current_page": 5,
+            "last_page": 5,
+            "from": 41,
+            "to": 45,
+            "total": 45
+          }
+        },
+        {
+          "args": [
+            0,
+            15,
+            1
+          ],
+          "expected": {
+            "current_page": 1,
+            "last_page": 1,
+            "from": null,
+            "to": null,
+            "total": 0
+          }
+        },
+        {
+          "args": [
+            30,
+            15,
+            2
+          ],
+          "expected": {
+            "current_page": 2,
+            "last_page": 2,
+            "from": 16,
+            "to": 30,
+            "total": 30
+          }
+        },
+        {
+          "args": [
+            5,
+            10,
+            3
+          ],
+          "expected": {
+            "current_page": 3,
+            "last_page": 1,
+            "from": null,
+            "to": null,
+            "total": 5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`activeNames` mirrors `$users->where('active', true)->pluck('name')->sort()->values()`. It returns a JSON **object** instead of a list because the sort keeps the old keys (the missing `->values()`). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "activeNames",
+      "starterCode": "<?php\n\nfunction activeNames(array $users): array\n{\n    $names = array_column(array_filter($users, fn ($u) => $u['active']), 'name');\n    asort($names);\n    return $names;\n}\n",
+      "referenceSolution": "<?php\n\nfunction activeNames(array $users): array\n{\n    $names = array_column(array_filter($users, fn ($u) => $u['active']), 'name');\n    sort($names);\n    return array_values($names);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Zoe",
+                "active": true
+              },
+              {
+                "name": "Ann",
+                "active": true
+              }
+            ]
+          ],
+          "expected": [
+            "Ann",
+            "Zoe"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "Bo",
+                "active": false
+              },
+              {
+                "name": "Cy",
+                "active": true
+              },
+              {
+                "name": "Al",
+                "active": true
+              }
+            ]
+          ],
+          "expected": [
+            "Al",
+            "Cy"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "Ed",
+                "active": false
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "Mia",
+                "active": true
+              },
+              {
+                "name": "Lu",
+                "active": true
+              },
+              {
+                "name": "Kai",
+                "active": true
+              }
+            ]
+          ],
+          "expected": [
+            "Kai",
+            "Lu",
+            "Mia"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Decide how to fix a slow sign-up endpoint.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`RegisterController@store` creates the user, then sends a welcome email through an external SMTP provider and calls a CRM API. Sign-up takes 4–6 seconds and sometimes fails when the CRM is down, even though the user was created.",
+      "steps": [
+        {
+          "id": "move",
+          "question": "What is the best first change?",
+          "options": [
+            "Move the email and CRM call into queued jobs (or a queued listener on `Registered`) so the request returns right after creating the user",
+            "Raise PHP's `max_execution_time` so the request no longer times out",
+            "Wrap the whole controller in `try/catch` and ignore CRM errors",
+            "Cache the CRM response for an hour"
+          ],
+          "correctIndex": 0,
+          "explanation": "Slow, failure-prone side effects belong on a queue: the user gets a fast response and a failed job can be retried without affecting sign-up."
+        },
+        {
+          "id": "sync",
+          "question": "You ship the jobs, but production is still slow. `.env` on the server has `QUEUE_CONNECTION=sync`. Why?",
+          "options": [
+            "The `sync` driver runs jobs immediately inside the request, so nothing is actually deferred",
+            "`sync` batches jobs and runs them every minute",
+            "`sync` only works with Redis",
+            "The jobs need `ShouldBeUnique` to be queued"
+          ],
+          "correctIndex": 0,
+          "explanation": "`sync` is meant for local development and tests. Use `database`, `redis` or `sqs` in production and run `php artisan queue:work` (e.g. under Supervisor)."
+        },
+        {
+          "id": "fail",
+          "question": "Now the CRM is down for 20 minutes. What should happen to those CRM jobs?",
+          "options": [
+            "Set `$tries` and `$backoff` so they retry later, and land in `failed_jobs` if they keep failing",
+            "Delete them on the first failure so the queue does not fill up",
+            "Retry them in a tight loop until the CRM comes back",
+            "Run them synchronously instead while the CRM is down"
+          ],
+          "correctIndex": 0,
+          "explanation": "Retries with backoff ride out a short outage; `failed_jobs` keeps whatever still fails so it can be inspected and retried with `queue:retry`."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "After deploying with `php artisan config:cache`, `env('STRIPE_KEY')` inside a controller returns `null`, but it worked locally. Why?",
+    "mcq": {
+      "options": [
+        "Once config is cached, the `.env` file is not loaded, so `env()` only works inside `config/*.php` files — read it with `config('services.stripe.key')`",
+        "`config:cache` deletes the `.env` file",
+        "`env()` is only available in Blade views",
+        "Environment variables are only loaded for queued jobs"
+      ],
+      "correctIndex": 0,
+      "explanation": "With a cached config Laravel skips loading `.env`. The values captured in `config/*.php` are kept, so always call `env()` from config files and `config()` everywhere else.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Given `Route::get('/posts/{post}', fn (Post $post) => $post);`, what happens when someone requests `/posts/999` and no post 999 exists?",
+    "mcq": {
+      "options": [
+        "Laravel returns a 404 automatically (route model binding throws `ModelNotFoundException`)",
+        "The closure runs with `$post` set to `null`",
+        "The closure runs with an empty, unsaved `Post`",
+        "A 500 error, because the model could not be resolved"
+      ],
+      "correctIndex": 0,
+      "explanation": "Implicit route model binding looks the model up by its route key and, if it is not found, throws `ModelNotFoundException`, which Laravel renders as a 404. You do not need `findOrFail` yourself.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In a service provider you register `$this->app->bind(ReportBuilder::class, ...)`. Two classes in the same request each type-hint `ReportBuilder`. What do they get?",
+    "mcq": {
+      "options": [
+        "Two different instances — `bind` runs the factory on every resolution; `singleton` would share one",
+        "The same instance — the container always caches resolved objects",
+        "An error, because a class can only be resolved once per request",
+        "The first class gets an instance, the second gets `null`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`bind` registers a factory that runs on each resolution. `singleton` resolves once and returns the same object for the rest of the request (or worker lifetime). `scoped` is like singleton but reset per request/job under Octane and queues.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`matchRoute` finds the route for a request: routes are `[method, uri, name]` with `{param}` segments. It returns `['name' => ..., 'params' => [...]]` or `null`. It ignores the HTTP method, so `POST /posts/5` matches the `GET` route. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "matchRoute",
+      "starterCode": "<?php\n\nfunction matchRoute(array $routes, string $method, string $path): ?array\n{\n    foreach ($routes as [$verb, $uri, $name]) {\n        $regex = '#^' . preg_replace('/\\{(\\w+)\\}/', '(?P<$1>[^/]+)', $uri) . '$#';\n        if (preg_match($regex, $path, $m)) {\n            $params = array_filter($m, 'is_string', ARRAY_FILTER_USE_KEY);\n            return ['name' => $name, 'params' => $params];\n        }\n    }\n    return null;\n}\n",
+      "referenceSolution": "<?php\n\nfunction matchRoute(array $routes, string $method, string $path): ?array\n{\n    foreach ($routes as [$verb, $uri, $name]) {\n        if (strtoupper($verb) !== strtoupper($method)) {\n            continue;\n        }\n        $regex = '#^' . preg_replace('/\\{(\\w+)\\}/', '(?P<$1>[^/]+)', $uri) . '$#';\n        if (preg_match($regex, $path, $m)) {\n            $params = array_filter($m, 'is_string', ARRAY_FILTER_USE_KEY);\n            return ['name' => $name, 'params' => $params];\n        }\n    }\n    return null;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "GET",
+                "/posts/{post}",
+                "posts.show"
+              ],
+              [
+                "PUT",
+                "/posts/{post}",
+                "posts.update"
+              ]
+            ],
+            "PUT",
+            "/posts/5"
+          ],
+          "expected": {
+            "name": "posts.update",
+            "params": {
+              "post": "5"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "GET",
+                "/posts/{post}",
+                "posts.show"
+              ]
+            ],
+            "POST",
+            "/posts/5"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              [
+                "GET",
+                "/users/{user}/posts/{post}",
+                "users.posts.show"
+              ]
+            ],
+            "GET",
+            "/users/2/posts/9"
+          ],
+          "expected": {
+            "name": "users.posts.show",
+            "params": {
+              "user": "2",
+              "post": "9"
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "GET",
+                "/posts",
+                "posts.index"
+              ],
+              [
+                "POST",
+                "/posts",
+                "posts.store"
+              ]
+            ],
+            "post",
+            "/posts"
+          ],
+          "expected": {
+            "name": "posts.store",
+            "params": []
+          }
+        },
+        {
+          "args": [
+            [],
+            "GET",
+            "/"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              [
+                "DELETE",
+                "/posts/{post}",
+                "posts.destroy"
+              ],
+              [
+                "GET",
+                "/posts/{post}",
+                "posts.show"
+              ]
+            ],
+            "GET",
+            "/posts/abc"
+          ],
+          "expected": {
+            "name": "posts.show",
+            "params": {
+              "post": "abc"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Laravel expands wildcard validation keys like `items.*.qty` into concrete keys (`items.0.qty`, `items.1.qty`). `expandWildcard` only expands the first item of the first `*`. Fix it so it expands every `*` (any depth) against the data.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "expandWildcard",
+      "starterCode": "<?php\n\nfunction expandWildcard(array $data, string $key): array\n{\n    return [str_replace('*', '0', $key)];\n}\n",
+      "referenceSolution": "<?php\n\nfunction expandWildcard(array $data, string $key): array\n{\n    $segments = explode('.', $key);\n    $star = array_search('*', $segments, true);\n    if ($star === false) {\n        return [$key];\n    }\n    $prefix = array_slice($segments, 0, $star);\n    $node = $data;\n    foreach ($prefix as $segment) {\n        if (!is_array($node) || !array_key_exists($segment, $node)) {\n            return [];\n        }\n        $node = $node[$segment];\n    }\n    if (!is_array($node)) {\n        return [];\n    }\n    $out = [];\n    foreach (array_keys($node) as $index) {\n        $concrete = implode('.', array_merge($prefix, [$index], array_slice($segments, $star + 1)));\n        $out = array_merge($out, expandWildcard($data, $concrete));\n    }\n    return $out;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "items": [
+                {
+                  "qty": 1
+                },
+                {
+                  "qty": 2
+                }
+              ]
+            },
+            "items.*.qty"
+          ],
+          "expected": [
+            "items.0.qty",
+            "items.1.qty"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "items": []
+            },
+            "items.*.qty"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "name": "x"
+            },
+            "name"
+          ],
+          "expected": [
+            "name"
+          ]
+        },
+        {
+          "args": [
+            {
+              "orders": [
+                {
+                  "lines": [
+                    {
+                      "sku": "a"
+                    },
+                    {
+                      "sku": "b"
+                    }
+                  ]
+                },
+                {
+                  "lines": [
+                    {
+                      "sku": "c"
+                    }
+                  ]
+                }
+              ]
+            },
+            "orders.*.lines.*.sku"
+          ],
+          "expected": [
+            "orders.0.lines.0.sku",
+            "orders.0.lines.1.sku",
+            "orders.1.lines.0.sku"
+          ]
+        },
+        {
+          "args": [
+            {},
+            "tags.*"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "tags": [
+                "a",
+                "b",
+                "c"
+              ]
+            },
+            "tags.*"
+          ],
+          "expected": [
+            "tags.0",
+            "tags.1",
+            "tags.2"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`rateLimit` decides whether a request is allowed: at most `$max` hits per `$decay` seconds (a hit counts while `hit > now - decay`). It returns `allowed` and `retry_after` (seconds until the oldest counted hit expires, `0` when allowed). It counts every hit ever made. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "rateLimit",
+      "starterCode": "<?php\n\nfunction rateLimit(array $hits, int $now, int $max, int $decay): array\n{\n    if (count($hits) < $max) {\n        return ['allowed' => true, 'retry_after' => 0];\n    }\n    return ['allowed' => false, 'retry_after' => min($hits) + $decay - $now];\n}\n",
+      "referenceSolution": "<?php\n\nfunction rateLimit(array $hits, int $now, int $max, int $decay): array\n{\n    $recent = array_filter($hits, fn ($t) => $t > $now - $decay);\n    if (count($recent) < $max) {\n        return ['allowed' => true, 'retry_after' => 0];\n    }\n    return ['allowed' => false, 'retry_after' => min($recent) + $decay - $now];\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              100,
+              110,
+              120
+            ],
+            125,
+            3,
+            60
+          ],
+          "expected": {
+            "allowed": false,
+            "retry_after": 35
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            1000,
+            5,
+            60
+          ],
+          "expected": {
+            "allowed": true,
+            "retry_after": 0
+          }
+        },
+        {
+          "args": [
+            [
+              10,
+              20,
+              900,
+              950
+            ],
+            1000,
+            3,
+            60
+          ],
+          "expected": {
+            "allowed": true,
+            "retry_after": 0
+          }
+        },
+        {
+          "args": [
+            [
+              0,
+              30,
+              50,
+              55
+            ],
+            60,
+            3,
+            60
+          ],
+          "expected": {
+            "allowed": false,
+            "retry_after": 30
+          }
+        },
+        {
+          "args": [
+            [
+              940
+            ],
+            1000,
+            1,
+            60
+          ],
+          "expected": {
+            "allowed": true,
+            "retry_after": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A `SetLocale` middleware reads `Accept-Language` (e.g. `fr-CH, fr;q=0.9, en;q=0.8`). Pick the highest-`q` tag the app supports (a tag with no `q` is `1`); if a full tag like `fr-CH` is not supported, try its primary language `fr`. Fall back to `$fallback`. It currently just takes the first tag. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "resolveLocale",
+      "starterCode": "<?php\n\nfunction resolveLocale(string $header, array $supported, string $fallback): string\n{\n    $first = trim(explode(',', $header)[0]);\n    return in_array($first, $supported, true) ? $first : $fallback;\n}\n",
+      "referenceSolution": "<?php\n\nfunction resolveLocale(string $header, array $supported, string $fallback): string\n{\n    $tags = [];\n    foreach (explode(',', $header) as $i => $part) {\n        $pieces = explode(';', trim($part));\n        $tag = trim($pieces[0]);\n        if ($tag === '') {\n            continue;\n        }\n        $q = 1.0;\n        if (isset($pieces[1]) && str_starts_with(trim($pieces[1]), 'q=')) {\n            $q = (float) substr(trim($pieces[1]), 2);\n        }\n        $tags[] = [$tag, $q, $i];\n    }\n    usort($tags, fn ($a, $b) => [$b[1], $a[2]] <=> [$a[1], $b[2]]);\n    foreach ($tags as [$tag]) {\n        if (in_array($tag, $supported, true)) {\n            return $tag;\n        }\n        $primary = explode('-', $tag)[0];\n        if (in_array($primary, $supported, true)) {\n            return $primary;\n        }\n    }\n    return $fallback;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "fr-CH, fr;q=0.9, en;q=0.8",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": "fr"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "",
+            [
+              "en"
+            ],
+            "en"
+          ],
+          "expected": "en"
+        },
+        {
+          "args": [
+            "de;q=0.5, es;q=0.9",
+            [
+              "de",
+              "es"
+            ],
+            "en"
+          ],
+          "expected": "es"
+        },
+        {
+          "args": [
+            "ja, zh;q=0.8",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": "en"
+        },
+        {
+          "args": [
+            "en-GB;q=0.7, nl",
+            [
+              "en",
+              "nl"
+            ],
+            "fr"
+          ],
+          "expected": "nl"
+        },
+        {
+          "args": [
+            "pt-BR",
+            [
+              "pt-BR",
+              "pt"
+            ],
+            "en"
+          ],
+          "expected": "pt-BR"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Review this controller method before it is merged.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every line that is a bug or a security problem.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "public function update(Request $request, Post $post)",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "{",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    $post->update($request->all());",
+          "issue": "Mass-assigns every input field (e.g. `user_id`, `is_featured`) without validation; use `$request->validate([...])` or a Form Request and pass only validated data."
+        },
+        {
+          "id": "l4",
+          "text": "    if ($request->user()->id !== $post->user_id) abort(403);",
+          "issue": "The ownership check runs after the update has already been saved; authorize first (a policy via `$this->authorize('update', $post)`)."
+        },
+        {
+          "id": "l5",
+          "text": "    $key = env('SEARCH_API_KEY');",
+          "issue": "`env()` returns null once config is cached; read it from a config file with `config()`."
+        },
+        {
+          "id": "l6",
+          "text": "    Search::index($post, $key);",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    return redirect()->route('posts.show', $post);",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Order a zero-surprise production deploy of a Laravel app.",
+    "task": {
+      "kind": "rank",
+      "prompt": "You deploy by pulling code on the server. Order the steps, first to last.",
+      "items": [
+        {
+          "id": "pull",
+          "label": "`git pull` the new release"
+        },
+        {
+          "id": "composer",
+          "label": "`composer install --no-dev --optimize-autoloader`"
+        },
+        {
+          "id": "migrate",
+          "label": "`php artisan migrate --force`"
+        },
+        {
+          "id": "cache",
+          "label": "`php artisan config:cache` and `route:cache`"
+        },
+        {
+          "id": "restart",
+          "label": "`php artisan queue:restart` so workers load the new code"
+        }
+      ],
+      "correctOrder": [
+        "pull",
+        "composer",
+        "migrate",
+        "cache",
+        "restart"
+      ],
+      "explanation": "Dependencies must be installed before any Artisan command runs the new code; migrations run before caches are rebuilt so the app starts against the new schema; queue workers are long-lived processes holding the old code in memory, so they are restarted last."
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How many routes does this register?\n\n```php\nRoute::resource('photos', PhotoController::class)->only(['index', 'show']);\n```",
+    "mcq": {
+      "options": [
+        "2",
+        "7",
+        "5",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Route::resource()` normally registers seven routes; `->only(['index', 'show'])` keeps just those two. (`apiResource` would register five, dropping `create` and `edit`.)",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A `StorePostRequest` Form Request's `authorize()` method returns `false`. What happens when the controller method that type-hints it is called?",
+    "mcq": {
+      "options": [
+        "The controller method never runs; Laravel responds with 403 Forbidden",
+        "The controller runs, but `$request->validated()` is empty",
+        "Laravel responds with 422 and the validation errors",
+        "Laravel redirects to the login page"
+      ],
+      "correctIndex": 0,
+      "explanation": "Form Requests are resolved before the controller runs: `authorize()` returning `false` throws an `AuthorizationException` (403); failed `rules()` throw a `ValidationException` (422 for JSON, a redirect back for web).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In your `AppServiceProvider`, you want to register a view composer that uses the already-registered `CartService`. Where should that code go?",
+    "mcq": {
+      "options": [
+        "`boot()` — it runs after every provider's `register()`, so other services are available",
+        "`register()` — it runs last, after the app has fully booted",
+        "The provider's constructor",
+        "`config/app.php`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`register()` should only bind things into the container; other providers may not have registered yet. `boot()` runs once all providers are registered, so it is the place to use other services, register composers, observers, routes and so on.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`hasValidSignature` checks a signed URL like Laravel does: the `signature` query param must equal `hash_hmac('sha256', <the URL without the signature param>, $key)`, compared in constant time. The current version hashes the URL **including** its signature, so nothing ever validates. Fix it. (`signature` is always the last query param.)",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "hasValidSignature",
+      "starterCode": "<?php\n\nfunction hasValidSignature(string $url, string $key): bool\n{\n    parse_str(parse_url($url, PHP_URL_QUERY) ?? '', $query);\n    $given = $query['signature'] ?? '';\n    return $given === hash_hmac('sha256', $url, $key);\n}\n",
+      "referenceSolution": "<?php\n\nfunction hasValidSignature(string $url, string $key): bool\n{\n    parse_str(parse_url($url, PHP_URL_QUERY) ?? '', $query);\n    $given = $query['signature'] ?? null;\n    if (!is_string($given) || $given === '') {\n        return false;\n    }\n    $original = preg_replace('/[?&]signature=[^&]*$/', '', $url);\n    return hash_equals(hash_hmac('sha256', $original, $key), $given);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "https://app.test/unsubscribe/5?expires=1700000000&signature=76961c81a9822b756516eaa779a37a478ded15b8e085dca561b14535e624da8b",
+            "base64:secret-key"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "https://app.test/invoices/77/download?signature=fa4a0f9e090913ea207209da942495ae4908f840a0ab4b1cea75856c8a0c14df",
+            "base64:secret-key"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "https://app.test/unsubscribe/6?expires=1700000000&signature=76961c81a9822b756516eaa779a37a478ded15b8e085dca561b14535e624da8b",
+            "base64:secret-key"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "https://app.test/unsubscribe/5?expires=1700000000&signature=76961c81a9822b756516eaa779a37a478ded15b8e085dca561b14535e624da8b",
+            "other-key"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "https://app.test/unsubscribe/5?expires=1700000000",
+            "base64:secret-key"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`cronDue` decides whether a scheduled task is due. Expressions have five fields (minute hour day month weekday), each `*`, a number, a list `1,15`, or a step `*/15`. `$time` is `[minute, hour, day, month, weekday]`. Lists and steps are not supported yet — add them.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "cronDue",
+      "starterCode": "<?php\n\nfunction cronDue(string $expr, array $time): bool\n{\n    $fields = preg_split('/\\s+/', trim($expr));\n    foreach ($fields as $i => $field) {\n        if ($field !== '*' && (int) $field !== $time[$i]) {\n            return false;\n        }\n    }\n    return true;\n}\n",
+      "referenceSolution": "<?php\n\nfunction cronDue(string $expr, array $time): bool\n{\n    $fields = preg_split('/\\s+/', trim($expr));\n    foreach ($fields as $i => $field) {\n        if (!fieldMatches($field, $time[$i])) {\n            return false;\n        }\n    }\n    return true;\n}\n\nfunction fieldMatches(string $field, int $value): bool\n{\n    foreach (explode(',', $field) as $part) {\n        if ($part === '*') {\n            return true;\n        }\n        if (str_starts_with($part, '*/')) {\n            $step = (int) substr($part, 2);\n            if ($step > 0 && $value % $step === 0) {\n                return true;\n            }\n            continue;\n        }\n        if ((int) $part === $value) {\n            return true;\n        }\n    }\n    return false;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "*/15 * * * *",
+            [
+              30,
+              9,
+              1,
+              1,
+              1
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "*/15 * * * *",
+            [
+              31,
+              9,
+              1,
+              1,
+              1
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "0 9,17 * * 1",
+            [
+              0,
+              17,
+              4,
+              3,
+              1
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "0 9,17 * * 1",
+            [
+              0,
+              12,
+              4,
+              3,
+              1
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "* * * * *",
+            [
+              59,
+              23,
+              31,
+              12,
+              0
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "30 2 1 * *",
+            [
+              30,
+              2,
+              1,
+              6,
+              4
+            ]
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`resolveOrder` returns the order in which a container must build services so every dependency is built first (`$deps` maps a service to the services its constructor needs; visit dependencies in listed order). A dependency cycle must return `\"circular\"` instead of silently producing an order. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "resolveOrder",
+      "starterCode": "<?php\n\nfunction resolveOrder(array $deps, string $root): array|string\n{\n    $order = [];\n    $seen = [];\n    $visit = function (string $id) use (&$visit, &$order, &$seen, $deps) {\n        if (isset($seen[$id])) {\n            return;\n        }\n        $seen[$id] = true;\n        foreach ($deps[$id] ?? [] as $dep) {\n            $visit($dep);\n        }\n        $order[] = $id;\n    };\n    $visit($root);\n    return $order;\n}\n",
+      "referenceSolution": "<?php\n\nfunction resolveOrder(array $deps, string $root): array|string\n{\n    $order = [];\n    $state = [];\n    $visit = function (string $id) use (&$visit, &$order, &$state, $deps): bool {\n        if (($state[$id] ?? null) === 'done') {\n            return true;\n        }\n        if (($state[$id] ?? null) === 'visiting') {\n            return false;\n        }\n        $state[$id] = 'visiting';\n        foreach ($deps[$id] ?? [] as $dep) {\n            if (!$visit($dep)) {\n                return false;\n            }\n        }\n        $state[$id] = 'done';\n        $order[] = $id;\n        return true;\n    };\n    return $visit($root) ? $order : 'circular';\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "OrderService": [
+                "Mailer",
+                "Repo"
+              ],
+              "Repo": [
+                "Db"
+              ]
+            },
+            "OrderService"
+          ],
+          "expected": [
+            "Mailer",
+            "Db",
+            "Repo",
+            "OrderService"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            "Logger"
+          ],
+          "expected": [
+            "Logger"
+          ]
+        },
+        {
+          "args": [
+            {
+              "A": [
+                "B"
+              ],
+              "B": [
+                "A"
+              ]
+            },
+            "A"
+          ],
+          "expected": "circular"
+        },
+        {
+          "args": [
+            {
+              "A": [
+                "B",
+                "C"
+              ],
+              "B": [
+                "C"
+              ],
+              "C": []
+            },
+            "A"
+          ],
+          "expected": [
+            "C",
+            "B",
+            "A"
+          ]
+        },
+        {
+          "args": [
+            {
+              "A": [
+                "B"
+              ],
+              "B": [
+                "C"
+              ],
+              "C": [
+                "A"
+              ]
+            },
+            "A"
+          ],
+          "expected": "circular"
+        },
+        {
+          "args": [
+            {
+              "A": [
+                "A"
+              ]
+            },
+            "A"
+          ],
+          "expected": "circular"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`cursorPage` implements cursor pagination over ids sorted ascending: return the next `$perPage` ids **after** `$afterId` (`null` = from the start) and `next_cursor` = the last returned id, or `null` when there is nothing after this page. It repeats the cursor row and always sets a cursor. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "cursorPage",
+      "starterCode": "<?php\n\nfunction cursorPage(array $ids, ?int $afterId, int $perPage): array\n{\n    $rest = array_values(array_filter($ids, fn ($id) => $afterId === null || $id >= $afterId));\n    $page = array_slice($rest, 0, $perPage);\n    return ['data' => $page, 'next_cursor' => end($page) ?: null];\n}\n",
+      "referenceSolution": "<?php\n\nfunction cursorPage(array $ids, ?int $afterId, int $perPage): array\n{\n    $rest = array_values(array_filter($ids, fn ($id) => $afterId === null || $id > $afterId));\n    $page = array_slice($rest, 0, $perPage);\n    $hasMore = count($rest) > $perPage;\n    return ['data' => $page, 'next_cursor' => $hasMore ? end($page) : null];\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            null,
+            2
+          ],
+          "expected": {
+            "data": [
+              1,
+              2
+            ],
+            "next_cursor": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "data": [
+              3,
+              4
+            ],
+            "next_cursor": 4
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "data": [
+              3,
+              4
+            ],
+            "next_cursor": null
+          }
+        },
+        {
+          "args": [
+            [],
+            null,
+            10
+          ],
+          "expected": {
+            "data": [],
+            "next_cursor": null
+          }
+        },
+        {
+          "args": [
+            [
+              10,
+              20,
+              30
+            ],
+            30,
+            5
+          ],
+          "expected": {
+            "data": [],
+            "next_cursor": null
+          }
+        },
+        {
+          "args": [
+            [
+              5,
+              9,
+              12
+            ],
+            6,
+            1
+          ],
+          "expected": {
+            "data": [
+              9
+            ],
+            "next_cursor": 9
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Diagnose duplicate emails after a deploy.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A queued `SendInvoiceEmail` job calls a slow PDF service then sends the email. Since a release that made PDFs larger, some customers receive the same invoice email two or three times. The `redis` queue connection has `retry_after => 90`; the worker runs `queue:work --timeout=120`.",
+      "steps": [
+        {
+          "id": "cause",
+          "question": "What is the most likely cause of the duplicates?",
+          "options": [
+            "Jobs now run longer than `retry_after` (90s), so Redis releases them to another worker while the first is still running",
+            "Redis is losing jobs and Laravel re-dispatches them",
+            "The `--timeout` is too short, so jobs are killed before sending",
+            "The mail driver sends every message twice by default"
+          ],
+          "correctIndex": 0,
+          "explanation": "If a job runs longer than `retry_after`, the queue assumes it died and makes it available again, so a second worker processes it in parallel."
+        },
+        {
+          "id": "config",
+          "question": "How should the two settings relate?",
+          "options": [
+            "`retry_after` must be a few seconds longer than the worker `--timeout` (e.g. timeout 120, retry_after 150)",
+            "They should be equal",
+            "`--timeout` must be longer than `retry_after`",
+            "Neither matters if `$tries = 1`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The worker kills a job at `--timeout`; `retry_after` must be longer so a job is only re-released after it has really stopped."
+        },
+        {
+          "id": "safety",
+          "question": "What additional change makes the email safe even if a job does run twice?",
+          "options": [
+            "Make the job idempotent: record `invoice_emailed_at` (or use a unique lock / `ShouldBeUnique`) and skip if already sent",
+            "Set `$tries = 100` so it eventually succeeds",
+            "Dispatch the job with `dispatchSync` instead",
+            "Lower the worker count to one"
+          ],
+          "correctIndex": 0,
+          "explanation": "Queues guarantee at-least-once delivery, so jobs with side effects should check whether the work is already done."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Review this queued job class.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that will cause problems in production.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class SyncCustomersToCrm implements ShouldQueue",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "{",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    public function __construct(public Collection $customers) {}  // dispatched with Customer::all()",
+          "issue": "Serialises every customer into the payload (only ids are stored, but all are re-queried in one go); dispatch one job per chunk of ids instead."
+        },
+        {
+          "id": "l5",
+          "text": "    public $tries = 3;",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    public function handle(CrmClient $crm): void",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "        foreach ($this->customers as $c) {",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "            Http::post('https://crm.example.com/contacts', $c->toArray());",
+          "issue": "No timeout and ignores the injected client; a hung request blocks the worker until it is killed. Use `Http::timeout(10)` and check the response."
+        },
+        {
+          "id": "l10",
+          "text": "            $c->synced_at = now(); $c->save();",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "        }",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "    }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Inside `DB::transaction(...)` you create an order and dispatch `SendOrderConfirmation::dispatch($order)`. Occasionally the job fails with \"No query results for model [Order]\". What is the fix?",
+    "mcq": {
+      "options": [
+        "Dispatch it after commit (`->afterCommit()`, or `after_commit => true` on the queue connection) so the worker cannot run before the row is committed",
+        "Add `$tries = 5` so the job eventually finds the order",
+        "Use `dispatchSync` inside the transaction",
+        "Pass `$order->toArray()` instead of the model"
+      ],
+      "correctIndex": 0,
+      "explanation": "A fast worker can pick up the job before the transaction commits, so the order is not visible yet. `afterCommit` holds the dispatch until the transaction commits (and drops it if it rolls back).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does `->by(...)` do in this rate limiter?\n\n```php\nRateLimiter::for('api', function (Request $request) {\n    return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());\n});\n```",
+    "mcq": {
+      "options": [
+        "It sets the key the limit is counted against: 60 per minute per signed-in user, or per IP for guests",
+        "It limits the whole application to 60 requests per minute in total",
+        "It exempts signed-in users from the limit",
+        "It names the limiter so it can be used as `throttle:by`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without `by()`, every request would share one bucket. Keying by user id (falling back to IP for guests) gives each client its own 60/min allowance.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-fundamentals-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-fundamentals",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A singleton `TenantContext` stores the current tenant. Under Laravel Octane, users occasionally see another tenant's data. What is the most likely cause and fix?",
+    "mcq": {
+      "options": [
+        "Octane keeps the app in memory between requests, so the singleton leaks across requests — register it with `scoped()` (or reset it per request)",
+        "Octane runs each request in a new process, so the singleton is lost — store it in the session",
+        "Singletons are not supported in Octane — use static properties instead",
+        "The route cache is stale — run `route:clear`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Octane boots the application once and reuses it, so singletons live across requests. `scoped()` bindings are flushed at the start of each request (and each queued job), which is what per-request state needs.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,380 @@
+[
+  {
+    "id": "bd-discovery-calls-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the parts of a 30-minute discovery call, first to last.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the parts of a 30-minute discovery call, first to last.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Dig into problems and what they cost the business"
+        },
+        {
+          "id": "r4",
+          "label": "Clarify decision process, budget range and timeline"
+        },
+        {
+          "id": "r5",
+          "label": "Recap what you heard and agree a dated next step"
+        },
+        {
+          "id": "r1",
+          "label": "Agree the agenda and time, and ask what they want from the call"
+        },
+        {
+          "id": "r2",
+          "label": "Understand their situation and current process"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Set the agenda, learn the context, explore pain and impact, qualify, then recap and commit to a next step."
+    }
+  },
+  {
+    "id": "bd-discovery-calls-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the moments in this discovery call summary where the rep went wrong.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the moments in this discovery call summary where the rep went wrong.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Rep opened by confirming 30 minutes and asking what a good outcome would be.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Rep spent the first 15 minutes presenting the agency's portfolio.",
+          "issue": "Discovery is for listening; a long pitch early leaves no time to learn the client's problem."
+        },
+        {
+          "id": "p3",
+          "text": "Client said dispatchers retype orders from email into their system all day.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Rep asked: 'You'd agree an AI tool would fix that, right?'",
+          "issue": "Leading question; ask open questions about the impact instead."
+        },
+        {
+          "id": "p5",
+          "text": "Rep asked who else would be involved in choosing a vendor.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Call ended with 'we'll be in touch' and no next meeting booked.",
+          "issue": "No dated next step; deals stall without one."
+        },
+        {
+          "id": "p7",
+          "text": "Rep sent a written recap the same afternoon.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-discovery-calls-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A startup founder books a discovery call: 'We want an app like Uber but for dog walkers.'",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A startup founder books a discovery call: 'We want an app like Uber but for dog walkers.'",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best opening question after the agenda?",
+          "options": [
+            "Have you seen our portfolio?",
+            "What tech stack do you want?",
+            "What is your budget?",
+            "What made you decide to build this now, and who is it for first?"
+          ],
+          "correctIndex": 3,
+          "explanation": "Motivation and first users reveal the real goal and shape the MVP; stack and budget come later."
+        },
+        {
+          "id": "s2",
+          "question": "The founder wants every feature for launch. What do you explore next?",
+          "options": [
+            "Whether they want blue or green branding",
+            "How many developers the agency has",
+            "Their personal background",
+            "Which features are needed for the first customers to get value, and what can wait"
+          ],
+          "correctIndex": 3,
+          "explanation": "Separating launch-critical from later features is how a realistic MVP and price emerge."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-discovery-calls-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "On a discovery call, the operations director of a logistics company says their AI quoting project is 'urgent'. Halfway through, they mention the CFO has not seen the idea yet.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a discovery call, the operations director of a logistics company says their AI quoting project is 'urgent'. Halfway through, they mention the CFO has not seen the idea yet.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What does this tell you?",
+          "options": [
+            "The CFO will reject it",
+            "The deal is fully qualified",
+            "Budget authority is unconfirmed, so 'urgent' may not mean funded",
+            "The director is not interested"
+          ],
+          "correctIndex": 2,
+          "explanation": "Without the economic buyer's awareness, urgency is a feeling, not a funded project."
+        },
+        {
+          "id": "s2",
+          "question": "What is the best next move?",
+          "options": [
+            "End the process politely",
+            "Ask the director to forward your brochure to the CFO",
+            "Help the director build the business case (cost of manual quoting) and propose a short call that includes the CFO",
+            "Send a full proposal tomorrow"
+          ],
+          "correctIndex": 2,
+          "explanation": "Equip your contact to sell internally and get access to the person who controls budget."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-discovery-calls-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "On discovery, the client says 3 staff each spend 4 hours a day manually writing delivery quotes, at a fully loaded cost of $30/hour, 22 working days a month. An AI quoting tool would cut that work by 75%. Calculate the current monthly cost, the monthly saving, and the annual saving.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "On discovery, the client says 3 staff each spend 4 hours a day manually writing delivery quotes, at a fully loaded cost of $30/hour, 22 working days a month. An AI quoting tool would cut that work by 75%. Calculate the current monthly cost, the monthly saving, and the annual saving.",
+      "table": {
+        "columns": [
+          "Input",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Staff",
+            "3"
+          ],
+          [
+            "Hours per person per day",
+            "4"
+          ],
+          [
+            "Cost per hour",
+            "$30"
+          ],
+          [
+            "Working days per month",
+            "22"
+          ],
+          [
+            "Reduction",
+            "75%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Current monthly cost",
+          "unit": "$",
+          "answer": 7920,
+          "tolerance": 1
+        },
+        {
+          "id": "save",
+          "label": "Monthly saving",
+          "unit": "$",
+          "answer": 5940,
+          "tolerance": 1
+        },
+        {
+          "id": "annual",
+          "label": "Annual saving",
+          "unit": "$",
+          "answer": 71280,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "3 x 4 x 30 x 22 = $7,920 per month; 75% = $5,940 per month; x 12 = $71,280 per year. This number anchors the business case."
+    }
+  },
+  {
+    "id": "bd-discovery-calls-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 3,
+    "prompt": "Write the recap email to send after this discovery call. Keep it short and in the client's words.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write the recap email to send after this discovery call. Keep it short and in the client's words.",
+      "context": "Call notes: Priya, Head of Customer Service at an online furniture retailer. Team of 12 answers ~1,500 emails a week; 60% are 'where is my order' or delivery-date questions. Response time is 2 days, and bad reviews mention slow replies. They use a helpdesk tool and have order data in their e-commerce platform. Priya wants answers in under 1 hour. Her VP of Operations approves spend over $10k. They want something before the holiday peak. Agreed: we send a short approach + ballpark; she will book a call with the VP.",
+      "wordLimit": 170,
+      "rubric": [
+        {
+          "id": "words",
+          "label": "Their problem in their words",
+          "description": "Captures the email volume, the share of order-status questions and the 2-day response time causing bad reviews.",
+          "weight": 1
+        },
+        {
+          "id": "success",
+          "label": "Success and constraints",
+          "description": "States the goal (replies under 1 hour), the holiday deadline, and the existing tools/data.",
+          "weight": 1
+        },
+        {
+          "id": "decision",
+          "label": "Decision process",
+          "description": "Notes the VP of Operations approves spend above $10k.",
+          "weight": 1
+        },
+        {
+          "id": "next",
+          "label": "Clear, dated next steps",
+          "description": "Lists what we send and by when, and the call with the VP; asks her to correct anything missed.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Priya,\n\nThanks for your time today. Here is what I heard, so please correct anything I missed:\n\n- Your team of 12 handles about 1,500 emails a week, and around 60% are \"where is my order\" or delivery-date questions.\n- Replies take about 2 days today, and slow responses are showing up in reviews.\n- Success means answering customers in under an hour, before the holiday peak.\n- You use a helpdesk tool and order data lives in your e-commerce platform, so an assistant could answer status questions directly and pass the rest to your team.\n- Spend over $10k is approved by your VP of Operations.\n\nNext steps: I will send a one-page approach and a ballpark range by Thursday. You will book a 30-minute call with your VP next week so we can walk through it together.\n\nBest,\nSam"
+    }
+  },
+  {
+    "id": "bd-discovery-calls-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which question is best for uncovering the business impact of a problem?",
+    "mcq": {
+      "options": [
+        "How many developers do you have?",
+        "Do you like our portfolio?",
+        "Would you prefer React or Flutter?",
+        "What happens to the business when orders are delayed by that manual step?"
+      ],
+      "correctIndex": 3,
+      "explanation": "Impact questions turn a process complaint into a cost the buyer can justify spending against.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-discovery-calls-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect gives short answers and seems guarded. What usually helps most?",
+    "mcq": {
+      "options": [
+        "Ask more yes/no questions faster",
+        "Jump straight to pricing",
+        "End the call early",
+        "Share a brief relevant example of a similar client's problem, then ask an open question about theirs"
+      ],
+      "correctIndex": 3,
+      "explanation": "A relevant example builds credibility and gives them something concrete to react to.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-discovery-calls-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-discovery-calls",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "At the end of a good discovery call the client says 'send me a proposal'. What is the strongest response?",
+    "mcq": {
+      "options": [
+        "Ask them to sign today",
+        "Say proposals take a month",
+        "Agree, and book a short session now to walk them and the decision-maker through it",
+        "Send a proposal by email and wait"
+      ],
+      "correctIndex": 2,
+      "explanation": "Proposals sent cold often stall; a booked walkthrough with the decision-maker keeps control of the next step.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

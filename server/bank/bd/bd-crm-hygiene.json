@@ -1,0 +1,405 @@
+[
+  {
+    "id": "bd-crm-hygiene-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the fields in this CRM deal record that are wrong or missing in a way that hurts the team.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the fields in this CRM deal record that are wrong or missing in a way that hurts the team.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Deal name: \"New deal\"",
+          "issue": "A generic name makes the deal impossible to find or tell apart; use company + project."
+        },
+        {
+          "id": "p2",
+          "text": "Company: Brightway Clinics",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Contact: Dana Ruiz, Head of Operations, dana@brightway.example",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Stage: Proposal sent",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Amount: blank",
+          "issue": "Without an amount the pipeline value and forecast are understated."
+        },
+        {
+          "id": "p6",
+          "text": "Close date: three years in the past",
+          "issue": "A stale close date breaks forecasting; update it or close the deal."
+        },
+        {
+          "id": "p7",
+          "text": "Last activity logged: discovery call notes with pains and next step",
+          "issue": null
+        },
+        {
+          "id": "p8",
+          "text": "Lead source: Referral (from a past client)",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-crm-hygiene-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A rep finishes a discovery call. Rank these CRM updates by importance, most important first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A rep finishes a discovery call. Rank these CRM updates by importance, most important first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Move the deal to the correct stage"
+        },
+        {
+          "id": "r4",
+          "label": "Add the contact's LinkedIn profile picture"
+        },
+        {
+          "id": "r1",
+          "label": "Set the dated next step (e.g. proposal review call on Thursday)"
+        },
+        {
+          "id": "r2",
+          "label": "Log the call notes: pains, goals, budget and timeline signals"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "The next step keeps the deal moving, notes preserve what was learned, the stage keeps the pipeline accurate; a profile picture adds nothing."
+    }
+  },
+  {
+    "id": "bd-crm-hygiene-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "An audit of open deals found these problems. Work out the share of open deals with no next step and the share with a close date in the past.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "An audit of open deals found these problems. Work out the share of open deals with no next step and the share with a close date in the past.",
+      "table": {
+        "columns": [
+          "Item",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Open deals",
+            "80"
+          ],
+          [
+            "Deals with no next step",
+            "28"
+          ],
+          [
+            "Deals with a past close date",
+            "12"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "nostep",
+          "label": "No next step",
+          "unit": "%",
+          "answer": 35,
+          "tolerance": 0.1
+        },
+        {
+          "id": "past",
+          "label": "Past close date",
+          "unit": "%",
+          "answer": 15,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "28 / 80 = 35%; 12 / 80 = 15%."
+    }
+  },
+  {
+    "id": "bd-crm-hygiene-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Pipeline value is reported from the CRM. Some deals are duplicates and some are dead but still open. Work out the reported value, the true value after removing them, and the overstatement.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Pipeline value is reported from the CRM. Some deals are duplicates and some are dead but still open. Work out the reported value, the true value after removing them, and the overstatement.",
+      "table": {
+        "columns": [
+          "Group",
+          "Deals",
+          "Total value ($)"
+        ],
+        "rows": [
+          [
+            "Genuine open deals",
+            "30",
+            "450000"
+          ],
+          [
+            "Duplicate records",
+            "5",
+            "60000"
+          ],
+          [
+            "Dead deals left open",
+            "8",
+            "120000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "reported",
+          "label": "Reported pipeline",
+          "unit": "$",
+          "answer": 630000,
+          "tolerance": 1
+        },
+        {
+          "id": "true",
+          "label": "True pipeline",
+          "unit": "$",
+          "answer": 450000,
+          "tolerance": 1
+        },
+        {
+          "id": "over",
+          "label": "Overstatement as % of true value",
+          "unit": "%",
+          "answer": 40,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Reported 450k + 60k + 120k = 630k. True 450k. Overstated by 180k / 450k = 40%."
+    }
+  },
+  {
+    "id": "bd-crm-hygiene-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You inherit a colleague's pipeline of 40 deals. Many have no notes and old dates.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You inherit a colleague's pipeline of 40 deals. Many have no notes and old dates.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should you do first?",
+          "options": [
+            "Move all deals to the next stage",
+            "Delete everything and start over",
+            "Review each deal: confirm status with the contact or close it as lost with a reason",
+            "Leave it as is"
+          ],
+          "correctIndex": 2,
+          "explanation": "Confirming or closing with a reason cleans the data without losing real opportunities."
+        },
+        {
+          "id": "s2",
+          "question": "A contact exists twice with different emails. What do you do?",
+          "options": [
+            "Merge the records, keeping the activity history and the current email",
+            "Delete the older one without checking",
+            "Rename one to \"old\"",
+            "Keep both"
+          ],
+          "correctIndex": 0,
+          "explanation": "Merging preserves history and avoids double outreach."
+        },
+        {
+          "id": "s3",
+          "question": "How do you stop the mess coming back?",
+          "options": [
+            "Only managers may edit the CRM",
+            "Hope for the best",
+            "Agree simple rules: required fields per stage, a next step on every open deal, a weekly review",
+            "Stop using the CRM"
+          ],
+          "correctIndex": 2,
+          "explanation": "Light rules plus a regular review keep hygiene a habit, not a cleanup project."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-crm-hygiene-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": "bd-tool-hubspot",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order these HubSpot deal stages for a typical agency deal, earliest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these HubSpot deal stages for a typical agency deal, earliest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Discovery done"
+        },
+        {
+          "id": "r4",
+          "label": "Proposal sent"
+        },
+        {
+          "id": "r5",
+          "label": "Negotiation"
+        },
+        {
+          "id": "r6",
+          "label": "Closed won"
+        },
+        {
+          "id": "r1",
+          "label": "New lead"
+        },
+        {
+          "id": "r2",
+          "label": "Qualified"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Each stage needs the one before: qualify, understand needs, propose, negotiate, then close."
+    }
+  },
+  {
+    "id": "bd-crm-hygiene-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why should every call or email with a prospect be logged in the CRM?",
+    "mcq": {
+      "options": [
+        "To increase email volume",
+        "So anyone can see the history and pick up the deal without asking the rep",
+        "Because CRMs delete unlogged deals",
+        "To make the deal look bigger"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shared history prevents dropped balls and repeated questions when people are away or deals change hands.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-crm-hygiene-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What makes a good \"next step\" on a deal?",
+    "mcq": {
+      "options": [
+        "\"Follow up\"",
+        "A specific action with a date, like \"Send revised estimate by Tuesday 14 May\"",
+        "\"Waiting on client\"",
+        "Leaving it blank until something happens"
+      ],
+      "correctIndex": 1,
+      "explanation": "A dated, specific action is something a rep can actually do and a manager can check.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-crm-hygiene-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-crm-hygiene",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A deal lost to a competitor is marked closed lost with no reason. Why does that matter?",
+    "mcq": {
+      "options": [
+        "Without loss reasons the team cannot spot patterns in pricing, fit or competitors",
+        "The deal reopens automatically",
+        "It breaks the CRM",
+        "It doesn't; lost is lost"
+      ],
+      "correctIndex": 0,
+      "explanation": "Loss reasons are the data that improves pricing, targeting and positioning.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

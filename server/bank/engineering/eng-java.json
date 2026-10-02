@@ -1,0 +1,1258 @@
+[
+  {
+    "id": "eng-java-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program reads integers (at least one) and prints the largest. It prints `0` when every number is negative. Fix `max`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int max(int[] xs) {\n        int best = 0;\n        for (int x : xs) if (x > best) best = x;\n        return best;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(max(xs));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static int max(int[] xs) {\n        int best = xs[0];\n        for (int x : xs) if (x > best) best = x;\n        return best;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(max(xs));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "3 -1 7",
+          "expected": "7"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "-5 -2 -9",
+          "expected": "-2"
+        },
+        {
+          "stdin": "42",
+          "expected": "42"
+        },
+        {
+          "stdin": "0 0",
+          "expected": "0"
+        },
+        {
+          "stdin": "-1",
+          "expected": "-1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program reads a role and prints `yes` if it is exactly `admin`, otherwise `no`. It always prints `no`. Fix `isAdmin`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static boolean isAdmin(String role) {\n        return role == \"admin\";\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(isAdmin(line) ? \"yes\" : \"no\");\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static boolean isAdmin(String role) {\n        return \"admin\".equals(role);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(isAdmin(line) ? \"yes\" : \"no\");\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "admin",
+          "expected": "yes"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "user",
+          "expected": "no"
+        },
+        {
+          "stdin": "Admin",
+          "expected": "no"
+        },
+        {
+          "stdin": "",
+          "expected": "no"
+        },
+        {
+          "stdin": "  admin  ",
+          "expected": "yes"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program reads a line of text, then a single character, and prints how many times the character appears. It crashes. Fix `count`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int count(String s, char c) {\n        int n = 0;\n        for (int i = 0; i <= s.length(); i++) {\n            if (s.charAt(i) == c) n++;\n        }\n        return n;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String text = in.nextLine();\n        char c = in.nextLine().charAt(0);\n        System.out.println(count(text, c));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static int count(String s, char c) {\n        int n = 0;\n        for (int i = 0; i < s.length(); i++) {\n            if (s.charAt(i) == c) n++;\n        }\n        return n;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String text = in.nextLine();\n        char c = in.nextLine().charAt(0);\n        System.out.println(count(text, c));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "banana\na",
+          "expected": "3"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "hello\nz",
+          "expected": "0"
+        },
+        {
+          "stdin": "\nx",
+          "expected": "0"
+        },
+        {
+          "stdin": "aaaa\na",
+          "expected": "4"
+        },
+        {
+          "stdin": "Mississippi\ns",
+          "expected": "4"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Print `fizzbuzz` for multiples of both 3 and 5, `fizz` for multiples of 3, `buzz` for multiples of 5, otherwise the number. Fix `label`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static String label(int n) {\n        if (n % 3 == 0) return \"fizz\";\n        if (n % 5 == 0) return \"buzz\";\n        if (n % 15 == 0) return \"fizzbuzz\";\n        return String.valueOf(n);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        System.out.println(label(in.nextInt()));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static String label(int n) {\n        if (n % 15 == 0) return \"fizzbuzz\";\n        if (n % 3 == 0) return \"fizz\";\n        if (n % 5 == 0) return \"buzz\";\n        return String.valueOf(n);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        System.out.println(label(in.nextInt()));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "15",
+          "expected": "fizzbuzz"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "9",
+          "expected": "fizz"
+        },
+        {
+          "stdin": "10",
+          "expected": "buzz"
+        },
+        {
+          "stdin": "7",
+          "expected": "7"
+        },
+        {
+          "stdin": "30",
+          "expected": "fizzbuzz"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program reads a line of words and prints them in reverse order. It crashes. Fix `reverseWords`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static String reverseWords(String line) {\n        String[] words = line.split(\" \");\n        StringBuilder sb = new StringBuilder();\n        for (int i = words.length; i >= 0; i--) {\n            sb.append(words[i]);\n            if (i > 0) sb.append(\" \");\n        }\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(reverseWords(line));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static String reverseWords(String line) {\n        String[] words = line.split(\" \");\n        StringBuilder sb = new StringBuilder();\n        for (int i = words.length - 1; i >= 0; i--) {\n            sb.append(words[i]);\n            if (i > 0) sb.append(\" \");\n        }\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(reverseWords(line));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "hello world",
+          "expected": "world hello"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "one",
+          "expected": "one"
+        },
+        {
+          "stdin": "a b c d",
+          "expected": "d c b a"
+        },
+        {
+          "stdin": "java is fun",
+          "expected": "fun is java"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program prints the average of the integers it reads, with 2 decimals. `1 2` prints `1.00` instead of `1.50`. Fix `average`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static double average(int[] xs) {\n        int sum = 0;\n        for (int x : xs) sum += x;\n        return sum / xs.length;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(String.format(\"%.2f\", average(xs)));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static double average(int[] xs) {\n        int sum = 0;\n        for (int x : xs) sum += x;\n        return (double) sum / xs.length;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(String.format(\"%.2f\", average(xs)));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2",
+          "expected": "1.50"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "4",
+          "expected": "4.00"
+        },
+        {
+          "stdin": "1 2 2",
+          "expected": "1.67"
+        },
+        {
+          "stdin": "-1 -2",
+          "expected": "-1.50"
+        },
+        {
+          "stdin": "10 20 30",
+          "expected": "20.00"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "3",
+        "3.5",
+        "4",
+        "3.0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both operands are `int`, so this is integer division and the fraction is dropped.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(7 / 2);\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "a12",
+        "a3",
+        "3a",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "`+` is evaluated left to right. `\"a\" + 1` is the string `a1`, and adding `2` to a string appends `2`.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"a\" + 1 + 2);\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "0",
+        "null",
+        "An exception",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "A new `int[]` is filled with the default value `0`. (An array of objects would be filled with `null`.)",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        int[] xs = new int[3];\n        System.out.println(xs[1]);\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The program reads a name (the line may be empty) and prints a greeting. An empty line means no name: print `Hello, guest`. Fix `greeting`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static String greeting(String name) {\n        return \"Hello, \" + name.trim();\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        String name = line.isEmpty() ? null : line;\n        System.out.println(greeting(name));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static String greeting(String name) {\n        if (name == null || name.isBlank()) return \"Hello, guest\";\n        return \"Hello, \" + name.trim();\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        String name = line.isEmpty() ? null : line;\n        System.out.println(greeting(name));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "Ann",
+          "expected": "Hello, Ann"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "Hello, guest"
+        },
+        {
+          "stdin": "  Bo  ",
+          "expected": "Hello, Bo"
+        },
+        {
+          "stdin": "Mary Jane",
+          "expected": "Hello, Mary Jane"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The program counts words and prints them as `word=count`, sorted by word. It crashes on the first word. Fix `countWords`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static Map<String, Integer> countWords(String[] words) {\n        Map<String, Integer> counts = new TreeMap<>();\n        for (String w : words) {\n            counts.put(w, counts.get(w) + 1);\n        }\n        return counts;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        String[] words = line.isEmpty() ? new String[0] : line.split(\"\\\\s+\");\n        StringBuilder out = new StringBuilder();\n        for (Map.Entry<String, Integer> e : countWords(words).entrySet()) {\n            if (out.length() > 0) out.append(\" \");\n            out.append(e.getKey()).append(\"=\").append(e.getValue());\n        }\n        System.out.println(out);\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static Map<String, Integer> countWords(String[] words) {\n        Map<String, Integer> counts = new TreeMap<>();\n        for (String w : words) {\n            counts.merge(w, 1, Integer::sum);\n        }\n        return counts;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        String[] words = line.isEmpty() ? new String[0] : line.split(\"\\\\s+\");\n        StringBuilder out = new StringBuilder();\n        for (Map.Entry<String, Integer> e : countWords(words).entrySet()) {\n            if (out.length() > 0) out.append(\" \");\n            out.append(e.getKey()).append(\"=\").append(e.getValue());\n        }\n        System.out.println(out);\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "b a b",
+          "expected": "a=1 b=2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "x",
+          "expected": "x=1"
+        },
+        {
+          "stdin": "go go go",
+          "expected": "go=3"
+        },
+        {
+          "stdin": "c b a",
+          "expected": "a=1 b=1 c=1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The program reads integers and prints only the odd ones. Removing the evens throws `ConcurrentModificationException`. Fix `removeEvens`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static void removeEvens(List<Integer> nums) {\n        for (Integer n : nums) {\n            if (n % 2 == 0) nums.remove(n);\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> nums = new ArrayList<>();\n        while (in.hasNextInt()) nums.add(in.nextInt());\n        removeEvens(nums);\n        System.out.println(nums);\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static void removeEvens(List<Integer> nums) {\n        nums.removeIf(n -> n % 2 == 0);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> nums = new ArrayList<>();\n        while (in.hasNextInt()) nums.add(in.nextInt());\n        removeEvens(nums);\n        System.out.println(nums);\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2 3 4 5",
+          "expected": "[1, 3, 5]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "[]"
+        },
+        {
+          "stdin": "2 4 6",
+          "expected": "[]"
+        },
+        {
+          "stdin": "7",
+          "expected": "[7]"
+        },
+        {
+          "stdin": "1 2 2 3",
+          "expected": "[1, 3]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Each input line is `name,age`. Print the sum of the ages, **skipping** lines whose age is not a number. It crashes on bad lines. Fix `ageOf` (return 0 for a bad line).",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int ageOf(String line) {\n        String[] parts = line.split(\",\");\n        return Integer.parseInt(parts[1].trim());\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        int total = 0;\n        while (in.hasNextLine()) {\n            String line = in.nextLine();\n            if (!line.isBlank()) total += ageOf(line);\n        }\n        System.out.println(total);\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static int ageOf(String line) {\n        String[] parts = line.split(\",\");\n        if (parts.length < 2) return 0;\n        try {\n            return Integer.parseInt(parts[1].trim());\n        } catch (NumberFormatException e) {\n            return 0;\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        int total = 0;\n        while (in.hasNextLine()) {\n            String line = in.nextLine();\n            if (!line.isBlank()) total += ageOf(line);\n        }\n        System.out.println(total);\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "ann,30\nbo,25",
+          "expected": "55"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "ann,thirty\nbo,25",
+          "expected": "25"
+        },
+        {
+          "stdin": "",
+          "expected": "0"
+        },
+        {
+          "stdin": "cy, 41 ",
+          "expected": "41"
+        },
+        {
+          "stdin": "di\ned,5",
+          "expected": "5"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The program prints the words it reads separated by `, `. It prints an extra `, ` at the end. Fix `joinWords`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static String joinWords(List<String> words) {\n        StringBuilder sb = new StringBuilder();\n        for (String w : words) sb.append(w).append(\", \");\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> words = new ArrayList<>();\n        while (in.hasNext()) words.add(in.next());\n        System.out.println(\"[\" + joinWords(words) + \"]\");\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static String joinWords(List<String> words) {\n        return String.join(\", \", words);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> words = new ArrayList<>();\n        while (in.hasNext()) words.add(in.next());\n        System.out.println(\"[\" + joinWords(words) + \"]\");\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "a b c",
+          "expected": "[a, b, c]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "[]"
+        },
+        {
+          "stdin": "solo",
+          "expected": "[solo]"
+        },
+        {
+          "stdin": "x y",
+          "expected": "[x, y]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Sort the names by **length**, and names of equal length alphabetically. Fix the comparator in `sortNames`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static void sortNames(List<String> names) {\n        names.sort(Comparator.comparing(String::length));\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> names = new ArrayList<>();\n        while (in.hasNext()) names.add(in.next());\n        sortNames(names);\n        System.out.println(String.join(\" \", names));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static void sortNames(List<String> names) {\n        names.sort(Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder()));\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> names = new ArrayList<>();\n        while (in.hasNext()) names.add(in.next());\n        sortNames(names);\n        System.out.println(String.join(\" \", names));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "bob al cy",
+          "expected": "al cy bob"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "zed amy",
+          "expected": "amy zed"
+        },
+        {
+          "stdin": "dd c bb a",
+          "expected": "a c bb dd"
+        },
+        {
+          "stdin": "x",
+          "expected": "x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "hi",
+        "HI",
+        "Hi",
+        "null"
+      ],
+      "correctIndex": 0,
+      "explanation": "Strings are immutable. `toUpperCase()` returns a new string, which is thrown away here; `s` still refers to `hi`.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        String s = \"hi\";\n        s.toUpperCase();\n        System.out.println(s);\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "3a",
+        "12a",
+        "a3",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "Evaluated left to right: `1 + 2` is the integer `3`, then `3 + \"a\"` becomes the string `3a`.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(1 + 2 + \"a\");\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What happens?",
+    "mcq": {
+      "options": [
+        "UnsupportedOperationException",
+        "[1, 2, 3]",
+        "[1, 2]",
+        "NullPointerException"
+      ],
+      "correctIndex": 0,
+      "explanation": "`List.of` returns an immutable list; any change throws `UnsupportedOperationException`. Copy it into `new ArrayList<>(…)` to modify it.",
+      "snippet": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> xs = List.of(1, 2);\n        try {\n            xs.add(3);\n            System.out.println(xs);\n        } catch (Exception e) {\n            System.out.println(e.getClass().getSimpleName());\n        }\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The program reads two counts and prints `same` when they are equal. It works for small numbers but says `different` for `1000 1000`. Fix `sameCount`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static boolean sameCount(Integer a, Integer b) {\n        return a == b;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        Integer a = Integer.valueOf(in.nextInt());\n        Integer b = Integer.valueOf(in.nextInt());\n        System.out.println(sameCount(a, b) ? \"same\" : \"different\");\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static boolean sameCount(Integer a, Integer b) {\n        return a.equals(b);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        Integer a = Integer.valueOf(in.nextInt());\n        Integer b = Integer.valueOf(in.nextInt());\n        System.out.println(sameCount(a, b) ? \"same\" : \"different\");\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "5 5",
+          "expected": "same"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "1000 1000",
+          "expected": "same"
+        },
+        {
+          "stdin": "3 4",
+          "expected": "different"
+        },
+        {
+          "stdin": "128 128",
+          "expected": "same"
+        },
+        {
+          "stdin": "-200 -200",
+          "expected": "same"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The program prints the total of order amounts. With large amounts the total goes negative. Fix `total`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int total(int[] amounts) {\n        int sum = 0;\n        for (int a : amounts) sum += a;\n        return sum;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(total(xs));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static long total(int[] amounts) {\n        long sum = 0;\n        for (int a : amounts) sum += a;\n        return sum;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(total(xs));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2 3",
+          "expected": "6"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "2000000000 2000000000",
+          "expected": "4000000000"
+        },
+        {
+          "stdin": "",
+          "expected": "0"
+        },
+        {
+          "stdin": "2147483647 1",
+          "expected": "2147483648"
+        },
+        {
+          "stdin": "-5 5",
+          "expected": "0"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Each line is a pipe-separated record like `ann|30|pune`. Print the number of fields. `ann|30|pune` prints `11`. Fix `fieldCount`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int fieldCount(String record) {\n        return record.split(\"|\").length;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(fieldCount(line));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static int fieldCount(String record) {\n        return record.split(\"\\\\|\").length;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String line = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(fieldCount(line));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "ann|30|pune",
+          "expected": "3"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "solo",
+          "expected": "1"
+        },
+        {
+          "stdin": "a|b",
+          "expected": "2"
+        },
+        {
+          "stdin": "x|y|z|w",
+          "expected": "4"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The program looks up a user's email and prints it, or `none` when the user is unknown. It crashes for unknown users. Fix `findEmail`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static Optional<String> findEmail(Map<String, String> emails, String user) {\n        return Optional.of(emails.get(user));\n    }\n\n    public static void main(String[] args) {\n        Map<String, String> emails = new HashMap<>();\n        emails.put(\"ann\", \"ann@x.com\");\n        emails.put(\"bo\", \"bo@x.com\");\n        Scanner in = new Scanner(System.in);\n        String user = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(findEmail(emails, user).orElse(\"none\"));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static Optional<String> findEmail(Map<String, String> emails, String user) {\n        return Optional.ofNullable(emails.get(user));\n    }\n\n    public static void main(String[] args) {\n        Map<String, String> emails = new HashMap<>();\n        emails.put(\"ann\", \"ann@x.com\");\n        emails.put(\"bo\", \"bo@x.com\");\n        Scanner in = new Scanner(System.in);\n        String user = in.hasNextLine() ? in.nextLine().trim() : \"\";\n        System.out.println(findEmail(emails, user).orElse(\"none\"));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "ann",
+          "expected": "ann@x.com"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "zed",
+          "expected": "none"
+        },
+        {
+          "stdin": "",
+          "expected": "none"
+        },
+        {
+          "stdin": "bo",
+          "expected": "bo@x.com"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The program counts words by their first letter and prints the map sorted by letter. It throws `IllegalStateException: Duplicate key`. Fix `countByInitial`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static Map<Character, Long> countByInitial(List<String> words) {\n        return words.stream()\n            .collect(Collectors.toMap(w -> w.charAt(0), w -> 1L));\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> words = new ArrayList<>();\n        while (in.hasNext()) words.add(in.next());\n        System.out.println(new TreeMap<>(countByInitial(words)));\n    }\n}",
+      "referenceSolution": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static Map<Character, Long> countByInitial(List<String> words) {\n        return words.stream()\n            .collect(Collectors.groupingBy(w -> w.charAt(0), Collectors.counting()));\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> words = new ArrayList<>();\n        while (in.hasNext()) words.add(in.next());\n        System.out.println(new TreeMap<>(countByInitial(words)));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "apple avocado bean",
+          "expected": "{a=2, b=1}"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "{}"
+        },
+        {
+          "stdin": "kiwi",
+          "expected": "{k=1}"
+        },
+        {
+          "stdin": "fig fun fox date",
+          "expected": "{d=1, f=3}"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "First line: sorted integers. Second line: a target. Print the target's index, or `-1`. It misses the last element. Fix `indexOf`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int indexOf(int[] xs, int target) {\n        int lo = 0, hi = xs.length - 1;\n        while (lo < hi) {\n            int mid = (lo + hi) / 2;\n            if (xs[mid] == target) return mid;\n            if (xs[mid] < target) lo = mid + 1;\n            else hi = mid - 1;\n        }\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String first = in.nextLine().trim();\n        int target = Integer.parseInt(in.nextLine().trim());\n        int[] xs = first.isEmpty() ? new int[0] : Arrays.stream(first.split(\" \")).mapToInt(Integer::parseInt).toArray();\n        System.out.println(indexOf(xs, target));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static int indexOf(int[] xs, int target) {\n        int lo = 0, hi = xs.length - 1;\n        while (lo <= hi) {\n            int mid = (lo + hi) / 2;\n            if (xs[mid] == target) return mid;\n            if (xs[mid] < target) lo = mid + 1;\n            else hi = mid - 1;\n        }\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        String first = in.nextLine().trim();\n        int target = Integer.parseInt(in.nextLine().trim());\n        int[] xs = first.isEmpty() ? new int[0] : Arrays.stream(first.split(\" \")).mapToInt(Integer::parseInt).toArray();\n        System.out.println(indexOf(xs, target));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 3 5 7\n7",
+          "expected": "3"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "4\n4",
+          "expected": "0"
+        },
+        {
+          "stdin": "\n3",
+          "expected": "-1"
+        },
+        {
+          "stdin": "1 3 5 7\n4",
+          "expected": "-1"
+        },
+        {
+          "stdin": "2 4 6\n2",
+          "expected": "0"
+        },
+        {
+          "stdin": "1 2 3 4 5\n5",
+          "expected": "4"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "true false",
+        "true true",
+        "false false",
+        "false true"
+      ],
+      "correctIndex": 0,
+      "explanation": "`==` compares references. Boxed values from -128 to 127 are cached, so `a` and `b` are the same object; 128 creates two different objects. Always compare boxed numbers with `.equals`.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        Integer a = 127, b = 127;\n        Integer c = 128, d = 128;\n        System.out.println((a == b) + \" \" + (c == d));\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "98",
+        "b",
+        "a1",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "`char + int` is numeric addition: `'a'` is 97, so the result is the `int` 98. Cast back with `(char) (c + 1)` to get `b`.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        char c = 'a';\n        System.out.println(c + 1);\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "finally",
+        "try",
+        "try finally",
+        "It does not compile"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `return` in `finally` replaces the value returned from `try`. That is why returning from `finally` is considered a bug — it also swallows exceptions.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(pick());\n    }\n\n    static String pick() {\n        try {\n            return \"try\";\n        } finally {\n            return \"finally\";\n        }\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The program reads points `x y` (one per line) and prints how many **distinct** points there are. Duplicates are counted twice. Fix `Point`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static class Point {\n        final int x, y;\n        Point(int x, int y) { this.x = x; this.y = y; }\n\n        @Override\n        public boolean equals(Object o) {\n            if (!(o instanceof Point)) return false;\n            Point p = (Point) o;\n            return x == p.x && y == p.y;\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        Set<Point> points = new HashSet<>();\n        while (in.hasNextInt()) points.add(new Point(in.nextInt(), in.nextInt()));\n        System.out.println(points.size());\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static class Point {\n        final int x, y;\n        Point(int x, int y) { this.x = x; this.y = y; }\n\n        @Override\n        public boolean equals(Object o) {\n            if (!(o instanceof Point)) return false;\n            Point p = (Point) o;\n            return x == p.x && y == p.y;\n        }\n\n        @Override\n        public int hashCode() {\n            return Objects.hash(x, y);\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        Set<Point> points = new HashSet<>();\n        while (in.hasNextInt()) points.add(new Point(in.nextInt(), in.nextInt()));\n        System.out.println(points.size());\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2\n1 2\n3 4",
+          "expected": "2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "0"
+        },
+        {
+          "stdin": "0 0",
+          "expected": "1"
+        },
+        {
+          "stdin": "5 5\n5 5\n5 5",
+          "expected": "1"
+        },
+        {
+          "stdin": "1 2\n2 1",
+          "expected": "2"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "The program sorts integers ascending. With very large and very small values the order comes out wrong. Fix the comparator in `sortAsc`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static void sortAsc(List<Integer> xs) {\n        xs.sort((a, b) -> a - b);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> xs = new ArrayList<>();\n        while (in.hasNextInt()) xs.add(in.nextInt());\n        sortAsc(xs);\n        System.out.println(xs);\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static void sortAsc(List<Integer> xs) {\n        xs.sort(Integer::compare);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> xs = new ArrayList<>();\n        while (in.hasNextInt()) xs.add(in.nextInt());\n        sortAsc(xs);\n        System.out.println(xs);\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "3 1 2",
+          "expected": "[1, 2, 3]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "2147483647 -2147483648 0",
+          "expected": "[-2147483648, 0, 2147483647]"
+        },
+        {
+          "stdin": "",
+          "expected": "[]"
+        },
+        {
+          "stdin": "-2000000000 2000000000",
+          "expected": "[-2000000000, 2000000000]"
+        },
+        {
+          "stdin": "5",
+          "expected": "[5]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Each line is `customer amount`. Group the amounts by customer and print `customer=[amounts]`, sorted by customer. It throws a `NullPointerException`. Fix `group`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static Map<String, List<Integer>> group(List<String[]> rows) {\n        Map<String, List<Integer>> byCustomer = new TreeMap<>();\n        for (String[] r : rows) {\n            byCustomer.putIfAbsent(r[0], new ArrayList<>()).add(Integer.parseInt(r[1]));\n        }\n        return byCustomer;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String[]> rows = new ArrayList<>();\n        while (in.hasNextLine()) {\n            String line = in.nextLine().trim();\n            if (!line.isEmpty()) rows.add(line.split(\" \"));\n        }\n        System.out.println(group(rows));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static Map<String, List<Integer>> group(List<String[]> rows) {\n        Map<String, List<Integer>> byCustomer = new TreeMap<>();\n        for (String[] r : rows) {\n            byCustomer.computeIfAbsent(r[0], k -> new ArrayList<>()).add(Integer.parseInt(r[1]));\n        }\n        return byCustomer;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String[]> rows = new ArrayList<>();\n        while (in.hasNextLine()) {\n            String line = in.nextLine().trim();\n            if (!line.isEmpty()) rows.add(line.split(\" \"));\n        }\n        System.out.println(group(rows));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "ann 5\nbo 3\nann 2",
+          "expected": "{ann=[5, 2], bo=[3]}"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "{}"
+        },
+        {
+          "stdin": "cy 1",
+          "expected": "{cy=[1]}"
+        },
+        {
+          "stdin": "b 1\na 2\nb 3\na 4",
+          "expected": "{a=[2, 4], b=[1, 3]}"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "The program prints the exact sum of the prices it reads (e.g. `0.1 0.2` → `0.3`). Doubles give `0.30000000000000004`. Fix `sum` to use `BigDecimal`; an empty input prints `0`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.math.BigDecimal;\nimport java.util.*;\n\npublic class Main {\n    static String sum(List<String> prices) {\n        double total = 0;\n        for (String p : prices) total += Double.parseDouble(p);\n        return String.valueOf(total);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> prices = new ArrayList<>();\n        while (in.hasNext()) prices.add(in.next());\n        System.out.println(sum(prices));\n    }\n}",
+      "referenceSolution": "import java.math.BigDecimal;\nimport java.util.*;\n\npublic class Main {\n    static String sum(List<String> prices) {\n        BigDecimal total = BigDecimal.ZERO;\n        for (String p : prices) total = total.add(new BigDecimal(p));\n        return total.toPlainString();\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<String> prices = new ArrayList<>();\n        while (in.hasNext()) prices.add(in.next());\n        System.out.println(sum(prices));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "0.1 0.2",
+          "expected": "0.3"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "0"
+        },
+        {
+          "stdin": "1.25 2.50",
+          "expected": "3.75"
+        },
+        {
+          "stdin": "10 0.05",
+          "expected": "10.05"
+        },
+        {
+          "stdin": "0.7 0.1",
+          "expected": "0.8"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The program reads a 2×2 grid, makes a copy with every cell doubled, and prints the **original** then the copy. The original changes too. Fix `doubled` so it does not touch its input.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int[][] doubled(int[][] grid) {\n        int[][] copy = grid.clone();\n        for (int[] row : copy)\n            for (int j = 0; j < row.length; j++) row[j] *= 2;\n        return copy;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        int[][] grid = new int[2][2];\n        for (int i = 0; i < 2; i++)\n            for (int j = 0; j < 2; j++) grid[i][j] = in.nextInt();\n        int[][] copy = doubled(grid);\n        System.out.println(Arrays.deepToString(grid));\n        System.out.println(Arrays.deepToString(copy));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static int[][] doubled(int[][] grid) {\n        int[][] copy = new int[grid.length][];\n        for (int i = 0; i < grid.length; i++) copy[i] = grid[i].clone();\n        for (int[] row : copy)\n            for (int j = 0; j < row.length; j++) row[j] *= 2;\n        return copy;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        int[][] grid = new int[2][2];\n        for (int i = 0; i < 2; i++)\n            for (int j = 0; j < 2; j++) grid[i][j] = in.nextInt();\n        int[][] copy = doubled(grid);\n        System.out.println(Arrays.deepToString(grid));\n        System.out.println(Arrays.deepToString(copy));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2\n3 4",
+          "expected": "[[1, 2], [3, 4]]\n[[2, 4], [6, 8]]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "0 0\n0 0",
+          "expected": "[[0, 0], [0, 0]]\n[[0, 0], [0, 0]]"
+        },
+        {
+          "stdin": "5 0\n0 5",
+          "expected": "[[5, 0], [0, 5]]\n[[10, 0], [0, 10]]"
+        },
+        {
+          "stdin": "-1 1\n2 -2",
+          "expected": "[[-1, 1], [2, -2]]\n[[-2, 2], [4, -4]]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "First line: a list of integers. Second line: a **value** to remove (its first occurrence). Print the list. It removes the wrong element. Fix `removeValue`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static void removeValue(List<Integer> xs, int value) {\n        xs.remove(value);\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> xs = new ArrayList<>();\n        for (String s : in.nextLine().trim().split(\" \")) if (!s.isEmpty()) xs.add(Integer.parseInt(s));\n        int value = Integer.parseInt(in.nextLine().trim());\n        removeValue(xs, value);\n        System.out.println(xs);\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static void removeValue(List<Integer> xs, int value) {\n        xs.remove(Integer.valueOf(value));\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> xs = new ArrayList<>();\n        for (String s : in.nextLine().trim().split(\" \")) if (!s.isEmpty()) xs.add(Integer.parseInt(s));\n        int value = Integer.parseInt(in.nextLine().trim());\n        removeValue(xs, value);\n        System.out.println(xs);\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "10 20 30\n20",
+          "expected": "[10, 30]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "5 6 7\n9",
+          "expected": "[5, 6, 7]"
+        },
+        {
+          "stdin": "1 2 3\n1",
+          "expected": "[2, 3]"
+        },
+        {
+          "stdin": "\n0",
+          "expected": "[]"
+        },
+        {
+          "stdin": "3 1 3\n3",
+          "expected": "[1, 3]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[10, 30]",
+        "[20, 30]",
+        "[10, 20, 30]",
+        "IndexOutOfBoundsException"
+      ],
+      "correctIndex": 0,
+      "explanation": "`remove(int)` removes by **index**, and the literal `1` is an `int`, so the element at index 1 (`20`) goes. To remove by value, pass an object: `xs.remove(Integer.valueOf(1))`.",
+      "snippet": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> xs = new ArrayList<>(List.of(10, 20, 30));\n        xs.remove(1);\n        System.out.println(xs);\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "-2147483648",
+        "2147483648",
+        "2147483647",
+        "An ArithmeticException"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Integer.MIN_VALUE` has no positive `int` counterpart, so negating it overflows back to itself. `Math.absExact` throws instead, and `Math.abs((long) x)` gives the true value.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(Math.abs(Integer.MIN_VALUE));\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  },
+  {
+    "id": "eng-java-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "false",
+        "true",
+        "It does not compile",
+        "0.3"
+      ],
+      "correctIndex": 0,
+      "explanation": "`0.1` and `0.2` cannot be represented exactly in binary floating point; their sum is `0.30000000000000004`. Compare with a tolerance, or use `BigDecimal` for money.",
+      "snippet": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(0.1 + 0.2 == 0.3);\n    }\n}",
+      "snippetLanguage": "java"
+    }
+  }
+]

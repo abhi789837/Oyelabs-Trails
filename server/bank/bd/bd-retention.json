@@ -1,0 +1,326 @@
+[
+  {
+    "id": "bd-retention-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Calculate client and revenue churn.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You started the year with 50 clients bringing $1,500,000 in annual revenue. During the year, 6 clients left, taking $120,000 of annual revenue with them.",
+      "table": null,
+      "fields": [
+        {
+          "id": "logo",
+          "label": "Client (logo) churn",
+          "unit": "%",
+          "answer": 12,
+          "tolerance": 0.1
+        },
+        {
+          "id": "rev",
+          "label": "Revenue churn",
+          "unit": "%",
+          "answer": 8,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Logo churn = 6 ÷ 50 = 12%. Revenue churn = 120,000 ÷ 1,500,000 = 8%. Smaller clients left; watch both numbers."
+    }
+  },
+  {
+    "id": "bd-retention-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Prioritise at-risk accounts for attention.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these accounts by how urgently they need retention attention, most urgent first.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "$3,000 a month client who is satisfied and renewing"
+        },
+        {
+          "id": "i1",
+          "label": "$15,000 a month client with an escalated complaint and an overdue invoice"
+        },
+        {
+          "id": "i2",
+          "label": "$8,000 a month client whose champion left and whose usage dropped 50%"
+        },
+        {
+          "id": "i3",
+          "label": "$2,000 a month client who asked how to cancel"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Weigh both risk and value: a large account in open trouble first, then a large account with strong warning signs, then a small account showing intent to leave. A healthy account needs the least."
+    }
+  },
+  {
+    "id": "bd-retention-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this save-call plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A client has given notice on their retainer. Mark the lines in this save-call plan that are likely to backfire.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Open by asking what led to the decision and listen fully.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Offer 40% off immediately before hearing their reasons.",
+          "issue": "A reflex discount ignores the real reason and devalues the service."
+        },
+        {
+          "id": "p3",
+          "text": "Remind them of the contract's penalties for leaving.",
+          "issue": "Threats end relationships and reputations; they rarely keep a client."
+        },
+        {
+          "id": "p4",
+          "text": "Share a plan that addresses the specific issues they raise.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "If they still leave, offer a smooth handover of code and documentation.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Tell them other clients are much happier with us.",
+          "issue": "Comparisons with other clients dismiss their experience."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-retention-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Respond when a client moves work in-house.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client says they have hired developers and will take maintenance in-house in three months.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Argue that in-house teams always fail",
+            "Understand the reasons and what their team will need to succeed",
+            "Stop prioritising their work",
+            "Raise prices for the remaining months"
+          ],
+          "correctIndex": 1,
+          "explanation": "Their reasons tell you whether there is a different role for you."
+        },
+        {
+          "id": "s2",
+          "question": "They want to own the code but lack senior architecture skills. What do you offer?",
+          "options": [
+            "Nothing; they made their choice",
+            "To keep doing everything at the same price",
+            "A structured handover plus a smaller advisory or escalation retainer",
+            "A free month to change their mind"
+          ],
+          "correctIndex": 2,
+          "explanation": "A hybrid role keeps the relationship and value, even when the main work moves."
+        },
+        {
+          "id": "s3",
+          "question": "If they decline any further work, how do you finish?",
+          "options": [
+            "Hand over the minimum required",
+            "Delay the handover",
+            "Remove documentation from the repository",
+            "Deliver a clean handover and ask for feedback and a reference"
+          ],
+          "correctIndex": 3,
+          "explanation": "A graceful exit protects your reputation and often brings clients back later."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-retention-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Value a reduction in churn.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You have 40 clients averaging $60,000 a year. Annual churn is 15%. A retention programme is expected to bring churn to 10%. Gross margin is 40%.",
+      "table": null,
+      "fields": [
+        {
+          "id": "clients",
+          "label": "Clients kept per year by the programme",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "rev",
+          "label": "Revenue kept per year",
+          "unit": "$",
+          "answer": 120000,
+          "tolerance": 1
+        },
+        {
+          "id": "gp",
+          "label": "Gross profit kept per year",
+          "unit": "$",
+          "answer": 48000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "5 percentage points of 40 clients = 2 clients × 60,000 = $120000 revenue, or $48000 gross profit. Compare that with the programme's cost."
+    }
+  },
+  {
+    "id": "bd-retention-t3-4",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Act on early warning signs.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A retainer client's requests have dropped by half for two months, and your contact's replies have become short.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Wait for the renewal conversation",
+            "Send a discount offer",
+            "Assume they are busy",
+            "Ask for a short call to check how things are going and what is changing on their side"
+          ],
+          "correctIndex": 3,
+          "explanation": "Early, open conversations surface issues while there is still time to act."
+        },
+        {
+          "id": "s2",
+          "question": "They mention a new CTO is reviewing all vendors. Next?",
+          "options": [
+            "Ask for an introduction to the CTO and prepare a short summary of results and value",
+            "Hope the CTO does not notice you",
+            "Contact the CTO behind your contact's back",
+            "Cut your rates before the review"
+          ],
+          "correctIndex": 0,
+          "explanation": "Meet the new decision-maker with evidence, ideally introduced by your contact."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-retention-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which is usually the earliest sign of churn risk?",
+    "mcq": {
+      "options": [
+        "A cancellation notice",
+        "Declining engagement, such as fewer requests or slower replies",
+        "An unpaid final invoice",
+        "A request for code handover"
+      ],
+      "correctIndex": 1,
+      "explanation": "By the time a notice arrives it is usually too late; engagement drops come first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-retention-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is retaining a client usually cheaper than winning a new one?",
+    "mcq": {
+      "options": [
+        "Existing clients always pay more",
+        "Contracts prevent existing clients from leaving",
+        "You avoid new acquisition costs and already have trust and context",
+        "New clients need more legal work"
+      ],
+      "correctIndex": 2,
+      "explanation": "Acquisition costs time and money; a retained client also brings expansion and referrals.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-retention-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-retention",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client churned after a long, well-run project. What is the most useful next step?",
+    "mcq": {
+      "options": [
+        "Remove them from the CRM",
+        "Offer a discount to return",
+        "Run an exit conversation to learn why, and feed the findings into account practices",
+        "Blame delivery"
+      ],
+      "correctIndex": 2,
+      "explanation": "Every churned client carries information about what to change.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

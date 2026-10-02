@@ -1,0 +1,382 @@
+[
+  {
+    "id": "pm-technical-tradeoffs-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The client wants a demo of an AI search feature in three weeks for an investor meeting. The tech lead says the fastest route is to call the LLM directly from the mobile app with an API key in the build; the proper route (a small backend proxy) adds about four days.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client wants a demo of an AI search feature in three weeks for an investor meeting. The tech lead says the fastest route is to call the LLM directly from the mobile app with an API key in the build; the proper route (a small backend proxy) adds about four days.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you recommend?",
+          "options": [
+            "Ship the key in the app and rotate it after the demo",
+            "Build the proxy: an API key shipped in a mobile app can be extracted and abused, and the four days fit the deadline",
+            "Skip the feature and show mock-ups",
+            "Let the client decide without explaining the risk"
+          ],
+          "correctIndex": 1,
+          "explanation": "Some shortcuts are acceptable debt; a leaked key is a security and cost incident. Four days fit inside three weeks."
+        },
+        {
+          "id": "d2",
+          "question": "The client asks why the demo needs \"extra backend work\". How do you explain it?",
+          "options": [
+            "In business terms: without it anyone could copy the key and run up the client's AI bill or misuse it under their name",
+            "Explain API key handling in technical detail",
+            "Say the developers insisted",
+            "Say it is agency policy and cannot be discussed"
+          ],
+          "correctIndex": 0,
+          "explanation": "Trade-offs land with clients when stated as cost, risk and outcome, not implementation."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A fixed-price project has room to pay down one piece of tech debt per sprint. Rank these from most to least urgent.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A fixed-price project has room to pay down one piece of tech debt per sprint. Rank these from most to least urgent.",
+      "items": [
+        {
+          "id": "r482ea",
+          "label": "No automated backups on the production database"
+        },
+        {
+          "id": "ree7cf",
+          "label": "Payment webhook handler has no retry, so failed events are lost"
+        },
+        {
+          "id": "r09a8c",
+          "label": "No tests around the loyalty-points calculation, which changes next sprint"
+        },
+        {
+          "id": "r8b57b",
+          "label": "Two different date libraries in the codebase"
+        },
+        {
+          "id": "r49efd",
+          "label": "Inconsistent CSS naming in the admin panel"
+        }
+      ],
+      "correctOrder": [
+        "r482ea",
+        "ree7cf",
+        "r09a8c",
+        "r8b57b",
+        "r49efd"
+      ],
+      "explanation": "Rank by impact times likelihood: data loss first, then lost money events, then risk on code about to change; consistency issues cost little until later."
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A tech lead wrote this note to justify a decision. Mark the statements a PM should challenge before it goes to the client.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A tech lead wrote this note to justify a decision. Mark the statements a PM should challenge before it goes to the client.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "We will use the client's existing PostgreSQL database rather than adding MongoDB.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "This keeps one backup and monitoring setup instead of two.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Microservices will make the MVP faster to build.",
+          "issue": "For a small MVP team, microservices usually add deployment and integration overhead; this claim needs evidence."
+        },
+        {
+          "id": "s4",
+          "text": "We will skip automated tests for the MVP since we will add them later.",
+          "issue": "\"Later\" rarely comes on fixed-bid work; untested code on payment paths is a quality risk the client should knowingly accept or reject."
+        },
+        {
+          "id": "s5",
+          "text": "Push notifications use the client's existing Firebase project.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Hosting stays in the client's AWS account in eu-west-1, as their contract requires.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The team can build a custom admin dashboard or use an off-the-shelf admin tool. Compare the 12-month cost of each option.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The team can build a custom admin dashboard or use an off-the-shelf admin tool. Compare the 12-month cost of each option.",
+      "table": {
+        "columns": [
+          "Option",
+          "Build cost",
+          "Monthly cost",
+          "Months"
+        ],
+        "rows": [
+          [
+            "Custom build",
+            "$18,000",
+            "$300 hosting",
+            "12"
+          ],
+          [
+            "Off-the-shelf tool",
+            "$4,000 setup",
+            "$1,100 licence",
+            "12"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "custom",
+          "label": "12-month cost of custom build",
+          "unit": "$",
+          "answer": 21600,
+          "tolerance": 1
+        },
+        {
+          "id": "tool",
+          "label": "12-month cost of off-the-shelf tool",
+          "unit": "$",
+          "answer": 17200,
+          "tolerance": 1
+        },
+        {
+          "id": "diff",
+          "label": "Saving of the cheaper option over 12 months",
+          "unit": "$",
+          "answer": 4400,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Custom: 18,000 + 12 x 300 = 21,600. Tool: 4,000 + 12 x 1,100 = 17,200. The tool saves 4,400 in year one; the break-even point moves past month 17, so the time horizon is part of the decision."
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "An AI feature calls an LLM on every request. The team can add a cache that answers repeated questions without calling the model. Use the data to compare monthly costs.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An AI feature calls an LLM on every request. The team can add a cache that answers repeated questions without calling the model. Use the data to compare monthly costs.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Requests per month",
+            "400,000"
+          ],
+          [
+            "Model cost per request",
+            "$0.012"
+          ],
+          [
+            "Share of requests the cache can answer",
+            "35%"
+          ],
+          [
+            "Cache hosting per month",
+            "$600"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "nocache",
+          "label": "Monthly cost without the cache",
+          "unit": "$",
+          "answer": 4800.0,
+          "tolerance": 1
+        },
+        {
+          "id": "withcache",
+          "label": "Monthly cost with the cache (model + hosting)",
+          "unit": "$",
+          "answer": 3720.0,
+          "tolerance": 1
+        },
+        {
+          "id": "saving",
+          "label": "Monthly saving from the cache",
+          "unit": "$",
+          "answer": 1080.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Without: 400,000 x 0.012 = 4,800. With: 260,000 x 0.012 = 3,120 + 600 = 3,720. Saving 1,080 a month, before counting the effort to keep cached answers fresh."
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Three months after launch, the client's platform is slowing down because of shortcuts taken to hit the launch date. The client wants five new features next quarter. The tech lead estimates 30% of next quarter's capacity would bring performance back under target.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Three months after launch, the client's platform is slowing down because of shortcuts taken to hit the launch date. The client wants five new features next quarter. The tech lead estimates 30% of next quarter's capacity would bring performance back under target.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you frame this to the client's product owner?",
+          "options": [
+            "As a choice with consequences: fewer features now, or rising page times and incident risk that will slow every future feature",
+            "As an internal engineering matter they do not need to know about",
+            "As the developers' fault for cutting corners",
+            "As a free fix the agency will absorb"
+          ],
+          "correctIndex": 0,
+          "explanation": "Tech debt is a business decision when the client pays for capacity; present it as options with cost and risk."
+        },
+        {
+          "id": "d2",
+          "question": "The product owner agrees to 20%, not 30%. What next?",
+          "options": [
+            "Quietly use 30% anyway",
+            "Refuse to start the new features",
+            "Agree which debt items the 20% covers, by impact, and record the remaining risk in the RAID log",
+            "Spread the 20% evenly across all debt items"
+          ],
+          "correctIndex": 2,
+          "explanation": "Make the trade visible: highest-impact items first, and the accepted residual risk written down with the client's decision."
+        },
+        {
+          "id": "d3",
+          "question": "Which measure best shows the client whether the debt work paid off?",
+          "options": [
+            "Number of debt tickets closed",
+            "Lines of code removed",
+            "Developer satisfaction survey",
+            "p95 page load and incident count before and after, against the agreed targets"
+          ],
+          "correctIndex": 3,
+          "explanation": "Report outcomes the client cares about, not activity."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which situation best justifies deliberately taking on tech debt?",
+    "mcq": {
+      "options": [
+        "Saving time on every sprint by skipping code review",
+        "Avoiding a conversation with the client about scope",
+        "Hitting a fixed trade-show date with a known, recorded shortcut and a scheduled payback",
+        "Letting a junior developer learn by trial and error in production"
+      ],
+      "correctIndex": 2,
+      "explanation": "Deliberate, recorded debt with a plan to repay is a legitimate trade. Unrecorded shortcuts taken to avoid hard conversations are just risk.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "The client's CTO wants to switch the LLM provider mid-project because a new model scored better on a public benchmark. What is the PM's best first step?",
+    "mcq": {
+      "options": [
+        "Switch immediately; benchmarks are objective",
+        "Ask the team to run the new model on the project's own evaluation set and estimate the switch cost before deciding",
+        "Refuse; changing providers is always out of scope",
+        "Escalate to the agency director"
+      ],
+      "correctIndex": 1,
+      "explanation": "Public benchmarks do not predict performance on the client's data. Evidence on the project's own evaluation set plus cost and schedule impact makes it a real decision.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-technical-tradeoffs-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-technical-tradeoffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which statement about build-versus-buy for a client feature is most accurate?",
+    "mcq": {
+      "options": [
+        "Buying is always cheaper because there is no development",
+        "Buying moves cost into recurring fees and vendor dependency, so compare multi-year total cost and exit options, not just build cost",
+        "Building is always better because the client owns the code",
+        "The cheapest option in the first month is the right choice"
+      ],
+      "correctIndex": 1,
+      "explanation": "Build and buy trade upfront cost against recurring cost, control and lock-in; the time horizon and exit cost decide which wins.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

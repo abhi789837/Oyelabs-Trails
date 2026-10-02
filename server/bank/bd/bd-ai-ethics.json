@@ -1,0 +1,334 @@
+[
+  {
+    "id": "bd-ai-ethics-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the ethical and accuracy problems in an AI-drafted email.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this AI-drafted outreach email that must not be sent as written.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Ravi, I saw your team is expanding its delivery operations in Pune.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We've helped over 500 logistics companies like yours.",
+          "issue": "Invented figure; only use numbers you can verify."
+        },
+        {
+          "id": "p3",
+          "text": "As a fellow IIT alumnus, I know you'll appreciate quality.",
+          "issue": "False personal connection made up by the AI."
+        },
+        {
+          "id": "p4",
+          "text": "We recently built a route-planning tool for a regional courier.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Would a 20-minute call next week be useful?",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Our AI solution guarantees a 50% cost reduction.",
+          "issue": "Unsupported guarantee that cannot be honestly made."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-ai-ethics-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Answer honestly about AI use.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks: \"Did you use AI to write this proposal?\" You drafted it with an AI tool and then edited and fact-checked it.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you say?",
+          "options": [
+            "No",
+            "Yes: you used an AI tool to draft it, and you reviewed and checked everything yourself",
+            "Avoid the question",
+            "Say AI wrote all of it and you didn't check"
+          ],
+          "correctIndex": 1,
+          "explanation": "Honesty about how work is produced protects trust; your review is what matters."
+        },
+        {
+          "id": "s2",
+          "question": "The client says their policy forbids sharing their data with AI tools. What do you do?",
+          "options": [
+            "Keep using AI but don't mention it",
+            "Argue the policy is outdated",
+            "Respect it: confirm no client data goes into AI tools on their account, and tell your team",
+            "Ignore it for drafts"
+          ],
+          "correctIndex": 2,
+          "explanation": "Client policies on their data must be followed and communicated internally."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-ethics-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank AI uses in BD by risk.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these uses of AI from highest risk to lowest.",
+      "items": [
+        {
+          "id": "i3",
+          "label": "Using AI to summarise a prospect's public website for internal notes"
+        },
+        {
+          "id": "i4",
+          "label": "Using AI to fix grammar in your own email"
+        },
+        {
+          "id": "i1",
+          "label": "Pasting a client's confidential contract into an unapproved, free AI tool"
+        },
+        {
+          "id": "i2",
+          "label": "Sending AI-generated case-study numbers to prospects without checking"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Leaking confidential data is the most serious; unchecked claims to clients next; internal use of public data and grammar help are low risk."
+    }
+  },
+  {
+    "id": "bd-ai-ethics-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Decide on disclosure for AI-generated media.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A colleague wants to send prospects AI-generated personalised videos in which an avatar of them speaks each prospect's name, without saying it is AI-generated.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the right approach?",
+          "options": [
+            "Disclose that the video is AI-generated and check the tool is approved by policy",
+            "Send them without disclosure",
+            "Claim each video was recorded personally",
+            "Use a stranger's likeness instead"
+          ],
+          "correctIndex": 0,
+          "explanation": "Presenting synthetic media as personally recorded misleads prospects."
+        },
+        {
+          "id": "s2",
+          "question": "A prospect replies that they feel deceived by an earlier undisclosed video. What do you do?",
+          "options": [
+            "Defend it as standard practice",
+            "Apologise, explain plainly, and stop undisclosed use",
+            "Ignore the reply",
+            "Deny it was AI"
+          ],
+          "correctIndex": 1,
+          "explanation": "Own it and fix the practice."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-ethics-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Measure the accuracy risk of AI-drafted outreach.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You audited 200 AI-drafted emails and found 14 with a factual error. The team sends 3,000 such emails a month. Your target is an error rate below 1%.",
+      "table": null,
+      "fields": [
+        {
+          "id": "rate",
+          "label": "Error rate found",
+          "unit": "%",
+          "answer": 7,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wrong",
+          "label": "Expected emails with errors per month",
+          "unit": "",
+          "answer": 210,
+          "tolerance": 0.5
+        },
+        {
+          "id": "max",
+          "label": "Maximum emails with errors per month to meet the target",
+          "unit": "",
+          "answer": 30,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Rate = 14 ÷ 200 = 7%. Expected errors = 3,000 × 0.07 = 210 a month. The target allows fewer than 30, so the checking process must improve before scaling."
+    }
+  },
+  {
+    "id": "bd-ai-ethics-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Set rules for AI use in a BD team.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are writing your BD team's AI-use guidelines.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which rule matters most?",
+          "options": [
+            "Use AI for everything to save time",
+            "Never mention AI to anyone",
+            "Only senior reps may use AI",
+            "The sender owns accuracy: every fact, number and claim is checked before it reaches a client"
+          ],
+          "correctIndex": 3,
+          "explanation": "Accountability for accuracy is the foundation."
+        },
+        {
+          "id": "s2",
+          "question": "What should the guidelines say about client data?",
+          "options": [
+            "Which tools are approved for which data, and that confidential data stays out of unapproved tools",
+            "Any tool is fine if it is popular",
+            "Client data can go anywhere for drafts",
+            "Nothing; it is IT's job"
+          ],
+          "correctIndex": 0,
+          "explanation": "Clear data rules prevent the most serious harm."
+        },
+        {
+          "id": "s3",
+          "question": "How should the team handle a client's request not to use AI on their account?",
+          "options": [
+            "Agree and forget",
+            "Record it in the CRM and honour it across the team",
+            "Ignore it if AI saves time",
+            "Ask the client to reconsider every month"
+          ],
+          "correctIndex": 1,
+          "explanation": "Client preferences must be visible to everyone who works on the account."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-ethics-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Who is responsible for a false claim in an AI-drafted email sent to a prospect?",
+    "mcq": {
+      "options": [
+        "The AI tool's vendor",
+        "The person who sent it",
+        "Nobody, since AI wrote it",
+        "The prospect, for believing it"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI is a tool; the sender owns what goes out.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-ethics-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is a \"hallucination\" in the context of AI tools used in sales?",
+    "mcq": {
+      "options": [
+        "A slow response from the tool",
+        "An overly long answer",
+        "A confident-sounding statement that is false or unsupported",
+        "A spelling error"
+      ],
+      "correctIndex": 2,
+      "explanation": "Hallucinations are why every fact, name and number from AI needs verification.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-ethics-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-ethics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A rep wants to upload a prospect list with personal data to a new, unapproved AI tool to save time. What is the right call?",
+    "mcq": {
+      "options": [
+        "Go ahead if it saves time",
+        "Upload only half the list",
+        "Upload it and delete it afterwards",
+        "Stop until the tool is approved under data-protection policy"
+      ],
+      "correctIndex": 3,
+      "explanation": "Personal data processing needs an approved tool and lawful basis; speed is not a reason to skip it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

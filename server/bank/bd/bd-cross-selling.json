@@ -1,0 +1,307 @@
+[
+  {
+    "id": "bd-cross-selling-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank cross-sell opportunities for one client.",
+    "task": {
+      "kind": "rank",
+      "prompt": "You built a web booking platform for a fitness chain. Rank these cross-sell opportunities from strongest to weakest.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "A redesign of their corporate brochure site, never mentioned"
+        },
+        {
+          "id": "i1",
+          "label": "Native mobile app their members keep asking for in reviews"
+        },
+        {
+          "id": "i2",
+          "label": "Automated testing to cut the regressions they have complained about"
+        },
+        {
+          "id": "i3",
+          "label": "A data dashboard for their head office, mentioned once in passing"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Strength comes from evidence of need: user demand and stated pain beat passing mentions and unrequested ideas."
+    }
+  },
+  {
+    "id": "bd-cross-selling-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Estimate revenue from cross-selling a maintenance plan.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You have 30 clients who had projects built but no maintenance plan. You expect 20% to take a $1,500 a month plan.",
+      "table": null,
+      "fields": [
+        {
+          "id": "clients",
+          "label": "Clients expected to adopt",
+          "unit": "",
+          "answer": 6,
+          "tolerance": 0.01
+        },
+        {
+          "id": "rev",
+          "label": "Annual revenue from those plans",
+          "unit": "$",
+          "answer": 108000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "30 × 0.2 = 6 clients × $1,500 × 12 = $108000 a year of recurring revenue."
+    }
+  },
+  {
+    "id": "bd-cross-selling-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this cross-sell plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this cross-sell plan that are risky or poorly thought through.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Target: clients whose apps launched more than 6 months ago without a maintenance plan.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Offer: an AI chatbot to every client, regardless of their business.",
+          "issue": "One-size-fits-all offers ignore client needs; base cross-sells on each client's situation."
+        },
+        {
+          "id": "p3",
+          "text": "Promise delivery in 2 weeks; the AI team is fully booked until next quarter.",
+          "issue": "Selling what delivery cannot staff creates a failure you caused."
+        },
+        {
+          "id": "p4",
+          "text": "Account managers introduce the offer in regular check-ins.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Each pitch includes a short example from a similar client.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Skip clients with open complaints? No, pitch them too.",
+          "issue": "Clients with open problems should have them fixed before being offered more."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-cross-selling-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Cross-sell a service that needs a different team.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your mobile-app client wants an AI recommendation engine. Your AI specialists are fewer and their availability is limited.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Before proposing, what do you do?",
+          "options": [
+            "Propose immediately with your usual timeline",
+            "Promise the app team can learn it",
+            "Check scope, availability and fit with the AI lead and confirm a realistic start date",
+            "Subcontract it without telling the client"
+          ],
+          "correctIndex": 2,
+          "explanation": "A cross-sell is only good if you can deliver it well."
+        },
+        {
+          "id": "s2",
+          "question": "The AI team can start in 8 weeks. The client wants to start now. What do you say?",
+          "options": [
+            "Promise to start now anyway",
+            "Lose the deal rather than discuss timing",
+            "Start with the mobile team and swap later",
+            "Be honest about the start date and suggest preparatory work, such as data readiness, in the meantime"
+          ],
+          "correctIndex": 3,
+          "explanation": "Honest timing plus useful interim work keeps the deal and the trust."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-cross-selling-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Cross-sell where another vendor is already present.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your client uses another vendor for QA, and you notice frequent bugs reaching production.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you raise it?",
+          "options": [
+            "Tell them the other vendor is incompetent",
+            "Share the defect data neutrally and ask how they would like to improve it, without attacking the other vendor",
+            "Ignore it",
+            "Fix the bugs secretly and bill for it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Lead with data and the client's goal; criticising another supplier usually backfires."
+        },
+        {
+          "id": "s2",
+          "question": "They ask for a proposal. What should it include?",
+          "options": [
+            "A demand to replace the vendor immediately",
+            "Only your hourly rates",
+            "A measurable goal (for example, fewer production defects), a pilot scope and how you would work alongside existing vendors",
+            "A generic QA brochure"
+          ],
+          "correctIndex": 2,
+          "explanation": "A pilot with a measurable goal lets the client compare fairly and lowers the risk of switching."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-cross-selling-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Measure service penetration across accounts.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You have 40 active accounts. 12 buy two or more of your services. Your goal is for 45% of accounts to buy two or more.",
+      "table": null,
+      "fields": [
+        {
+          "id": "now",
+          "label": "Current share buying two or more services",
+          "unit": "%",
+          "answer": 30,
+          "tolerance": 0.1
+        },
+        {
+          "id": "need",
+          "label": "Additional accounts needed to reach 45%",
+          "unit": "",
+          "answer": 6,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "12 ÷ 40 = 30%. 45% of 40 = 18 accounts, so 6 more. Multi-service clients tend to stay longer, which is why this metric matters."
+    }
+  },
+  {
+    "id": "bd-cross-selling-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which is a cross-sell?",
+    "mcq": {
+      "options": [
+        "Offering ongoing QA automation to a client you built an app for",
+        "Moving a client to a bigger tier of the same retainer",
+        "Renewing an existing contract",
+        "Discounting a renewal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cross-selling adds a different service; moving up a tier of the same one is an upsell.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-cross-selling-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why do clients who buy several services from you tend to stay longer?",
+    "mcq": {
+      "options": [
+        "Contracts force them to stay",
+        "You are more embedded in their work and deliver more value, so switching is harder and less attractive",
+        "They forget to cancel",
+        "They get automatic discounts"
+      ],
+      "correctIndex": 1,
+      "explanation": "Breadth of relationship increases both value and switching cost.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-cross-selling-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-cross-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Who should be involved before you cross-sell a new specialist service?",
+    "mcq": {
+      "options": [
+        "Only the client",
+        "The delivery lead for that service, to confirm fit and capacity",
+        "Only finance",
+        "Nobody; the account manager decides"
+      ],
+      "correctIndex": 1,
+      "explanation": "Selling capacity you do not have damages the account you were trying to grow.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

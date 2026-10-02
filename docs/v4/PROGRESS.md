@@ -42,11 +42,11 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 ## Phase 5: Question bank
 - [x] 5.1 question_bank table + migration
 - [x] 5.2 Deterministic assembler (no LLM)
-- [ ] 5.3 Engineering seed (subagents) + sandbox validation
+- [x] 5.3 Engineering seed (subagents) + sandbox validation
 - [x] 5.4 Gap-fill background job
 - [x] 5.5 /admin/question-bank
 - [x] 5.6 Auto-retire by stats
-- [ ] 5.7 Checkpoint + commit `feat(v4-p5)`
+- [x] 5.7 Checkpoint + commit `feat(v4-p5)`
 
 ## Phase 6: AI cost control
 - [x] 6.1 server/ai/router with task types + admin-configurable models
@@ -101,3 +101,4 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - Server status (mid-run): v4 engine, bank, router/batches/budget, department-aware path (D6/D7), bulk user actions and anonymised deletion are implemented with tests. Client work in flight: v4 assessment UI + task components + proctoring (4.4, 4.7, 4.8, 4.9), admin bank/AI-usage/routing pages (5.5, 6.5 UI). Bank seeding: engineering 27 skills, PM 42+ skills, BD 37+ skills validated so far.
 - Course generation is still synchronous per lesson (routed, capped, cached); only bank fills use the Batch API. See RESULTS.md for the cost consequence.
 - P4 committed: v4 sheet UI (navigator, one clock, Monaco + Run x3, runnable MCQ snippets, task components, "I don't know yet"), Monaco-aware proctoring whitelist with tests, report by skill. The same commit carries the server work already done for P5 (bank admin API, stats, fill job), P6 (router, batches, budget, usage), P8 (department-aware parts, catalog attach) and P9 (bulk actions, anonymised deletion), plus the admin bank/usage/routing pages and the PM/BD curricula; the per-phase commits that follow add what remains of each.
+- P5 committed: validated seed bank — engineering 37 skills (core + Java/Dart), PM all 85 skills (775 items), BD all 78 skills (707 items). Java grading retries a run that timed out with no output (busy-runner JVM start). A further 24 engineering major-stack skills are being seeded and land with Phase 7/10.

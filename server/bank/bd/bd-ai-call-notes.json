@@ -1,0 +1,317 @@
+[
+  {
+    "id": "bd-ai-call-notes-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Get consent to record a sales call.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You use an AI note-taker that records and transcribes calls.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do at the start of the call?",
+          "options": [
+            "Record without mentioning it",
+            "Tell the client the call will be recorded for notes, and ask if that is OK",
+            "Mention it at the end",
+            "Only tell them if they ask"
+          ],
+          "correctIndex": 1,
+          "explanation": "Ask permission before recording; follow your company's policy and local rules."
+        },
+        {
+          "id": "s2",
+          "question": "The client says they would rather not be recorded. What do you do?",
+          "options": [
+            "Keep recording quietly",
+            "End the call",
+            "Turn the recorder off and take notes by hand",
+            "Record only your own voice"
+          ],
+          "correctIndex": 2,
+          "explanation": "Respect the choice; consent is the client's to give."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the AI call-notes workflow.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for using AI call notes, first at the top.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Record and transcribe the call"
+        },
+        {
+          "id": "i3",
+          "label": "Generate the AI summary"
+        },
+        {
+          "id": "i4",
+          "label": "Check the summary against what was actually said"
+        },
+        {
+          "id": "i5",
+          "label": "Update the CRM fields and next step"
+        },
+        {
+          "id": "i6",
+          "label": "Send the client a short recap"
+        },
+        {
+          "id": "i1",
+          "label": "Get the client's consent to record"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "Consent first, then capture, summarise, check, record and follow up. Checking before the CRM update stops errors spreading."
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Work out the cost of an AI notes tool.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An AI note-taking tool costs $20 per user per month. Your team has 6 reps.",
+      "table": null,
+      "fields": [
+        {
+          "id": "monthly",
+          "label": "Monthly cost",
+          "unit": "$",
+          "answer": 120,
+          "tolerance": 0.5
+        },
+        {
+          "id": "annual",
+          "label": "Annual cost",
+          "unit": "$",
+          "answer": 1440,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "6 × $20 = $120 a month; × 12 = $1,440 a year."
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the errors in this AI call summary.",
+    "task": {
+      "kind": "spot",
+      "prompt": "You remember the call clearly: the client said budget is \"around $40–50k, pending CFO approval\" and asked for a proposal by Friday. Mark the lines in the AI summary that are wrong or should not go into the CRM.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client: operations director at a 3-site bakery chain.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Budget: $50,000 approved.",
+          "issue": "Wrong: budget is a $40–50k range and still needs CFO approval."
+        },
+        {
+          "id": "p3",
+          "text": "Next step: proposal by Friday.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Client agreed to sign next week.",
+          "issue": "Invented commitment; nothing like this was said."
+        },
+        {
+          "id": "p5",
+          "text": "Client mentioned a recent health problem that delayed the project.",
+          "issue": "Sensitive personal information that does not belong in CRM notes."
+        },
+        {
+          "id": "p6",
+          "text": "Pain point: orders taken by phone cause frequent errors.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Work out the time AI notes save.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Writing call notes and updating the CRM used to take 15 minutes per call. With AI notes plus a check, it takes 5 minutes. You run 25 calls a week.",
+      "table": null,
+      "fields": [
+        {
+          "id": "min",
+          "label": "Minutes saved per week",
+          "unit": "min",
+          "answer": 250,
+          "tolerance": 1
+        },
+        {
+          "id": "hours",
+          "label": "Hours saved per week",
+          "unit": "h",
+          "answer": 4.17,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "(15 − 5) × 25 = 250 minutes ≈ 4.17 hours a week."
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Correct an AI summary before updating the CRM.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The AI summary says the client \"approved a $50,000 budget\". You recall they said \"around $40–50k, but our CFO has to approve\".",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you record in the CRM?",
+          "options": [
+            "$50,000 approved, as in the summary",
+            "Nothing about budget",
+            "Budget range $40–50k, pending CFO approval",
+            "$45,000 approved"
+          ],
+          "correctIndex": 2,
+          "explanation": "Record what was actually said; the CRM drives forecasts."
+        },
+        {
+          "id": "s2",
+          "question": "How should the deal stage reflect this?",
+          "options": [
+            "Move it to commit",
+            "Mark it closed won",
+            "Delete the deal",
+            "Keep it before \"budget confirmed\" until the CFO approves"
+          ],
+          "correctIndex": 3,
+          "explanation": "Stages should follow evidence, not an optimistic summary."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Before recording a sales call with an AI note-taker, what must you do?",
+    "mcq": {
+      "options": [
+        "Nothing, if the tool is approved",
+        "Tell them afterwards",
+        "Ask the participants for permission",
+        "Only inform your manager"
+      ],
+      "correctIndex": 2,
+      "explanation": "Recording without consent breaks trust and may break rules; always ask first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What should you do with an AI-generated call summary before saving it to the CRM?",
+    "mcq": {
+      "options": [
+        "Save it unchanged",
+        "Delete it",
+        "Forward it to the client unchanged",
+        "Read it and correct anything that does not match what was said"
+      ],
+      "correctIndex": 3,
+      "explanation": "AI summaries can misattribute or invent details; you own the accuracy of the record.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-call-notes-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-call-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The AI summary includes a client's comment about a family illness. What should you do?",
+    "mcq": {
+      "options": [
+        "Keep it to show empathy later",
+        "Highlight it for the team",
+        "Add more detail",
+        "Remove it; personal sensitive information does not belong in the CRM"
+      ],
+      "correctIndex": 3,
+      "explanation": "Only store business-relevant information; sensitive personal details should stay out.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

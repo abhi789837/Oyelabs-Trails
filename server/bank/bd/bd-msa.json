@@ -1,0 +1,327 @@
+[
+  {
+    "id": "bd-msa-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the clauses to flag to counsel in this MSA summary.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A client sent their MSA. You are not reviewing it legally, but you must flag clauses that need counsel's attention before you go further. Mark them.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Each project is defined in a separate SOW under this MSA.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The supplier's liability is unlimited for any claim.",
+          "issue": "Unlimited liability is a major risk; flag to counsel."
+        },
+        {
+          "id": "p3",
+          "text": "Invoices are payable 120 days after receipt.",
+          "issue": "Unusually long payment terms are a commercial and cash-flow issue to raise with leadership and counsel."
+        },
+        {
+          "id": "p4",
+          "text": "The client may terminate at any time without paying for work already performed.",
+          "issue": "Termination without payment for work done needs counsel's review."
+        },
+        {
+          "id": "p5",
+          "text": "All intellectual property, including the supplier's pre-existing tools, transfers to the client.",
+          "issue": "Transfer of pre-existing IP affects reuse across clients; flag to counsel."
+        },
+        {
+          "id": "p6",
+          "text": "Either party may terminate with 30 days' written notice.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Notices must be sent to the addresses listed in Schedule 1.",
+          "issue": null
+        },
+        {
+          "id": "p8",
+          "text": "The agreement is governed by the law stated in clause 18.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-msa-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the MSA process.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for getting an MSA and first SOW signed, first at the top.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Counsel reviews legal points; BD handles commercial points"
+        },
+        {
+          "id": "i5",
+          "label": "Authorised signatories sign the MSA"
+        },
+        {
+          "id": "i6",
+          "label": "Sign the first SOW under the MSA"
+        },
+        {
+          "id": "i1",
+          "label": "Agree the commercial terms with the client"
+        },
+        {
+          "id": "i2",
+          "label": "Send your standard MSA, or receive theirs"
+        },
+        {
+          "id": "i3",
+          "label": "Client and agency exchange redlines"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "Commercial agreement first, then the legal framework with counsel, then the project-specific SOW under it."
+    }
+  },
+  {
+    "id": "bd-msa-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle a client's MSA under time pressure.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client sends their own 25-page MSA and says: \"It's standard, just sign it today so we can start Monday.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Send it to counsel with the commercial context and a realistic review timeline, and tell the client",
+            "Sign it; they said it is standard",
+            "Skim it and sign if nothing looks odd",
+            "Rewrite the clauses you dislike yourself"
+          ],
+          "correctIndex": 0,
+          "explanation": "BD does not sign or interpret legal terms on its own; counsel reviews, and you manage the timeline with the client."
+        },
+        {
+          "id": "s2",
+          "question": "The client asks you to explain what the indemnity clause means for them. What do you say?",
+          "options": [
+            "Your best guess",
+            "That you will get the right answer from your counsel, rather than interpreting it yourself",
+            "That indemnity clauses are meaningless",
+            "That it only matters in court"
+          ],
+          "correctIndex": 1,
+          "explanation": "Explaining legal effect is legal advice; route it to counsel."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-msa-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Understand a liability cap in numbers.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your counsel-approved MSA caps liability at the fees paid in the 12 months before a claim. A client pays $30,000 a month and a claim arises at the end of month 8. The client proposes instead a cap of 1× the SOW value, which is $150,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "cap",
+          "label": "Cap under your MSA at that point",
+          "unit": "$",
+          "answer": 240000,
+          "tolerance": 1
+        },
+        {
+          "id": "diff",
+          "label": "Difference between your cap and the client's proposal",
+          "unit": "$",
+          "answer": 90000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Fees paid so far = 8 × 30,000 = $240,000 (less than 12 months have passed). The client's proposal is $150,000, $90,000 lower. BD can work out the numbers; whether either cap is acceptable is for counsel and leadership."
+    }
+  },
+  {
+    "id": "bd-msa-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Decide what goes in the MSA and what goes in the SOW.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A long-term client asks to add a new project's pricing, timeline and deliverables into the MSA itself.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Where should these go?",
+          "options": [
+            "Into the MSA, replacing earlier terms",
+            "In an email",
+            "In a new SOW under the existing MSA",
+            "In the invoice"
+          ],
+          "correctIndex": 2,
+          "explanation": "The MSA holds the terms that govern every project; each project's specifics belong in its SOW."
+        },
+        {
+          "id": "s2",
+          "question": "The client also wants to change the MSA's payment terms for all future work. What do you do?",
+          "options": [
+            "Agree by email",
+            "Edit the MSA document yourself",
+            "Say MSAs can never change",
+            "Discuss the commercial request with leadership and have counsel handle any amendment"
+          ],
+          "correctIndex": 3,
+          "explanation": "Changes to the master terms need a proper amendment through counsel."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-msa-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Estimate the cash cost of longer payment terms.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client wants net-90 terms instead of your standard net-30 on a $50,000 invoice. Your business funds working capital at about 1% a month.",
+      "table": null,
+      "fields": [
+        {
+          "id": "months",
+          "label": "Extra months you wait for payment",
+          "unit": "months",
+          "answer": 2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "cost",
+          "label": "Approximate financing cost of the longer terms",
+          "unit": "$",
+          "answer": 1000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "90 − 30 = 60 days, about 2 months. Cost ≈ 50,000 × 1% × 2 = $1,000. Longer terms are a concession with a real cost; trade them rather than give them."
+    }
+  },
+  {
+    "id": "bd-msa-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the difference between an MSA and an SOW?",
+    "mcq": {
+      "options": [
+        "They are the same document",
+        "The MSA sets the general terms for the relationship; each SOW defines a specific project's scope, price and timeline",
+        "The SOW overrides the MSA in every case",
+        "The MSA is only for fixed-price work"
+      ],
+      "correctIndex": 1,
+      "explanation": "Agreeing the MSA once makes later projects faster, because each one needs only a new SOW.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-msa-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client's MSA includes a clause you do not understand. What is BD's role?",
+    "mcq": {
+      "options": [
+        "Interpret it as best you can",
+        "Delete it before signing",
+        "Flag it to counsel with the commercial context and let counsel advise",
+        "Ignore it if the deal is small"
+      ],
+      "correctIndex": 2,
+      "explanation": "BD manages the commercial conversation; counsel advises on legal meaning and risk.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-msa-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-msa",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which MSA topic is commercial, and so usually negotiated by BD with leadership, rather than purely legal?",
+    "mcq": {
+      "options": [
+        "The governing law",
+        "The wording of the indemnity clause",
+        "The limitation of liability wording",
+        "Payment terms and invoicing schedule"
+      ],
+      "correctIndex": 3,
+      "explanation": "BD can negotiate commercial points like payment timing; legal wording stays with counsel.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

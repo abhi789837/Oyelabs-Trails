@@ -1,0 +1,321 @@
+[
+  {
+    "id": "bd-pricing-strategy-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Compare a value-based price with a cost-plus price.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An automation project will save a client about $400,000 a year. Delivery cost is $50,000. Your cost-plus policy targets a 40% gross margin. A value-based approach would price at 25% of the first year's saving.",
+      "table": null,
+      "fields": [
+        {
+          "id": "cp",
+          "label": "Cost-plus price at a 40% margin",
+          "unit": "$",
+          "answer": 83333.33,
+          "tolerance": 1
+        },
+        {
+          "id": "vb",
+          "label": "Value-based price",
+          "unit": "$",
+          "answer": 100000,
+          "tolerance": 1
+        },
+        {
+          "id": "vbm",
+          "label": "Gross margin at the value-based price",
+          "unit": "%",
+          "answer": 50,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Cost-plus = 50,000 ÷ 0.6 = $83333.33. Value-based = 25% × 400,000 = $100000, a 50% margin, while the client still keeps three-quarters of the first year's value. Value pricing needs a credible, client-agreed estimate of the value."
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Position price in a market racing to the bottom.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "In a segment you target, several competitors quote 30–40% below your rates. Your win rate there has fallen.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best strategic response?",
+          "options": [
+            "Look at win/loss data to see where you lose, then sharpen positioning on outcomes and offer a lower-scope entry option",
+            "Cut rates across the board by 35%",
+            "Exit the segment immediately",
+            "Match each competitor quote deal by deal"
+          ],
+          "correctIndex": 0,
+          "explanation": "Blanket cuts destroy margin everywhere; understand why you lose and compete on value with a scoped entry point."
+        },
+        {
+          "id": "s2",
+          "question": "Data shows you still win when clients care about long-term maintenance. What follows?",
+          "options": [
+            "Ignore the finding",
+            "Target and message to clients for whom long-term quality matters, and qualify out pure price shoppers earlier",
+            "Lower prices for those clients too",
+            "Stop offering maintenance"
+          ],
+          "correctIndex": 1,
+          "explanation": "Pricing strategy includes choosing which buyers to serve."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank pricing approaches by value captured.",
+    "task": {
+      "kind": "rank",
+      "prompt": "For a project with a clearly quantified, client-agreed ROI, rank these pricing approaches from most to least value captured by the agency.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Matching the lowest competitor quote"
+        },
+        {
+          "id": "i1",
+          "label": "Value-based price tied to the agreed ROI"
+        },
+        {
+          "id": "i2",
+          "label": "Tiered options (good, better, best) anchored on value"
+        },
+        {
+          "id": "i3",
+          "label": "Cost-plus at your standard margin"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "When value is clear and agreed, pricing from it captures the most. Cost-plus ignores value; matching the lowest bid gives away both value and margin."
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this discounting policy.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this draft discounting policy that will hurt pricing discipline.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Any discount needs a recorded reason and something received in return.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Sales reps may give up to 25% off without approval.",
+          "issue": "A high self-approved limit invites routine discounting; approval levels should scale with size."
+        },
+        {
+          "id": "p3",
+          "text": "Discounts above 10% need the head of sales; above 15%, the CEO.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "End-of-quarter discounts of 20% are automatically available to close deals.",
+          "issue": "Predictable quarter-end discounts teach clients to wait."
+        },
+        {
+          "id": "p5",
+          "text": "Discounts are applied to the rate card, never to estimates.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Discount levels are not tracked after the deal closes.",
+          "issue": "Without tracking, you cannot see how discounting affects margin."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Work out how much volume a price increase can afford to lose.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You plan to raise your hourly rate from $50 to $55. Your delivery cost is $32 an hour.",
+      "table": null,
+      "fields": [
+        {
+          "id": "before",
+          "label": "Gross profit per hour before",
+          "unit": "$",
+          "answer": 18,
+          "tolerance": 0.01
+        },
+        {
+          "id": "after",
+          "label": "Gross profit per hour after",
+          "unit": "$",
+          "answer": 23,
+          "tolerance": 0.01
+        },
+        {
+          "id": "loss",
+          "label": "Maximum share of hours you can lose and keep the same gross profit",
+          "unit": "%",
+          "answer": 21.74,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "Profit per hour rises from $18 to $23. You keep the same profit at 78.26% of today's hours (18 ÷ 23), so you can lose up to 21.74% of volume. A 10% price rise rarely loses that much."
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Choose how to price AI usage in a proposal.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client wants a fixed price for an AI support assistant, including model API costs, but cannot predict usage.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which pricing structure best balances risk?",
+          "options": [
+            "Fixed price for the build; AI usage billed as pass-through or in usage tiers with caps",
+            "One fixed price covering everything for three years",
+            "Free AI usage to win the deal",
+            "Usage billed at a large unexplained markup"
+          ],
+          "correctIndex": 0,
+          "explanation": "Usage-driven costs belong in usage-based pricing; a fixed price turns your margin into a bet on adoption."
+        },
+        {
+          "id": "s2",
+          "question": "What must the proposal state for this to work?",
+          "options": [
+            "Only the model name",
+            "The usage assumptions, how usage is measured and reported, and what happens above the tier",
+            "Nothing; keep it simple",
+            "That costs will never change"
+          ],
+          "correctIndex": 1,
+          "explanation": "Written assumptions and reporting turn later conversations into a reference to what was agreed."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is value-based pricing?",
+    "mcq": {
+      "options": [
+        "Pricing at cost plus a fixed margin",
+        "Charging whatever competitors charge",
+        "Setting the price from the measurable value to the client rather than from your cost",
+        "Giving discounts to high-value clients"
+      ],
+      "correctIndex": 2,
+      "explanation": "It works when value is quantified and agreed with the client.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why offer three tiered options (for example good, better, best) in a proposal?",
+    "mcq": {
+      "options": [
+        "To confuse the client",
+        "Because clients always choose the cheapest",
+        "To avoid writing a scope",
+        "They anchor the conversation on value and let the client choose scope rather than haggle on price"
+      ],
+      "correctIndex": 3,
+      "explanation": "Options shift the question from \"whether and how much\" to \"which one\", and protect your rate.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-strategy-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-strategy",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the main risk of frequent ad-hoc discounting?",
+    "mcq": {
+      "options": [
+        "It erodes margins and teaches clients your list price is negotiable",
+        "It shortens sales cycles too much",
+        "It makes invoices more complex",
+        "It increases win rates too much"
+      ],
+      "correctIndex": 0,
+      "explanation": "Discount discipline protects both margin and price credibility.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

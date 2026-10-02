@@ -1,0 +1,319 @@
+[
+  {
+    "id": "bd-pricing-dedicated-team-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Price a dedicated team per month.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client wants a dedicated team: 2 developers at $4,200 a month each, 1 QA engineer at $3,000 a month and a project manager at half time (full-time rate $5,000 a month). The engagement runs 6 months.",
+      "table": null,
+      "fields": [
+        {
+          "id": "monthly",
+          "label": "Monthly fee",
+          "unit": "$",
+          "answer": 13900,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total over 6 months",
+          "unit": "$",
+          "answer": 83400,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Monthly = 8,400 + 3,000 + 2,500 = $13900. Six months = $83400."
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Check the margin on a dedicated team and on a discount request.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The team above bills $13,900 a month. Monthly costs: each developer $2,600, QA $1,800, PM $3,400 full-time (half allocated). The client asks for 10% off. Round percentages to two decimals.",
+      "table": null,
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Monthly delivery cost",
+          "unit": "$",
+          "answer": 8700,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Gross margin at full price",
+          "unit": "%",
+          "answer": 37.41,
+          "tolerance": 0.01
+        },
+        {
+          "id": "margin2",
+          "label": "Gross margin after a 10% discount",
+          "unit": "%",
+          "answer": 30.46,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Cost = 5,200 + 1,800 + 1,700 = $8700. Margin = (13,900 − 8700) ÷ 13,900 = 37.41%. After 10% off, revenue is $12510 and margin 30.46%: a 10% discount removes about a fifth of the margin."
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Handle a request to replace a team member.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Two months into a dedicated-team engagement, the client says one developer is too slow and asks for a replacement.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Replace the developer immediately",
+            "Defend the developer and decline",
+            "Ask for specific examples and review the developer's work with your delivery lead",
+            "Offer a discount instead"
+          ],
+          "correctIndex": 2,
+          "explanation": "Understand the issue first; it may be skills, onboarding, or unclear priorities on the client side."
+        },
+        {
+          "id": "s2",
+          "question": "The review shows a real skills mismatch for the new React Native work. Next?",
+          "options": [
+            "Swap the developer overnight with no handover",
+            "Keep the developer and say nothing",
+            "Charge the client for the replacement's onboarding without discussing it",
+            "Agree a replacement with an overlap period for handover, as the contract allows"
+          ],
+          "correctIndex": 3,
+          "explanation": "A planned handover protects the client's velocity and the product's knowledge."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this dedicated-team proposal.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that do not belong in, or undermine, a dedicated-team proposal.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Monthly fee per role, invoiced at the start of each month.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The client's product owner sets the backlog priorities.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "We guarantee all roadmap features will be delivered by March.",
+          "issue": "A capacity model sells a team's time, not a fixed outcome; this guarantee turns it into an unpriced fixed bid."
+        },
+        {
+          "id": "p4",
+          "text": "We may replace team members at any time without notice.",
+          "issue": "Unannounced swaps break continuity; replacements need notice and a handover."
+        },
+        {
+          "id": "p5",
+          "text": "Team size can change with 30 days' notice.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The rate includes unlimited overtime.",
+          "issue": "Unlimited overtime is an open-ended cost and a burnout risk."
+        },
+        {
+          "id": "p7",
+          "text": "Weekly demo and monthly capacity review.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Rank clients by how well a dedicated team fits them.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these clients from best fit for a dedicated team to worst fit.",
+      "items": [
+        {
+          "id": "i3",
+          "label": "Startup that wants a fixed 8-week MVP with a set budget"
+        },
+        {
+          "id": "i4",
+          "label": "Company that needs one bug fixed"
+        },
+        {
+          "id": "i1",
+          "label": "Funded product company with a 12-month roadmap and its own product owner"
+        },
+        {
+          "id": "i2",
+          "label": "Enterprise that needs to extend its team for a 6-month platform build"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Dedicated teams suit long, evolving work with a client-side owner. Short, fixed-scope work is better as a project."
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Handle a sudden scale-down request.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client with 5 dedicated developers says funding is tight and wants to drop to 2 developers from next week. The contract requires 30 days' notice to reduce the team.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best first response?",
+          "options": [
+            "Acknowledge their situation, refer to the 30-day notice, and look at a phased reduction with them",
+            "Insist on the full 30 days with no discussion",
+            "Cut to 2 developers next week as asked",
+            "Threaten to stop work"
+          ],
+          "correctIndex": 0,
+          "explanation": "The notice period protects your bench cost; a phased plan shows you understand their situation."
+        },
+        {
+          "id": "s2",
+          "question": "Your three released developers have no other project yet. What should you do internally?",
+          "options": [
+            "Wait until the notice period ends",
+            "Tell resourcing now so they can be placed, and use the notice period to plan",
+            "Keep them on the client's project unbilled",
+            "Ask the client to pay for them anyway after notice"
+          ],
+          "correctIndex": 1,
+          "explanation": "Bench cost is the main risk of this model. Early warning to resourcing limits it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In a dedicated-team model, who usually prioritises the backlog?",
+    "mcq": {
+      "options": [
+        "The client, typically through their product owner",
+        "The agency's sales rep",
+        "Each developer individually",
+        "Whoever is senior on the team that week"
+      ],
+      "correctIndex": 0,
+      "explanation": "The client buys the team's capacity and directs it; the agency supplies, manages and keeps the team healthy.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How is a dedicated team usually billed?",
+    "mcq": {
+      "options": [
+        "A single fixed price for the finished product",
+        "A monthly fee per team member, based on role",
+        "Per feature delivered",
+        "Per bug fixed"
+      ],
+      "correctIndex": 1,
+      "explanation": "It is a capacity model: the client pays for people's time each month, not for a defined output.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-dedicated-team-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-dedicated-team",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the main financial risk to the agency in a dedicated-team model?",
+    "mcq": {
+      "options": [
+        "Scope creep on a fixed price",
+        "Bench cost when the client reduces the team at short notice",
+        "The client paying too far in advance",
+        "Having too many reports to send"
+      ],
+      "correctIndex": 1,
+      "explanation": "When people are released without notice and there is no next project, the agency pays salaries with no revenue; notice periods exist for this.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

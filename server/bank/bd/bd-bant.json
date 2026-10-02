@@ -1,0 +1,395 @@
+[
+  {
+    "id": "bd-bant-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What does BANT stand for?",
+    "mcq": {
+      "options": [
+        "Budget, Approval, Next steps, Team",
+        "Buyer, Audience, Niche, Target",
+        "Budget, Authority, Need, Timeline",
+        "Business, Account, Negotiation, Terms"
+      ],
+      "correctIndex": 2,
+      "explanation": "BANT is a quick qualification screen: is there money, can this person decide, is there a real need, and is there a date?",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-bant-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A founder says \"We have not set a budget yet, we want to know what it costs.\" How should you treat the B in BANT?",
+    "mcq": {
+      "options": [
+        "Mark budget as confirmed",
+        "Refuse to discuss price until they name a number",
+        "Not as a disqualifier: give a ballpark range and check whether that range is fundable for them",
+        "Disqualify the lead immediately"
+      ],
+      "correctIndex": 2,
+      "explanation": "Buyers rarely know a budget for something new. Anchoring with a range and checking their reaction qualifies budget better than demanding a number.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-bant-m2-3",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "When is BANT a better fit than MEDDPICC?",
+    "mcq": {
+      "options": [
+        "Any deal involving more than one stakeholder",
+        "Only deals in the public sector",
+        "Smaller, transactional deals such as a $10k Upwork project with one decision-maker",
+        "A six-figure enterprise deal with procurement and security review"
+      ],
+      "correctIndex": 2,
+      "explanation": "BANT is fast and fits simple deals. Complex, multi-stakeholder deals need MEDDPICC's depth on decision process, paper process and champions.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-bant-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these inbound leads from most to least qualified using BANT.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these inbound leads from most to least qualified using BANT.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Product manager with a clear need but who says the VP decides and has not been told yet"
+        },
+        {
+          "id": "r4",
+          "label": "Student exploring an idea \"some day\", no budget"
+        },
+        {
+          "id": "r1",
+          "label": "COO with an approved $60k budget, clear process pain, launch needed by Q3"
+        },
+        {
+          "id": "r2",
+          "label": "Founder with a clear need and Q2 deadline, budget not set but reacts well to a $40–60k range"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "All four BANT elements confirmed ranks first; strong need/timeline with a workable budget range is next; no access to authority is weaker; no budget, need urgency or timeline is not qualified."
+    }
+  },
+  {
+    "id": "bd-bant-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the BANT notes in this CRM record that are not real evidence of qualification.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the BANT notes in this CRM record that are not real evidence of qualification.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Budget: CFO confirmed $45k is allocated for this financial year.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Authority: contact seemed senior and confident.",
+          "issue": "An impression, not evidence; confirm who signs and how decisions are made."
+        },
+        {
+          "id": "p3",
+          "text": "Need: manual invoicing takes two staff two days a month; errors delayed three client payments last quarter.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Timeline: \"ASAP\".",
+          "issue": "No date or driving event; ask what happens if it is not live by a specific date."
+        },
+        {
+          "id": "p5",
+          "text": "Next step: technical call with their IT lead booked for Tuesday 10am.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Source: referral from an existing client.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-bant-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A marketing manager from a 200-person retail company books a call about a loyalty app.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A marketing manager from a 200-person retail company books a call about a loyalty app.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Early in the call, how do you check Authority without being blunt?",
+          "options": [
+            "\"Besides you, who else will be involved in choosing a partner and approving the spend?\"",
+            "\"Are you the boss?\"",
+            "Skip it; marketing managers always decide"
+          ],
+          "correctIndex": 0,
+          "explanation": "An open question about the process reveals authority without offending."
+        },
+        {
+          "id": "s2",
+          "question": "She says the CMO decides. What next?",
+          "options": [
+            "End the call",
+            "Ask what the CMO will need to see, and offer to join a call with both of them",
+            "Pitch harder to her"
+          ],
+          "correctIndex": 1,
+          "explanation": "Equip your contact and get access to the decision-maker."
+        },
+        {
+          "id": "s3",
+          "question": "Timeline is \"this year sometime\". How do you firm it up?",
+          "options": [
+            "Write \"this year\" as qualified",
+            "Tell her she must start next week",
+            "Ask whether there is an event driving it, such as a season or campaign launch"
+          ],
+          "correctIndex": 2,
+          "explanation": "A driving event turns a vague timeline into a real one."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-bant-t2-4",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your team scores leads 0–25 on each BANT element (max 100) and only writes full proposals for leads scoring 60 or more. Calculate each lead's score and how many of the three qualify.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your team scores leads 0–25 on each BANT element (max 100) and only writes full proposals for leads scoring 60 or more. Calculate each lead's score and how many of the three qualify.",
+      "table": {
+        "columns": [
+          "Lead",
+          "Budget",
+          "Authority",
+          "Need",
+          "Timeline"
+        ],
+        "rows": [
+          [
+            "A",
+            "20",
+            "15",
+            "25",
+            "10"
+          ],
+          [
+            "B",
+            "10",
+            "10",
+            "20",
+            "15"
+          ],
+          [
+            "C",
+            "25",
+            "20",
+            "15",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Lead A score",
+          "unit": "",
+          "answer": 70,
+          "tolerance": 0
+        },
+        {
+          "id": "b",
+          "label": "Lead B score",
+          "unit": "",
+          "answer": 55,
+          "tolerance": 0
+        },
+        {
+          "id": "c",
+          "label": "Lead C score",
+          "unit": "",
+          "answer": 65,
+          "tolerance": 0
+        },
+        {
+          "id": "n",
+          "label": "Leads that qualify for a full proposal",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "A = 20+15+25+10 = 70; B = 10+10+20+15 = 55; C = 25+20+15+5 = 65. A and C qualify (2 leads)."
+    }
+  },
+  {
+    "id": "bd-bant-t2-5",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "An Upwork client posts a $5k job for a booking feature. On the call they have the budget, decide alone and need it in a month.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "An Upwork client posts a $5k job for a booking feature. On the call they have the budget, decide alone and need it in a month.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which qualification approach fits this deal?",
+          "options": [
+            "A quick BANT check, then move to scope and proposal",
+            "Full MEDDPICC with a mutual action plan",
+            "No qualification at all"
+          ],
+          "correctIndex": 0,
+          "explanation": "A small deal with one decision-maker fits BANT; heavier frameworks waste time."
+        },
+        {
+          "id": "s2",
+          "question": "Need is vague: \"we want online booking\". What do you ask?",
+          "options": [
+            "\"Can you pay upfront?\"",
+            "\"How do bookings happen today, and what goes wrong?\"",
+            "\"What colour should the button be?\""
+          ],
+          "correctIndex": 1,
+          "explanation": "Clarify the real problem so the scope matches the need."
+        },
+        {
+          "id": "s3",
+          "question": "They reveal a partner must approve anything over $3k. What changes?",
+          "options": [
+            "Nothing, they said they decide alone",
+            "Drop the price under $3k",
+            "Authority is not fully confirmed; ask to include the partner before sending the proposal"
+          ],
+          "correctIndex": 2,
+          "explanation": "New information on authority changes the qualification; address it early."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-bant-t2-6",
+    "departmentId": "bd",
+    "skillId": "bd-bant",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A prospect cannot answer every BANT question on the first call. Rank these gaps by how seriously they weaken the deal, most serious first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A prospect cannot answer every BANT question on the first call. Rank these gaps by how seriously they weaken the deal, most serious first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Budget not set, but they react well to a ballpark range"
+        },
+        {
+          "id": "r4",
+          "label": "Timeline loose but there is a trade show in six months"
+        },
+        {
+          "id": "r1",
+          "label": "No real need: they are \"just curious\" about AI"
+        },
+        {
+          "id": "r2",
+          "label": "No access to the person who approves spending"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Without need nothing else matters; without authority you cannot close; an unset budget with a positive reaction is common and workable; a loose timeline with a real event can be firmed up."
+    }
+  }
+]

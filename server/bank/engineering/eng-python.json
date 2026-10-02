@@ -1,0 +1,1966 @@
+[
+  {
+    "id": "eng-python-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `can_vote` so it returns `True` for anyone aged **18 or older**.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "can_vote",
+      "starterCode": "def can_vote(age):\n    return age > 18",
+      "referenceSolution": "def can_vote(age):\n    return age >= 18",
+      "sampleTests": [
+        {
+          "args": [
+            20
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            18
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            17
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            99
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`count_vowels` should count vowels (`a e i o u`) in any case. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "count_vowels",
+      "starterCode": "def count_vowels(s):\n    return sum(1 for c in s if c in \"aeiou\")",
+      "referenceSolution": "def count_vowels(s):\n    return sum(1 for c in s.lower() if c in \"aeiou\")",
+      "sampleTests": [
+        {
+          "args": [
+            "Hello"
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "AEIOU"
+          ],
+          "expected": 5
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "xyz"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "Programming"
+          ],
+          "expected": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix the list comprehension so `evens` returns only the even numbers, in order.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "evens",
+      "starterCode": "def evens(nums):\n    return [n for n in nums if n % 2 == 1]",
+      "referenceSolution": "def evens(nums):\n    return [n for n in nums if n % 2 == 0]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          "expected": [
+            2,
+            4
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              0,
+              -2,
+              3
+            ]
+          ],
+          "expected": [
+            0,
+            -2
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              3,
+              5
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`full_name` gets a dict like `{\"first\": \"Ann\", \"last\": \"Lee\"}`. Return `\"Ann Lee\"`; if `last` is missing or empty, return just the first name.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "full_name",
+      "starterCode": "def full_name(user):\n    return user[\"first\"] + \" \" + user[\"last\"]",
+      "referenceSolution": "def full_name(user):\n    last = user.get(\"last\")\n    if not last:\n        return user[\"first\"]\n    return user[\"first\"] + \" \" + last",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "first": "Ann",
+              "last": "Lee"
+            }
+          ],
+          "expected": "Ann Lee"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "first": "Bo"
+            }
+          ],
+          "expected": "Bo"
+        },
+        {
+          "args": [
+            {
+              "first": "Cy",
+              "last": ""
+            }
+          ],
+          "expected": "Cy"
+        },
+        {
+          "args": [
+            {
+              "first": "Di",
+              "last": "Ng"
+            }
+          ],
+          "expected": "Di Ng"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`word_count` should count words separated by any amount of whitespace. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "word_count",
+      "starterCode": "def word_count(text):\n    return len(text.split(\" \"))",
+      "referenceSolution": "def word_count(text):\n    return len(text.split())",
+      "sampleTests": [
+        {
+          "args": [
+            "a b c"
+          ],
+          "expected": 3
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "  hi   there "
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            "one"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "tab\tand\nnewline"
+          ],
+          "expected": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`clamp` should keep `x` within `lo..hi`. One branch returns the wrong bound — fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "clamp",
+      "starterCode": "def clamp(x, lo, hi):\n    if x < lo:\n        return lo\n    if x > hi:\n        return lo\n    return x",
+      "referenceSolution": "def clamp(x, lo, hi):\n    if x < lo:\n        return lo\n    if x > hi:\n        return hi\n    return x",
+      "sampleTests": [
+        {
+          "args": [
+            5,
+            0,
+            10
+          ],
+          "expected": 5
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            15,
+            0,
+            10
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            -3,
+            0,
+            10
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            10,
+            0,
+            10
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            7,
+            7,
+            7
+          ],
+          "expected": 7
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "3",
+        "1",
+        "[3]",
+        "IndexError"
+      ],
+      "correctIndex": 0,
+      "explanation": "Negative indexes count from the end, so `x[-1]` is the last element, `3`.",
+      "snippet": "x = [1, 2, 3]\nprint(x[-1])",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "3 1",
+        "3.5 1",
+        "3 0",
+        "4 1"
+      ],
+      "correctIndex": 0,
+      "explanation": "`//` is floor division (3) and `%` is the remainder (1). `print` separates arguments with a space.",
+      "snippet": "print(7 // 2, 7 % 2)",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "OYE",
+        "oye",
+        "OYEL",
+        "LABS"
+      ],
+      "correctIndex": 0,
+      "explanation": "`name[:3]` takes the first three characters, `oye`, and `.upper()` returns `OYE`.",
+      "snippet": "name = \"oyelabs\"\nprint(name[:3].upper())",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`last_n` should return the last `n` items. It returns the whole list when `n` is 0. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "last_n",
+      "starterCode": "def last_n(items, n):\n    return items[-n:]",
+      "referenceSolution": "def last_n(items, n):\n    if n <= 0:\n        return []\n    return items[-n:]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            2
+          ],
+          "expected": [
+            3,
+            4
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            5
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            1
+          ],
+          "expected": [
+            "c"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`parse_kv(\"a=1;b=2\")` should return `{\"a\": \"1\", \"b\": \"2\"}`. It crashes on an empty string and on a trailing `;`. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_kv",
+      "starterCode": "def parse_kv(s):\n    return dict(pair.split(\"=\") for pair in s.split(\";\"))",
+      "referenceSolution": "def parse_kv(s):\n    return dict(pair.split(\"=\", 1) for pair in s.split(\";\") if pair)",
+      "sampleTests": [
+        {
+          "args": [
+            "a=1;b=2"
+          ],
+          "expected": {
+            "a": "1",
+            "b": "2"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "x=9;"
+          ],
+          "expected": {
+            "x": "9"
+          }
+        },
+        {
+          "args": [
+            "k=v"
+          ],
+          "expected": {
+            "k": "v"
+          }
+        },
+        {
+          "args": [
+            "a=1;;b=2"
+          ],
+          "expected": {
+            "a": "1",
+            "b": "2"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`dedupe` must remove duplicates but **keep the first-seen order**. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "dedupe",
+      "starterCode": "def dedupe(items):\n    return list(set(items))",
+      "referenceSolution": "def dedupe(items):\n    return list(dict.fromkeys(items))",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              3,
+              1,
+              3,
+              2,
+              1
+            ]
+          ],
+          "expected": [
+            3,
+            1,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "b",
+              "a",
+              "b"
+            ]
+          ],
+          "expected": [
+            "b",
+            "a"
+          ]
+        },
+        {
+          "args": [
+            [
+              5,
+              4,
+              3,
+              2,
+              1,
+              5
+            ]
+          ],
+          "expected": [
+            5,
+            4,
+            3,
+            2,
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              9,
+              9,
+              9
+            ]
+          ],
+          "expected": [
+            9
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`group_by_initial` should map each first letter to **all** words starting with it, in input order. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "group_by_initial",
+      "starterCode": "def group_by_initial(words):\n    groups = {}\n    for w in words:\n        groups[w[0]] = [w]\n    return groups",
+      "referenceSolution": "def group_by_initial(words):\n    groups = {}\n    for w in words:\n        groups.setdefault(w[0], []).append(w)\n    return groups",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "apple",
+              "bean",
+              "avocado"
+            ]
+          ],
+          "expected": {
+            "a": [
+              "apple",
+              "avocado"
+            ],
+            "b": [
+              "bean"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              "kiwi"
+            ]
+          ],
+          "expected": {
+            "k": [
+              "kiwi"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              "fig",
+              "fig",
+              "date"
+            ]
+          ],
+          "expected": {
+            "f": [
+              "fig",
+              "fig"
+            ],
+            "d": [
+              "date"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`safe_int` should return the parsed integer, or `default` when the string is not a valid integer. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "safe_int",
+      "starterCode": "def safe_int(s, default):\n    return int(s)",
+      "referenceSolution": "def safe_int(s, default):\n    try:\n        return int(s)\n    except ValueError:\n        return default",
+      "sampleTests": [
+        {
+          "args": [
+            "42",
+            0
+          ],
+          "expected": 42
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "x",
+            0
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "",
+            -1
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            " 7 ",
+            0
+          ],
+          "expected": 7
+        },
+        {
+          "args": [
+            "-3",
+            0
+          ],
+          "expected": -3
+        },
+        {
+          "args": [
+            "4.5",
+            9
+          ],
+          "expected": 9
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Each cart line has a `price` and an optional `qty` (default 1). Fix `total_price`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "total_price",
+      "starterCode": "def total_price(cart):\n    return sum(item[\"price\"] * item[\"qty\"] for item in cart)",
+      "referenceSolution": "def total_price(cart):\n    return sum(item[\"price\"] * item.get(\"qty\", 1) for item in cart)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "price": 10,
+                "qty": 2
+              },
+              {
+                "price": 5
+              }
+            ]
+          ],
+          "expected": 25
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 3
+              }
+            ]
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 4,
+                "qty": 0
+              },
+              {
+                "price": 1,
+                "qty": 3
+              }
+            ]
+          ],
+          "expected": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "1",
+        "0",
+        "KeyError",
+        "None"
+      ],
+      "correctIndex": 0,
+      "explanation": "`d.get(\"b\", 0)` returns the default `0` for a missing key, then `0 + 1` is `1`.",
+      "snippet": "d = {\"a\": 1}\nprint(d.get(\"b\", 0) + d[\"a\"])",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[3, 1, 2] [1, 2, 3]",
+        "[1, 2, 3] [1, 2, 3]",
+        "[3, 1, 2] None",
+        "None [1, 2, 3]"
+      ],
+      "correctIndex": 0,
+      "explanation": "`sorted()` returns a new list and leaves the original alone. (`nums.sort()` would sort in place and return `None`.)",
+      "snippet": "nums = [3, 1, 2]\ns = sorted(nums)\nprint(nums, s)",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[1, 2, 3]",
+        "[1, 2]",
+        "[3]",
+        "None"
+      ],
+      "correctIndex": 0,
+      "explanation": "`b = a` copies the reference, not the list. Both names point at the same list, so appending through `b` changes `a`.",
+      "snippet": "a = [1, 2]\nb = a\nb.append(3)\nprint(a)",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`top_n` gets `{name: score}`. Return the `n` names with the highest scores, highest first; break ties by name (A–Z).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "top_n",
+      "starterCode": "def top_n(scores, n):\n    return sorted(scores, key=lambda k: scores[k])[:n]",
+      "referenceSolution": "def top_n(scores, n):\n    return sorted(scores, key=lambda k: (-scores[k], k))[:n]",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "ann": 5,
+              "bo": 9,
+              "cy": 7
+            },
+            2
+          ],
+          "expected": [
+            "bo",
+            "cy"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "zed": 4,
+              "amy": 4,
+              "kim": 1
+            },
+            2
+          ],
+          "expected": [
+            "amy",
+            "zed"
+          ]
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            5
+          ],
+          "expected": [
+            "a"
+          ]
+        },
+        {
+          "args": [
+            {
+              "a": 3,
+              "b": 2,
+              "c": 1
+            },
+            0
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`chunk` splits a list into pieces of `size`; the last piece may be shorter. It drops the tail. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "chunk",
+      "starterCode": "def chunk(items, size):\n    return [items[i:i + size] for i in range(0, len(items) - size, size)]",
+      "referenceSolution": "def chunk(items, size):\n    return [items[i:i + size] for i in range(0, len(items), size)]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              5
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            5
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            2
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3,
+              4
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              7
+            ],
+            1
+          ],
+          "expected": [
+            [
+              7
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`add_tag` should return a **new** one-item list when no list is passed. Calls are leaking into each other — fix `add_tag` (the driver `tag_twice` calls it twice).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "tag_twice",
+      "starterCode": "def add_tag(tag, tags=[]):\n    tags.append(tag)\n    return tags\n\n# Test driver (leave as is)\ndef tag_twice(a, b):\n    first = add_tag(a)\n    second = add_tag(b)\n    return [first, second]",
+      "referenceSolution": "def add_tag(tag, tags=None):\n    if tags is None:\n        tags = []\n    tags.append(tag)\n    return tags\n\n# Test driver (leave as is)\ndef tag_twice(a, b):\n    first = add_tag(a)\n    second = add_tag(b)\n    return [first, second]",
+      "sampleTests": [
+        {
+          "args": [
+            "a",
+            "b"
+          ],
+          "expected": [
+            [
+              "a"
+            ],
+            [
+              "b"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "x",
+            "x"
+          ],
+          "expected": [
+            [
+              "x"
+            ],
+            [
+              "x"
+            ]
+          ]
+        },
+        {
+          "args": [
+            "new",
+            "old"
+          ],
+          "expected": [
+            [
+              "new"
+            ],
+            [
+              "old"
+            ]
+          ]
+        },
+        {
+          "args": [
+            "",
+            "z"
+          ],
+          "expected": [
+            [
+              ""
+            ],
+            [
+              "z"
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`merge_settings` returns a new dict where `overrides` win — except override values that are `None`, which must be ignored.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "merge_settings",
+      "starterCode": "def merge_settings(defaults, overrides):\n    return {**defaults, **overrides}",
+      "referenceSolution": "def merge_settings(defaults, overrides):\n    return {**defaults, **{k: v for k, v in overrides.items() if v is not None}}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "theme": "light",
+              "size": 12
+            },
+            {
+              "size": 14
+            }
+          ],
+          "expected": {
+            "theme": "light",
+            "size": 14
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "theme": "light"
+            },
+            {
+              "theme": null
+            }
+          ],
+          "expected": {
+            "theme": "light"
+          }
+        },
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {
+              "b": 2,
+              "a": null
+            }
+          ],
+          "expected": {
+            "a": 1,
+            "b": 2
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {
+              "a": 0
+            }
+          ],
+          "expected": {
+            "a": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Parse a log line `\"<date> <level> <message>\"` into a dict. The message can contain spaces. Fix `parse_log`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_log",
+      "starterCode": "def parse_log(line):\n    date, level, message = line.split(\" \")\n    return {\"date\": date, \"level\": level, \"message\": message}",
+      "referenceSolution": "def parse_log(line):\n    date, level, message = line.strip().split(\" \", 2)\n    return {\"date\": date, \"level\": level, \"message\": message}",
+      "sampleTests": [
+        {
+          "args": [
+            "2024-01-02 ERROR disk full"
+          ],
+          "expected": {
+            "date": "2024-01-02",
+            "level": "ERROR",
+            "message": "disk full"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2024-05-01 INFO ok"
+          ],
+          "expected": {
+            "date": "2024-05-01",
+            "level": "INFO",
+            "message": "ok"
+          }
+        },
+        {
+          "args": [
+            "2024-06-30 WARN retry 3 of 5 failed"
+          ],
+          "expected": {
+            "date": "2024-06-30",
+            "level": "WARN",
+            "message": "retry 3 of 5 failed"
+          }
+        },
+        {
+          "args": [
+            "2023-12-31 DEBUG a  b\n"
+          ],
+          "expected": {
+            "date": "2023-12-31",
+            "level": "DEBUG",
+            "message": "a  b"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`flatten` should turn a list of lists into one flat list. The comprehension has its loops in the wrong order — fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "flatten",
+      "starterCode": "def flatten(nested):\n    return [x for x in sub for sub in nested]",
+      "referenceSolution": "def flatten(nested):\n    return [x for sub in nested for x in sub]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                2
+              ],
+              [
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [],
+              [
+                4
+              ],
+              []
+            ]
+          ],
+          "expected": [
+            4
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "a"
+              ],
+              [
+                "b",
+                "c"
+              ]
+            ]
+          ],
+          "expected": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[1, 2]",
+        "[2]",
+        "[1]",
+        "None"
+      ],
+      "correctIndex": 0,
+      "explanation": "Default values are evaluated once, when the function is defined. Every call without `items` shares the same list, so it keeps growing. Use `items=None` and create the list inside.",
+      "snippet": "def f(x, items=[]):\n    items.append(x)\n    return items\n\nf(1)\nprint(f(2))",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[2, 6]",
+        "[0, 4, 8]",
+        "[0, 2, 4, 6, 8]",
+        "[1, 3]"
+      ],
+      "correctIndex": 0,
+      "explanation": "`i % 2` is truthy for odd `i` (1 and 3), which are then doubled to 2 and 6.",
+      "snippet": "print([i * 2 for i in range(5) if i % 2])",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`finally` then `try`",
+        "`try` then `finally`",
+        "only `try`",
+        "only `finally`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The `finally` block runs before the function actually returns, so it prints first; then the caller prints the returned value `try`.",
+      "snippet": "def f():\n    try:\n        return \"try\"\n    finally:\n        print(\"finally\")\n\nprint(f())",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "`fib(n)` is correct but far too slow for `n` around 70. Make it fast (keep it recursive or not — your choice).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "fib",
+      "starterCode": "def fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)",
+      "referenceSolution": "from functools import cache\n\n@cache\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)",
+      "sampleTests": [
+        {
+          "args": [
+            10
+          ],
+          "expected": 55
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            50
+          ],
+          "expected": 12586269025
+        },
+        {
+          "args": [
+            70
+          ],
+          "expected": 190392490709135
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`totals_by_user` sums `amount` per `user`. Rows arrive unsorted, and some users come back with only part of their total. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "totals_by_user",
+      "starterCode": "from itertools import groupby\n\ndef totals_by_user(rows):\n    return {user: sum(r[\"amount\"] for r in group)\n            for user, group in groupby(rows, key=lambda r: r[\"user\"])}",
+      "referenceSolution": "from collections import defaultdict\n\ndef totals_by_user(rows):\n    totals = defaultdict(int)\n    for r in rows:\n        totals[r[\"user\"]] += r[\"amount\"]\n    return dict(totals)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "user": "a",
+                "amount": 5
+              },
+              {
+                "user": "b",
+                "amount": 2
+              },
+              {
+                "user": "a",
+                "amount": 1
+              }
+            ]
+          ],
+          "expected": {
+            "a": 6,
+            "b": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "user": "x",
+                "amount": 3
+              },
+              {
+                "user": "x",
+                "amount": 4
+              }
+            ]
+          ],
+          "expected": {
+            "x": 7
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "user": "a",
+                "amount": 1
+              },
+              {
+                "user": "b",
+                "amount": 1
+              },
+              {
+                "user": "a",
+                "amount": 1
+              },
+              {
+                "user": "b",
+                "amount": 1
+              }
+            ]
+          ],
+          "expected": {
+            "a": 2,
+            "b": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "`stats` should return `[total, largest]` of the squares of `nums` (`largest` is `None` for an empty list). It crashes. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "stats",
+      "starterCode": "def stats(nums):\n    squares = (n * n for n in nums)\n    return [sum(squares), max(squares, default=None)]",
+      "referenceSolution": "def stats(nums):\n    squares = [n * n for n in nums]\n    return [sum(squares), max(squares, default=None)]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": [
+            14,
+            9
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": [
+            0,
+            null
+          ]
+        },
+        {
+          "args": [
+            [
+              -4
+            ]
+          ],
+          "expected": [
+            16,
+            16
+          ]
+        },
+        {
+          "args": [
+            [
+              2,
+              -3
+            ]
+          ],
+          "expected": [
+            13,
+            9
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`make_multipliers(n)` should return functions where the i-th one multiplies by `i`. Every function multiplies by the same number. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "apply_all",
+      "starterCode": "def make_multipliers(n):\n    return [lambda x: x * i for i in range(n)]\n\n# Test driver (leave as is)\ndef apply_all(n, x):\n    return [f(x) for f in make_multipliers(n)]",
+      "referenceSolution": "def make_multipliers(n):\n    return [lambda x, i=i: x * i for i in range(n)]\n\n# Test driver (leave as is)\ndef apply_all(n, x):\n    return [f(x) for f in make_multipliers(n)]",
+      "sampleTests": [
+        {
+          "args": [
+            3,
+            10
+          ],
+          "expected": [
+            0,
+            10,
+            20
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            5
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            1,
+            7
+          ],
+          "expected": [
+            0
+          ]
+        },
+        {
+          "args": [
+            4,
+            2
+          ],
+          "expected": [
+            0,
+            2,
+            4,
+            6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Return order `id`s sorted by `priority` ascending, then by `created` (ISO date string) **newest first**.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "sort_orders",
+      "starterCode": "def sort_orders(orders):\n    ordered = sorted(orders, key=lambda o: (o[\"priority\"], o[\"created\"]), reverse=True)\n    return [o[\"id\"] for o in ordered]",
+      "referenceSolution": "def sort_orders(orders):\n    by_date = sorted(orders, key=lambda o: o[\"created\"], reverse=True)\n    ordered = sorted(by_date, key=lambda o: o[\"priority\"])\n    return [o[\"id\"] for o in ordered]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "priority": 2,
+                "created": "2024-01-01"
+              },
+              {
+                "id": 2,
+                "priority": 1,
+                "created": "2024-01-02"
+              },
+              {
+                "id": 3,
+                "priority": 1,
+                "created": "2024-03-01"
+              }
+            ]
+          ],
+          "expected": [
+            3,
+            2,
+            1
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "priority": 1,
+                "created": "2024-01-01"
+              }
+            ]
+          ],
+          "expected": [
+            9
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "priority": 3,
+                "created": "2024-02-01"
+              },
+              {
+                "id": 2,
+                "priority": 3,
+                "created": "2024-05-01"
+              },
+              {
+                "id": 3,
+                "priority": 1,
+                "created": "2023-01-01"
+              }
+            ]
+          ],
+          "expected": [
+            3,
+            2,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`parse_duration` turns strings like `\"1h30m15s\"`, `\"45m\"` or `\"2h\"` into seconds; any part may be missing. Return `None` for text that is not a duration.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_duration",
+      "starterCode": "import re\n\ndef parse_duration(text):\n    m = re.match(r\"(\\d+)h(\\d+)m(\\d+)s\", text)\n    if not m:\n        return None\n    h, mi, s = m.groups()\n    return int(h) * 3600 + int(mi) * 60 + int(s)",
+      "referenceSolution": "import re\n\ndef parse_duration(text):\n    m = re.fullmatch(r\"(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\d+)s)?\", text)\n    if not m or not text:\n        return None\n    h, mi, s = (int(g or 0) for g in m.groups())\n    return h * 3600 + mi * 60 + s",
+      "sampleTests": [
+        {
+          "args": [
+            "1h30m15s"
+          ],
+          "expected": 5415
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "45m"
+          ],
+          "expected": 2700
+        },
+        {
+          "args": [
+            "2h"
+          ],
+          "expected": 7200
+        },
+        {
+          "args": [
+            "10s"
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            "abc"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "1h5s"
+          ],
+          "expected": 3605
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[2, 2, 2]",
+        "[0, 1, 2]",
+        "[0, 0, 0]",
+        "NameError"
+      ],
+      "correctIndex": 0,
+      "explanation": "Closures look up `i` when they are called, not when they are created. By then the comprehension has finished and `i` is 2. Bind it with a default argument: `lambda i=i: i`.",
+      "snippet": "fs = [lambda: i for i in range(3)]\nprint([f() for f in fs])",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "6 0",
+        "6 6",
+        "0 6",
+        "TypeError"
+      ],
+      "correctIndex": 0,
+      "explanation": "A generator can be consumed once. The first `sum` exhausts it; the second sees no items and returns 0.",
+      "snippet": "g = (x for x in [1, 2, 3])\nprint(sum(g), sum(g))",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-python-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[[1, 0], [1, 0]]",
+        "[[1, 0], [0, 0]]",
+        "[[1, 1], [0, 0]]",
+        "[[1, 1], [1, 1]]"
+      ],
+      "correctIndex": 0,
+      "explanation": "`[row] * 2` repeats the **same** inner list twice, so changing one row changes both. Build rows independently: `[[0] * 2 for _ in range(2)]`.",
+      "snippet": "grid = [[0] * 2] * 2\ngrid[0][0] = 1\nprint(grid)",
+      "snippetLanguage": "python"
+    }
+  }
+]

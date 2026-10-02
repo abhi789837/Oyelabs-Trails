@@ -1,0 +1,465 @@
+[
+  {
+    "id": "pm-client-communication-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the parts of a good weekly client update email, from top to bottom.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Risks, blockers and decisions needed from the client (with dates)"
+        },
+        {
+          "id": "r2",
+          "label": "What was delivered this week"
+        },
+        {
+          "id": "r1",
+          "label": "One-line headline: overall status and anything the client must act on"
+        },
+        {
+          "id": "r3",
+          "label": "What is planned for next week"
+        },
+        {
+          "id": "r5",
+          "label": "Sign-off with the next touchpoint (demo, call or report date)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Lead with the headline so a busy client sees status and asks first, then progress, plan and risks, and close with the next touchpoint."
+    }
+  },
+  {
+    "id": "pm-client-communication-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A PM drafted this Slack message to a client about a delayed payment-gateway integration. Mark the problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Priya, quick update on the Stripe integration.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The devs messed up the webhook config so it's broken again.",
+          "issue": "Blames the team in front of the client and gives no useful detail; describe the issue and the fix instead."
+        },
+        {
+          "id": "p3",
+          "text": "We now expect it to be ready on Thursday 14 March.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "It should be fine, probably, unless something else comes up.",
+          "issue": "Vague hedging undermines the date; state the confidence and the one real risk instead."
+        },
+        {
+          "id": "p5",
+          "text": "To finish testing we need your Stripe live keys by Tuesday.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "I'll confirm progress in Wednesday's call.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-client-communication-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A client sends messages at these times. Your agency promises a first response within 4 working hours (09:00–18:00). Work out the latest acceptable reply time for each.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Work out each deadline as an hour on the 24-hour clock.",
+      "table": null,
+      "fields": [
+        {
+          "id": "a",
+          "label": "Message at 10:00 Tuesday: reply by (hour of the day, 24h)",
+          "unit": "h",
+          "answer": 14,
+          "tolerance": 0
+        },
+        {
+          "id": "b",
+          "label": "Message at 16:00 Tuesday: reply by Wednesday at (hour, 24h)",
+          "unit": "h",
+          "answer": 11,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "10:00 + 4 working hours = 14:00 the same day. At 16:00 there are 2 working hours left (to 18:00), so the remaining 2 run from 09:00 Wednesday: 11:00."
+    }
+  },
+  {
+    "id": "pm-client-communication-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Your client contact on a white-label taxi app emails at 22:00 asking, angrily, why the driver map 'still doesn't work' on staging. You know a fix was deployed to staging an hour ago.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your client contact on a white-label taxi app emails at 22:00 asking, angrily, why the driver map 'still doesn't work' on staging. You know a fix was deployed to staging an hour ago.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first the next morning?",
+          "options": [
+            "Reply 'it works, clear your cache'",
+            "Check the map on staging yourself, then reply with what you found",
+            "Forward the email to the dev team without comment",
+            "Wait for the weekly call to discuss it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Verify before you answer; replying from assumption risks being wrong twice."
+        },
+        {
+          "id": "s2",
+          "question": "It works for you, but the client was looking at an old build link. How do you reply?",
+          "options": [
+            "Point out that the mistake was theirs",
+            "Thank them, confirm it is fixed, share the correct staging link and a 20-second screen recording, and pin the link in the shared channel",
+            "Say nothing since it works now",
+            "Escalate to your manager"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fix the confusion without blame and remove the cause (an old link) so it does not happen again."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-client-communication-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "On a fixed-bid e-commerce build, the client's CEO joins a call for the first time and says the checkout 'must' support buy-now-pay-later at launch. It is not in the signed scope and launch is in three weeks.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a fixed-bid e-commerce build, the client's CEO joins a call for the first time and says the checkout 'must' support buy-now-pay-later at launch. It is not in the signed scope and launch is in three weeks.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you say on the call?",
+          "options": [
+            "'Yes, we'll add it.'",
+            "'That's out of scope, sorry.'",
+            "'Understood why it matters. It's not in the current scope, so let me come back by Thursday with the effort, cost and impact on the launch date so you can decide.'",
+            "'Let me ask the developers if they can squeeze it in.'"
+          ],
+          "correctIndex": 2,
+          "explanation": "Acknowledge the need, be honest that it is new scope, and commit to giving the facts needed for a decision."
+        },
+        {
+          "id": "s2",
+          "question": "The estimate shows it would push launch two weeks. What do you present?",
+          "options": [
+            "Only the option to delay launch",
+            "Options: launch on time and add BNPL in a fast follow-up release, or delay launch by two weeks, each with cost",
+            "A recommendation to cancel BNPL permanently",
+            "Nothing until the client asks again"
+          ],
+          "correctIndex": 1,
+          "explanation": "Give the client clear options with trade-offs, ideally with your recommendation, and let them decide."
+        },
+        {
+          "id": "s3",
+          "question": "The CEO chooses the fast follow-up. What do you send after the call?",
+          "options": [
+            "Nothing, it was agreed verbally",
+            "A short written summary of the decision plus a change request for the follow-up release",
+            "A full revised SOW for signature before any more work",
+            "A message to the developers only"
+          ],
+          "correctIndex": 1,
+          "explanation": "Confirm decisions in writing and put new scope through a change request so cost and timing are on record."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-client-communication-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this email from a PM to a non-technical client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Subject: Sprint 6 update and one decision needed by Friday",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "This sprint we shipped the booking calendar and the email reminders.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "The JWT refresh flow is flaky because of a race in the Redis-backed token store.",
+          "issue": "Jargon a non-technical client cannot act on; explain the user impact instead (some users may be logged out)."
+        },
+        {
+          "id": "p4",
+          "text": "We need you to choose between Option A (SMS reminders, +3 days) and Option B (email only) by Friday.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Also, the budget might be a bit over, we'll see.",
+          "issue": "A budget risk mentioned vaguely and in passing; give the number and what is being done about it."
+        },
+        {
+          "id": "p6",
+          "text": "Thanks, and see you at Monday's demo.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-client-communication-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Your communication plan for a client project lists these recurring touchpoints. Calculate the PM time per month (4 weeks).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Touchpoint",
+          "Frequency",
+          "Hours each"
+        ],
+        "rows": [
+          [
+            "Status call (1 h) + prep (0.5 h)",
+            "Weekly",
+            "1.5"
+          ],
+          [
+            "Sprint demo",
+            "Fortnightly",
+            "1"
+          ],
+          [
+            "Steering meeting",
+            "Monthly",
+            "1.5"
+          ],
+          [
+            "Written status report",
+            "Weekly",
+            "0.5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hrs",
+          "label": "PM hours per month on client communication",
+          "unit": "h",
+          "answer": 11.5,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Weekly call + prep: 4 × 1.5 = 6 h. Fortnightly demo: 2 × 1 = 2 h. Monthly steering: 1.5 h. Weekly report: 4 × 0.5 = 2 h. Total = 11.5 h."
+    }
+  },
+  {
+    "id": "pm-client-communication-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write a client email explaining a slipped milestone.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write the email to the client from the notes below. Be honest, give the new date and what you are doing about it, and say what you need from them.",
+      "context": "Project: white-label grocery app for FreshCart. Milestone 'Beta to client testers' was due Friday 12 April.\n- Cause: the client's inventory API went down for 3 days last week, blocking integration testing.\n- New date: Wednesday 17 April.\n- To protect the date: one extra QA engineer for 3 days at no cost to client.\n- Need from client: confirmation that their API will be stable, and the list of 10 beta testers by Monday 15 April.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "honest",
+          "label": "Clear about the slip",
+          "description": "States plainly that the milestone moves and the new date, early in the email.",
+          "weight": 1
+        },
+        {
+          "id": "cause",
+          "label": "Cause without blame",
+          "description": "Explains the cause factually without blaming the client or the team.",
+          "weight": 1
+        },
+        {
+          "id": "action",
+          "label": "Mitigation",
+          "description": "Says what the agency is doing to protect the new date.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Clear asks with dates",
+          "description": "Asks for the API confirmation and the tester list with the Monday deadline.",
+          "weight": 1.5
+        },
+        {
+          "id": "tone",
+          "label": "Professional tone",
+          "description": "Concise, calm and client-friendly.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Subject: Beta milestone moves to Wednesday 17 April\n\nHi Sam,\n\nThe beta release to your testers will move from Friday 12 April to Wednesday 17 April.\n\nLast week the inventory API was unavailable for three days, which blocked our integration testing. To protect the new date we are adding an extra QA engineer for three days, at no cost to you.\n\nTo keep us on track, could you please:\n1. Confirm the inventory API will be stable through next week.\n2. Send the names and emails of your 10 beta testers by Monday 15 April.\n\nI'll confirm progress in Monday's call. Thanks for your help.\n\nBest,\nAnna"
+    }
+  },
+  {
+    "id": "pm-client-communication-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A client asks for a decision-relevant update in a long Slack thread. Where should the decision be recorded?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Only in the Slack thread",
+        "In a written summary (email or the project log) that the client confirms",
+        "In the developer's personal notes",
+        "Nowhere, verbal agreement is enough"
+      ],
+      "correctIndex": 1,
+      "explanation": "Decisions should live somewhere durable and shared, confirmed by the client, so they can be found later and are not lost in chat.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-client-communication-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your client contact prefers short WhatsApp messages, but their CFO wants formal monthly reports. What is the best approach?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Send everyone WhatsApp messages",
+        "Tailor channel and format per stakeholder in a communication plan",
+        "Send everyone the formal report only",
+        "Let the client contact forward things to the CFO"
+      ],
+      "correctIndex": 1,
+      "explanation": "Different stakeholders need different channels and detail; a communication plan records who gets what, how and how often.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-client-communication-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-client-communication",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You find a bug in production that leaks no data but shows wrong prices on 2% of orders. The client has not noticed. What do you do?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Fix it quietly and say nothing",
+        "Tell the client promptly with the impact, the fix plan and the time to fix",
+        "Wait until the monthly report",
+        "Tell the client only if they ask"
+      ],
+      "correctIndex": 1,
+      "explanation": "Proactive, prompt disclosure with impact and a plan protects trust; clients who find issues themselves lose confidence in the agency.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

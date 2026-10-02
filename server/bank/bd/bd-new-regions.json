@@ -1,0 +1,329 @@
+[
+  {
+    "id": "bd-new-regions-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of entering a new region.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for expanding into a new region, first at the top.",
+      "items": [
+        {
+          "id": "i5",
+          "label": "Win and showcase the first local reference clients"
+        },
+        {
+          "id": "i6",
+          "label": "Scale with local hires or partners"
+        },
+        {
+          "id": "i1",
+          "label": "Research demand, competition and buying habits"
+        },
+        {
+          "id": "i2",
+          "label": "Run a small, measured test such as a targeted outreach campaign"
+        },
+        {
+          "id": "i3",
+          "label": "Review contracts, tax and data rules with counsel and finance"
+        },
+        {
+          "id": "i4",
+          "label": "Adapt the offering: pricing, currency, time-zone coverage"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "Learn, test cheaply, check legal and tax before signing local clients, adapt, prove with references, then invest heavily."
+    }
+  },
+  {
+    "id": "bd-new-regions-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Evaluate a market-entry test.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You test a new region with 500 targeted outreach emails. 4% reply, 30% of replies become meetings, and 20% of meetings become deals averaging $40,000. The test cost $15,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "deals",
+          "label": "Expected deals",
+          "unit": "",
+          "answer": 1.2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "rev",
+          "label": "Expected revenue",
+          "unit": "$",
+          "answer": 48000,
+          "tolerance": 1
+        },
+        {
+          "id": "ratio",
+          "label": "Expected revenue per dollar of test cost",
+          "unit": "",
+          "answer": 3.2,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Deals = 500 × 0.04 × 0.3 × 0.2 = 1.2. Revenue = 1.2 × 40,000 = $48000, or 3.2 per dollar spent. Small numbers mean the test proves interest more than economics."
+    }
+  },
+  {
+    "id": "bd-new-regions-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle time-zone expectations in a new region.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are entering the US market with a delivery team in a time zone 10 hours ahead. US prospects ask about responsiveness.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you offer?",
+          "options": [
+            "Promise the team will work US hours permanently",
+            "Avoid the topic",
+            "Say time zones don't matter for software",
+            "A defined daily overlap window, a local or overlapping point of contact, and clear response times"
+          ],
+          "correctIndex": 3,
+          "explanation": "Be concrete and sustainable about overlap; vague or unsustainable promises fail later."
+        },
+        {
+          "id": "s2",
+          "question": "A prospect needs urgent production support around the clock. What do you do?",
+          "options": [
+            "Price and staff a proper on-call arrangement, or say honestly what you can cover",
+            "Promise 24/7 support at no extra cost",
+            "Ignore the requirement",
+            "Ask your developers to keep phones on at night unpaid"
+          ],
+          "correctIndex": 0,
+          "explanation": "On-call coverage has real cost; scope and price it honestly."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-new-regions-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this regional expansion plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this plan for entering a new country that are risky.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Target: mid-size retailers, based on interviews with 12 local buyers.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Use our home-country contract templates unchanged.",
+          "issue": "Local law, tax and data rules may differ; contracts need review by counsel before use."
+        },
+        {
+          "id": "p3",
+          "text": "Quote in local currency with prices reviewed against local rates.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Claim \"trusted by leading local brands\" on the website from day one.",
+          "issue": "A false claim before you have local clients."
+        },
+        {
+          "id": "p5",
+          "text": "Store local customer data wherever is cheapest.",
+          "issue": "Data-location rules may apply; check with counsel or your data-protection lead."
+        },
+        {
+          "id": "p6",
+          "text": "Pilot budget and success criteria reviewed after six months.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Partner with a local agency for introductions.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-new-regions-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Choose between two regions.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Region A: larger market, many competitors, no existing clients. Region B: smaller market, two happy existing clients, a partner willing to refer.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which do you enter first?",
+          "options": [
+            "Region A, because it is larger",
+            "Region B, where references and a partner lower the cost of winning clients",
+            "Both at once with half the budget each",
+            "Neither"
+          ],
+          "correctIndex": 1,
+          "explanation": "An existing foothold usually beats raw market size for a first expansion."
+        },
+        {
+          "id": "s2",
+          "question": "What should define success after 12 months?",
+          "options": [
+            "Website visits",
+            "Number of events attended",
+            "Agreed targets for qualified pipeline, deals won and margin, set before entry",
+            "How the team feels about it"
+          ],
+          "correctIndex": 2,
+          "explanation": "Set measurable success criteria upfront so you can decide to scale or stop."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-new-regions-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Work out the payback of a regional BD hire.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A regional BD hire costs $90,000 a year. In year 1 they are expected to close 5 deals of $50,000, and in year 2, 8 deals. Gross margin on delivery is 35%.",
+      "table": null,
+      "fields": [
+        {
+          "id": "y1",
+          "label": "Year 1 gross profit minus hire cost",
+          "unit": "$",
+          "answer": -2500,
+          "tolerance": 1
+        },
+        {
+          "id": "y2",
+          "label": "Year 2 gross profit minus hire cost",
+          "unit": "$",
+          "answer": 50000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Year 1: 5 × 50,000 × 0.35 = 87,500 − 90,000 = $-2500. Year 2: 140,000 − 90,000 = $50000. New regions usually take more than a year to pay back."
+    }
+  },
+  {
+    "id": "bd-new-regions-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why run a small test before committing heavily to a new region?",
+    "mcq": {
+      "options": [
+        "It is required by local law",
+        "It guarantees success",
+        "It shows real demand and conversion rates cheaply before larger investment",
+        "It replaces the need for local references"
+      ],
+      "correctIndex": 2,
+      "explanation": "Testing turns assumptions into data and limits the cost of being wrong.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-new-regions-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Before signing your first client in a new country, what must you check?",
+    "mcq": {
+      "options": [
+        "Only the exchange rate",
+        "Only the local holidays",
+        "Nothing; your home contract applies everywhere",
+        "Contract, tax and data rules, with counsel and finance"
+      ],
+      "correctIndex": 3,
+      "explanation": "Local rules can change what your standard contract and data handling must say; that is for counsel to confirm.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-new-regions-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-new-regions",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What most speeds up winning clients in a new region?",
+    "mcq": {
+      "options": [
+        "Local references and partners who already have trust there",
+        "A larger website",
+        "Lower prices than everyone",
+        "More cold emails from the home office"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trust is local; references and partners transfer it to you.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

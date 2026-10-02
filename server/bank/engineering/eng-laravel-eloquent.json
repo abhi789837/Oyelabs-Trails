@@ -1,0 +1,2385 @@
+[
+  {
+    "id": "eng-laravel-eloquent-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Eloquent guesses a model's table: snake_case the class name and pluralise it. `tableName` just lowercases and adds `s`. Fix it for these rules: consonant + `y` → `ies`; ending in `s`, `x`, `z`, `ch` or `sh` → add `es`; otherwise add `s`.\n\n- `BlogPost` → `blog_posts`\n- `Category` → `categories`",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "tableName",
+      "starterCode": "<?php\n\nfunction tableName(string $model): string\n{\n    return strtolower($model) . 's';\n}\n",
+      "referenceSolution": "<?php\n\nfunction tableName(string $model): string\n{\n    $snake = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $model));\n    if (preg_match('/[^aeiou]y$/', $snake)) {\n        return substr($snake, 0, -1) . 'ies';\n    }\n    if (preg_match('/(s|x|z|ch|sh)$/', $snake)) {\n        return $snake . 'es';\n    }\n    return $snake . 's';\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "BlogPost"
+          ],
+          "expected": "blog_posts"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "User"
+          ],
+          "expected": "users"
+        },
+        {
+          "args": [
+            "Category"
+          ],
+          "expected": "categories"
+        },
+        {
+          "args": [
+            "Box"
+          ],
+          "expected": "boxes"
+        },
+        {
+          "args": [
+            "Address"
+          ],
+          "expected": "addresses"
+        },
+        {
+          "args": [
+            "Survey"
+          ],
+          "expected": "surveys"
+        },
+        {
+          "args": [
+            "OrderItem"
+          ],
+          "expected": "order_items"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "For `belongsTo`, Eloquent assumes the foreign key is the snake_case model name plus `_id` (`BlogPost` → `blog_post_id`). Fix `foreignKey`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "foreignKey",
+      "starterCode": "<?php\n\nfunction foreignKey(string $model): string\n{\n    return strtolower($model) . '_id';\n}\n",
+      "referenceSolution": "<?php\n\nfunction foreignKey(string $model): string\n{\n    return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $model)) . '_id';\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            "User"
+          ],
+          "expected": "user_id"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "BlogPost"
+          ],
+          "expected": "blog_post_id"
+        },
+        {
+          "args": [
+            "OrderItem"
+          ],
+          "expected": "order_item_id"
+        },
+        {
+          "args": [
+            "Team"
+          ],
+          "expected": "team_id"
+        },
+        {
+          "args": [
+            "ApiTokenScope"
+          ],
+          "expected": "api_token_scope_id"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`fillOnly` should behave like mass assignment with `$fillable`: keep only the input keys listed in `$fillable` and drop everything else (such as `is_admin`). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "fillOnly",
+      "starterCode": "<?php\n\nfunction fillOnly(array $input, array $fillable): array\n{\n    return $input;\n}\n",
+      "referenceSolution": "<?php\n\nfunction fillOnly(array $input, array $fillable): array\n{\n    return array_intersect_key($input, array_flip($fillable));\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "is_admin": true
+            },
+            [
+              "name",
+              "email"
+            ]
+          ],
+          "expected": {
+            "name": "Ada"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            [
+              "name"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "name": "Bo",
+              "email": "b@x.io",
+              "role": "admin"
+            },
+            [
+              "name",
+              "email"
+            ]
+          ],
+          "expected": {
+            "name": "Bo",
+            "email": "b@x.io"
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Cy"
+            },
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "title": "Hi",
+              "body": "..."
+            },
+            [
+              "title",
+              "body"
+            ]
+          ],
+          "expected": {
+            "title": "Hi",
+            "body": "..."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`castAttributes` applies a model's `$casts` (`int`, `float`, `bool`, `array` from JSON) to raw database values. Two bugs: `bool` casts are ignored, and `null` should stay `null` for every cast. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "castAttributes",
+      "starterCode": "<?php\n\nfunction castAttributes(array $attributes, array $casts): array\n{\n    foreach ($casts as $key => $type) {\n        if (!array_key_exists($key, $attributes)) {\n            continue;\n        }\n        $value = $attributes[$key];\n        $attributes[$key] = match ($type) {\n            'int' => (int) $value,\n            'float' => (float) $value,\n            'array' => json_decode((string) $value, true),\n            default => $value,\n        };\n    }\n    return $attributes;\n}\n",
+      "referenceSolution": "<?php\n\nfunction castAttributes(array $attributes, array $casts): array\n{\n    foreach ($casts as $key => $type) {\n        if (!array_key_exists($key, $attributes) || $attributes[$key] === null) {\n            continue;\n        }\n        $value = $attributes[$key];\n        $attributes[$key] = match ($type) {\n            'int' => (int) $value,\n            'float' => (float) $value,\n            'bool' => (bool) $value,\n            'array' => json_decode((string) $value, true),\n            default => $value,\n        };\n    }\n    return $attributes;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": "7",
+              "is_active": "1"
+            },
+            {
+              "id": "int",
+              "is_active": "bool"
+            }
+          ],
+          "expected": {
+            "id": 7,
+            "is_active": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "is_active": "0"
+            },
+            {
+              "is_active": "bool"
+            }
+          ],
+          "expected": {
+            "is_active": false
+          }
+        },
+        {
+          "args": [
+            {
+              "age": null,
+              "score": "2.5"
+            },
+            {
+              "age": "int",
+              "score": "float"
+            }
+          ],
+          "expected": {
+            "age": null,
+            "score": 2.5
+          }
+        },
+        {
+          "args": [
+            {
+              "tags": "[\"a\",\"b\"]"
+            },
+            {
+              "tags": "array"
+            }
+          ],
+          "expected": {
+            "tags": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Ada"
+            },
+            {
+              "missing": "int"
+            }
+          ],
+          "expected": {
+            "name": "Ada"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The `full_name` accessor joins first and last name. When `last_name` is empty or missing it returns a trailing space (`\"Cher \"`). Fix `getFullNameAttribute()`. `fullName` is the test driver.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "fullName",
+      "starterCode": "<?php\n\nclass User\n{\n    public function __construct(private array $attributes) {}\n\n    public function getFullNameAttribute(): string\n    {\n        return $this->attributes['first_name'] . ' ' . ($this->attributes['last_name'] ?? '');\n    }\n}\n\n// Test driver (leave as is)\nfunction fullName(array $attributes): string\n{\n    return (new User($attributes))->getFullNameAttribute();\n}\n",
+      "referenceSolution": "<?php\n\nclass User\n{\n    public function __construct(private array $attributes) {}\n\n    public function getFullNameAttribute(): string\n    {\n        return trim(($this->attributes['first_name'] ?? '') . ' ' . ($this->attributes['last_name'] ?? ''));\n    }\n}\n\nfunction fullName(array $attributes): string\n{\n    return (new User($attributes))->getFullNameAttribute();\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "first_name": "Ada",
+              "last_name": "Lovelace"
+            }
+          ],
+          "expected": "Ada Lovelace"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "first_name": "Cher",
+              "last_name": ""
+            }
+          ],
+          "expected": "Cher"
+        },
+        {
+          "args": [
+            {
+              "first_name": "Prince"
+            }
+          ],
+          "expected": "Prince"
+        },
+        {
+          "args": [
+            {
+              "first_name": "Alan",
+              "last_name": "Turing"
+            }
+          ],
+          "expected": "Alan Turing"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Find the mass-assignment hole.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A user can make themselves an admin through the profile form. Mark the line(s) responsible.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class User extends Authenticatable",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "{",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    protected $guarded = [];",
+          "issue": "An empty `$guarded` makes every column mass-assignable, including `is_admin`. List safe columns in `$fillable` instead."
+        },
+        {
+          "id": "l4",
+          "text": "    protected $hidden = ['password', 'remember_token'];",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "// ProfileController@update",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "$request->user()->update($request->all());",
+          "issue": "Passes every request field to `update()`; use `$request->validated()` or `$request->only([...])`."
+        },
+        {
+          "id": "l8",
+          "text": "return back()->with('status', 'Profile saved');",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`$user = User::find(999);` and there is no user with id 999. What is `$user`?",
+    "mcq": {
+      "options": [
+        "`null` — use `findOrFail()` if you want a 404 instead",
+        "An empty `User` model",
+        "It throws `ModelNotFoundException`",
+        "An empty collection"
+      ],
+      "correctIndex": 0,
+      "explanation": "`find()` returns the model or `null`. `findOrFail()` throws `ModelNotFoundException`, which Laravel turns into a 404 response.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A `Post` model has `protected $fillable = ['title', 'body'];`. What happens with `Post::create(['title' => 'Hi', 'body' => '...', 'user_id' => 5])`?",
+    "mcq": {
+      "options": [
+        "`title` and `body` are set; `user_id` is silently ignored (not mass-assignable)",
+        "All three columns are saved",
+        "It throws because `user_id` is not fillable",
+        "Nothing is saved"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only `$fillable` attributes are mass-assigned; others are discarded (unless `Model::preventSilentlyDiscardingAttributes()` is on, which throws instead). Set `user_id` explicitly, e.g. `$request->user()->posts()->create([...])`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is `$query` after `$query = User::where('active', true);`?",
+    "mcq": {
+      "options": [
+        "An Eloquent query builder — no query has run yet; call `->get()`, `->first()` or `->paginate()` to execute it",
+        "A collection of active users",
+        "The first active user",
+        "`true` if any active user exists"
+      ],
+      "correctIndex": 0,
+      "explanation": "`where()` only adds a constraint and returns the builder, so you can keep chaining. The SQL runs when you call a terminal method such as `get()`, `first()`, `count()` or `paginate()`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`buildWheres` turns request filters into query constraints `[column, operator, value]` (in the filters' order): `status` → `['status', '=', v]`, `search` → `['name', 'like', '%v%']`, `min_price` / `max_price` → `['price', '>=' / '<=', (int) v]`. Empty or `null` filters must be **skipped** (a blank search box should not filter), and prices must be ints. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "buildWheres",
+      "starterCode": "<?php\n\nfunction buildWheres(array $filters): array\n{\n    $wheres = [];\n    foreach ($filters as $key => $value) {\n        $where = match ($key) {\n            'status' => ['status', '=', $value],\n            'search' => ['name', 'like', \"%$value%\"],\n            'min_price' => ['price', '>=', $value],\n            'max_price' => ['price', '<=', $value],\n            default => null,\n        };\n        if ($where) {\n            $wheres[] = $where;\n        }\n    }\n    return $wheres;\n}\n",
+      "referenceSolution": "<?php\n\nfunction buildWheres(array $filters): array\n{\n    $wheres = [];\n    foreach ($filters as $key => $value) {\n        if ($value === null || $value === '') {\n            continue;\n        }\n        $where = match ($key) {\n            'status' => ['status', '=', $value],\n            'search' => ['name', 'like', \"%$value%\"],\n            'min_price' => ['price', '>=', (int) $value],\n            'max_price' => ['price', '<=', (int) $value],\n            default => null,\n        };\n        if ($where) {\n            $wheres[] = $where;\n        }\n    }\n    return $wheres;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "status": "active",
+              "search": ""
+            }
+          ],
+          "expected": [
+            [
+              "status",
+              "=",
+              "active"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "search": "mug",
+              "min_price": "10",
+              "max_price": "50"
+            }
+          ],
+          "expected": [
+            [
+              "name",
+              "like",
+              "%mug%"
+            ],
+            [
+              "price",
+              ">=",
+              10
+            ],
+            [
+              "price",
+              "<=",
+              50
+            ]
+          ]
+        },
+        {
+          "args": [
+            {
+              "status": null,
+              "page": "2"
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "min_price": "0"
+            }
+          ],
+          "expected": [
+            [
+              "price",
+              ">=",
+              0
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "This is what eager loading does after its second query: attach each post's comments by `post_id`. Every post must get a `comments` key — an empty list when it has none. Fix `attachComments`.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "attachComments",
+      "starterCode": "<?php\n\nfunction attachComments(array $posts, array $comments): array\n{\n    $byPost = [];\n    foreach ($comments as $c) {\n        $byPost[$c['post_id']][] = $c;\n    }\n    foreach ($posts as $i => $post) {\n        if (isset($byPost[$post['id']])) {\n            $posts[$i]['comments'] = $byPost[$post['id']];\n        }\n    }\n    return $posts;\n}\n",
+      "referenceSolution": "<?php\n\nfunction attachComments(array $posts, array $comments): array\n{\n    $byPost = [];\n    foreach ($comments as $c) {\n        $byPost[$c['post_id']][] = $c;\n    }\n    foreach ($posts as $i => $post) {\n        $posts[$i]['comments'] = $byPost[$post['id']] ?? [];\n    }\n    return $posts;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            [
+              {
+                "id": 10,
+                "post_id": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "comments": [
+                {
+                  "id": 10,
+                  "post_id": 1
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "comments": []
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              {
+                "id": 1,
+                "post_id": 1
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 5
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "id": 5,
+              "comments": []
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            [
+              {
+                "id": 7,
+                "post_id": 2
+              },
+              {
+                "id": 8,
+                "post_id": 2
+              },
+              {
+                "id": 9,
+                "post_id": 3
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "comments": []
+            },
+            {
+              "id": 2,
+              "comments": [
+                {
+                  "id": 7,
+                  "post_id": 2
+                },
+                {
+                  "id": 8,
+                  "post_id": 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`withCount` should add `comments_count` to each post (like `Post::withCount('comments')`). It puts the total of **all** comments on every post. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "withCount",
+      "starterCode": "<?php\n\nfunction withCount(array $posts, array $comments): array\n{\n    foreach ($posts as $i => $post) {\n        $posts[$i]['comments_count'] = count($comments);\n    }\n    return $posts;\n}\n",
+      "referenceSolution": "<?php\n\nfunction withCount(array $posts, array $comments): array\n{\n    $counts = array_count_values(array_column($comments, 'post_id'));\n    foreach ($posts as $i => $post) {\n        $posts[$i]['comments_count'] = $counts[$post['id']] ?? 0;\n    }\n    return $posts;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            [
+              {
+                "post_id": 1
+              },
+              {
+                "post_id": 1
+              },
+              {
+                "post_id": 2
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "comments_count": 2
+            },
+            {
+              "id": 2,
+              "comments_count": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "id": 3,
+              "comments_count": 0
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            [
+              {
+                "post_id": 2
+              },
+              {
+                "post_id": 9
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "comments_count": 0
+            },
+            {
+              "id": 2,
+              "comments_count": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`setAttribute` applies the model's mutators before saving: `email` is trimmed and lowercased, `name` is trimmed, anything else is stored as is. The email mutator forgets to trim and `name` has no mutator. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "setAttribute",
+      "starterCode": "<?php\n\nfunction setAttribute(array $attributes, string $key, mixed $value): array\n{\n    if ($key === 'email') {\n        $value = strtolower($value);\n    }\n    $attributes[$key] = $value;\n    return $attributes;\n}\n",
+      "referenceSolution": "<?php\n\nfunction setAttribute(array $attributes, string $key, mixed $value): array\n{\n    if ($key === 'email') {\n        $value = strtolower(trim($value));\n    } elseif ($key === 'name') {\n        $value = trim($value);\n    }\n    $attributes[$key] = $value;\n    return $attributes;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {},
+            "email",
+            "  Ada@Example.COM "
+          ],
+          "expected": {
+            "email": "ada@example.com"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1
+            },
+            "name",
+            "  Bo  "
+          ],
+          "expected": {
+            "id": 1,
+            "name": "Bo"
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "x"
+            },
+            "age",
+            30
+          ],
+          "expected": {
+            "name": "x",
+            "age": 30
+          }
+        },
+        {
+          "args": [
+            {},
+            "email",
+            "a@b.io"
+          ],
+          "expected": {
+            "email": "a@b.io"
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Old"
+            },
+            "name",
+            "New"
+          ],
+          "expected": {
+            "name": "New"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`orderRows` mimics chained `->orderBy('a')->orderByDesc('b')`: sort by the first column, and use later columns only to break ties. It only sorts by the first column. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "orderRows",
+      "starterCode": "<?php\n\nfunction orderRows(array $rows, array $orders): array\n{\n    [$column, $direction] = $orders[0];\n    usort($rows, function ($a, $b) use ($column, $direction) {\n        $cmp = $a[$column] <=> $b[$column];\n        return $direction === 'desc' ? -$cmp : $cmp;\n    });\n    return $rows;\n}\n",
+      "referenceSolution": "<?php\n\nfunction orderRows(array $rows, array $orders): array\n{\n    usort($rows, function ($a, $b) use ($orders) {\n        foreach ($orders as [$column, $direction]) {\n            $cmp = $a[$column] <=> $b[$column];\n            if ($cmp !== 0) {\n                return $direction === 'desc' ? -$cmp : $cmp;\n            }\n        }\n        return 0;\n    });\n    return $rows;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "team": "b",
+                "score": 1
+              },
+              {
+                "team": "a",
+                "score": 2
+              },
+              {
+                "team": "a",
+                "score": 5
+              }
+            ],
+            [
+              [
+                "team",
+                "asc"
+              ],
+              [
+                "score",
+                "desc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "team": "a",
+              "score": 5
+            },
+            {
+              "team": "a",
+              "score": 2
+            },
+            {
+              "team": "b",
+              "score": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              [
+                "id",
+                "asc"
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "last": "Li",
+                "first": "Zoe"
+              },
+              {
+                "last": "Li",
+                "first": "Amy"
+              },
+              {
+                "last": "Ko",
+                "first": "Bo"
+              }
+            ],
+            [
+              [
+                "last",
+                "asc"
+              ],
+              [
+                "first",
+                "asc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "last": "Ko",
+              "first": "Bo"
+            },
+            {
+              "last": "Li",
+              "first": "Amy"
+            },
+            {
+              "last": "Li",
+              "first": "Zoe"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "p": 1,
+                "d": "2024-01-02"
+              },
+              {
+                "p": 1,
+                "d": "2024-03-01"
+              },
+              {
+                "p": 2,
+                "d": "2023-01-01"
+              }
+            ],
+            [
+              [
+                "p",
+                "desc"
+              ],
+              [
+                "d",
+                "desc"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "p": 2,
+              "d": "2023-01-01"
+            },
+            {
+              "p": 1,
+              "d": "2024-03-01"
+            },
+            {
+              "p": 1,
+              "d": "2024-01-02"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Spot the N+1 queries.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This page lists 50 posts and runs over 100 queries. Mark the lines that trigger a query **per post**.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "$posts = Post::latest()->take(50)->get();",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "@foreach ($posts as $post)",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  <h2>{{ $post->title }}</h2>",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  <p>By {{ $post->author->name }}</p>",
+          "issue": "Lazy-loads `author` for every post; add `->with('author')`."
+        },
+        {
+          "id": "l5",
+          "text": "  <span>{{ $post->comments->count() }} comments</span>",
+          "issue": "Loads every comment of every post just to count them; use `->withCount('comments')` and `$post->comments_count`."
+        },
+        {
+          "id": "l6",
+          "text": "  <time>{{ $post->created_at->diffForHumans() }}</time>",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "@endforeach",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How many SQL queries does this run for 20 posts that have comments?\n\n```php\n$posts = Post::with('comments')->get();\nforeach ($posts as $post) {\n    echo $post->comments->count();\n}\n```",
+    "mcq": {
+      "options": [
+        "2",
+        "21",
+        "1",
+        "40"
+      ],
+      "correctIndex": 0,
+      "explanation": "Eager loading runs one query for the posts and one `where post_id in (...)` query for all their comments. Without `with('comments')` it would be 1 + 20 (the N+1 problem).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `$post->comments` and `$post->comments()`?",
+    "mcq": {
+      "options": [
+        "`$post->comments` returns the loaded collection; `$post->comments()` returns the relationship query builder you can add constraints to",
+        "They are identical",
+        "`$post->comments()` returns the collection; `$post->comments` returns the builder",
+        "`$post->comments` only works after `with('comments')`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The property loads the relation (lazily if needed) and caches the result as a collection. The method returns a `HasMany` relation, so `$post->comments()->where('approved', true)->count()` runs one targeted query.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`$tag = Tag::firstOrNew(['slug' => 'php']);` — no tag with that slug exists. What is the state of `$tag`?",
+    "mcq": {
+      "options": [
+        "A new `Tag` with `slug` set, **not** saved yet — call `save()` to persist it",
+        "A new `Tag` already saved to the database",
+        "`null`",
+        "It throws `ModelNotFoundException`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`firstOrNew` returns an unsaved instance when nothing matches; `firstOrCreate` inserts it immediately. `firstOrNew` is handy when you want to set more attributes before saving.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`getDirty` returns the attributes that changed since the model was loaded (`key => new value`), including keys that are new. Like Eloquent, a numeric string and a number with the same text (`'5'` vs `5`) are **not** dirty — but the current strict comparison reports them. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "getDirty",
+      "starterCode": "<?php\n\nfunction getDirty(array $original, array $current): array\n{\n    $dirty = [];\n    foreach ($current as $key => $value) {\n        if (!array_key_exists($key, $original) || $original[$key] !== $value) {\n            $dirty[$key] = $value;\n        }\n    }\n    return $dirty;\n}\n",
+      "referenceSolution": "<?php\n\nfunction getDirty(array $original, array $current): array\n{\n    $dirty = [];\n    foreach ($current as $key => $value) {\n        if (!array_key_exists($key, $original)) {\n            $dirty[$key] = $value;\n            continue;\n        }\n        $old = $original[$key];\n        $same = $old === $value\n            || (is_numeric($old) && is_numeric($value) && (string) $old === (string) $value);\n        if (!$same) {\n            $dirty[$key] = $value;\n        }\n    }\n    return $dirty;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "name": "Ada"
+            },
+            {
+              "id": "1",
+              "name": "Ada L"
+            }
+          ],
+          "expected": {
+            "name": "Ada L"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "qty": 5
+            },
+            {
+              "qty": "5"
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "bio": null
+            },
+            {
+              "bio": ""
+            }
+          ],
+          "expected": {
+            "bio": ""
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {
+              "a": 1,
+              "b": 2
+            }
+          ],
+          "expected": {
+            "b": 2
+          }
+        },
+        {
+          "args": [
+            {
+              "price": "10.50"
+            },
+            {
+              "price": "10.5"
+            }
+          ],
+          "expected": {
+            "price": "10.5"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`sync()` on a many-to-many relation returns which ids were `attached` and `detached`. `syncPivot` returns JSON objects instead of sorted lists. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "syncPivot",
+      "starterCode": "<?php\n\nfunction syncPivot(array $current, array $desired): array\n{\n    return [\n        'attached' => array_diff($desired, $current),\n        'detached' => array_diff($current, $desired),\n    ];\n}\n",
+      "referenceSolution": "<?php\n\nfunction syncPivot(array $current, array $desired): array\n{\n    $attached = array_values(array_unique(array_diff($desired, $current)));\n    $detached = array_values(array_diff($current, $desired));\n    sort($attached);\n    sort($detached);\n    return ['attached' => $attached, 'detached' => $detached];\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2,
+              3,
+              4
+            ]
+          ],
+          "expected": {
+            "attached": [
+              4
+            ],
+            "detached": [
+              1
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              3,
+              1
+            ]
+          ],
+          "expected": {
+            "attached": [
+              1,
+              3
+            ],
+            "detached": []
+          }
+        },
+        {
+          "args": [
+            [
+              5,
+              6
+            ],
+            []
+          ],
+          "expected": {
+            "attached": [],
+            "detached": [
+              5,
+              6
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "expected": {
+            "attached": [],
+            "detached": []
+          }
+        },
+        {
+          "args": [
+            [
+              9,
+              1,
+              4
+            ],
+            [
+              4,
+              7,
+              2
+            ]
+          ],
+          "expected": {
+            "attached": [
+              2,
+              7
+            ],
+            "detached": [
+              1,
+              9
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`softDeleteScope` mimics the `SoftDeletes` scope and returns matching ids: the default hides rows with a `deleted_at`, `withTrashed` returns everything, and `onlyTrashed` returns only deleted rows. `onlyTrashed` is broken. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "softDeleteScope",
+      "starterCode": "<?php\n\nfunction softDeleteScope(array $rows, string $mode): array\n{\n    $filtered = match ($mode) {\n        'withTrashed' => $rows,\n        'onlyTrashed' => $rows,\n        default => array_filter($rows, fn ($r) => $r['deleted_at'] === null),\n    };\n    return array_values(array_column($filtered, 'id'));\n}\n",
+      "referenceSolution": "<?php\n\nfunction softDeleteScope(array $rows, string $mode): array\n{\n    $filtered = match ($mode) {\n        'withTrashed' => $rows,\n        'onlyTrashed' => array_filter($rows, fn ($r) => $r['deleted_at'] !== null),\n        default => array_filter($rows, fn ($r) => $r['deleted_at'] === null),\n    };\n    return array_values(array_column($filtered, 'id'));\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "deleted_at": null
+              },
+              {
+                "id": 2,
+                "deleted_at": "2024-05-01"
+              }
+            ],
+            "default"
+          ],
+          "expected": [
+            1
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "deleted_at": null
+              },
+              {
+                "id": 2,
+                "deleted_at": "2024-05-01"
+              }
+            ],
+            "onlyTrashed"
+          ],
+          "expected": [
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "deleted_at": null
+              },
+              {
+                "id": 2,
+                "deleted_at": "2024-05-01"
+              }
+            ],
+            "withTrashed"
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            [],
+            "onlyTrashed"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "deleted_at": null
+              }
+            ],
+            "onlyTrashed"
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`upsertRows` mimics `Model::upsert($rows, uniqueBy: 'sku', update: ['price'])`: an incoming row whose `sku` exists updates **only** the `$update` columns; a new `sku` is inserted whole. It currently overwrites every column (including `created_at`). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "upsertRows",
+      "starterCode": "<?php\n\nfunction upsertRows(array $existing, array $incoming, string $uniqueBy, array $update): array\n{\n    $byKey = [];\n    foreach ($existing as $row) {\n        $byKey[$row[$uniqueBy]] = $row;\n    }\n    foreach ($incoming as $row) {\n        $key = $row[$uniqueBy];\n        $byKey[$key] = isset($byKey[$key]) ? array_merge($byKey[$key], $row) : $row;\n    }\n    return array_values($byKey);\n}\n",
+      "referenceSolution": "<?php\n\nfunction upsertRows(array $existing, array $incoming, string $uniqueBy, array $update): array\n{\n    $byKey = [];\n    foreach ($existing as $row) {\n        $byKey[$row[$uniqueBy]] = $row;\n    }\n    foreach ($incoming as $row) {\n        $key = $row[$uniqueBy];\n        if (isset($byKey[$key])) {\n            foreach ($update as $column) {\n                if (array_key_exists($column, $row)) {\n                    $byKey[$key][$column] = $row[$column];\n                }\n            }\n        } else {\n            $byKey[$key] = $row;\n        }\n    }\n    return array_values($byKey);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "sku": "A",
+                "price": 10,
+                "created_at": "jan"
+              }
+            ],
+            [
+              {
+                "sku": "A",
+                "price": 12,
+                "created_at": "jun"
+              }
+            ],
+            "sku",
+            [
+              "price"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "A",
+              "price": 12,
+              "created_at": "jan"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              {
+                "sku": "B",
+                "price": 5
+              }
+            ],
+            "sku",
+            [
+              "price"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "B",
+              "price": 5
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "A",
+                "price": 1,
+                "stock": 3
+              }
+            ],
+            [
+              {
+                "sku": "A",
+                "price": 2,
+                "stock": 99
+              },
+              {
+                "sku": "C",
+                "price": 7,
+                "stock": 1
+              }
+            ],
+            "sku",
+            [
+              "price"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "A",
+              "price": 2,
+              "stock": 3
+            },
+            {
+              "sku": "C",
+              "price": 7,
+              "stock": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "A",
+                "price": 1,
+                "stock": 3
+              }
+            ],
+            [
+              {
+                "sku": "A",
+                "stock": 0
+              }
+            ],
+            "sku",
+            [
+              "price",
+              "stock"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "A",
+              "price": 1,
+              "stock": 0
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "A",
+                "price": 1
+              }
+            ],
+            [],
+            "sku",
+            [
+              "price"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "A",
+              "price": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Rename a column on a busy production table without downtime.",
+    "task": {
+      "kind": "rank",
+      "prompt": "`orders.total` must become `orders.total_cents`. Old and new app servers run side by side during deploys. Order the releases, first to last.",
+      "items": [
+        {
+          "id": "add",
+          "label": "Migration: add a nullable `total_cents` column"
+        },
+        {
+          "id": "dual",
+          "label": "Deploy code that writes both `total` and `total_cents`"
+        },
+        {
+          "id": "backfill",
+          "label": "Backfill `total_cents` for existing rows in chunks (`chunkById`)"
+        },
+        {
+          "id": "read",
+          "label": "Deploy code that reads and writes only `total_cents`"
+        },
+        {
+          "id": "drop",
+          "label": "Migration: drop the old `total` column"
+        }
+      ],
+      "correctOrder": [
+        "add",
+        "dual",
+        "backfill",
+        "read",
+        "drop"
+      ],
+      "explanation": "A direct `renameColumn` breaks whichever servers still run the old code. Expand (add + dual write), migrate the data, switch reads, then contract (drop) once nothing uses the old column."
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Fix a slow API endpoint.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`GET /api/orders` returns 100 orders, each with its customer's name and its number of items. Telescope shows 201 queries per request.",
+      "steps": [
+        {
+          "id": "load",
+          "question": "Which query change fixes it?",
+          "options": [
+            "`Order::with('customer:id,name')->withCount('items')->paginate(100)`",
+            "`Order::all()->load('customer')` then count items in PHP with `$order->items->count()`",
+            "Cache the response for an hour",
+            "Add an index on `orders.id`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`with` loads every customer in one query (selecting only the needed columns, which must include the key), and `withCount` adds an `items_count` subquery instead of loading items."
+        },
+        {
+          "id": "prevent",
+          "question": "How do you stop this from creeping back in?",
+          "options": [
+            "Call `Model::preventLazyLoading(! app()->isProduction())` in `AppServiceProvider::boot()` so lazy loads throw in dev and tests",
+            "Ban the `->` operator on relations in code review",
+            "Set `$with = ['*']` on every model",
+            "Turn off query logging"
+          ],
+          "correctIndex": 0,
+          "explanation": "With lazy loading prevented outside production, an N+1 throws a `LazyLoadingViolationException` during development and tests instead of silently shipping."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `Post::whereHas('comments')->get()` and `Post::with('comments')->get()`?",
+    "mcq": {
+      "options": [
+        "`whereHas` filters to posts that have at least one comment (without loading them); `with` returns all posts and eager-loads their comments",
+        "They are the same; `whereHas` is the older name",
+        "`whereHas` loads the comments; `with` filters posts",
+        "`with` only works on `belongsTo` relations"
+      ],
+      "correctIndex": 0,
+      "explanation": "`whereHas` adds an `exists` subquery to filter the parents. `with` does not filter at all. Combine them (or use `withWhereHas`) when you need both filtering and loading.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "This is meant to return **user 1's** posts that are drafts or in review. What does it actually return?\n\n```php\nPost::where('user_id', 1)\n    ->where('status', 'draft')\n    ->orWhere('status', 'review')\n    ->get();\n```",
+    "mcq": {
+      "options": [
+        "User 1's drafts **plus every user's** posts in review",
+        "Exactly user 1's drafts and reviews",
+        "Only user 1's drafts",
+        "An error, `orWhere` must come first"
+      ],
+      "correctIndex": 0,
+      "explanation": "The SQL is `user_id = 1 and status = 'draft' or status = 'review'`, and `and` binds tighter than `or`. Group the `or` in a closure: `->where(fn ($q) => $q->where('status', 'draft')->orWhere('status', 'review'))`, or use `whereIn('status', [...])`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An `Order` model has an observer whose `updated` event writes an audit log. Which call does **not** write an audit entry?",
+    "mcq": {
+      "options": [
+        "`Order::where('status', 'pending')->update(['status' => 'cancelled']);`",
+        "`$order->update(['status' => 'cancelled']);`",
+        "`$order->status = 'cancelled'; $order->save();`",
+        "`$order->fill(['status' => 'cancelled'])->save();`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A mass update on the query builder runs one `UPDATE` statement without loading models, so model events, observers and mutators do not fire. The other three update a model instance and fire `updating`/`updated`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`findNPlusOne` scans a request's query log: normalise each query by replacing numbers and quoted strings with `?`, then return `normalised query => count` for patterns that ran at least `$threshold` times. It counts raw queries, so `id = 1` and `id = 2` never group. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "findNPlusOne",
+      "starterCode": "<?php\n\nfunction findNPlusOne(array $queries, int $threshold): array\n{\n    $counts = array_count_values($queries);\n    return array_filter($counts, fn ($n) => $n >= $threshold);\n}\n",
+      "referenceSolution": "<?php\n\nfunction findNPlusOne(array $queries, int $threshold): array\n{\n    $normalised = array_map(\n        fn ($q) => preg_replace([\"/'[^']*'/\", '/\\b\\d+\\b/'], '?', $q),\n        $queries\n    );\n    $counts = array_count_values($normalised);\n    return array_filter($counts, fn ($n) => $n >= $threshold);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "select * from posts",
+              "select * from users where id = 1",
+              "select * from users where id = 2",
+              "select * from users where id = 3"
+            ],
+            3
+          ],
+          "expected": {
+            "select * from users where id = ?": 3
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            2
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "select * from tags where slug = 'php'",
+              "select * from tags where slug = 'go'"
+            ],
+            2
+          ],
+          "expected": {
+            "select * from tags where slug = ?": 2
+          }
+        },
+        {
+          "args": [
+            [
+              "select * from a",
+              "select * from b where id = 1"
+            ],
+            2
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "select * from c where post_id = 10 limit 5",
+              "select * from c where post_id = 11 limit 5",
+              "select count(*) from c"
+            ],
+            2
+          ],
+          "expected": {
+            "select * from c where post_id = ? limit ?": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`afterCursor` returns the next page of ids for keyset pagination ordered by `created_at desc, id desc`. Rows come sorted that way; the cursor is the last row seen `[created_at, id]`. Rows sharing the cursor's `created_at` but with a smaller id must still be returned — they are currently skipped. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "afterCursor",
+      "starterCode": "<?php\n\nfunction afterCursor(array $rows, array $cursor, int $limit): array\n{\n    [$createdAt, $id] = $cursor;\n    $next = array_filter($rows, fn ($r) => $r['created_at'] < $createdAt);\n    return array_slice(array_column($next, 'id'), 0, $limit);\n}\n",
+      "referenceSolution": "<?php\n\nfunction afterCursor(array $rows, array $cursor, int $limit): array\n{\n    [$createdAt, $id] = $cursor;\n    $next = array_filter(\n        $rows,\n        fn ($r) => $r['created_at'] < $createdAt || ($r['created_at'] === $createdAt && $r['id'] < $id)\n    );\n    return array_slice(array_column($next, 'id'), 0, $limit);\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "created_at": "10:02"
+              },
+              {
+                "id": 8,
+                "created_at": "10:01"
+              },
+              {
+                "id": 7,
+                "created_at": "10:01"
+              },
+              {
+                "id": 3,
+                "created_at": "10:00"
+              }
+            ],
+            [
+              "10:01",
+              8
+            ],
+            2
+          ],
+          "expected": [
+            7,
+            3
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              "10:00",
+              1
+            ],
+            5
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 5,
+                "created_at": "09:00"
+              },
+              {
+                "id": 4,
+                "created_at": "09:00"
+              },
+              {
+                "id": 2,
+                "created_at": "09:00"
+              }
+            ],
+            [
+              "09:00",
+              5
+            ],
+            10
+          ],
+          "expected": [
+            4,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "created_at": "10:02"
+              },
+              {
+                "id": 8,
+                "created_at": "10:01"
+              }
+            ],
+            [
+              "10:02",
+              9
+            ],
+            1
+          ],
+          "expected": [
+            8
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "created_at": "08:00"
+              }
+            ],
+            [
+              "08:00",
+              1
+            ],
+            3
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`optimisticUpdate` applies changes only if the row's `version` still equals `$expectedVersion` (the version the user loaded); then it bumps `version` by 1. Otherwise it returns `\"conflict\"` so two editors cannot silently overwrite each other. The version check is missing. Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "optimisticUpdate",
+      "starterCode": "<?php\n\nfunction optimisticUpdate(array $row, array $changes, int $expectedVersion): array|string\n{\n    $row = array_merge($row, $changes);\n    $row['version'] = $row['version'] + 1;\n    return $row;\n}\n",
+      "referenceSolution": "<?php\n\nfunction optimisticUpdate(array $row, array $changes, int $expectedVersion): array|string\n{\n    if ($row['version'] !== $expectedVersion) {\n        return 'conflict';\n    }\n    unset($changes['version']);\n    $row = array_merge($row, $changes);\n    $row['version'] = $expectedVersion + 1;\n    return $row;\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "title": "A",
+              "version": 3
+            },
+            {
+              "title": "B"
+            },
+            3
+          ],
+          "expected": {
+            "id": 1,
+            "title": "B",
+            "version": 4
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "title": "A",
+              "version": 4
+            },
+            {
+              "title": "B"
+            },
+            3
+          ],
+          "expected": "conflict"
+        },
+        {
+          "args": [
+            {
+              "id": 2,
+              "qty": 5,
+              "version": 0
+            },
+            {},
+            0
+          ],
+          "expected": {
+            "id": 2,
+            "qty": 5,
+            "version": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 3,
+              "qty": 5,
+              "version": 2
+            },
+            {
+              "qty": 4,
+              "version": 99
+            },
+            2
+          ],
+          "expected": {
+            "id": 3,
+            "qty": 4,
+            "version": 3
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 4,
+              "version": 1
+            },
+            {
+              "x": 1
+            },
+            2
+          ],
+          "expected": "conflict"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "`eagerQuery` builds the second query of eager loading: `select * from <table> where <key> in (<ids>)` using the parents' ids **de-duplicated, sorted and without nulls**. With no ids it must return `null` (Eloquent skips the query). Fix it.",
+    "coding": {
+      "language": "php",
+      "mode": "function",
+      "functionName": "eagerQuery",
+      "starterCode": "<?php\n\nfunction eagerQuery(array $parentIds, string $table, string $foreignKey): ?string\n{\n    return \"select * from $table where $foreignKey in (\" . implode(', ', $parentIds) . \")\";\n}\n",
+      "referenceSolution": "<?php\n\nfunction eagerQuery(array $parentIds, string $table, string $foreignKey): ?string\n{\n    $ids = array_values(array_unique(array_filter($parentIds, fn ($id) => $id !== null)));\n    if (!$ids) {\n        return null;\n    }\n    sort($ids);\n    return \"select * from $table where $foreignKey in (\" . implode(', ', $ids) . \")\";\n}\n",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              3,
+              1,
+              3,
+              2
+            ],
+            "comments",
+            "post_id"
+          ],
+          "expected": "select * from comments where post_id in (1, 2, 3)"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "comments",
+            "post_id"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              null,
+              null
+            ],
+            "users",
+            "id"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              7,
+              null,
+              7
+            ],
+            "users",
+            "id"
+          ],
+          "expected": "select * from users where id in (7)"
+        },
+        {
+          "args": [
+            [
+              10,
+              2
+            ],
+            "items",
+            "order_id"
+          ],
+          "expected": "select * from items where order_id in (2, 10)"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Review a nightly Eloquent job.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This job deactivates customers who have not ordered for a year. There are 400k customers and the job runs out of memory and misses rows. Mark the problem lines.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "public function handle(): void",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "{",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    $cutoff = now()->subYear();",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    Customer::where('active', true)->chunk(500, function ($customers) use ($cutoff) {",
+          "issue": "`chunk()` pages with offsets while the loop flips `active` to false, so later pages skip rows. Use `chunkById()`."
+        },
+        {
+          "id": "l5",
+          "text": "        foreach ($customers as $customer) {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "            $last = $customer->orders->max('created_at');",
+          "issue": "Lazy-loads every order of every customer (N+1 and heavy); use `withMax('orders', 'created_at')`."
+        },
+        {
+          "id": "l7",
+          "text": "            if ($last === null || $last < $cutoff) {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "                $customer->update(['active' => false]);",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "            }",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "        }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "    });",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Stop overselling stock under load.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Checkout does:\n\n```php\n$product = Product::find($id);\nif ($product->stock > 0) {\n    $product->stock = $product->stock - 1;\n    $product->save();\n    Order::create([...]);\n}\n```\n\nDuring a flash sale, 120 orders were created for 100 items.",
+      "steps": [
+        {
+          "id": "cause",
+          "question": "Why does it oversell?",
+          "options": [
+            "Two requests read `stock = 1` at the same time, both pass the check and both save — a read-modify-write race",
+            "`save()` is asynchronous and returns before the row is written",
+            "Eloquent caches `find()` results across requests",
+            "MySQL ignores updates during high load"
+          ],
+          "correctIndex": 0,
+          "explanation": "The check and the write are separate statements, so concurrent requests interleave between them."
+        },
+        {
+          "id": "fix",
+          "question": "Which change makes the decrement safe?",
+          "options": [
+            "An atomic conditional update: `Product::whereKey($id)->where('stock', '>', 0)->decrement('stock')` and only create the order if it affected 1 row",
+            "Add `sleep(1)` before saving so requests are spaced out",
+            "Use `$product->refresh()` before the check",
+            "Increase the database connection pool"
+          ],
+          "correctIndex": 0,
+          "explanation": "The database applies the condition and the decrement in one statement, so only one request can take the last item. (`lockForUpdate()` inside a transaction also works.)"
+        },
+        {
+          "id": "order",
+          "question": "The decrement succeeds but `Order::create` then fails. How do you keep stock and orders consistent?",
+          "options": [
+            "Wrap the decrement and the order creation in `DB::transaction()` so a failure rolls both back",
+            "Increment the stock back in a `finally` block",
+            "Retry `Order::create` until it succeeds",
+            "Run the order creation in a queued job"
+          ],
+          "correctIndex": 0,
+          "explanation": "A transaction makes the two writes all-or-nothing; manual compensation can itself fail or race."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A command runs `User::where('migrated', false)->chunk(1000, fn ($users) => $users->each->update(['migrated' => true]));` and only migrates about half the users. Why, and what is the fix?",
+    "mcq": {
+      "options": [
+        "`chunk()` uses `limit/offset`; updating the filtered column shrinks the result set so each offset skips rows — use `chunkById()`",
+        "`chunk()` stops after the first error — wrap it in `try/catch`",
+        "`each->update` is asynchronous — use `save()` instead",
+        "The chunk size is too big — use 100"
+      ],
+      "correctIndex": 0,
+      "explanation": "After the first chunk is updated, those rows no longer match, so offset 1000 now skips 1000 unprocessed rows. `chunkById()` pages with `where id > last_id`, which is stable while you modify rows.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Two requests run `$post->views = $post->views + 1; $post->save();` at the same time on a post with 10 views. What can the final value be, and what avoids that?",
+    "mcq": {
+      "options": [
+        "11 — both read 10 and write 11; `$post->increment('views')` runs `update ... set views = views + 1` atomically",
+        "Always 12 — Eloquent locks the row during `save()`",
+        "An error is thrown because of the conflict",
+        "10 — the second save is ignored"
+      ],
+      "correctIndex": 0,
+      "explanation": "Read-modify-write in PHP loses updates under concurrency. `increment()` pushes the arithmetic into a single SQL statement, so the database serialises it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-laravel-eloquent-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-laravel-eloquent",
+    "trackId": null,
+    "stackId": "stack-laravel",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "With `Model::preventLazyLoading()` enabled, what happens when code accesses `$post->author` on a post that was loaded **without** `with('author')`?",
+    "mcq": {
+      "options": [
+        "A `LazyLoadingViolationException` is thrown, flagging a potential N+1",
+        "`$post->author` returns `null`",
+        "The relation is loaded silently and a warning is logged to the browser console",
+        "All relations on all models are eager-loaded automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "It turns silent lazy loads into exceptions (or a custom handler via `handleLazyLoadingViolationUsing`). Usually enabled outside production: `Model::preventLazyLoading(! app()->isProduction())`. Loading a single model on its own is exempt.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

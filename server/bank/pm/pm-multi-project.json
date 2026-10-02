@@ -1,0 +1,357 @@
+[
+  {
+    "id": "pm-multi-project-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "You run four client projects. Monday morning brings these items. Rank them, most urgent first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "You run four client projects. Monday morning brings these items. Rank them, most urgent first.",
+      "items": [
+        {
+          "id": "rf54cc",
+          "label": "Production checkout is down on Project A's live app"
+        },
+        {
+          "id": "rfebe7",
+          "label": "Project B's client needs a go/no-go decision for tomorrow's release"
+        },
+        {
+          "id": "rfe151",
+          "label": "Project C's sprint planning is this afternoon and the backlog is not refined"
+        },
+        {
+          "id": "r12b55",
+          "label": "Project D's client asked for a monthly report due Friday"
+        },
+        {
+          "id": "r89c38",
+          "label": "A team member asked for feedback on their career plan"
+        }
+      ],
+      "correctOrder": [
+        "rf54cc",
+        "rfebe7",
+        "rfe151",
+        "r12b55",
+        "r89c38"
+      ],
+      "explanation": "Live outage first, then a time-boxed release decision, then today's planning, then a report due later in the week; the career talk matters but can be scheduled."
+    }
+  },
+  {
+    "id": "pm-multi-project-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Context switching has a cost. Using the common rule of thumb below, estimate productive time for a developer split across projects.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Context switching has a cost. Using the common rule of thumb below, estimate productive time for a developer split across projects.",
+      "table": {
+        "columns": [
+          "Projects at once",
+          "Time lost to switching"
+        ],
+        "rows": [
+          [
+            "1",
+            "0%"
+          ],
+          [
+            "2",
+            "20%"
+          ],
+          [
+            "3",
+            "40%"
+          ],
+          [
+            "4",
+            "60%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "p3",
+          "label": "Productive hours per project in a 40-hour week with 3 projects",
+          "unit": "h",
+          "answer": 8.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "p1",
+          "label": "Productive hours on one project if dedicated",
+          "unit": "h",
+          "answer": 40,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "With 3 projects, 60% of 40 = 24 productive hours, or 8 per project, compared with 40 on one project."
+    }
+  },
+  {
+    "id": "pm-multi-project-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A PM's weekly plan across three projects. Mark the practices that will cause trouble.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's weekly plan across three projects. Mark the practices that will cause trouble.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Each project has a fixed weekly status slot with its client.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "I review all three RAID logs every Monday.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "I promised all three clients the same senior developer for next week.",
+          "issue": "Over-committing a shared resource guarantees a conflict; resolve allocation before promising."
+        },
+        {
+          "id": "s4",
+          "text": "Project priorities are agreed with my director when they conflict.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "I answer every Slack message within five minutes, all day.",
+          "issue": "Constant interruption destroys focus; set response windows and escalation channels."
+        },
+        {
+          "id": "s6",
+          "text": "I keep a single calendar with all project milestones.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "I skip retrospectives on the smaller projects to save time.",
+          "issue": "Small projects benefit from lightweight retros too; skipping them hides recurring problems."
+        },
+        {
+          "id": "s8",
+          "text": "Client decisions are logged in each project's decision log.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-multi-project-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Two of your projects need the same iOS developer next week for urgent fixes. Both clients have been promised quick turnarounds.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Two of your projects need the same iOS developer next week for urgent fixes. Both clients have been promised quick turnarounds.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is your first step?",
+          "options": [
+            "Split the developer 50/50",
+            "Give the developer to the louder client",
+            "Ask the developer to work both full-time",
+            "Assess each fix's business impact and deadline, then agree priority with your resource manager"
+          ],
+          "correctIndex": 3,
+          "explanation": "Priority is a business decision made with facts, not volume or overtime."
+        },
+        {
+          "id": "d2",
+          "question": "Project A's fix goes first. What do you tell Project B's client?",
+          "options": [
+            "Nothing until the developer is free",
+            "A realistic new date and any interim workaround, before they chase you",
+            "That the developer is sick",
+            "That the fix is in progress"
+          ],
+          "correctIndex": 1,
+          "explanation": "Proactive, honest updates keep trust."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-multi-project-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps to set up a weekly portfolio review for the projects you manage.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps to set up a weekly portfolio review for the projects you manage.",
+      "items": [
+        {
+          "id": "r94afc",
+          "label": "Agree a common status format for every project"
+        },
+        {
+          "id": "re3701",
+          "label": "Collect updates from each project before the meeting"
+        },
+        {
+          "id": "rc6dbf",
+          "label": "Review cross-project risks and shared resources first"
+        },
+        {
+          "id": "rca907",
+          "label": "Decide priorities and resource moves"
+        },
+        {
+          "id": "r87b26",
+          "label": "Record decisions and communicate to teams and clients"
+        }
+      ],
+      "correctOrder": [
+        "r94afc",
+        "re3701",
+        "rc6dbf",
+        "rca907",
+        "r87b26"
+      ],
+      "explanation": "Comparable data, gathered in advance, reviewed for cross-project conflicts, decided, then communicated."
+    }
+  },
+  {
+    "id": "pm-multi-project-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You manage five projects and are working 60-hour weeks. Quality of your reporting is slipping.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You manage five projects and are working 60-hour weeks. Quality of your reporting is slipping.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the best first move?",
+          "options": [
+            "List where your time goes, then delegate or standardise the repeatable parts (reports, minutes, ticket hygiene)",
+            "Work weekends until things calm down",
+            "Stop sending status reports",
+            "Drop the smallest client"
+          ],
+          "correctIndex": 0,
+          "explanation": "Find the waste before cutting value or burning out."
+        },
+        {
+          "id": "d2",
+          "question": "Your director asks what would help. What do you ask for?",
+          "options": [
+            "Nothing; you will manage",
+            "A bigger bonus",
+            "A cap on concurrent projects or a junior PM to own day-to-day coordination on two of them",
+            "Removal of all client meetings"
+          ],
+          "correctIndex": 2,
+          "explanation": "Capacity problems need capacity solutions, stated concretely."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-multi-project-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is limiting the number of projects a person works on at once important?",
+    "mcq": {
+      "options": [
+        "Clients dislike shared staff",
+        "Context switching wastes time and raises errors, so fewer concurrent projects deliver more",
+        "It makes timesheets simpler",
+        "It lowers salaries"
+      ],
+      "correctIndex": 1,
+      "explanation": "Each extra concurrent project adds switching overhead; focus improves flow across the portfolio.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-multi-project-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Two projects you manage both claim top priority. Who should decide?",
+    "mcq": {
+      "options": [
+        "The person with portfolio authority, usually a director, using agreed criteria such as revenue, risk and commitments",
+        "Whichever client calls first",
+        "The developers",
+        "The PM alone, based on preference"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cross-project priority is a business decision; the PM brings the facts to the person accountable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-multi-project-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-multi-project",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What makes a single status format across all your projects useful?",
+    "mcq": {
+      "options": [
+        "It looks more professional",
+        "Clients require it",
+        "It lets you and leadership compare projects quickly and spot trouble",
+        "It removes the need for project-specific detail"
+      ],
+      "correctIndex": 2,
+      "explanation": "Comparable status turns many projects into a portfolio view; project detail still lives in each project.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

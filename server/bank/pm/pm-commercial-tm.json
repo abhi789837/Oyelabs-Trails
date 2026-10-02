@@ -1,0 +1,393 @@
+[
+  {
+    "id": "pm-commercial-tm-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Calculate this month's T&M invoice.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate this month's T&M invoice.",
+      "table": {
+        "columns": [
+          "Role",
+          "Hours",
+          "Rate"
+        ],
+        "rows": [
+          [
+            "Senior developer",
+            "120",
+            "$95"
+          ],
+          [
+            "Developer",
+            "140",
+            "$75"
+          ],
+          [
+            "QA",
+            "60",
+            "$60"
+          ],
+          [
+            "PM",
+            "30",
+            "$85"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "inv",
+          "label": "Invoice total",
+          "unit": "$",
+          "answer": 28050,
+          "tolerance": 1
+        },
+        {
+          "id": "hrs",
+          "label": "Total billable hours",
+          "unit": "h",
+          "answer": 350,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "11,400 + 10,500 + 3,600 + 2,550 = 28,050 for 350 hours."
+    }
+  },
+  {
+    "id": "pm-commercial-tm-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A T&M project has a not-to-exceed cap. Forecast against it.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A T&M project has a not-to-exceed cap. Forecast against it.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Cap",
+            "$120,000"
+          ],
+          [
+            "Billed to date",
+            "$84,000"
+          ],
+          [
+            "Average monthly burn",
+            "$14,000"
+          ],
+          [
+            "Months of work remaining (team estimate)",
+            "3"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "rem",
+          "label": "Remaining budget under the cap",
+          "unit": "$",
+          "answer": 36000,
+          "tolerance": 1
+        },
+        {
+          "id": "fc",
+          "label": "Forecast total spend",
+          "unit": "$",
+          "answer": 126000,
+          "tolerance": 1
+        },
+        {
+          "id": "over",
+          "label": "Forecast amount above the cap",
+          "unit": "$",
+          "answer": 6000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "36,000 left; forecast 126,000, which exceeds the cap by 6,000. Warn the client now."
+    }
+  },
+  {
+    "id": "pm-commercial-tm-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A PM's monthly T&M report to the client. Mark the lines that would damage trust or cause billing disputes.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's monthly T&M report to the client. Mark the lines that would damage trust or cause billing disputes.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Hours this month: 342 across 4 people, detail attached by task.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Budget used: 70% of the cap; forecast to reach 100% in month 8.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "We rounded everyone up to 160 hours since they were all busy.",
+          "issue": "T&M billing must reflect actual logged time, not round numbers."
+        },
+        {
+          "id": "s4",
+          "text": "Includes 20 hours fixing a bug our own developer introduced last week.",
+          "issue": "Whether rework is billable depends on the contract, but it should be stated and agreed, not silently billed."
+        },
+        {
+          "id": "s5",
+          "text": "Next month's priorities, agreed with your product owner, are attached.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Hours spent on internal agency training are included.",
+          "issue": "Internal training is not client work and should not be billed."
+        },
+        {
+          "id": "s7",
+          "text": "Rates are unchanged from the contract.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Questions on any line can go to the PM.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-commercial-tm-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A T&M client complains: \"Your hours keep growing and I don't know what I'm paying for.\"",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A T&M client complains: \"Your hours keep growing and I don't know what I'm paying for.\"",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you change first?",
+          "options": [
+            "Reduce the hours billed without telling the team",
+            "Switch to fixed price immediately",
+            "Explain that T&M means they pay for time",
+            "Send a weekly hours report against agreed priorities, with a forecast against the cap"
+          ],
+          "correctIndex": 3,
+          "explanation": "T&M clients carry the cost risk, so they need visibility to feel in control."
+        },
+        {
+          "id": "d2",
+          "question": "What else gives them control?",
+          "options": [
+            "Letting developers pick work",
+            "A product owner who approves the sprint backlog, so they decide where hours go",
+            "Monthly instead of weekly reporting",
+            "Hiding low-value tasks"
+          ],
+          "correctIndex": 1,
+          "explanation": "In T&M the client steers by priorities; make that explicit."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-commercial-tm-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank these T&M controls by how much they protect the client from runaway cost, most first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these T&M controls by how much they protect the client from runaway cost, most first.",
+      "items": [
+        {
+          "id": "r6757e",
+          "label": "A not-to-exceed cap with early warning at 75%"
+        },
+        {
+          "id": "r45085",
+          "label": "Sprint backlog approved by the client's product owner"
+        },
+        {
+          "id": "r16032",
+          "label": "Weekly timesheet reports by task"
+        },
+        {
+          "id": "r326a1",
+          "label": "Monthly invoice with a summary"
+        }
+      ],
+      "correctOrder": [
+        "r6757e",
+        "r45085",
+        "r16032",
+        "r326a1"
+      ],
+      "explanation": "A cap bounds total spend; backlog approval controls where hours go; weekly reports give visibility; a monthly invoice comes after the fact."
+    }
+  },
+  {
+    "id": "pm-commercial-tm-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Compare the client's cost under T&M and fixed price for the same work. The agency's fixed price includes a 25% risk premium over its T&M estimate.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare the client's cost under T&M and fixed price for the same work. The agency's fixed price includes a 25% risk premium over its T&M estimate.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "T&M estimate",
+            "800 hours at $80"
+          ],
+          [
+            "Actual hours if all goes to plan",
+            "800"
+          ],
+          [
+            "Actual hours if overrun",
+            "1,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "fp",
+          "label": "Fixed price (T&M estimate + 25%)",
+          "unit": "$",
+          "answer": 80000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "tmplan",
+          "label": "Client cost under T&M if to plan",
+          "unit": "$",
+          "answer": 64000,
+          "tolerance": 1
+        },
+        {
+          "id": "tmover",
+          "label": "Client cost under T&M if overrun",
+          "unit": "$",
+          "answer": 80000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Fixed price 80,000. T&M to plan 64,000; with overrun 80,000. The client pays a premium for certainty under fixed price."
+    }
+  },
+  {
+    "id": "pm-commercial-tm-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Under a T&M contract, who carries most of the cost risk?",
+    "mcq": {
+      "options": [
+        "The agency",
+        "The developers",
+        "The client, because they pay for the hours actually worked",
+        "The payment provider"
+      ],
+      "correctIndex": 2,
+      "explanation": "In T&M the client pays for effort used, so they need visibility and usually a cap.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-commercial-tm-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why do many T&M contracts include a not-to-exceed cap?",
+    "mcq": {
+      "options": [
+        "To let the agency charge more",
+        "To fix the scope",
+        "To remove the need for timesheets",
+        "To give the client a ceiling on spend while keeping scope flexible"
+      ],
+      "correctIndex": 3,
+      "explanation": "A cap limits the client's exposure; reaching it triggers a conversation, not silent overrun.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-commercial-tm-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A T&M team's productivity is low because the client's product owner rarely attends refinement. What should the PM do?",
+    "mcq": {
+      "options": [
+        "Keep billing; it's the client's money",
+        "Show the client the cost of the delays in hours and agree a regular slot with the product owner",
+        "Have developers guess requirements",
+        "Stop work until the PO attends"
+      ],
+      "correctIndex": 1,
+      "explanation": "Under T&M, client-side delays directly cost the client; making that visible usually fixes attendance.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

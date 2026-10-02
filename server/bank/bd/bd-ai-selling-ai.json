@@ -1,0 +1,336 @@
+[
+  {
+    "id": "bd-ai-selling-ai-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Run discovery for an AI project.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A retailer's CEO says: \"We want ChatGPT for our business.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you ask first?",
+          "options": [
+            "Which AI model they prefer",
+            "How big their budget is for AI",
+            "Which specific task or problem they want AI to help with, and how it is handled today",
+            "Whether they want a mobile app too"
+          ],
+          "correctIndex": 2,
+          "explanation": "AI projects succeed when tied to a specific use case."
+        },
+        {
+          "id": "s2",
+          "question": "They want to cut customer-support load. What do you need next?",
+          "options": [
+            "A logo for the chatbot",
+            "A list of every product they sell",
+            "The CEO's preferred chatbot name",
+            "Data on ticket types and volumes, where the answers live, and how they will measure success"
+          ],
+          "correctIndex": 3,
+          "explanation": "Data availability and success metrics decide feasibility and value."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Estimate the net saving from a support chatbot.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client handles 20,000 support chats a month at about $3 each in staff cost. An AI assistant is expected to fully resolve 30% of chats. The AI costs about $0.05 per chat on all chats.",
+      "table": null,
+      "fields": [
+        {
+          "id": "saved",
+          "label": "Monthly staff cost saved",
+          "unit": "$",
+          "answer": 18000,
+          "tolerance": 1
+        },
+        {
+          "id": "ai",
+          "label": "Monthly AI running cost",
+          "unit": "$",
+          "answer": 1000,
+          "tolerance": 1
+        },
+        {
+          "id": "net",
+          "label": "Net monthly saving",
+          "unit": "$",
+          "answer": 17000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Resolved = 6,000 × $3 = $18000. AI = 20,000 × $0.05 = $1000. Net = $17000. The 30% resolution rate is an assumption to test in a pilot."
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this AI project proposal.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this AI support-assistant proposal that overpromise or leave out something important.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The assistant answers questions from your help centre and order data.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "It will be 100% accurate.",
+          "issue": "No AI system is fully accurate; state measured targets and how errors are handled."
+        },
+        {
+          "id": "p3",
+          "text": "No human review will be needed after launch.",
+          "issue": "Monitoring and escalation to humans are part of a safe design."
+        },
+        {
+          "id": "p4",
+          "text": "Success measure: share of chats resolved without a human, tracked weekly.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "It will replace your entire support team.",
+          "issue": "Overpromises and ignores complex cases."
+        },
+        {
+          "id": "p6",
+          "text": "A four-week pilot on one product line comes first.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Chats the assistant is unsure about are handed to a human agent.",
+          "issue": null
+        },
+        {
+          "id": "p8",
+          "text": "A weekly report shows resolution rate and escalations.",
+          "issue": null
+        },
+        {
+          "id": "p9",
+          "text": "How customer data is stored and processed: to be decided later.",
+          "issue": "Data handling must be defined and agreed before using customer data."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank clients by AI readiness.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these prospects from most ready to least ready for an AI project.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Clear use case, but data scattered across systems"
+        },
+        {
+          "id": "i3",
+          "label": "Enthusiasm for AI but no specific use case yet"
+        },
+        {
+          "id": "i4",
+          "label": "Wants AI because a competitor announced it, with no data or owner"
+        },
+        {
+          "id": "i1",
+          "label": "Clear use case, clean accessible data and a named internal owner"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Readiness is a clear problem, usable data and ownership. Without them, start with discovery, not a build."
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Set expectations from pilot to production.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An AI pilot resolved 25% of chats correctly in testing. The client expected 60% and wants to launch anyway.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you recommend?",
+          "options": [
+            "Share the evaluation results honestly, explain the main failure causes and agree improvements before scaling",
+            "Launch and hope it improves",
+            "Hide the results",
+            "Claim the testing was flawed"
+          ],
+          "correctIndex": 0,
+          "explanation": "Honest evaluation guides the decision; launching below agreed quality damages trust in the product and in you."
+        },
+        {
+          "id": "s2",
+          "question": "What should define \"ready to launch\"?",
+          "options": [
+            "When the client gets impatient",
+            "Agreed accuracy and safety thresholds on a test set, plus human escalation for uncertain cases",
+            "When the demo looks good",
+            "When the budget runs out"
+          ],
+          "correctIndex": 1,
+          "explanation": "Clear thresholds and fallbacks make launch decisions objective."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Estimate the monthly model cost of an AI feature.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An AI feature handles 50,000 conversations a month. Each uses about 3,000 input tokens and 500 output tokens. Assume a model priced at $3 per million input tokens and $15 per million output tokens.",
+      "table": null,
+      "fields": [
+        {
+          "id": "input",
+          "label": "Monthly input-token cost",
+          "unit": "$",
+          "answer": 450,
+          "tolerance": 0.5
+        },
+        {
+          "id": "output",
+          "label": "Monthly output-token cost",
+          "unit": "$",
+          "answer": 375,
+          "tolerance": 0.5
+        },
+        {
+          "id": "annual",
+          "label": "Annual model cost",
+          "unit": "$",
+          "answer": 9900,
+          "tolerance": 5
+        }
+      ],
+      "explanation": "Input: 150M tokens × $3/M = $450. Output: 25M × $15/M = $375. Annual = $9900. Prices vary by model and change over time, so state them as assumptions in the proposal."
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What should be agreed with the client before building an AI feature?",
+    "mcq": {
+      "options": [
+        "Only the model name",
+        "The use case, success metrics and how quality will be evaluated",
+        "Only the launch date",
+        "The chatbot's personality"
+      ],
+      "correctIndex": 1,
+      "explanation": "Measurable goals and an evaluation method stop arguments about whether the AI works.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How do you best reduce the risk of an AI assistant giving wrong answers to customers?",
+    "mcq": {
+      "options": [
+        "Use the largest model available",
+        "Tell customers it is always right",
+        "Ground it in the client's verified content, test it on real questions and route uncertain cases to humans",
+        "Avoid testing to save time"
+      ],
+      "correctIndex": 2,
+      "explanation": "Grounding, evaluation and human fallback are the practical controls.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-selling-ai-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-selling-ai",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client asks you to guarantee the AI will never make a mistake. What do you say?",
+    "mcq": {
+      "options": [
+        "Guarantee it to win the deal",
+        "Refuse to discuss accuracy",
+        "Explain that AI is probabilistic, and propose measured targets, monitoring and human fallback",
+        "Promise a full refund for every error"
+      ],
+      "correctIndex": 2,
+      "explanation": "Honest framing plus a safe design is more credible than an impossible guarantee.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

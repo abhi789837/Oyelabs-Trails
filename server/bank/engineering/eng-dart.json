@@ -1,0 +1,1238 @@
+[
+  {
+    "id": "eng-dart-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program prints the sum of the integers on one line; an empty line should print `0`. It crashes on empty input. Fix `sumAll`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nint sumAll(List<int> xs) {\n  return xs.reduce((a, b) => a + b);\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(sumAll(xs));\n}",
+      "referenceSolution": "import 'dart:io';\n\nint sumAll(List<int> xs) {\n  return xs.fold(0, (a, b) => a + b);\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(sumAll(xs));\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2 3",
+          "expected": "6"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "0"
+        },
+        {
+          "stdin": "5",
+          "expected": "5"
+        },
+        {
+          "stdin": "-2 2",
+          "expected": "0"
+        },
+        {
+          "stdin": "10 20",
+          "expected": "30"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program greets the name it reads; an empty line means there is no name and should print `Hello, guest`. It prints `Hello, null`. Fix `greet`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString greet(String? name) {\n  return 'Hello, $name';\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(greet(line.isEmpty ? null : line));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString greet(String? name) {\n  return 'Hello, ${name ?? 'guest'}';\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(greet(line.isEmpty ? null : line));\n}",
+      "sampleTests": [
+        {
+          "stdin": "Ann",
+          "expected": "Hello, Ann"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "Hello, guest"
+        },
+        {
+          "stdin": "Bo",
+          "expected": "Hello, Bo"
+        },
+        {
+          "stdin": "Mary Jane",
+          "expected": "Hello, Mary Jane"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program reads a price and a quantity (integers) and should print e.g. `Total: 12`. It prints the expression text instead. Fix `lineTotal`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString lineTotal(int price, int qty) {\n  return 'Total: $price * qty';\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(lineTotal(xs[0], xs[1]));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString lineTotal(int price, int qty) {\n  return 'Total: ${price * qty}';\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(lineTotal(xs[0], xs[1]));\n}",
+      "sampleTests": [
+        {
+          "stdin": "3 4",
+          "expected": "Total: 12"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "5 0",
+          "expected": "Total: 0"
+        },
+        {
+          "stdin": "1 1",
+          "expected": "Total: 1"
+        },
+        {
+          "stdin": "250 2",
+          "expected": "Total: 500"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Print `A` for a score of 90 or more, `B` for 80 or more, otherwise `C`. Fix `grade`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString grade(int score) {\n  if (score > 90) return 'A';\n  if (score > 80) return 'B';\n  return 'C';\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(grade(int.parse(line)));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString grade(int score) {\n  if (score >= 90) return 'A';\n  if (score >= 80) return 'B';\n  return 'C';\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(grade(int.parse(line)));\n}",
+      "sampleTests": [
+        {
+          "stdin": "95",
+          "expected": "A"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "90",
+          "expected": "A"
+        },
+        {
+          "stdin": "80",
+          "expected": "B"
+        },
+        {
+          "stdin": "79",
+          "expected": "C"
+        },
+        {
+          "stdin": "0",
+          "expected": "C"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The program prints the names **longer than 3 characters**, joined with `, `. Fix `longNames`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> longNames(List<String> names) {\n  return names.where((n) => n.length < 3).toList();\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final names = line.isEmpty ? <String>[] : line.split(' ');\n  print(longNames(names).join(', '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> longNames(List<String> names) {\n  return names.where((n) => n.length > 3).toList();\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final names = line.isEmpty ? <String>[] : line.split(' ');\n  print(longNames(names).join(', '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "al anna bo maria",
+          "expected": "anna, maria"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "bob",
+          "expected": ""
+        },
+        {
+          "stdin": "abcd",
+          "expected": "abcd"
+        },
+        {
+          "stdin": "xy alexander",
+          "expected": "alexander"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`capitalize` upper-cases the first letter; the program prints the result in brackets. It crashes on an empty line, which should print `[]`. Fix it.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString capitalize(String s) {\n  return s[0].toUpperCase() + s.substring(1);\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print('[${capitalize(line)}]');\n}",
+      "referenceSolution": "import 'dart:io';\n\nString capitalize(String s) {\n  if (s.isEmpty) return s;\n  return s[0].toUpperCase() + s.substring(1);\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print('[${capitalize(line)}]');\n}",
+      "sampleTests": [
+        {
+          "stdin": "dart",
+          "expected": "[Dart]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "[]"
+        },
+        {
+          "stdin": "a",
+          "expected": "[A]"
+        },
+        {
+          "stdin": "Hello",
+          "expected": "[Hello]"
+        },
+        {
+          "stdin": "x y",
+          "expected": "[X y]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "3",
+        "3.5",
+        "4",
+        "3.0"
+      ],
+      "correctIndex": 0,
+      "explanation": "`~/` is integer division: it divides and drops the fraction, returning an `int`.",
+      "snippet": "void main() {\n  print(7 ~/ 2);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "guest",
+        "null",
+        "An error",
+        "(empty line)"
+      ],
+      "correctIndex": 0,
+      "explanation": "An uninitialised nullable variable is `null`, and `??` returns the right-hand side when the left is `null`.",
+      "snippet": "void main() {\n  String? name;\n  print(name ?? 'guest');\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "ababab",
+        "ab3",
+        "An error",
+        "ab ab ab"
+      ],
+      "correctIndex": 0,
+      "explanation": "`String * int` repeats the string that many times.",
+      "snippet": "void main() {\n  print('ab' * 3);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The program counts words and prints `word=count` pairs sorted by word. It throws a null-check error. Fix `countWords`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nMap<String, int> countWords(List<String> words) {\n  final counts = <String, int>{};\n  for (final w in words) {\n    counts[w] = counts[w]! + 1;\n  }\n  return counts;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final counts = countWords(line.isEmpty ? [] : line.split(' '));\n  final keys = counts.keys.toList()..sort();\n  print(keys.map((k) => '$k=${counts[k]}').join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nMap<String, int> countWords(List<String> words) {\n  final counts = <String, int>{};\n  for (final w in words) {\n    counts[w] = (counts[w] ?? 0) + 1;\n  }\n  return counts;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final counts = countWords(line.isEmpty ? [] : line.split(' '));\n  final keys = counts.keys.toList()..sort();\n  print(keys.map((k) => '$k=${counts[k]}').join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "b a b",
+          "expected": "a=1 b=2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "x",
+          "expected": "x=1"
+        },
+        {
+          "stdin": "go go go",
+          "expected": "go=3"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The program sums the numbers on a line, **ignoring** anything that is not an integer. It throws a `FormatException`. Fix `sumValid`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nint sumValid(List<String> parts) {\n  var total = 0;\n  for (final p in parts) {\n    total += int.parse(p);\n  }\n  return total;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(sumValid(line.isEmpty ? [] : line.split(' ')));\n}",
+      "referenceSolution": "import 'dart:io';\n\nint sumValid(List<String> parts) {\n  var total = 0;\n  for (final p in parts) {\n    total += int.tryParse(p) ?? 0;\n  }\n  return total;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(sumValid(line.isEmpty ? [] : line.split(' ')));\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2 x 3",
+          "expected": "6"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "0"
+        },
+        {
+          "stdin": "abc",
+          "expected": "0"
+        },
+        {
+          "stdin": "10 -4",
+          "expected": "6"
+        },
+        {
+          "stdin": "5 5.5 5",
+          "expected": "10"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Print the first even number, or `none` if there is none. It throws `Bad state: No element`. Fix `firstEven`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nint? firstEven(List<int> xs) {\n  return xs.firstWhere((x) => x.isEven);\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(firstEven(xs) ?? 'none');\n}",
+      "referenceSolution": "import 'dart:io';\n\nint? firstEven(List<int> xs) {\n  for (final x in xs) {\n    if (x.isEven) return x;\n  }\n  return null;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(firstEven(xs) ?? 'none');\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 4 6",
+          "expected": "4"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "1 3 5",
+          "expected": "none"
+        },
+        {
+          "stdin": "",
+          "expected": "none"
+        },
+        {
+          "stdin": "0",
+          "expected": "0"
+        },
+        {
+          "stdin": "7 -2",
+          "expected": "-2"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Sort the names by **length**, and names of equal length alphabetically. Fix the comparator in `sortNames`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nvoid sortNames(List<String> names) {\n  names.sort((a, b) => a.length.compareTo(b.length));\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final names = line.isEmpty ? <String>[] : line.split(' ');\n  sortNames(names);\n  print(names.join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nvoid sortNames(List<String> names) {\n  names.sort((a, b) {\n    final byLength = a.length.compareTo(b.length);\n    return byLength != 0 ? byLength : a.compareTo(b);\n  });\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final names = line.isEmpty ? <String>[] : line.split(' ');\n  sortNames(names);\n  print(names.join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "bob cy al",
+          "expected": "al cy bob"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "zed amy",
+          "expected": "amy zed"
+        },
+        {
+          "stdin": "dd c bb a",
+          "expected": "a c bb dd"
+        },
+        {
+          "stdin": "x",
+          "expected": "x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Print the whole-number average of the integers (drop the fraction): `2 3` prints `2`. It prints `2.5`. Fix `average`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nnum average(List<int> xs) {\n  final sum = xs.fold(0, (a, b) => a + b);\n  return sum / xs.length;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(average(xs));\n}",
+      "referenceSolution": "import 'dart:io';\n\nnum average(List<int> xs) {\n  final sum = xs.fold(0, (a, b) => a + b);\n  return sum ~/ xs.length;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  print(average(xs));\n}",
+      "sampleTests": [
+        {
+          "stdin": "2 3",
+          "expected": "2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "4",
+          "expected": "4"
+        },
+        {
+          "stdin": "1 2 3 4",
+          "expected": "2"
+        },
+        {
+          "stdin": "10 20",
+          "expected": "15"
+        },
+        {
+          "stdin": "0 1",
+          "expected": "0"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Tags arrive as a comma-separated line like `a, b ,c`. Print them trimmed and joined with `|`, skipping empty tags. Fix `cleanTags`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> cleanTags(String raw) {\n  return raw.split(',');\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(cleanTags(line).join('|'));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> cleanTags(String raw) {\n  return raw.split(',').map((t) => t.trim()).where((t) => t.isNotEmpty).toList();\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(cleanTags(line).join('|'));\n}",
+      "sampleTests": [
+        {
+          "stdin": "a, b ,c",
+          "expected": "a|b|c"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "solo",
+          "expected": "solo"
+        },
+        {
+          "stdin": "x,,y,",
+          "expected": "x|y"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "2.5",
+        "2",
+        "3",
+        "2.0"
+      ],
+      "correctIndex": 0,
+      "explanation": "`/` always returns a `double` in Dart, even for two `int`s. Use `~/` for integer division.",
+      "snippet": "void main() {\n  print(5 / 2);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "(2, 3)",
+        "[2, 3]",
+        "Instance of 'WhereIterable<int>'",
+        "{2, 3}"
+      ],
+      "correctIndex": 0,
+      "explanation": "`where` returns a lazy `Iterable`, which prints with parentheses. Call `.toList()` when you need a `List`.",
+      "snippet": "void main() {\n  final xs = [1, 2, 3];\n  print(xs.where((x) => x > 1));\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "0",
+        "12",
+        "null",
+        "A FormatException"
+      ],
+      "correctIndex": 0,
+      "explanation": "`int.tryParse` returns `null` instead of throwing when the text is not a valid integer, and `?? 0` supplies the default.",
+      "snippet": "void main() {\n  print(int.tryParse('12x') ?? 0);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Each input line is `name` or `name email`. Print the email's domain, or `none` when there is no email. It crashes on users without an email. Fix `domainOf`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nclass User {\n  final String name;\n  final String? email;\n  User(this.name, this.email);\n}\n\nString domainOf(User u) {\n  return u.email!.split('@')[1];\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final parts = line.split(' ');\n  final user = User(parts[0], parts.length > 1 ? parts[1] : null);\n  print(domainOf(user));\n}",
+      "referenceSolution": "import 'dart:io';\n\nclass User {\n  final String name;\n  final String? email;\n  User(this.name, this.email);\n}\n\nString domainOf(User u) {\n  final email = u.email;\n  if (email == null || !email.contains('@')) return 'none';\n  return email.split('@')[1];\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final parts = line.split(' ');\n  final user = User(parts[0], parts.length > 1 ? parts[1] : null);\n  print(domainOf(user));\n}",
+      "sampleTests": [
+        {
+          "stdin": "ann ann@oyelabs.com",
+          "expected": "oyelabs.com"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "bo",
+          "expected": "none"
+        },
+        {
+          "stdin": "cy cy@x.io",
+          "expected": "x.io"
+        },
+        {
+          "stdin": "di",
+          "expected": "none"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Each line is `name:age`. Print the name of the **oldest** person. `ann:9` beats `bo:10` — fix `oldest`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString oldest(List<String> lines) {\n  var best = lines.first.split(':');\n  for (final l in lines) {\n    final p = l.split(':');\n    if (p[1].compareTo(best[1]) > 0) best = p;\n  }\n  return best[0];\n}\n\nvoid main() {\n  final lines = <String>[];\n  String? l;\n  while ((l = stdin.readLineSync()) != null) {\n    final t = l!.trim();\n    if (t.isNotEmpty) lines.add(t);\n  }\n  print(oldest(lines));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString oldest(List<String> lines) {\n  var best = lines.first.split(':');\n  for (final l in lines) {\n    final p = l.split(':');\n    if (int.parse(p[1]) > int.parse(best[1])) best = p;\n  }\n  return best[0];\n}\n\nvoid main() {\n  final lines = <String>[];\n  String? l;\n  while ((l = stdin.readLineSync()) != null) {\n    final t = l!.trim();\n    if (t.isNotEmpty) lines.add(t);\n  }\n  print(oldest(lines));\n}",
+      "sampleTests": [
+        {
+          "stdin": "ann:9\nbo:10",
+          "expected": "bo"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "solo:40",
+          "expected": "solo"
+        },
+        {
+          "stdin": "a:5\nb:100\nc:20",
+          "expected": "b"
+        },
+        {
+          "stdin": "x:30\ny:4",
+          "expected": "x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Input is `name=score` pairs. Print the names by score **highest first**, ties by name. Fix `ranking`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> ranking(Map<String, int> scores) {\n  final names = scores.keys.toList();\n  names.sort();\n  return names;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final scores = <String, int>{};\n  for (final pair in line.split(' ').where((p) => p.isNotEmpty)) {\n    final kv = pair.split('=');\n    scores[kv[0]] = int.parse(kv[1]);\n  }\n  print(ranking(scores).join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> ranking(Map<String, int> scores) {\n  final names = scores.keys.toList();\n  names.sort((a, b) {\n    final byScore = scores[b]!.compareTo(scores[a]!);\n    return byScore != 0 ? byScore : a.compareTo(b);\n  });\n  return names;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final scores = <String, int>{};\n  for (final pair in line.split(' ').where((p) => p.isNotEmpty)) {\n    final kv = pair.split('=');\n    scores[kv[0]] = int.parse(kv[1]);\n  }\n  print(ranking(scores).join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "ann=5 bo=9 cy=7",
+          "expected": "bo cy ann"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "zed=4 amy=4",
+          "expected": "amy zed"
+        },
+        {
+          "stdin": "a=1 b=2 c=3",
+          "expected": "c b a"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Print the price with exactly **two decimals** (`3.5` → `3.50`, `10` → `10.00`). Fix `formatPrice`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nString formatPrice(double price) {\n  return price.toString();\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(formatPrice(double.parse(line)));\n}",
+      "referenceSolution": "import 'dart:io';\n\nString formatPrice(double price) {\n  return price.toStringAsFixed(2);\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  print(formatPrice(double.parse(line)));\n}",
+      "sampleTests": [
+        {
+          "stdin": "3.5",
+          "expected": "3.50"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "0",
+          "expected": "0.00"
+        },
+        {
+          "stdin": "10",
+          "expected": "10.00"
+        },
+        {
+          "stdin": "1.25",
+          "expected": "1.25"
+        },
+        {
+          "stdin": "99.999",
+          "expected": "100.00"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Line 1: items. Line 2: `page size` where **page 1 is the first page**. Print that page's items separated by spaces. Page 1 comes back as page 2. Fix `pageOf`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> pageOf(List<String> items, int page, int size) {\n  return items.skip(page * size).take(size).toList();\n}\n\nvoid main() {\n  final items = (stdin.readLineSync() ?? '').trim().split(' ').where((s) => s.isNotEmpty).toList();\n  final ps = (stdin.readLineSync() ?? '').trim().split(' ').map(int.parse).toList();\n  print(pageOf(items, ps[0], ps[1]).join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> pageOf(List<String> items, int page, int size) {\n  return items.skip((page - 1) * size).take(size).toList();\n}\n\nvoid main() {\n  final items = (stdin.readLineSync() ?? '').trim().split(' ').where((s) => s.isNotEmpty).toList();\n  final ps = (stdin.readLineSync() ?? '').trim().split(' ').map(int.parse).toList();\n  print(pageOf(items, ps[0], ps[1]).join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "a b c d e\n1 2",
+          "expected": "a b"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "a b c d e\n3 2",
+          "expected": "e"
+        },
+        {
+          "stdin": "a b\n2 5",
+          "expected": ""
+        },
+        {
+          "stdin": "a b c d\n2 2",
+          "expected": "c d"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`withExtra` should return a **new** list with `x` appended, leaving the original alone. The program prints the original, then the new list. Fix `withExtra`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<int> withExtra(List<int> xs, int x) {\n  final copy = xs;\n  copy.add(x);\n  return copy;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  final extended = withExtra(xs, 99);\n  print(xs);\n  print(extended);\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<int> withExtra(List<int> xs, int x) {\n  return [...xs, x];\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  final extended = withExtra(xs, 99);\n  print(xs);\n  print(extended);\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2",
+          "expected": "[1, 2]\n[1, 2, 99]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "[]\n[99]"
+        },
+        {
+          "stdin": "5",
+          "expected": "[5]\n[5, 99]"
+        },
+        {
+          "stdin": "3 2 1",
+          "expected": "[3, 2, 1]\n[3, 2, 1, 99]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "[1, 2, 3]",
+        "An error: list is final",
+        "[1, 2]",
+        "(1, 2, 3)"
+      ],
+      "correctIndex": 0,
+      "explanation": "`final` only stops the variable from being reassigned; the list it points to can still change. `const` would make the list itself unmodifiable.",
+      "snippet": "void main() {\n  final list = [1, 2];\n  list.add(3);\n  print(list);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "Unsupported operation: Cannot add to an unmodifiable list",
+        "[new]",
+        "[]",
+        "It does not compile"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `const` list is deeply immutable; `add` throws an `UnsupportedError` at run time. Build a new list instead (`[...tags, 'new']`).",
+      "snippet": "void main() {\n  const tags = <String>[];\n  try {\n    tags.add('new');\n    print(tags);\n  } catch (e) {\n    print(e);\n  }\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "ab",
+        "b",
+        "Instance of 'StringBuffer'",
+        "null"
+      ],
+      "correctIndex": 0,
+      "explanation": "The cascade `..` calls each method on the same object and the whole expression evaluates to that object, so `sb` is the buffer containing `ab`.",
+      "snippet": "void main() {\n  final sb = StringBuffer()\n    ..write('a')\n    ..write('b');\n  print(sb);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`fetchAll` should return every result of `fetch`, in input order. It returns an empty list. Fix `fetchAll`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nFuture<int> fetch(int id) =>\n    Future.delayed(const Duration(milliseconds: 10), () => id * 10);\n\nFuture<List<int>> fetchAll(List<int> ids) async {\n  final out = <int>[];\n  ids.forEach((id) async {\n    out.add(await fetch(id));\n  });\n  return out;\n}\n\nFuture<void> main() async {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  final results = await fetchAll(xs);\n  print(results.join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nFuture<int> fetch(int id) =>\n    Future.delayed(const Duration(milliseconds: 10), () => id * 10);\n\nFuture<List<int>> fetchAll(List<int> ids) async {\n  return Future.wait(ids.map(fetch));\n}\n\nFuture<void> main() async {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  final results = await fetchAll(xs);\n  print(results.join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2 3",
+          "expected": "10 20 30"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "7",
+          "expected": "70"
+        },
+        {
+          "stdin": "5 0",
+          "expected": "50 0"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The program reads points `x y` (one per line) and prints how many **distinct** points there are. Duplicates are counted twice. Fix `Point`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nclass Point {\n  final int x, y;\n  Point(this.x, this.y);\n}\n\nvoid main() {\n  final lines = <String>[];\n  String? l;\n  while ((l = stdin.readLineSync()) != null) {\n    final t = l!.trim();\n    if (t.isNotEmpty) lines.add(t);\n  }\n  final points = lines.map((l) {\n    final p = l.split(' ').map(int.parse).toList();\n    return Point(p[0], p[1]);\n  }).toSet();\n  print(points.length);\n}",
+      "referenceSolution": "import 'dart:io';\n\nclass Point {\n  final int x, y;\n  Point(this.x, this.y);\n\n  @override\n  bool operator ==(Object other) => other is Point && other.x == x && other.y == y;\n\n  @override\n  int get hashCode => Object.hash(x, y);\n}\n\nvoid main() {\n  final lines = <String>[];\n  String? l;\n  while ((l = stdin.readLineSync()) != null) {\n    final t = l!.trim();\n    if (t.isNotEmpty) lines.add(t);\n  }\n  final points = lines.map((l) {\n    final p = l.split(' ').map(int.parse).toList();\n    return Point(p[0], p[1]);\n  }).toSet();\n  print(points.length);\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 2\n1 2\n3 4",
+          "expected": "2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": "0"
+        },
+        {
+          "stdin": "0 0",
+          "expected": "1"
+        },
+        {
+          "stdin": "5 5\n5 5\n5 5",
+          "expected": "1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`fetch` throws for negative ids. `fetchAll` should return each result, using `-1` for ids that failed, instead of failing everything. Fix `fetchAll`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nFuture<int> fetch(int id) async {\n  if (id < 0) throw ArgumentError('bad id: $id');\n  return id * 10;\n}\n\nFuture<List<int>> fetchAll(List<int> ids) {\n  return Future.wait(ids.map(fetch));\n}\n\nFuture<void> main() async {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  final results = await fetchAll(xs);\n  print(results.join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nFuture<int> fetch(int id) async {\n  if (id < 0) throw ArgumentError('bad id: $id');\n  return id * 10;\n}\n\nFuture<List<int>> fetchAll(List<int> ids) {\n  return Future.wait(ids.map((id) async {\n    try {\n      return await fetch(id);\n    } catch (_) {\n      return -1;\n    }\n  }));\n}\n\nFuture<void> main() async {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final xs = line.isEmpty ? <int>[] : line.split(RegExp(r'\\s+')).map(int.parse).toList();\n  final results = await fetchAll(xs);\n  print(results.join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "1 -2 3",
+          "expected": "10 -1 30"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "-1",
+          "expected": "-1"
+        },
+        {
+          "stdin": "-5 -6",
+          "expected": "-1 -1"
+        },
+        {
+          "stdin": "4",
+          "expected": "40"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "`addTag` should return a list with the tag added. When called without a list it throws `Unsupported operation`. Fix `addTag` (it may return a new list).",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nList<String> addTag(String tag, [List<String> tags = const []]) {\n  tags.add(tag);\n  return tags;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final parts = line.split(' ');\n  final result = parts.length == 1 ? addTag(parts[0]) : addTag(parts.last, parts.sublist(0, parts.length - 1));\n  print(result.join(','));\n}",
+      "referenceSolution": "import 'dart:io';\n\nList<String> addTag(String tag, [List<String> tags = const []]) {\n  return [...tags, tag];\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final parts = line.split(' ');\n  final result = parts.length == 1 ? addTag(parts[0]) : addTag(parts.last, parts.sublist(0, parts.length - 1));\n  print(result.join(','));\n}",
+      "sampleTests": [
+        {
+          "stdin": "new",
+          "expected": "new"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "a b c",
+          "expected": "a,b,c"
+        },
+        {
+          "stdin": "x",
+          "expected": "x"
+        },
+        {
+          "stdin": "p q",
+          "expected": "p,q"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Each input line is `key ttl`. Remove the entries whose ttl is `0` or less and print the remaining keys, sorted. It throws `ConcurrentModificationError`. Fix `removeExpired`.",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nvoid removeExpired(Map<String, int> ttl) {\n  ttl.forEach((key, value) {\n    if (value <= 0) ttl.remove(key);\n  });\n}\n\nvoid main() {\n  final lines = <String>[];\n  String? l;\n  while ((l = stdin.readLineSync()) != null) {\n    final t = l!.trim();\n    if (t.isNotEmpty) lines.add(t);\n  }\n  final ttl = <String, int>{};\n  for (final l in lines) {\n    final p = l.split(' ');\n    ttl[p[0]] = int.parse(p[1]);\n  }\n  removeExpired(ttl);\n  print((ttl.keys.toList()..sort()).join(' '));\n}",
+      "referenceSolution": "import 'dart:io';\n\nvoid removeExpired(Map<String, int> ttl) {\n  ttl.removeWhere((key, value) => value <= 0);\n}\n\nvoid main() {\n  final lines = <String>[];\n  String? l;\n  while ((l = stdin.readLineSync()) != null) {\n    final t = l!.trim();\n    if (t.isNotEmpty) lines.add(t);\n  }\n  final ttl = <String, int>{};\n  for (final l in lines) {\n    final p = l.split(' ');\n    ttl[p[0]] = int.parse(p[1]);\n  }\n  removeExpired(ttl);\n  print((ttl.keys.toList()..sort()).join(' '));\n}",
+      "sampleTests": [
+        {
+          "stdin": "a 5\nb 0\nc 2",
+          "expected": "a c"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "x 0",
+          "expected": ""
+        },
+        {
+          "stdin": "k -1\nj 3\ni 0",
+          "expected": "j"
+        },
+        {
+          "stdin": "z 1",
+          "expected": "z"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The program reads two versions like `1.10.0 1.9.0` and prints `yes` if the first is newer. It says `no` for that example. Fix `isNewer` (versions have up to 3 numeric parts; missing parts count as 0).",
+    "coding": {
+      "language": "dart",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import 'dart:io';\n\nbool isNewer(String a, String b) {\n  return a.compareTo(b) > 0;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final v = line.split(' ');\n  print(isNewer(v[0], v[1]) ? 'yes' : 'no');\n}",
+      "referenceSolution": "import 'dart:io';\n\nbool isNewer(String a, String b) {\n  List<int> parts(String v) {\n    final p = v.split('.').map(int.parse).toList();\n    while (p.length < 3) p.add(0);\n    return p;\n  }\n  final x = parts(a), y = parts(b);\n  for (var i = 0; i < 3; i++) {\n    if (x[i] != y[i]) return x[i] > y[i];\n  }\n  return false;\n}\n\nvoid main() {\n  final line = (stdin.readLineSync() ?? '').trim();\n  final v = line.split(' ');\n  print(isNewer(v[0], v[1]) ? 'yes' : 'no');\n}",
+      "sampleTests": [
+        {
+          "stdin": "1.10.0 1.9.0",
+          "expected": "yes"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "1.2.0 1.2.0",
+          "expected": "no"
+        },
+        {
+          "stdin": "2.0.0 10.0.0",
+          "expected": "no"
+        },
+        {
+          "stdin": "1.2 1.1.9",
+          "expected": "yes"
+        },
+        {
+          "stdin": "1.0.0 1.0",
+          "expected": "no"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dart-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In what order are the letters printed?",
+    "mcq": {
+      "options": [
+        "A D C B",
+        "A B C D",
+        "A D B C",
+        "A C B D"
+      ],
+      "correctIndex": 0,
+      "explanation": "Synchronous code runs first (A, D). Then the microtask queue is drained (C) before the next event-queue task, the `Future(...)` callback (B).",
+      "snippet": "import 'dart:async';\n\nvoid main() {\n  print('A');\n  Future(() => print('B'));\n  scheduleMicrotask(() => print('C'));\n  print('D');\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 0.5,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "true",
+        "false",
+        "It does not compile",
+        "null"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dart 3 records have structural equality: two records with the same shape and equal fields are `==`.",
+      "snippet": "void main() {\n  final a = (1, 'x');\n  final b = (1, 'x');\n  print(a == b);\n}",
+      "snippetLanguage": "dart"
+    }
+  },
+  {
+    "id": "eng-dart-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dart",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print?",
+    "mcq": {
+      "options": [
+        "`0` then `6`",
+        "`3` then `3`",
+        "`0` then `3`",
+        "`3` then `9`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`map` is lazy: nothing runs until the iterable is iterated, and every iteration runs the callback again. Call `.toList()` once and reuse the list when the callback is expensive or has side effects.",
+      "snippet": "void main() {\n  var calls = 0;\n  final doubled = [1, 2, 3].map((x) {\n    calls++;\n    return x * 2;\n  });\n  print(calls);\n  doubled.toList();\n  doubled.toList();\n  print(calls);\n}",
+      "snippetLanguage": "dart"
+    }
+  }
+]

@@ -1,0 +1,2228 @@
+[
+  {
+    "id": "eng-js-async-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `getDisplayName(id)`: fetch the user with `fetchUser(id)` (async) and return their `name`, or `\"Unknown\"` when the API returns `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "getDisplayName",
+      "starterCode": "// Fake API (leave as is).\nconst USERS = { 1: { id: 1, name: \"Ana\" }, 2: { id: 2, name: \"Bo\" }, 3: { id: 3, name: \"Cy\" } };\nasync function fetchUser(id) {\n  await null;\n  if (id === 99) throw new Error(\"Network down\");\n  return USERS[id] ?? null;\n}\n\nasync function getDisplayName(id) {\n  const user = fetchUser(id);\n  return user.name;\n}",
+      "referenceSolution": "// Fake API (leave as is).\nconst USERS = { 1: { id: 1, name: \"Ana\" }, 2: { id: 2, name: \"Bo\" }, 3: { id: 3, name: \"Cy\" } };\nasync function fetchUser(id) {\n  await null;\n  if (id === 99) throw new Error(\"Network down\");\n  return USERS[id] ?? null;\n}\n\nasync function getDisplayName(id) {\n  const user = await fetchUser(id);\n  return user ? user.name : \"Unknown\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1
+          ],
+          "expected": "Ana"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            2
+          ],
+          "expected": "Bo"
+        },
+        {
+          "args": [
+            42
+          ],
+          "expected": "Unknown"
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": "Cy"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`readSetting(name, callback)` is an old callback API: it calls `callback(error, value)`. Write `readSettingAsync(name)` that returns a Promise: resolve with the value, reject with the error.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "tryRead",
+      "starterCode": "// Old callback API (leave as is).\nfunction readSetting(name, callback) {\n  const settings = { theme: \"dark\", lang: \"en\" };\n  Promise.resolve().then(() => {\n    if (name in settings) callback(null, settings[name]);\n    else callback(new Error(\"No setting \" + name));\n  });\n}\n\nfunction readSettingAsync(name) {\n  return new Promise((resolve, reject) => {\n    readSetting(name, (value) => resolve(value));\n  });\n}\n\n// Test driver (leave as is).\nasync function tryRead(name) {\n  try {\n    return await readSettingAsync(name);\n  } catch (e) {\n    return \"error: \" + e.message;\n  }\n}",
+      "referenceSolution": "// Old callback API (leave as is).\nfunction readSetting(name, callback) {\n  const settings = { theme: \"dark\", lang: \"en\" };\n  Promise.resolve().then(() => {\n    if (name in settings) callback(null, settings[name]);\n    else callback(new Error(\"No setting \" + name));\n  });\n}\n\nfunction readSettingAsync(name) {\n  return new Promise((resolve, reject) => {\n    readSetting(name, (error, value) => (error ? reject(error) : resolve(value)));\n  });\n}\n\n// Test driver (leave as is).\nasync function tryRead(name) {\n  try {\n    return await readSettingAsync(name);\n  } catch (e) {\n    return \"error: \" + e.message;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "theme"
+          ],
+          "expected": "dark"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "lang"
+          ],
+          "expected": "en"
+        },
+        {
+          "args": [
+            "font"
+          ],
+          "expected": "error: No setting font"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": "error: No setting "
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`orderTotal(ids)` should add up the prices returned by the async `getPrice(id)`. Right now it returns something like `\"0[object Promise]...\"`. Fix it (one request at a time is fine).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "orderTotal",
+      "starterCode": "// Fake API (leave as is).\nasync function getPrice(id) {\n  await null;\n  return { a: 5, b: 12, c: 0.5 }[id];\n}\n\nasync function orderTotal(ids) {\n  let total = 0;\n  for (const id of ids) {\n    total += getPrice(id);\n  }\n  return total;\n}",
+      "referenceSolution": "// Fake API (leave as is).\nasync function getPrice(id) {\n  await null;\n  return { a: 5, b: 12, c: 0.5 }[id];\n}\n\nasync function orderTotal(ids) {\n  let total = 0;\n  for (const id of ids) {\n    total += await getPrice(id);\n  }\n  return total;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "expected": 17
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              "c"
+            ]
+          ],
+          "expected": 0.5
+        },
+        {
+          "args": [
+            [
+              "a",
+              "a",
+              "c"
+            ]
+          ],
+          "expected": 10.5
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`cartCount()` should resolve to the number of items in the cart, but it resolves to `undefined`. Fix the `.then` chain.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cartCount",
+      "starterCode": "// Fake API (leave as is).\nfunction fetchCart(user) {\n  const carts = { ana: [\"pen\", \"ink\"], bo: [] };\n  return Promise.resolve({ items: carts[user] ?? [] });\n}\n\nfunction cartCount(user) {\n  return fetchCart(user).then((cart) => {\n    cart.items.length;\n  });\n}",
+      "referenceSolution": "// Fake API (leave as is).\nfunction fetchCart(user) {\n  const carts = { ana: [\"pen\", \"ink\"], bo: [] };\n  return Promise.resolve({ items: carts[user] ?? [] });\n}\n\nfunction cartCount(user) {\n  return fetchCart(user).then((cart) => cart.items.length);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "ana"
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "bo"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "nobody"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "ana"
+          ],
+          "expected": 2
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`safeLoad(id)` should never throw: return `{ ok: true, user }` on success or `{ ok: false, error: message }` when `fetchUser` rejects.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "safeLoad",
+      "starterCode": "// Fake API (leave as is).\nconst USERS = { 1: { id: 1, name: \"Ana\" }, 2: { id: 2, name: \"Bo\" }, 3: { id: 3, name: \"Cy\" } };\nasync function fetchUser(id) {\n  await null;\n  if (id === 99) throw new Error(\"Network down\");\n  return USERS[id] ?? null;\n}\n\nasync function safeLoad(id) {\n  const user = await fetchUser(id);\n  return { ok: true, user };\n}",
+      "referenceSolution": "// Fake API (leave as is).\nconst USERS = { 1: { id: 1, name: \"Ana\" }, 2: { id: 2, name: \"Bo\" }, 3: { id: 3, name: \"Cy\" } };\nasync function fetchUser(id) {\n  await null;\n  if (id === 99) throw new Error(\"Network down\");\n  return USERS[id] ?? null;\n}\n\nasync function safeLoad(id) {\n  try {\n    const user = await fetchUser(id);\n    return { ok: true, user };\n  } catch (e) {\n    return { ok: false, error: e.message };\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1
+          ],
+          "expected": {
+            "ok": true,
+            "user": {
+              "id": 1,
+              "name": "Ana"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            99
+          ],
+          "expected": {
+            "ok": false,
+            "error": "Network down"
+          }
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": {
+            "ok": true,
+            "user": null
+          }
+        },
+        {
+          "args": [
+            2
+          ],
+          "expected": {
+            "ok": true,
+            "user": {
+              "id": 2,
+              "name": "Bo"
+            }
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Load several users **at the same time** with `Promise.all` and return their names in the same order as `ids`. Missing users give `\"Unknown\"`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "loadNames",
+      "starterCode": "// Fake API (leave as is).\nconst USERS = { 1: { id: 1, name: \"Ana\" }, 2: { id: 2, name: \"Bo\" }, 3: { id: 3, name: \"Cy\" } };\nasync function fetchUser(id) {\n  await null;\n  if (id === 99) throw new Error(\"Network down\");\n  return USERS[id] ?? null;\n}\n\nasync function loadNames(ids) {\n  const users = ids.map((id) => fetchUser(id));\n  return users.map((u) => (u ? u.name : \"Unknown\"));\n}",
+      "referenceSolution": "// Fake API (leave as is).\nconst USERS = { 1: { id: 1, name: \"Ana\" }, 2: { id: 2, name: \"Bo\" }, 3: { id: 3, name: \"Cy\" } };\nasync function fetchUser(id) {\n  await null;\n  if (id === 99) throw new Error(\"Network down\");\n  return USERS[id] ?? null;\n}\n\nasync function loadNames(ids) {\n  const users = await Promise.all(ids.map((id) => fetchUser(id)));\n  return users.map((u) => (u ? u.name : \"Unknown\"));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              2,
+              1
+            ]
+          ],
+          "expected": [
+            "Bo",
+            "Ana"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              3,
+              7
+            ]
+          ],
+          "expected": [
+            "Cy",
+            "Unknown"
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              1
+            ]
+          ],
+          "expected": [
+            "Ana",
+            "Ana"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "1 3 2",
+        "1 2 3",
+        "3 1 2",
+        "1 3"
+      ],
+      "correctIndex": 0,
+      "explanation": "An async function runs synchronously until its first `await`. Then it pauses and the caller continues (`3`); the rest of `save` runs afterwards as a microtask.",
+      "snippet": "async function save() {\n  console.log(\"1\");\n  await null;\n  console.log(\"2\");\n}\nsave();\nconsole.log(\"3\");",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "10",
+        "5",
+        "undefined",
+        "Promise { 10 }"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each `.then` receives what the previous callback *returned*. `5 * 2` is returned, so the next `.then` logs `10`.",
+      "snippet": "Promise.resolve(5)\n  .then((v) => v * 2)\n  .then((v) => console.log(v));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "true object",
+        "false number",
+        "true number",
+        "false object"
+      ],
+      "correctIndex": 0,
+      "explanation": "An `async` function always returns a Promise, even when you `return` a plain value. You need `await getCount()` or `.then` to get the `3`.",
+      "snippet": "async function getCount() {\n  return 3;\n}\nconst result = getCount();\nconsole.log(result instanceof Promise, typeof result);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`loadDashboard(userId)` needs the user and their orders. The two requests do not depend on each other — run them **in parallel** and return `{ name, orderCount }`. The driver checks they overlap.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runDashboard",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function loadDashboard(userId, api) {\n  const user = await api.getUser(userId);\n  const orders = await api.getOrders(userId);\n  return { name: user.name, orderCount: orders.length };\n}\n\n// Test driver (leave as is): a fake API that records the most requests in flight.\nasync function runDashboard(userId, orderCount) {\n  let active = 0;\n  let maxActive = 0;\n  const call = async (value) => {\n    active++;\n    maxActive = Math.max(maxActive, active);\n    await ticks(3);\n    active--;\n    return value;\n  };\n  const api = {\n    getUser: (id) => call({ id, name: \"User \" + id }),\n    getOrders: () => call(Array.from({ length: orderCount }, (_, i) => i)),\n  };\n  const result = await loadDashboard(userId, api);\n  return { ...result, parallel: maxActive === 2 };\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function loadDashboard(userId, api) {\n  const [user, orders] = await Promise.all([api.getUser(userId), api.getOrders(userId)]);\n  return { name: user.name, orderCount: orders.length };\n}\n\n// Test driver (leave as is): a fake API that records the most requests in flight.\nasync function runDashboard(userId, orderCount) {\n  let active = 0;\n  let maxActive = 0;\n  const call = async (value) => {\n    active++;\n    maxActive = Math.max(maxActive, active);\n    await ticks(3);\n    active--;\n    return value;\n  };\n  const api = {\n    getUser: (id) => call({ id, name: \"User \" + id }),\n    getOrders: () => call(Array.from({ length: orderCount }, (_, i) => i)),\n  };\n  const result = await loadDashboard(userId, api);\n  return { ...result, parallel: maxActive === 2 };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            7,
+            2
+          ],
+          "expected": {
+            "name": "User 7",
+            "orderCount": 2,
+            "parallel": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1,
+            0
+          ],
+          "expected": {
+            "name": "User 1",
+            "orderCount": 0,
+            "parallel": true
+          }
+        },
+        {
+          "args": [
+            42,
+            5
+          ],
+          "expected": {
+            "name": "User 42",
+            "orderCount": 5,
+            "parallel": true
+          }
+        },
+        {
+          "args": [
+            3,
+            1
+          ],
+          "expected": {
+            "name": "User 3",
+            "orderCount": 1,
+            "parallel": true
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Sync a list of records: some uploads fail. Use `Promise.allSettled` so one failure does not lose the others. Return `{ saved: [ids], failed: [{ id, error }] }` in input order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "syncAll",
+      "starterCode": "// Fake API (leave as is): ids divisible by 3 fail.\nasync function upload(id) {\n  await null;\n  if (id % 3 === 0) throw new Error(\"Timeout \" + id);\n  return id;\n}\n\nasync function syncAll(ids) {\n  const saved = await Promise.all(ids.map(upload));\n  return { saved, failed: [] };\n}",
+      "referenceSolution": "// Fake API (leave as is): ids divisible by 3 fail.\nasync function upload(id) {\n  await null;\n  if (id % 3 === 0) throw new Error(\"Timeout \" + id);\n  return id;\n}\n\nasync function syncAll(ids) {\n  const results = await Promise.allSettled(ids.map(upload));\n  const saved = [];\n  const failed = [];\n  results.forEach((r, i) => {\n    if (r.status === \"fulfilled\") saved.push(r.value);\n    else failed.push({ id: ids[i], error: r.reason.message });\n  });\n  return { saved, failed };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": {
+            "saved": [
+              1,
+              2
+            ],
+            "failed": [
+              {
+                "id": 3,
+                "error": "Timeout 3"
+              }
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "saved": [],
+            "failed": []
+          }
+        },
+        {
+          "args": [
+            [
+              3,
+              6
+            ]
+          ],
+          "expected": {
+            "saved": [],
+            "failed": [
+              {
+                "id": 3,
+                "error": "Timeout 3"
+              },
+              {
+                "id": 6,
+                "error": "Timeout 6"
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              4,
+              5
+            ]
+          ],
+          "expected": {
+            "saved": [
+              4,
+              5
+            ],
+            "failed": []
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Database migrations must run **one after another, in order**. `runMigrations` uses `forEach(async ...)` and returns before they finish. Fix it so the driver's log shows each one starting after the previous one ended.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runAll",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function runMigrations(migrations, run) {\n  migrations.forEach(async (m) => {\n    await run(m);\n  });\n}\n\n// Test driver (leave as is): each migration takes a few ticks and logs start/end.\nasync function runAll(names) {\n  const log = [];\n  await runMigrations(names, async (name) => {\n    log.push(\"start \" + name);\n    await ticks(name.length);\n    log.push(\"end \" + name);\n  });\n  return log;\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function runMigrations(migrations, run) {\n  for (const m of migrations) {\n    await run(m);\n  }\n}\n\n// Test driver (leave as is): each migration takes a few ticks and logs start/end.\nasync function runAll(names) {\n  const log = [];\n  await runMigrations(names, async (name) => {\n    log.push(\"start \" + name);\n    await ticks(name.length);\n    log.push(\"end \" + name);\n  });\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "users",
+              "orders"
+            ]
+          ],
+          "expected": [
+            "start users",
+            "end users",
+            "start orders",
+            "end orders"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a"
+            ]
+          ],
+          "expected": [
+            "start a",
+            "end a"
+          ]
+        },
+        {
+          "args": [
+            [
+              "long_one",
+              "b",
+              "cc"
+            ]
+          ],
+          "expected": [
+            "start long_one",
+            "end long_one",
+            "start b",
+            "end b",
+            "start cc",
+            "end cc"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write `retry(fn, times)`: call the async `fn`; if it rejects, try again, up to `times` attempts in total. Resolve with the first success, or reject with the **last** error.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runRetry",
+      "starterCode": "async function retry(fn, times) {\n  try {\n    return await fn();\n  } catch (e) {\n    return retry(fn, times);\n  }\n}\n\n// Test driver (leave as is): fn fails the first failFirst times.\nasync function runRetry(failFirst, times) {\n  let attempts = 0;\n  const flaky = async () => {\n    attempts++;\n    if (attempts <= failFirst) throw new Error(\"fail \" + attempts);\n    return \"ok\";\n  };\n  try {\n    return { result: await retry(flaky, times), attempts };\n  } catch (e) {\n    return { result: \"error: \" + e.message, attempts };\n  }\n}",
+      "referenceSolution": "async function retry(fn, times) {\n  let lastError;\n  for (let i = 0; i < times; i++) {\n    try {\n      return await fn();\n    } catch (e) {\n      lastError = e;\n    }\n  }\n  throw lastError;\n}\n\n// Test driver (leave as is): fn fails the first failFirst times.\nasync function runRetry(failFirst, times) {\n  let attempts = 0;\n  const flaky = async () => {\n    attempts++;\n    if (attempts <= failFirst) throw new Error(\"fail \" + attempts);\n    return \"ok\";\n  };\n  try {\n    return { result: await retry(flaky, times), attempts };\n  } catch (e) {\n    return { result: \"error: \" + e.message, attempts };\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2,
+            3
+          ],
+          "expected": {
+            "result": "ok",
+            "attempts": 3
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            3
+          ],
+          "expected": {
+            "result": "ok",
+            "attempts": 1
+          }
+        },
+        {
+          "args": [
+            5,
+            3
+          ],
+          "expected": {
+            "result": "error: fail 3",
+            "attempts": 3
+          }
+        },
+        {
+          "args": [
+            1,
+            1
+          ],
+          "expected": {
+            "result": "error: fail 1",
+            "attempts": 1
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`getJson(url)` wraps a fetch-like function. `fetch` only rejects on network errors, so check `res.ok` yourself: throw `new Error(\"HTTP \" + status)` for a bad status, otherwise return the parsed body (`await res.json()`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "load",
+      "starterCode": "// Fake fetch (leave as is).\nasync function fakeFetch(url) {\n  await null;\n  const routes = { \"/me\": [200, { name: \"Ana\" }], \"/admin\": [403, { error: \"forbidden\" }], \"/empty\": [204, null] };\n  const [status, body] = routes[url] ?? [404, { error: \"not found\" }];\n  return { ok: status >= 200 && status < 300, status, json: async () => body };\n}\n\nasync function getJson(url) {\n  const res = await fakeFetch(url);\n  return res.json();\n}\n\n// Test driver (leave as is).\nasync function load(url) {\n  try {\n    return { data: await getJson(url) };\n  } catch (e) {\n    return { error: e.message };\n  }\n}",
+      "referenceSolution": "// Fake fetch (leave as is).\nasync function fakeFetch(url) {\n  await null;\n  const routes = { \"/me\": [200, { name: \"Ana\" }], \"/admin\": [403, { error: \"forbidden\" }], \"/empty\": [204, null] };\n  const [status, body] = routes[url] ?? [404, { error: \"not found\" }];\n  return { ok: status >= 200 && status < 300, status, json: async () => body };\n}\n\nasync function getJson(url) {\n  const res = await fakeFetch(url);\n  if (!res.ok) throw new Error(\"HTTP \" + res.status);\n  return await res.json();\n}\n\n// Test driver (leave as is).\nasync function load(url) {\n  try {\n    return { data: await getJson(url) };\n  } catch (e) {\n    return { error: e.message };\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/me"
+          ],
+          "expected": {
+            "data": {
+              "name": "Ana"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/admin"
+          ],
+          "expected": {
+            "error": "HTTP 403"
+          }
+        },
+        {
+          "args": [
+            "/nope"
+          ],
+          "expected": {
+            "error": "HTTP 404"
+          }
+        },
+        {
+          "args": [
+            "/empty"
+          ],
+          "expected": {
+            "data": null
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Try image mirrors in order and return the name of the first one that responds. If they all fail, return `null`. Do not stop at the first failure.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "firstAvailable",
+      "starterCode": "// Fake check (leave as is): mirrors whose name starts with \"down\" fail.\nasync function ping(mirror: string): Promise<string> {\n  await null;\n  if (mirror.startsWith(\"down\")) throw new Error(mirror + \" unreachable\");\n  return mirror;\n}\n\nasync function firstAvailable(mirrors: string[]): Promise<string | null> {\n  for (const m of mirrors) {\n    return await ping(m);\n  }\n  return null;\n}",
+      "referenceSolution": "// Fake check (leave as is): mirrors whose name starts with \"down\" fail.\nasync function ping(mirror: string): Promise<string> {\n  await null;\n  if (mirror.startsWith(\"down\")) throw new Error(mirror + \" unreachable\");\n  return mirror;\n}\n\nasync function firstAvailable(mirrors: string[]): Promise<string | null> {\n  for (const m of mirrors) {\n    try {\n      return await ping(m);\n    } catch {\n      // try the next one\n    }\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "down-eu",
+              "us"
+            ]
+          ],
+          "expected": "us"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              "down-1",
+              "down-2"
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              "asia",
+              "down-us"
+            ]
+          ],
+          "expected": "asia"
+        },
+        {
+          "args": [
+            [
+              "down-a",
+              "down-b",
+              "c"
+            ]
+          ],
+          "expected": "c"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "caught boom, then after",
+        "A, then caught boom",
+        "caught boom only",
+        "A, then after"
+      ],
+      "correctIndex": 0,
+      "explanation": "A rejection skips `.then` callbacks until it reaches a `.catch`. The `.catch` handles it and returns normally, so the chain is fulfilled again and the last `.then` runs.",
+      "snippet": "Promise.reject(new Error(\"boom\"))\n  .then(() => console.log(\"A\"))\n  .catch((e) => console.log(\"caught \" + e.message))\n  .then(() => console.log(\"after\"));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "0",
+        "3",
+        "1",
+        "undefined"
+      ],
+      "correctIndex": 0,
+      "explanation": "`forEach` ignores the promises its callback returns, so `saveAll` resolves before any `push` has happened. Use `for...of` with `await`, or `await Promise.all(items.map(...))`.",
+      "snippet": "const saved = [];\nconst fakeApiCall = () => new Promise((resolve) => setTimeout(resolve, 10));\nasync function saveAll(items) {\n  items.forEach(async (n) => {\n    await fakeApiCall();\n    saved.push(n);\n  });\n}\nsaveAll([1, 2, 3]).then(() => console.log(saved.length));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "card declined",
+        "[ 1, 3 ]",
+        "[ 1, undefined, 3 ]",
+        "[ 1, Error: card declined, 3 ]"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Promise.all` rejects as soon as any input rejects, with that reason; the other results are lost. Use `Promise.allSettled` when you want every outcome.",
+      "snippet": "Promise.all([\n  Promise.resolve(1),\n  Promise.reject(new Error(\"card declined\")),\n  Promise.resolve(3),\n])\n  .then((values) => console.log(values))\n  .catch((e) => console.log(e.message));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 3,
+    "prompt": "Write `mapLimit(items, limit, fn)`: like `Promise.all(items.map(fn))`, but with at most `limit` calls in flight at once. Results keep input order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runPool",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function mapLimit(items, limit, fn) {\n  return Promise.all(items.map(fn));\n}\n\n// Test driver (leave as is): each task takes d ticks and returns d * 10.\nasync function runPool(durations, limit) {\n  let active = 0;\n  let maxActive = 0;\n  const task = async (d) => {\n    active++;\n    maxActive = Math.max(maxActive, active);\n    await ticks(d);\n    active--;\n    return d * 10;\n  };\n  const results = await mapLimit(durations, limit, task);\n  return { results, maxActive };\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function mapLimit(items, limit, fn) {\n  const results = new Array(items.length);\n  let next = 0;\n  async function worker() {\n    while (next < items.length) {\n      const i = next++;\n      results[i] = await fn(items[i], i);\n    }\n  }\n  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));\n  return results;\n}\n\n// Test driver (leave as is): each task takes d ticks and returns d * 10.\nasync function runPool(durations, limit) {\n  let active = 0;\n  let maxActive = 0;\n  const task = async (d) => {\n    active++;\n    maxActive = Math.max(maxActive, active);\n    await ticks(d);\n    active--;\n    return d * 10;\n  };\n  const results = await mapLimit(durations, limit, task);\n  return { results, maxActive };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              3,
+              1,
+              2,
+              1
+            ],
+            2
+          ],
+          "expected": {
+            "results": [
+              30,
+              10,
+              20,
+              10
+            ],
+            "maxActive": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": {
+            "results": [],
+            "maxActive": 0
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            5
+          ],
+          "expected": {
+            "results": [
+              10,
+              20,
+              30
+            ],
+            "maxActive": 3
+          }
+        },
+        {
+          "args": [
+            [
+              2,
+              2,
+              2
+            ],
+            1
+          ],
+          "expected": {
+            "results": [
+              20,
+              20,
+              20
+            ],
+            "maxActive": 1
+          }
+        },
+        {
+          "args": [
+            [
+              5,
+              1,
+              1,
+              1,
+              1
+            ],
+            2
+          ],
+          "expected": {
+            "results": [
+              50,
+              10,
+              10,
+              10,
+              10
+            ],
+            "maxActive": 2
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Write `settleAll(promises)` **without** `Promise.allSettled`: resolve to an array of `{ status: \"fulfilled\", value }` or `{ status: \"rejected\", reason }` (use the error's `message` as `reason`), in input order, once all have settled.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runSettle",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction settleAll(promises) {\n  return Promise.all(promises).then((values) => values.map((value) => ({ status: \"fulfilled\", value })));\n}\n\n// Test driver (leave as is): specs = [{ value, t } | { error, t }] where t is ticks to settle.\nfunction runSettle(specs) {\n  const promises = specs.map(async (s) => {\n    await ticks(s.t);\n    if (\"error\" in s) throw new Error(s.error);\n    return s.value;\n  });\n  return settleAll(promises);\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction settleAll(promises) {\n  return Promise.all(\n    promises.map((p) =>\n      Promise.resolve(p).then(\n        (value) => ({ status: \"fulfilled\", value }),\n        (e) => ({ status: \"rejected\", reason: e.message }),\n      ),\n    ),\n  );\n}\n\n// Test driver (leave as is): specs = [{ value, t } | { error, t }] where t is ticks to settle.\nfunction runSettle(specs) {\n  const promises = specs.map(async (s) => {\n    await ticks(s.t);\n    if (\"error\" in s) throw new Error(s.error);\n    return s.value;\n  });\n  return settleAll(promises);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "value": 1,
+                "t": 2
+              },
+              {
+                "error": "x",
+                "t": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "status": "fulfilled",
+              "value": 1
+            },
+            {
+              "status": "rejected",
+              "reason": "x"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "error": "a",
+                "t": 1
+              },
+              {
+                "error": "b",
+                "t": 0
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "status": "rejected",
+              "reason": "a"
+            },
+            {
+              "status": "rejected",
+              "reason": "b"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "value": "late",
+                "t": 5
+              },
+              {
+                "value": "early",
+                "t": 0
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "status": "fulfilled",
+              "value": "late"
+            },
+            {
+              "status": "fulfilled",
+              "value": "early"
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Several components ask for the same user at the same time. Write `dedupe(fetcher)` so concurrent calls with the same key share **one** in-flight request. Once it settles, the next call fetches again (this is not a cache).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runDedupe",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction dedupe(fetcher) {\n  return (key) => fetcher(key);\n}\n\n// Test driver (leave as is): each round's calls happen together; rounds run one after another.\nasync function runDedupe(rounds) {\n  let fetches = 0;\n  const get = dedupe(async (key) => {\n    fetches++;\n    await ticks(2);\n    return key.toUpperCase();\n  });\n  const values = [];\n  for (const round of rounds) values.push(await Promise.all(round.map(get)));\n  return { values, fetches };\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction dedupe(fetcher) {\n  const inflight = new Map();\n  return (key) => {\n    if (inflight.has(key)) return inflight.get(key);\n    const p = fetcher(key).finally(() => inflight.delete(key));\n    inflight.set(key, p);\n    return p;\n  };\n}\n\n// Test driver (leave as is): each round's calls happen together; rounds run one after another.\nasync function runDedupe(rounds) {\n  let fetches = 0;\n  const get = dedupe(async (key) => {\n    fetches++;\n    await ticks(2);\n    return key.toUpperCase();\n  });\n  const values = [];\n  for (const round of rounds) values.push(await Promise.all(round.map(get)));\n  return { values, fetches };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                "a",
+                "b"
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              [
+                "A",
+                "A",
+                "B"
+              ]
+            ],
+            "fetches": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "values": [],
+            "fetches": 0
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                "a"
+              ],
+              [
+                "a"
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              [
+                "A",
+                "A"
+              ],
+              [
+                "A"
+              ]
+            ],
+            "fetches": 2
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "x",
+                "y",
+                "x",
+                "y",
+                "x"
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              [
+                "X",
+                "Y",
+                "X",
+                "Y",
+                "X"
+              ]
+            ],
+            "fetches": 2
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Fetch from several regions and use **whichever succeeds first** (`Promise.any`). If every region fails, return `\"all failed\"`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runFastest",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function fastest(tasks) {\n  return Promise.race(tasks.map((t) => t()));\n}\n\n// Test driver (leave as is): specs = [{ name, t, ok }]; t = ticks before it settles.\nfunction runFastest(specs) {\n  const tasks = specs.map((s) => async () => {\n    await ticks(s.t);\n    if (!s.ok) throw new Error(s.name + \" failed\");\n    return s.name;\n  });\n  return fastest(tasks);\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nasync function fastest(tasks) {\n  try {\n    return await Promise.any(tasks.map((t) => t()));\n  } catch {\n    return \"all failed\";\n  }\n}\n\n// Test driver (leave as is): specs = [{ name, t, ok }]; t = ticks before it settles.\nfunction runFastest(specs) {\n  const tasks = specs.map((s) => async () => {\n    await ticks(s.t);\n    if (!s.ok) throw new Error(s.name + \" failed\");\n    return s.name;\n  });\n  return fastest(tasks);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "eu",
+                "t": 3,
+                "ok": true
+              },
+              {
+                "name": "us",
+                "t": 1,
+                "ok": true
+              }
+            ]
+          ],
+          "expected": "us"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "eu",
+                "t": 3,
+                "ok": true
+              },
+              {
+                "name": "us",
+                "t": 1,
+                "ok": false
+              }
+            ]
+          ],
+          "expected": "eu"
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "t": 1,
+                "ok": false
+              },
+              {
+                "name": "b",
+                "t": 2,
+                "ok": false
+              }
+            ]
+          ],
+          "expected": "all failed"
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "solo",
+                "t": 0,
+                "ok": true
+              }
+            ]
+          ],
+          "expected": "solo"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "An API is paginated with a cursor. Write `fetchAll(fetchPage)`: call `fetchPage(cursor)` starting with `null`; each response is `{ items, next }`. Keep going until `next` is `null` and return all items in order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runPages",
+      "starterCode": "async function fetchAll(fetchPage) {\n  const { items } = await fetchPage(null);\n  return items;\n}\n\n// Test driver (leave as is): pages is a list of item arrays; cursors are page numbers.\nasync function runPages(pages) {\n  let requests = 0;\n  const fetchPage = async (cursor) => {\n    requests++;\n    const i = cursor ?? 0;\n    await null;\n    return { items: pages[i] ?? [], next: i + 1 < pages.length ? i + 1 : null };\n  };\n  const items = await fetchAll(fetchPage);\n  return { items, requests };\n}",
+      "referenceSolution": "async function fetchAll(fetchPage) {\n  const all = [];\n  let cursor = null;\n  do {\n    const page = await fetchPage(cursor);\n    all.push(...page.items);\n    cursor = page.next;\n  } while (cursor !== null);\n  return all;\n}\n\n// Test driver (leave as is): pages is a list of item arrays; cursors are page numbers.\nasync function runPages(pages) {\n  let requests = 0;\n  const fetchPage = async (cursor) => {\n    requests++;\n    const i = cursor ?? 0;\n    await null;\n    return { items: pages[i] ?? [], next: i + 1 < pages.length ? i + 1 : null };\n  };\n  const items = await fetchAll(fetchPage);\n  return { items, requests };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                2
+              ],
+              [
+                3
+              ]
+            ]
+          ],
+          "expected": {
+            "items": [
+              1,
+              2,
+              3
+            ],
+            "requests": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "items": [],
+            "requests": 1
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                1
+              ]
+            ]
+          ],
+          "expected": {
+            "items": [
+              1
+            ],
+            "requests": 1
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "a"
+              ],
+              [],
+              [
+                "b",
+                "c"
+              ]
+            ]
+          ],
+          "expected": {
+            "items": [
+              "a",
+              "b",
+              "c"
+            ],
+            "requests": 3
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Write `createQueue()` returning `add(task)`. Tasks are async functions; they must run **one at a time** in the order added, even when added all at once. `add` returns a promise for that task's result.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runQueue",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction createQueue() {\n  return {\n    add: (task) => task(),\n  };\n}\n\n// Test driver (leave as is): adds every job at once; a job named \"bad\" rejects.\nasync function runQueue(jobs) {\n  const q = createQueue();\n  const log = [];\n  const promises = jobs.map(([name, t]) =>\n    q.add(async () => {\n      log.push(\"start \" + name);\n      await ticks(t);\n      log.push(\"end \" + name);\n      if (name === \"bad\") throw new Error(\"bad\");\n      return name;\n    }).catch((e) => \"error: \" + e.message),\n  );\n  const results = await Promise.all(promises);\n  return { log, results };\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction createQueue() {\n  let tail = Promise.resolve();\n  return {\n    add(task) {\n      const result = tail.then(() => task());\n      tail = result.catch(() => {});\n      return result;\n    },\n  };\n}\n\n// Test driver (leave as is): adds every job at once; a job named \"bad\" rejects.\nasync function runQueue(jobs) {\n  const q = createQueue();\n  const log = [];\n  const promises = jobs.map(([name, t]) =>\n    q.add(async () => {\n      log.push(\"start \" + name);\n      await ticks(t);\n      log.push(\"end \" + name);\n      if (name === \"bad\") throw new Error(\"bad\");\n      return name;\n    }).catch((e) => \"error: \" + e.message),\n  );\n  const results = await Promise.all(promises);\n  return { log, results };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                3
+              ],
+              [
+                "b",
+                1
+              ]
+            ]
+          ],
+          "expected": {
+            "log": [
+              "start a",
+              "end a",
+              "start b",
+              "end b"
+            ],
+            "results": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "log": [],
+            "results": []
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "bad",
+                1
+              ],
+              [
+                "c",
+                1
+              ]
+            ]
+          ],
+          "expected": {
+            "log": [
+              "start bad",
+              "end bad",
+              "start c",
+              "end c"
+            ],
+            "results": [
+              "error: bad",
+              "c"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "x",
+                0
+              ],
+              [
+                "y",
+                4
+              ],
+              [
+                "z",
+                2
+              ]
+            ]
+          ],
+          "expected": {
+            "log": [
+              "start x",
+              "end x",
+              "start y",
+              "end y",
+              "start z",
+              "end z"
+            ],
+            "results": [
+              "x",
+              "y",
+              "z"
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "async start, sync, promise, async end, timeout",
+        "sync, async start, promise, async end, timeout",
+        "async start, sync, timeout, promise, async end",
+        "async start, async end, sync, promise, timeout"
+      ],
+      "correctIndex": 0,
+      "explanation": "Synchronous code first (`async start`, `sync`). Then all microtasks in queue order: the `.then` was queued before the `await` continuation. Timers (`setTimeout`) run only after the microtask queue is empty.",
+      "snippet": "setTimeout(() => console.log(\"timeout\"), 0);\nPromise.resolve().then(() => console.log(\"promise\"));\n(async () => {\n  console.log(\"async start\");\n  await null;\n  console.log(\"async end\");\n})();\nconsole.log(\"sync\");",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "rejected: offline",
+        "value: fallback",
+        "value: undefined",
+        "Uncaught Error: offline"
+      ],
+      "correctIndex": 0,
+      "explanation": "`return promise` without `await` hands the promise back unresolved, so the rejection happens *after* the `try` block has exited and `catch` never sees it. Write `return await ...` inside `try`.",
+      "snippet": "async function load() {\n  try {\n    return Promise.reject(new Error(\"offline\"));\n  } catch {\n    return \"fallback\";\n  }\n}\nload().then(\n  (v) => console.log(\"value: \" + v),\n  (e) => console.log(\"rejected: \" + e.message),\n);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`getProfile()` and `getSettings()` are independent and each takes about 300 ms. Roughly how long does this take?\n\n```js\nconst profile = await getProfile();\nconst settings = await getSettings();\n```",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "About 600 ms — the second request starts only after the first finishes",
+        "About 300 ms — `await` runs them in parallel",
+        "About 300 ms — the engine reorders independent awaits",
+        "About 0 ms — `await` does not block"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each `await` pauses the function until that promise settles, so the second request is not even started until the first is done. Start both first: `const [profile, settings] = await Promise.all([getProfile(), getSettings()])`.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Write `retryWithBackoff(fn, retries, baseMs, sleep)`: call `fn`; after each failure wait `baseMs * 2^attempt` (100, 200, 400… for base 100) using the given async `sleep(ms)`, then retry. After `retries` retries, reject with the last error.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runBackoff",
+      "starterCode": "async function retryWithBackoff(fn, retries, baseMs, sleep) {\n  for (let attempt = 0; attempt < retries; attempt++) {\n    try {\n      return await fn();\n    } catch (e) {\n      await sleep(baseMs);\n    }\n  }\n}\n\n// Test driver (leave as is): sleep only records the delay; fn fails the first failFirst times.\nasync function runBackoff(failFirst, retries, baseMs) {\n  const delays = [];\n  let attempts = 0;\n  const fn = async () => {\n    attempts++;\n    if (attempts <= failFirst) throw new Error(\"fail \" + attempts);\n    return \"ok\";\n  };\n  const sleep = async (ms) => {\n    delays.push(ms);\n  };\n  try {\n    return { result: await retryWithBackoff(fn, retries, baseMs, sleep), delays, attempts };\n  } catch (e) {\n    return { result: \"error: \" + e.message, delays, attempts };\n  }\n}",
+      "referenceSolution": "async function retryWithBackoff(fn, retries, baseMs, sleep) {\n  for (let attempt = 0; ; attempt++) {\n    try {\n      return await fn();\n    } catch (e) {\n      if (attempt >= retries) throw e;\n      await sleep(baseMs * 2 ** attempt);\n    }\n  }\n}\n\n// Test driver (leave as is): sleep only records the delay; fn fails the first failFirst times.\nasync function runBackoff(failFirst, retries, baseMs) {\n  const delays = [];\n  let attempts = 0;\n  const fn = async () => {\n    attempts++;\n    if (attempts <= failFirst) throw new Error(\"fail \" + attempts);\n    return \"ok\";\n  };\n  const sleep = async (ms) => {\n    delays.push(ms);\n  };\n  try {\n    return { result: await retryWithBackoff(fn, retries, baseMs, sleep), delays, attempts };\n  } catch (e) {\n    return { result: \"error: \" + e.message, delays, attempts };\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2,
+            3,
+            100
+          ],
+          "expected": {
+            "result": "ok",
+            "delays": [
+              100,
+              200
+            ],
+            "attempts": 3
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            3,
+            100
+          ],
+          "expected": {
+            "result": "ok",
+            "delays": [],
+            "attempts": 1
+          }
+        },
+        {
+          "args": [
+            9,
+            2,
+            50
+          ],
+          "expected": {
+            "result": "error: fail 3",
+            "delays": [
+              50,
+              100
+            ],
+            "attempts": 3
+          }
+        },
+        {
+          "args": [
+            3,
+            3,
+            10
+          ],
+          "expected": {
+            "result": "ok",
+            "delays": [
+              10,
+              20,
+              40
+            ],
+            "attempts": 4
+          }
+        },
+        {
+          "args": [
+            1,
+            0,
+            100
+          ],
+          "expected": {
+            "result": "error: fail 1",
+            "delays": [],
+            "attempts": 1
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Write `createLoader(fetchMany)` (a mini DataLoader): `load(key)` returns a promise, and all `load` calls made in the **same tick** are sent as one `fetchMany(keys)` call, which resolves to values in the same order as `keys`. If `fetchMany` rejects, every load in that batch rejects.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runLoader",
+      "starterCode": "function createLoader(fetchMany) {\n  return async (key) => {\n    const [value] = await fetchMany([key]);\n    return value;\n  };\n}\n\n// Test driver (leave as is): each group of keys is loaded together; groups run one after another.\n// fetchMany fails for any batch containing \"boom\".\nasync function runLoader(groups) {\n  const batches = [];\n  const load = createLoader(async (keys) => {\n    batches.push(keys);\n    await null;\n    if (keys.includes(\"boom\")) throw new Error(\"batch failed\");\n    return keys.map((k) => k.toUpperCase());\n  });\n  const values = [];\n  for (const group of groups) {\n    values.push(await Promise.all(group.map((k) => load(k).catch((e) => \"error: \" + e.message))));\n  }\n  return { values, batches };\n}",
+      "referenceSolution": "function createLoader(fetchMany) {\n  let queue = [];\n  return (key) =>\n    new Promise((resolve, reject) => {\n      queue.push({ key, resolve, reject });\n      if (queue.length === 1) {\n        Promise.resolve().then(async () => {\n          const batch = queue;\n          queue = [];\n          try {\n            const values = await fetchMany(batch.map((b) => b.key));\n            batch.forEach((b, i) => b.resolve(values[i]));\n          } catch (e) {\n            batch.forEach((b) => b.reject(e));\n          }\n        });\n      }\n    });\n}\n\n// Test driver (leave as is): each group of keys is loaded together; groups run one after another.\n// fetchMany fails for any batch containing \"boom\".\nasync function runLoader(groups) {\n  const batches = [];\n  const load = createLoader(async (keys) => {\n    batches.push(keys);\n    await null;\n    if (keys.includes(\"boom\")) throw new Error(\"batch failed\");\n    return keys.map((k) => k.toUpperCase());\n  });\n  const values = [];\n  for (const group of groups) {\n    values.push(await Promise.all(group.map((k) => load(k).catch((e) => \"error: \" + e.message))));\n  }\n  return { values, batches };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                "b",
+                "c"
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              [
+                "A",
+                "B",
+                "C"
+              ]
+            ],
+            "batches": [
+              [
+                "a",
+                "b",
+                "c"
+              ]
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "values": [],
+            "batches": []
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "a"
+              ],
+              [
+                "b",
+                "c"
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              [
+                "A"
+              ],
+              [
+                "B",
+                "C"
+              ]
+            ],
+            "batches": [
+              [
+                "a"
+              ],
+              [
+                "b",
+                "c"
+              ]
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                "x",
+                "boom"
+              ],
+              [
+                "y"
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              [
+                "error: batch failed",
+                "error: batch failed"
+              ],
+              [
+                "Y"
+              ]
+            ],
+            "batches": [
+              [
+                "x",
+                "boom"
+              ],
+              [
+                "y"
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A search box fires a request per keystroke and responses can arrive out of order. Write `latestOnly(fn)`: the wrapped async function resolves to `fn`'s result only for the **most recent** call; any older call resolves to `null` instead of overwriting newer results.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runSearch",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction latestOnly(fn) {\n  return (...args) => fn(...args);\n}\n\n// Test driver (leave as is): queries = [[text, ticks]] all fired at once; ticks = response delay.\nasync function runSearch(queries) {\n  const search = latestOnly(async (q, t) => {\n    await ticks(t);\n    return \"results for \" + q;\n  });\n  return Promise.all(queries.map(([q, t]) => search(q, t)));\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\nfunction latestOnly(fn) {\n  let latest = 0;\n  return async (...args) => {\n    const id = ++latest;\n    const result = await fn(...args);\n    return id === latest ? result : null;\n  };\n}\n\n// Test driver (leave as is): queries = [[text, ticks]] all fired at once; ticks = response delay.\nasync function runSearch(queries) {\n  const search = latestOnly(async (q, t) => {\n    await ticks(t);\n    return \"results for \" + q;\n  });\n  return Promise.all(queries.map(([q, t]) => search(q, t)));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                3
+              ],
+              [
+                "ab",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            null,
+            "results for ab"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "x",
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            "results for x"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                1
+              ],
+              [
+                "ab",
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            null,
+            "results for ab"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                1
+              ],
+              [
+                "ab",
+                5
+              ],
+              [
+                "abc",
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            null,
+            null,
+            "results for abc"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Write `circuitBreaker(fn, threshold)`: after `threshold` **consecutive** failures, further calls reject immediately with `Error(\"circuit open\")` without calling `fn`. A success resets the failure count.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runBreaker",
+      "starterCode": "function circuitBreaker(fn, threshold) {\n  let failures = 0;\n  return async (...args) => {\n    try {\n      return await fn(...args);\n    } catch (e) {\n      failures++;\n      throw e;\n    }\n  };\n}\n\n// Test driver (leave as is): outcomes is what the real service does on each actual call.\nasync function runBreaker(outcomes, threshold, calls) {\n  let used = 0;\n  const service = async () => {\n    const o = outcomes[used++];\n    await null;\n    if (o !== \"ok\") throw new Error(\"boom\");\n    return \"ok\";\n  };\n  const guarded = circuitBreaker(service, threshold);\n  const results = [];\n  for (let i = 0; i < calls; i++) {\n    results.push(await guarded().catch((e) => \"error: \" + e.message));\n  }\n  return { results, serviceCalls: used };\n}",
+      "referenceSolution": "function circuitBreaker(fn, threshold) {\n  let failures = 0;\n  return async (...args) => {\n    if (failures >= threshold) throw new Error(\"circuit open\");\n    try {\n      const result = await fn(...args);\n      failures = 0;\n      return result;\n    } catch (e) {\n      failures++;\n      throw e;\n    }\n  };\n}\n\n// Test driver (leave as is): outcomes is what the real service does on each actual call.\nasync function runBreaker(outcomes, threshold, calls) {\n  let used = 0;\n  const service = async () => {\n    const o = outcomes[used++];\n    await null;\n    if (o !== \"ok\") throw new Error(\"boom\");\n    return \"ok\";\n  };\n  const guarded = circuitBreaker(service, threshold);\n  const results = [];\n  for (let i = 0; i < calls; i++) {\n    results.push(await guarded().catch((e) => \"error: \" + e.message));\n  }\n  return { results, serviceCalls: used };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "fail",
+              "fail",
+              "ok"
+            ],
+            2,
+            3
+          ],
+          "expected": {
+            "results": [
+              "error: boom",
+              "error: boom",
+              "error: circuit open"
+            ],
+            "serviceCalls": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "ok",
+              "ok"
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "results": [
+              "ok",
+              "ok"
+            ],
+            "serviceCalls": 2
+          }
+        },
+        {
+          "args": [
+            [
+              "fail",
+              "ok",
+              "fail",
+              "ok"
+            ],
+            2,
+            4
+          ],
+          "expected": {
+            "results": [
+              "error: boom",
+              "ok",
+              "error: boom",
+              "ok"
+            ],
+            "serviceCalls": 4
+          }
+        },
+        {
+          "args": [
+            [
+              "fail"
+            ],
+            1,
+            3
+          ],
+          "expected": {
+            "results": [
+              "error: boom",
+              "error: circuit open",
+              "error: circuit open"
+            ],
+            "serviceCalls": 1
+          }
+        },
+        {
+          "args": [
+            [],
+            3,
+            0
+          ],
+          "expected": {
+            "results": [],
+            "serviceCalls": 0
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Write `withSignal(task, signal)`: run the async `task`, but reject with `Error(\"Aborted\")` as soon as `signal` fires. If the signal has already fired, reject without starting the task. (The signal is a tiny fake with `aborted` and `onAbort(cb)`.)",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "runAbortable",
+      "starterCode": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\ninterface Signal {\n  aborted: boolean;\n  onAbort(cb: () => void): void;\n}\n\nfunction withSignal<T>(task: () => Promise<T>, signal: Signal): Promise<T> {\n  return task();\n}\n\n// Test driver (leave as is): abortAt = ticks until abort (0 = already aborted, -1 = never).\nasync function runAbortable(taskTicks: number, abortAt: number) {\n  const listeners: (() => void)[] = [];\n  const signal = { aborted: false, onAbort: (cb: () => void) => listeners.push(cb) };\n  const abort = () => {\n    signal.aborted = true;\n    listeners.forEach((l) => l());\n  };\n  if (abortAt === 0) abort();\n  else if (abortAt > 0) ticks(abortAt).then(abort);\n  let started = false;\n  const task = async () => {\n    started = true;\n    await ticks(taskTicks);\n    return \"done\";\n  };\n  try {\n    return { result: await withSignal(task, signal), started };\n  } catch (e) {\n    return { result: \"error: \" + (e as Error).message, started };\n  }\n}",
+      "referenceSolution": "// Helper (leave as is): resolves after n microtask turns, so tests never use real time.\nfunction ticks(n) {\n  let p = Promise.resolve();\n  for (let i = 0; i < n; i++) p = p.then(() => {});\n  return p;\n}\n\ninterface Signal {\n  aborted: boolean;\n  onAbort(cb: () => void): void;\n}\n\nfunction withSignal<T>(task: () => Promise<T>, signal: Signal): Promise<T> {\n  if (signal.aborted) return Promise.reject(new Error(\"Aborted\"));\n  return new Promise<T>((resolve, reject) => {\n    signal.onAbort(() => reject(new Error(\"Aborted\")));\n    task().then(resolve, reject);\n  });\n}\n\n// Test driver (leave as is): abortAt = ticks until abort (0 = already aborted, -1 = never).\nasync function runAbortable(taskTicks: number, abortAt: number) {\n  const listeners: (() => void)[] = [];\n  const signal = { aborted: false, onAbort: (cb: () => void) => listeners.push(cb) };\n  const abort = () => {\n    signal.aborted = true;\n    listeners.forEach((l) => l());\n  };\n  if (abortAt === 0) abort();\n  else if (abortAt > 0) ticks(abortAt).then(abort);\n  let started = false;\n  const task = async () => {\n    started = true;\n    await ticks(taskTicks);\n    return \"done\";\n  };\n  try {\n    return { result: await withSignal(task, signal), started };\n  } catch (e) {\n    return { result: \"error: \" + (e as Error).message, started };\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2,
+            -1
+          ],
+          "expected": {
+            "result": "done",
+            "started": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            2,
+            0
+          ],
+          "expected": {
+            "result": "error: Aborted",
+            "started": false
+          }
+        },
+        {
+          "args": [
+            10,
+            3
+          ],
+          "expected": {
+            "result": "error: Aborted",
+            "started": true
+          }
+        },
+        {
+          "args": [
+            1,
+            20
+          ],
+          "expected": {
+            "result": "done",
+            "started": true
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-async-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "This Express handler imports a CSV of orders. Mark the lines with async bugs.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines with async bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "app.post(\"/import\", async (req, res) => {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const rows = parseCsv(req.body);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  rows.forEach(async (row) => { await db.orders.insert(row); });",
+          "issue": "`forEach` does not wait for async callbacks; the response is sent before inserts finish and their errors are unhandled."
+        },
+        {
+          "id": "l4",
+          "text": "  const customer = await db.customers.find(rows[0].customerId);",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  for (const row of rows) { await sendEmail(row.email); }",
+          "issue": "Hundreds of independent emails sent strictly one after another; batch them or use a limited-concurrency pool / queue."
+        },
+        {
+          "id": "l6",
+          "text": "  audit.log(\"import\", customer.id);",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  notifySlack(\"import done\");",
+          "issue": "Promise neither awaited nor given a `.catch`; a Slack failure becomes an unhandled rejection."
+        },
+        {
+          "id": "l8",
+          "text": "  res.json({ imported: rows.length });",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "});",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-js-async-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "executor, after constructor, then",
+        "after constructor, executor, then",
+        "executor, then, after constructor",
+        "after constructor, then, executor"
+      ],
+      "correctIndex": 0,
+      "explanation": "The function passed to `new Promise` runs synchronously, right away. Only the `.then` callback is deferred to a microtask. That is why wrapping work in `new Promise` does not make it run in the background.",
+      "snippet": "const p = new Promise((resolve) => {\n  console.log(\"executor\");\n  resolve();\n});\nconsole.log(\"after constructor\");\np.then(() => console.log(\"then\"));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "30,10,20",
+        "10,20,30",
+        "30,20,10",
+        "10,30,20"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Promise.all` returns values in the order of the *input* array, not the order they finished. That is what lets you destructure results safely.",
+      "snippet": "const wait = (ms) => new Promise((r) => setTimeout(() => r(ms), ms));\n(async () => {\n  const results = await Promise.all([wait(30), wait(10), wait(20)]);\n  console.log(results.join(\",\"));\n})();",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-async-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "data",
+        "cleanup",
+        "undefined",
+        "[\"data\", \"cleanup\"]"
+      ],
+      "correctIndex": 0,
+      "explanation": "`finally` is for side effects: its return value is ignored and the original value passes through. (Only a throw or a rejected promise from `finally` changes the outcome.)",
+      "snippet": "Promise.resolve(\"data\")\n  .finally(() => \"cleanup\")\n  .then((v) => console.log(v));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  }
+]

@@ -81,7 +81,18 @@ export class PistonClient {
     }
   }
 
+  /**
+   * Runs once, and once more if the run timed out having printed nothing: on a busy runner a JVM
+   * start alone can eat the budget, and marking a learner's correct Java wrong for that is worse
+   * than a second try. A genuine infinite loop times out twice and is reported as such.
+   */
   async execute(language: SandboxLanguage, source: string, stdin: string, timeoutMs?: number): Promise<PistonResponse> {
+    const first = await this.executeOnce(language, source, stdin, timeoutMs);
+    const timedOutEmpty = (first.run?.status === "TO" || first.run?.signal === "SIGKILL") && !(first.run?.stdout ?? "").trim();
+    return timedOutEmpty ? this.executeOnce(language, source, stdin, timeoutMs) : first;
+  }
+
+  private async executeOnce(language: SandboxLanguage, source: string, stdin: string, timeoutMs?: number): Promise<PistonResponse> {
     const name = PISTON_LANGUAGE[language];
     if (!name) throw new SandboxUnavailableError(`${language} cannot run in the code runner.`);
     const version = (await this.runtimes()).get(name);

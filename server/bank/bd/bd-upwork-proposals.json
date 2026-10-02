@@ -1,0 +1,388 @@
+[
+  {
+    "id": "bd-upwork-proposals-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "This Upwork proposal was sent to a job for a 'booking app for a chain of 8 dental clinics, iOS and Android, with SMS reminders'. Mark the sentences that weaken it.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "This Upwork proposal was sent to a job for a 'booking app for a chain of 8 dental clinics, iOS and Android, with SMS reminders'. Mark the sentences that weaken it.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Dear Sir/Madam, I hope this message finds you well.",
+          "issue": "Generic greeting wastes the preview lines the client reads first."
+        },
+        {
+          "id": "p2",
+          "text": "You need patients across 8 clinics to book and get SMS reminders without phone calls, on both iOS and Android.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "We built a similar booking app for a 5-location physiotherapy group; no-shows dropped after reminders went live.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Our company was founded many years ago and has over 100 talented developers in many technologies.",
+          "issue": "Agency boilerplate about size says nothing about this client's problem."
+        },
+        {
+          "id": "p5",
+          "text": "I would suggest one cross-platform app so both stores launch together and maintenance stays in one codebase.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Quick question: do the clinics already use a practice-management system we should sync with?",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Please check our portfolio of 300 projects and let me know if you like anything.",
+          "issue": "Pushes work onto the client; link one or two relevant examples instead."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-upwork-proposals-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order these parts of a strong Upwork proposal from first to last.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these parts of a strong Upwork proposal from first to last.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Brief approach or first idea specific to their job"
+        },
+        {
+          "id": "r4",
+          "label": "A smart question about their scope"
+        },
+        {
+          "id": "r5",
+          "label": "Clear call to action, e.g. a short call this week"
+        },
+        {
+          "id": "r1",
+          "label": "One line restating the client's problem in their terms"
+        },
+        {
+          "id": "r2",
+          "label": "Relevant proof: a similar project and its outcome"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Lead with their problem (the preview), back it with proof, show how you would approach it, ask a question that starts a conversation, then close with a next step."
+    }
+  },
+  {
+    "id": "bd-upwork-proposals-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 3,
+    "prompt": "Write the opening of an Upwork proposal (the part the client sees before clicking) for the job below. Make the client want to open it.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write the opening of an Upwork proposal (the part the client sees before clicking) for the job below. Make the client want to open it.",
+      "context": "Job post: \"We run a 40-room boutique hotel. Guests email us the same questions all day (check-in time, parking, breakfast). We want an AI assistant on our website and WhatsApp that answers these and hands over to staff when needed. Budget: $8k-$12k. Need it before summer season.\"",
+      "wordLimit": 110,
+      "rubric": [
+        {
+          "id": "problem",
+          "label": "Mirrors their problem",
+          "description": "Restates the repetitive guest questions and the website + WhatsApp channels in the client's terms in the first sentence.",
+          "weight": 1
+        },
+        {
+          "id": "proof",
+          "label": "Relevant proof",
+          "description": "Mentions one comparable AI assistant or hospitality/support project with a concrete outcome, without inventing implausible stats.",
+          "weight": 1
+        },
+        {
+          "id": "specific",
+          "label": "Specific idea or question",
+          "description": "Includes one job-specific idea (e.g. human handover, training on their FAQ) or a smart question; nothing generic.",
+          "weight": 1
+        },
+        {
+          "id": "cta",
+          "label": "Clear next step",
+          "description": "Ends with a low-effort next step such as a short call or a quick demo, and respects their summer deadline.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Answering \"what time is check-in?\" fifty times a day is exactly what an AI assistant should take off your front desk. We recently built a website and WhatsApp assistant for a guesthouse group that answers routine questions from their own FAQ and hands anything unusual to staff with the full chat attached. For your hotel I would start with your top 20 guest questions so it is live well before summer. Do you already use a booking or PMS system it should check? Happy to show you a 5-minute demo this week."
+    }
+  },
+  {
+    "id": "bd-upwork-proposals-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client posts: 'Need a senior team to rebuild our logistics dashboard in React. Answer the screening question: how would you approach the first two weeks?' The budget is $25k-$40k.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client posts: 'Need a senior team to rebuild our logistics dashboard in React. Answer the screening question: how would you approach the first two weeks?' The budget is $25k-$40k.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should you answer the screening question?",
+          "options": [
+            "Write 'Let's discuss on a call'",
+            "Paste the agency's standard process document",
+            "Give a short, specific plan: audit the current dashboard, confirm key user flows, propose a phased rebuild with a first deliverable",
+            "List every React library the team knows"
+          ],
+          "correctIndex": 2,
+          "explanation": "Screening questions are where clients filter; a specific, credible plan shows senior thinking."
+        },
+        {
+          "id": "s2",
+          "question": "The client invites you to interview and asks for a fixed price on the spot. You have not seen the current system. What do you do?",
+          "options": [
+            "Refuse to discuss price until a full spec exists",
+            "Quote the top of their budget with no reasoning",
+            "Give a range based on comparable dashboards, and explain a short paid discovery or code review will firm it up",
+            "Quote the bottom of their budget to win"
+          ],
+          "correctIndex": 2,
+          "explanation": "A grounded range with a clear path to a firm number is honest and keeps momentum."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upwork-proposals-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You A/B tested two proposal openings over a quarter. Calculate the reply rate (%) and the win rate per proposal (%) for each version.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "You A/B tested two proposal openings over a quarter. Calculate the reply rate (%) and the win rate per proposal (%) for each version.",
+      "table": {
+        "columns": [
+          "Version",
+          "Proposals",
+          "Client replies",
+          "Wins"
+        ],
+        "rows": [
+          [
+            "A: agency intro first",
+            "60",
+            "6",
+            "2"
+          ],
+          [
+            "B: client's problem first",
+            "50",
+            "12",
+            "4"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ra",
+          "label": "Reply rate, A",
+          "unit": "%",
+          "answer": 10,
+          "tolerance": 0.1
+        },
+        {
+          "id": "rb",
+          "label": "Reply rate, B",
+          "unit": "%",
+          "answer": 24,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wa",
+          "label": "Win rate, A",
+          "unit": "%",
+          "answer": 3.33,
+          "tolerance": 0.05
+        },
+        {
+          "id": "wb",
+          "label": "Win rate, B",
+          "unit": "%",
+          "answer": 8,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "A: 6/60 = 10% replies, 2/60 = 3.33% wins. B: 12/50 = 24% replies, 4/50 = 8% wins. Problem-first openings perform better."
+    }
+  },
+  {
+    "id": "bd-upwork-proposals-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the sentences in this proposal for a $60k 'AI document-processing platform for an insurance broker' that create risk or overpromise.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the sentences in this proposal for a $60k 'AI document-processing platform for an insurance broker' that create risk or overpromise.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "You want claim documents read automatically so your team stops retyping data into your system.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We guarantee 100% extraction accuracy on all documents from day one.",
+          "issue": "No AI system can guarantee 100% accuracy; promise a measured target and a human review step."
+        },
+        {
+          "id": "p3",
+          "text": "We would start with a two-week proof of concept on 200 of your real documents to measure accuracy.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Low-confidence fields would be flagged for your team to review before saving.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "We can deliver the full platform in two weeks for any budget you have.",
+          "issue": "Unrealistic timeline and vague price undermine credibility on a $60k build."
+        },
+        {
+          "id": "p6",
+          "text": "What formats do most claims arrive in today: scanned PDFs, photos or emails?",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-upwork-proposals-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why should the first one or two lines of an Upwork proposal focus on the client's problem?",
+    "mcq": {
+      "options": [
+        "It makes the proposal shorter to write",
+        "Clients only read the last line",
+        "The client often sees only a short preview before deciding whether to open a proposal",
+        "Upwork deletes proposals that start with a greeting"
+      ],
+      "correctIndex": 2,
+      "explanation": "The preview is the hook; a line about their problem earns the click where a generic intro does not.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-proposals-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which proposal closing is most likely to get a reply?",
+    "mcq": {
+      "options": [
+        "Please hire us, we are the best",
+        "Our rate is non-negotiable",
+        "A specific question about their project plus an offer of a short call",
+        "Thanks for reading, hope to hear from you"
+      ],
+      "correctIndex": 2,
+      "explanation": "A relevant question gives the client an easy reason to reply and starts a conversation.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-proposals-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client's job post is vague: 'Need an app like Airbnb, budget TBD'. What is the strongest proposal approach?",
+    "mcq": {
+      "options": [
+        "Send your longest proposal template",
+        "Show relevant marketplace proof, propose a small paid discovery or MVP scope, and ask two sharp questions to define it",
+        "Quote the full cost of an Airbnb-scale product",
+        "Skip it because vague posts never convert"
+      ],
+      "correctIndex": 1,
+      "explanation": "Vague posts reward the agency that helps shape the scope; a defined first step lowers the client's risk.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

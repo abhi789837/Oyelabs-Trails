@@ -1,0 +1,320 @@
+[
+  {
+    "id": "bd-ip-clauses-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the IP terms to flag to counsel in this SOW.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this SOW's IP section that you should flag to counsel before signing.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Custom code written for this project is assigned to the client.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "IP transfers to the client on signature of this SOW.",
+          "issue": "Transfer before payment removes leverage if invoices go unpaid; flag the timing to counsel."
+        },
+        {
+          "id": "p3",
+          "text": "The client also owns all of the agency's pre-existing tools and libraries used in the project.",
+          "issue": "Losing pre-existing IP stops you reusing it for other clients; flag it."
+        },
+        {
+          "id": "p4",
+          "text": "Third-party and open-source components remain under their own licences.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "The agency may show non-confidential screenshots in its portfolio with approval.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The agency warrants that no open-source software is used anywhere.",
+          "issue": "Almost all modern software uses open source; this warranty is likely untrue and needs counsel."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-ip-clauses-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order how BD handles IP terms in a deal.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for handling IP terms in a new deal, first at the top.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Flag the IP terms and those components to counsel"
+        },
+        {
+          "id": "i3",
+          "label": "Counsel advises on the wording"
+        },
+        {
+          "id": "i4",
+          "label": "Explain the agreed position to the client in plain terms, as counsel approved"
+        },
+        {
+          "id": "i5",
+          "label": "Record the final position in the SOW"
+        },
+        {
+          "id": "i1",
+          "label": "Ask delivery which pre-existing and third-party components will be used"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "BD gathers the facts and manages the conversation; counsel sets the wording."
+    }
+  },
+  {
+    "id": "bd-ip-clauses-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle an ownership request on a white-label platform.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client buying your white-label marketplace platform asks to own the entire codebase exclusively. You license the same base platform to many clients.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best response?",
+          "options": [
+            "Agree to transfer the whole platform",
+            "Refuse to discuss ownership",
+            "Promise exclusivity verbally",
+            "Explain that the base platform is licensed, while custom work built for them can be theirs, subject to counsel's wording"
+          ],
+          "correctIndex": 3,
+          "explanation": "License the shared base; discuss ownership of client-specific work; counsel drafts it."
+        },
+        {
+          "id": "s2",
+          "question": "They insist on full ownership. What commercial option can you explore?",
+          "options": [
+            "A separate, much higher-priced buyout or custom build, decided with leadership and counsel",
+            "Give it free to win the deal",
+            "Sell it and keep licensing it to others",
+            "End talks immediately"
+          ],
+          "correctIndex": 0,
+          "explanation": "Exclusive ownership of a reusable asset has a different price and needs leadership approval."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ip-clauses-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Respond to a request to remove the liability cap.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks to remove the liability cap from your contract \"because we trust you\".",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Agree, to show confidence",
+            "Remove it from the document yourself",
+            "Explain that the cap is standard practice for you and pass the request to counsel and leadership",
+            "Tell them caps are illegal to remove"
+          ],
+          "correctIndex": 2,
+          "explanation": "Liability caps are a legal and business risk decision, not BD's to waive."
+        },
+        {
+          "id": "s2",
+          "question": "Counsel proposes a higher cap as a compromise. How do you present it?",
+          "options": [
+            "Rephrase it in your own legal terms",
+            "Present it as final and non-negotiable without discussion",
+            "Skip it and hope they forget",
+            "As counsel worded it, focusing on the commercial reasoning, without giving legal interpretation"
+          ],
+          "correctIndex": 3,
+          "explanation": "Relay legal positions accurately and leave interpretation to counsel."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ip-clauses-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Compare liability cap proposals in numbers.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your counsel-approved terms cap liability at 1.5× the fees under the relevant SOW. The SOW is worth $120,000. The client proposes a cap equal to the total fees across all three SOWs under the MSA ($120,000, $80,000 and $60,000).",
+      "table": null,
+      "fields": [
+        {
+          "id": "yours",
+          "label": "Cap under your terms",
+          "unit": "$",
+          "answer": 180000,
+          "tolerance": 1
+        },
+        {
+          "id": "theirs",
+          "label": "Cap under the client's proposal",
+          "unit": "$",
+          "answer": 260000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Yours: 1.5 × 120,000 = $180,000. Theirs: 120,000 + 80,000 + 60,000 = $260,000. Knowing the numbers helps the conversation; deciding what is acceptable is for counsel and leadership."
+    }
+  },
+  {
+    "id": "bd-ip-clauses-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Answer questions about AI-assisted code and IP.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks: \"If your developers use AI coding tools, do we still own the code?\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you answer?",
+          "options": [
+            "Be open that AI tools are used under your policy, and get counsel to confirm the contract wording on ownership",
+            "Say you never use AI tools",
+            "Guarantee ownership in your own words",
+            "Say it is a grey area and move on"
+          ],
+          "correctIndex": 0,
+          "explanation": "Be transparent about practice and let counsel answer the legal question."
+        },
+        {
+          "id": "s2",
+          "question": "The client wants AI tools excluded from their project. What do you do?",
+          "options": [
+            "Agree verbally",
+            "Check with delivery whether that is feasible, agree it explicitly in the SOW, and price any impact",
+            "Agree but keep using them",
+            "Refuse"
+          ],
+          "correctIndex": 1,
+          "explanation": "Any restriction must be feasible, written down and honoured."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ip-clauses-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is \"pre-existing IP\" in an agency contract?",
+    "mcq": {
+      "options": [
+        "Code written during the project",
+        "The client's brand",
+        "Tools, libraries and code the agency owned before the project and reuses across clients",
+        "Open-source software"
+      ],
+      "correctIndex": 2,
+      "explanation": "Keeping pre-existing IP lets the agency reuse it; clients usually get a licence to it in their product.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ip-clauses-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why do agencies often tie IP transfer to full payment?",
+    "mcq": {
+      "options": [
+        "It is required by every law",
+        "It makes code run faster",
+        "Clients prefer it",
+        "It keeps leverage to be paid for the work delivered"
+      ],
+      "correctIndex": 3,
+      "explanation": "This is a common commercial position; the exact wording is for counsel.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ip-clauses-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-ip-clauses",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Who should decide the final wording of IP and liability clauses?",
+    "mcq": {
+      "options": [
+        "Counsel, with leadership deciding on the business risk",
+        "The BD rep closing the deal",
+        "The client's procurement team alone",
+        "The lead developer"
+      ],
+      "correctIndex": 0,
+      "explanation": "BD supplies context and manages the conversation, but legal wording and risk acceptance sit elsewhere.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

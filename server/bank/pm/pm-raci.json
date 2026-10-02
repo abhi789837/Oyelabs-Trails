@@ -1,0 +1,396 @@
+[
+  {
+    "id": "pm-raci-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the rows in this RACI for an app release that break RACI rules.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Write release notes: PM = A, Tech lead = R, Client PO = I",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Approve production release: Client PO = A, PM = A, Tech lead = C",
+          "issue": "Two Accountable roles; there must be exactly one A per activity."
+        },
+        {
+          "id": "p3",
+          "text": "Run regression tests: QA = R, PM = A, Tech lead = C",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Submit to app stores: Tech lead = R, PM = A",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Update the status page: Support = C, PM = I",
+          "issue": "No one is Responsible or Accountable, so nobody will do it."
+        },
+        {
+          "id": "p6",
+          "text": "Notify end users: Client marketing = R and A",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-raci-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "From this RACI matrix for a website launch, count the assignments for the PM.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Task",
+          "PM",
+          "Dev lead",
+          "QA",
+          "Client"
+        ],
+        "rows": [
+          [
+            "Content migration",
+            "R",
+            "C",
+            "-",
+            "A"
+          ],
+          [
+            "QA sign-off",
+            "A",
+            "C",
+            "R",
+            "I"
+          ],
+          [
+            "DNS cutover",
+            "A",
+            "R",
+            "I",
+            "C"
+          ],
+          [
+            "Analytics setup",
+            "A",
+            "R",
+            "-",
+            "I"
+          ],
+          [
+            "Launch comms",
+            "R",
+            "I",
+            "-",
+            "A"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "r",
+          "label": "Tasks where PM is Responsible",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        },
+        {
+          "id": "a",
+          "label": "Tasks where PM is Accountable",
+          "unit": "",
+          "answer": 3,
+          "tolerance": 0
+        },
+        {
+          "id": "total",
+          "label": "Tasks where PM has any role",
+          "unit": "",
+          "answer": 5,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "PM: R on content migration and launch comms (2); A on QA sign-off, DNS cutover and analytics setup (3). All 5 tasks involve the PM."
+    }
+  },
+  {
+    "id": "pm-raci-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the RACI letters from 'does the work' to 'only kept up to date'.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Informed: told about progress or the result"
+        },
+        {
+          "id": "r2",
+          "label": "Accountable: owns the outcome and signs off"
+        },
+        {
+          "id": "r1",
+          "label": "Responsible: does the work"
+        },
+        {
+          "id": "r3",
+          "label": "Consulted: gives input before the work is done"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "R does the work, A owns and approves it, C is asked for input (two-way), I is told (one-way)."
+    }
+  },
+  {
+    "id": "pm-raci-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "On a white-label app, design approvals keep stalling because the client's marketing head, product owner and CEO all believe they sign off designs.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a white-label app, design approvals keep stalling because the client's marketing head, product owner and CEO all believe they sign off designs.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Get approval from all three each time",
+            "Propose a RACI for design approval with one Accountable person, and have the sponsor confirm it",
+            "Let the designers decide",
+            "Skip approvals to save time"
+          ],
+          "correctIndex": 1,
+          "explanation": "One Accountable approver removes the deadlock; the sponsor confirming it gives it authority."
+        },
+        {
+          "id": "s2",
+          "question": "The product owner becomes Accountable. What are the other two?",
+          "options": [
+            "Also Accountable",
+            "Consulted (marketing head) and Informed (CEO), or as the sponsor agrees",
+            "Removed from the project",
+            "Responsible for the designs"
+          ],
+          "correctIndex": 1,
+          "explanation": "Others keep a voice (C) or visibility (I) without blocking sign-off."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-raci-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this RACI note a PM shared with a client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Each row has exactly one Accountable person.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Our developers are Responsible for building features.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Everyone on the client side is marked Consulted on every task to keep them engaged.",
+          "issue": "Too many C's slow every task; consult only people whose input is needed."
+        },
+        {
+          "id": "p4",
+          "text": "The client PO is Accountable for accepting stories.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "The RACI is final and won't be revisited during the project.",
+          "issue": "Roles change during a project; the RACI should be reviewed when people or phases change."
+        },
+        {
+          "id": "p6",
+          "text": "Informed people get the weekly status report.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-raci-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps to build a RACI for a new project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Add Responsible, Consulted and Informed"
+        },
+        {
+          "id": "r2",
+          "label": "List the roles (not just names) involved"
+        },
+        {
+          "id": "r1",
+          "label": "List the key activities and deliverables"
+        },
+        {
+          "id": "r3",
+          "label": "Assign one Accountable per activity"
+        },
+        {
+          "id": "r5",
+          "label": "Review it with the team and the client, then share it"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Activities and roles form the grid; fix the single A first, fill the rest, then validate with the people involved."
+    }
+  },
+  {
+    "id": "pm-raci-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "How many people should be Accountable for one activity in a RACI?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Exactly one",
+        "At least two, for backup",
+        "Everyone in the team",
+        "None, accountability is shared"
+      ],
+      "correctIndex": 0,
+      "explanation": "One Accountable person avoids confusion over who owns the outcome.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-raci-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between Consulted and Informed?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Consulted gives input before or during the work (two-way); Informed is told afterwards (one-way)",
+        "They mean the same thing",
+        "Informed people approve the work",
+        "Consulted people do the work"
+      ],
+      "correctIndex": 0,
+      "explanation": "C is a two-way conversation that shapes the work; I is a one-way update.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-raci-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-raci",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A row has a Responsible and a Consulted person but no Accountable. What is the risk?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Nobody owns the final decision or sign-off",
+        "Too many people approve it",
+        "The task will be done twice",
+        "No risk, Accountable is optional"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without an A, the work may be done but nobody signs it off or answers for it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

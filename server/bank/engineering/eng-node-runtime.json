@@ -1,0 +1,2141 @@
+[
+  {
+    "id": "eng-node-runtime-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `getExtension` so it behaves like `path.extname`: return the last extension including the dot (`'app.test.js'` gives `'.js'`), or `''` when there is none. A leading dot alone (`'.env'`) is not an extension.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "getExtension",
+      "starterCode": "function getExtension(filename) {\n  return filename.slice(filename.indexOf('.'));\n}",
+      "referenceSolution": "function getExtension(filename) {\n  const i = filename.lastIndexOf('.');\n  if (i <= 0) return '';\n  return filename.slice(i);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "server.js"
+          ],
+          "expected": ".js"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "app.test.js"
+          ],
+          "expected": ".js"
+        },
+        {
+          "args": [
+            "README"
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            ".env"
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "archive.tar.gz"
+          ],
+          "expected": ".gz"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`parseArgs` receives `process.argv` (the first two entries are the node binary and the script path). Return an object: `--port=3000` becomes `{ port: '3000' }` and a bare `--verbose` becomes `{ verbose: true }`. Ignore anything that does not start with `--`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseArgs",
+      "starterCode": "function parseArgs(argv) {\n  const out = {};\n  for (let i = 0; i < argv.length; i++) {\n    const arg = argv[i];\n    if (!arg.startsWith('--')) continue;\n    const [key, value] = arg.slice(2).split('=');\n    out[key] = value === undefined ? true : value;\n  }\n  return out;\n}",
+      "referenceSolution": "function parseArgs(argv) {\n  const out = {};\n  for (let i = 2; i < argv.length; i++) {\n    const arg = argv[i];\n    if (!arg.startsWith('--')) continue;\n    const eq = arg.indexOf('=');\n    if (eq === -1) out[arg.slice(2)] = true;\n    else out[arg.slice(2, eq)] = arg.slice(eq + 1);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "/usr/bin/node",
+              "/app/server.js",
+              "--port=3000",
+              "--verbose"
+            ]
+          ],
+          "expected": {
+            "port": "3000",
+            "verbose": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "node",
+              "script.js"
+            ]
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              "node",
+              "--inspect.js",
+              "--env=prod"
+            ]
+          ],
+          "expected": {
+            "env": "prod"
+          }
+        },
+        {
+          "args": [
+            [
+              "node",
+              "s.js",
+              "build",
+              "--out=dist"
+            ]
+          ],
+          "expected": {
+            "out": "dist"
+          }
+        },
+        {
+          "args": [
+            [
+              "node",
+              "s.js",
+              "--url=http://x.io/?a=1"
+            ]
+          ],
+          "expected": {
+            "url": "http://x.io/?a=1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Environment variables are always strings. Fix `readPort` so it returns a **number**: `env.PORT` when it is a valid port (1–65535), otherwise `3000`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "readPort",
+      "starterCode": "function readPort(env) {\n  return env.PORT || 3000;\n}",
+      "referenceSolution": "function readPort(env) {\n  const port = Number(env.PORT);\n  if (Number.isInteger(port) && port >= 1 && port <= 65535) return port;\n  return 3000;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "PORT": "8080"
+            }
+          ],
+          "expected": 8080
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": 3000
+        },
+        {
+          "args": [
+            {
+              "PORT": "abc"
+            }
+          ],
+          "expected": 3000
+        },
+        {
+          "args": [
+            {
+              "PORT": "70000"
+            }
+          ],
+          "expected": 3000
+        },
+        {
+          "args": [
+            {
+              "PORT": "443"
+            }
+          ],
+          "expected": 443
+        },
+        {
+          "args": [
+            {
+              "PORT": ""
+            }
+          ],
+          "expected": 3000
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `basename` so it returns the last segment of a POSIX path, like `path.basename`. A trailing slash is ignored: `'/var/log/'` gives `'log'`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "basename",
+      "starterCode": "function basename(p) {\n  return p.split('/').pop();\n}",
+      "referenceSolution": "function basename(p) {\n  const parts = p.split('/').filter(Boolean);\n  return parts.length ? parts[parts.length - 1] : '';\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/home/app/server.js"
+          ],
+          "expected": "server.js"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/var/log/"
+          ],
+          "expected": "log"
+        },
+        {
+          "args": [
+            "file.txt"
+          ],
+          "expected": "file.txt"
+        },
+        {
+          "args": [
+            "/"
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "a/b//c//"
+          ],
+          "expected": "c"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Node decides how to load a file from its extension and the nearest `package.json`. Complete `moduleType(pkg, filename)` to return `'esm'` or `'cjs'`: `.mjs` is always ESM, `.cjs` is always CommonJS, and `.js` follows `pkg.type` (`'module'` means ESM; anything else, including no `type`, means CommonJS).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "moduleType",
+      "starterCode": "function moduleType(pkg, filename) {\n  if (filename.endsWith('.mjs')) return 'esm';\n  return 'cjs';\n}",
+      "referenceSolution": "function moduleType(pkg, filename) {\n  if (filename.endsWith('.mjs')) return 'esm';\n  if (filename.endsWith('.cjs')) return 'cjs';\n  return pkg && pkg.type === 'module' ? 'esm' : 'cjs';\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "type": "module"
+            },
+            "index.js"
+          ],
+          "expected": "esm"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            "index.js"
+          ],
+          "expected": "cjs"
+        },
+        {
+          "args": [
+            {
+              "type": "module"
+            },
+            "config.cjs"
+          ],
+          "expected": "cjs"
+        },
+        {
+          "args": [
+            {
+              "type": "commonjs"
+            },
+            "tool.mjs"
+          ],
+          "expected": "esm"
+        },
+        {
+          "args": [
+            {
+              "type": "commonjs"
+            },
+            "a.js"
+          ],
+          "expected": "cjs"
+        },
+        {
+          "args": [
+            {
+              "type": "module"
+            },
+            "b.js"
+          ],
+          "expected": "esm"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This small Node server crashes or misbehaves on startup. Mark the lines that are wrong.",
+    "task": {
+      "prompt": "This small Node server crashes or misbehaves on startup. Mark the lines that are wrong.",
+      "kind": "spot",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const fs = require('fs');",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "const path = require('path');",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "const port = process.env.PORT;",
+          "issue": "No fallback: when PORT is unset the server listens on a random port, and the value is a string."
+        },
+        {
+          "id": "l4",
+          "text": "const file = path.join(__dirname, 'data.json');",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "http.createServer((req, res) => {",
+          "issue": "`http` is never required, so this throws a ReferenceError at startup."
+        },
+        {
+          "id": "l6",
+          "text": "  res.end(fs.readFileSync(file));",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "}).listen(port);",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-node-runtime-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You start a script with `node app.js --port 4000`. What is `process.argv[2]`?",
+    "mcq": {
+      "options": [
+        "`'--port'`",
+        "`'4000'`",
+        "`'app.js'`",
+        "`'--port 4000'`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`process.argv[0]` is the node binary, `[1]` is the script path, and user arguments start at index 2. Arguments are split on spaces, so `--port` and `4000` are separate entries.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-node-runtime-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "start, end, timeout",
+        "start, timeout, end",
+        "timeout, start, end",
+        "start, end (the timeout never fires)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Even with a delay of 0, the timer callback runs on a later turn of the event loop, after the synchronous code has finished.",
+      "snippet": "console.log('start');\nsetTimeout(() => console.log('timeout'), 0);\nconsole.log('end');",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-node-runtime-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You rename `server.js` to `server.mjs`. Which of these no longer works inside it without changes?",
+    "mcq": {
+      "options": [
+        "`__dirname`",
+        "`process.env`",
+        "`console.log`",
+        "`setTimeout`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`__dirname`, `__filename` and `require` are CommonJS wrapper variables. In an ES module use `import.meta.dirname` (Node 20.11+) or `path.dirname(fileURLToPath(import.meta.url))`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-node-runtime-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix `compareVersions(a, b)` so it returns `-1`, `0` or `1` comparing two `major.minor.patch` versions **numerically** (`1.10.0` is newer than `1.9.0`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "compareVersions",
+      "starterCode": "function compareVersions(a, b) {\n  if (a === b) return 0;\n  return a < b ? -1 : 1;\n}",
+      "referenceSolution": "function compareVersions(a, b) {\n  const pa = a.split('.').map(Number);\n  const pb = b.split('.').map(Number);\n  for (let i = 0; i < 3; i++) {\n    if (pa[i] !== pb[i]) return pa[i] < pb[i] ? -1 : 1;\n  }\n  return 0;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "1.10.0",
+            "1.9.0"
+          ],
+          "expected": 1
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2.0.0",
+            "2.0.0"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "1.2.3",
+            "1.2.10"
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            "10.0.0",
+            "9.9.9"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "0.0.1",
+            "0.1.0"
+          ],
+          "expected": -1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "In `package.json`, `\"^1.4.2\"` accepts any version with the same major that is `>= 1.4.2`. Complete `satisfiesCaret(version, range)` for majors of 1 or more.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "satisfiesCaret",
+      "starterCode": "function satisfiesCaret(version, range) {\n  const [vMajor] = version.split('.').map(Number);\n  const [rMajor] = range.slice(1).split('.').map(Number);\n  return vMajor === rMajor;\n}",
+      "referenceSolution": "function satisfiesCaret(version, range) {\n  const v = version.split('.').map(Number);\n  const r = range.slice(1).split('.').map(Number);\n  if (v[0] !== r[0]) return false;\n  for (let i = 1; i < 3; i++) {\n    if (v[i] !== r[i]) return v[i] > r[i];\n  }\n  return true;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "1.5.0",
+            "^1.4.2"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "1.4.1",
+            "^1.4.2"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "2.0.0",
+            "^1.4.2"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "1.4.2",
+            "^1.4.2"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "3.10.0",
+            "^3.9.5"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "3.9.4",
+            "^3.9.5"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `normalizePath` like `path.posix.normalize`: resolve `.` and `..` segments and collapse repeated slashes. Keep a leading `/` for absolute paths; `..` cannot go above the root of an absolute path. Return `'.'` for an empty relative result.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "normalizePath",
+      "starterCode": "function normalizePath(p) {\n  return p.split('/').filter((s) => s !== '.').join('/');\n}",
+      "referenceSolution": "function normalizePath(p) {\n  const absolute = p.startsWith('/');\n  const out = [];\n  for (const seg of p.split('/')) {\n    if (!seg || seg === '.') continue;\n    if (seg === '..') {\n      if (out.length && out[out.length - 1] !== '..') out.pop();\n      else if (!absolute) out.push('..');\n    } else out.push(seg);\n  }\n  const body = out.join('/');\n  if (absolute) return '/' + body;\n  return body || '.';\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/app/src/../lib/./util.js"
+          ],
+          "expected": "/app/lib/util.js"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "a//b/./c"
+          ],
+          "expected": "a/b/c"
+        },
+        {
+          "args": [
+            "/../etc"
+          ],
+          "expected": "/etc"
+        },
+        {
+          "args": [
+            "../x/../y"
+          ],
+          "expected": "../y"
+        },
+        {
+          "args": [
+            "a/.."
+          ],
+          "expected": "."
+        },
+        {
+          "args": [
+            "/"
+          ],
+          "expected": "/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete the small `Emitter` class: `on(event, fn)` adds a listener, `emit(event, arg)` calls every listener for that event in the order they were added, and `off(event, fn)` removes one. The driver records calls as `'<listener>:<arg>'`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runEmitter",
+      "starterCode": "class Emitter {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] ||= []).push(fn);\n  }\n  emit(event, arg) {\n    const list = this.listeners[event];\n    if (list) list[0](arg);\n  }\n  off(event, fn) {}\n}\n\n// Test driver (leave as is). ops: [\"on\", event, name] | [\"off\", event, name] | [\"emit\", event, arg]\nfunction runEmitter(ops) {\n  const e = new Emitter();\n  const log = [];\n  const fns = {};\n  const fnFor = (name) => (fns[name] ||= (arg) => log.push(name + ':' + arg));\n  for (const [op, event, x] of ops) {\n    if (op === 'on') e.on(event, fnFor(x));\n    if (op === 'off') e.off(event, fnFor(x));\n    if (op === 'emit') e.emit(event, x);\n  }\n  return log;\n}",
+      "referenceSolution": "class Emitter {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] ||= []).push(fn);\n  }\n  emit(event, arg) {\n    const list = this.listeners[event];\n    if (list) for (const fn of [...list]) fn(arg);\n  }\n  off(event, fn) {\n    const list = this.listeners[event];\n    if (list) this.listeners[event] = list.filter((f) => f !== fn);\n  }\n}\n\n// Test driver (leave as is). ops: [\"on\", event, name] | [\"off\", event, name] | [\"emit\", event, arg]\nfunction runEmitter(ops) {\n  const e = new Emitter();\n  const log = [];\n  const fns = {};\n  const fnFor = (name) => (fns[name] ||= (arg) => log.push(name + ':' + arg));\n  for (const [op, event, x] of ops) {\n    if (op === 'on') e.on(event, fnFor(x));\n    if (op === 'off') e.off(event, fnFor(x));\n    if (op === 'emit') e.emit(event, x);\n  }\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "on",
+                "data",
+                "a"
+              ],
+              [
+                "on",
+                "data",
+                "b"
+              ],
+              [
+                "emit",
+                "data",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            "a:1",
+            "b:1"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "emit",
+                "data",
+                1
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "on",
+                "data",
+                "a"
+              ],
+              [
+                "on",
+                "data",
+                "b"
+              ],
+              [
+                "off",
+                "data",
+                "a"
+              ],
+              [
+                "emit",
+                "data",
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            "b:2"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "on",
+                "x",
+                "a"
+              ],
+              [
+                "on",
+                "y",
+                "b"
+              ],
+              [
+                "emit",
+                "y",
+                3
+              ],
+              [
+                "emit",
+                "x",
+                4
+              ]
+            ]
+          ],
+          "expected": [
+            "b:3",
+            "a:4"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "on",
+                "d",
+                "a"
+              ],
+              [
+                "off",
+                "d",
+                "a"
+              ],
+              [
+                "emit",
+                "d",
+                5
+              ]
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix `loadConfig(env)`. It should return `{ port, debug, origins }`: `port` a number (default `3000`), `debug` true only for `'true'` or `'1'`, and `origins` the comma-separated `ALLOWED_ORIGINS` trimmed, with empty entries dropped (`[]` when unset).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "loadConfig",
+      "starterCode": "function loadConfig(env) {\n  return {\n    port: Number(env.PORT) || 3000,\n    debug: Boolean(env.DEBUG),\n    origins: env.ALLOWED_ORIGINS ? env.ALLOWED_ORIGINS.split(',') : [],\n  };\n}",
+      "referenceSolution": "function loadConfig(env) {\n  return {\n    port: Number(env.PORT) || 3000,\n    debug: env.DEBUG === 'true' || env.DEBUG === '1',\n    origins: (env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean),\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "PORT": "8080",
+              "DEBUG": "true",
+              "ALLOWED_ORIGINS": "https://a.com, https://b.com"
+            }
+          ],
+          "expected": {
+            "port": 8080,
+            "debug": true,
+            "origins": [
+              "https://a.com",
+              "https://b.com"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "port": 3000,
+            "debug": false,
+            "origins": []
+          }
+        },
+        {
+          "args": [
+            {
+              "DEBUG": "false"
+            }
+          ],
+          "expected": {
+            "port": 3000,
+            "debug": false,
+            "origins": []
+          }
+        },
+        {
+          "args": [
+            {
+              "DEBUG": "1",
+              "ALLOWED_ORIGINS": "https://x.io,,"
+            }
+          ],
+          "expected": {
+            "port": 3000,
+            "debug": true,
+            "origins": [
+              "https://x.io"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "PORT": "5000",
+              "DEBUG": "0"
+            }
+          ],
+          "expected": {
+            "port": 5000,
+            "debug": false,
+            "origins": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Put the phases of one turn of the Node.js event loop in the order libuv runs them.",
+    "task": {
+      "prompt": "Put the phases of one turn of the Node.js event loop in the order libuv runs them.",
+      "kind": "rank",
+      "items": [
+        {
+          "id": "timers",
+          "label": "Timers: expired `setTimeout` / `setInterval` callbacks"
+        },
+        {
+          "id": "pending",
+          "label": "Pending callbacks: some deferred system I/O callbacks"
+        },
+        {
+          "id": "poll",
+          "label": "Poll: wait for and run I/O callbacks"
+        },
+        {
+          "id": "check",
+          "label": "Check: `setImmediate` callbacks"
+        },
+        {
+          "id": "close",
+          "label": "Close callbacks: e.g. `socket.on('close')`"
+        }
+      ],
+      "correctOrder": [
+        "timers",
+        "pending",
+        "poll",
+        "check",
+        "close"
+      ],
+      "explanation": "Timers, pending callbacks, (idle/prepare), poll, check, close. `process.nextTick` and promise callbacks are not a phase: they drain between every callback."
+    }
+  },
+  {
+    "id": "eng-node-runtime-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In a CommonJS Node script, what does this print? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "A E D C B",
+        "A E C D B",
+        "A D C E B",
+        "A E B D C"
+      ],
+      "correctIndex": 0,
+      "explanation": "Synchronous code first (A, E). Then the nextTick queue (D), then promise microtasks (C), and only then the event loop reaches the timers phase (B).",
+      "snippet": "console.log('A');\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve().then(() => console.log('C'));\nprocess.nextTick(() => console.log('D'));\nconsole.log('E');",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-node-runtime-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An Express route calls `fs.readFileSync` on a 50 MB file for every request. What happens when 100 requests arrive at once?",
+    "mcq": {
+      "options": [
+        "Requests are served one after another, and every other request on the server (even health checks) waits while each read runs",
+        "Node reads the 100 files in parallel on the libuv thread pool",
+        "Node starts a new thread per request, so only memory use grows",
+        "The reads are cached after the first one, so only the first request is slow"
+      ],
+      "correctIndex": 0,
+      "explanation": "`readFileSync` blocks the single JavaScript thread. Nothing else runs until it returns. `fs.promises.readFile` (or a stream) hands the work to libuv so the event loop stays free.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-node-runtime-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`counter.js` is `module.exports = { count: 0 };`. `a.js` does `require('./counter').count++` and then `b.js` logs `require('./counter').count`. Both run in the same process, `a.js` first. What does `b.js` log?",
+    "mcq": {
+      "options": [
+        "`1`",
+        "`0`",
+        "`undefined`",
+        "It throws, because a module can only be required once"
+      ],
+      "correctIndex": 0,
+      "explanation": "`require` caches modules by resolved path. The module body runs once and every later `require` gets the same exported object, so the increment is visible.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-node-runtime-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Complete `promisify(fn)` for Node-style callback functions: the last argument is `(err, result) => …`. The returned function must return a promise that rejects with `err` when it is set and resolves with `result` otherwise.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runDivide",
+      "starterCode": "function promisify(fn) {\n  return (...args) => new Promise((resolve) => {\n    fn(...args, (err, result) => resolve(result));\n  });\n}\n\n// Test driver (leave as is).\nfunction divide(a, b, cb) {\n  if (b === 0) cb(new Error('divide by zero'));\n  else cb(null, a / b);\n}\nasync function runDivide(a, b) {\n  try {\n    return { ok: await promisify(divide)(a, b) };\n  } catch (err) {\n    return { error: err.message };\n  }\n}",
+      "referenceSolution": "function promisify(fn) {\n  return (...args) => new Promise((resolve, reject) => {\n    fn(...args, (err, result) => (err ? reject(err) : resolve(result)));\n  });\n}\n\n// Test driver (leave as is).\nfunction divide(a, b, cb) {\n  if (b === 0) cb(new Error('divide by zero'));\n  else cb(null, a / b);\n}\nasync function runDivide(a, b) {\n  try {\n    return { ok: await promisify(divide)(a, b) };\n  } catch (err) {\n    return { error: err.message };\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            10,
+            2
+          ],
+          "expected": {
+            "ok": 5
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1,
+            0
+          ],
+          "expected": {
+            "error": "divide by zero"
+          }
+        },
+        {
+          "args": [
+            0,
+            5
+          ],
+          "expected": {
+            "ok": 0
+          }
+        },
+        {
+          "args": [
+            -9,
+            3
+          ],
+          "expected": {
+            "ok": -3
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Add `once(event, fn)` to `Emitter`: the listener runs on the next `emit` only, then removes itself. Other listeners for the same event must still run, in order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runEmitter",
+      "starterCode": "class Emitter {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] ||= []).push(fn);\n  }\n  off(event, fn) {\n    const list = this.listeners[event] || [];\n    this.listeners[event] = list.filter((f) => f !== fn);\n  }\n  emit(event, arg) {\n    for (const fn of [...(this.listeners[event] || [])]) fn(arg);\n  }\n  once(event, fn) {\n    this.on(event, fn);\n  }\n}\n\n// Test driver (leave as is). ops: [\"on\" | \"once\", event, name] | [\"emit\", event, arg]\nfunction runEmitter(ops) {\n  const e = new Emitter();\n  const log = [];\n  for (const [op, event, x] of ops) {\n    if (op === 'emit') e.emit(event, x);\n    else e[op](event, (arg) => log.push(x + ':' + arg));\n  }\n  return log;\n}",
+      "referenceSolution": "class Emitter {\n  constructor() { this.listeners = {}; }\n  on(event, fn) {\n    (this.listeners[event] ||= []).push(fn);\n  }\n  off(event, fn) {\n    const list = this.listeners[event] || [];\n    this.listeners[event] = list.filter((f) => f !== fn);\n  }\n  emit(event, arg) {\n    for (const fn of [...(this.listeners[event] || [])]) fn(arg);\n  }\n  once(event, fn) {\n    const wrapper = (arg) => {\n      this.off(event, wrapper);\n      fn(arg);\n    };\n    this.on(event, wrapper);\n  }\n}\n\n// Test driver (leave as is). ops: [\"on\" | \"once\", event, name] | [\"emit\", event, arg]\nfunction runEmitter(ops) {\n  const e = new Emitter();\n  const log = [];\n  for (const [op, event, x] of ops) {\n    if (op === 'emit') e.emit(event, x);\n    else e[op](event, (arg) => log.push(x + ':' + arg));\n  }\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "once",
+                "ready",
+                "a"
+              ],
+              [
+                "emit",
+                "ready",
+                1
+              ],
+              [
+                "emit",
+                "ready",
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            "a:1"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "on",
+                "d",
+                "a"
+              ],
+              [
+                "once",
+                "d",
+                "b"
+              ],
+              [
+                "on",
+                "d",
+                "c"
+              ],
+              [
+                "emit",
+                "d",
+                1
+              ],
+              [
+                "emit",
+                "d",
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            "a:1",
+            "b:1",
+            "c:1",
+            "a:2",
+            "c:2"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "once",
+                "d",
+                "a"
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "once",
+                "d",
+                "a"
+              ],
+              [
+                "once",
+                "d",
+                "b"
+              ],
+              [
+                "emit",
+                "d",
+                7
+              ],
+              [
+                "emit",
+                "d",
+                8
+              ]
+            ]
+          ],
+          "expected": [
+            "a:7",
+            "b:7"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Complete a minimal `.env` parser. Each `KEY=VALUE` line becomes a property. Skip blank lines and lines starting with `#`. Trim keys and values, allow `=` inside the value, and strip one pair of matching surrounding quotes (`'` or `\"`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseDotenv",
+      "starterCode": "function parseDotenv(text) {\n  const out = {};\n  for (const line of text.split('\\n')) {\n    const parts = line.split('=');\n    out[parts[0]] = parts[1];\n  }\n  return out;\n}",
+      "referenceSolution": "function parseDotenv(text) {\n  const out = {};\n  for (const raw of text.split('\\n')) {\n    const line = raw.trim();\n    if (!line || line.startsWith('#')) continue;\n    const eq = line.indexOf('=');\n    if (eq === -1) continue;\n    const key = line.slice(0, eq).trim();\n    let value = line.slice(eq + 1).trim();\n    const q = value[0];\n    if ((q === '\"' || q === \"'\") && value.length >= 2 && value[value.length - 1] === q) value = value.slice(1, -1);\n    out[key] = value;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "PORT=3000\nNAME=api"
+          ],
+          "expected": {
+            "PORT": "3000",
+            "NAME": "api"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "# comment\n\nDB_URL=postgres://u:p@h/db?ssl=true"
+          ],
+          "expected": {
+            "DB_URL": "postgres://u:p@h/db?ssl=true"
+          }
+        },
+        {
+          "args": [
+            "GREETING=\"hello world\"\nSINGLE='x=1'"
+          ],
+          "expected": {
+            "GREETING": "hello world",
+            "SINGLE": "x=1"
+          }
+        },
+        {
+          "args": [
+            "  KEY = value  "
+          ],
+          "expected": {
+            "KEY": "value"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Async `fs` and `crypto` work runs on libuv's thread pool (4 threads by default). Complete `poolTime(durations, size)`: jobs are queued in order, each starts as soon as a thread is free, and you return the time (ms) when the last job finishes.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "poolTime",
+      "starterCode": "function poolTime(durations, size) {\n  return Math.max(0, ...durations);\n}",
+      "referenceSolution": "function poolTime(durations, size) {\n  const threads = new Array(size).fill(0);\n  for (const d of durations) {\n    let i = 0;\n    for (let j = 1; j < size; j++) if (threads[j] < threads[i]) i = j;\n    threads[i] += d;\n  }\n  return Math.max(0, ...threads);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100
+            ],
+            4
+          ],
+          "expected": 200
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            4
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              50,
+              50,
+              50
+            ],
+            4
+          ],
+          "expected": 50
+        },
+        {
+          "args": [
+            [
+              100,
+              10,
+              10,
+              10,
+              10
+            ],
+            2
+          ],
+          "expected": 100
+        },
+        {
+          "args": [
+            [
+              30,
+              20,
+              10
+            ],
+            1
+          ],
+          "expected": 60
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Complete a simplified version of Node's relative-module resolution. Given the importing file `from`, a relative `spec` (starting with `./` or `../`) and the list of existing `files`, try in order: the exact path, the path + `.js`, then the path + `/index.js`. Return the first that exists, or `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "resolveModule",
+      "starterCode": "function resolveModule(from, spec, files) {\n  const dir = from.slice(0, from.lastIndexOf('/'));\n  const parts = (dir + '/' + spec).split('/');\n  const out = [];\n  for (const p of parts) {\n    if (p === '..') out.pop();\n    else if (p !== '.' && p !== '') out.push(p);\n  }\n  const base = '/' + out.join('/');\n  for (const candidate of [base, base + '.js']) {\n    if (files.includes(candidate)) return candidate;\n  }\n  return null;\n}",
+      "referenceSolution": "function resolveModule(from, spec, files) {\n  const dir = from.slice(0, from.lastIndexOf('/'));\n  const parts = (dir + '/' + spec).split('/');\n  const out = [];\n  for (const p of parts) {\n    if (p === '..') out.pop();\n    else if (p !== '.' && p !== '') out.push(p);\n  }\n  const base = '/' + out.join('/');\n  for (const candidate of [base, base + '.js', base + '/index.js']) {\n    if (files.includes(candidate)) return candidate;\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/app/src/server.js",
+            "./db",
+            [
+              "/app/src/db.js"
+            ]
+          ],
+          "expected": "/app/src/db.js"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/app/src/server.js",
+            "../lib",
+            [
+              "/app/lib/index.js"
+            ]
+          ],
+          "expected": "/app/lib/index.js"
+        },
+        {
+          "args": [
+            "/app/src/server.js",
+            "./missing",
+            [
+              "/app/src/db.js"
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/app/a.js",
+            "./data.json",
+            [
+              "/app/data.json",
+              "/app/data.json.js"
+            ]
+          ],
+          "expected": "/app/data.json"
+        },
+        {
+          "args": [
+            "/app/src/x.js",
+            "./utils",
+            [
+              "/app/src/utils.js",
+              "/app/src/utils/index.js"
+            ]
+          ],
+          "expected": "/app/src/utils.js"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Users report the whole API freezes for seconds at a time. Mark the lines in this handler that block the event loop.",
+    "task": {
+      "prompt": "Users report the whole API freezes for seconds at a time. Mark the lines in this handler that block the event loop.",
+      "kind": "spot",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "app.post('/signup', async (req, res) => {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const { email, password } = req.body;",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  const hash = crypto.pbkdf2Sync(password, salt, 600000, 64, 'sha512');",
+          "issue": "A synchronous key derivation with 600k iterations holds the only JS thread for hundreds of ms; use the async `crypto.pbkdf2` (or bcrypt/argon2 async)."
+        },
+        {
+          "id": "l4",
+          "text": "  const user = await db.users.create({ email, hash });",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  const blocklist = JSON.parse(fs.readFileSync('./blocklist.json', 'utf8'));",
+          "issue": "Reads and parses a file synchronously on every request; load it once at startup or read it asynchronously."
+        },
+        {
+          "id": "l6",
+          "text": "  if (blocklist.includes(email)) return res.status(403).end();",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  await mailer.sendWelcome(email);",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  res.status(201).json({ id: user.id });",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "});",
+          "issue": null
+        }
+      ],
+      "askExplanation": true
+    }
+  },
+  {
+    "id": "eng-node-runtime-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print in Node? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "immediate, then timeout",
+        "timeout, then immediate",
+        "It changes from run to run",
+        "Only timeout: setImmediate does not run inside a timer"
+      ],
+      "correctIndex": 0,
+      "explanation": "Inside a timer callback the loop is already past the timers phase, so it reaches the check phase (`setImmediate`) before it comes back round to timers. At the top level of a script the order of the two is not guaranteed, but here it is.",
+      "snippet": "setTimeout(() => {\n  setTimeout(() => console.log('timeout'), 0);\n  setImmediate(() => console.log('immediate'));\n}, 0);",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-node-runtime-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "One endpoint builds a large report with a 2-second synchronous loop, and p99 latency for every other endpoint jumps while it runs. What is the right fix?",
+    "mcq": {
+      "options": [
+        "Move the computation to a worker thread (or a job queue) so the main thread keeps serving requests",
+        "Wrap the loop in `async` / `await` so it runs in the background",
+        "Increase `UV_THREADPOOL_SIZE` to 64",
+        "Run more instances of the same handler with `Promise.all`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`async` does not make CPU work run elsewhere, and the libuv pool only runs Node's own I/O and crypto jobs. CPU-bound JavaScript needs another thread (`worker_threads`) or another process.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-node-runtime-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "On Node 20, a promise rejects and no code ever attaches a `.catch` or `try/catch` to it. What happens by default?",
+    "mcq": {
+      "options": [
+        "The process prints the error and exits with a non-zero code",
+        "A warning is printed and the process keeps running",
+        "Nothing; the rejection is silently ignored",
+        "The rejection is retried on the next tick"
+      ],
+      "correctIndex": 0,
+      "explanation": "Since Node 15 the default `--unhandled-rejections=throw` turns an unhandled rejection into an uncaught exception, which crashes the process. Handle errors where the promise is awaited.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-node-runtime-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Complete the graceful-shutdown logic. After `shutdown`, new requests are rejected, but the server only reports `'closed'` once every in-flight request has ended (immediately if none are in flight). The driver logs what the server reports.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runServer",
+      "starterCode": "class Server {\n  constructor() {\n    this.inFlight = new Set();\n    this.closing = false;\n    this.log = [];\n  }\n  start(id) {\n    if (this.closing) return this.log.push('rejected:' + id);\n    this.inFlight.add(id);\n  }\n  end(id) {\n    this.inFlight.delete(id);\n  }\n  shutdown() {\n    this.closing = true;\n    this.log.push('closed');\n  }\n}\n\n// Test driver (leave as is). ops: [\"start\", id] | [\"end\", id] | [\"shutdown\"]\nfunction runServer(ops) {\n  const s = new Server();\n  for (const [op, id] of ops) s[op](id);\n  return s.log;\n}",
+      "referenceSolution": "class Server {\n  constructor() {\n    this.inFlight = new Set();\n    this.closing = false;\n    this.closed = false;\n    this.log = [];\n  }\n  start(id) {\n    if (this.closing) return this.log.push('rejected:' + id);\n    this.inFlight.add(id);\n  }\n  end(id) {\n    this.inFlight.delete(id);\n    this.maybeClose();\n  }\n  shutdown() {\n    this.closing = true;\n    this.maybeClose();\n  }\n  maybeClose() {\n    if (this.closing && !this.closed && this.inFlight.size === 0) {\n      this.closed = true;\n      this.log.push('closed');\n    }\n  }\n}\n\n// Test driver (leave as is). ops: [\"start\", id] | [\"end\", id] | [\"shutdown\"]\nfunction runServer(ops) {\n  const s = new Server();\n  for (const [op, id] of ops) s[op](id);\n  return s.log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "start",
+                1
+              ],
+              [
+                "shutdown"
+              ],
+              [
+                "start",
+                2
+              ],
+              [
+                "end",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            "rejected:2",
+            "closed"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "shutdown"
+              ]
+            ]
+          ],
+          "expected": [
+            "closed"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "start",
+                1
+              ],
+              [
+                "start",
+                2
+              ],
+              [
+                "shutdown"
+              ],
+              [
+                "end",
+                1
+              ],
+              [
+                "end",
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            "closed"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "start",
+                1
+              ],
+              [
+                "end",
+                1
+              ],
+              [
+                "shutdown"
+              ],
+              [
+                "start",
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            "closed",
+            "rejected:3"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "start",
+                1
+              ],
+              [
+                "shutdown"
+              ]
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Circular `require`s give you half-initialised modules. Complete `findCycle(deps)`: `deps` maps a module to the modules it requires. Starting from modules in key order and following dependencies in listed order, return the first cycle found as a path that starts and ends on the same module (e.g. `['a', 'b', 'a']`), or `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "findCycle",
+      "starterCode": "function findCycle(deps) {\n  for (const m of Object.keys(deps)) {\n    if ((deps[m] || []).includes(m)) return [m, m];\n  }\n  return null;\n}",
+      "referenceSolution": "function findCycle(deps) {\n  const done = new Set();\n  const stack = [];\n  const onStack = new Set();\n  function visit(m) {\n    if (onStack.has(m)) return stack.slice(stack.indexOf(m)).concat(m);\n    if (done.has(m)) return null;\n    stack.push(m);\n    onStack.add(m);\n    for (const d of deps[m] || []) {\n      const found = visit(d);\n      if (found) return found;\n    }\n    stack.pop();\n    onStack.delete(m);\n    done.add(m);\n    return null;\n  }\n  for (const m of Object.keys(deps)) {\n    const found = visit(m);\n    if (found) return found;\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "a": [
+                "b"
+              ],
+              "b": [
+                "a"
+              ]
+            }
+          ],
+          "expected": [
+            "a",
+            "b",
+            "a"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "app": [
+                "db",
+                "log"
+              ],
+              "db": [
+                "log"
+              ],
+              "log": []
+            }
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "app": [
+                "db"
+              ],
+              "db": [
+                "models"
+              ],
+              "models": [
+                "db"
+              ]
+            }
+          ],
+          "expected": [
+            "db",
+            "models",
+            "db"
+          ]
+        },
+        {
+          "args": [
+            {
+              "x": [
+                "x"
+              ]
+            }
+          ],
+          "expected": [
+            "x",
+            "x"
+          ]
+        },
+        {
+          "args": [
+            {
+              "a": [
+                "b",
+                "c"
+              ],
+              "b": [],
+              "c": [
+                "d"
+              ],
+              "d": [
+                "a"
+              ]
+            }
+          ],
+          "expected": [
+            "a",
+            "c",
+            "d",
+            "a"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A health check samples event-loop lag with `setInterval(fn, interval)`. `ticks` are the times (ms) at which the callback actually ran. The lag of a tick is how late it was compared to the previous tick + `interval` (never negative). Return `{ maxLag, slowTicks }`, where `slowTicks` counts ticks with lag above `threshold`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "lagReport",
+      "starterCode": "function lagReport(ticks, interval, threshold) {\n  let maxLag = 0;\n  let slowTicks = 0;\n  for (let i = 1; i < ticks.length; i++) {\n    const lag = ticks[i] - ticks[i - 1];\n    maxLag = Math.max(maxLag, lag);\n    if (lag > threshold) slowTicks++;\n  }\n  return { maxLag, slowTicks };\n}",
+      "referenceSolution": "function lagReport(ticks, interval, threshold) {\n  let maxLag = 0;\n  let slowTicks = 0;\n  for (let i = 1; i < ticks.length; i++) {\n    const lag = Math.max(0, ticks[i] - ticks[i - 1] - interval);\n    maxLag = Math.max(maxLag, lag);\n    if (lag > threshold) slowTicks++;\n  }\n  return { maxLag, slowTicks };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              0,
+              100,
+              250,
+              350
+            ],
+            100,
+            20
+          ],
+          "expected": {
+            "maxLag": 50,
+            "slowTicks": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            100,
+            20
+          ],
+          "expected": {
+            "maxLag": 0,
+            "slowTicks": 0
+          }
+        },
+        {
+          "args": [
+            [
+              0
+            ],
+            100,
+            20
+          ],
+          "expected": {
+            "maxLag": 0,
+            "slowTicks": 0
+          }
+        },
+        {
+          "args": [
+            [
+              0,
+              99,
+              200,
+              300
+            ],
+            100,
+            0
+          ],
+          "expected": {
+            "maxLag": 1,
+            "slowTicks": 1
+          }
+        },
+        {
+          "args": [
+            [
+              0,
+              500,
+              600,
+              1200
+            ],
+            100,
+            300
+          ],
+          "expected": {
+            "maxLag": 500,
+            "slowTicks": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Complete `dedupe(loader)`: while a load for a key is in flight, further calls with the same key must share that promise instead of calling `loader` again. Once it settles, the next call loads afresh. The driver fires a batch of calls at once, waits, then fires the same batch again, and reports the results and how many times `loader` ran.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runDedupe",
+      "starterCode": "function dedupe(loader) {\n  return (key) => loader(key);\n}\n\n// Test driver (leave as is).\nasync function runDedupe(keys) {\n  let calls = 0;\n  const load = dedupe(async (key) => {\n    calls++;\n    await null;\n    return key.toUpperCase();\n  });\n  const first = await Promise.all(keys.map((k) => load(k)));\n  const second = await Promise.all(keys.map((k) => load(k)));\n  return { results: first.concat(second), calls };\n}",
+      "referenceSolution": "function dedupe(loader) {\n  const inFlight = new Map();\n  return (key) => {\n    if (inFlight.has(key)) return inFlight.get(key);\n    const p = Promise.resolve(loader(key)).finally(() => inFlight.delete(key));\n    inFlight.set(key, p);\n    return p;\n  };\n}\n\n// Test driver (leave as is).\nasync function runDedupe(keys) {\n  let calls = 0;\n  const load = dedupe(async (key) => {\n    calls++;\n    await null;\n    return key.toUpperCase();\n  });\n  const first = await Promise.all(keys.map((k) => load(k)));\n  const second = await Promise.all(keys.map((k) => load(k)));\n  return { results: first.concat(second), calls };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "a",
+              "a",
+              "b"
+            ]
+          ],
+          "expected": {
+            "results": [
+              "A",
+              "A",
+              "B",
+              "A",
+              "A",
+              "B"
+            ],
+            "calls": 4
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "x",
+              "x",
+              "x",
+              "x"
+            ]
+          ],
+          "expected": {
+            "results": [
+              "X",
+              "X",
+              "X",
+              "X",
+              "X",
+              "X",
+              "X",
+              "X"
+            ],
+            "calls": 2
+          }
+        },
+        {
+          "args": [
+            [
+              "k"
+            ]
+          ],
+          "expected": {
+            "results": [
+              "K",
+              "K"
+            ],
+            "calls": 2
+          }
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "a",
+              "c",
+              "b"
+            ]
+          ],
+          "expected": {
+            "results": [
+              "A",
+              "B",
+              "A",
+              "C",
+              "B",
+              "A",
+              "B",
+              "A",
+              "C",
+              "B"
+            ],
+            "calls": 6
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "`AsyncLocalStorage` gives each request its own context. Here is a synchronous version: `run(ctx, fn)` makes `ctx` the current context while `fn` runs and must restore the previous one afterwards, **even if `fn` throws**. Fix `ContextStore`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runContexts",
+      "starterCode": "class ContextStore {\n  constructor() { this.current = null; }\n  run(ctx, fn) {\n    const prev = this.current;\n    this.current = ctx;\n    const result = fn();\n    this.current = prev;\n    return result;\n  }\n  get() { return this.current; }\n}\n\n// Test driver (leave as is). Each request id runs a handler; ids ending in \"!\" throw inside it.\nfunction runContexts(ids) {\n  const store = new ContextStore();\n  const log = [];\n  for (const id of ids) {\n    try {\n      store.run({ id }, () => {\n        store.run({ id: id + '/db' }, () => log.push(store.get().id));\n        log.push(store.get().id);\n        if (id.endsWith('!')) throw new Error('boom');\n      });\n    } catch (err) {\n      log.push('error');\n    }\n    log.push(store.get() === null ? 'none' : 'leaked:' + store.get().id);\n  }\n  return log;\n}",
+      "referenceSolution": "class ContextStore {\n  constructor() { this.current = null; }\n  run(ctx, fn) {\n    const prev = this.current;\n    this.current = ctx;\n    try {\n      return fn();\n    } finally {\n      this.current = prev;\n    }\n  }\n  get() { return this.current; }\n}\n\n// Test driver (leave as is). Each request id runs a handler; ids ending in \"!\" throw inside it.\nfunction runContexts(ids) {\n  const store = new ContextStore();\n  const log = [];\n  for (const id of ids) {\n    try {\n      store.run({ id }, () => {\n        store.run({ id: id + '/db' }, () => log.push(store.get().id));\n        log.push(store.get().id);\n        if (id.endsWith('!')) throw new Error('boom');\n      });\n    } catch (err) {\n      log.push('error');\n    }\n    log.push(store.get() === null ? 'none' : 'leaked:' + store.get().id);\n  }\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "r1"
+            ]
+          ],
+          "expected": [
+            "r1/db",
+            "r1",
+            "none"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "r1!",
+              "r2"
+            ]
+          ],
+          "expected": [
+            "r1!/db",
+            "r1!",
+            "error",
+            "none",
+            "r2/db",
+            "r2",
+            "none"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a!",
+              "b!"
+            ]
+          ],
+          "expected": [
+            "a!/db",
+            "a!",
+            "error",
+            "none",
+            "b!/db",
+            "b!",
+            "error",
+            "none"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-node-runtime-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Kubernetes sends your Node API `SIGTERM` during a rolling deploy. Put the graceful-shutdown steps in the order they should happen.",
+    "task": {
+      "prompt": "Kubernetes sends your Node API `SIGTERM` during a rolling deploy. Put the graceful-shutdown steps in the order they should happen.",
+      "kind": "rank",
+      "items": [
+        {
+          "id": "sig",
+          "label": "Handle `SIGTERM` (do not exit immediately)"
+        },
+        {
+          "id": "ready",
+          "label": "Start failing the readiness probe so the load balancer stops routing new traffic"
+        },
+        {
+          "id": "close",
+          "label": "Call `server.close()` to stop accepting new connections"
+        },
+        {
+          "id": "drain",
+          "label": "Wait for in-flight requests to finish, with a hard deadline"
+        },
+        {
+          "id": "pools",
+          "label": "Close database pools, queue consumers and other connections"
+        },
+        {
+          "id": "exit",
+          "label": "Exit with code 0"
+        }
+      ],
+      "correctOrder": [
+        "sig",
+        "ready",
+        "close",
+        "drain",
+        "pools",
+        "exit"
+      ],
+      "explanation": "Stop new traffic first, let existing work finish, and only then tear down the resources that work depends on. Closing the DB pool before draining fails the requests you are waiting for."
+    }
+  },
+  {
+    "id": "eng-node-runtime-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print in Node? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "async start, sync, tick, promise, after await, immediate",
+        "sync, async start, tick, promise, after await, immediate",
+        "async start, sync, promise, after await, tick, immediate",
+        "async start, after await, sync, tick, promise, immediate"
+      ],
+      "correctIndex": 0,
+      "explanation": "An async function runs synchronously up to its first `await`. After the script, Node drains nextTicks, then promise microtasks in the order they were queued (`.then` before the `await` continuation), and `setImmediate` waits for the check phase.",
+      "snippet": "setImmediate(() => console.log('immediate'));\nprocess.nextTick(() => console.log('tick'));\nPromise.resolve().then(() => console.log('promise'));\n(async () => {\n  console.log('async start');\n  await null;\n  console.log('after await');\n})();\nconsole.log('sync');",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-node-runtime-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Eight concurrent `crypto.pbkdf2` calls (async), each taking about 100 ms alone, all finish after roughly 200 ms on an 8-core machine. Why?",
+    "mcq": {
+      "options": [
+        "libuv's thread pool has 4 threads by default, so the jobs run in two waves of four",
+        "pbkdf2 always runs on the main thread",
+        "Node only uses half of the available cores",
+        "The calls are serialised because they share a salt"
+      ],
+      "correctIndex": 0,
+      "explanation": "Async crypto, `fs`, `dns.lookup` and zlib share the libuv pool (`UV_THREADPOOL_SIZE`, default 4). Raising it, before the pool is first used, lets more of that work run in parallel.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-node-runtime-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-node-runtime",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Heap usage of a Node API grows steadily until the pod is OOM-killed. A heap snapshot shows a module-level `Map` keyed by request id holding response objects. What is the right fix?",
+    "mcq": {
+      "options": [
+        "Bound the cache (LRU with a max size and TTL), or delete entries when the request finishes",
+        "Raise `--max-old-space-size` so the process has more memory",
+        "Call `global.gc()` after every request",
+        "Switch the `Map` to a plain object"
+      ],
+      "correctIndex": 0,
+      "explanation": "Anything reachable from a module-level variable lives for the life of the process. More heap only delays the crash and forced GC cannot free reachable objects; the cache needs an eviction rule.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

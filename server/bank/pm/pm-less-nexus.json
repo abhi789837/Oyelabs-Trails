@@ -1,0 +1,338 @@
+[
+  {
+    "id": "pm-less-nexus-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client says they run \"LeSS\" with five teams. Mark the practices that are not LeSS.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A client says they run \"LeSS\" with five teams. Mark the practices that are not LeSS.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "One Product Owner and one Product Backlog for the whole product.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Each team has its own Product Owner and backlog.",
+          "issue": "LeSS has one Product Owner and one Product Backlog across all teams."
+        },
+        {
+          "id": "s3",
+          "text": "All teams share one Sprint and produce one integrated increment.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Teams are organised as component teams: API team, iOS team, web team.",
+          "issue": "LeSS prefers cross-functional feature teams; component teams create cross-team handoffs."
+        },
+        {
+          "id": "s5",
+          "text": "Sprint Planning has two parts: a shared Part 1 and team-level Part 2.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "There is an overall retrospective after the team retrospectives.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Each team picks its own sprint length.",
+          "issue": "All teams in LeSS work in one common Sprint."
+        },
+        {
+          "id": "s8",
+          "text": "Teams coordinate directly, e.g. by talking or joint refinement.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-less-nexus-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order these Nexus events within a Sprint.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these Nexus events within a Sprint.",
+      "items": [
+        {
+          "id": "rfcac8",
+          "label": "Nexus Sprint Planning"
+        },
+        {
+          "id": "rb32d7",
+          "label": "Nexus Daily Scrum, then team Daily Scrums"
+        },
+        {
+          "id": "rcb377",
+          "label": "Nexus Sprint Review"
+        },
+        {
+          "id": "r715fe",
+          "label": "Nexus Sprint Retrospective"
+        }
+      ],
+      "correctOrder": [
+        "rfcac8",
+        "rb32d7",
+        "rcb377",
+        "r715fe"
+      ],
+      "explanation": "Nexus wraps Scrum events with a Nexus-level version: plan together, sync daily on integration, review one integrated increment, then improve together."
+    }
+  },
+  {
+    "id": "pm-less-nexus-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client with four Scrum teams on one product asks how to coordinate better. Integration issues surface late, and each team optimises its own sprint.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client with four Scrum teams on one product asks how to coordinate better. Integration issues surface late, and each team optimises its own sprint.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "Which response fits best?",
+          "options": [
+            "Give each team a separate product to own",
+            "Introduce a lightweight scaling approach such as Nexus or LeSS: one backlog, a shared Sprint, and an integrated increment each Sprint",
+            "Add a separate integration phase at the end",
+            "Increase the number of status meetings"
+          ],
+          "correctIndex": 1,
+          "explanation": "These frameworks address exactly late integration and local optimisation."
+        },
+        {
+          "id": "d2",
+          "question": "In Nexus, who is accountable for resolving integration issues?",
+          "options": [
+            "The Nexus Integration Team",
+            "Each team's developers separately",
+            "The client's CTO",
+            "The Scrum of Scrums chair"
+          ],
+          "correctIndex": 0,
+          "explanation": "Nexus adds a Nexus Integration Team accountable for an integrated increment."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-less-nexus-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order these from the least to the most structure added on top of plain Scrum.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these from the least to the most structure added on top of plain Scrum.",
+      "items": [
+        {
+          "id": "r71b33",
+          "label": "A Scrum of Scrums meeting between team representatives"
+        },
+        {
+          "id": "r9ed85",
+          "label": "LeSS: one backlog, one Product Owner and a shared Sprint for all teams"
+        },
+        {
+          "id": "r3ff9b",
+          "label": "SAFe: Agile Release Trains, extra roles, and solution and portfolio layers"
+        }
+      ],
+      "correctOrder": [
+        "r71b33",
+        "r9ed85",
+        "r3ff9b"
+      ],
+      "explanation": "A Scrum of Scrums is only a coordination meeting; LeSS is Scrum applied to many teams with minimal additions; SAFe adds roles, events and whole management layers."
+    }
+  },
+  {
+    "id": "pm-less-nexus-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Oyelabs and another agency each have one team working on the same client product. Their sprints are on different schedules.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Oyelabs and another agency each have one team working on the same client product. Their sprints are on different schedules.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the simplest helpful change?",
+          "options": [
+            "Align sprint cadences and hold a short Scrum of Scrums with joint refinement for shared items",
+            "Adopt SAFe",
+            "Merge the agencies",
+            "Integrate only before launch"
+          ],
+          "correctIndex": 0,
+          "explanation": "Two teams need light coordination, not a heavy framework."
+        },
+        {
+          "id": "d2",
+          "question": "What artefact helps most?",
+          "options": [
+            "Separate backlogs with no link",
+            "A Gantt chart per agency",
+            "A weekly email of finished tickets",
+            "One shared, ordered backlog for the product with cross-team dependencies visible"
+          ],
+          "correctIndex": 3,
+          "explanation": "One backlog keeps priorities single."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-less-nexus-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Basic LeSS is designed for up to about eight teams. A client has 60 developers on one product and wants teams of about 7.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Basic LeSS is designed for up to about eight teams. A client has 60 developers on one product and wants teams of about 7.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Developers",
+            "60"
+          ],
+          [
+            "Target team size",
+            "7"
+          ],
+          [
+            "Basic LeSS limit",
+            "about 8 teams"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "teams",
+          "label": "Teams needed (round up)",
+          "unit": "teams",
+          "answer": 9,
+          "tolerance": 0
+        },
+        {
+          "id": "over",
+          "label": "Teams above the Basic LeSS limit",
+          "unit": "teams",
+          "answer": 1,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "60 / 7 = 8.6, so 9 teams; that is beyond Basic LeSS, so LeSS Huge (requirement areas) or fewer, larger teams would apply."
+    }
+  },
+  {
+    "id": "pm-less-nexus-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does LeSS Huge add for very large products?",
+    "mcq": {
+      "options": [
+        "A separate backlog per team",
+        "A portfolio layer with lean budgets",
+        "Requirement areas, each with an Area Product Owner, under one overall Product Owner",
+        "A Release Train Engineer"
+      ],
+      "correctIndex": 2,
+      "explanation": "LeSS Huge keeps one product and one backlog, grouped into requirement areas.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-less-nexus-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is a Scrum of Scrums?",
+    "mcq": {
+      "options": [
+        "A framework with its own roles and certification",
+        "A sprint containing several smaller sprints",
+        "A retrospective about other retrospectives",
+        "A meeting where representatives from several teams coordinate dependencies and impediments"
+      ],
+      "correctIndex": 3,
+      "explanation": "It is a coordination technique, not a full scaling framework.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-less-nexus-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-less-nexus",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why do LeSS and Nexus favour feature teams over component teams?",
+    "mcq": {
+      "options": [
+        "Feature teams can deliver end-to-end value, reducing cross-team handoffs and integration delays",
+        "Component teams are cheaper",
+        "Feature teams need no Product Owner",
+        "Feature teams never integrate"
+      ],
+      "correctIndex": 0,
+      "explanation": "Component teams turn every feature into a dependency chain.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

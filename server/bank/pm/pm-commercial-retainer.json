@@ -1,0 +1,366 @@
+[
+  {
+    "id": "pm-commercial-retainer-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A support retainer: work out utilisation and effective rate.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A support retainer: work out utilisation and effective rate.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Monthly fee",
+            "$8,000"
+          ],
+          [
+            "Hours included",
+            "100"
+          ],
+          [
+            "Hours used this month",
+            "72"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "util",
+          "label": "Utilisation",
+          "unit": "%",
+          "answer": 72,
+          "tolerance": 0.1
+        },
+        {
+          "id": "eff",
+          "label": "Effective rate per hour used",
+          "unit": "$",
+          "answer": 111.1111,
+          "tolerance": 0.5
+        },
+        {
+          "id": "unused",
+          "label": "Unused hours",
+          "unit": "h",
+          "answer": 28,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "72% used; effective rate 8,000 / 72 = 111.11 per hour; 28 hours unused."
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Compare margin on a dedicated-team retainer.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare margin on a dedicated-team retainer.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Monthly fee",
+            "$32,000"
+          ],
+          [
+            "Team",
+            "2 developers + 0.5 QA"
+          ],
+          [
+            "Monthly cost per developer",
+            "$9,500"
+          ],
+          [
+            "Monthly cost of a full-time QA",
+            "$7,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Monthly team cost",
+          "unit": "$",
+          "answer": 22500.0,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Margin",
+          "unit": "%",
+          "answer": 29.6875,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Cost 19,000 + 3,500 = 22,500. Margin 9,500 / 32,000 = 29.7%."
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "These are clauses in a draft monthly retainer. Mark the ones that will cause trouble.",
+    "task": {
+      "kind": "spot",
+      "prompt": "These are clauses in a draft monthly retainer. Mark the ones that will cause trouble.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Fee: $10,000 a month for up to 120 hours of development, QA and PM.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Unused hours roll over indefinitely.",
+          "issue": "Indefinite rollover builds a growing liability; cap rollover (e.g. one month)."
+        },
+        {
+          "id": "s3",
+          "text": "Requests are prioritised monthly by the client's product owner.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Response time for critical production incidents: within 2 business hours.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Any work the client requests is covered, regardless of size.",
+          "issue": "No boundary between retainer work and new projects; large items should be quoted separately."
+        },
+        {
+          "id": "s6",
+          "text": "Hours above 120 are billed at the standard hourly rate with prior approval.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Either party can end the retainer with 30 days' notice.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "A monthly report lists hours by task and the next month's priorities.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A retainer client has used only 50% of their hours for three months and says they may cancel.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A retainer client has used only 50% of their hours for three months and says they may cancel.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do?",
+          "options": [
+            "Bill extra hours to show activity",
+            "Meet them to review goals and propose a backlog of valuable work, or a smaller retainer that fits their demand",
+            "Ignore it; the fee is still paid",
+            "Cancel before they do"
+          ],
+          "correctIndex": 1,
+          "explanation": "Low usage signals low perceived value; fix the value or right-size the commitment."
+        },
+        {
+          "id": "d2",
+          "question": "They choose a smaller retainer. What should you agree?",
+          "options": [
+            "Nothing; just change the invoice",
+            "A rollover of all unused hours",
+            "Revised hours and fee, how priorities are set, and when to review again",
+            "A longer notice period"
+          ],
+          "correctIndex": 2,
+          "explanation": "Make the new terms clear and set a review point."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank these retainer health signals from most to least worrying for renewal.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these retainer health signals from most to least worrying for renewal.",
+      "items": [
+        {
+          "id": "rafccf",
+          "label": "Client stopped attending monthly priority reviews"
+        },
+        {
+          "id": "rd5793",
+          "label": "Utilisation has been 40% for three months"
+        },
+        {
+          "id": "r43d51",
+          "label": "Utilisation is 105% with approved overage"
+        },
+        {
+          "id": "r803d7",
+          "label": "One sprint had a minor bug escape"
+        }
+      ],
+      "correctOrder": [
+        "rafccf",
+        "rd5793",
+        "r43d51",
+        "r803d7"
+      ],
+      "explanation": "Disengagement predicts churn most; low use suggests low value; high use with approved overage signals demand; a minor bug is normal."
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A dedicated-team retainer client wants to move one developer to another vendor for cost reasons, keeping two with Oyelabs.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A dedicated-team retainer client wants to move one developer to another vendor for cost reasons, keeping two with Oyelabs.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is your first move?",
+          "options": [
+            "Agree immediately",
+            "Threaten to end the retainer",
+            "Lower rates for all three without analysis",
+            "Understand the cost driver and show the impact on velocity and knowledge, plus options such as a different role mix"
+          ],
+          "correctIndex": 3,
+          "explanation": "Find the real problem and offer options before reacting."
+        },
+        {
+          "id": "d2",
+          "question": "They proceed. What must be managed?",
+          "options": [
+            "Knowledge transfer, access removal, and a revised plan showing what the smaller team can deliver",
+            "Nothing; it's their decision",
+            "Keep the old velocity commitment",
+            "Delay the handover to keep billing"
+          ],
+          "correctIndex": 0,
+          "explanation": "Smooth transitions protect the relationship and the remaining work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does a retainer mainly buy the client?",
+    "mcq": {
+      "options": [
+        "A fixed list of features",
+        "Reserved capacity each month for ongoing work and support",
+        "Ownership of the agency's team",
+        "A discount on future fixed-bid projects"
+      ],
+      "correctIndex": 1,
+      "explanation": "Retainers trade a predictable monthly fee for guaranteed availability, suiting ongoing product work.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which situation fits a retainer best?",
+    "mcq": {
+      "options": [
+        "A one-off 8-week website build",
+        "A proof of concept with a fixed end",
+        "A live app needing ongoing improvements and support after launch",
+        "A hardware purchase"
+      ],
+      "correctIndex": 2,
+      "explanation": "Ongoing, variable demand suits a capacity-based model.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-commercial-retainer-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-commercial-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why can unlimited rollover of unused retainer hours become a problem?",
+    "mcq": {
+      "options": [
+        "It lowers the hourly rate",
+        "The agency accumulates an obligation to deliver many hours later, often all at once",
+        "It breaks data-protection rules",
+        "Clients never use rolled-over hours"
+      ],
+      "correctIndex": 1,
+      "explanation": "Banked hours become a liability that can swamp capacity when the client finally calls on them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

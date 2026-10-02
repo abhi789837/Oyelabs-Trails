@@ -1,0 +1,374 @@
+[
+  {
+    "id": "pm-scrum-accountabilities-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A client's onboarding deck describes Scrum roles on your project. Mark the statements that contradict the Scrum Guide (2020).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The Product Owner orders the Product Backlog.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The Scrum Master assigns tasks to each developer every morning.",
+          "issue": "Developers self-manage how they do the work; the Scrum Master serves the team and does not assign tasks."
+        },
+        {
+          "id": "p3",
+          "text": "The Developers create the Sprint plan, the Sprint Backlog.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "The Product Owner can be a committee of three client managers.",
+          "issue": "The Product Owner is one person, not a committee, though they may represent many stakeholders."
+        },
+        {
+          "id": "p5",
+          "text": "The Scrum Master helps remove impediments to the team's progress.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The Scrum Team is usually 10 or fewer people.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-scrum-accountabilities-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A developer asks: 'The client's marketing lead wants the banner moved. Should I just do it?' The Product Owner is the client's product manager.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A developer asks: 'The client's marketing lead wants the banner moved. Should I just do it?' The Product Owner is the client's product manager.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Who decides whether this goes into the work?",
+          "options": [
+            "The Product Owner, who orders the Product Backlog",
+            "The developer",
+            "The marketing lead directly",
+            "The Scrum Master"
+          ],
+          "correctIndex": 0,
+          "explanation": "Requests go to the Product Owner, who decides their place in the backlog."
+        },
+        {
+          "id": "s2",
+          "question": "What should the Scrum Master do if this keeps happening?",
+          "options": [
+            "Coach stakeholders on routing requests through the PO",
+            "Do the change themselves",
+            "Ban the marketing lead from Slack",
+            "Ask developers to work overtime"
+          ],
+          "correctIndex": 0,
+          "explanation": "The Scrum Master serves the organisation by helping stakeholders understand and work with Scrum."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scrum-accountabilities-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A client stakeholder suggests a new 'saved addresses' feature. Order what happens to it in Scrum.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "It is inspected with stakeholders at the Sprint Review"
+        },
+        {
+          "id": "r4",
+          "label": "It is selected in Sprint Planning toward a Sprint Goal"
+        },
+        {
+          "id": "r2",
+          "label": "The Product Owner adds it to the Product Backlog and orders it"
+        },
+        {
+          "id": "r1",
+          "label": "The stakeholder raises it with the Product Owner"
+        },
+        {
+          "id": "r3",
+          "label": "Developers and the Product Owner refine and size it"
+        },
+        {
+          "id": "r5",
+          "label": "Developers build it during the Sprint"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Requests go through the PO, who owns the backlog; refinement prepares the item, Sprint Planning selects it, the Developers build it and the Review inspects it."
+    }
+  },
+  {
+    "id": "pm-scrum-accountabilities-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "At your agency, the PM is also called the Scrum Master. The client's CEO wants to be the Product Owner but is available only one hour a fortnight.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "At your agency, the PM is also called the Scrum Master. The client's CEO wants to be the Product Owner but is available only one hour a fortnight.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the main risk?",
+          "options": [
+            "Backlog decisions will wait on the CEO and the team will build on guesses",
+            "The CEO will write too much code",
+            "The sprints will be too short",
+            "There is no risk"
+          ],
+          "correctIndex": 0,
+          "explanation": "An unavailable Product Owner is a classic bottleneck; the team needs timely answers."
+        },
+        {
+          "id": "s2",
+          "question": "What do you propose?",
+          "options": [
+            "The CEO delegates PO accountability to an available product lead and keeps final say at reviews",
+            "Cancel Sprint Reviews",
+            "The Scrum Master becomes PO as well with no client input",
+            "Run sprints without a Product Owner"
+          ],
+          "correctIndex": 0,
+          "explanation": "A delegated, empowered PO keeps decisions moving while the CEO stays involved."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scrum-accountabilities-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The Scrum Guide recommends 10 or fewer people on a Scrum Team. Your client project has the people below. How many are on the Scrum Team, and how many people over the guideline is that?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Person",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Product Owner",
+            "1"
+          ],
+          [
+            "Scrum Master",
+            "1"
+          ],
+          [
+            "Engineers",
+            "6"
+          ],
+          [
+            "Designer",
+            "1"
+          ],
+          [
+            "QA engineers",
+            "2"
+          ],
+          [
+            "Client sponsor (attends reviews only)",
+            "1"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "team",
+          "label": "People on the Scrum Team",
+          "unit": "",
+          "answer": 11,
+          "tolerance": 0
+        },
+        {
+          "id": "over",
+          "label": "People over the guideline of 10",
+          "unit": "",
+          "answer": 1,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Scrum Team = 1 PO + 1 SM + 9 developers (designer, QA and engineers are all Developers) = 11. That is 1 over; consider splitting into two teams sharing one backlog."
+    }
+  },
+  {
+    "id": "pm-scrum-accountabilities-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A new team member asks you, the Scrum Master, to tell her which ticket to pick up each morning.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A new team member asks you, the Scrum Master, to tell her which ticket to pick up each morning.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the Scrum-aligned answer?",
+          "options": [
+            "Coach her to pick work from the Sprint Backlog with the other Developers, toward the Sprint Goal",
+            "Assign her a ticket every morning",
+            "Ask the Product Owner to assign her work",
+            "Tell her to wait for the tech lead"
+          ],
+          "correctIndex": 0,
+          "explanation": "Developers self-manage who does what; the Scrum Master coaches self-management rather than assigning work."
+        },
+        {
+          "id": "s2",
+          "question": "She is blocked because staging credentials have not arrived from the client's IT team. What do you do?",
+          "options": [
+            "Help remove the impediment by chasing the client's IT contact",
+            "Tell her to work it out alone",
+            "Remove the item from the Sprint",
+            "Ask her to build without testing"
+          ],
+          "correctIndex": 0,
+          "explanation": "Removing impediments outside the team's control is a core Scrum Master service."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scrum-accountabilities-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Under the Scrum Guide (2020), which three accountabilities make up a Scrum Team?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Product Owner, Scrum Master and Developers",
+        "Project Manager, Tech Lead and QA",
+        "Sponsor, Product Owner and Testers",
+        "Scrum Master, Architect and Developers"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 2020 guide defines exactly three accountabilities: Product Owner, Scrum Master and Developers.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scrum-accountabilities-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Who is accountable for maximising the value of the product?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The Product Owner",
+        "The Scrum Master",
+        "The Developers",
+        "The client's finance team"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Product Owner is accountable for maximising the value of the product resulting from the team's work.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scrum-accountabilities-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-accountabilities",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In Scrum, who counts as a 'Developer'?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Anyone on the Scrum Team committed to creating the increment, including designers and QA",
+        "Only people who write code",
+        "Only senior engineers",
+        "Only the client's IT staff"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Scrum Guide uses Developers for everyone creating the increment, whatever their speciality.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

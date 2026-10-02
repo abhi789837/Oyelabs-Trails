@@ -1,0 +1,345 @@
+[
+  {
+    "id": "pm-ai-meeting-notes-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "An AI tool summarised a client call. Compare it with the facts below and mark the lines in the summary that are wrong or invented.\n\nFacts from the call: the client agreed to move the launch to 14 March; the payment screen redesign was discussed but not decided; Priya (client) will send the brand guidelines by Friday.",
+    "task": {
+      "kind": "spot",
+      "prompt": "An AI tool summarised a client call. Compare it with the facts below and mark the lines in the summary that are wrong or invented.\n\nFacts from the call: the client agreed to move the launch to 14 March; the payment screen redesign was discussed but not decided; Priya (client) will send the brand guidelines by Friday.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Attendees: Priya (client), Sam (PM), Lee (tech lead).",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Decision: launch moves to 14 March.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Decision: the payment screen will be redesigned.",
+          "issue": "It was discussed, not decided; the AI turned a discussion into a decision."
+        },
+        {
+          "id": "s4",
+          "text": "Action: Priya sends brand guidelines by Friday.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Action: Lee delivers the new payment design by Monday.",
+          "issue": "Invented action; nobody agreed this."
+        },
+        {
+          "id": "s6",
+          "text": "Next call: same time next week.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps for using an AI tool to produce meeting notes for a client call.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps for using an AI tool to produce meeting notes for a client call.",
+      "items": [
+        {
+          "id": "r626aa",
+          "label": "Check the tool is approved for this client's data and get consent to record"
+        },
+        {
+          "id": "rb88e4",
+          "label": "Record and transcribe the call"
+        },
+        {
+          "id": "r8c015",
+          "label": "Generate a draft summary of decisions, actions and open questions"
+        },
+        {
+          "id": "r4f3fe",
+          "label": "Check every decision, owner and date against the transcript"
+        },
+        {
+          "id": "r332b1",
+          "label": "Send the reviewed notes to attendees"
+        }
+      ],
+      "correctOrder": [
+        "r626aa",
+        "rb88e4",
+        "r8c015",
+        "r4f3fe",
+        "r332b1"
+      ],
+      "explanation": "Permission first; then capture; draft; verify; and only then share."
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A client asks at the start of a call whether it is being recorded for AI notes. Your team usually records every call.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks at the start of a call whether it is being recorded for AI notes. Your team usually records every call.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do?",
+          "options": [
+            "Explain the AI note-taking, ask for their consent, and do not record if they decline",
+            "Record anyway since it's routine",
+            "Say it's not recorded and record it",
+            "End the call"
+          ],
+          "correctIndex": 0,
+          "explanation": "Consent is needed before recording; honesty is non-negotiable."
+        },
+        {
+          "id": "d2",
+          "question": "They decline. How do you capture the notes?",
+          "options": [
+            "Record on your phone instead",
+            "Skip notes for this call",
+            "Take notes manually and send them for confirmation after the call",
+            "Ask a colleague to record secretly"
+          ],
+          "correctIndex": 2,
+          "explanation": "Respect the decision and still capture outcomes."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A PM wrote this prompt for summarising a call transcript. Mark the parts that will make the summary less reliable or less safe.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM wrote this prompt for summarising a call transcript. Mark the parts that will make the summary less reliable or less safe.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Summarise the transcript below for the client.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "List decisions, owners and dates only where they are stated in the transcript.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "If something is unclear, make a reasonable guess so the notes look complete.",
+          "issue": "Encourages invention; ask the model to mark unclear items as open questions instead."
+        },
+        {
+          "id": "s4",
+          "text": "Include an Open questions section.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Here is the transcript, plus the client's full customer database export for context.",
+          "issue": "Unnecessary personal data shared with the tool; include only what the task needs."
+        },
+        {
+          "id": "s6",
+          "text": "Keep it under 250 words.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A PM measures time saved by AI meeting notes over a month.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A PM measures time saved by AI meeting notes over a month.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Client calls per month",
+            "20"
+          ],
+          [
+            "Manual notes per call",
+            "30 min"
+          ],
+          [
+            "AI draft + review per call",
+            "10 min"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "saved",
+          "label": "Minutes saved per month",
+          "unit": "min",
+          "answer": 400,
+          "tolerance": 1
+        },
+        {
+          "id": "hours",
+          "label": "Hours saved per month",
+          "unit": "h",
+          "answer": 6.6667,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "20 minutes saved per call x 20 = 400 minutes = 6.7 hours. Review time stays in the plan."
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "These items appeared in an AI-generated summary. Rank them by how carefully you must verify them before sending, most first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "These items appeared in an AI-generated summary. Rank them by how carefully you must verify them before sending, most first.",
+      "items": [
+        {
+          "id": "r2f9dc",
+          "label": "A price or budget figure"
+        },
+        {
+          "id": "rd4474",
+          "label": "A deadline someone agreed to"
+        },
+        {
+          "id": "r34fed",
+          "label": "Who owns each action"
+        },
+        {
+          "id": "r5ace6",
+          "label": "The meeting's general topic"
+        }
+      ],
+      "correctOrder": [
+        "r2f9dc",
+        "rd4474",
+        "r34fed",
+        "r5ace6"
+      ],
+      "explanation": "Money and commitments create the biggest disputes if wrong; ownership matters for follow-through; the topic rarely causes harm."
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the most important step before sending AI-generated meeting notes to a client?",
+    "mcq": {
+      "options": [
+        "Check decisions, owners, dates and numbers against what was actually said",
+        "Make the formatting consistent",
+        "Add more detail",
+        "Send quickly so the client sees them"
+      ],
+      "correctIndex": 0,
+      "explanation": "AI summaries can merge speakers or turn suggestions into decisions; the PM is responsible for accuracy.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which AI tool should you use for a client's call transcripts?",
+    "mcq": {
+      "options": [
+        "Any free tool that works well",
+        "Your personal account",
+        "One the company has approved for that client's data",
+        "Whichever tool the client mentions"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tool terms differ on data use; client contracts may restrict sharing.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-meeting-notes-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-meeting-notes",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An AI summary lists a decision you do not remember being made. What should you do?",
+    "mcq": {
+      "options": [
+        "Keep it; the AI heard it",
+        "Delete the whole summary",
+        "Check the transcript; if it was not decided, move it to open questions",
+        "Ask the AI if it is sure"
+      ],
+      "correctIndex": 2,
+      "explanation": "The source is the transcript, not the model's confidence.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

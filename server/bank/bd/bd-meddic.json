@@ -1,0 +1,403 @@
+[
+  {
+    "id": "bd-meddic-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "In MEDDPICC, what does the \"Paper process\" cover?",
+    "mcq": {
+      "options": [
+        "The steps from verbal yes to signature: legal review, security questionnaires, procurement and contract signing",
+        "Printing the proposal on paper",
+        "The client's internal document management system",
+        "How the agency invoices after delivery"
+      ],
+      "correctIndex": 0,
+      "explanation": "Paper process is where agency deals often stall for weeks. Mapping it early protects the timeline and the forecast.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-meddic-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Your friendly contact replies quickly and likes your proposal but has no influence over the decision. In MEDDPICC terms, are they a champion?",
+    "mcq": {
+      "options": [
+        "No: a champion has influence and actively sells for you when you are not in the room",
+        "Yes: anyone who likes you is a champion",
+        "Yes, as long as they reply within a day",
+        "No, champions must be the economic buyer"
+      ],
+      "correctIndex": 0,
+      "explanation": "A friendly coach is useful, but a champion needs power and a personal stake in your success. The champion is often not the economic buyer.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-meddic-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A $200k deal is in the \"Proposal sent\" stage. You have never spoken to the economic buyer and the decision process is unknown. How should you forecast it?",
+    "mcq": {
+      "options": [
+        "Forecast it at the stage probability as usual",
+        "Mark it as closed-won",
+        "Remove it from the pipeline",
+        "Discount it below the stage probability and make reaching the economic buyer the next action"
+      ],
+      "correctIndex": 3,
+      "explanation": "Stage alone overstates deals that lack MEDDPICC evidence. No economic buyer access is a major risk to call out, not a reason to delete the deal.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-meddic-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Put the letters of MEDDPICC in order by matching these elements to the acronym, first letter first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the letters of MEDDPICC in order by matching these elements to the acronym, first letter first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Decision criteria: how they will judge options"
+        },
+        {
+          "id": "r4",
+          "label": "Decision process: the steps to a decision"
+        },
+        {
+          "id": "r5",
+          "label": "Paper process: legal, procurement, signature"
+        },
+        {
+          "id": "r6",
+          "label": "Identify pain: the problem driving the deal"
+        },
+        {
+          "id": "r7",
+          "label": "Champion: an insider who sells for you"
+        },
+        {
+          "id": "r8",
+          "label": "Competition: other vendors, in-house or doing nothing"
+        },
+        {
+          "id": "r1",
+          "label": "Metrics: the quantified outcome"
+        },
+        {
+          "id": "r2",
+          "label": "Economic buyer: who releases the money"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6",
+        "r7",
+        "r8"
+      ],
+      "explanation": "M-E-D-D-P-I-C-C: Metrics, Economic buyer, Decision criteria, Decision process, Paper process, Identify pain, Champion, Competition."
+    }
+  },
+  {
+    "id": "bd-meddic-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the MEDDPICC fields in this deal record that are weak or wrong.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the MEDDPICC fields in this deal record that are weak or wrong.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Metrics: cut average claim handling from 5 days to 1 day; saves ~$400k/year (client's estimate).",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Economic buyer: Sam (IT analyst), because he set up the first call.",
+          "issue": "Setting up a call does not make someone the economic buyer; that is the person who can release the money."
+        },
+        {
+          "id": "p3",
+          "text": "Decision criteria: security certification, AI accuracy above 90% on their sample, delivery under 6 months.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Decision process: not discussed yet, will ask after the proposal.",
+          "issue": "Unknown decision process is a gap to close before the proposal, not after."
+        },
+        {
+          "id": "p5",
+          "text": "Paper process: security questionnaire then legal review, about 4 weeks per the client.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Competition: one consultancy plus an internal build option.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-meddic-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are qualifying a $120k AI analytics platform deal with a retail chain. Your contact is the head of e-commerce.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are qualifying a $120k AI analytics platform deal with a retail chain. Your contact is the head of e-commerce.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What establishes the Metrics element?",
+          "options": [
+            "Your hourly rate",
+            "The quantified outcome they expect, such as a 10% lift in repeat purchases worth $X a year",
+            "The number of screens in the platform"
+          ],
+          "correctIndex": 1,
+          "explanation": "Metrics are the measurable business result the buyer cares about."
+        },
+        {
+          "id": "s2",
+          "question": "The head of e-commerce says the CFO approves anything above $100k. What do you do?",
+          "options": [
+            "Ignore the CFO",
+            "Cut the price below $100k",
+            "Treat the CFO as economic buyer and plan with your contact how to reach them with the business case"
+          ],
+          "correctIndex": 2,
+          "explanation": "Identify and access the economic buyer, ideally through your champion."
+        },
+        {
+          "id": "s3",
+          "question": "How do you test whether the head of e-commerce is a real champion?",
+          "options": [
+            "Ask them to do something for the deal, such as setting up the CFO meeting or sharing the decision criteria",
+            "Check whether they like your LinkedIn posts",
+            "Assume they are because they are senior"
+          ],
+          "correctIndex": 0,
+          "explanation": "Champions act; test them with a concrete request."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-meddic-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your team weights pipeline by stage probability and then halves the probability for any deal with no economic-buyer contact. Calculate the adjusted weighted pipeline.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your team weights pipeline by stage probability and then halves the probability for any deal with no economic-buyer contact. Calculate the adjusted weighted pipeline.",
+      "table": {
+        "columns": [
+          "Deal",
+          "Value",
+          "Stage probability",
+          "Economic buyer contacted?"
+        ],
+        "rows": [
+          [
+            "A",
+            "$100,000",
+            "60%",
+            "Yes"
+          ],
+          [
+            "B",
+            "$80,000",
+            "40%",
+            "No"
+          ],
+          [
+            "C",
+            "$50,000",
+            "80%",
+            "Yes"
+          ],
+          [
+            "D",
+            "$150,000",
+            "60%",
+            "No"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "raw",
+          "label": "Weighted pipeline before the adjustment",
+          "unit": "$",
+          "answer": 222000,
+          "tolerance": 1
+        },
+        {
+          "id": "adj",
+          "label": "Adjusted weighted pipeline",
+          "unit": "$",
+          "answer": 161000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Raw: 60,000 + 32,000 + 40,000 + 90,000 = 222,000. Adjusted, with B and D at half probability: 60,000 + 16,000 + 40,000 + 45,000 = 161,000."
+    }
+  },
+  {
+    "id": "bd-meddic-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A $250k healthcare platform deal has verbal approval. The champion says \"just a formality now: procurement and a security review\". Your quarter ends in three weeks.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A $250k healthcare platform deal has verbal approval. The champion says \"just a formality now: procurement and a security review\". Your quarter ends in three weeks.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should you do first?",
+          "options": [
+            "Send the contract and wait",
+            "Ask the champion to walk you through each paper-process step, owner and typical duration",
+            "Forecast it closed this quarter"
+          ],
+          "correctIndex": 1,
+          "explanation": "\"Formality\" steps are where deals slip; map them in detail."
+        },
+        {
+          "id": "s2",
+          "question": "You learn security reviews usually take six weeks there. What do you do with the forecast?",
+          "options": [
+            "Keep it in this quarter and hope",
+            "Offer a discount to speed up the security team",
+            "Move the expected close to next quarter and tell your manager why"
+          ],
+          "correctIndex": 2,
+          "explanation": "Forecast from evidence; discounts do not shorten a security review."
+        },
+        {
+          "id": "s3",
+          "question": "How can you shorten the security review?",
+          "options": [
+            "Send your security documentation and completed standard questionnaire upfront, and offer a call with your engineer",
+            "Ask the champion to skip it",
+            "Remove the AI features"
+          ],
+          "correctIndex": 0,
+          "explanation": "Remove friction by being prepared, not by bypassing their process."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-meddic-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-meddic",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these deals by the strength of their MEDDPICC evidence, strongest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these deals by the strength of their MEDDPICC evidence, strongest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Enthusiastic contact, decision criteria known, no metrics or economic buyer"
+        },
+        {
+          "id": "r4",
+          "label": "Contact went quiet after the demo; nothing confirmed"
+        },
+        {
+          "id": "r1",
+          "label": "Metrics agreed, met the economic buyer, decision and paper process mapped, champion set up the CFO call"
+        },
+        {
+          "id": "r2",
+          "label": "Metrics agreed and a strong champion, but economic buyer not yet met"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Ranking follows how much verified evidence each deal has across the elements, with economic-buyer access and a tested champion weighing most."
+    }
+  }
+]

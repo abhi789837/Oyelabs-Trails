@@ -1,0 +1,383 @@
+[
+  {
+    "id": "bd-lead-clutch-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": "bd-tool-clutch",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Review this agency's directory listing draft. Mark the parts that will cost it leads.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this agency's directory listing draft. Mark the parts that will cost it leads.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Tagline: \"We do everything for everyone.\"",
+          "issue": "No focus: buyers filter by service and industry, so a generic tagline matches nothing."
+        },
+        {
+          "id": "p2",
+          "text": "Service focus: 60% mobile apps, 30% web apps, 10% AI integrations.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Portfolio: three case studies with the client's problem, what was built and the result.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Reviews: one review, from 2019.",
+          "issue": "Few and stale reviews signal low activity; recent verified reviews drive ranking and trust."
+        },
+        {
+          "id": "p5",
+          "text": "Minimum project size and hourly rate range are filled in.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Contact form routes to an inbox nobody checks.",
+          "issue": "Leads that wait days go cold; directory enquiries need a fast owner."
+        },
+        {
+          "id": "p7",
+          "text": "Industries served: healthcare, logistics, education.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-lead-clutch-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these actions by how much they are likely to improve a directory profile's lead flow, most impact first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these actions by how much they are likely to improve a directory profile's lead flow, most impact first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Set an accurate service focus and minimum project size"
+        },
+        {
+          "id": "r4",
+          "label": "Change the profile's cover image colour"
+        },
+        {
+          "id": "r1",
+          "label": "Collect several recent, verified client reviews"
+        },
+        {
+          "id": "r2",
+          "label": "Add detailed case studies matching your target industries"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Directories rank and buyers decide mostly on verified reviews, then relevant proof, then accurate filters; cosmetics matter least."
+    }
+  },
+  {
+    "id": "bd-lead-clutch-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A directory listing produced these results last quarter. Work out the cost per lead and the cost per won deal.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A directory listing produced these results last quarter. Work out the cost per lead and the cost per won deal.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Sponsored listing spend",
+            "$3,000"
+          ],
+          [
+            "Leads received",
+            "15"
+          ],
+          [
+            "Deals won",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cpl",
+          "label": "Cost per lead",
+          "unit": "$",
+          "answer": 200,
+          "tolerance": 1
+        },
+        {
+          "id": "cpd",
+          "label": "Cost per won deal",
+          "unit": "$",
+          "answer": 1500,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "3,000 / 15 = $200 per lead; 3,000 / 2 = $1,500 per won deal."
+    }
+  },
+  {
+    "id": "bd-lead-clutch-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Compare two lead sources for the quarter. Work out the return on spend (won revenue divided by spend) for each.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare two lead sources for the quarter. Work out the return on spend (won revenue divided by spend) for each.",
+      "table": {
+        "columns": [
+          "Source",
+          "Spend ($)",
+          "Won revenue ($)"
+        ],
+        "rows": [
+          [
+            "Directory sponsorship",
+            "6000",
+            "48000"
+          ],
+          [
+            "Paid search ads",
+            "9000",
+            "36000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "dir",
+          "label": "Directory: revenue per $1 spent",
+          "unit": "x",
+          "answer": 8,
+          "tolerance": 0.01
+        },
+        {
+          "id": "ads",
+          "label": "Ads: revenue per $1 spent",
+          "unit": "x",
+          "answer": 4,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "48,000 / 6,000 = 8x; 36,000 / 9,000 = 4x. The directory returned twice as much per dollar."
+    }
+  },
+  {
+    "id": "bd-lead-clutch-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": "bd-tool-clutch",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A project just finished well for a healthcare client. Your directory profile has few reviews.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A project just finished well for a healthcare client. Your directory profile has few reviews.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When should you ask for a review?",
+          "options": [
+            "Six months later",
+            "Soon after a clear success, while the result is fresh",
+            "Before the project starts",
+            "Never; reviews should be organic only"
+          ],
+          "correctIndex": 1,
+          "explanation": "Ask at the moment of value; the client remembers the result and goodwill is highest."
+        },
+        {
+          "id": "s2",
+          "question": "The client agrees but is busy. What makes it most likely to happen?",
+          "options": [
+            "Send a long survey of your own",
+            "Make it easy: send the review link, explain it takes a short call or form, and offer a convenient time",
+            "Write the review for them and post it under their name",
+            "Remind them daily"
+          ],
+          "correctIndex": 1,
+          "explanation": "Reducing effort raises completion; writing it for them is fake and breaks directory rules."
+        },
+        {
+          "id": "s3",
+          "question": "The review mentions a missed deadline alongside praise. What do you do?",
+          "options": [
+            "Ask them to delete it",
+            "Respond publicly and professionally, acknowledging the delay and what you changed",
+            "Report it as fake",
+            "Ignore it"
+          ],
+          "correctIndex": 1,
+          "explanation": "A calm, honest response builds more trust with buyers than a perfect record."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-lead-clutch-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the steps of handling a new enquiry from a directory listing.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of handling a new enquiry from a directory listing.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Book a discovery call"
+        },
+        {
+          "id": "r4",
+          "label": "Send a follow-up recap and next steps"
+        },
+        {
+          "id": "r5",
+          "label": "Ask won clients for a review to feed the listing"
+        },
+        {
+          "id": "r1",
+          "label": "Acknowledge the enquiry quickly and log it in the CRM with source"
+        },
+        {
+          "id": "r2",
+          "label": "Check fit against your ICP and minimum project size"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Speed and logging first, qualify, talk, recap; reviews from won work close the loop that generates the next lead."
+    }
+  },
+  {
+    "id": "bd-lead-clutch-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": "bd-tool-clutch",
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What do buyers on directories like Clutch rely on most when shortlisting an agency?",
+    "mcq": {
+      "options": [
+        "The agency's office photos",
+        "Verified client reviews and relevant portfolio work",
+        "The length of the company description",
+        "How many services are listed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Directories are trusted because reviews are verified; reviews plus relevant work drive shortlists.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-clutch-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why does a directory listing need an accurate minimum project size?",
+    "mcq": {
+      "options": [
+        "It is required to log in",
+        "It filters out enquiries too small to be worth pursuing and sets buyer expectations",
+        "It raises the agency's hourly rate automatically",
+        "It hides the agency from competitors"
+      ],
+      "correctIndex": 1,
+      "explanation": "An honest minimum saves time on both sides and keeps leads within what the agency can profitably serve.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-clutch-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-clutch",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A colleague suggests posting reviews from friends posing as clients to boost the listing. What is the right call?",
+    "mcq": {
+      "options": [
+        "Do it, everyone does",
+        "Refuse; fake reviews break directory rules, risk removal and destroy buyer trust",
+        "Do it but only for two reviews",
+        "Post them from a different account"
+      ],
+      "correctIndex": 1,
+      "explanation": "Directories verify reviews and remove or penalise fakes; reputational damage outweighs any short-term ranking.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

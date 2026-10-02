@@ -1,0 +1,404 @@
+[
+  {
+    "id": "bd-white-label-offering-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What does a \"white-label\" app mean when an agency sells it to a client?",
+    "mcq": {
+      "options": [
+        "An app built entirely from scratch to the client's unique specification",
+        "An app that can only be used with a white colour theme",
+        "A free open-source app with no support",
+        "A ready-built product the agency rebrands and configures for the client, who launches it under their own name"
+      ],
+      "correctIndex": 3,
+      "explanation": "White-label means the base product already exists; the client gets their brand, configuration and usually some customisation on top, which is why it is faster and cheaper than a custom build.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-white-label-offering-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A startup founder wants to launch a food-delivery app in one city within six weeks on a small budget. Why might a white-label solution suit them better than a custom build?",
+    "mcq": {
+      "options": [
+        "White-label apps never need any customisation",
+        "White-label apps are owned outright by the agency's other clients",
+        "Custom builds cannot include payments",
+        "The core flows (ordering, payments, tracking, admin) already exist, so launch is faster and cheaper"
+      ],
+      "correctIndex": 3,
+      "explanation": "The value of white-label is time and cost to market for a well-understood model. Some customisation is still normal.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-white-label-offering-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect loves the white-label demo but lists 14 major changes to how the core marketplace works. What is the most honest advice?",
+    "mcq": {
+      "options": [
+        "Tell them white-label products can never be changed",
+        "Ignore the changes and send the standard white-label quote",
+        "With that much change to the core, a custom build (possibly reusing parts) may be cheaper and cleaner in the long run; compare both",
+        "Promise all 14 changes at the white-label price to win the deal"
+      ],
+      "correctIndex": 2,
+      "explanation": "Heavy changes to the core erode white-label's speed and cost advantage and create a fork that is hard to upgrade. Showing both options builds trust and avoids a loss-making deal.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-white-label-offering-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which question matters most to qualify a white-label lead before quoting?",
+    "mcq": {
+      "options": [
+        "How many developers do you employ?",
+        "Have you ever used an app before?",
+        "How does your business model differ from the standard flow the product supports?",
+        "What is your favourite app colour?"
+      ],
+      "correctIndex": 2,
+      "explanation": "The fit between their model and the product's built-in flows decides whether white-label works and how much customisation it needs.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-white-label-offering-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these prospects by how well a white-label delivery-app product fits them, best fit first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these prospects by how well a white-label delivery-app product fits them, best fit first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "A courier firm needing delivery with a custom multi-stop route optimiser"
+        },
+        {
+          "id": "r4",
+          "label": "A biotech lab wanting a sample-tracking system for regulators"
+        },
+        {
+          "id": "r1",
+          "label": "A restaurant group launching standard food delivery in two cities next quarter"
+        },
+        {
+          "id": "r2",
+          "label": "A grocery startup that wants standard delivery plus its own loyalty points"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Closest to the product's standard flows fits best; each step down adds more custom work, and the lab's need is a different product entirely."
+    }
+  },
+  {
+    "id": "bd-white-label-offering-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the claims in this white-label sales email that are risky or untrue.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the claims in this white-label sales email that are risky or untrue.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Our ready-made delivery platform includes customer, driver and admin apps.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We will brand it with your logo, colours and app name.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "You will own the full source code exclusively, and nobody else will ever use this product.",
+          "issue": "White-label products are licensed to many clients; exclusive ownership needs a different (custom or buy-out) agreement."
+        },
+        {
+          "id": "p4",
+          "text": "Typical launch time is a few weeks once branding and setup are agreed.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Any feature you can imagine is included at no extra cost.",
+          "issue": "Customisation beyond the standard product is normally scoped and priced."
+        },
+        {
+          "id": "p6",
+          "text": "We will help you publish to the app stores.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-white-label-offering-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A taxi operator asks for \"an app like Uber\" for their 40-car fleet, launching in two months, with a modest budget.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A taxi operator asks for \"an app like Uber\" for their 40-car fleet, launching in two months, with a modest budget.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you propose first?",
+          "options": [
+            "A full custom build quote",
+            "A six-month discovery programme",
+            "A demo of the white-label ride-hailing product to check fit against their flows"
+          ],
+          "correctIndex": 2,
+          "explanation": "Their need is close to a standard model, the timeline is short and budget modest: check white-label fit first."
+        },
+        {
+          "id": "s2",
+          "question": "They want drivers paid weekly instead of per ride. How do you treat this?",
+          "options": [
+            "Check whether the product supports configurable payouts; if not, scope it as a priced customisation",
+            "Promise it is included without checking",
+            "Say it is impossible"
+          ],
+          "correctIndex": 0,
+          "explanation": "Confirm with the product/engineering team, then price it if it is not standard."
+        },
+        {
+          "id": "s3",
+          "question": "They ask whether they can change the product later. What is the right answer?",
+          "options": [
+            "Yes, unlimited changes are free forever",
+            "Yes, through scoped customisation, with the trade-off that heavy changes can make upgrades harder",
+            "No, white-label can never change"
+          ],
+          "correctIndex": 1,
+          "explanation": "Honest about flexibility and the upgrade trade-off."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-white-label-offering-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client compares launching a white-label app with a custom build. Calculate the first-year cost of each.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client compares launching a white-label app with a custom build. Calculate the first-year cost of each.",
+      "table": {
+        "columns": [
+          "Option",
+          "Upfront",
+          "Monthly"
+        ],
+        "rows": [
+          [
+            "White-label",
+            "$12,000 setup + $6,000 customisation",
+            "$800 licence/hosting"
+          ],
+          [
+            "Custom build",
+            "$70,000 build",
+            "$1,500 maintenance & hosting"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "wl",
+          "label": "White-label first-year cost",
+          "unit": "$",
+          "answer": 27600,
+          "tolerance": 1
+        },
+        {
+          "id": "custom",
+          "label": "Custom build first-year cost",
+          "unit": "$",
+          "answer": 88000,
+          "tolerance": 1
+        },
+        {
+          "id": "saving",
+          "label": "First-year saving with white-label",
+          "unit": "$",
+          "answer": 60400,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "White-label: 12,000 + 6,000 + 12 x 800 = 27,600. Custom: 70,000 + 12 x 1,500 = 88,000. Saving: 60,400."
+    }
+  },
+  {
+    "id": "bd-white-label-offering-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client on a white-label plan asks when a custom build would become cheaper overall. Using the numbers below, how many months until the custom option's total cost equals the white-label total?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client on a white-label plan asks when a custom build would become cheaper overall. Using the numbers below, how many months until the custom option's total cost equals the white-label total?",
+      "table": {
+        "columns": [
+          "Option",
+          "Upfront",
+          "Monthly"
+        ],
+        "rows": [
+          [
+            "White-label",
+            "$15,000",
+            "$2,000"
+          ],
+          [
+            "Custom build",
+            "$60,000",
+            "$500"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "months",
+          "label": "Break-even month",
+          "unit": "months",
+          "answer": 30,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "15,000 + 2,000m = 60,000 + 500m, so 1,500m = 45,000 and m = 30. Before month 30 white-label is cheaper."
+    }
+  },
+  {
+    "id": "bd-white-label-offering-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-offering",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A reseller (a marketing agency) wants to resell your white-label AI chatbot to their own clients under their brand.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A reseller (a marketing agency) wants to resell your white-label AI chatbot to their own clients under their brand.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the key commercial question to settle first?",
+          "options": [
+            "The chatbot's default font",
+            "Whether they have a LinkedIn page",
+            "Pricing structure: per-client licence or revenue share, and who supports end clients"
+          ],
+          "correctIndex": 2,
+          "explanation": "Reseller deals live or die on margin and support responsibility."
+        },
+        {
+          "id": "s2",
+          "question": "They want to promise their clients 100% accurate answers. What do you advise?",
+          "options": [
+            "Not to: AI answers can be wrong; set expectations and include human hand-off or review",
+            "Agree, it helps them sell",
+            "Tell them to avoid mentioning AI at all"
+          ],
+          "correctIndex": 0,
+          "explanation": "Overpromising AI accuracy creates support load and churn for both parties."
+        },
+        {
+          "id": "s3",
+          "question": "One of their clients needs a custom integration with an in-house ERP. How do you handle it?",
+          "options": [
+            "Refuse all integrations",
+            "Scope it as a separate paid customisation through the reseller",
+            "Include it free to keep the reseller happy"
+          ],
+          "correctIndex": 1,
+          "explanation": "Custom integrations are real engineering; price them and keep the reseller as the contracting party."
+        }
+      ]
+    }
+  }
+]

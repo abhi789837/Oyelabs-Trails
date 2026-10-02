@@ -1,0 +1,371 @@
+[
+  {
+    "id": "pm-raid-log-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Classify these entries for a RAID log by putting them in R, A, I, D order: the risk first, then the assumption, then the issue, then the dependency.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Classify these entries for a RAID log by putting them in R, A, I, D order: the risk first, then the assumption, then the issue, then the dependency.",
+      "items": [
+        {
+          "id": "r39b4a",
+          "label": "The client's payment provider may not approve the merchant account before launch"
+        },
+        {
+          "id": "rd4f0c",
+          "label": "The client will supply final brand assets by week 3"
+        },
+        {
+          "id": "r70aa0",
+          "label": "The staging server has been down since Monday and QA is blocked"
+        },
+        {
+          "id": "ra65bf",
+          "label": "Push notifications need the client's Apple Developer account access"
+        }
+      ],
+      "correctOrder": [
+        "r39b4a",
+        "rd4f0c",
+        "r70aa0",
+        "ra65bf"
+      ],
+      "explanation": "A risk might happen; an assumption is something treated as true without proof; an issue is happening now; a dependency is something the work needs from someone else."
+    }
+  },
+  {
+    "id": "pm-raid-log-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Review these RAID log entries. Mark the entries that are badly written.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review these RAID log entries. Mark the entries that are badly written.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "R-04: If the client's data export arrives after 15 May, migration testing slips a sprint. Owner: PM. Response: chase weekly, prepare synthetic data.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "R-05: Things might go wrong with the API.",
+          "issue": "No cause, effect, owner or response; it cannot be acted on."
+        },
+        {
+          "id": "s3",
+          "text": "I-02: Staging SSL certificate expired on 2 May; QA blocked. Owner: DevOps. Fix due 3 May.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "I-03: Client is difficult.",
+          "issue": "Personal and vague; describe the concrete problem, e.g. decisions take two weeks."
+        },
+        {
+          "id": "s5",
+          "text": "A-01: Client's existing user database has unique emails. Validate by: data audit, week 2.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "D-02: Design system from the client's brand agency, due 10 May. Owner: client PM.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "R-06: Team may be late. Owner: everyone.",
+          "issue": "\"Everyone\" means nobody; a risk needs a single owner and a specific cause."
+        },
+        {
+          "id": "s8",
+          "text": "D-03: SMS provider account approval. Owner: client ops. Needed by: sprint 4.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-raid-log-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "An assumption in your RAID log says \"The client's CRM API supports bulk updates.\" In sprint 3 the developer finds it only supports one record at a time.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An assumption in your RAID log says \"The client's CRM API supports bulk updates.\" In sprint 3 the developer finds it only supports one record at a time.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What happens to the log entry?",
+          "options": [
+            "Close the assumption as invalid and raise an issue with its impact, linked to the original entry",
+            "Delete the assumption",
+            "Leave it; the log is just documentation",
+            "Change it to say the API supports single updates"
+          ],
+          "correctIndex": 0,
+          "explanation": "A failed assumption becomes an issue (or risk); the link keeps the history clear."
+        },
+        {
+          "id": "d2",
+          "question": "Who do you tell first?",
+          "options": [
+            "Nobody until the end of the sprint",
+            "Only the developers",
+            "The client's product owner, with the impact and options, at the next agreed touchpoint or sooner if it blocks work",
+            "The client's CEO"
+          ],
+          "correctIndex": 2,
+          "explanation": "The owner of the decision needs the impact quickly; escalation above them is only needed if it stalls."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-raid-log-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Your RAID log scores risks as probability (1-5) x impact (1-5). Anything scoring 12 or more is reviewed weekly with the client.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your RAID log scores risks as probability (1-5) x impact (1-5). Anything scoring 12 or more is reviewed weekly with the client.",
+      "table": {
+        "columns": [
+          "Risk",
+          "Probability",
+          "Impact"
+        ],
+        "rows": [
+          [
+            "App Store rejection",
+            "3",
+            "5"
+          ],
+          [
+            "Key developer leaves",
+            "2",
+            "4"
+          ],
+          [
+            "Client data late",
+            "4",
+            "3"
+          ],
+          [
+            "Hosting cost spike",
+            "2",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "store",
+          "label": "Score: App Store rejection",
+          "unit": "",
+          "answer": 15,
+          "tolerance": 0
+        },
+        {
+          "id": "dev",
+          "label": "Score: key developer leaves",
+          "unit": "",
+          "answer": 8,
+          "tolerance": 0
+        },
+        {
+          "id": "data",
+          "label": "Score: client data late",
+          "unit": "",
+          "answer": 12,
+          "tolerance": 0
+        },
+        {
+          "id": "count",
+          "label": "How many risks need weekly client review",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "15, 8, 12 and 4. App Store rejection (15) and late client data (12) meet the 12-point threshold."
+    }
+  },
+  {
+    "id": "pm-raid-log-t2-5",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order these steps for a weekly RAID review with the client.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for a weekly RAID review with the client.",
+      "items": [
+        {
+          "id": "r2631b",
+          "label": "Update the status of open issues and their due dates"
+        },
+        {
+          "id": "rf7a0d",
+          "label": "Re-score the top risks and check their responses are working"
+        },
+        {
+          "id": "r36e19",
+          "label": "Check assumptions due for validation this week"
+        },
+        {
+          "id": "r3b5e0",
+          "label": "Confirm dependencies due in the next two weeks"
+        },
+        {
+          "id": "r8b4f9",
+          "label": "Agree owners and dates for any new entries"
+        }
+      ],
+      "correctOrder": [
+        "r2631b",
+        "rf7a0d",
+        "r36e19",
+        "r3b5e0",
+        "r8b4f9"
+      ],
+      "explanation": "Issues first (they are hurting now), then risks, then assumptions and near-term dependencies, ending with clear actions."
+    }
+  },
+  {
+    "id": "pm-raid-log-t2-6",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A risk in the log, \"Client may not deliver test accounts for the payment gateway by sprint 5\", has its trigger date pass with no accounts delivered.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A risk in the log, \"Client may not deliver test accounts for the payment gateway by sprint 5\", has its trigger date pass with no accounts delivered.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do with the entry?",
+          "options": [
+            "Convert it to an issue with today's impact and an owner, and start the agreed response",
+            "Keep it as a risk and raise its probability",
+            "Close it, since the date has passed",
+            "Mark it amber in the status report only"
+          ],
+          "correctIndex": 0,
+          "explanation": "When a risk happens, it becomes an issue and the planned response kicks in."
+        },
+        {
+          "id": "d2",
+          "question": "What is the best mitigation now?",
+          "options": [
+            "Use the gateway's sandbox with test cards to keep development moving while the client chases live test accounts",
+            "Pause all payment work",
+            "Use a team member's personal card on production",
+            "Remove payments from scope"
+          ],
+          "correctIndex": 0,
+          "explanation": "A workaround that keeps work moving while the dependency is chased; never use real personal payment details."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-raid-log-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between a risk and an issue?",
+    "mcq": {
+      "options": [
+        "Risks are technical, issues are commercial",
+        "A risk is an uncertain future event; an issue is a problem already happening",
+        "Issues are owned by the client, risks by the agency",
+        "There is no difference"
+      ],
+      "correctIndex": 1,
+      "explanation": "Risks are managed with probability and responses; issues are managed with actions and deadlines because they are happening now.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-raid-log-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why log assumptions at all?",
+    "mcq": {
+      "options": [
+        "So each one can be validated, and its failure spotted early before it turns into an issue",
+        "To blame the client if they turn out wrong",
+        "Because contracts require it",
+        "To make the log longer for audits"
+      ],
+      "correctIndex": 0,
+      "explanation": "Many project failures trace back to an unvalidated assumption. Logging gives each a check date and an owner.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-raid-log-m2-3",
+    "departmentId": "pm",
+    "skillId": "pm-raid-log",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Who should own a dependency on the client's IT team delivering VPN access?",
+    "mcq": {
+      "options": [
+        "The agency's developers",
+        "Nobody; dependencies are just noted",
+        "A named person on the client side, with the agency PM tracking the date",
+        "The PM, who should get VPN access themselves"
+      ],
+      "correctIndex": 2,
+      "explanation": "The person who can actually deliver it owns it; the PM tracks and escalates if it slips.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

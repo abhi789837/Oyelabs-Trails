@@ -1,0 +1,394 @@
+[
+  {
+    "id": "bd-competitor-awareness-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect says \"Another agency quoted 40% less.\" What is the best first response?",
+    "mcq": {
+      "options": [
+        "Tell them the other agency is bad",
+        "End the conversation",
+        "Ask what the other quote includes (scope, QA, design, support, timeline) so you compare like for like",
+        "Immediately match the lower price"
+      ],
+      "correctIndex": 2,
+      "explanation": "Quotes often differ because scope differs. Understanding what is included lets you show real value or adjust honestly, instead of discounting blind.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-competitor-awareness-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "In agency sales, which of these is often the competitor you lose to most, even though it is not another agency?",
+    "mcq": {
+      "options": [
+        "A hardware supplier",
+        "The app store",
+        "Doing nothing, or building it in-house",
+        "The client's accountant"
+      ],
+      "correctIndex": 2,
+      "explanation": "Status quo and in-house builds are real alternatives. Discovery should surface the cost of doing nothing and the true cost of hiring.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-competitor-awareness-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What makes a competitor battlecard useful to a BD rep in a live deal?",
+    "mcq": {
+      "options": [
+        "Their office address",
+        "Their typical strengths and weaknesses, common claims, questions that expose gaps, and proof points that counter them",
+        "Their full employee list",
+        "Negative rumours about their founders"
+      ],
+      "correctIndex": 1,
+      "explanation": "A battlecard is a quick reference for handling a competitor in a conversation: honest strengths, weak spots, trap-setting questions and your proof.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-competitor-awareness-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Compare your quote with a competitor's on a like-for-like basis. The competitor's quote excludes QA and post-launch support, which the client will need. What is the competitor's true comparable cost, and how much more (in %) is your quote than that?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare your quote with a competitor's on a like-for-like basis. The competitor's quote excludes QA and post-launch support, which the client will need. What is the competitor's true comparable cost, and how much more (in %) is your quote than that?",
+      "table": {
+        "columns": [
+          "Item",
+          "Your quote",
+          "Competitor"
+        ],
+        "rows": [
+          [
+            "Development",
+            "$48,000",
+            "$42,000"
+          ],
+          [
+            "QA",
+            "included",
+            "not included (est. 15% of their development)"
+          ],
+          [
+            "3 months post-launch support",
+            "included",
+            "not included (est. $1,500/month)"
+          ],
+          [
+            "Total quoted",
+            "$58,000",
+            "$42,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "true",
+          "label": "Competitor's comparable cost",
+          "unit": "$",
+          "answer": 52800,
+          "tolerance": 1
+        },
+        {
+          "id": "gap",
+          "label": "Your quote above competitor's comparable cost",
+          "unit": "%",
+          "answer": 9.85,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "QA: 42,000 x 15% = 6,300. Support: 3 x 1,500 = 4,500. Comparable cost: 42,000 + 6,300 + 4,500 = 52,800. Gap: (58,000 - 52,800) / 52,800 = 9.85%, much smaller than the headline 38%."
+    }
+  },
+  {
+    "id": "bd-competitor-awareness-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You have 30 minutes to research a competitor before a bake-off pitch. Rank these sources by how useful they are, most useful first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "You have 30 minutes to research a competitor before a bake-off pitch. Rank these sources by how useful they are, most useful first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Their pricing signals (hourly rate ranges on marketplaces or directory profiles)"
+        },
+        {
+          "id": "r4",
+          "label": "Their social media follower count"
+        },
+        {
+          "id": "r1",
+          "label": "Their published case studies in the client's industry"
+        },
+        {
+          "id": "r2",
+          "label": "Their client reviews on directories like Clutch"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Case studies in the same industry show what you are up against; reviews reveal real strengths and complaints; pricing signals help position; follower counts tell you little."
+    }
+  },
+  {
+    "id": "bd-competitor-awareness-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the lines in this competitor battlecard that a rep should not use.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this competitor battlecard that a rep should not use.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Strengths: large team, many logos, strong design portfolio.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Weaknesses: junior developers often staffed after the sale; reviews mention slow communication.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Say: \"They are frauds and will steal your code.\"",
+          "issue": "Unprovable, unprofessional attacks hurt your credibility and may be defamatory."
+        },
+        {
+          "id": "p4",
+          "text": "Ask: \"Who exactly will work on your project, and can you meet them before signing?\"",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Claim we are cheaper in every case, even if you are not sure.",
+          "issue": "Unverified claims backfire when the client compares quotes."
+        },
+        {
+          "id": "p6",
+          "text": "Proof to share: our similar case study with a reference client.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-competitor-awareness-t2-4",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A SaaS company is deciding between hiring three in-house developers and using your agency for a new product.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A SaaS company is deciding between hiring three in-house developers and using your agency for a new product.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the strongest honest argument for the agency?",
+          "options": [
+            "Agencies are always cheaper than employees",
+            "In-house teams never work",
+            "Speed to start and a full team (design, QA, PM) without long hiring cycles"
+          ],
+          "correctIndex": 2,
+          "explanation": "Time to start and a complete team are real advantages; blanket claims are not."
+        },
+        {
+          "id": "s2",
+          "question": "They worry about knowledge leaving with the agency. How do you respond?",
+          "options": [
+            "Offer documentation, code ownership, and a handover or hybrid plan to their future hires",
+            "Say that never happens",
+            "Suggest they never hire in-house"
+          ],
+          "correctIndex": 0,
+          "explanation": "Address the real risk with a concrete transition plan."
+        },
+        {
+          "id": "s3",
+          "question": "They decide to hire in-house eventually. What is the best move?",
+          "options": [
+            "Argue them out of hiring",
+            "Propose building the first version now and helping onboard their hires later",
+            "Withdraw from the deal"
+          ],
+          "correctIndex": 1,
+          "explanation": "Turning a competing option into a phased plan keeps you in the deal."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-competitor-awareness-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are in the final two for a $150k AI platform project. The other finalist is a well-known firm. The buyer hints your competitor has \"a stronger AI team\".",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are in the final two for a $150k AI platform project. The other finalist is a well-known firm. The buyer hints your competitor has \"a stronger AI team\".",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you ask first?",
+          "options": [
+            "Whether they will accept a 20% discount",
+            "Who the competitor's CEO is",
+            "What specifically made their AI team seem stronger: people, case studies or approach?"
+          ],
+          "correctIndex": 2,
+          "explanation": "Find the real decision criterion before responding."
+        },
+        {
+          "id": "s2",
+          "question": "The answer: they showed a live demo of a similar model. What do you do?",
+          "options": [
+            "Offer a short technical session or proof-of-concept on the buyer's own sample data",
+            "Send more brochures",
+            "Claim your AI is better without evidence"
+          ],
+          "correctIndex": 0,
+          "explanation": "Counter proof with proof, ideally on their data."
+        },
+        {
+          "id": "s3",
+          "question": "You lose the deal. What is the best follow-up?",
+          "options": [
+            "Complain about the decision",
+            "Ask for feedback, record the loss reason in the CRM and update the battlecard",
+            "Never contact them again"
+          ],
+          "correctIndex": 1,
+          "explanation": "Loss reasons feed better battlecards and positioning, and polite exits keep the door open."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-competitor-awareness-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-competitor-awareness",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Last year's competitive deals are below. Calculate your overall win rate against Competitor X and the share of losses to X that were lost on price.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Last year's competitive deals are below. Calculate your overall win rate against Competitor X and the share of losses to X that were lost on price.",
+      "table": {
+        "columns": [
+          "Competitor X deals",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Won",
+            "9"
+          ],
+          [
+            "Lost on price",
+            "12"
+          ],
+          [
+            "Lost on case-study relevance",
+            "6"
+          ],
+          [
+            "Lost on timeline",
+            "3"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "win",
+          "label": "Win rate against X",
+          "unit": "%",
+          "answer": 30,
+          "tolerance": 0.1
+        },
+        {
+          "id": "price",
+          "label": "Share of losses to X lost on price",
+          "unit": "%",
+          "answer": 57.14,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Total deals: 9 + 12 + 6 + 3 = 30. Win rate: 9/30 = 30%. Losses: 21; price losses 12/21 = 57.1%. Pricing (or how value is shown against price) is the main pattern to address."
+    }
+  }
+]

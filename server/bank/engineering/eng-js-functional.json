@@ -1,0 +1,2669 @@
+[
+  {
+    "id": "eng-js-functional-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return just the names from a list of users, using `map`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "getNames",
+      "starterCode": "function getNames(users) {\n  return users.map((user) => user);\n}",
+      "referenceSolution": "function getNames(users) {\n  return users.map((user) => user.name);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "Ana"
+              },
+              {
+                "id": 2,
+                "name": "Bo"
+              }
+            ]
+          ],
+          "expected": [
+            "Ana",
+            "Bo"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "name": "Cy"
+              }
+            ]
+          ],
+          "expected": [
+            "Cy"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": ""
+              },
+              {
+                "name": "Z"
+              }
+            ]
+          ],
+          "expected": [
+            "",
+            "Z"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return only the users whose `active` flag is `true`, using `filter`. Keep their order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "activeUsers",
+      "starterCode": "function activeUsers(users) {\n  return users.filter((user) => user.active === false);\n}",
+      "referenceSolution": "function activeUsers(users) {\n  return users.filter((user) => user.active === true);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "active": true
+              },
+              {
+                "id": 2,
+                "active": false
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "active": true
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "active": false
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "active": true
+              },
+              {
+                "id": 2,
+                "active": true
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "active": true
+            },
+            {
+              "id": 2,
+              "active": true
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Use `reduce` to add up the `qty` of every line in an order. An empty order has `0` items.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "totalQty",
+      "starterCode": "function totalQty(lines) {\n  return lines.reduce((sum, line) => sum + line.qty);\n}",
+      "referenceSolution": "function totalQty(lines) {\n  return lines.reduce((sum, line) => sum + line.qty, 0);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "qty": 2
+              },
+              {
+                "sku": "b",
+                "qty": 3
+              }
+            ]
+          ],
+          "expected": 5
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "qty": 4
+              }
+            ]
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "qty": 1
+              },
+              {
+                "sku": "b",
+                "qty": 1
+              },
+              {
+                "sku": "c",
+                "qty": 8
+              }
+            ]
+          ],
+          "expected": 10
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Find the product with the given `id` using `find`. Return `null` (not `undefined`) when there is none.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "findById",
+      "starterCode": "function findById(products, id) {\n  return products.find((p) => p.id === id);\n}",
+      "referenceSolution": "function findById(products, id) {\n  return products.find((p) => p.id === id) ?? null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "title": "Pen"
+              },
+              {
+                "id": 2,
+                "title": "Ink"
+              }
+            ],
+            2
+          ],
+          "expected": {
+            "id": 2,
+            "title": "Ink"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            1
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "title": "Pen"
+              }
+            ],
+            5
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 0,
+                "title": "Zero"
+              }
+            ],
+            0
+          ],
+          "expected": {
+            "id": 0,
+            "title": "Zero"
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return `true` if **any** product is out of stock (`stock === 0`). Use `some`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "hasOutOfStock",
+      "starterCode": "function hasOutOfStock(products) {\n  return products.every((p) => p.stock === 0);\n}",
+      "referenceSolution": "function hasOutOfStock(products) {\n  return products.some((p) => p.stock === 0);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "stock": 3
+              },
+              {
+                "stock": 0
+              }
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "stock": 1
+              },
+              {
+                "stock": 2
+              }
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "stock": 0
+              }
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              {
+                "stock": 5
+              },
+              {
+                "stock": 0
+              },
+              {
+                "stock": 0
+              }
+            ]
+          ],
+          "expected": true
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return a new list with every price doubled. Do **not** change the original product objects — the driver checks.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "doubleDriver",
+      "starterCode": "function doublePrices(products) {\n  products.forEach((p) => {\n    p.price = p.price * 2;\n  });\n  return products;\n}\n\n// Test driver (leave as is).\nfunction doubleDriver(products) {\n  const before = JSON.stringify(products);\n  const result = doublePrices(products);\n  return { result, untouched: JSON.stringify(products) === before };\n}",
+      "referenceSolution": "function doublePrices(products) {\n  return products.map((p) => ({ ...p, price: p.price * 2 }));\n}\n\n// Test driver (leave as is).\nfunction doubleDriver(products) {\n  const before = JSON.stringify(products);\n  const result = doublePrices(products);\n  return { result, untouched: JSON.stringify(products) === before };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "price": 5
+              }
+            ]
+          ],
+          "expected": {
+            "result": [
+              {
+                "id": 1,
+                "price": 10
+              }
+            ],
+            "untouched": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "result": [],
+            "untouched": true
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "price": 0
+              },
+              {
+                "id": 2,
+                "price": 1.5
+              }
+            ]
+          ],
+          "expected": {
+            "result": [
+              {
+                "id": 1,
+                "price": 0
+              },
+              {
+                "id": 2,
+                "price": 3
+              }
+            ],
+            "untouched": true
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "price": 100,
+                "tag": "x"
+              }
+            ]
+          ],
+          "expected": {
+            "result": [
+              {
+                "id": 9,
+                "price": 200,
+                "tag": "x"
+              }
+            ],
+            "untouched": true
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "[ 20, 40 ]",
+        "[ 10, 30 ]",
+        "[ 10, 20, 30, 40 ]",
+        "[ 2, 4 ]"
+      ],
+      "correctIndex": 0,
+      "explanation": "`filter` keeps the even numbers `[2, 4]`, then `map` multiplies each by 10.",
+      "snippet": "const result = [1, 2, 3, 4]\n  .filter((n) => n % 2 === 0)\n  .map((n) => n * 10);\nconsole.log(result);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "[ undefined, undefined, undefined ]",
+        "[ 2, 4, 6 ]",
+        "[ 1, 2, 3 ]",
+        "[]"
+      ],
+      "correctIndex": 0,
+      "explanation": "With curly braces, an arrow function needs an explicit `return`. Without it each callback returns `undefined`. Write `(n) => n * 2` or add `return`.",
+      "snippet": "const doubled = [1, 2, 3].map((n) => {\n  n * 2;\n});\nconsole.log(doubled);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "20",
+        "10",
+        "15",
+        "514"
+      ],
+      "correctIndex": 0,
+      "explanation": "The second argument to `reduce` is the starting value, so it adds `10 + 5 + 1 + 4`.",
+      "snippet": "const total = [5, 1, 4].reduce((sum, n) => sum + n, 10);\nconsole.log(total);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Count how many tickets there are per `priority`: return e.g. `{ high: 2, low: 1 }`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "countBy",
+      "starterCode": "function countBy(tickets) {\n  return tickets.reduce((acc, t) => {\n    acc[t.priority] = 1;\n    return acc;\n  }, {});\n}",
+      "referenceSolution": "function countBy(tickets) {\n  return tickets.reduce((acc, t) => {\n    acc[t.priority] = (acc[t.priority] ?? 0) + 1;\n    return acc;\n  }, {});\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "priority": "high"
+              },
+              {
+                "priority": "low"
+              },
+              {
+                "priority": "high"
+              }
+            ]
+          ],
+          "expected": {
+            "high": 2,
+            "low": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "priority": "p1"
+              }
+            ]
+          ],
+          "expected": {
+            "p1": 1
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "priority": "a"
+              },
+              {
+                "priority": "a"
+              },
+              {
+                "priority": "a"
+              },
+              {
+                "priority": "b"
+              }
+            ]
+          ],
+          "expected": {
+            "a": 3,
+            "b": 1
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Turn a list into a lookup object keyed by `key`: `indexBy(users, \"id\")` → `{ 1: {...}, 2: {...} }`. A later duplicate replaces an earlier one.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "indexBy",
+      "starterCode": "function indexBy(list, key) {\n  return list.map((item) => ({ [item[key]]: item }));\n}",
+      "referenceSolution": "function indexBy(list, key) {\n  return list.reduce((acc, item) => {\n    acc[item[key]] = item;\n    return acc;\n  }, {});\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "n": "a"
+              },
+              {
+                "id": 2,
+                "n": "b"
+              }
+            ],
+            "id"
+          ],
+          "expected": {
+            "1": {
+              "id": 1,
+              "n": "a"
+            },
+            "2": {
+              "id": 2,
+              "n": "b"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "id"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "x",
+                "q": 1
+              },
+              {
+                "sku": "x",
+                "q": 2
+              }
+            ],
+            "sku"
+          ],
+          "expected": {
+            "x": {
+              "sku": "x",
+              "q": 2
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "email": "a@x",
+                "v": 1
+              }
+            ],
+            "email"
+          ],
+          "expected": {
+            "a@x": {
+              "email": "a@x",
+              "v": 1
+            }
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Sort products by `price` ascending, then by `name` A–Z when prices are equal. Return a new array; do not reorder the input.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "sortDriver",
+      "starterCode": "function sortProducts(products) {\n  return products.sort((a, b) => a.price - b.price);\n}\n\n// Test driver (leave as is).\nfunction sortDriver(products) {\n  const before = JSON.stringify(products);\n  const sorted = sortProducts(products).map((p) => p.name);\n  return { sorted, untouched: JSON.stringify(products) === before };\n}",
+      "referenceSolution": "function sortProducts(products) {\n  return [...products].sort((a, b) => a.price - b.price || a.name.localeCompare(b.name));\n}\n\n// Test driver (leave as is).\nfunction sortDriver(products) {\n  const before = JSON.stringify(products);\n  const sorted = sortProducts(products).map((p) => p.name);\n  return { sorted, untouched: JSON.stringify(products) === before };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Pen",
+                "price": 3
+              },
+              {
+                "name": "Ink",
+                "price": 1
+              }
+            ]
+          ],
+          "expected": {
+            "sorted": [
+              "Ink",
+              "Pen"
+            ],
+            "untouched": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "sorted": [],
+            "untouched": true
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "b",
+                "price": 2
+              },
+              {
+                "name": "a",
+                "price": 2
+              },
+              {
+                "name": "c",
+                "price": 1
+              }
+            ]
+          ],
+          "expected": {
+            "sorted": [
+              "c",
+              "a",
+              "b"
+            ],
+            "untouched": true
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "x",
+                "price": 10
+              },
+              {
+                "name": "y",
+                "price": 9
+              }
+            ]
+          ],
+          "expected": {
+            "sorted": [
+              "y",
+              "x"
+            ],
+            "untouched": true
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write `pipe(...fns)`: it returns a function that passes its input through each function **left to right**. `pipe()` with no functions returns the input unchanged.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pipeDriver",
+      "starterCode": "function pipe(...fns) {\n  return (x) => fns.reduceRight((value, fn) => fn(value), x);\n}\n\n// Test driver (leave as is): steps are names of small string helpers.\nfunction pipeDriver(steps, input) {\n  const helpers = {\n    trim: (s) => s.trim(),\n    lower: (s) => s.toLowerCase(),\n    dash: (s) => s.replace(/\\s+/g, \"-\"),\n    exclaim: (s) => s + \"!\",\n    first3: (s) => s.slice(0, 3),\n  };\n  return pipe(...steps.map((s) => helpers[s]))(input);\n}",
+      "referenceSolution": "function pipe(...fns) {\n  return (x) => fns.reduce((value, fn) => fn(value), x);\n}\n\n// Test driver (leave as is): steps are names of small string helpers.\nfunction pipeDriver(steps, input) {\n  const helpers = {\n    trim: (s) => s.trim(),\n    lower: (s) => s.toLowerCase(),\n    dash: (s) => s.replace(/\\s+/g, \"-\"),\n    exclaim: (s) => s + \"!\",\n    first3: (s) => s.slice(0, 3),\n  };\n  return pipe(...steps.map((s) => helpers[s]))(input);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "trim",
+              "lower",
+              "dash"
+            ],
+            "  Hello World "
+          ],
+          "expected": "hello-world"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "As Is"
+          ],
+          "expected": "As Is"
+        },
+        {
+          "args": [
+            [
+              "first3",
+              "exclaim"
+            ],
+            "abcdef"
+          ],
+          "expected": "abc!"
+        },
+        {
+          "args": [
+            [
+              "exclaim",
+              "first3"
+            ],
+            "ab"
+          ],
+          "expected": "ab!"
+        },
+        {
+          "args": [
+            [
+              "lower"
+            ],
+            "ABC"
+          ],
+          "expected": "abc"
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Compute a cart summary in **one** `reduce`: `{ count, subtotal }` where `count` is the total quantity and `subtotal` is the sum of `price * qty`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cartSummary",
+      "starterCode": "function cartSummary(items) {\n  return items.reduce(\n    (acc, item) => ({ count: acc.count + 1, subtotal: acc.subtotal + item.price }),\n    { count: 0, subtotal: 0 },\n  );\n}",
+      "referenceSolution": "function cartSummary(items) {\n  return items.reduce(\n    (acc, item) => ({ count: acc.count + item.qty, subtotal: acc.subtotal + item.price * item.qty }),\n    { count: 0, subtotal: 0 },\n  );\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "price": 10,
+                "qty": 2
+              },
+              {
+                "price": 3,
+                "qty": 1
+              }
+            ]
+          ],
+          "expected": {
+            "count": 3,
+            "subtotal": 23
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "count": 0,
+            "subtotal": 0
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 4,
+                "qty": 5
+              }
+            ]
+          ],
+          "expected": {
+            "count": 5,
+            "subtotal": 20
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 1,
+                "qty": 0
+              },
+              {
+                "price": 2,
+                "qty": 1
+              }
+            ]
+          ],
+          "expected": {
+            "count": 1,
+            "subtotal": 2
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Write a generic `uniqueBy(items, key)` that keeps the **first** item for each distinct value of `key`, in order.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "uniqueBy",
+      "starterCode": "function uniqueBy<T, K extends keyof T>(items: T[], key: K): T[] {\n  return items.filter((item, i) => items.indexOf(item) === i);\n}",
+      "referenceSolution": "function uniqueBy<T, K extends keyof T>(items: T[], key: K): T[] {\n  const seen = new Set<T[K]>();\n  return items.filter((item) => {\n    if (seen.has(item[key])) return false;\n    seen.add(item[key]);\n    return true;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "v": "a"
+              },
+              {
+                "id": 1,
+                "v": "b"
+              },
+              {
+                "id": 2,
+                "v": "c"
+              }
+            ],
+            "id"
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "v": "a"
+            },
+            {
+              "id": 2,
+              "v": "c"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "id"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "e": "x",
+                "n": 1
+              },
+              {
+                "e": "y",
+                "n": 2
+              },
+              {
+                "e": "x",
+                "n": 3
+              },
+              {
+                "e": "y",
+                "n": 4
+              }
+            ],
+            "e"
+          ],
+          "expected": [
+            {
+              "e": "x",
+              "n": 1
+            },
+            {
+              "e": "y",
+              "n": 2
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "k": 0
+              },
+              {
+                "k": 0
+              }
+            ],
+            "k"
+          ],
+          "expected": [
+            {
+              "k": 0
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "[ 3, 10, 7 ] true",
+        "[ '3', '10', '7' ] true",
+        "[ 3, 10, 7 ] false",
+        "[ NaN, NaN, NaN ] false"
+      ],
+      "correctIndex": 0,
+      "explanation": "`map(Number)` converts each string to a number (Number ignores the extra index argument). All three are greater than 2, so `every` is `true`.",
+      "snippet": "const ids = [\"3\", \"10\", \"7\"].map(Number);\nconsole.log(ids, ids.every((n) => n > 2));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "30 10 20 | 10 20 30",
+        "10 20 30 | 10 20 30",
+        "30 10 20 | 30 10 20",
+        "10 20 30 | 30 10 20"
+      ],
+      "correctIndex": 0,
+      "explanation": "Spreading into a new array before `sort` leaves `prices` untouched; only the copy is sorted. `sort` alone would have changed `prices` too.",
+      "snippet": "const prices = [30, 10, 20];\nconst sorted = [...prices].sort((a, b) => a - b);\nconsole.log(prices.join(\" \"), \"|\", sorted.join(\" \"));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "[ 'js', 'react', 'css' ]",
+        "[ [ 'js', 'react' ], [ 'css' ] ]",
+        "[ 'js react', 'css' ]",
+        "[ 'js', 'react css' ]"
+      ],
+      "correctIndex": 0,
+      "explanation": "`flatMap` maps each item to an array and flattens one level, so the split pieces end up in a single list.",
+      "snippet": "const tags = [\"js react\", \"css\"].flatMap((s) => s.split(\" \"));\nconsole.log(tags);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Group orders by the month of their `date` (`\"2024-03-15\"` → `\"2024-03\"`) and return `[{ month, total }]` sorted by month ascending, where `total` sums `amount`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "totalsByMonth",
+      "starterCode": "function totalsByMonth(orders) {\n  const totals = {};\n  orders.forEach((o) => {\n    totals[o.date] = (totals[o.date] ?? 0) + o.amount;\n  });\n  return Object.entries(totals).map(([month, total]) => ({ month, total }));\n}",
+      "referenceSolution": "function totalsByMonth(orders) {\n  const totals = {};\n  orders.forEach((o) => {\n    const month = o.date.slice(0, 7);\n    totals[month] = (totals[month] ?? 0) + o.amount;\n  });\n  return Object.entries(totals)\n    .map(([month, total]) => ({ month, total }))\n    .sort((a, b) => a.month.localeCompare(b.month));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "date": "2024-03-15",
+                "amount": 10
+              },
+              {
+                "date": "2024-03-02",
+                "amount": 5
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "month": "2024-03",
+              "total": 15
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "date": "2024-05-01",
+                "amount": 1
+              },
+              {
+                "date": "2024-01-31",
+                "amount": 2
+              },
+              {
+                "date": "2024-05-20",
+                "amount": 3
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "month": "2024-01",
+              "total": 2
+            },
+            {
+              "month": "2024-05",
+              "total": 4
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "date": "2023-12-31",
+                "amount": 7
+              },
+              {
+                "date": "2024-01-01",
+                "amount": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "month": "2023-12",
+              "total": 7
+            },
+            {
+              "month": "2024-01",
+              "total": 1
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A CSV export arrives as a header row plus data rows. Return an array of objects keyed by header. Missing trailing cells become `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "rowsToObjects",
+      "starterCode": "function rowsToObjects(rows) {\n  const [headers, ...data] = rows;\n  return data.map((row) => row.map((cell, i) => ({ [headers[i]]: cell })));\n}",
+      "referenceSolution": "function rowsToObjects(rows) {\n  if (!rows.length) return [];\n  const [headers, ...data] = rows;\n  return data.map((row) => Object.fromEntries(headers.map((h, i) => [h, row[i] ?? null])));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "id",
+                "name"
+              ],
+              [
+                "1",
+                "Ana"
+              ],
+              [
+                "2",
+                "Bo"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "id": "1",
+              "name": "Ana"
+            },
+            {
+              "id": "2",
+              "name": "Bo"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "id",
+                "name"
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                "b",
+                "c"
+              ],
+              [
+                "1"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "a": "1",
+              "b": null,
+              "c": null
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "x"
+              ],
+              [
+                ""
+              ],
+              [
+                "y"
+              ]
+            ]
+          ],
+          "expected": [
+            {
+              "x": ""
+            },
+            {
+              "x": "y"
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Return the top `n` customers by total spend: `[{ customer, total }]`, highest first; ties are broken by customer name A–Z.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "topSpenders",
+      "starterCode": "function topSpenders(orders, n) {\n  return orders\n    .sort((a, b) => b.amount - a.amount)\n    .slice(0, n)\n    .map((o) => ({ customer: o.customer, total: o.amount }));\n}",
+      "referenceSolution": "function topSpenders(orders, n) {\n  const totals = orders.reduce((acc, o) => {\n    acc[o.customer] = (acc[o.customer] ?? 0) + o.amount;\n    return acc;\n  }, {});\n  return Object.entries(totals)\n    .map(([customer, total]) => ({ customer, total }))\n    .sort((a, b) => b.total - a.total || a.customer.localeCompare(b.customer))\n    .slice(0, n);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "customer": "ana",
+                "amount": 50
+              },
+              {
+                "customer": "bo",
+                "amount": 70
+              },
+              {
+                "customer": "ana",
+                "amount": 30
+              }
+            ],
+            1
+          ],
+          "expected": [
+            {
+              "customer": "ana",
+              "total": 80
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "customer": "z",
+                "amount": 10
+              },
+              {
+                "customer": "a",
+                "amount": 10
+              }
+            ],
+            2
+          ],
+          "expected": [
+            {
+              "customer": "a",
+              "total": 10
+            },
+            {
+              "customer": "z",
+              "total": 10
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "customer": "x",
+                "amount": 5
+              }
+            ],
+            5
+          ],
+          "expected": [
+            {
+              "customer": "x",
+              "total": 5
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "customer": "a",
+                "amount": 1
+              },
+              {
+                "customer": "b",
+                "amount": 2
+              },
+              {
+                "customer": "a",
+                "amount": 2
+              },
+              {
+                "customer": "c",
+                "amount": 2.5
+              }
+            ],
+            2
+          ],
+          "expected": [
+            {
+              "customer": "a",
+              "total": 3
+            },
+            {
+              "customer": "c",
+              "total": 2.5
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Flatten arbitrarily nested arrays into one flat list: `[1, [2, [3, [4]]]]` → `[1, 2, 3, 4]`. Don't use `Array.prototype.flat`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "flattenDeep",
+      "starterCode": "function flattenDeep(list) {\n  return list.reduce((acc, item) => acc.concat(item), []);\n}",
+      "referenceSolution": "function flattenDeep(list) {\n  return list.reduce((acc, item) => acc.concat(Array.isArray(item) ? flattenDeep(item) : [item]), []);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              [
+                2,
+                [
+                  3,
+                  [
+                    4
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [],
+              [
+                []
+              ]
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a",
+              [
+                "b"
+              ],
+              [
+                [
+                  "c",
+                  [
+                    "d"
+                  ]
+                ]
+              ]
+            ]
+          ],
+          "expected": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": [
+            1,
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Write `mapValues(obj, fnName)` that returns a new object with the same keys, each value transformed by the named function. The driver supplies the functions.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mapValuesDriver",
+      "starterCode": "function mapValues(obj, fn) {\n  return Object.keys(obj).map((key) => fn(obj[key]));\n}\n\n// Test driver (leave as is).\nfunction mapValuesDriver(obj, fnName) {\n  const fns = {\n    double: (v) => v * 2,\n    upper: (v) => String(v).toUpperCase(),\n    withKey: (v, k) => k + \"=\" + v,\n  };\n  return mapValues(obj, fns[fnName]);\n}",
+      "referenceSolution": "function mapValues(obj, fn) {\n  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, fn(value, key)]));\n}\n\n// Test driver (leave as is).\nfunction mapValuesDriver(obj, fnName) {\n  const fns = {\n    double: (v) => v * 2,\n    upper: (v) => String(v).toUpperCase(),\n    withKey: (v, k) => k + \"=\" + v,\n  };\n  return mapValues(obj, fns[fnName]);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": 2
+            },
+            "double"
+          ],
+          "expected": {
+            "a": 2,
+            "b": 4
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            "double"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "x": "hi"
+            },
+            "upper"
+          ],
+          "expected": {
+            "x": "HI"
+          }
+        },
+        {
+          "args": [
+            {
+              "page": 2,
+              "q": "x"
+            },
+            "withKey"
+          ],
+          "expected": {
+            "page": "page=2",
+            "q": "q=x"
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Apply optional filters to a product list. Every filter that is present must match (`category`, `minPrice`, `maxPrice` inclusive, `inStock` meaning `stock > 0`). With no filters, everything matches.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "applyFilters",
+      "starterCode": "interface Product { name: string; category: string; price: number; stock: number }\ninterface Filters { category?: string; minPrice?: number; maxPrice?: number; inStock?: boolean }\n\nfunction applyFilters(products: Product[], f: Filters): string[] {\n  return products\n    .filter((p) => !f.category || p.category === f.category)\n    .filter((p) => !f.minPrice || p.price > f.minPrice)\n    .map((p) => p.name);\n}",
+      "referenceSolution": "interface Product { name: string; category: string; price: number; stock: number }\ninterface Filters { category?: string; minPrice?: number; maxPrice?: number; inStock?: boolean }\n\nfunction applyFilters(products: Product[], f: Filters): string[] {\n  const checks: ((p: Product) => boolean)[] = [];\n  if (f.category !== undefined) checks.push((p) => p.category === f.category);\n  if (f.minPrice !== undefined) checks.push((p) => p.price >= f.minPrice!);\n  if (f.maxPrice !== undefined) checks.push((p) => p.price <= f.maxPrice!);\n  if (f.inStock) checks.push((p) => p.stock > 0);\n  return products.filter((p) => checks.every((check) => check(p))).map((p) => p.name);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Pen",
+                "category": "office",
+                "price": 3,
+                "stock": 5
+              },
+              {
+                "name": "Mug",
+                "category": "home",
+                "price": 8,
+                "stock": 0
+              }
+            ],
+            {
+              "category": "office"
+            }
+          ],
+          "expected": [
+            "Pen"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "category": "x",
+                "price": 1,
+                "stock": 1
+              }
+            ],
+            {}
+          ],
+          "expected": [
+            "A"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "category": "x",
+                "price": 10,
+                "stock": 1
+              },
+              {
+                "name": "B",
+                "category": "x",
+                "price": 20,
+                "stock": 1
+              }
+            ],
+            {
+              "minPrice": 10,
+              "maxPrice": 15
+            }
+          ],
+          "expected": [
+            "A"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "category": "x",
+                "price": 5,
+                "stock": 0
+              },
+              {
+                "name": "B",
+                "category": "y",
+                "price": 5,
+                "stock": 2
+              }
+            ],
+            {
+              "inStock": true
+            }
+          ],
+          "expected": [
+            "B"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "Free",
+                "category": "x",
+                "price": 0,
+                "stock": 1
+              },
+              {
+                "name": "Paid",
+                "category": "x",
+                "price": 3,
+                "stock": 1
+              }
+            ],
+            {
+              "maxPrice": 0
+            }
+          ],
+          "expected": [
+            "Free"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "TypeError",
+        "0",
+        "undefined",
+        "NaN"
+      ],
+      "correctIndex": 0,
+      "explanation": "`reduce` on an empty array with no initial value has nothing to start from and throws a `TypeError`. Always pass an initial value when the list can be empty.",
+      "snippet": "try {\n  const total = [].reduce((sum, n) => sum + n);\n  console.log(total);\n} catch (e) {\n  console.log(e.constructor.name);\n}",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "8",
+        "7",
+        "6",
+        "[Function]"
+      ],
+      "correctIndex": 0,
+      "explanation": "This is a left-to-right pipe: `3 + 1 = 4`, then `4 * 2 = 8`. Applying them in the other order would give `7`.",
+      "snippet": "const steps = [(x) => x + 1, (x) => x * 2];\nconsole.log(steps.reduce((value, fn) => fn(value), 3));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "true false",
+        "false false",
+        "true true",
+        "false true"
+      ],
+      "correctIndex": 0,
+      "explanation": "`every` on an empty list is `true` (no item fails) and `some` is `false` (no item passes). This bites validation code like `items.every(isValid)` on an empty cart.",
+      "snippet": "console.log([].every((n) => n > 0), [].some((n) => n > 0));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Build a category tree from a flat list `{ id, name, parentId }` (`parentId: null` for roots). Each node becomes `{ id, name, children }`, with roots and every `children` list sorted by `name`. Items whose parent does not exist are treated as roots.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "buildTree",
+      "starterCode": "function buildTree(items) {\n  return items\n    .filter((i) => i.parentId === null)\n    .map((i) => ({ id: i.id, name: i.name, children: [] }));\n}",
+      "referenceSolution": "function buildTree(items) {\n  const nodes = new Map(items.map((i) => [i.id, { id: i.id, name: i.name, children: [] }]));\n  const roots = [];\n  for (const item of items) {\n    const parent = item.parentId === null ? null : nodes.get(item.parentId);\n    (parent ? parent.children : roots).push(nodes.get(item.id));\n  }\n  const sortDeep = (list) => {\n    list.sort((a, b) => a.name.localeCompare(b.name));\n    list.forEach((n) => sortDeep(n.children));\n    return list;\n  };\n  return sortDeep(roots);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "Shoes",
+                "parentId": null
+              },
+              {
+                "id": 2,
+                "name": "Running",
+                "parentId": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "Shoes",
+              "children": [
+                {
+                  "id": 2,
+                  "name": "Running",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "name": "Kids",
+                "parentId": 1
+              },
+              {
+                "id": 1,
+                "name": "Shoes",
+                "parentId": null
+              },
+              {
+                "id": 2,
+                "name": "Adults",
+                "parentId": 1
+              },
+              {
+                "id": 4,
+                "name": "Bags",
+                "parentId": null
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 4,
+              "name": "Bags",
+              "children": []
+            },
+            {
+              "id": 1,
+              "name": "Shoes",
+              "children": [
+                {
+                  "id": 2,
+                  "name": "Adults",
+                  "children": []
+                },
+                {
+                  "id": 3,
+                  "name": "Kids",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 5,
+                "name": "Orphan",
+                "parentId": 99
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 5,
+              "name": "Orphan",
+              "children": []
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "a",
+                "parentId": null
+              },
+              {
+                "id": 2,
+                "name": "b",
+                "parentId": 1
+              },
+              {
+                "id": 3,
+                "name": "c",
+                "parentId": 2
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "a",
+              "children": [
+                {
+                  "id": 2,
+                  "name": "b",
+                  "children": [
+                    {
+                      "id": 3,
+                      "name": "c",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Pivot sales rows into a report: `{ region: { quarter: total } }`, summing `amount` for repeated region/quarter pairs.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pivot",
+      "starterCode": "function pivot(rows) {\n  return rows.reduce((acc, r) => {\n    acc[r.region] = { [r.quarter]: r.amount };\n    return acc;\n  }, {});\n}",
+      "referenceSolution": "function pivot(rows) {\n  return rows.reduce((acc, r) => {\n    const region = (acc[r.region] ??= {});\n    region[r.quarter] = (region[r.quarter] ?? 0) + r.amount;\n    return acc;\n  }, {});\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "region": "EU",
+                "quarter": "Q1",
+                "amount": 10
+              },
+              {
+                "region": "EU",
+                "quarter": "Q2",
+                "amount": 5
+              }
+            ]
+          ],
+          "expected": {
+            "EU": {
+              "Q1": 10,
+              "Q2": 5
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "region": "US",
+                "quarter": "Q1",
+                "amount": 1
+              },
+              {
+                "region": "US",
+                "quarter": "Q1",
+                "amount": 2
+              },
+              {
+                "region": "EU",
+                "quarter": "Q1",
+                "amount": 4
+              }
+            ]
+          ],
+          "expected": {
+            "US": {
+              "Q1": 3
+            },
+            "EU": {
+              "Q1": 4
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "region": "APAC",
+                "quarter": "Q4",
+                "amount": 0
+              }
+            ]
+          ],
+          "expected": {
+            "APAC": {
+              "Q4": 0
+            }
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Diff two lists of records by `id` for a sync job: return `{ added, removed, updated }` as lists of ids (in the order they appear in `next` for added/updated, in `prev` for removed). A record is updated when any field differs (fields always come in the same order, so comparing `JSON.stringify` output is fine).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "diffById",
+      "starterCode": "function diffById(prev, next) {\n  const added = next.filter((n) => !prev.includes(n)).map((n) => n.id);\n  const removed = prev.filter((p) => !next.includes(p)).map((p) => p.id);\n  return { added, removed, updated: [] };\n}",
+      "referenceSolution": "function diffById(prev, next) {\n  const before = new Map(prev.map((p) => [p.id, p]));\n  const after = new Map(next.map((n) => [n.id, n]));\n  return {\n    added: next.filter((n) => !before.has(n.id)).map((n) => n.id),\n    removed: prev.filter((p) => !after.has(p.id)).map((p) => p.id),\n    updated: next.filter((n) => before.has(n.id) && JSON.stringify(before.get(n.id)) !== JSON.stringify(n)).map((n) => n.id),\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "v": "a"
+              },
+              {
+                "id": 2,
+                "v": "b"
+              }
+            ],
+            [
+              {
+                "id": 2,
+                "v": "B"
+              },
+              {
+                "id": 3,
+                "v": "c"
+              }
+            ]
+          ],
+          "expected": {
+            "added": [
+              3
+            ],
+            "removed": [
+              1
+            ],
+            "updated": [
+              2
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": {
+            "added": [],
+            "removed": [],
+            "updated": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "v": 1
+              }
+            ],
+            [
+              {
+                "id": 1,
+                "v": 1
+              }
+            ]
+          ],
+          "expected": {
+            "added": [],
+            "removed": [],
+            "updated": []
+          }
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "id": 5,
+                "v": 0
+              },
+              {
+                "id": 4,
+                "v": 0
+              }
+            ]
+          ],
+          "expected": {
+            "added": [
+              5,
+              4
+            ],
+            "removed": [],
+            "updated": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "a": 1,
+                "b": 2
+              },
+              {
+                "id": 2,
+                "a": 1,
+                "b": 1
+              }
+            ],
+            [
+              {
+                "id": 2,
+                "a": 1,
+                "b": 2
+              },
+              {
+                "id": 1,
+                "a": 1,
+                "b": 2
+              }
+            ]
+          ],
+          "expected": {
+            "added": [],
+            "removed": [],
+            "updated": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Write `compose(middlewares)` for an Express-style chain: each middleware is `(ctx, next) => ...`; calling `next()` runs the next one. `compose` returns `run(ctx)`. A middleware that doesn't call `next` stops the chain.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runChain",
+      "starterCode": "function compose(middlewares) {\n  return (ctx) => {\n    middlewares.forEach((mw) => mw(ctx, () => {}));\n  };\n}\n\n// Test driver (leave as is): names pick middlewares that log before/after next().\nfunction runChain(names, user) {\n  const library = {\n    timer: (ctx, next) => {\n      ctx.log.push(\"timer start\");\n      next();\n      ctx.log.push(\"timer end\");\n    },\n    auth: (ctx, next) => {\n      if (!ctx.user) {\n        ctx.log.push(\"401\");\n        return;\n      }\n      ctx.log.push(\"auth ok\");\n      next();\n    },\n    handler: (ctx) => {\n      ctx.log.push(\"hello \" + ctx.user);\n    },\n  };\n  const ctx = { user, log: [] };\n  compose(names.map((n) => library[n]))(ctx);\n  return ctx.log;\n}",
+      "referenceSolution": "function compose(middlewares) {\n  return (ctx) => {\n    const dispatch = (i) => {\n      const mw = middlewares[i];\n      if (mw) mw(ctx, () => dispatch(i + 1));\n    };\n    dispatch(0);\n  };\n}\n\n// Test driver (leave as is): names pick middlewares that log before/after next().\nfunction runChain(names, user) {\n  const library = {\n    timer: (ctx, next) => {\n      ctx.log.push(\"timer start\");\n      next();\n      ctx.log.push(\"timer end\");\n    },\n    auth: (ctx, next) => {\n      if (!ctx.user) {\n        ctx.log.push(\"401\");\n        return;\n      }\n      ctx.log.push(\"auth ok\");\n      next();\n    },\n    handler: (ctx) => {\n      ctx.log.push(\"hello \" + ctx.user);\n    },\n  };\n  const ctx = { user, log: [] };\n  compose(names.map((n) => library[n]))(ctx);\n  return ctx.log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "timer",
+              "auth",
+              "handler"
+            ],
+            "ana"
+          ],
+          "expected": [
+            "timer start",
+            "auth ok",
+            "hello ana",
+            "timer end"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "ana"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "timer",
+              "auth",
+              "handler"
+            ],
+            null
+          ],
+          "expected": [
+            "timer start",
+            "401",
+            "timer end"
+          ]
+        },
+        {
+          "args": [
+            [
+              "handler",
+              "timer"
+            ],
+            "bo"
+          ],
+          "expected": [
+            "hello bo"
+          ]
+        },
+        {
+          "args": [
+            [
+              "auth",
+              "handler"
+            ],
+            "cy"
+          ],
+          "expected": [
+            "auth ok",
+            "hello cy"
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Join users to their teams for a list view. The naive `users.map(u => teams.find(...))` is O(n·m); build a lookup first. Return `{ name, team }` per user, with `team: null` when the team id is unknown.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "withTeams",
+      "starterCode": "interface User { name: string; teamId: number }\ninterface Team { id: number; title: string }\n\nfunction withTeams(users: User[], teams: Team[]) {\n  return users.map((u) => ({ name: u.name, team: teams.find((t) => t.id === u.teamId)!.title }));\n}",
+      "referenceSolution": "interface User { name: string; teamId: number }\ninterface Team { id: number; title: string }\n\nfunction withTeams(users: User[], teams: Team[]) {\n  const byId = new Map(teams.map((t) => [t.id, t.title] as const));\n  return users.map((u) => ({ name: u.name, team: byId.get(u.teamId) ?? null }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Ana",
+                "teamId": 1
+              }
+            ],
+            [
+              {
+                "id": 1,
+                "title": "Web"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "name": "Ana",
+              "team": "Web"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            [
+              {
+                "id": 1,
+                "title": "Web"
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "Bo",
+                "teamId": 7
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "name": "Bo",
+              "team": null
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "teamId": 2
+              },
+              {
+                "name": "B",
+                "teamId": 1
+              },
+              {
+                "name": "C",
+                "teamId": 2
+              }
+            ],
+            [
+              {
+                "id": 1,
+                "title": "Web"
+              },
+              {
+                "id": 2,
+                "title": "Mobile"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "name": "A",
+              "team": "Mobile"
+            },
+            {
+              "name": "B",
+              "team": "Web"
+            },
+            {
+              "name": "C",
+              "team": "Mobile"
+            }
+          ]
+        }
+      ]
+    },
+    "mcq": null,
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Review this function that prepares a leaderboard from 50,000 scores. Mark the lines that are wrong or needlessly slow.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs or performance problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function leaderboard(scores, players) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const valid = scores.filter((s) => s.points >= 0);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  const named = valid.map((s) => ({ ...s, name: players.find((p) => p.id === s.playerId).name }));",
+          "issue": "`find` inside `map` is O(n·m) and throws when a player is missing; build a Map of players first and handle a miss."
+        },
+        {
+          "id": "l4",
+          "text": "  const best = named.reduce((acc, s) => ({ ...acc, [s.playerId]: Math.max(acc[s.playerId] ?? 0, s.points) }), {});",
+          "issue": "Spreading the accumulator on every step copies the whole object each time — O(n²) for 50k rows. Mutate the accumulator instead."
+        },
+        {
+          "id": "l5",
+          "text": "  const rows = Object.entries(best).map(([id, points]) => ({ id, points }));",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  rows.sort((a, b) => b.points - a.points);",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  return rows.slice(0, 10);",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-js-functional-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "ana ana,bo",
+        "bo ana,bo",
+        "ana bo,ana",
+        "bo bo,ana"
+      ],
+      "correctIndex": 0,
+      "explanation": "`sort` is the one common array method in this chain that mutates: it reorders `users` itself before `map` runs. If `users` is React state or a prop, this is a bug; copy first or use `toSorted`.",
+      "snippet": "const users = [{ n: \"bo\" }, { n: \"ana\" }];\nconst names = users\n  .sort((x, y) => x.n.localeCompare(y.n))\n  .map((u) => u.n);\nconsole.log(users[0].n, names.join(\",\"));",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "true 2",
+        "false 0",
+        "true 0",
+        "false 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "`reduce` does not copy the initial value: the accumulator *is* `seed`, so mutating it changes `seed`. Fine for a fresh `{}` literal, a bug if you pass in a shared object (like defaults).",
+      "snippet": "const seed = {};\nconst seen = [\"a\", \"b\"].reduce((acc, k) => {\n  acc[k] = true;\n  return acc;\n}, seed);\nconsole.log(seen === seed, Object.keys(seed).length);",
+      "snippetLanguage": "javascript"
+    },
+    "task": null
+  },
+  {
+    "id": "eng-js-functional-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-js-functional",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A list page runs `orders.map(o => ({ ...o, customer: customers.find(c => c.id === o.customerId) }))` with 20,000 orders and 5,000 customers, and it is slow. What is the best fix?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Build `new Map(customers.map(c => [c.id, c]))` once, then look up each order with `map.get` — O(n + m) instead of O(n·m)",
+        "Replace `map` with a `for` loop — loops are faster than `map`",
+        "Use `filter(...)[0]` instead of `find`",
+        "Sort `customers` by id first so `find` stops earlier"
+      ],
+      "correctIndex": 0,
+      "explanation": "The cost is the nested scan: every order scans the customer list. One pass to build a Map makes each lookup O(1). Swapping `map` for a loop or `find` for `filter` changes constants, not the complexity.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

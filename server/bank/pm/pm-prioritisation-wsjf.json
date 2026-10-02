@@ -1,0 +1,380 @@
+[
+  {
+    "id": "pm-prioritisation-wsjf-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Calculate the cost of delay and WSJF for this feature. In SAFe, cost of delay = user-business value + time criticality + risk reduction/opportunity enablement, and WSJF = cost of delay / job size.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate the cost of delay and WSJF for this feature. In SAFe, cost of delay = user-business value + time criticality + risk reduction/opportunity enablement, and WSJF = cost of delay / job size.",
+      "table": {
+        "columns": [
+          "Factor",
+          "Score"
+        ],
+        "rows": [
+          [
+            "User-business value",
+            "8"
+          ],
+          [
+            "Time criticality",
+            "13"
+          ],
+          [
+            "Risk reduction / opportunity enablement",
+            "5"
+          ],
+          [
+            "Job size",
+            "13"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cod",
+          "label": "Cost of delay",
+          "unit": "",
+          "answer": 26,
+          "tolerance": 0.01
+        },
+        {
+          "id": "wsjf",
+          "label": "WSJF",
+          "unit": "",
+          "answer": 2.0,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Cost of delay = 8 + 13 + 5 = 26. WSJF = 26 / 13 = 2.0."
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Rank these features by WSJF, highest first. WSJF = (value + time criticality + risk reduction) / job size.\n\n| Feature | Value | Time crit. | Risk red. | Job size |\n|---|---|---|---|---|\n| App Store compliance update | 5 | 20 | 8 | 3 |\n| Loyalty programme | 13 | 5 | 3 | 13 |\n| Payment provider migration | 8 | 13 | 13 | 8 |\n| AI chat assistant | 20 | 3 | 5 | 20 |",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these features by WSJF, highest first. WSJF = (value + time criticality + risk reduction) / job size.\n\n| Feature | Value | Time crit. | Risk red. | Job size |\n|---|---|---|---|---|\n| App Store compliance update | 5 | 20 | 8 | 3 |\n| Loyalty programme | 13 | 5 | 3 | 13 |\n| Payment provider migration | 8 | 13 | 13 | 8 |\n| AI chat assistant | 20 | 3 | 5 | 20 |",
+      "items": [
+        {
+          "id": "r04b1c",
+          "label": "App Store compliance update"
+        },
+        {
+          "id": "r3fb8b",
+          "label": "Payment provider migration"
+        },
+        {
+          "id": "rd7bc6",
+          "label": "Loyalty programme"
+        },
+        {
+          "id": "r36985",
+          "label": "AI chat assistant"
+        }
+      ],
+      "correctOrder": [
+        "r04b1c",
+        "r3fb8b",
+        "rd7bc6",
+        "r36985"
+      ],
+      "explanation": "WSJF: compliance 33/3 = 11.0; payment migration 34/8 = 4.25; loyalty 21/13 = 1.6; AI chat 28/20 = 1.4."
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Score these two features with WSJF.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Score these two features with WSJF.",
+      "table": {
+        "columns": [
+          "Feature",
+          "Value",
+          "Time crit.",
+          "Risk red.",
+          "Job size"
+        ],
+        "rows": [
+          [
+            "Offline mode",
+            "13",
+            "3",
+            "5",
+            "8"
+          ],
+          [
+            "GDPR consent banner",
+            "5",
+            "13",
+            "13",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "off",
+          "label": "WSJF of offline mode",
+          "unit": "",
+          "answer": 2.625,
+          "tolerance": 0.01
+        },
+        {
+          "id": "gdpr",
+          "label": "WSJF of GDPR banner",
+          "unit": "",
+          "answer": 15.5,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Offline mode: 21 / 8 = 2.63. GDPR banner: 31 / 2 = 15.5. Small, time-critical regulatory work rises to the top."
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The client wants to split the large AI chat assistant into an MVP slice. Compare WSJF before and after the split. The slice keeps most of the time criticality but only part of the value.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The client wants to split the large AI chat assistant into an MVP slice. Compare WSJF before and after the split. The slice keeps most of the time criticality but only part of the value.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value",
+          "Time crit.",
+          "Risk red.",
+          "Job size"
+        ],
+        "rows": [
+          [
+            "Whole feature",
+            "20",
+            "8",
+            "5",
+            "20"
+          ],
+          [
+            "MVP slice",
+            "13",
+            "8",
+            "5",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "whole",
+          "label": "WSJF of the whole feature",
+          "unit": "",
+          "answer": 1.65,
+          "tolerance": 0.01
+        },
+        {
+          "id": "mvp",
+          "label": "WSJF of the MVP slice",
+          "unit": "",
+          "answer": 5.2,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Whole: 33 / 20 = 1.65. Slice: 26 / 5 = 5.2. Splitting large items is how WSJF rewards getting value out sooner."
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client's PI-planning notes describe how they scored WSJF. Mark the practices that undermine the method.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A client's PI-planning notes describe how they scored WSJF. Mark the practices that undermine the method.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Each factor is scored relative to the other items, using a modified Fibonacci scale.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "The smallest item in each column is given a 1 as the reference point.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Job size is in calendar weeks, including time waiting for the client's legal review.",
+          "issue": "Job size should reflect effort (or duration of the work itself), not queue time outside the team's control."
+        },
+        {
+          "id": "s4",
+          "text": "The product manager scores all factors alone to save time.",
+          "issue": "Scoring should involve business and technical stakeholders; one person's view loses the risk and size input."
+        },
+        {
+          "id": "s5",
+          "text": "Items are re-scored at each PI because time criticality changes.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Once scored, items stay in that order for the whole year.",
+          "issue": "Cost of delay changes over time; WSJF needs regular re-scoring."
+        },
+        {
+          "id": "s7",
+          "text": "The top items are then checked against capacity and dependencies.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Business owners and architects score value and risk reduction together.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client runs SAFe and invites Oyelabs to PI planning. Your team's three features have WSJF scores of 6.5, 4.0 and 1.2. The 6.5 item depends on an API another vendor delivers mid-PI.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client runs SAFe and invites Oyelabs to PI planning. Your team's three features have WSJF scores of 6.5, 4.0 and 1.2. The 6.5 item depends on an API another vendor delivers mid-PI.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you plan the 6.5 item?",
+          "options": [
+            "Plan it after the API's delivery date, record the dependency on the program board, and pull the 4.0 item forward meanwhile",
+            "Start it on day one and stub the API indefinitely",
+            "Drop it because of the dependency",
+            "Ignore WSJF and do the smallest item first"
+          ],
+          "correctIndex": 0,
+          "explanation": "WSJF sets priority; dependencies set feasible sequence. The board makes the dependency visible to the other vendor."
+        },
+        {
+          "id": "d2",
+          "question": "The other vendor's API slips by a full iteration. What do you do?",
+          "options": [
+            "Wait until the end of the PI to mention it",
+            "Build the API yourselves without asking",
+            "Raise it at the next sync, re-plan with the RTE, and tell the business owner which objective is now at risk",
+            "Re-score WSJF so the item looks less important"
+          ],
+          "correctIndex": 2,
+          "explanation": "Cross-team dependency changes are handled in the ART's syncs, with the risk made visible to business owners."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why does WSJF divide cost of delay by job size?",
+    "mcq": {
+      "options": [
+        "To penalise teams that estimate badly",
+        "So that small jobs with high cost of delay go first, maximising economic value delivered early",
+        "To convert story points into hours",
+        "To make large features look more important"
+      ],
+      "correctIndex": 1,
+      "explanation": "Doing short, valuable jobs first delivers more value sooner; that is the \"shortest job first\" part.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which of these is NOT one of the three components of cost of delay in SAFe's WSJF?",
+    "mcq": {
+      "options": [
+        "User-business value",
+        "Time criticality",
+        "Risk reduction and/or opportunity enablement",
+        "Developer seniority"
+      ],
+      "correctIndex": 3,
+      "explanation": "SAFe's cost of delay sums user-business value, time criticality and risk reduction/opportunity enablement. Seniority has nothing to do with it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prioritisation-wsjf-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-wsjf",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A regulatory deadline makes a small feature's time criticality very high. What does WSJF typically do with it?",
+    "mcq": {
+      "options": [
+        "Leaves it in place, because value is low",
+        "Moves it to the bottom until the deadline is near",
+        "Moves it near the top, because high cost of delay over a small job size gives a large score",
+        "Excludes it, because compliance is not a feature"
+      ],
+      "correctIndex": 2,
+      "explanation": "Time criticality is part of cost of delay; with a small denominator, deadline-driven work rises quickly.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

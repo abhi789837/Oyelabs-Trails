@@ -1,0 +1,367 @@
+[
+  {
+    "id": "pm-apis-for-pms-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order what happens when a user taps 'Book' in a booking app that calls the agency's API.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "The API returns a response (201 Created) to the app"
+        },
+        {
+          "id": "r2",
+          "label": "The API checks the user's login token"
+        },
+        {
+          "id": "r1",
+          "label": "The app sends a request to the API (POST /bookings)"
+        },
+        {
+          "id": "r3",
+          "label": "The API saves the booking in the database"
+        },
+        {
+          "id": "r5",
+          "label": "The app shows the confirmation screen"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Request, authentication, processing, response, then the app updates its screen."
+    }
+  },
+  {
+    "id": "pm-apis-for-pms-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this integration note a PM wrote for a client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The app will use the Google Maps API to show nearby stores.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Google Maps is free for unlimited use, so there are no running costs.",
+          "issue": "Maps APIs bill by usage beyond a free allowance; include expected cost."
+        },
+        {
+          "id": "p3",
+          "text": "We will need the client's Google Cloud account and a billing card set up.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "If Google changes their API, nothing on our side will ever need updating.",
+          "issue": "Third-party APIs change and deprecate versions; plan for maintenance."
+        },
+        {
+          "id": "p5",
+          "text": "Store locations will come from the client's own store API.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-apis-for-pms-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An SMS provider's API costs $0.04 per message. The app sends a booking confirmation and a reminder for each booking. Work out the monthly cost.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Input",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Bookings per month",
+            "3,000"
+          ],
+          [
+            "SMS per booking",
+            "2"
+          ],
+          [
+            "Price per SMS",
+            "$0.04"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "msgs",
+          "label": "SMS messages per month",
+          "unit": "",
+          "answer": 6000,
+          "tolerance": 0
+        },
+        {
+          "id": "cost",
+          "label": "SMS cost per month",
+          "unit": "$",
+          "answer": 240.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "3,000 bookings × 2 messages = 6,000 messages; × $0.04 = $240 per month."
+    }
+  },
+  {
+    "id": "pm-apis-for-pms-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A weather API allows 1,000 free calls a day, then charges $0.001 per extra call. The app calls it once each time a user opens the home screen. Work out the daily cost.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Input",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Daily active users",
+            "4,000"
+          ],
+          [
+            "Home screen opens per user per day",
+            "3"
+          ],
+          [
+            "Free calls per day",
+            "1,000"
+          ],
+          [
+            "Price per extra call",
+            "$0.001"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "calls",
+          "label": "API calls per day",
+          "unit": "",
+          "answer": 12000,
+          "tolerance": 0
+        },
+        {
+          "id": "cost",
+          "label": "Cost per day",
+          "unit": "$",
+          "answer": 11.0,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "4,000 users × 3 opens = 12,000 calls. 11,000 are above the free tier: 11,000 × $0.001 = $11 per day. Caching results would cut this."
+    }
+  },
+  {
+    "id": "pm-apis-for-pms-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "QA reports that the app shows 'Error 401' when loading the order history.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "QA reports that the app shows 'Error 401' when loading the order history.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What does a 401 usually mean?",
+          "options": [
+            "The server crashed",
+            "The request was not authenticated (missing or expired login token)",
+            "The page was not found",
+            "The order history is empty"
+          ],
+          "correctIndex": 1,
+          "explanation": "401 Unauthorized means the API did not accept the caller's credentials."
+        },
+        {
+          "id": "s2",
+          "question": "Who is the best first person to look at it?",
+          "options": [
+            "The designer",
+            "The developer who owns login/authentication",
+            "The client's CEO",
+            "The app-store reviewer"
+          ],
+          "correctIndex": 1,
+          "explanation": "Authentication problems sit with the developer handling auth or the API."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-apis-for-pms-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The client wants their app to update the moment a delivery partner marks an order delivered in the partner's system.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client wants their app to update the moment a delivery partner marks an order delivered in the partner's system.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which integration approach fits best?",
+          "options": [
+            "The app checks the partner API every 24 hours",
+            "A webhook: the partner's system calls your API when the status changes",
+            "The client emails the status",
+            "A monthly CSV import"
+          ],
+          "correctIndex": 1,
+          "explanation": "Webhooks push events as they happen, avoiding constant polling."
+        },
+        {
+          "id": "s2",
+          "question": "What do you ask the partner before the team starts?",
+          "options": [
+            "Their office address",
+            "API/webhook documentation, a sandbox account and rate limits",
+            "Their logo",
+            "Their pricing for consumers"
+          ],
+          "correctIndex": 1,
+          "explanation": "Docs, a sandbox and limits are what developers need to estimate and build an integration."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-apis-for-pms-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In plain terms, what is an API?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A defined way for one piece of software to request data or actions from another",
+        "A type of database",
+        "A design tool",
+        "A programming language"
+      ],
+      "correctIndex": 0,
+      "explanation": "An API is a contract that lets systems talk: which requests can be made and what comes back.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-apis-for-pms-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An API returns status 500. What does it usually indicate?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "An error on the server side",
+        "The user typed a wrong password",
+        "The request succeeded",
+        "The resource was created"
+      ],
+      "correctIndex": 0,
+      "explanation": "5xx codes are server errors; 4xx are client/request errors; 2xx are successes.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-apis-for-pms-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-apis-for-pms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why does an agency often want a sandbox (test) account for a third-party API like a payment gateway?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To build and test without real money or real customer impact",
+        "Because sandboxes are faster in production",
+        "To avoid signing a contract",
+        "To skip QA"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sandboxes let the team test integrations safely before switching to live credentials.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

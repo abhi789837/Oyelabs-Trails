@@ -1,0 +1,374 @@
+[
+  {
+    "id": "pm-prd-writing-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A PM drafted this PRD section for a client's AI support-chat feature. Mark the lines that would cause trouble for the team or the client at sign-off.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM drafted this PRD section for a client's AI support-chat feature. Mark the lines that would cause trouble for the team or the client at sign-off.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Problem: support agents spend about 40% of their time answering the same 20 order-status questions.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Goal: the chatbot should be fast and accurate.",
+          "issue": "Not measurable. State targets, e.g. p95 response under 3 s and an agreed accuracy bar on an evaluation set."
+        },
+        {
+          "id": "s3",
+          "text": "Users: logged-in customers on web and the iOS/Android apps.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Non-goals: refunds and account deletion stay with human agents in this phase.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Requirement: the bot answers order-status questions using the client's Orders API.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Requirement: the bot should handle all other questions as well as possible.",
+          "issue": "Open-ended scope with no definition of done; list the intents in scope or move this to a later phase."
+        },
+        {
+          "id": "s7",
+          "text": "Acceptance: verified by the client's QA team.",
+          "issue": "Says who, not what. Acceptance criteria must state the observable conditions to be met."
+        },
+        {
+          "id": "s8",
+          "text": "Open question: does the Orders API expose delivery ETA? Owner: client tech lead, due 12 May.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-prd-writing-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Put these PRD sections in the order a reader should meet them, first at the top.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these PRD sections in the order a reader should meet them, first at the top.",
+      "items": [
+        {
+          "id": "r4903e",
+          "label": "Problem statement and context"
+        },
+        {
+          "id": "r26eae",
+          "label": "Goals and success metrics"
+        },
+        {
+          "id": "rf7319",
+          "label": "Users and key scenarios"
+        },
+        {
+          "id": "r64d97",
+          "label": "Functional requirements"
+        },
+        {
+          "id": "r8f9c6",
+          "label": "Acceptance criteria"
+        },
+        {
+          "id": "ra270f",
+          "label": "Open questions and decisions log"
+        }
+      ],
+      "correctOrder": [
+        "r4903e",
+        "r26eae",
+        "rf7319",
+        "r64d97",
+        "r8f9c6",
+        "ra270f"
+      ],
+      "explanation": "A PRD argues from why to what: the problem and the measure of success come first, then who it is for, then what to build, how to verify it, and what is still undecided."
+    }
+  },
+  {
+    "id": "pm-prd-writing-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "You are writing the PRD for a white-label loyalty app. In the discovery workshop the client's marketing lead said \"we want gamification\", the operations lead said \"points must sync with the POS within a minute\", and nobody mentioned offline use.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are writing the PRD for a white-label loyalty app. In the discovery workshop the client's marketing lead said \"we want gamification\", the operations lead said \"points must sync with the POS within a minute\", and nobody mentioned offline use.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How should \"we want gamification\" appear in the PRD?",
+          "options": [
+            "As a requirement: \"The app includes gamification\"",
+            "Leave it out; it was only mentioned once",
+            "As an open question with an owner, until the client defines which mechanics and why",
+            "As a non-goal, since it is vague"
+          ],
+          "correctIndex": 2,
+          "explanation": "A vague wish written as a requirement becomes unbounded scope. Record it as an open question with an owner and a date."
+        },
+        {
+          "id": "d2",
+          "question": "How should the POS sync be written?",
+          "options": [
+            "\"Points sync in real time\"",
+            "\"Points sync quickly with the POS\"",
+            "\"The POS integration works reliably\"",
+            "\"Points earned at the POS appear in the app within 60 seconds for 99% of transactions\""
+          ],
+          "correctIndex": 3,
+          "explanation": "A requirement needs a measurable threshold the team can test and the client can accept."
+        },
+        {
+          "id": "d3",
+          "question": "Offline use was never discussed. What do you do?",
+          "options": [
+            "Assume offline is needed and add it as a requirement",
+            "Assume it is not needed and say nothing",
+            "Add it to open questions and confirm with the client before sign-off",
+            "Ask the developers to decide"
+          ],
+          "correctIndex": 2,
+          "explanation": "Unstated assumptions become disputes at UAT. Surface them explicitly and get a decision."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-prd-writing-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A PRD review is due tomorrow and you have time for only some fixes. Rank these issues from most to least important to fix before the client signs.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A PRD review is due tomorrow and you have time for only some fixes. Rank these issues from most to least important to fix before the client signs.",
+      "items": [
+        {
+          "id": "r156c9",
+          "label": "No acceptance criteria for the payment-refund flow"
+        },
+        {
+          "id": "r5fde8",
+          "label": "Success metric \"increase engagement\" has no baseline or target"
+        },
+        {
+          "id": "ra4e16",
+          "label": "Out-of-scope list is missing, though the client keeps mentioning a web admin"
+        },
+        {
+          "id": "r621ff",
+          "label": "Two requirements use different names for the same \"merchant\" entity"
+        },
+        {
+          "id": "r1d404",
+          "label": "Section headings do not match the team's template"
+        }
+      ],
+      "correctOrder": [
+        "r156c9",
+        "r5fde8",
+        "ra4e16",
+        "r621ff",
+        "r1d404"
+      ],
+      "explanation": "Missing acceptance criteria on money flows causes the most expensive disputes; an unmeasurable goal and an unstated boundary are next; naming and formatting are cheap to fix later."
+    }
+  },
+  {
+    "id": "pm-prd-writing-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "These lines come from a functional spec for an AI receipt-scanning feature. Mark the lines that are not testable as written.",
+    "task": {
+      "kind": "spot",
+      "prompt": "These lines come from a functional spec for an AI receipt-scanning feature. Mark the lines that are not testable as written.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "The user can photograph a receipt from the expense screen.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Extraction must be highly accurate.",
+          "issue": "No threshold or evaluation method; nobody can say when it passes."
+        },
+        {
+          "id": "s3",
+          "text": "Merchant, date and total are extracted and shown for review before saving.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "On the agreed 200-receipt evaluation set, the total is correct on at least 95% of receipts.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "If extraction fails, the user can type the fields manually.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "The feature should feel seamless.",
+          "issue": "Subjective; replace with concrete UX criteria such as steps or time to complete."
+        },
+        {
+          "id": "s7",
+          "text": "Processing takes no longer than 5 seconds at p95 on a 4G connection.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-prd-writing-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 3,
+    "prompt": "Write the \"Goals, non-goals and success metrics\" section of a PRD for the feature in the context. Use bullets.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write the \"Goals, non-goals and success metrics\" section of a PRD for the feature in the context. Use bullets.",
+      "context": "Client: a regional pharmacy chain. Feature: AI prescription-refill reminders in their white-label app. Discovery notes: 30% of patients miss refills; the client wants fewer missed refills and fewer calls to stores. Phase 1 is push notifications only; SMS is a later phase. Pharmacists must still approve every refill. Baseline: 12,000 refill calls a month across stores.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "goals",
+          "label": "Goals tied to the problem",
+          "description": "States goals that follow from the missed-refill and call-volume problem, not features.",
+          "weight": 1
+        },
+        {
+          "id": "metrics",
+          "label": "Measurable metrics",
+          "description": "Each metric has the baseline and a target and a time frame, e.g. refill calls from 12,000 a month to a stated lower number within a stated period.",
+          "weight": 1
+        },
+        {
+          "id": "nongoals",
+          "label": "Clear non-goals",
+          "description": "Names SMS as out of scope for phase 1 and keeps pharmacist approval with humans (no automated refill approval).",
+          "weight": 1
+        },
+        {
+          "id": "noinvent",
+          "label": "No invented facts",
+          "description": "Does not invent decisions not in the notes; any target the notes do not give is marked as proposed or to be agreed.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Goals\n- Reduce missed prescription refills for app users.\n- Reduce refill-related calls to stores.\n\nSuccess metrics (targets proposed, to be agreed with the client)\n- Missed-refill rate among app users: from 30% to 20% within 6 months of launch.\n- Refill calls to stores: from 12,000 a month to 9,000 a month within 6 months.\n- Reminder-to-refill-request conversion: tracked from launch, target set after the first month of data.\n\nNon-goals (phase 1)\n- SMS reminders (planned for a later phase).\n- Automatic refill approval: every refill is still approved by a pharmacist.\n- Changes to the in-store pharmacy system."
+    }
+  },
+  {
+    "id": "pm-prd-writing-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A developer asks why the PRD has a non-goals section at all. What is the best answer?",
+    "mcq": {
+      "options": [
+        "It lists features the team failed to estimate",
+        "It is where the PM puts requirements that the client may add later at no cost",
+        "It replaces the need for acceptance criteria",
+        "It records what the client agreed is out of scope, so expectations and change requests have a clear baseline"
+      ],
+      "correctIndex": 3,
+      "explanation": "Non-goals make the boundary explicit. When the client later asks for an excluded item, the PRD shows it was out of scope, which turns an argument into a change request.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prd-writing-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Who should own the answer to an open question in a PRD such as \"Does the client's CRM allow write access via API?\"",
+    "mcq": {
+      "options": [
+        "The PM, who should guess and move on",
+        "The whole team, discussed at stand-up",
+        "Nobody until development starts",
+        "A named person who can actually find out, usually on the client's side, with a due date"
+      ],
+      "correctIndex": 3,
+      "explanation": "Open questions without an owner and a date stay open. The person with access to the answer (often the client's tech lead) owns it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prd-writing-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-prd-writing",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Midway through a sprint the client agrees a change to a requirement on a call. What should happen to the PRD?",
+    "mcq": {
+      "options": [
+        "Nothing; the PRD is frozen after sign-off",
+        "Update it with a version note and a link to the decision, and tell the team what changed",
+        "Rewrite the section silently so it reads cleanly",
+        "Start a new PRD for the change"
+      ],
+      "correctIndex": 1,
+      "explanation": "A PRD is a living reference. Versioned changes linked to the decision keep the team and client aligned and preserve the audit trail for any commercial discussion.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

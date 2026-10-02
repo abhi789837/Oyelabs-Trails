@@ -1,0 +1,393 @@
+[
+  {
+    "id": "bd-loom-proposals-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the sections of a 2-minute Loom video proposal for a prospect who wants an AI customer-support assistant, first to last.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the sections of a 2-minute Loom video proposal for a prospect who wants an AI customer-support assistant, first to last.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Show a similar assistant you built, on screen, for 30-40 seconds"
+        },
+        {
+          "id": "r4",
+          "label": "Sketch how it would work for them and one key question"
+        },
+        {
+          "id": "r5",
+          "label": "Ask for a short call and say how to book it"
+        },
+        {
+          "id": "r1",
+          "label": "Greet them by name and say what you looked at (their website and support page)"
+        },
+        {
+          "id": "r2",
+          "label": "Name the problem you noticed on their site, in their terms"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Personal hook, their problem, proof, tailored idea, then a single clear next step."
+    }
+  },
+  {
+    "id": "bd-loom-proposals-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the problems in this plan for a Loom video proposal.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problems in this plan for a Loom video proposal.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Open the video on the prospect's own website so they recognise it instantly.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Spend the first three minutes on the agency's history and team photos.",
+          "issue": "The opening must be about the prospect; a long intro loses viewers before the point."
+        },
+        {
+          "id": "p3",
+          "text": "Keep the whole video around two minutes.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Record one generic video and send it to every prospect this month.",
+          "issue": "A generic video removes the personalisation that makes Loom proposals work."
+        },
+        {
+          "id": "p5",
+          "text": "Show one relevant case study on screen rather than a list of ten.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "End with a clear ask: a 15-minute call, with the booking link under the video.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Use a thumbnail with the prospect's site visible so the email preview is personal.",
+          "issue": null
+        },
+        {
+          "id": "p8",
+          "text": "Leave background tabs with other clients' data visible while recording.",
+          "issue": "Exposes other clients' information; close unrelated tabs before recording."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-loom-proposals-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "An inbound lead from a fitness-studio chain filled in a form: 'Want a booking app. Can you send info?' You decide to reply with a short Loom.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "An inbound lead from a fitness-studio chain filled in a form: 'Want a booking app. Can you send info?' You decide to reply with a short Loom.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should the video show first?",
+          "options": [
+            "A full price list",
+            "Code from a past project",
+            "Your agency's pitch deck",
+            "Their current booking flow on their website, and where it creates friction"
+          ],
+          "correctIndex": 3,
+          "explanation": "Starting on their own site proves you looked and frames the problem."
+        },
+        {
+          "id": "s2",
+          "question": "What should the email around the video say?",
+          "options": [
+            "Nothing, just the link",
+            "A full proposal with fixed price",
+            "One line on what the video covers and a link to book a call",
+            "A request that they watch it twice"
+          ],
+          "correctIndex": 2,
+          "explanation": "A short context line raises the chance they click; the video does the persuasion and the email gives the next step."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-loom-proposals-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You compared text-only proposals with Loom proposals over a quarter. Calculate the call-booking rate (%) and the win rate (%) for each.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "You compared text-only proposals with Loom proposals over a quarter. Calculate the call-booking rate (%) and the win rate (%) for each.",
+      "table": {
+        "columns": [
+          "Proposal type",
+          "Sent",
+          "Calls booked",
+          "Wins"
+        ],
+        "rows": [
+          [
+            "Text only",
+            "120",
+            "12",
+            "3"
+          ],
+          [
+            "Loom video",
+            "40",
+            "10",
+            "4"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ct",
+          "label": "Call rate, text",
+          "unit": "%",
+          "answer": 10,
+          "tolerance": 0.1
+        },
+        {
+          "id": "cl",
+          "label": "Call rate, Loom",
+          "unit": "%",
+          "answer": 25,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wt",
+          "label": "Win rate, text",
+          "unit": "%",
+          "answer": 2.5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wl",
+          "label": "Win rate, Loom",
+          "unit": "%",
+          "answer": 10,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Text: 12/120 = 10% calls, 3/120 = 2.5% wins. Loom: 10/40 = 25% calls, 4/40 = 10% wins."
+    }
+  },
+  {
+    "id": "bd-loom-proposals-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A rep spends 20 minutes on each Loom proposal and 8 minutes on each text proposal. Using the rates below, calculate the minutes of rep time per win for each approach.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A rep spends 20 minutes on each Loom proposal and 8 minutes on each text proposal. Using the rates below, calculate the minutes of rep time per win for each approach.",
+      "table": {
+        "columns": [
+          "Proposal type",
+          "Minutes each",
+          "Win rate"
+        ],
+        "rows": [
+          [
+            "Text only",
+            "8",
+            "2.5%"
+          ],
+          [
+            "Loom video",
+            "20",
+            "10%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "t",
+          "label": "Minutes per win, text",
+          "unit": "min",
+          "answer": 320,
+          "tolerance": 1
+        },
+        {
+          "id": "l",
+          "label": "Minutes per win, Loom",
+          "unit": "min",
+          "answer": 200,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Text: 8 / 0.025 = 320 minutes per win. Loom: 20 / 0.10 = 200 minutes per win. Loom costs more per proposal but less per win."
+    }
+  },
+  {
+    "id": "bd-loom-proposals-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your Loom proposals get high view counts but few replies. Loom shows most viewers stop watching around 50 seconds into 4-minute videos.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your Loom proposals get high view counts but few replies. Loom shows most viewers stop watching around 50 seconds into 4-minute videos.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What does the drop-off suggest?",
+          "options": [
+            "The thumbnail is wrong",
+            "The links are broken",
+            "Videos are too long and the key point comes too late",
+            "Prospects are not interested in video at all"
+          ],
+          "correctIndex": 2,
+          "explanation": "Viewers start watching but leave early, so the content order and length are the issue."
+        },
+        {
+          "id": "s2",
+          "question": "What change do you make?",
+          "options": [
+            "Add background music",
+            "Send the same video twice",
+            "Make videos longer with more detail",
+            "Cut to about 2 minutes and put the prospect's problem and the ask in the first 30 seconds"
+          ],
+          "correctIndex": 3,
+          "explanation": "Front-load what matters and shorten the video so the ask is seen."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-loom-proposals-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What most makes a Loom proposal outperform a text proposal?",
+    "mcq": {
+      "options": [
+        "Visible personalisation: showing the prospect's own product or site and talking about their problem",
+        "Higher video resolution",
+        "A longer running time",
+        "Background music and animations"
+      ],
+      "correctIndex": 0,
+      "explanation": "Proof that you looked at their business, delivered in a human voice, is what drives replies.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-loom-proposals-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "When is a Loom video proposal NOT worth the extra time?",
+    "mcq": {
+      "options": [
+        "For a low-value or poor-fit lead where a short text reply is enough",
+        "For a high-value inbound lead",
+        "When the prospect has a website you can show",
+        "When you have a relevant case study to show on screen"
+      ],
+      "correctIndex": 0,
+      "explanation": "Video takes more time per lead, so save it for leads where fit and value justify it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-loom-proposals-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-loom-proposals",
+    "trackId": null,
+    "stackId": "bd-tool-loom",
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect watched your Loom twice and shared it with a colleague, but has not replied. What is the best follow-up?",
+    "mcq": {
+      "options": [
+        "Send the same video again",
+        "Wait a month before following up",
+        "Ask why they have not replied yet",
+        "A short note referencing the colleague's likely question and offering a call with both"
+      ],
+      "correctIndex": 3,
+      "explanation": "Engagement signals a second stakeholder is involved; a follow-up that includes them moves the deal forward.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

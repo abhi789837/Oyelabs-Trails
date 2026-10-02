@@ -1,0 +1,391 @@
+[
+  {
+    "id": "pm-meeting-facilitation-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps for running a 45-minute client design-review meeting.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Confirm the decisions and owners before time runs out"
+        },
+        {
+          "id": "r2",
+          "label": "Open by stating the goal and the decisions needed"
+        },
+        {
+          "id": "r1",
+          "label": "Send the agenda and the designs to review a day before"
+        },
+        {
+          "id": "r3",
+          "label": "Walk through each screen and collect feedback"
+        },
+        {
+          "id": "r5",
+          "label": "Send minutes with decisions and action items the same day"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Prepare, set the goal, do the work, confirm decisions while everyone is present, then record them in writing."
+    }
+  },
+  {
+    "id": "pm-meeting-facilitation-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this meeting agenda for a 30-minute sprint-review call with a client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Goal: client sees the new onboarding flow and approves it for release.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "1. Demo of onboarding flow (10 min)",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "2. Any other business (20 min)",
+          "issue": "Two-thirds of the time on an open-ended slot invites drift; give real topics and times."
+        },
+        {
+          "id": "p4",
+          "text": "3. Discuss everything about the next 6 months of roadmap",
+          "issue": "Far too big for a 30-minute review and off the meeting's goal."
+        },
+        {
+          "id": "p5",
+          "text": "Attendees: client PO, PM, lead developer",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Pre-read: staging link to onboarding flow",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-meeting-facilitation-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the action items in these minutes that are not usable as written.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Decision: launch date stays 3 June.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Action: Raj to send the final app icon files to the agency by Friday 24 May.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Action: someone to look into the push notification issue.",
+          "issue": "No owner and no date; nobody will do it."
+        },
+        {
+          "id": "p4",
+          "text": "Action: Lena (QA) to retest the payments flow on iOS by Thursday.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Action: improve performance.",
+          "issue": "No owner, no date and no measurable outcome."
+        },
+        {
+          "id": "p6",
+          "text": "Action: PM to send the revised timeline to the client by Wednesday.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-meeting-facilitation-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A daily 30-minute status meeting has 8 attendees with an average blended cost of $45/hour. Work out its cost.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "day",
+          "label": "Cost per meeting",
+          "unit": "$",
+          "answer": 180.0,
+          "tolerance": 1
+        },
+        {
+          "id": "month",
+          "label": "Cost per month (20 working days)",
+          "unit": "$",
+          "answer": 3600.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "8 people × 0.5 h × $45 = $180 per meeting; × 20 days = $3,600 per month."
+    }
+  },
+  {
+    "id": "pm-meeting-facilitation-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "In a requirements meeting with a client, their head of sales spends 15 minutes on a feature for a different product line. Twenty minutes remain and three agenda items are untouched.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "In a requirements meeting with a client, their head of sales spends 15 minutes on a feature for a different product line. Twenty minutes remain and three agenda items are untouched.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do in the moment?",
+          "options": [
+            "Let them finish, it's the client",
+            "Acknowledge the point, park it on a visible parking lot with a follow-up, and return to the agenda",
+            "End the meeting early",
+            "Tell them the topic is irrelevant"
+          ],
+          "correctIndex": 1,
+          "explanation": "A parking lot respects the topic while keeping the meeting on its goal."
+        },
+        {
+          "id": "s2",
+          "question": "Ten minutes before the end, one agenda item remains. What do you do?",
+          "options": [
+            "Run 20 minutes over",
+            "Confirm decisions so far, and agree how and when the remaining item will be handled",
+            "Skip the minutes since you ran out of time",
+            "Rush through it without discussion"
+          ],
+          "correctIndex": 1,
+          "explanation": "Use the last minutes to lock in decisions and plan the leftover item rather than overrunning."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-meeting-facilitation-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "You are facilitating a retrospective-style workshop with the client's team. One senior manager answers every question first and the others stay quiet.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are facilitating a retrospective-style workshop with the client's team. One senior manager answers every question first and the others stay quiet.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which technique helps most?",
+          "options": [
+            "Ask the manager to leave",
+            "Silent writing first (sticky notes), then share round-robin",
+            "Only take questions from the manager",
+            "Skip discussion and send a survey later"
+          ],
+          "correctIndex": 1,
+          "explanation": "Silent writing then round-robin gives everyone equal airtime before the loudest voice anchors the group."
+        },
+        {
+          "id": "s2",
+          "question": "After the meeting, how should open disagreements be recorded in the minutes?",
+          "options": [
+            "Leave them out to keep it positive",
+            "Record them as open questions with an owner and a date to resolve",
+            "Attribute them to the people who were wrong",
+            "Record them as decisions"
+          ],
+          "correctIndex": 1,
+          "explanation": "Unresolved items need an owner and date or they vanish."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-meeting-facilitation-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write the minutes for a client meeting from rough notes.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Turn the rough notes below into minutes the client can read in one minute: decisions, action items with owner and date, and open questions.",
+      "context": "Call with BrightBank 4 Mar, attendees: Mei (client PO), Tom (client IT), Anna (PM), Dev (tech lead).\n- agreed to drop Android tablet layout from v1\n- Tom will get us VPN access for the staging API, by Thu 7 Mar\n- Dev: estimate biometric login by Fri 8 Mar\n- still unclear whether push notifications need legal review - Mei to check with legal\n- next call 11 Mar",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "decisions",
+          "label": "Decisions listed",
+          "description": "Records the tablet-layout decision clearly as a decision.",
+          "weight": 1
+        },
+        {
+          "id": "actions",
+          "label": "Actions with owner and date",
+          "description": "Every action has a named owner and a date.",
+          "weight": 2
+        },
+        {
+          "id": "open",
+          "label": "Open questions",
+          "description": "Captures the legal-review question with an owner.",
+          "weight": 1
+        },
+        {
+          "id": "concise",
+          "label": "Readable",
+          "description": "Short, structured, no transcript-style narrative.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Minutes: BrightBank call, 4 March\nAttendees: Mei (PO), Tom (IT), Anna (PM), Dev (tech lead)\n\nDecisions\n- Android tablet layout is out of scope for v1.\n\nActions\n- Tom: provide VPN access to the staging API by Thu 7 Mar.\n- Dev: estimate biometric login by Fri 8 Mar.\n- Mei: check with legal whether push notifications need review, report back by 11 Mar.\n\nOpen questions\n- Do push notifications need legal review? (Mei)\n\nNext call: 11 March."
+    }
+  },
+  {
+    "id": "pm-meeting-facilitation-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the single most useful thing to put at the top of a meeting agenda?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The meeting's goal or the decision it must reach",
+        "The full attendee biographies",
+        "The last meeting's complete transcript",
+        "A list of every open ticket"
+      ],
+      "correctIndex": 0,
+      "explanation": "A stated goal tells people why they are there and lets the facilitator keep the discussion on track.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-meeting-facilitation-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "When should minutes from a client meeting be sent?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The same day, while memories are fresh",
+        "At the end of the project",
+        "Only if the client asks for them",
+        "At the next meeting"
+      ],
+      "correctIndex": 0,
+      "explanation": "Same-day minutes let people correct misunderstandings quickly and start on their actions.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-meeting-facilitation-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-meeting-facilitation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A recurring weekly internal meeting regularly ends with no decisions and no actions. What is the best first step?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Make it longer",
+        "Review its purpose; change the format, shrink attendance or cancel it",
+        "Add more attendees",
+        "Record it so absent people can watch"
+      ],
+      "correctIndex": 1,
+      "explanation": "A meeting that produces nothing should have its purpose checked; often an async update replaces it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

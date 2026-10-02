@@ -1,0 +1,364 @@
+[
+  {
+    "id": "pm-evm-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A fixed-price build has a budget at completion (BAC) of $200,000. At the week-8 checkpoint: PV = $100,000, EV = $80,000, AC = $100,000. Calculate the variances and indices.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A fixed-price build has a budget at completion (BAC) of $200,000. At the week-8 checkpoint: PV = $100,000, EV = $80,000, AC = $100,000. Calculate the variances and indices.",
+      "table": null,
+      "fields": [
+        {
+          "id": "cv",
+          "label": "Cost variance (CV = EV - AC)",
+          "unit": "$",
+          "answer": -20000,
+          "tolerance": 1
+        },
+        {
+          "id": "sv",
+          "label": "Schedule variance (SV = EV - PV)",
+          "unit": "$",
+          "answer": -20000,
+          "tolerance": 1
+        },
+        {
+          "id": "cpi",
+          "label": "CPI (EV / AC)",
+          "unit": "",
+          "answer": 0.8,
+          "tolerance": 0.01
+        },
+        {
+          "id": "spi",
+          "label": "SPI (EV / PV)",
+          "unit": "",
+          "answer": 0.8,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "CV = -20,000; SV = -20,000; CPI = 0.80; SPI = 0.80. Over budget and behind schedule."
+    }
+  },
+  {
+    "id": "pm-evm-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Using the same project (BAC $200,000, EV $80,000, AC $100,000), forecast the finish.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Using the same project (BAC $200,000, EV $80,000, AC $100,000), forecast the finish.",
+      "table": null,
+      "fields": [
+        {
+          "id": "eac",
+          "label": "EAC = BAC / CPI",
+          "unit": "$",
+          "answer": 250000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "etc",
+          "label": "ETC = EAC - AC",
+          "unit": "$",
+          "answer": 150000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "vac",
+          "label": "VAC = BAC - EAC",
+          "unit": "$",
+          "answer": -50000.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "CPI 0.8, so EAC = 250,000; ETC = 150,000; VAC = -50,000."
+    }
+  },
+  {
+    "id": "pm-evm-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An agile release has BAC $120,000 over 6 sprints. EV is the value of accepted stories. Use cumulative values after sprint 3.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An agile release has BAC $120,000 over 6 sprints. EV is the value of accepted stories. Use cumulative values after sprint 3.",
+      "table": {
+        "columns": [
+          "Sprint",
+          "PV",
+          "EV",
+          "AC"
+        ],
+        "rows": [
+          [
+            "Sprint 1",
+            "$20,000",
+            "$20,000",
+            "$22,000"
+          ],
+          [
+            "Sprint 2",
+            "$20,000",
+            "$18,000",
+            "$21,000"
+          ],
+          [
+            "Sprint 3",
+            "$20,000",
+            "$22,000",
+            "$20,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cpi",
+          "label": "Cumulative CPI",
+          "unit": "",
+          "answer": 0.9524,
+          "tolerance": 0.01
+        },
+        {
+          "id": "spi",
+          "label": "Cumulative SPI",
+          "unit": "",
+          "answer": 1.0,
+          "tolerance": 0.01
+        },
+        {
+          "id": "eac",
+          "label": "EAC (BAC / CPI)",
+          "unit": "$",
+          "answer": 126000.0,
+          "tolerance": 400
+        }
+      ],
+      "explanation": "PV 60,000, EV 60,000, AC 63,000. CPI = 0.952, SPI = 1.00, EAC = 120,000 / 0.952 = 126,000."
+    }
+  },
+  {
+    "id": "pm-evm-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "BAC = $500,000, EV = $200,000, AC = $250,000. Calculate the to-complete performance index needed to finish within BAC, and compare EAC formulas.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "BAC = $500,000, EV = $200,000, AC = $250,000. Calculate the to-complete performance index needed to finish within BAC, and compare EAC formulas.",
+      "table": null,
+      "fields": [
+        {
+          "id": "tcpi",
+          "label": "TCPI = (BAC - EV) / (BAC - AC)",
+          "unit": "",
+          "answer": 1.2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "eac1",
+          "label": "EAC assuming current CPI continues (BAC / CPI)",
+          "unit": "$",
+          "answer": 625000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "eac2",
+          "label": "EAC assuming the overrun was one-off (AC + BAC - EV)",
+          "unit": "$",
+          "answer": 550000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "TCPI = 300,000 / 250,000 = 1.20. EAC typical = 625,000; EAC atypical = 550,000. The gap shows why the assumption behind the formula must be stated."
+    }
+  },
+  {
+    "id": "pm-evm-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A PM's EVM commentary for a steering group. Mark the statements that misread the numbers.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's EVM commentary for a steering group. Mark the statements that misread the numbers.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "CPI is 0.85: we earn 85 cents of planned value for every dollar spent.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "SPI is 1.05, so we are definitely going to finish on time.",
+          "issue": "SPI measures schedule in money and drifts to 1.0 at the end; it does not guarantee the date, and the critical path may still be late."
+        },
+        {
+          "id": "s3",
+          "text": "We counted stories that are built but not yet accepted as earned value.",
+          "issue": "EV should only credit accepted work; this inflates EV."
+        },
+        {
+          "id": "s4",
+          "text": "EAC uses BAC / CPI because the overrun comes from integration effort across the whole build.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "TCPI to BAC is 1.25; the team just needs to work harder.",
+          "issue": "A TCPI far above the current CPI signals a scope or budget conversation, not a motivational target."
+        },
+        {
+          "id": "s6",
+          "text": "CV is -$18,000.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "We recommend reviewing scope options at the next steering meeting.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Next report in two weeks.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-evm-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Halfway through a $300,000 project, CPI is 0.75 and SPI is 1.10.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Halfway through a $300,000 project, CPI is 0.75 and SPI is 1.10.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What does this combination usually mean?",
+          "options": [
+            "Work is ahead of plan but costing more than budgeted, often from extra people or overtime",
+            "The project is under budget and late",
+            "Everything is on track",
+            "The data must be wrong"
+          ],
+          "correctIndex": 0,
+          "explanation": "SPI above 1 with CPI below 1 suggests buying speed with money."
+        },
+        {
+          "id": "d2",
+          "question": "The client asks if the project will finish within budget. What do you report?",
+          "options": [
+            "Yes, because the schedule is ahead",
+            "It is too early to say",
+            "Only the CPI number, with no forecast",
+            "At current efficiency the forecast EAC is $400,000; you will present options to reduce cost or scope"
+          ],
+          "correctIndex": 3,
+          "explanation": "300,000 / 0.75 = 400,000: give a forecast and options."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-evm-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A CPI of 1.10 means:",
+    "mcq": {
+      "options": [
+        "The project is 10% behind schedule",
+        "The project is 10% over budget",
+        "The project is getting $1.10 of planned work done for every $1 spent",
+        "The project will finish 10% early"
+      ],
+      "correctIndex": 2,
+      "explanation": "CPI above 1 is under budget for the work done.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-evm-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which value is the budgeted cost of the work actually completed?",
+    "mcq": {
+      "options": [
+        "Planned value (PV)",
+        "Earned value (EV)",
+        "Actual cost (AC)",
+        "Budget at completion (BAC)"
+      ],
+      "correctIndex": 1,
+      "explanation": "EV credits completed work at its budgeted cost, which is what makes cost and schedule comparable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-evm-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-evm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why does SPI tend toward 1.0 near the end of every project, even late ones?",
+    "mcq": {
+      "options": [
+        "Because teams speed up at the end",
+        "Because the budget is reset",
+        "Because AC stops growing",
+        "Once all work is done, EV equals PV (both equal BAC), regardless of how late it finished"
+      ],
+      "correctIndex": 3,
+      "explanation": "SPI is money-based; earned schedule metrics are needed when timing matters late in a project.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

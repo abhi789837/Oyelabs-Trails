@@ -1,0 +1,390 @@
+[
+  {
+    "id": "bd-demos-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What should a demo of a past project be built around?",
+    "mcq": {
+      "options": [
+        "The source code of the app",
+        "The specific problems the prospect raised in discovery, shown through the relevant parts of the product",
+        "Every feature the product has, in menu order",
+        "The agency's company history"
+      ],
+      "correctIndex": 1,
+      "explanation": "A demo sells when the buyer sees their own problems being solved. Feature tours bore buyers and bury the parts that matter.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-demos-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Halfway through a demo, the prospect asks about a feature you have not built before. What is the best response?",
+    "mcq": {
+      "options": [
+        "End the demo",
+        "Say honestly that you have not built that exact feature, explain how you would approach it, and note it for the proposal",
+        "Claim you have built it many times",
+        "Ignore the question and continue"
+      ],
+      "correctIndex": 1,
+      "explanation": "Honesty plus a credible approach keeps trust; inventing experience is found out during delivery.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-demos-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "You are demoing an AI document assistant to a skeptical compliance team. What makes the demo most convincing?",
+    "mcq": {
+      "options": [
+        "Running it on a sample of their own (anonymised) documents and showing how it handles wrong or uncertain answers",
+        "A polished video with perfect results on curated data",
+        "A slide listing AI accuracy statistics from research papers",
+        "Letting them try it only after they sign"
+      ],
+      "correctIndex": 0,
+      "explanation": "Skeptics trust what they see on their own data, and seeing failure handling (citations, confidence, human review) addresses their real fear.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-demos-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Put the parts of a 30-minute discovery-led demo in the best order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the parts of a 30-minute discovery-led demo in the best order.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Show supporting features tied to their other needs"
+        },
+        {
+          "id": "r4",
+          "label": "Invite questions and check how each part landed"
+        },
+        {
+          "id": "r5",
+          "label": "Agree a dated next step"
+        },
+        {
+          "id": "r1",
+          "label": "Recap the prospect's goals and problems from discovery and confirm they are still right"
+        },
+        {
+          "id": "r2",
+          "label": "Show the workflow that solves their biggest problem first"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Confirm what matters, lead with the biggest problem while attention is highest, support it, check for reactions, and never end without a next step."
+    }
+  },
+  {
+    "id": "bd-demos-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the steps in this rep's demo plan that will hurt the demo.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the steps in this rep's demo plan that will hurt the demo.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Open by confirming the three problems they raised on the discovery call.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Spend the first 10 minutes on our company history and team photos.",
+          "issue": "Burns the buyer's attention on content they did not come for."
+        },
+        {
+          "id": "p3",
+          "text": "Show the dispatch dashboard, since manual dispatch was their biggest pain.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Use the live production account of another client to show real data.",
+          "issue": "Exposes another client's data; use a demo environment or anonymised data."
+        },
+        {
+          "id": "p5",
+          "text": "Pause after each section and ask whether it matches how their team works.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "End by booking a scoping session with their operations lead.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-demos-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are about to demo a white-label booking app to a chain of salons. Ten minutes before the call, the demo environment is down.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are about to demo a white-label booking app to a chain of salons. Ten minutes before the call, the demo environment is down.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Cancel the call without explanation",
+            "Show slides only and pretend that was the plan",
+            "Switch to a recorded walkthrough (e.g. a Loom) of the same flows and say so openly"
+          ],
+          "correctIndex": 2,
+          "explanation": "A backup recording keeps the meeting useful; being upfront keeps trust."
+        },
+        {
+          "id": "s2",
+          "question": "During the recording, the owner asks to see how staff rotas work. You have no clip of that. What do you do?",
+          "options": [
+            "Note it and offer a short live follow-up session once the environment is back",
+            "Say rotas are not important",
+            "Describe it vaguely and move on"
+          ],
+          "correctIndex": 0,
+          "explanation": "Capture the request and follow through with a live view."
+        },
+        {
+          "id": "s3",
+          "question": "After the call, what do you send?",
+          "options": [
+            "Nothing until they ask",
+            "A recap with the problems discussed, what was shown, the open question on rotas and the follow-up date",
+            "Only an invoice"
+          ],
+          "correctIndex": 1,
+          "explanation": "A recap turns an imperfect demo into a professional next step."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-demos-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are demoing a custom analytics platform to five people from a manufacturer: the COO (economic buyer), two plant managers, an IT lead and a finance analyst.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are demoing a custom analytics platform to five people from a manufacturer: the COO (economic buyer), two plant managers, an IT lead and a finance analyst.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you plan the demo?",
+          "options": [
+            "Show the same generic tour for everyone",
+            "Focus only on the IT lead",
+            "Map each attendee's priorities from discovery and make sure each sees the part that matters to them"
+          ],
+          "correctIndex": 2,
+          "explanation": "Multi-stakeholder demos need a moment for every role, especially the economic buyer."
+        },
+        {
+          "id": "s2",
+          "question": "The IT lead keeps asking deep integration questions and the COO checks their phone. What do you do?",
+          "options": [
+            "Offer the IT lead a separate technical session and bring the demo back to the COO's business outcome",
+            "Answer every integration question in depth",
+            "Ask the COO to put their phone away"
+          ],
+          "correctIndex": 0,
+          "explanation": "Park deep detail for the right audience and re-engage the decision-maker."
+        },
+        {
+          "id": "s3",
+          "question": "At the end, what is the strongest close?",
+          "options": [
+            "Send the price by email later without discussion",
+            "Ask the COO what they would need to see to move forward and agree dated next steps with owners",
+            "Ask if anyone has questions and end"
+          ],
+          "correctIndex": 1,
+          "explanation": "A next step agreed with the economic buyer moves the deal; open-ended endings stall it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-demos-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your team tracks demo outcomes. Calculate the demo-to-proposal rate and demo-to-win rate for each approach.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your team tracks demo outcomes. Calculate the demo-to-proposal rate and demo-to-win rate for each approach.",
+      "table": {
+        "columns": [
+          "Demo approach",
+          "Demos run",
+          "Proposals requested",
+          "Deals won"
+        ],
+        "rows": [
+          [
+            "Generic feature tour",
+            "40",
+            "14",
+            "4"
+          ],
+          [
+            "Discovery-led, tailored",
+            "30",
+            "18",
+            "9"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "pA",
+          "label": "Feature tour: demo-to-proposal",
+          "unit": "%",
+          "answer": 35,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wA",
+          "label": "Feature tour: demo-to-win",
+          "unit": "%",
+          "answer": 10,
+          "tolerance": 0.1
+        },
+        {
+          "id": "pB",
+          "label": "Tailored: demo-to-proposal",
+          "unit": "%",
+          "answer": 60,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wB",
+          "label": "Tailored: demo-to-win",
+          "unit": "%",
+          "answer": 30,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Feature tour: 14/40 = 35%, 4/40 = 10%. Tailored: 18/30 = 60%, 9/30 = 30%. Tailored demos win three times as often per demo."
+    }
+  },
+  {
+    "id": "bd-demos-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-demos",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A prospect raised these needs in discovery. You have 20 minutes to demo. Rank what to show by priority, first to show at the top.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A prospect raised these needs in discovery. You have 20 minutes to demo. Rank what to show by priority, first to show at the top.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Mobile view for managers: a nice-to-have"
+        },
+        {
+          "id": "r4",
+          "label": "Dark mode: no one asked for it"
+        },
+        {
+          "id": "r1",
+          "label": "Automated invoice matching: they said it costs two staff full-time"
+        },
+        {
+          "id": "r2",
+          "label": "Approval workflow: they mentioned delays but no cost"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Lead with the quantified, most painful problem; then the real but smaller pain; then nice-to-haves; skip features nobody asked for."
+    }
+  }
+]

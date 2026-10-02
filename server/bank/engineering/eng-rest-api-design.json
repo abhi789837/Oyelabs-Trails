@@ -1,0 +1,2571 @@
+[
+  {
+    "id": "eng-rest-api-design-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`createOrderResponse(result)` turns the result of creating an order into an HTTP response. Fix it:\n- `{ ok: true, id }` → `201` with a `Location` header of `/orders/<id>`\n- `{ conflict: true }` → `409`\n- `{ invalid: true }` → `400`\n\nAlways return `{ status, headers }` (`headers` is `{}` when there are none).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "createOrderResponse",
+      "starterCode": "function createOrderResponse(result) {\n  if (result.ok) return { status: 200, headers: {} };\n  return { status: 400, headers: {} };\n}",
+      "referenceSolution": "function createOrderResponse(result) {\n  if (result.ok) return { status: 201, headers: { Location: '/orders/' + result.id } };\n  if (result.conflict) return { status: 409, headers: {} };\n  return { status: 400, headers: {} };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "ok": true,
+              "id": 17
+            }
+          ],
+          "expected": {
+            "status": 201,
+            "headers": {
+              "Location": "/orders/17"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "conflict": true
+            }
+          ],
+          "expected": {
+            "status": 409,
+            "headers": {}
+          }
+        },
+        {
+          "args": [
+            {
+              "invalid": true
+            }
+          ],
+          "expected": {
+            "status": 400,
+            "headers": {}
+          }
+        },
+        {
+          "args": [
+            {
+              "ok": true,
+              "id": "ord_9"
+            }
+          ],
+          "expected": {
+            "status": 201,
+            "headers": {
+              "Location": "/orders/ord_9"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `paginationMeta(total, page, limit)`. It returns `{ page, limit, total, totalPages, hasNext, hasPrev }`, where a partial last page still counts as a page.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "paginationMeta",
+      "starterCode": "function paginationMeta(total, page, limit) {\n  const totalPages = Math.floor(total / limit);\n  return { page, limit, total, totalPages, hasNext: page < totalPages, hasPrev: page > 1 };\n}",
+      "referenceSolution": "function paginationMeta(total, page, limit) {\n  const totalPages = Math.ceil(total / limit);\n  return { page, limit, total, totalPages, hasNext: page < totalPages, hasPrev: page > 1 };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            45,
+            1,
+            20
+          ],
+          "expected": {
+            "page": 1,
+            "limit": 20,
+            "total": 45,
+            "totalPages": 3,
+            "hasNext": true,
+            "hasPrev": false
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            40,
+            2,
+            20
+          ],
+          "expected": {
+            "page": 2,
+            "limit": 20,
+            "total": 40,
+            "totalPages": 2,
+            "hasNext": false,
+            "hasPrev": true
+          }
+        },
+        {
+          "args": [
+            0,
+            1,
+            20
+          ],
+          "expected": {
+            "page": 1,
+            "limit": 20,
+            "total": 0,
+            "totalPages": 0,
+            "hasNext": false,
+            "hasPrev": false
+          }
+        },
+        {
+          "args": [
+            45,
+            2,
+            20
+          ],
+          "expected": {
+            "page": 2,
+            "limit": 20,
+            "total": 45,
+            "totalPages": 3,
+            "hasNext": true,
+            "hasPrev": true
+          }
+        },
+        {
+          "args": [
+            1,
+            1,
+            10
+          ],
+          "expected": {
+            "page": 1,
+            "limit": 10,
+            "total": 1,
+            "totalPages": 1,
+            "hasNext": false,
+            "hasPrev": false
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `parseSort` for `GET /products?sort=-createdAt,name`. A leading `-` means descending, otherwise ascending. Drop fields that are not in `allowed` (never pass raw input to `ORDER BY`). A missing or empty param gives `[]`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "parseSort",
+      "starterCode": "type Sort = { field: string; dir: 'asc' | 'desc' };\n\nfunction parseSort(param: string | null, allowed: string[]): Sort[] {\n  return param!.split(',').map((field) => ({ field, dir: 'asc' }));\n}",
+      "referenceSolution": "type Sort = { field: string; dir: 'asc' | 'desc' };\n\nfunction parseSort(param: string | null, allowed: string[]): Sort[] {\n  if (!param) return [];\n  const out: Sort[] = [];\n  for (const raw of param.split(',')) {\n    const part = raw.trim();\n    if (!part) continue;\n    const desc = part.startsWith('-');\n    const field = desc ? part.slice(1) : part;\n    if (allowed.includes(field)) out.push({ field, dir: desc ? 'desc' : 'asc' });\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "-createdAt,name",
+            [
+              "createdAt",
+              "name",
+              "price"
+            ]
+          ],
+          "expected": [
+            {
+              "field": "createdAt",
+              "dir": "desc"
+            },
+            {
+              "field": "name",
+              "dir": "asc"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null,
+            [
+              "name"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "",
+            [
+              "name"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "price,-password",
+            [
+              "name",
+              "price"
+            ]
+          ],
+          "expected": [
+            {
+              "field": "price",
+              "dir": "asc"
+            }
+          ]
+        },
+        {
+          "args": [
+            "-price",
+            [
+              "price"
+            ]
+          ],
+          "expected": [
+            {
+              "field": "price",
+              "dir": "desc"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Errors from this API use the Problem Details shape: `{ type: 'about:blank', title, status, detail }`. Fix `problem(status, detail)` so `title` is the standard reason phrase for 400, 401, 403, 404, 409, 422 and 500, and `'Error'` for anything else.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "problem",
+      "starterCode": "function problem(status, detail) {\n  return { type: 'about:blank', title: status === 404 ? 'Not Found' : 'Error', status, detail };\n}",
+      "referenceSolution": "const TITLES = {\n  400: 'Bad Request',\n  401: 'Unauthorized',\n  403: 'Forbidden',\n  404: 'Not Found',\n  409: 'Conflict',\n  422: 'Unprocessable Content',\n  500: 'Internal Server Error',\n};\n\nfunction problem(status, detail) {\n  return { type: 'about:blank', title: TITLES[status] || 'Error', status, detail };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            404,
+            "Order 9 does not exist"
+          ],
+          "expected": {
+            "type": "about:blank",
+            "title": "Not Found",
+            "status": 404,
+            "detail": "Order 9 does not exist"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            409,
+            "Email already registered"
+          ],
+          "expected": {
+            "type": "about:blank",
+            "title": "Conflict",
+            "status": 409,
+            "detail": "Email already registered"
+          }
+        },
+        {
+          "args": [
+            401,
+            "Token expired"
+          ],
+          "expected": {
+            "type": "about:blank",
+            "title": "Unauthorized",
+            "status": 401,
+            "detail": "Token expired"
+          }
+        },
+        {
+          "args": [
+            418,
+            "?"
+          ],
+          "expected": {
+            "type": "about:blank",
+            "title": "Error",
+            "status": 418,
+            "detail": "?"
+          }
+        },
+        {
+          "args": [
+            422,
+            "quantity must be positive"
+          ],
+          "expected": {
+            "type": "about:blank",
+            "title": "Unprocessable Content",
+            "status": 422,
+            "detail": "quantity must be positive"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `parseId(raw)` for routes like `/orders/:id`. Return the id as a number only when `raw` is a whole positive integer written with digits only; otherwise return `null` so the route can answer `400` or `404`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseId",
+      "starterCode": "function parseId(raw) {\n  const id = parseInt(raw, 10);\n  return Number.isNaN(id) ? null : id;\n}",
+      "referenceSolution": "function parseId(raw) {\n  if (typeof raw !== 'string' || !/^[0-9]+$/.test(raw)) return null;\n  const id = Number(raw);\n  return id > 0 && Number.isSafeInteger(id) ? id : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "42"
+          ],
+          "expected": 42
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "4x"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "0"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "-1"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "1.5"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Here is the endpoint list for a new users API. Mark the endpoints that do not follow REST conventions.",
+    "task": {
+      "prompt": "Here is the endpoint list for a new users API. Mark the endpoints that do not follow REST conventions.",
+      "kind": "spot",
+      "segments": [
+        {
+          "id": "e1",
+          "text": "GET /users — list users",
+          "issue": null
+        },
+        {
+          "id": "e2",
+          "text": "GET /getUser?id=42 — fetch one user",
+          "issue": "A verb in the path; the resource is `GET /users/42`."
+        },
+        {
+          "id": "e3",
+          "text": "POST /users — create a user",
+          "issue": null
+        },
+        {
+          "id": "e4",
+          "text": "PATCH /users/42 — update some fields",
+          "issue": null
+        },
+        {
+          "id": "e5",
+          "text": "POST /users/42/delete — delete a user",
+          "issue": "Deletion is `DELETE /users/42`; a POST to a verb path is not idempotent and confuses caches and clients."
+        },
+        {
+          "id": "e6",
+          "text": "GET /users/42/orders — the user's orders",
+          "issue": null
+        },
+        {
+          "id": "e7",
+          "text": "DELETE /users/42 — delete a user",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A client wants to change only a user's `phone`, leaving every other field as it is. Which request fits best?",
+    "mcq": {
+      "options": [
+        "`PATCH /users/42` with `{ \"phone\": \"…\" }`",
+        "`PUT /users/42` with `{ \"phone\": \"…\" }`",
+        "`POST /users/42/phone`",
+        "`GET /users/42?phone=…`"
+      ],
+      "correctIndex": 0,
+      "explanation": "PATCH applies a partial update. PUT replaces the whole resource, so sending only `phone` would (correctly) wipe the other fields.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`DELETE /orders/17` succeeds and there is nothing useful to send back. Which status code fits best?",
+    "mcq": {
+      "options": [
+        "`204 No Content`",
+        "`200 OK` with an empty JSON object",
+        "`202 Accepted`",
+        "`410 Gone`"
+      ],
+      "correctIndex": 0,
+      "explanation": "204 says \"done, no body\". 202 means the work has only been queued, and 410 is what a later GET could return for a resource that is permanently gone.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which of these requests is **idempotent**: sending it twice leaves the server in the same state as sending it once?",
+    "mcq": {
+      "options": [
+        "`PUT /users/42` with the full user",
+        "`POST /orders` with a new order",
+        "`POST /payments` charging a card",
+        "`POST /users/42/login-attempts`"
+      ],
+      "correctIndex": 0,
+      "explanation": "PUT sets the resource to the given state, so repeating it changes nothing more. Each POST here creates something new. That is why retries of POSTs need idempotency keys.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix `buildLinks(path, page, limit, total)` to return pagination links `{ self, first, last, prev, next }`, each `'<path>?page=<n>&limit=<limit>'`. `last` is the last page (page 1 when there are no items); `prev` is `null` on the first page and `next` is `null` on the last.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "buildLinks",
+      "starterCode": "function buildLinks(path: string, page: number, limit: number, total: number) {\n  const url = (p: number) => path + '?page=' + p + '&limit=' + limit;\n  const last = Math.ceil(total / limit);\n  return { self: url(page), first: url(1), last: url(last), prev: url(page - 1), next: url(page + 1) };\n}",
+      "referenceSolution": "function buildLinks(path: string, page: number, limit: number, total: number) {\n  const url = (p: number) => path + '?page=' + p + '&limit=' + limit;\n  const last = Math.max(1, Math.ceil(total / limit));\n  return {\n    self: url(page),\n    first: url(1),\n    last: url(last),\n    prev: page > 1 ? url(page - 1) : null,\n    next: page < last ? url(page + 1) : null,\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/orders",
+            2,
+            10,
+            35
+          ],
+          "expected": {
+            "self": "/orders?page=2&limit=10",
+            "first": "/orders?page=1&limit=10",
+            "last": "/orders?page=4&limit=10",
+            "prev": "/orders?page=1&limit=10",
+            "next": "/orders?page=3&limit=10"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/orders",
+            1,
+            10,
+            0
+          ],
+          "expected": {
+            "self": "/orders?page=1&limit=10",
+            "first": "/orders?page=1&limit=10",
+            "last": "/orders?page=1&limit=10",
+            "prev": null,
+            "next": null
+          }
+        },
+        {
+          "args": [
+            "/users",
+            4,
+            10,
+            35
+          ],
+          "expected": {
+            "self": "/users?page=4&limit=10",
+            "first": "/users?page=1&limit=10",
+            "last": "/users?page=4&limit=10",
+            "prev": "/users?page=3&limit=10",
+            "next": null
+          }
+        },
+        {
+          "args": [
+            "/u",
+            1,
+            50,
+            120
+          ],
+          "expected": {
+            "self": "/u?page=1&limit=50",
+            "first": "/u?page=1&limit=50",
+            "last": "/u?page=3&limit=50",
+            "prev": null,
+            "next": "/u?page=2&limit=50"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix `conditionalGet(ifNoneMatch, etag)`. Return `304` when the `If-None-Match` header matches the current `etag`, else `200`. The header may list several tags separated by commas, may be `*`, and tags compare **weakly**: `W/\"v1\"` matches `\"v1\"`. A missing header means `200`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "conditionalGet",
+      "starterCode": "function conditionalGet(ifNoneMatch, etag) {\n  return ifNoneMatch === etag ? 304 : 200;\n}",
+      "referenceSolution": "function conditionalGet(ifNoneMatch, etag) {\n  if (!ifNoneMatch) return 200;\n  if (ifNoneMatch.trim() === '*') return 304;\n  const strip = (tag) => tag.trim().replace(/^W\\//, '');\n  const current = strip(etag);\n  return ifNoneMatch.split(',').some((tag) => strip(tag) === current) ? 304 : 200;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "\"abc\"",
+            "\"abc\""
+          ],
+          "expected": 304
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null,
+            "\"abc\""
+          ],
+          "expected": 200
+        },
+        {
+          "args": [
+            "\"x\", \"abc\"",
+            "\"abc\""
+          ],
+          "expected": 304
+        },
+        {
+          "args": [
+            "W/\"abc\"",
+            "\"abc\""
+          ],
+          "expected": 304
+        },
+        {
+          "args": [
+            "\"old\"",
+            "\"abc\""
+          ],
+          "expected": 200
+        },
+        {
+          "args": [
+            "*",
+            "\"abc\""
+          ],
+          "expected": 304
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Fix `parseFilters(query, allowed)` for queries like `?status=paid&total[gte]=100`. A plain key means `eq`; `field[op]` uses `op`, which must be one of `eq, ne, gt, gte, lt, lte`. Numeric strings become numbers. Collect errors instead of guessing: `'unknown field: <f>'` and `'unknown operator: <op>'`. Return `{ filters, errors }` in query order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseFilters",
+      "starterCode": "function parseFilters(query, allowed) {\n  const filters = [];\n  const errors = [];\n  for (const [key, raw] of Object.entries(query)) {\n    const m = key.match(/^(\\w+)(?:\\[(\\w+)\\])?$/);\n    const field = m ? m[1] : key;\n    const op = m && m[2] ? m[2] : 'eq';\n    if (!allowed.includes(field)) {\n      errors.push('unknown field: ' + field);\n      continue;\n    }\n    filters.push({ field, op, value: raw });\n  }\n  return { filters, errors };\n}",
+      "referenceSolution": "const OPS = ['eq', 'ne', 'gt', 'gte', 'lt', 'lte'];\n\nfunction parseFilters(query, allowed) {\n  const filters = [];\n  const errors = [];\n  for (const [key, raw] of Object.entries(query)) {\n    const m = key.match(/^(\\w+)(?:\\[(\\w+)\\])?$/);\n    const field = m ? m[1] : key;\n    const op = m && m[2] ? m[2] : 'eq';\n    if (!allowed.includes(field)) {\n      errors.push('unknown field: ' + field);\n      continue;\n    }\n    if (!OPS.includes(op)) {\n      errors.push('unknown operator: ' + op);\n      continue;\n    }\n    const value = raw !== '' && !Number.isNaN(Number(raw)) ? Number(raw) : raw;\n    filters.push({ field, op, value });\n  }\n  return { filters, errors };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "status": "paid",
+              "total[gte]": "100"
+            },
+            [
+              "status",
+              "total"
+            ]
+          ],
+          "expected": {
+            "filters": [
+              {
+                "field": "status",
+                "op": "eq",
+                "value": "paid"
+              },
+              {
+                "field": "total",
+                "op": "gte",
+                "value": 100
+              }
+            ],
+            "errors": []
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            [
+              "status"
+            ]
+          ],
+          "expected": {
+            "filters": [],
+            "errors": []
+          }
+        },
+        {
+          "args": [
+            {
+              "total[regex]": ".*"
+            },
+            [
+              "total"
+            ]
+          ],
+          "expected": {
+            "filters": [],
+            "errors": [
+              "unknown operator: regex"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "password": "x",
+              "total[lt]": "5"
+            },
+            [
+              "total"
+            ]
+          ],
+          "expected": {
+            "filters": [
+              {
+                "field": "total",
+                "op": "lt",
+                "value": 5
+              }
+            ],
+            "errors": [
+              "unknown field: password"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "status[ne]": ""
+            },
+            [
+              "status"
+            ]
+          ],
+          "expected": {
+            "filters": [
+              {
+                "field": "status",
+                "op": "ne",
+                "value": ""
+              }
+            ],
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix `parseVersionedPath(path, supported)` for URL versioning. `/v2/users` gives `{ version: 2, rest: '/users' }` and `/v2` gives `rest: '/'`. Versions can have more than one digit. A missing, malformed or unsupported version gives `{ status: 404 }`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseVersionedPath",
+      "starterCode": "function parseVersionedPath(path, supported) {\n  const m = path.match(/^\\/v(\\d)\\//);\n  if (!m) return { status: 404 };\n  return { version: Number(m[1]), rest: path.slice(m[0].length - 1) };\n}",
+      "referenceSolution": "function parseVersionedPath(path, supported) {\n  const m = path.match(/^\\/v(\\d+)(\\/.*)?$/);\n  if (!m) return { status: 404 };\n  const version = Number(m[1]);\n  if (!supported.includes(version)) return { status: 404 };\n  return { version, rest: m[2] || '/' };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/v2/users",
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": {
+            "version": 2,
+            "rest": "/users"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/v10/orders/5",
+            [
+              1,
+              2,
+              10
+            ]
+          ],
+          "expected": {
+            "version": 10,
+            "rest": "/orders/5"
+          }
+        },
+        {
+          "args": [
+            "/v3/users",
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": {
+            "status": 404
+          }
+        },
+        {
+          "args": [
+            "/users",
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": {
+            "status": 404
+          }
+        },
+        {
+          "args": [
+            "/v1",
+            [
+              1
+            ]
+          ],
+          "expected": {
+            "version": 1,
+            "rest": "/"
+          }
+        },
+        {
+          "args": [
+            "/version/users",
+            [
+              1
+            ]
+          ],
+          "expected": {
+            "status": 404
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "This `PATCH /users/:id` validator silently drops fields it does not know, so clients never learn their update was ignored. Fix `validatePatch(body, allowed, readOnly)`:\n- not a plain object → `{ status: 400, errors: ['body must be an object'] }`\n- no fields → `{ status: 400, errors: ['no fields to update'] }`\n- for each key in body order: `'<f> is read-only'` if in `readOnly`, else `'<f> is not allowed'` if not in `allowed` → `400` with all errors\n- otherwise `{ status: 200, update: body }`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "validatePatch",
+      "starterCode": "function validatePatch(body, allowed, readOnly) {\n  const update = {};\n  for (const k of Object.keys(body)) {\n    if (allowed.includes(k)) update[k] = body[k];\n  }\n  return { status: 200, update };\n}",
+      "referenceSolution": "function validatePatch(body, allowed, readOnly) {\n  if (!body || typeof body !== 'object' || Array.isArray(body)) {\n    return { status: 400, errors: ['body must be an object'] };\n  }\n  const keys = Object.keys(body);\n  if (!keys.length) return { status: 400, errors: ['no fields to update'] };\n  const errors = [];\n  for (const k of keys) {\n    if (readOnly.includes(k)) errors.push(k + ' is read-only');\n    else if (!allowed.includes(k)) errors.push(k + ' is not allowed');\n  }\n  if (errors.length) return { status: 400, errors };\n  return { status: 200, update: body };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada"
+            },
+            [
+              "name",
+              "phone"
+            ],
+            [
+              "id"
+            ]
+          ],
+          "expected": {
+            "status": 200,
+            "update": {
+              "name": "Ada"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            [
+              "name"
+            ],
+            [
+              "id"
+            ]
+          ],
+          "expected": {
+            "status": 400,
+            "errors": [
+              "no fields to update"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            [
+              "name"
+            ],
+            [
+              "id"
+            ]
+          ],
+          "expected": {
+            "status": 400,
+            "errors": [
+              "body must be an object"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 9,
+              "name": "x",
+              "role": "admin"
+            },
+            [
+              "name"
+            ],
+            [
+              "id",
+              "createdAt"
+            ]
+          ],
+          "expected": {
+            "status": 400,
+            "errors": [
+              "id is read-only",
+              "role is not allowed"
+            ]
+          }
+        },
+        {
+          "args": [
+            null,
+            [
+              "name"
+            ],
+            []
+          ],
+          "expected": {
+            "status": 400,
+            "errors": [
+              "body must be an object"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You must rename a field in a public API response (`fullName` → `name`), which breaks clients. Order the steps of a safe rollout.",
+    "task": {
+      "prompt": "You must rename a field in a public API response (`fullName` → `name`), which breaks clients. Order the steps of a safe rollout.",
+      "kind": "rank",
+      "items": [
+        {
+          "id": "v2",
+          "label": "Ship `/v2` with the new field alongside the unchanged `/v1`"
+        },
+        {
+          "id": "hdr",
+          "label": "Mark `/v1` responses with `Deprecation` and `Sunset` headers and announce the date"
+        },
+        {
+          "id": "migrate",
+          "label": "Help the main clients migrate and track `/v1` traffic per client"
+        },
+        {
+          "id": "wait",
+          "label": "Wait until `/v1` traffic is near zero (and the sunset date has passed)"
+        },
+        {
+          "id": "gone",
+          "label": "Remove `/v1` and return `410 Gone` for it"
+        }
+      ],
+      "correctOrder": [
+        "v2",
+        "hdr",
+        "migrate",
+        "wait",
+        "gone"
+      ],
+      "explanation": "Give clients a working alternative first, tell them clearly, measure who is still on the old version, and only remove it once the data says it is safe."
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A logged-in user with role `viewer` calls `DELETE /projects/7`, which only admins may do. Which status code fits?",
+    "mcq": {
+      "options": [
+        "`403 Forbidden`",
+        "`401 Unauthorized`",
+        "`404 Not Found`, always",
+        "`400 Bad Request`"
+      ],
+      "correctIndex": 0,
+      "explanation": "We know who they are (so not 401) but they are not allowed. Some APIs return 404 instead to hide that a resource exists, but that is a deliberate choice, not the default.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`GET /orders?status=shipped` finds no matching orders. What should it return?",
+    "mcq": {
+      "options": [
+        "`200 OK` with an empty list",
+        "`404 Not Found`",
+        "`204 No Content`",
+        "`400 Bad Request`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The collection exists; the filter just matched nothing. An empty list keeps client code simple; a 404 makes \"no results\" look like a broken URL.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client pages through `GET /feed?page=2&limit=20` while new posts are being added at the top. Users report seeing some posts twice. Why, and what fixes it?",
+    "mcq": {
+      "options": [
+        "Offset pagination shifts when rows are inserted before the offset; cursor (keyset) pagination using the last item seen avoids it",
+        "The limit is too small; use 100",
+        "The client should cache page 1",
+        "The database returns rows in random order; add `DISTINCT`"
+      ],
+      "correctIndex": 0,
+      "explanation": "With `OFFSET 20`, every insert at the top pushes an item from page 1 onto page 2. A cursor such as `?after=<id>` is stable under inserts.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Fix `cursorPage(items, cursor, limit)`. `items` are sorted by `id` ascending, but ids have gaps (rows get deleted). `cursor` is the id of the last item the client saw (`null` for the first page). Return `{ data, nextCursor }`, where `nextCursor` is the last returned id only if more items follow, else `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cursorPage",
+      "starterCode": "function cursorPage(items, cursor, limit) {\n  const start = cursor === null ? 0 : cursor;\n  const data = items.slice(start, start + limit);\n  return { data, nextCursor: data.length ? data[data.length - 1].id : null };\n}",
+      "referenceSolution": "function cursorPage(items, cursor, limit) {\n  const rest = cursor === null ? items : items.filter((item) => item.id > cursor);\n  const data = rest.slice(0, limit);\n  const nextCursor = rest.length > limit ? data[data.length - 1].id : null;\n  return { data, nextCursor };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              },
+              {
+                "id": 3
+              }
+            ],
+            null,
+            2
+          ],
+          "expected": {
+            "data": [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            "nextCursor": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 3
+              },
+              {
+                "id": 8
+              },
+              {
+                "id": 9
+              },
+              {
+                "id": 15
+              }
+            ],
+            8,
+            2
+          ],
+          "expected": {
+            "data": [
+              {
+                "id": 9
+              },
+              {
+                "id": 15
+              }
+            ],
+            "nextCursor": null
+          }
+        },
+        {
+          "args": [
+            [],
+            null,
+            10
+          ],
+          "expected": {
+            "data": [],
+            "nextCursor": null
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 5
+              },
+              {
+                "id": 10
+              },
+              {
+                "id": 20
+              },
+              {
+                "id": 30
+              }
+            ],
+            5,
+            2
+          ],
+          "expected": {
+            "data": [
+              {
+                "id": 10
+              },
+              {
+                "id": 20
+              }
+            ],
+            "nextCursor": 20
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            2,
+            5
+          ],
+          "expected": {
+            "data": [],
+            "nextCursor": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`POST /orders` accepts an `Idempotency-Key`. Complete `processRequests(requests)` (each `{ key, body }`) and return the response for each:\n- new key (or no key): create order `n` (1, 2, 3…) → `{ status: 201, orderId: n, replayed: false }`\n- known key, same body: the stored response with `replayed: true`, no new order\n- known key, different body → `{ status: 422, error: 'key reused' }`\n\nRequests without a key are never stored.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "processRequests",
+      "starterCode": "function processRequests(requests) {\n  const seen = new Map();\n  let next = 1;\n  return requests.map(({ key, body }) => {\n    if (key && seen.has(key)) return { ...seen.get(key), replayed: true };\n    const res = { status: 201, orderId: next++, replayed: false };\n    if (key) seen.set(key, res);\n    return res;\n  });\n}",
+      "referenceSolution": "function processRequests(requests) {\n  const seen = new Map();\n  let next = 1;\n  return requests.map(({ key, body }) => {\n    const fingerprint = JSON.stringify(body);\n    if (key && seen.has(key)) {\n      const stored = seen.get(key);\n      if (stored.fingerprint !== fingerprint) return { status: 422, error: 'key reused' };\n      return { ...stored.res, replayed: true };\n    }\n    const res = { status: 201, orderId: next++, replayed: false };\n    if (key) seen.set(key, { fingerprint, res });\n    return res;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "key": "k1",
+                "body": {
+                  "sku": "A"
+                }
+              },
+              {
+                "key": "k1",
+                "body": {
+                  "sku": "A"
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "status": 201,
+              "orderId": 1,
+              "replayed": false
+            },
+            {
+              "status": 201,
+              "orderId": 1,
+              "replayed": true
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "key": "k1",
+                "body": {
+                  "sku": "A"
+                }
+              },
+              {
+                "key": "k1",
+                "body": {
+                  "sku": "B"
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "status": 201,
+              "orderId": 1,
+              "replayed": false
+            },
+            {
+              "status": 422,
+              "error": "key reused"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "key": null,
+                "body": {
+                  "sku": "A"
+                }
+              },
+              {
+                "key": null,
+                "body": {
+                  "sku": "A"
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "status": 201,
+              "orderId": 1,
+              "replayed": false
+            },
+            {
+              "status": 201,
+              "orderId": 2,
+              "replayed": false
+            }
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "key": "a",
+                "body": {}
+              },
+              {
+                "key": "b",
+                "body": {}
+              },
+              {
+                "key": "a",
+                "body": {}
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "status": 201,
+              "orderId": 1,
+              "replayed": false
+            },
+            {
+              "status": 201,
+              "orderId": 2,
+              "replayed": false
+            },
+            {
+              "status": 201,
+              "orderId": 1,
+              "replayed": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Two admins editing the same product overwrite each other. Use optimistic concurrency: the product's ETag is `\"v<version>\"`. Fix `updateWithIfMatch(resource, ifMatch, patch)`:\n- no `If-Match` → `{ status: 428 }`\n- `If-Match` differs from the current ETag → `{ status: 412, etag: <current> }`\n- otherwise merge `patch` into `resource.data`, bump the version and return `{ status: 200, etag: <new>, data }`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "updateWithIfMatch",
+      "starterCode": "function updateWithIfMatch(resource, ifMatch, patch) {\n  const etag = '\"v' + resource.version + '\"';\n  if (ifMatch && ifMatch !== etag) return { status: 412, etag };\n  const data = { ...resource.data, ...patch };\n  return { status: 200, etag: '\"v' + (resource.version + 1) + '\"', data };\n}",
+      "referenceSolution": "function updateWithIfMatch(resource, ifMatch, patch) {\n  const etag = '\"v' + resource.version + '\"';\n  if (!ifMatch) return { status: 428 };\n  if (ifMatch !== etag) return { status: 412, etag };\n  const data = { ...resource.data, ...patch };\n  return { status: 200, etag: '\"v' + (resource.version + 1) + '\"', data };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "version": 3,
+              "data": {
+                "price": 10
+              }
+            },
+            "\"v3\"",
+            {
+              "price": 12
+            }
+          ],
+          "expected": {
+            "status": 200,
+            "etag": "\"v4\"",
+            "data": {
+              "price": 12
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "version": 3,
+              "data": {
+                "price": 10
+              }
+            },
+            null,
+            {
+              "price": 12
+            }
+          ],
+          "expected": {
+            "status": 428
+          }
+        },
+        {
+          "args": [
+            {
+              "version": 4,
+              "data": {
+                "price": 12
+              }
+            },
+            "\"v3\"",
+            {
+              "price": 15
+            }
+          ],
+          "expected": {
+            "status": 412,
+            "etag": "\"v4\""
+          }
+        },
+        {
+          "args": [
+            {
+              "version": 1,
+              "data": {
+                "price": 1,
+                "name": "Pen"
+              }
+            },
+            "\"v1\"",
+            {
+              "name": "Pencil"
+            }
+          ],
+          "expected": {
+            "status": 200,
+            "etag": "\"v2\"",
+            "data": {
+              "price": 1,
+              "name": "Pencil"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Support sparse fieldsets: `GET /users/1?fields=id,name,address.city`. Complete `pickFields(obj, fields)`: return only the listed fields, where a dotted path picks a nested field and keeps its parent structure. Missing fields are skipped. An empty or missing `fields` returns the whole object.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "pickFields",
+      "starterCode": "function pickFields(obj: Record<string, any>, fields: string | null): Record<string, any> {\n  if (!fields) return obj;\n  const out: Record<string, any> = {};\n  for (const f of fields.split(',')) {\n    if (f in obj) out[f] = obj[f];\n  }\n  return out;\n}",
+      "referenceSolution": "function pickFields(obj: Record<string, any>, fields: string | null): Record<string, any> {\n  if (!fields) return obj;\n  const out: Record<string, any> = {};\n  for (const raw of fields.split(',')) {\n    const path = raw.trim().split('.').filter(Boolean);\n    if (!path.length) continue;\n    let src: any = obj;\n    let ok = true;\n    for (const key of path) {\n      if (src && typeof src === 'object' && key in src) src = src[key];\n      else { ok = false; break; }\n    }\n    if (!ok) continue;\n    let dst = out;\n    for (const key of path.slice(0, -1)) dst = dst[key] ??= {};\n    dst[path[path.length - 1]] = src;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "name": "Ada",
+              "email": "a@x.io"
+            },
+            "id,name"
+          ],
+          "expected": {
+            "id": 1,
+            "name": "Ada"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "address": {
+                "city": "Pune",
+                "zip": "411001"
+              }
+            },
+            "id,address.city"
+          ],
+          "expected": {
+            "id": 1,
+            "address": {
+              "city": "Pune"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 1
+            },
+            ""
+          ],
+          "expected": {
+            "id": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 1,
+              "name": "Ada"
+            },
+            "id,secret,address.city"
+          ],
+          "expected": {
+            "id": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": {
+                  "c": 1,
+                  "d": 2
+                }
+              }
+            },
+            "a.b.c,a.b.d"
+          ],
+          "expected": {
+            "a": {
+              "b": {
+                "c": 1,
+                "d": 2
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Clients page through a GitHub-style API using the `Link` header. Fix `parseLinkHeader(header)` to return an object mapping each `rel` to its URL, e.g. `<https://api.x.com/items?page=2>; rel=\"next\"`. A `rel` can hold several space-separated names. A missing header gives `{}`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseLinkHeader",
+      "starterCode": "function parseLinkHeader(header) {\n  const out = {};\n  for (const part of header.split(',')) {\n    const [url, rel] = part.split(';');\n    out[rel.split('=')[1]] = url;\n  }\n  return out;\n}",
+      "referenceSolution": "function parseLinkHeader(header) {\n  const out = {};\n  if (!header) return out;\n  const re = /<([^>]*)>\\s*;\\s*rel=\"?([^\";,]+)\"?/g;\n  let m;\n  while ((m = re.exec(header))) {\n    for (const rel of m[2].trim().split(/\\s+/)) out[rel] = m[1];\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "<https://api.x.com/items?page=2>; rel=\"next\""
+          ],
+          "expected": {
+            "next": "https://api.x.com/items?page=2"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "<https://a.io/i?page=3>; rel=\"next\", <https://a.io/i?page=9>; rel=\"last\""
+          ],
+          "expected": {
+            "next": "https://a.io/i?page=3",
+            "last": "https://a.io/i?page=9"
+          }
+        },
+        {
+          "args": [
+            "<https://a.io/i?page=1>; rel=\"first prev\""
+          ],
+          "expected": {
+            "first": "https://a.io/i?page=1",
+            "prev": "https://a.io/i?page=1"
+          }
+        },
+        {
+          "args": [
+            "<https://a.io/i?page=2>;rel=next"
+          ],
+          "expected": {
+            "next": "https://a.io/i?page=2"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "This is part of a design doc for an orders API. Mark the decisions that will cause problems for clients.",
+    "task": {
+      "prompt": "This is part of a design doc for an orders API. Mark the decisions that will cause problems for clients.",
+      "kind": "spot",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Resources are plural nouns: `/orders`, `/orders/{id}`, `/orders/{id}/items`.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "When an order is not found we return `200` with `{ \"error\": \"not found\" }` so the frontend never sees a failed request.",
+          "issue": "Hides errors from every client, cache and monitor; use 404 with an error body."
+        },
+        {
+          "id": "s3",
+          "text": "`POST /orders` returns `201` with a `Location` header.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "List endpoints return every matching row; there is no pagination because the table is small today.",
+          "issue": "Unbounded lists grow with the data and break later; add a default and maximum page size now, as adding it later is a breaking change."
+        },
+        {
+          "id": "s5",
+          "text": "Validation errors return `400` with a list of field errors.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Timestamps are ISO 8601 strings in UTC.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "`GET /orders/{id}/cancel` cancels the order.",
+          "issue": "GET must be safe: crawlers, prefetchers and retries will cancel orders. Use `POST /orders/{id}/cancel` or a state change via PATCH."
+        },
+        {
+          "id": "s8",
+          "text": "Breaking changes ship under a new `/v2` prefix.",
+          "issue": null
+        }
+      ],
+      "askExplanation": true
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A mobile client sends `POST /payments` with `Idempotency-Key: 9f1c…`, times out, and retries with the same key and body. The first attempt actually succeeded. What should the server do?",
+    "mcq": {
+      "options": [
+        "Return the stored response from the first attempt without charging again",
+        "Charge again, since the client asked twice",
+        "Return `409 Conflict` because the key was used",
+        "Return `500` so the client knows something went wrong"
+      ],
+      "correctIndex": 0,
+      "explanation": "That is the whole point of the key: a retry gets the original outcome. A different body with the same key is the case to reject.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`GET /events?page=5000&limit=50` takes 4 seconds while page 1 takes 20 ms. Why?",
+    "mcq": {
+      "options": [
+        "`OFFSET 249950` makes the database read and discard every skipped row; keyset pagination (`WHERE id > :last`) uses the index to jump straight there",
+        "The database caches only the first pages",
+        "`LIMIT` is ignored for large offsets",
+        "Page numbers above 1000 disable the index"
+      ],
+      "correctIndex": 0,
+      "explanation": "Offset cost grows with the offset. A cursor on an indexed column costs the same on every page.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You want browsers to keep a copy of `GET /products/42` but check with the server (using its ETag) before every use. Which header does that?",
+    "mcq": {
+      "options": [
+        "`Cache-Control: no-cache`",
+        "`Cache-Control: no-store`",
+        "`Cache-Control: max-age=0, immutable`",
+        "`Pragma: public`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`no-cache` means \"store it, but revalidate first\", which with an ETag usually costs a cheap 304. `no-store` forbids keeping it at all.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Extend idempotency keys to handle **concurrent** retries. Events are `['start', key, bodyHash]` or `['finish', key, status]`. For each `start`, output:\n- `'process'` for a new key\n- `'conflict'` when the same key is still in flight (respond `409`)\n- `'replay:<status>'` when it finished with the same hash\n- `'mismatch'` when the key was used with a different hash\n\n`finish` events output nothing.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "idempotency",
+      "starterCode": "function idempotency(events) {\n  const done = new Map();\n  const out = [];\n  for (const [type, key, value] of events) {\n    if (type === 'finish') {\n      done.set(key, { status: value });\n      continue;\n    }\n    if (done.has(key)) out.push('replay:' + done.get(key).status);\n    else out.push('process');\n  }\n  return out;\n}",
+      "referenceSolution": "function idempotency(events) {\n  const keys = new Map();\n  const out = [];\n  for (const [type, key, value] of events) {\n    if (type === 'finish') {\n      const entry = keys.get(key);\n      if (entry) entry.status = value;\n      continue;\n    }\n    const entry = keys.get(key);\n    if (!entry) {\n      keys.set(key, { hash: value, status: null });\n      out.push('process');\n    } else if (entry.hash !== value) out.push('mismatch');\n    else if (entry.status === null) out.push('conflict');\n    else out.push('replay:' + entry.status);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "start",
+                "k",
+                "h1"
+              ],
+              [
+                "start",
+                "k",
+                "h1"
+              ],
+              [
+                "finish",
+                "k",
+                201
+              ],
+              [
+                "start",
+                "k",
+                "h1"
+              ]
+            ]
+          ],
+          "expected": [
+            "process",
+            "conflict",
+            "replay:201"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              [
+                "start",
+                "k",
+                "h1"
+              ],
+              [
+                "finish",
+                "k",
+                201
+              ],
+              [
+                "start",
+                "k",
+                "h2"
+              ]
+            ]
+          ],
+          "expected": [
+            "process",
+            "mismatch"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "start",
+                "a",
+                "h"
+              ],
+              [
+                "start",
+                "b",
+                "h"
+              ],
+              [
+                "finish",
+                "b",
+                400
+              ],
+              [
+                "start",
+                "b",
+                "h"
+              ],
+              [
+                "start",
+                "a",
+                "h"
+              ]
+            ]
+          ],
+          "expected": [
+            "process",
+            "process",
+            "replay:400",
+            "conflict"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Complete `versionLifecycle(version, policy, today)`. `policy` maps versions to `{ deprecated, sunset }` ISO dates (either may be missing); `today` is an ISO date. Return:\n- unknown version → `{ status: 404 }`\n- on or after `sunset` → `{ status: 410 }`\n- on or after `deprecated` → `{ status: 200, headers }` with `Deprecation: '@<unix seconds of deprecated>'` and, if there is a sunset, `Sunset: <HTTP date>` (`toUTCString()`)\n- otherwise `{ status: 200, headers: {} }`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "versionLifecycle",
+      "starterCode": "function versionLifecycle(version, policy, today) {\n  const p = policy[version];\n  if (!p) return { status: 404 };\n  const headers = {};\n  if (p.deprecated && today >= p.deprecated) {\n    headers.Deprecation = '@' + Date.parse(p.deprecated) / 1000;\n    if (p.sunset) headers.Sunset = new Date(p.sunset).toUTCString();\n  }\n  return { status: 200, headers };\n}",
+      "referenceSolution": "function versionLifecycle(version, policy, today) {\n  const p = policy[version];\n  if (!p) return { status: 404 };\n  if (p.sunset && today >= p.sunset) return { status: 410 };\n  const headers = {};\n  if (p.deprecated && today >= p.deprecated) {\n    headers.Deprecation = '@' + Date.parse(p.deprecated) / 1000;\n    if (p.sunset) headers.Sunset = new Date(p.sunset).toUTCString();\n  }\n  return { status: 200, headers };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "v1",
+            {
+              "v1": {
+                "deprecated": "2026-01-01",
+                "sunset": "2026-07-01"
+              }
+            },
+            "2026-03-15"
+          ],
+          "expected": {
+            "status": 200,
+            "headers": {
+              "Deprecation": "@1767225600",
+              "Sunset": "Wed, 01 Jul 2026 00:00:00 GMT"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "v1",
+            {
+              "v1": {
+                "deprecated": "2026-01-01",
+                "sunset": "2026-07-01"
+              }
+            },
+            "2026-07-01"
+          ],
+          "expected": {
+            "status": 410
+          }
+        },
+        {
+          "args": [
+            "v2",
+            {
+              "v2": {}
+            },
+            "2026-07-01"
+          ],
+          "expected": {
+            "status": 200,
+            "headers": {}
+          }
+        },
+        {
+          "args": [
+            "v9",
+            {
+              "v1": {}
+            },
+            "2026-01-01"
+          ],
+          "expected": {
+            "status": 404
+          }
+        },
+        {
+          "args": [
+            "v1",
+            {
+              "v1": {
+                "deprecated": "2026-01-01"
+              }
+            },
+            "2027-01-01"
+          ],
+          "expected": {
+            "status": 200,
+            "headers": {
+              "Deprecation": "@1767225600"
+            }
+          }
+        },
+        {
+          "args": [
+            "v1",
+            {
+              "v1": {
+                "deprecated": "2026-01-01",
+                "sunset": "2026-07-01"
+              }
+            },
+            "2025-12-31"
+          ],
+          "expected": {
+            "status": 200,
+            "headers": {}
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Implement JSON Merge Patch (RFC 7386) for `PATCH` with `Content-Type: application/merge-patch+json`: objects merge recursively, a `null` value deletes the key, and anything that is not an object (including arrays) replaces the target value. Do not mutate `target`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "mergePatch",
+      "starterCode": "function mergePatch(target: any, patch: any): any {\n  return Object.assign({}, target, patch);\n}",
+      "referenceSolution": "function mergePatch(target: any, patch: any): any {\n  if (patch === null || typeof patch !== 'object' || Array.isArray(patch)) return patch;\n  const out: Record<string, any> = target && typeof target === 'object' && !Array.isArray(target) ? { ...target } : {};\n  for (const [key, value] of Object.entries(patch)) {\n    if (value === null) delete out[key];\n    else out[key] = mergePatch(out[key], value);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "phone": "1"
+            },
+            {
+              "phone": null
+            }
+          ],
+          "expected": {
+            "name": "Ada"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "a": {
+                "b": 1,
+                "c": 2
+              }
+            },
+            {
+              "a": {
+                "c": 3
+              }
+            }
+          ],
+          "expected": {
+            "a": {
+              "b": 1,
+              "c": 3
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "tags": [
+                "x",
+                "y"
+              ]
+            },
+            {
+              "tags": [
+                "z"
+              ]
+            }
+          ],
+          "expected": {
+            "tags": [
+              "z"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {}
+          ],
+          "expected": {
+            "a": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "a": "str"
+            },
+            {
+              "a": {
+                "b": null,
+                "c": 1
+              }
+            }
+          ],
+          "expected": {
+            "a": {
+              "c": 1
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": {
+                  "c": 1
+                }
+              }
+            },
+            {
+              "a": {
+                "b": {
+                  "c": null
+                }
+              }
+            }
+          ],
+          "expected": {
+            "a": {
+              "b": {}
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A feed is sorted by `createdAt` descending, then `id` descending, and many items share a `createdAt`. Fix the keyset pagination in `nextPage(items, cursor, limit)`: `cursor` is `{ createdAt, id }` of the last item seen (`null` for the first page). Return `{ ids, nextCursor }`, where `nextCursor` is set only if more items follow.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "nextPage",
+      "starterCode": "function nextPage(items, cursor, limit) {\n  const rest = cursor ? items.filter((it) => it.createdAt < cursor.createdAt) : items;\n  const page = rest.slice(0, limit);\n  const last = page[page.length - 1];\n  return {\n    ids: page.map((it) => it.id),\n    nextCursor: rest.length > limit ? { createdAt: last.createdAt, id: last.id } : null,\n  };\n}",
+      "referenceSolution": "function nextPage(items, cursor, limit) {\n  const after = (it) => it.createdAt < cursor.createdAt || (it.createdAt === cursor.createdAt && it.id < cursor.id);\n  const rest = cursor ? items.filter(after) : items;\n  const page = rest.slice(0, limit);\n  const last = page[page.length - 1];\n  return {\n    ids: page.map((it) => it.id),\n    nextCursor: rest.length > limit ? { createdAt: last.createdAt, id: last.id } : null,\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "createdAt": 100,
+                "id": 9
+              },
+              {
+                "createdAt": 100,
+                "id": 7
+              },
+              {
+                "createdAt": 100,
+                "id": 4
+              },
+              {
+                "createdAt": 90,
+                "id": 8
+              }
+            ],
+            {
+              "createdAt": 100,
+              "id": 7
+            },
+            2
+          ],
+          "expected": {
+            "ids": [
+              4,
+              8
+            ],
+            "nextCursor": null
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "createdAt": 100,
+                "id": 9
+              },
+              {
+                "createdAt": 100,
+                "id": 7
+              },
+              {
+                "createdAt": 90,
+                "id": 8
+              }
+            ],
+            null,
+            2
+          ],
+          "expected": {
+            "ids": [
+              9,
+              7
+            ],
+            "nextCursor": {
+              "createdAt": 100,
+              "id": 7
+            }
+          }
+        },
+        {
+          "args": [
+            [],
+            null,
+            5
+          ],
+          "expected": {
+            "ids": [],
+            "nextCursor": null
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "createdAt": 5,
+                "id": 3
+              },
+              {
+                "createdAt": 5,
+                "id": 2
+              },
+              {
+                "createdAt": 5,
+                "id": 1
+              }
+            ],
+            {
+              "createdAt": 5,
+              "id": 3
+            },
+            1
+          ],
+          "expected": {
+            "ids": [
+              2
+            ],
+            "nextCursor": {
+              "createdAt": 5,
+              "id": 2
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "createdAt": 100,
+                "id": 9
+              },
+              {
+                "createdAt": 50,
+                "id": 1
+              }
+            ],
+            {
+              "createdAt": 50,
+              "id": 1
+            },
+            10
+          ],
+          "expected": {
+            "ids": [],
+            "nextCursor": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Apply a JSON Patch (RFC 6902 subset: `add`, `replace`, `remove`, `test`, paths to object keys like `/address/city`). The patch is **atomic**: if any operation fails (`test` value differs, `replace`/`remove` of a missing key, or a missing parent), return `{ ok: false, failedOp: <index>, doc }` with the **original, unchanged** document. On success return `{ ok: true, doc }`. Fix `applyPatch`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "applyPatch",
+      "starterCode": "function applyPatch(doc, ops) {\n  for (let i = 0; i < ops.length; i++) {\n    const { op, path, value } = ops[i];\n    const keys = path.split('/').slice(1);\n    const last = keys.pop();\n    let parent = doc;\n    for (const k of keys) parent = parent && parent[k];\n    if (!parent || typeof parent !== 'object') return { ok: false, failedOp: i, doc };\n    if (op === 'test' && JSON.stringify(parent[last]) !== JSON.stringify(value)) return { ok: false, failedOp: i, doc };\n    if ((op === 'replace' || op === 'remove') && !(last in parent)) return { ok: false, failedOp: i, doc };\n    if (op === 'add' || op === 'replace') parent[last] = value;\n    if (op === 'remove') delete parent[last];\n  }\n  return { ok: true, doc };\n}",
+      "referenceSolution": "function applyPatch(doc, ops) {\n  const work = JSON.parse(JSON.stringify(doc));\n  for (let i = 0; i < ops.length; i++) {\n    const { op, path, value } = ops[i];\n    const keys = path.split('/').slice(1);\n    const last = keys.pop();\n    let parent = work;\n    for (const k of keys) parent = parent && parent[k];\n    if (!parent || typeof parent !== 'object') return { ok: false, failedOp: i, doc };\n    if (op === 'test' && JSON.stringify(parent[last]) !== JSON.stringify(value)) return { ok: false, failedOp: i, doc };\n    if ((op === 'replace' || op === 'remove') && !(last in parent)) return { ok: false, failedOp: i, doc };\n    if (op === 'add' || op === 'replace') parent[last] = value;\n    if (op === 'remove') delete parent[last];\n  }\n  return { ok: true, doc: work };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada"
+            },
+            [
+              {
+                "op": "replace",
+                "path": "/name",
+                "value": "Grace"
+              }
+            ]
+          ],
+          "expected": {
+            "ok": true,
+            "doc": {
+              "name": "Grace"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "stock": 5,
+              "price": 10
+            },
+            [
+              {
+                "op": "replace",
+                "path": "/price",
+                "value": 12
+              },
+              {
+                "op": "test",
+                "path": "/stock",
+                "value": 4
+              }
+            ]
+          ],
+          "expected": {
+            "ok": false,
+            "failedOp": 1,
+            "doc": {
+              "stock": 5,
+              "price": 10
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": 1
+              }
+            },
+            [
+              {
+                "op": "add",
+                "path": "/a/c",
+                "value": 2
+              },
+              {
+                "op": "remove",
+                "path": "/a/b"
+              }
+            ]
+          ],
+          "expected": {
+            "ok": true,
+            "doc": {
+              "a": {
+                "c": 2
+              }
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            [
+              {
+                "op": "add",
+                "path": "/b",
+                "value": 2
+              },
+              {
+                "op": "remove",
+                "path": "/zzz"
+              }
+            ]
+          ],
+          "expected": {
+            "ok": false,
+            "failedOp": 1,
+            "doc": {
+              "a": 1
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            []
+          ],
+          "expected": {
+            "ok": true,
+            "doc": {
+              "a": 1
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "You are designing `GET /activity` for a feed table with 50 million rows. New rows arrive every second, clients scroll endlessly, and the product team wants \"Page 3 of 2,481\" in the UI.",
+    "task": {
+      "prompt": "You are designing `GET /activity` for a feed table with 50 million rows. New rows arrive every second, clients scroll endlessly, and the product team wants \"Page 3 of 2,481\" in the UI.",
+      "kind": "scenario",
+      "steps": [
+        {
+          "id": "style",
+          "question": "Which pagination style should the API use?",
+          "options": [
+            "Cursor (keyset) pagination on `(created_at, id)`, returning an opaque `next` cursor",
+            "`?page=&limit=` with `OFFSET`",
+            "Return everything and let the client page",
+            "Random sampling of rows"
+          ],
+          "correctIndex": 0,
+          "explanation": "Keyset is stable under inserts and costs the same on every page."
+        },
+        {
+          "id": "index",
+          "question": "What does the database need for it to stay fast?",
+          "options": [
+            "A composite index on `(created_at DESC, id DESC)` matching the sort",
+            "An index on `id` only",
+            "A full-text index",
+            "Nothing; `LIMIT` is enough"
+          ],
+          "correctIndex": 0,
+          "explanation": "The index must match the sort and the cursor comparison so each page is an index range scan."
+        },
+        {
+          "id": "count",
+          "question": "How should you handle the \"of 2,481\" total?",
+          "options": [
+            "Push back: drop exact totals, or show an approximate/cached count, since `COUNT(*)` over 50M rows on every request is expensive and keeps changing",
+            "Run `COUNT(*)` on every request",
+            "Count in the client",
+            "Add a trigger that counts every page view"
+          ],
+          "correctIndex": 0,
+          "explanation": "Exact totals on a large, fast-moving table cost a lot and are stale immediately; an estimate or \"load more\" UI serves users just as well."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your API starts returning `429` under load and clients retry immediately in tight loops, making it worse. What should the API and clients do?",
+    "mcq": {
+      "options": [
+        "Send `Retry-After` with 429/503, and have clients back off exponentially with jitter, honouring that header",
+        "Return `500` instead so clients stop retrying",
+        "Raise the rate limit until the 429s stop",
+        "Have clients retry every 100 ms until it works"
+      ],
+      "correctIndex": 0,
+      "explanation": "Synchronised immediate retries become a retry storm. A server hint plus jittered backoff spreads the load out.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A public API returns `price` as a string (`\"19.99\"`) and you want it to be an integer number of cents. Clients are many and outside your control. What is the least disruptive change?",
+    "mcq": {
+      "options": [
+        "Add a new field (`priceCents`), keep `price` unchanged but deprecated, and remove it only in the next major version",
+        "Change `price` to an integer in place and announce it",
+        "Return both types in `price` depending on a header nobody sends yet",
+        "Change it to a number and keep the field name, since JSON is untyped"
+      ],
+      "correctIndex": 0,
+      "explanation": "Adding a field is backward compatible; changing a field's type breaks every client that parses it. Removal belongs in a version bump.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-rest-api-design-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-rest-api-design",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "`GET /me` returns the logged-in user's profile with `Cache-Control: public, max-age=300`, and a CDN sits in front of the API. What can go wrong?",
+    "mcq": {
+      "options": [
+        "The CDN can serve one user's profile to other users; personalised responses need `private` (or `no-store`)",
+        "Nothing, because the request carries an `Authorization` header",
+        "The browser will ignore `max-age` for JSON",
+        "The CDN will strip the ETag"
+      ],
+      "correctIndex": 0,
+      "explanation": "`public` explicitly allows shared caches to store the response, even for authenticated requests. Per-user data must be `private`, and shared caches must never key it on the URL alone.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

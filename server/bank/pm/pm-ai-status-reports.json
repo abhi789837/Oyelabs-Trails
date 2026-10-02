@@ -1,0 +1,353 @@
+[
+  {
+    "id": "pm-ai-status-reports-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "An AI drafted this weekly status update from your Jira data and notes. Your notes say: 18 of 24 stories done; payment integration blocked on client credentials; next demo on Thursday. Mark the lines that are wrong or not supported.",
+    "task": {
+      "kind": "spot",
+      "prompt": "An AI drafted this weekly status update from your Jira data and notes. Your notes say: 18 of 24 stories done; payment integration blocked on client credentials; next demo on Thursday. Mark the lines that are wrong or not supported.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Progress: 18 of 24 sprint stories are done.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Overall status: green, everything on track.",
+          "issue": "Not supported: a blocker exists, so the status needs judgement, probably amber."
+        },
+        {
+          "id": "s3",
+          "text": "Blocker: payment integration waits for production credentials from the client.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "The team expects to finish all remaining stories by Tuesday.",
+          "issue": "Invented forecast not in the notes."
+        },
+        {
+          "id": "s5",
+          "text": "Next demo: Thursday.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Ask: please send the payment credentials by Wednesday.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps for producing a weekly client status report with AI help.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps for producing a weekly client status report with AI help.",
+      "items": [
+        {
+          "id": "r15dcf",
+          "label": "Gather the facts: progress, risks, decisions needed"
+        },
+        {
+          "id": "r0997a",
+          "label": "Remove data the tool does not need, such as personal or secret details"
+        },
+        {
+          "id": "r281e2",
+          "label": "Ask the AI to draft the update from those facts only"
+        },
+        {
+          "id": "r7e4f5",
+          "label": "Check every claim and set the RAG status yourself"
+        },
+        {
+          "id": "re0c14",
+          "label": "Send it under your name"
+        }
+      ],
+      "correctOrder": [
+        "r15dcf",
+        "r0997a",
+        "r281e2",
+        "r7e4f5",
+        "re0c14"
+      ],
+      "explanation": "Facts in, minimal data, draft, human verification and judgement, then the PM owns it."
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "An AI draft of your status report sounds very positive, but you know the project is a week behind.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An AI draft of your status report sounds very positive, but you know the project is a week behind.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do?",
+          "options": [
+            "Rewrite the status to state the delay, its cause and the plan",
+            "Send it as is; the client likes good news",
+            "Ask the AI for a different tone and send whatever comes back",
+            "Delay the report until you catch up"
+          ],
+          "correctIndex": 0,
+          "explanation": "The PM owns the message; honest status protects trust."
+        },
+        {
+          "id": "d2",
+          "question": "How can you avoid this next time?",
+          "options": [
+            "Give the AI the actual RAG status and risks as input, and ask it not to add assessments",
+            "Stop writing status reports",
+            "Use a different AI tool",
+            "Let the AI decide the RAG status"
+          ],
+          "correctIndex": 0,
+          "explanation": "Better inputs and clear instructions reduce misleading drafts; judgement stays with you."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A PM's prompt to draft a status report. Mark the problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's prompt to draft a status report. Mark the problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Write a weekly status update for a non-technical client sponsor.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Use only the facts below; do not add forecasts or numbers that are not listed.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Facts: [list of progress, risks, decisions]",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Also include the database password so they can check the data.",
+          "issue": "Never put secrets in prompts or reports."
+        },
+        {
+          "id": "s5",
+          "text": "Make the status green regardless of the risks.",
+          "issue": "Asks the AI to mislead the client."
+        },
+        {
+          "id": "s6",
+          "text": "Keep it to 150 words with a clear ask at the end.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Review the AI draft in the context against the facts, then write the corrected status update you would send. Keep it short.",
+    "task": {
+      "kind": "write",
+      "prompt": "Review the AI draft in the context against the facts, then write the corrected status update you would send. Keep it short.",
+      "context": "Facts: Sprint 6 of 8. 21 of 26 stories done. Risk: App Store review may take longer than planned because of a new privacy-label requirement. Decision needed: client to approve the privacy-label wording by Wednesday. Demo Friday.\n\nAI draft: \"Great week! The project is green and will launch early. All stories are nearly done and App Store approval is guaranteed. No action needed from you.\"",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "accurate",
+          "label": "Accurate facts",
+          "description": "States progress (21 of 26 stories, sprint 6 of 8) and the demo correctly.",
+          "weight": 1
+        },
+        {
+          "id": "risk",
+          "label": "Risk stated honestly",
+          "description": "Includes the App Store review risk and removes the false guarantee and early-launch claim.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Clear ask",
+          "description": "Asks the client to approve the privacy-label wording by Wednesday.",
+          "weight": 1
+        },
+        {
+          "id": "tone",
+          "label": "Appropriate tone",
+          "description": "Plain, factual and suitable for a sponsor; no hype.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Status: amber\n\nProgress: Sprint 6 of 8. 21 of 26 stories are done. Demo on Friday.\n\nRisk: App Store review may take longer than planned because of a new privacy-label requirement. We are preparing the submission early to allow for this.\n\nDecision needed: please approve the privacy-label wording by Wednesday so we can submit on time."
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-t1-4",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "Before an AI drafts your status report, work out the progress figures yourself so you can check its numbers.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Before an AI drafts your status report, work out the progress figures yourself so you can check its numbers.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Stories planned this sprint",
+            "25"
+          ],
+          [
+            "Stories done",
+            "20"
+          ],
+          [
+            "Story points planned",
+            "50"
+          ],
+          [
+            "Story points done",
+            "38"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "stories",
+          "label": "Stories done as a share of planned",
+          "unit": "%",
+          "answer": 80,
+          "tolerance": 0.5
+        },
+        {
+          "id": "points",
+          "label": "Points done as a share of planned",
+          "unit": "%",
+          "answer": 76,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "20 / 25 = 80% of stories; 38 / 50 = 76% of points. If the AI draft says otherwise, correct it."
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Who is responsible for the content of an AI-drafted status report?",
+    "mcq": {
+      "options": [
+        "The PM who sends it",
+        "The AI tool",
+        "The client",
+        "The developers whose tickets it read"
+      ],
+      "correctIndex": 0,
+      "explanation": "AI drafts; the PM verifies and owns what is sent.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which instruction most reduces invented content in an AI status draft?",
+    "mcq": {
+      "options": [
+        "Be creative",
+        "Make it longer",
+        "Sound confident",
+        "Use only the facts provided and list anything uncertain as an open question"
+      ],
+      "correctIndex": 3,
+      "explanation": "Grounding the model in provided facts and allowing it to say what is unknown reduces fabrication.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-status-reports-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-status-reports",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Before pasting project data into an AI tool for a status report, what should you remove?",
+    "mcq": {
+      "options": [
+        "Personal data, credentials and anything the task does not need",
+        "Story names",
+        "Sprint numbers",
+        "The project name"
+      ],
+      "correctIndex": 0,
+      "explanation": "Minimise what you share; secrets never belong in prompts.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,1831 @@
+[
+  {
+    "id": "eng-sql-aggregation-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Table `products(id, name, category, price, stock)`. Return each `category` and how many products it has as `n`, by category. The query returns one row.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT category, COUNT(*) AS n\nFROM products\nORDER BY category;",
+      "referenceSolution": "SELECT category, COUNT(*) AS n\nFROM products\nGROUP BY category\nORDER BY category;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'Mug','home',8,1),(2,'Lamp','home',30,1),(3,'Pen','office',2,1);",
+          "expected": [
+            {
+              "category": "home",
+              "n": 2
+            },
+            {
+              "category": "office",
+              "n": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','y',1,1),(3,'C','z',1,1);",
+          "expected": [
+            {
+              "category": "x",
+              "n": 1
+            },
+            {
+              "category": "y",
+              "n": 1
+            },
+            {
+              "category": "z",
+              "n": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','x',1,1);",
+          "expected": [
+            {
+              "category": "x",
+              "n": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Table `sales(id, product, price, qty)`. Return the total `revenue` (sum of `price × qty` over all sales).",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT SUM(price) AS revenue\nFROM sales;",
+      "referenceSolution": "SELECT SUM(price * qty) AS revenue\nFROM sales;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE sales(id INTEGER, product TEXT, price REAL, qty INTEGER); INSERT INTO sales VALUES (1,'Pen',2,5),(2,'Mug',8,1);",
+          "expected": [
+            {
+              "revenue": 18
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE sales(id INTEGER, product TEXT, price REAL, qty INTEGER); INSERT INTO sales VALUES (1,'Pen',2,0);",
+          "expected": [
+            {
+              "revenue": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE sales(id INTEGER, product TEXT, price REAL, qty INTEGER); INSERT INTO sales VALUES (1,'Lamp',30,2),(2,'Lamp',30,1),(3,'Cap',5,4);",
+          "expected": [
+            {
+              "revenue": 110
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE sales(id INTEGER, product TEXT, price REAL, qty INTEGER); INSERT INTO sales VALUES (1,'Desk',100,3);",
+          "expected": [
+            {
+              "revenue": 300
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return each `category` and its average price as `avg_price`, **rounded to 2 decimals**, by category.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT category, ROUND(AVG(price)) AS avg_price\nFROM products\nGROUP BY category\nORDER BY category;",
+      "referenceSolution": "SELECT category, ROUND(AVG(price), 2) AS avg_price\nFROM products\nGROUP BY category\nORDER BY category;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','home',10,1),(2,'B','home',15,1),(3,'C','office',3.333,1);",
+          "expected": [
+            {
+              "category": "home",
+              "avg_price": 12.5
+            },
+            {
+              "category": "office",
+              "avg_price": 3.33
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','x',2,1),(3,'C','x',2,1);",
+          "expected": [
+            {
+              "category": "x",
+              "avg_price": 1.67
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','y',4,1);",
+          "expected": [
+            {
+              "category": "y",
+              "avg_price": 4
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Table `users(id, name, phone)`. Return `with_phone`: how many users **have a phone number** (`phone` is `NULL` when missing).",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT COUNT(*) AS with_phone\nFROM users;",
+      "referenceSolution": "SELECT COUNT(phone) AS with_phone\nFROM users;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, phone TEXT); INSERT INTO users VALUES (1,'Ann','555'),(2,'Bo',NULL),(3,'Cy','777');",
+          "expected": [
+            {
+              "with_phone": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, phone TEXT);",
+          "expected": [
+            {
+              "with_phone": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, phone TEXT); INSERT INTO users VALUES (1,'Di',NULL);",
+          "expected": [
+            {
+              "with_phone": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, phone TEXT); INSERT INTO users VALUES (1,'Ed','1'),(2,'Fi',NULL),(3,'Gu',NULL);",
+          "expected": [
+            {
+              "with_phone": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Table `orders(id, customer_id, total, status, created_at)`. Return `customers`: how many **different** customers have placed an order.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT COUNT(customer_id) AS customers\nFROM orders;",
+      "referenceSolution": "SELECT COUNT(DISTINCT customer_id) AS customers\nFROM orders;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'paid','d'),(2,1,5,'paid','d'),(3,2,5,'paid','d');",
+          "expected": [
+            {
+              "customers": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": [
+            {
+              "customers": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,7,5,'paid','d'),(2,7,5,'paid','d'),(3,7,5,'paid','d');",
+          "expected": [
+            {
+              "customers": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'paid','d'),(2,2,5,'paid','d'),(3,3,5,'paid','d'),(4,3,5,'paid','d');",
+          "expected": [
+            {
+              "customers": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return each `category` with **more than 2** products, and its count as `n`, by category. The query errors — fix it.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT category, COUNT(*) AS n\nFROM products\nWHERE COUNT(*) > 2\nGROUP BY category\nORDER BY category;",
+      "referenceSolution": "SELECT category, COUNT(*) AS n\nFROM products\nGROUP BY category\nHAVING COUNT(*) > 2\nORDER BY category;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','home',1,1),(2,'B','home',1,1),(3,'C','home',1,1),(4,'D','office',1,1);",
+          "expected": [
+            {
+              "category": "home",
+              "n": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','x',1,1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','x',1,1),(3,'C','x',1,1),(4,'D','y',1,1),(5,'E','y',1,1),(6,'F','y',1,1),(7,'G','y',1,1);",
+          "expected": [
+            {
+              "category": "x",
+              "n": 3
+            },
+            {
+              "category": "y",
+              "n": 4
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What are `a` and `b`?",
+    "mcq": {
+      "options": [
+        "3 and 1",
+        "3 and 3",
+        "1 and 1",
+        "3 and 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "`COUNT(*)` counts rows; `COUNT(column)` counts only non-`NULL` values of that column.",
+      "snippet": "CREATE TABLE users(name TEXT, phone TEXT);\nINSERT INTO users VALUES ('Ann','555'), ('Bo',NULL), ('Cy',NULL);\nSELECT COUNT(*) AS a, COUNT(phone) AS b FROM users;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "You want only groups whose `SUM(total)` is over 100. Where does that condition go?",
+    "mcq": {
+      "options": [
+        "In `HAVING`, after `GROUP BY`",
+        "In `WHERE`, before `GROUP BY`",
+        "In `ORDER BY`",
+        "In the `SELECT` list"
+      ],
+      "correctIndex": 0,
+      "explanation": "`WHERE` filters rows before grouping and cannot use aggregates. `HAVING` filters the groups after the aggregates are computed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is `avg_rating`?",
+    "mcq": {
+      "options": [
+        "3.0",
+        "2.0",
+        "NULL",
+        "6.0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Aggregates skip `NULL`s, so the average is (4 + 2) / 2 = 3.0, not (4 + 2) / 3.",
+      "snippet": "CREATE TABLE reviews(rating INTEGER);\nINSERT INTO reviews VALUES (4), (NULL), (2);\nSELECT AVG(rating) AS avg_rating FROM reviews;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return the **top 3** customers by total spent: `customer_id` and `spent`, highest first.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT customer_id, SUM(total) AS spent\nFROM orders\nGROUP BY customer_id\nORDER BY customer_id\nLIMIT 3;",
+      "referenceSolution": "SELECT customer_id, SUM(total) AS spent\nFROM orders\nGROUP BY customer_id\nORDER BY spent DESC\nLIMIT 3;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'paid','d'),(2,2,50,'paid','d'),(3,3,20,'paid','d'),(4,4,30,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 2,
+              "spent": 50
+            },
+            {
+              "customer_id": 4,
+              "spent": 30
+            },
+            {
+              "customer_id": 3,
+              "spent": 20
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,9,5,'paid','d'),(2,9,6,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 9,
+              "spent": 11
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,1,'paid','d'),(2,2,2,'paid','d'),(3,3,3,'paid','d'),(4,4,4,'paid','d'),(5,1,10,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 1,
+              "spent": 11
+            },
+            {
+              "customer_id": 4,
+              "spent": 4
+            },
+            {
+              "customer_id": 3,
+              "spent": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Per `category`, count the products **in stock** (`stock > 0`) as `in_stock`, and keep only categories where that count is at least 2. Order by category.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT category, COUNT(*) AS in_stock\nFROM products\nGROUP BY category\nHAVING stock > 0 AND COUNT(*) >= 2\nORDER BY category;",
+      "referenceSolution": "SELECT category, COUNT(*) AS in_stock\nFROM products\nWHERE stock > 0\nGROUP BY category\nHAVING COUNT(*) >= 2\nORDER BY category;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','home',1,3),(2,'B','home',1,0),(3,'C','home',1,5),(4,'D','office',1,2);",
+          "expected": [
+            {
+              "category": "home",
+              "in_stock": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,0),(2,'B','x',1,0);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','x',1,1),(3,'C','x',1,0);",
+          "expected": [
+            {
+              "category": "x",
+              "in_stock": 2
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return revenue per **month** (`created_at` is `'YYYY-MM-DD'`): `month` as `'YYYY-MM'` and `revenue` (sum of `total`), by month.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT created_at AS month, SUM(total) AS revenue\nFROM orders\nGROUP BY created_at\nORDER BY month;",
+      "referenceSolution": "SELECT strftime('%Y-%m', created_at) AS month, SUM(total) AS revenue\nFROM orders\nGROUP BY month\nORDER BY month;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,10,'paid','2024-01-05'),(2,1,5,'paid','2024-01-20'),(3,2,7,'paid','2024-02-01');",
+          "expected": [
+            {
+              "month": "2024-01",
+              "revenue": 15
+            },
+            {
+              "month": "2024-02",
+              "revenue": 7
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,3,'paid','2023-12-31'),(2,1,4,'paid','2024-01-01');",
+          "expected": [
+            {
+              "month": "2023-12",
+              "revenue": 3
+            },
+            {
+              "month": "2024-01",
+              "revenue": 4
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,1,'paid','2024-05-01'),(2,1,2,'paid','2024-05-02'),(3,1,3,'paid','2024-05-03');",
+          "expected": [
+            {
+              "month": "2024-05",
+              "revenue": 6
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Table `reviews(id, product, rating)`; `rating` is `NULL` when the user skipped it. Return `product` and `avg_rating`, **counting a missing rating as 0**, by product.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT product, AVG(rating) AS avg_rating\nFROM reviews\nGROUP BY product\nORDER BY product;",
+      "referenceSolution": "SELECT product, AVG(COALESCE(rating, 0)) AS avg_rating\nFROM reviews\nGROUP BY product\nORDER BY product;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE reviews(id INTEGER, product TEXT, rating INTEGER); INSERT INTO reviews VALUES (1,'Mug',4),(2,'Mug',NULL),(3,'Pen',5);",
+          "expected": [
+            {
+              "product": "Mug",
+              "avg_rating": 2
+            },
+            {
+              "product": "Pen",
+              "avg_rating": 5
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE reviews(id INTEGER, product TEXT, rating INTEGER); INSERT INTO reviews VALUES (1,'Cap',NULL);",
+          "expected": [
+            {
+              "product": "Cap",
+              "avg_rating": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE reviews(id INTEGER, product TEXT, rating INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE reviews(id INTEGER, product TEXT, rating INTEGER); INSERT INTO reviews VALUES (1,'Hat',3),(2,'Hat',3),(3,'Hat',NULL),(4,'Hat',NULL);",
+          "expected": [
+            {
+              "product": "Hat",
+              "avg_rating": 1.5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Count orders per customer **and** status: `customer_id`, `status`, `n`, ordered by customer_id, status.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT customer_id, status, COUNT(*) AS n\nFROM orders\nGROUP BY customer_id\nORDER BY customer_id, status;",
+      "referenceSolution": "SELECT customer_id, status, COUNT(*) AS n\nFROM orders\nGROUP BY customer_id, status\nORDER BY customer_id, status;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'paid','d'),(2,1,5,'refunded','d'),(3,1,5,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 1,
+              "status": "paid",
+              "n": 2
+            },
+            {
+              "customer_id": 1,
+              "status": "refunded",
+              "n": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,2,5,'paid','d'),(2,1,5,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 1,
+              "status": "paid",
+              "n": 1
+            },
+            {
+              "customer_id": 2,
+              "status": "paid",
+              "n": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,3,5,'new','d'),(2,3,5,'paid','d'),(3,3,5,'new','d'),(4,3,5,'void','d');",
+          "expected": [
+            {
+              "customer_id": 3,
+              "status": "new",
+              "n": 2
+            },
+            {
+              "customer_id": 3,
+              "status": "paid",
+              "n": 1
+            },
+            {
+              "customer_id": 3,
+              "status": "void",
+              "n": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return each `category` and its share of all products as `pct` (0–100, rounded to 1 decimal), by category. Every share comes out 0.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT category,\n  ROUND(COUNT(*) / (SELECT COUNT(*) FROM products) * 100, 1) AS pct\nFROM products\nGROUP BY category\nORDER BY category;",
+      "referenceSolution": "SELECT category,\n  ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM products), 1) AS pct\nFROM products\nGROUP BY category\nORDER BY category;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','home',1,1),(2,'B','home',1,1),(3,'C','office',1,1),(4,'D','toys',1,1);",
+          "expected": [
+            {
+              "category": "home",
+              "pct": 50
+            },
+            {
+              "category": "office",
+              "pct": 25
+            },
+            {
+              "category": "toys",
+              "pct": 25
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','y',1,1),(3,'C','y',1,1);",
+          "expected": [
+            {
+              "category": "x",
+              "pct": 33.3
+            },
+            {
+              "category": "y",
+              "pct": 66.7
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'A','x',1,1),(2,'B','x',1,1),(3,'C','y',1,1),(4,'D','y',1,1),(5,'E','y',1,1),(6,'F','y',1,1),(7,'G','y',1,1),(8,'H','y',1,1);",
+          "expected": [
+            {
+              "category": "x",
+              "pct": 25
+            },
+            {
+              "category": "y",
+              "pct": 75
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "3",
+        "2",
+        "4",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "There is one row per distinct `(customer_id, status)` pair: (1, paid), (1, void), (2, paid).",
+      "snippet": "CREATE TABLE orders(customer_id INTEGER, status TEXT);\nINSERT INTO orders VALUES (1,'paid'), (1,'paid'), (1,'void'), (2,'paid');\nSELECT customer_id, status, COUNT(*) FROM orders GROUP BY customer_id, status;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The table is empty. What does `SUM(total)` return?",
+    "mcq": {
+      "options": [
+        "`s` is NULL and `c` is 0",
+        "`s` is 0 and `c` is 0",
+        "No row at all",
+        "`s` is NULL and `c` is NULL"
+      ],
+      "correctIndex": 0,
+      "explanation": "An aggregate without `GROUP BY` always returns one row. `SUM` of no rows is `NULL` (wrap it in `COALESCE(…, 0)`), while `COUNT` returns 0.",
+      "snippet": "CREATE TABLE orders(total REAL);\nSELECT SUM(total) AS s, COUNT(*) AS c FROM orders;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What are `a` and `b`?",
+    "mcq": {
+      "options": [
+        "6 and 3",
+        "3 and 3",
+        "6 and 6",
+        "3 and 6"
+      ],
+      "correctIndex": 0,
+      "explanation": "`COUNT(user_id)` counts every non-`NULL` value (6 visits); `COUNT(DISTINCT user_id)` counts different users (3).",
+      "snippet": "CREATE TABLE visits(user_id INTEGER);\nINSERT INTO visits VALUES (1), (1), (2), (3), (3), (3);\nSELECT COUNT(user_id) AS a, COUNT(DISTINCT user_id) AS b FROM visits;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Per customer, return `customer_id`, `paid` (number of orders with status `'paid'`) and `refunded` (number with `'refunded'`), by customer_id. Both counts come out as the total number of orders.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT customer_id,\n  COUNT(status = 'paid') AS paid,\n  COUNT(status = 'refunded') AS refunded\nFROM orders\nGROUP BY customer_id\nORDER BY customer_id;",
+      "referenceSolution": "SELECT customer_id,\n  SUM(status = 'paid') AS paid,\n  SUM(status = 'refunded') AS refunded\nFROM orders\nGROUP BY customer_id\nORDER BY customer_id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'paid','d'),(2,1,5,'refunded','d'),(3,1,5,'paid','d'),(4,2,5,'new','d');",
+          "expected": [
+            {
+              "customer_id": 1,
+              "paid": 2,
+              "refunded": 1
+            },
+            {
+              "customer_id": 2,
+              "paid": 0,
+              "refunded": 0
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,5,5,'refunded','d');",
+          "expected": [
+            {
+              "customer_id": 5,
+              "paid": 0,
+              "refunded": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,3,5,'paid','d'),(2,3,5,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 3,
+              "paid": 2,
+              "refunded": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Return the **most expensive product in each category**: `category` and `name`, by category. On a price tie, pick the name that sorts first. Only one row comes back.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT category, name\nFROM (\n  SELECT category, name,\n    ROW_NUMBER() OVER (ORDER BY price DESC, name) AS rn\n  FROM products\n)\nWHERE rn = 1\nORDER BY category;",
+      "referenceSolution": "SELECT category, name\nFROM (\n  SELECT category, name,\n    ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC, name) AS rn\n  FROM products\n)\nWHERE rn = 1\nORDER BY category;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'Mug','home',8,1),(2,'Lamp','home',35,1),(3,'Pen','office',2,1);",
+          "expected": [
+            {
+              "category": "home",
+              "name": "Lamp"
+            },
+            {
+              "category": "office",
+              "name": "Pen"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'B','x',5,1),(2,'A','x',5,1),(3,'C','y',9,1);",
+          "expected": [
+            {
+              "category": "x",
+              "name": "A"
+            },
+            {
+              "category": "y",
+              "name": "C"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT, price REAL, stock INTEGER); INSERT INTO products VALUES (1,'Desk','home',120,1),(2,'Cap','toys',4,1),(3,'Kite','toys',9,1);",
+          "expected": [
+            {
+              "category": "home",
+              "name": "Desk"
+            },
+            {
+              "category": "toys",
+              "name": "Kite"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Table `daily(day, amount)`. Return `day`, `amount` and a **running total** `running` ordered by day. Every row shows the grand total.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT day, amount,\n  SUM(amount) OVER () AS running\nFROM daily\nORDER BY day;",
+      "referenceSolution": "SELECT day, amount,\n  SUM(amount) OVER (ORDER BY day) AS running\nFROM daily\nORDER BY day;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('2024-01-01',10),('2024-01-02',5),('2024-01-03',20);",
+          "expected": [
+            {
+              "day": "2024-01-01",
+              "amount": 10,
+              "running": 10
+            },
+            {
+              "day": "2024-01-02",
+              "amount": 5,
+              "running": 15
+            },
+            {
+              "day": "2024-01-03",
+              "amount": 20,
+              "running": 35
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('2024-02-02',3),('2024-02-01',1);",
+          "expected": [
+            {
+              "day": "2024-02-01",
+              "amount": 1,
+              "running": 1
+            },
+            {
+              "day": "2024-02-02",
+              "amount": 3,
+              "running": 4
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('2024-03-01',7);",
+          "expected": [
+            {
+              "day": "2024-03-01",
+              "amount": 7,
+              "running": 7
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Table `scores(player, score)`. Return `player`, `score` and `pos`: tied scores share a position and the next position is skipped (1, 2, 2, 4). Order by score desc, then player.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT player, score,\n  ROW_NUMBER() OVER (ORDER BY score DESC) AS pos\nFROM scores\nORDER BY score DESC, player;",
+      "referenceSolution": "SELECT player, score,\n  RANK() OVER (ORDER BY score DESC) AS pos\nFROM scores\nORDER BY score DESC, player;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE scores(player TEXT, score INTEGER); INSERT INTO scores VALUES ('ann',90),('bo',80),('cy',80),('di',70);",
+          "expected": [
+            {
+              "player": "ann",
+              "score": 90,
+              "pos": 1
+            },
+            {
+              "player": "bo",
+              "score": 80,
+              "pos": 2
+            },
+            {
+              "player": "cy",
+              "score": 80,
+              "pos": 2
+            },
+            {
+              "player": "di",
+              "score": 70,
+              "pos": 4
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE scores(player TEXT, score INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE scores(player TEXT, score INTEGER); INSERT INTO scores VALUES ('x',5),('y',5);",
+          "expected": [
+            {
+              "player": "x",
+              "score": 5,
+              "pos": 1
+            },
+            {
+              "player": "y",
+              "score": 5,
+              "pos": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE scores(player TEXT, score INTEGER); INSERT INTO scores VALUES ('a',3),('b',2),('c',1);",
+          "expected": [
+            {
+              "player": "a",
+              "score": 3,
+              "pos": 1
+            },
+            {
+              "player": "b",
+              "score": 2,
+              "pos": 2
+            },
+            {
+              "player": "c",
+              "score": 1,
+              "pos": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Return `customer_id` of customers who have **at least 2 orders and** an average order total above 50, by customer_id.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT customer_id\nFROM orders\nGROUP BY customer_id\nHAVING AVG(total) > 50 OR COUNT(*) >= 2\nORDER BY customer_id;",
+      "referenceSolution": "SELECT customer_id\nFROM orders\nGROUP BY customer_id\nHAVING AVG(total) > 50 AND COUNT(*) >= 2\nORDER BY customer_id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,100,'paid','d'),(2,1,60,'paid','d'),(3,2,500,'paid','d'),(4,3,10,'paid','d'),(5,3,10,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,4,51,'paid','d'),(2,4,51,'paid','d');",
+          "expected": [
+            {
+              "customer_id": 4
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,5,50,'paid','d'),(2,5,50,'paid','d'),(3,6,900,'paid','d');",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Return `day`, `amount` and `change` versus the **previous** day (`NULL` for the first day), ordered by day. The changes are against the wrong day.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT day, amount,\n  amount - LAG(amount) OVER (ORDER BY day DESC) AS change\nFROM daily\nORDER BY day;",
+      "referenceSolution": "SELECT day, amount,\n  amount - LAG(amount) OVER (ORDER BY day) AS change\nFROM daily\nORDER BY day;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('2024-01-01',10),('2024-01-02',15),('2024-01-03',12);",
+          "expected": [
+            {
+              "day": "2024-01-01",
+              "amount": 10,
+              "change": null
+            },
+            {
+              "day": "2024-01-02",
+              "amount": 15,
+              "change": 5
+            },
+            {
+              "day": "2024-01-03",
+              "amount": 12,
+              "change": -3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('2024-05-01',4);",
+          "expected": [
+            {
+              "day": "2024-05-01",
+              "amount": 4,
+              "change": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('2024-02-02',1),('2024-02-01',9);",
+          "expected": [
+            {
+              "day": "2024-02-01",
+              "amount": 9,
+              "change": null
+            },
+            {
+              "day": "2024-02-02",
+              "amount": 1,
+              "change": -8
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What `pos` values does each function produce, in score order?",
+    "mcq": {
+      "options": [
+        "rn 1,2,3,4; rk 1,2,2,4; dr 1,2,2,3",
+        "rn 1,2,2,4; rk 1,2,3,4; dr 1,2,2,3",
+        "rn 1,2,3,4; rk 1,2,2,3; dr 1,2,2,4",
+        "All three give 1,2,2,3"
+      ],
+      "correctIndex": 0,
+      "explanation": "`ROW_NUMBER` never ties; `RANK` gives ties the same number and skips the next; `DENSE_RANK` gives ties the same number without gaps.",
+      "snippet": "CREATE TABLE s(p TEXT, score INTEGER);\nINSERT INTO s VALUES ('a',90), ('b',80), ('c',80), ('d',70);\nSELECT p,\n  ROW_NUMBER() OVER (ORDER BY score DESC, p) AS rn,\n  RANK() OVER (ORDER BY score DESC) AS rk,\n  DENSE_RANK() OVER (ORDER BY score DESC) AS dr\nFROM s ORDER BY score DESC, p;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How many rows does each query return?",
+    "mcq": {
+      "options": [
+        "group 2, window 3",
+        "group 2, window 2",
+        "group 3, window 3",
+        "group 3, window 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "`GROUP BY` collapses each group to one row. A window function computes the same per-group sum but keeps every input row.",
+      "snippet": "CREATE TABLE o(customer_id INTEGER, total REAL);\nINSERT INTO o VALUES (1,10), (1,20), (2,5);\nSELECT 'group' AS q, COUNT(*) AS n FROM (SELECT customer_id, SUM(total) FROM o GROUP BY customer_id);\nSELECT 'window' AS q, COUNT(*) AS n FROM (SELECT customer_id, SUM(total) OVER (PARTITION BY customer_id) FROM o);",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is `big`?",
+    "mcq": {
+      "options": [
+        "3",
+        "2",
+        "1",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "`total > 5` evaluates to 0 or 1 — never `NULL` — and `COUNT` counts every non-`NULL` value, so it returns 3. Use `SUM(total > 5)` or `COUNT(CASE WHEN total > 5 THEN 1 END)` for conditional counts.",
+      "snippet": "CREATE TABLE o(total REAL);\nINSERT INTO o VALUES (3), (8), (12);\nSELECT COUNT(total > 5) AS big FROM o;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Return `day`, `amount` and `avg3`: the average of that day and the **two previous days** (fewer at the start), ordered by day.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT day, amount,\n  AVG(amount) OVER (ORDER BY day) AS avg3\nFROM daily\nORDER BY day;",
+      "referenceSolution": "SELECT day, amount,\n  AVG(amount) OVER (ORDER BY day ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS avg3\nFROM daily\nORDER BY day;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('d1',3),('d2',6),('d3',9),('d4',0);",
+          "expected": [
+            {
+              "day": "d1",
+              "amount": 3,
+              "avg3": 3
+            },
+            {
+              "day": "d2",
+              "amount": 6,
+              "avg3": 4.5
+            },
+            {
+              "day": "d3",
+              "amount": 9,
+              "avg3": 6
+            },
+            {
+              "day": "d4",
+              "amount": 0,
+              "avg3": 5
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('d1',10),('d2',20);",
+          "expected": [
+            {
+              "day": "d1",
+              "amount": 10,
+              "avg3": 10
+            },
+            {
+              "day": "d2",
+              "amount": 20,
+              "avg3": 15
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE daily(day TEXT, amount REAL); INSERT INTO daily VALUES ('d1',1),('d2',1),('d3',1),('d4',1),('d5',7);",
+          "expected": [
+            {
+              "day": "d1",
+              "amount": 1,
+              "avg3": 1
+            },
+            {
+              "day": "d2",
+              "amount": 1,
+              "avg3": 1
+            },
+            {
+              "day": "d3",
+              "amount": 1,
+              "avg3": 1
+            },
+            {
+              "day": "d4",
+              "amount": 1,
+              "avg3": 1
+            },
+            {
+              "day": "d5",
+              "amount": 7,
+              "avg3": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Return each order's `id` and `pct`: its share of **that customer's** total spend (0–100, rounded to 1 decimal), by id.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT id,\n  ROUND(total * 100.0 / SUM(total) OVER (), 1) AS pct\nFROM orders\nORDER BY id;",
+      "referenceSolution": "SELECT id,\n  ROUND(total * 100.0 / SUM(total) OVER (PARTITION BY customer_id), 1) AS pct\nFROM orders\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,30,'paid','d'),(2,1,10,'paid','d'),(3,2,50,'paid','d');",
+          "expected": [
+            {
+              "id": 1,
+              "pct": 75
+            },
+            {
+              "id": 2,
+              "pct": 25
+            },
+            {
+              "id": 3,
+              "pct": 100
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,7,1,'paid','d'),(2,7,2,'paid','d');",
+          "expected": [
+            {
+              "id": 1,
+              "pct": 33.3
+            },
+            {
+              "id": 2,
+              "pct": 66.7
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'paid','d'),(2,2,5,'paid','d');",
+          "expected": [
+            {
+              "id": 1,
+              "pct": 100
+            },
+            {
+              "id": 2,
+              "pct": 100
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Tables `orders(id, customer_id, total)` and `order_lines(order_id, sku)`. Per customer return `customer_id`, `spent` (sum of order totals) and `lines` (number of order lines), by customer_id. `spent` comes out too high.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT o.customer_id, SUM(o.total) AS spent, COUNT(l.sku) AS lines\nFROM orders o\nLEFT JOIN order_lines l ON l.order_id = o.id\nGROUP BY o.customer_id\nORDER BY o.customer_id;",
+      "referenceSolution": "SELECT o.customer_id, SUM(o.total) AS spent, COALESCE(SUM(l.n), 0) AS lines\nFROM orders o\nLEFT JOIN (SELECT order_id, COUNT(*) AS n FROM order_lines GROUP BY order_id) l\n  ON l.order_id = o.id\nGROUP BY o.customer_id\nORDER BY o.customer_id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL); INSERT INTO orders VALUES (1,1,100),(2,2,40); CREATE TABLE order_lines(order_id INTEGER, sku TEXT); INSERT INTO order_lines VALUES (1,'a'),(1,'b'),(1,'c'),(2,'x');",
+          "expected": [
+            {
+              "customer_id": 1,
+              "spent": 100,
+              "lines": 3
+            },
+            {
+              "customer_id": 2,
+              "spent": 40,
+              "lines": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL); INSERT INTO orders VALUES (1,5,10); CREATE TABLE order_lines(order_id INTEGER, sku TEXT);",
+          "expected": [
+            {
+              "customer_id": 5,
+              "spent": 10,
+              "lines": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL); CREATE TABLE order_lines(order_id INTEGER, sku TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL); INSERT INTO orders VALUES (1,3,20),(2,3,30); CREATE TABLE order_lines(order_id INTEGER, sku TEXT); INSERT INTO order_lines VALUES (1,'a'),(1,'b'),(2,'c');",
+          "expected": [
+            {
+              "customer_id": 3,
+              "spent": 50,
+              "lines": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Table `employees(id, name, dept, salary)`. Return everyone earning one of the **top 2 distinct salaries** in their department: `dept`, `name`, `salary`, ordered by dept, salary desc, name. People tied on salary are being dropped.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT dept, name, salary\nFROM (\n  SELECT dept, name, salary,\n    ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC) AS r\n  FROM employees\n)\nWHERE r <= 2\nORDER BY dept, salary DESC, name;",
+      "referenceSolution": "SELECT dept, name, salary\nFROM (\n  SELECT dept, name, salary,\n    DENSE_RANK() OVER (PARTITION BY dept ORDER BY salary DESC) AS r\n  FROM employees\n)\nWHERE r <= 2\nORDER BY dept, salary DESC, name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, dept TEXT, salary INTEGER); INSERT INTO employees VALUES (1,'Ann','eng',100),(2,'Bo','eng',100),(3,'Cy','eng',90),(4,'Di','eng',80);",
+          "expected": [
+            {
+              "dept": "eng",
+              "name": "Ann",
+              "salary": 100
+            },
+            {
+              "dept": "eng",
+              "name": "Bo",
+              "salary": 100
+            },
+            {
+              "dept": "eng",
+              "name": "Cy",
+              "salary": 90
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, dept TEXT, salary INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, dept TEXT, salary INTEGER); INSERT INTO employees VALUES (1,'Ed','ops',50);",
+          "expected": [
+            {
+              "dept": "ops",
+              "name": "Ed",
+              "salary": 50
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, dept TEXT, salary INTEGER); INSERT INTO employees VALUES (1,'A','x',10),(2,'B','x',20),(3,'C','x',20),(4,'D','y',5),(5,'E','y',5);",
+          "expected": [
+            {
+              "dept": "x",
+              "name": "B",
+              "salary": 20
+            },
+            {
+              "dept": "x",
+              "name": "C",
+              "salary": 20
+            },
+            {
+              "dept": "x",
+              "name": "A",
+              "salary": 10
+            },
+            {
+              "dept": "y",
+              "name": "D",
+              "salary": 5
+            },
+            {
+              "dept": "y",
+              "name": "E",
+              "salary": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Table `signups(id, month)` with months like `'2024-01'`. Return `month`, `n` (sign-ups that month) and `cumulative` (sign-ups up to and including that month), by month.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT month, COUNT(*) AS n,\n  SUM(COUNT(*)) OVER () AS cumulative\nFROM signups\nGROUP BY month\nORDER BY month;",
+      "referenceSolution": "SELECT month, COUNT(*) AS n,\n  SUM(COUNT(*)) OVER (ORDER BY month) AS cumulative\nFROM signups\nGROUP BY month\nORDER BY month;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, month TEXT); INSERT INTO signups VALUES (1,'2024-01'),(2,'2024-01'),(3,'2024-02'),(4,'2024-03');",
+          "expected": [
+            {
+              "month": "2024-01",
+              "n": 2,
+              "cumulative": 2
+            },
+            {
+              "month": "2024-02",
+              "n": 1,
+              "cumulative": 3
+            },
+            {
+              "month": "2024-03",
+              "n": 1,
+              "cumulative": 4
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, month TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, month TEXT); INSERT INTO signups VALUES (1,'2024-06');",
+          "expected": [
+            {
+              "month": "2024-06",
+              "n": 1,
+              "cumulative": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, month TEXT); INSERT INTO signups VALUES (1,'2024-02'),(2,'2024-01'),(3,'2024-02');",
+          "expected": [
+            {
+              "month": "2024-01",
+              "n": 1,
+              "cumulative": 1
+            },
+            {
+              "month": "2024-02",
+              "n": 2,
+              "cumulative": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Return `avg_spend`: the average **total spend per customer** (sum each customer's orders, then average those sums), rounded to 2 decimals.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT ROUND(AVG(total), 2) AS avg_spend\nFROM orders;",
+      "referenceSolution": "SELECT ROUND(AVG(spent), 2) AS avg_spend\nFROM (SELECT customer_id, SUM(total) AS spent FROM orders GROUP BY customer_id);",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,10,'paid','d'),(2,1,20,'paid','d'),(3,2,30,'paid','d');",
+          "expected": [
+            {
+              "avg_spend": 30
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT);",
+          "expected": [
+            {
+              "avg_spend": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'paid','d'),(2,2,5,'paid','d');",
+          "expected": [
+            {
+              "avg_spend": 5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, status TEXT, created_at TEXT); INSERT INTO orders VALUES (1,1,1,'paid','d'),(2,1,1,'paid','d'),(3,1,1,'paid','d'),(4,2,10,'paid','d');",
+          "expected": [
+            {
+              "avg_spend": 6.5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "What `running` values does this return? Note the two rows on `d2`.",
+    "mcq": {
+      "options": [
+        "1, 6, 6, 10",
+        "1, 3, 6, 10",
+        "1, 5, 5, 10",
+        "10, 10, 10, 10"
+      ],
+      "correctIndex": 0,
+      "explanation": "With `ORDER BY` and no frame, the default frame is `RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW`, which includes all **peers** — rows with the same `day`. Both `d2` rows see 1 + 2 + 3 = 6. Use `ROWS BETWEEN …` (or a unique ordering) for a strict row-by-row running total.",
+      "snippet": "CREATE TABLE t(day TEXT, v INTEGER);\nINSERT INTO t VALUES ('d1',1), ('d2',2), ('d2',3), ('d3',4);\nSELECT day, v, SUM(v) OVER (ORDER BY day) AS running FROM t ORDER BY day, v;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Customer 1 has orders of 10 and 20; customer 2 has one order of 90. What are `a` and `b`?",
+    "mcq": {
+      "options": [
+        "40.0 and 60.0",
+        "60.0 and 40.0",
+        "40.0 and 40.0",
+        "60.0 and 60.0"
+      ],
+      "correctIndex": 0,
+      "explanation": "`a` is the average **order** (120 / 3). `b` averages per-customer totals (30 and 90 → 60). Decide which one the report means before writing the aggregate.",
+      "snippet": "CREATE TABLE o(customer_id INTEGER, total REAL);\nINSERT INTO o VALUES (1,10), (1,20), (2,90);\nSELECT\n  (SELECT AVG(total) FROM o) AS a,\n  (SELECT AVG(s) FROM (SELECT SUM(total) AS s FROM o GROUP BY customer_id)) AS b;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-aggregation-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-aggregation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why is `spent` wrong here?",
+    "mcq": {
+      "options": [
+        "The join repeats the order once per line, so its total is summed twice (200)",
+        "`SUM` cannot be combined with `COUNT` in one query",
+        "The join should be a CROSS JOIN",
+        "`COUNT(l.sku)` changes the value of `SUM`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Joining one order to two lines yields two rows that both carry `total = 100`. Aggregate the many side first (a subquery per order) or use separate subqueries before joining.",
+      "snippet": "CREATE TABLE orders(id INTEGER, total REAL);\nCREATE TABLE lines(order_id INTEGER, sku TEXT);\nINSERT INTO orders VALUES (1, 100);\nINSERT INTO lines VALUES (1,'a'), (1,'b');\nSELECT SUM(o.total) AS spent, COUNT(l.sku) AS n FROM orders o JOIN lines l ON l.order_id = o.id;",
+      "snippetLanguage": "sql"
+    }
+  }
+]

@@ -1,0 +1,381 @@
+[
+  {
+    "id": "bd-lead-upwork-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these Upwork job posts for a web and mobile agency, best lead first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these Upwork job posts for a web and mobile agency, best lead first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Payment not verified, no hires: \"need an app like Uber, quick quote please\""
+        },
+        {
+          "id": "r4",
+          "label": "Payment not verified, no hires, 50+ proposals already: fix one CSS bug for $10"
+        },
+        {
+          "id": "r1",
+          "label": "Payment verified client, 12 past hires, 4.9 rating: build a booking app (iOS + Android + admin panel), budget $25k–$40k"
+        },
+        {
+          "id": "r2",
+          "label": "Payment verified, 3 past hires: add a Stripe checkout to an existing React web app, fixed $3k"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Verified payment, hiring history and a scoped, sizeable brief make the best lead. A small, clear job from a verified client beats vague or unverified posts; a crowded $10 bug fix is the weakest use of a bid."
+    }
+  },
+  {
+    "id": "bd-lead-upwork-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A teammate summarised an Upwork job post. Mark the details that are red flags for a lead.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A teammate summarised an Upwork job post. Mark the details that are red flags for a lead.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client: payment method verified, 8 hires, $60k spent.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Brief: \"Build a full marketplace like Amazon, must be done in 2 weeks.\"",
+          "issue": "An unrealistic scope-to-timeline ratio signals a client who will be hard to satisfy."
+        },
+        {
+          "id": "p3",
+          "text": "Budget: fixed price $500 for the whole platform.",
+          "issue": "The budget is far below any realistic cost for the scope."
+        },
+        {
+          "id": "p4",
+          "text": "Client asks for a short summary of similar work.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Client wants all communication moved to WhatsApp before any contract.",
+          "issue": "Moving off-platform before a contract removes payment protection and breaks marketplace terms."
+        },
+        {
+          "id": "p6",
+          "text": "Client timezone overlaps 4 hours with the team.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-lead-upwork-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Last month the agency sent proposals on Upwork. Work out the reply rate and the win rate (both as a percentage of proposals sent).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Last month the agency sent proposals on Upwork. Work out the reply rate and the win rate (both as a percentage of proposals sent).",
+      "table": {
+        "columns": [
+          "Metric",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Proposals sent",
+            "80"
+          ],
+          [
+            "Client replies",
+            "12"
+          ],
+          [
+            "Contracts won",
+            "4"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "reply",
+          "label": "Reply rate",
+          "unit": "%",
+          "answer": 15,
+          "tolerance": 0.1
+        },
+        {
+          "id": "win",
+          "label": "Win rate",
+          "unit": "%",
+          "answer": 5,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "12 / 80 = 15% replied; 4 / 80 = 5% became contracts."
+    }
+  },
+  {
+    "id": "bd-lead-upwork-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Compare two months of Upwork bidding. Work out revenue won per proposal sent for each month.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare two months of Upwork bidding. Work out revenue won per proposal sent for each month.",
+      "table": {
+        "columns": [
+          "Month",
+          "Proposals sent",
+          "Contracts won",
+          "Total contract value ($)"
+        ],
+        "rows": [
+          [
+            "June",
+            "100",
+            "3",
+            "45000"
+          ],
+          [
+            "July",
+            "40",
+            "4",
+            "36000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "june",
+          "label": "June: value per proposal",
+          "unit": "$",
+          "answer": 450,
+          "tolerance": 1
+        },
+        {
+          "id": "july",
+          "label": "July: value per proposal",
+          "unit": "$",
+          "answer": 900,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "June: 45,000 / 100 = $450. July: 36,000 / 40 = $900. Fewer, better-targeted bids produced twice the value per bid."
+    }
+  },
+  {
+    "id": "bd-lead-upwork-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client with verified payment and 20 past hires posts: \"MVP for a fitness coaching app, web + mobile, budget open, start next week.\" They invite your agency to apply.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client with verified payment and 20 past hires posts: \"MVP for a fitness coaching app, web + mobile, budget open, start next week.\" They invite your agency to apply.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should the proposal open with?",
+          "options": [
+            "The agency's founding story and team size",
+            "A one-line read of their goal and a relevant fitness or booking app you shipped",
+            "A full price breakdown for every feature",
+            "A request to move to email to discuss"
+          ],
+          "correctIndex": 1,
+          "explanation": "Clients skim the first lines; showing you understood the goal plus proof wins the reply."
+        },
+        {
+          "id": "s2",
+          "question": "The client replies and asks for a price before any call. What do you do?",
+          "options": [
+            "Refuse to give any number without a call",
+            "Give a ranged ballpark tied to stated assumptions and suggest a short call to firm it up",
+            "Quote the lowest possible number to win",
+            "Ask them to name their budget first and say nothing else"
+          ],
+          "correctIndex": 1,
+          "explanation": "A ranged ballpark with assumptions keeps momentum without locking you into an unscoped fixed price."
+        },
+        {
+          "id": "s3",
+          "question": "After the call they want to start but the scope is still fuzzy. Which contract shape fits?",
+          "options": [
+            "One large fixed-price contract for the full app",
+            "A small paid discovery or first milestone, then fixed milestones once scope is clear",
+            "Unpaid work until they are happy",
+            "Decline the work"
+          ],
+          "correctIndex": 1,
+          "explanation": "A paid discovery milestone de-risks both sides and turns fuzzy scope into an estimate you can stand behind."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-lead-upwork-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the steps of working an Upwork lead from first sight to contract.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of working an Upwork lead from first sight to contract.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Answer questions and run a short call to clarify scope"
+        },
+        {
+          "id": "r4",
+          "label": "Agree milestones and price"
+        },
+        {
+          "id": "r5",
+          "label": "Client sends the contract offer and work starts"
+        },
+        {
+          "id": "r1",
+          "label": "Check client history, payment status and fit against your services"
+        },
+        {
+          "id": "r2",
+          "label": "Send a tailored proposal with relevant proof"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Qualify, propose, clarify, agree terms, then start — skipping qualification wastes bids, skipping clarification causes scope fights."
+    }
+  },
+  {
+    "id": "bd-lead-upwork-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which signal on an Upwork job post best suggests the client will actually hire and pay?",
+    "mcq": {
+      "options": [
+        "A verified payment method and a history of past hires",
+        "A very short job description",
+        "A large number of proposals already submitted",
+        "A budget set at the platform minimum"
+      ],
+      "correctIndex": 0,
+      "explanation": "Payment verification and hiring history are the strongest evidence a client hires and pays; the others say little or point the other way.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-upwork-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why do agencies treat Upwork as one lead source among several rather than the only one?",
+    "mcq": {
+      "options": [
+        "Upwork leads never convert",
+        "Platform rules, fees and ranking can change, so relying on one channel is risky",
+        "Upwork does not allow agencies",
+        "Clients on Upwork only want hourly work"
+      ],
+      "correctIndex": 1,
+      "explanation": "Concentration risk: a ranking or policy change can cut deal flow overnight, so a healthy pipeline mixes sources.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-upwork-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-upwork",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A long-term Upwork client asks to move future projects off the platform to save fees. What is the sensible response?",
+    "mcq": {
+      "options": [
+        "Agree immediately and send a bank invoice",
+        "Check the platform's current terms on moving relationships off-platform before agreeing anything",
+        "Ignore the message",
+        "Ask them to post a new job instead"
+      ],
+      "correctIndex": 1,
+      "explanation": "Marketplaces restrict off-platform moves for a period or require a fee; breaking terms can get the agency account suspended. Check the current rules first.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

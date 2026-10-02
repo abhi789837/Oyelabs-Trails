@@ -1,0 +1,370 @@
+[
+  {
+    "id": "pm-acceptance-criteria-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put the parts of a Gherkin acceptance criterion in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "When they apply the code SAVE10"
+        },
+        {
+          "id": "r1",
+          "label": "Given the shopper has items in the cart"
+        },
+        {
+          "id": "r3",
+          "label": "Then the total drops by 10%"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "explanation": "Given sets the context, When is the action, Then is the expected outcome."
+    }
+  },
+  {
+    "id": "pm-acceptance-criteria-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Acceptance criteria for 'As a shopper, I want to reset my password'. Mark the criteria that are not testable or do not belong.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Given a registered email, when I request a reset, then I receive a reset link within 2 minutes.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The reset link expires after 30 minutes.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "The reset screen should feel secure.",
+          "issue": "Subjective; replace with checkable rules (e.g. password strength rules)."
+        },
+        {
+          "id": "p4",
+          "text": "A new password must be at least 8 characters with one number.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Use bcrypt with cost 12 and a Redis token store.",
+          "issue": "Implementation detail, not acceptance behaviour; leave the how to the developers."
+        },
+        {
+          "id": "p6",
+          "text": "Given an unregistered email, I see the same confirmation message (no account disclosure).",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-acceptance-criteria-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "QA tested a story against its acceptance criteria on staging. How many criteria passed, and what share failed?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Criterion",
+          "Result"
+        ],
+        "rows": [
+          [
+            "AC1 search by name",
+            "Pass"
+          ],
+          [
+            "AC2 search by category",
+            "Pass"
+          ],
+          [
+            "AC3 empty-state message",
+            "Fail"
+          ],
+          [
+            "AC4 results under 2 s",
+            "Pass"
+          ],
+          [
+            "AC5 sort by price",
+            "Fail"
+          ],
+          [
+            "AC6 pagination 20 per page",
+            "Pass"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "pass",
+          "label": "Criteria passed",
+          "unit": "",
+          "answer": 4,
+          "tolerance": 0
+        },
+        {
+          "id": "fail",
+          "label": "Share of criteria failed",
+          "unit": "%",
+          "answer": 33.3,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "4 of 6 criteria passed and 2 failed: 2 / 6 = 33.3%. The story is not Done until all criteria pass."
+    }
+  },
+  {
+    "id": "pm-acceptance-criteria-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "In UAT, the client rejects 'export orders to CSV' because 'it should include the customer's phone number'. The agreed acceptance criteria list the columns and do not include phone number.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "In UAT, the client rejects 'export orders to CSV' because 'it should include the customer's phone number'. The agreed acceptance criteria list the columns and do not include phone number.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Is the story Done?",
+          "options": [
+            "Yes, it meets the agreed criteria; the phone column is a new request",
+            "No, the client is always right",
+            "Only if QA agrees",
+            "No, all stories must be re-estimated"
+          ],
+          "correctIndex": 0,
+          "explanation": "Acceptance criteria are the agreement; meeting them means the story is accepted."
+        },
+        {
+          "id": "s2",
+          "question": "How do you handle the phone number?",
+          "options": [
+            "Thank them, log it as a new backlog item (or change request) and let them prioritise it",
+            "Add it quietly tonight",
+            "Refuse it",
+            "Reopen the original story"
+          ],
+          "correctIndex": 0,
+          "explanation": "New needs become new items; this keeps acceptance clean and scope visible."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-acceptance-criteria-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order when these things should happen for a story to be accepted smoothly.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "QA tests each criterion on staging"
+        },
+        {
+          "id": "r2",
+          "label": "Client confirms the criteria before the Sprint"
+        },
+        {
+          "id": "r1",
+          "label": "PO and team draft acceptance criteria in refinement"
+        },
+        {
+          "id": "r3",
+          "label": "Developers build against the criteria"
+        },
+        {
+          "id": "r5",
+          "label": "Client accepts in the Sprint Review or UAT"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Criteria are agreed before building, so build, test and acceptance all check against the same agreement."
+    }
+  },
+  {
+    "id": "pm-acceptance-criteria-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A team's Definition of Ready says a story can enter a Sprint when these are true. Mark the lines that should not be in a Definition of Ready.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The story has acceptance criteria agreed with the PO.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The story is estimated by the team.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Designs are attached where the story has UI.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "The story has been fully coded on a branch already.",
+          "issue": "That is building the work before the Sprint; Ready means understood and ready to start, not done."
+        },
+        {
+          "id": "p5",
+          "text": "Dependencies on the client (API keys, content) are resolved or scheduled.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Every possible edge case is documented in a 20-page spec.",
+          "issue": "Ready means 'enough to start', not exhaustive documentation; this makes nothing ever ready."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-acceptance-criteria-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Who usually agrees acceptance criteria on an agency project?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The Product Owner (or client contact) with the team, before the work starts",
+        "The developer alone after building",
+        "QA alone during testing",
+        "Sales during the pitch"
+      ],
+      "correctIndex": 0,
+      "explanation": "Criteria are a shared agreement made before work starts, so everyone tests against the same definition.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-acceptance-criteria-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "How do acceptance criteria differ from the Definition of Done?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Criteria are specific to one story; the DoD applies to every item",
+        "They are the same thing",
+        "The DoD is written by the client only",
+        "Criteria apply to the whole product"
+      ],
+      "correctIndex": 0,
+      "explanation": "Acceptance criteria describe one story's expected behaviour; the DoD is the quality bar for all work.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-acceptance-criteria-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-acceptance-criteria",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which acceptance criterion is best written?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Given a basket over £50, when the shopper checks out, then delivery is free",
+        "Delivery should be cheap",
+        "Use a delivery-fee microservice",
+        "Delivery works properly"
+      ],
+      "correctIndex": 0,
+      "explanation": "It states context, action and a checkable outcome; the others are vague or describe implementation.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

@@ -1,0 +1,364 @@
+[
+  {
+    "id": "pm-scope-basics-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order a work breakdown structure for a white-label grocery app from the broadest level to the most detailed.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Work package: card payment integration"
+        },
+        {
+          "id": "r2",
+          "label": "Deliverable: customer mobile app"
+        },
+        {
+          "id": "r1",
+          "label": "Project: grocery delivery app"
+        },
+        {
+          "id": "r3",
+          "label": "Sub-deliverable: checkout flow"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "A WBS decomposes the whole project into deliverables, then sub-deliverables, down to work packages small enough to estimate and assign."
+    }
+  },
+  {
+    "id": "pm-scope-basics-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This is part of a scope statement for a clinic booking app. Mark the lines that are too vague to be in scope or should be in an exclusions list.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Patients can book, reschedule and cancel appointments in the iOS and Android apps.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The admin panel will be user friendly and modern.",
+          "issue": "Not measurable: what counts as 'user friendly' must be stated as concrete features or criteria."
+        },
+        {
+          "id": "p3",
+          "text": "Payments via Stripe card checkout for appointment deposits.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Any other features the clinic may need later.",
+          "issue": "Open-ended: this makes scope unlimited; future needs belong in change requests."
+        },
+        {
+          "id": "p5",
+          "text": "SMS reminders 24 hours before each appointment.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Out of scope: web version for patients.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-scope-basics-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A WBS for a marketing website has these work packages. What is the total estimated effort, and what share of it is the CMS work?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Work package",
+          "Estimate (h)"
+        ],
+        "rows": [
+          [
+            "Design system",
+            "40"
+          ],
+          [
+            "Page templates",
+            "60"
+          ],
+          [
+            "CMS integration",
+            "80"
+          ],
+          [
+            "SEO & analytics",
+            "30"
+          ],
+          [
+            "Launch & handover",
+            "20"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total effort",
+          "unit": "hours",
+          "answer": 230,
+          "tolerance": 0
+        },
+        {
+          "id": "cms",
+          "label": "CMS share of total effort",
+          "unit": "%",
+          "answer": 34.8,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Total = 40 + 60 + 80 + 30 + 20 = 230 h. CMS = 80 / 230 = 34.8%."
+    }
+  },
+  {
+    "id": "pm-scope-basics-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "On a fixed-scope project for a fitness app, the client says in the weekly call: 'Can you also add Apple Watch support? It should be small.' Watch support is not in the signed scope.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a fixed-scope project for a fitness app, the client says in the weekly call: 'Can you also add Apple Watch support? It should be small.' Watch support is not in the signed scope.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first response?",
+          "options": [
+            "Agree, to keep the client happy",
+            "Say it's out of the agreed scope and that you will assess it as a change request",
+            "Say no, it can never be done",
+            "Ask a developer to start on it quietly"
+          ],
+          "correctIndex": 1,
+          "explanation": "Acknowledge the request without committing, and route it through change control."
+        },
+        {
+          "id": "s2",
+          "question": "The estimate is 3 weeks. What do you take back to the client?",
+          "options": [
+            "The change request with cost, timeline impact and options (add now, defer to phase 2)",
+            "Only the cost",
+            "A promise to squeeze it in at no cost",
+            "Nothing, unless they ask again"
+          ],
+          "correctIndex": 0,
+          "explanation": "A change request shows the impact on cost and schedule and lets the client decide with full information."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scope-basics-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Three sprints in, you notice the team has added an 'export to PDF' button, dark mode and a referral screen that nobody asked for, because 'they were quick'.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Three sprints in, you notice the team has added an 'export to PDF' button, dark mode and a referral screen that nobody asked for, because 'they were quick'.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is this called?",
+          "options": [
+            "Gold plating",
+            "A change request",
+            "Progressive elaboration",
+            "Fast tracking"
+          ],
+          "correctIndex": 0,
+          "explanation": "Adding unrequested extras is gold plating; it uses budget and adds risk without client approval."
+        },
+        {
+          "id": "s2",
+          "question": "What do you do now?",
+          "options": [
+            "Leave it; the client will be pleased",
+            "Tell the team that extras go to the backlog for the client to prioritise, and check the time spent against the budget",
+            "Remove all three features immediately without discussing it",
+            "Bill the client for them"
+          ],
+          "correctIndex": 1,
+          "explanation": "Stop the pattern, make the time visible, and let the client decide on the extras through the backlog."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scope-basics-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A client asks for a change to agreed scope. Put the change-control steps in order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Get the client's written approval or rejection"
+        },
+        {
+          "id": "r2",
+          "label": "Assess impact on scope, schedule, cost and risk"
+        },
+        {
+          "id": "r1",
+          "label": "Log the request in the change log"
+        },
+        {
+          "id": "r3",
+          "label": "Present the change request with options to the client"
+        },
+        {
+          "id": "r5",
+          "label": "Update the scope, plan and backlog if approved"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Log, assess impact, present options, get a written decision, then update the baselines. Skipping the written decision is how scope creep starts."
+    }
+  },
+  {
+    "id": "pm-scope-basics-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does the triple constraint describe?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The trade-off between scope, time and cost, with quality affected by all three",
+        "The three Scrum accountabilities",
+        "The three phases of a WBS",
+        "The three signatures a contract needs"
+      ],
+      "correctIndex": 0,
+      "explanation": "Changing one of scope, time or cost affects the others; squeezing all three hurts quality.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scope-basics-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why should a scope statement include an explicit list of exclusions?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It prevents arguments later about what was never promised",
+        "It makes the document longer and more professional",
+        "It is required by Scrum",
+        "It lets the team skip estimation"
+      ],
+      "correctIndex": 0,
+      "explanation": "Exclusions make the boundary clear; clients often assume things like 'a web version' or 'admin reports' are included.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scope-basics-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which item is a well-sized WBS work package?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Integrate Stripe card payments in checkout (about 3 days)",
+        "Build the app",
+        "Make it good",
+        "Phase 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "A work package is small enough to estimate, assign and track, with a clear deliverable.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

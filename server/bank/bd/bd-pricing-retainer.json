@@ -1,0 +1,322 @@
+[
+  {
+    "id": "bd-pricing-retainer-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Invoice a retainer month with overage.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client's retainer is 80 hours a month at $55 an hour, billed as a fixed monthly fee. Extra hours are billed at an overage rate of $65. In May the team logged 95 hours.",
+      "table": null,
+      "fields": [
+        {
+          "id": "fee",
+          "label": "Monthly retainer fee",
+          "unit": "$",
+          "answer": 4400,
+          "tolerance": 1
+        },
+        {
+          "id": "invoice",
+          "label": "May invoice total",
+          "unit": "$",
+          "answer": 5375,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Fee = 80 × 55 = $4400. Overage = 15 × 65 = $975. Total = $5375."
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Check retainer utilisation before a renewal call.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client pays $6,000 a month for up to 100 hours. Over the last three months they used 60, 70 and 55 hours.",
+      "table": null,
+      "fields": [
+        {
+          "id": "used",
+          "label": "Total hours used",
+          "unit": "h",
+          "answer": 185,
+          "tolerance": 0.5
+        },
+        {
+          "id": "util",
+          "label": "Utilisation of the retainer",
+          "unit": "%",
+          "answer": 61.67,
+          "tolerance": 0.1
+        },
+        {
+          "id": "eff",
+          "label": "Effective rate the client paid per hour used",
+          "unit": "$/h",
+          "answer": 97.3,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "Used = 185 of 300 hours (61.67%). Effective rate = 18,000 ÷ 185 = $97.3 an hour. Low utilisation is a churn risk: the client is paying for capacity they are not using, so bring a plan to the renewal."
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Respond to a client asking to roll over unused retainer hours.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client used only 40 of 80 retainer hours in each of the last two months and asks to roll the unused 80 hours forward. The contract says hours do not roll over.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first move?",
+          "options": [
+            "Point to the contract and refuse",
+            "Find out why hours went unused and propose a backlog of useful work for the next months",
+            "Agree to roll over all 80 hours",
+            "Stop logging hours until they catch up"
+          ],
+          "correctIndex": 1,
+          "explanation": "Unused hours usually mean the client has no plan for the capacity. Fix that before arguing about terms."
+        },
+        {
+          "id": "s2",
+          "question": "They still want some recognition of the unused time. What is a reasonable offer?",
+          "options": [
+            "Rolling over all hours indefinitely",
+            "Refunding both months in full",
+            "A one-time, limited goodwill rollover, or moving to a smaller tier going forward",
+            "Doubling next month's hours for free"
+          ],
+          "correctIndex": 2,
+          "explanation": "A bounded gesture keeps goodwill without making rollover the norm; a smaller tier matches what they actually need."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this retainer agreement summary.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this retainer summary that will cause disputes or hurt the agency.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "$4,400 per month, invoiced in advance on the 1st.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Covers unlimited requests of any size.",
+          "issue": "Unlimited scope at a fixed fee has no ceiling; the retainer needs an hours or scope limit."
+        },
+        {
+          "id": "p3",
+          "text": "Urgent issues will be handled quickly.",
+          "issue": "\"Quickly\" is undefined; set response times by priority."
+        },
+        {
+          "id": "p4",
+          "text": "Unused hours roll over with no expiry.",
+          "issue": "Banked hours pile up into a liability the team may have to deliver all at once."
+        },
+        {
+          "id": "p5",
+          "text": "Additional hours are billed at $65 an hour with prior approval.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Either party may end the retainer with 30 days' written notice.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "A monthly report lists the work done and hours used.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Rank clients by how well a retainer fits them.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these clients from best fit for a monthly retainer to worst fit.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Business that needs one landing page this month"
+        },
+        {
+          "id": "i1",
+          "label": "Live app that needs monthly updates, fixes and small features"
+        },
+        {
+          "id": "i2",
+          "label": "SaaS company with a steady roadmap that needs overflow capacity"
+        },
+        {
+          "id": "i3",
+          "label": "Startup finishing a one-off MVP with no plans after launch"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Retainers suit steady, recurring work. One-off projects are better priced as projects."
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 3,
+    "prompt": "Propose a retainer to an ad-hoc client.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write a short email proposing a monthly retainer to this client. Use the numbers given; do not overpromise.",
+      "context": "Over the last six months the client sent 14 small requests (bug fixes and minor features), using 30–45 hours a month, each billed separately at $60 an hour. Requests often waited 3–5 days to be scheduled. You can offer 40 hours a month at $55 an hour, with a 2-business-day response for normal requests.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "data",
+          "label": "Uses the client's own history",
+          "description": "Refers to their actual request pattern and hours.",
+          "weight": 1
+        },
+        {
+          "id": "value",
+          "label": "Clear benefit to the client",
+          "description": "Explains the saving and faster scheduling in concrete terms.",
+          "weight": 1
+        },
+        {
+          "id": "terms",
+          "label": "States the key terms",
+          "description": "Hours, rate or fee, response time, and what happens to extra hours.",
+          "weight": 1
+        },
+        {
+          "id": "next",
+          "label": "Low-pressure next step",
+          "description": "Proposes a specific next step without pressure.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Daniel, looking back at the last six months, you sent us 14 requests using 30–45 hours a month, and some waited 3–5 days to be scheduled. A retainer would fit that pattern better: 40 hours a month at $55 an hour ($2,200 a month, down from $60), with a reply within 2 business days on normal requests because the time is reserved for you. Extra hours would be billed at the same $55 with your approval, and you could change the tier with 30 days' notice. Shall I send a one-page summary, or would a 15-minute call this week be easier?"
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the main commercial benefit of a retainer for the agency?",
+    "mcq": {
+      "options": [
+        "The client can never cancel",
+        "Predictable monthly revenue that makes capacity planning easier",
+        "There is no need to report on hours",
+        "Rates can change every month"
+      ],
+      "correctIndex": 1,
+      "explanation": "Recurring revenue lets you staff steadily instead of chasing the next project to fill the bench.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which set of terms does a well-defined retainer need?",
+    "mcq": {
+      "options": [
+        "Only the monthly fee",
+        "The monthly fee and a promise of unlimited support",
+        "Hours or scope included, response times, overage rate, rollover rule and notice period",
+        "A list of every task for the next year"
+      ],
+      "correctIndex": 2,
+      "explanation": "Each missing term is a future argument: what is included, how fast, what extra costs, what happens to unused time, and how to exit.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-retainer-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-retainer",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A client on a 50-hour retainer has used about 70 hours a month for four months, paying overage each time. What should you suggest?",
+    "mcq": {
+      "options": [
+        "Keeping things as they are because overage is profitable",
+        "Capping their hours at 50 and pausing extra requests",
+        "Moving to a larger tier at a better rate, using the four months of data",
+        "Lowering the overage rate quietly"
+      ],
+      "correctIndex": 2,
+      "explanation": "Consistent overage means the tier is wrong. Right-sizing it is fairer to the client and secures the revenue.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

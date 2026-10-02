@@ -1,0 +1,395 @@
+[
+  {
+    "id": "pm-escalations-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A client's API team has missed three agreed deadlines for an endpoint your app needs. Order the escalation steps.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "If still unresolved, escalate to the steering committee or account director with a decision request"
+        },
+        {
+          "id": "r2",
+          "label": "Log it as an issue with impact and date in the status report"
+        },
+        {
+          "id": "r1",
+          "label": "Raise it directly with the client's API lead and agree a new date"
+        },
+        {
+          "id": "r3",
+          "label": "When the new date is missed, raise it with your client sponsor with the impact and options"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Try to resolve at the lowest level first, make it visible, then escalate one level at a time with impact and options."
+    }
+  },
+  {
+    "id": "pm-escalations-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this escalation email from a PM to the client sponsor.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Subject: Decision needed by Thursday: payment provider access blocking launch",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Issue: we still have no production access to the payment provider, requested on 2 May.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Your IT team is being completely unhelpful and frankly unprofessional.",
+          "issue": "Emotional blame; state facts and impact instead."
+        },
+        {
+          "id": "p4",
+          "text": "Impact: each day of delay after 20 May moves launch by one day.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "We have tried everything.",
+          "issue": "Vague; list what was tried so the sponsor can see the lower levels were used."
+        },
+        {
+          "id": "p6",
+          "text": "Ask: please authorise IT to grant access by 16 May, or approve launching with card payments disabled.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "I can join a 15-minute call any time tomorrow.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-escalations-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A blocked integration is delaying the launch of a subscription app. Each week of delay costs the client lost revenue and costs the agency extra team time. Work out the cost of a 3-week delay.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Input",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Expected client revenue per week after launch",
+            "$12,000"
+          ],
+          [
+            "Team size waiting",
+            "4 people"
+          ],
+          [
+            "Hours per person per week",
+            "40"
+          ],
+          [
+            "Share of their time idle while blocked",
+            "50%"
+          ],
+          [
+            "Internal cost per hour",
+            "$50"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "rev",
+          "label": "Client lost revenue for 3 weeks",
+          "unit": "$",
+          "answer": 36000,
+          "tolerance": 1
+        },
+        {
+          "id": "team",
+          "label": "Agency extra team cost for 3 weeks",
+          "unit": "$",
+          "answer": 12000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total cost of the delay",
+          "unit": "$",
+          "answer": 48000.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Revenue: 3 × $12,000 = $36,000. Team: 4 people × 40 h × 50% idle × $50/h = $4,000/week, × 3 = $12,000. Total = $48,000. Putting a number on it makes the escalation concrete."
+    }
+  },
+  {
+    "id": "pm-escalations-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Your lead developer tells you a third-party video SDK cannot support the offline mode the client was promised in the SOW. Launch is in six weeks.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your lead developer tells you a third-party video SDK cannot support the offline mode the client was promised in the SOW. Launch is in six weeks.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first step?",
+          "options": [
+            "Hide it and hope a fix appears",
+            "Confirm the facts and options with the team (alternative SDK, reduced scope, workaround) with rough cost and time",
+            "Email the client CEO immediately",
+            "Tell the developer to make it work somehow"
+          ],
+          "correctIndex": 1,
+          "explanation": "Escalate with facts and options, not just a problem."
+        },
+        {
+          "id": "s2",
+          "question": "Who do you escalate to first?",
+          "options": [
+            "The client's end users",
+            "Your account director internally, then the client sponsor together",
+            "The SDK vendor's CEO",
+            "Nobody, decide yourself"
+          ],
+          "correctIndex": 1,
+          "explanation": "Contract-level issues need internal alignment before going to the client sponsor."
+        },
+        {
+          "id": "s3",
+          "question": "How do you present it to the client?",
+          "options": [
+            "As the SDK vendor's fault only",
+            "With the impact, two or three options with cost and timeline, a recommendation and a decision date",
+            "As a done deal: offline mode is removed",
+            "Verbally only"
+          ],
+          "correctIndex": 1,
+          "explanation": "A good escalation asks for a specific decision by a date and makes it easy to make."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-escalations-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The client's product owner has twice rejected stories that met their written acceptance criteria, adding new conditions each time. The sprint goal is at risk and the team is frustrated.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client's product owner has twice rejected stories that met their written acceptance criteria, adding new conditions each time. The sprint goal is at risk and the team is frustrated.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Escalate to the client CEO",
+            "Meet the PO, walk through the criteria and the rejections, and agree that new conditions become new stories",
+            "Accept every rejection",
+            "Let the developers argue it out"
+          ],
+          "correctIndex": 1,
+          "explanation": "Try to resolve directly first, using the agreed criteria as the reference."
+        },
+        {
+          "id": "s2",
+          "question": "It happens again the next sprint. What now?",
+          "options": [
+            "Stop accepting stories from this PO",
+            "Escalate to the client sponsor with the data (stories, criteria, rejection reasons, cost) and ask for a clear acceptance process",
+            "Bill the client a penalty without notice",
+            "Absorb the cost quietly"
+          ],
+          "correctIndex": 1,
+          "explanation": "A repeated pattern with commercial impact justifies escalating, with evidence and a process proposal."
+        },
+        {
+          "id": "s3",
+          "question": "What should the escalation not contain?",
+          "options": [
+            "The cost of the rework",
+            "Personal criticism of the PO",
+            "The proposed acceptance process",
+            "Specific story examples"
+          ],
+          "correctIndex": 1,
+          "explanation": "Keep it about the process and impact; personal attacks make the sponsor defend their person."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-escalations-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order these issues from most to least urgent to escalate to the client sponsor today.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "A designer is on leave next month"
+        },
+        {
+          "id": "r2",
+          "label": "A security finding in a pen test due to be fixed before launch next week"
+        },
+        {
+          "id": "r1",
+          "label": "Production checkout is down for all users"
+        },
+        {
+          "id": "r3",
+          "label": "The client's legal review of the privacy policy is 5 days late with launch in 3 weeks"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Live business impact first, then launch-blocking risks by time left; a planned absence is handled internally."
+    }
+  },
+  {
+    "id": "pm-escalations-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What makes an escalation effective?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It states the issue, impact, options and the specific decision needed by a date",
+        "It is sent to as many senior people as possible",
+        "It is sent only after the deadline has passed",
+        "It explains who is to blame"
+      ],
+      "correctIndex": 0,
+      "explanation": "Decision-makers act on clear impact and a specific ask; a wide audience and blame slow things down.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-escalations-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why agree an escalation path at kickoff?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "So everyone knows in advance who decides what when issues cannot be resolved at their level",
+        "To avoid ever needing one",
+        "Because clients pay extra for it",
+        "So the PM can skip the client sponsor"
+      ],
+      "correctIndex": 0,
+      "explanation": "A pre-agreed path makes escalation a normal process rather than a personal confrontation.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-escalations-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-escalations",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A PM escalates almost every minor issue to the client sponsor. What is the likely effect?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The sponsor starts ignoring escalations, so a real one may be missed",
+        "The project speeds up",
+        "The team gains more autonomy",
+        "The client trusts the agency more"
+      ],
+      "correctIndex": 0,
+      "explanation": "Over-escalation burns credibility and attention; escalate when the issue cannot be resolved at the current level.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

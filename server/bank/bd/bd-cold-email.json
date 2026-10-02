@@ -1,0 +1,506 @@
+[
+  {
+    "id": "bd-cold-email-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the lines in this cold email that will hurt the reply rate.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this cold email that will hurt the reply rate.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Subject: PARTNERSHIP OPPORTUNITY!!! Best app developers in the world",
+          "issue": "All-caps, exclamation marks and hype look like spam and trigger filters."
+        },
+        {
+          "id": "p2",
+          "text": "Hi Tom, saw your team launched same-day prescription delivery last month.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "We are a 150-person agency founded in 2012 with offices in four countries and 400 happy clients across every industry.",
+          "issue": "A paragraph about yourself instead of the prospect; nothing here is relevant to Tom."
+        },
+        {
+          "id": "p4",
+          "text": "Teams scaling delivery often hit driver-dispatch bottlenecks; we built a dispatch app that cut a pharmacy client's late orders by a third.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Worth a 15-minute chat next week to see if that applies to you?",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Please see our attached 30-page company brochure and price list.",
+          "issue": "Large attachments in a first email hurt deliverability and ask too much of a cold reader."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-cold-email-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these cold email subject lines for a VP Operations at a delivery startup, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these cold email subject lines for a VP Operations at a delivery startup, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Our agency's services"
+        },
+        {
+          "id": "r4",
+          "label": "URGENT: Revolutionary app solution 50% OFF"
+        },
+        {
+          "id": "r1",
+          "label": "Late deliveries since the same-day launch?"
+        },
+        {
+          "id": "r2",
+          "label": "Quick question, Tom"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "A short, specific subject tied to their situation wins; a personal but vague one is next; a generic pitch is weak; hype and urgency look like spam."
+    }
+  },
+  {
+    "id": "bd-cold-email-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": "bd-tool-lemlist",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Work out the rates for this cold email campaign. Opens and replies are as a percentage of delivered emails.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Work out the rates for this cold email campaign. Opens and replies are as a percentage of delivered emails.",
+      "table": {
+        "columns": [
+          "Metric",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Emails sent",
+            "500"
+          ],
+          [
+            "Bounced",
+            "25"
+          ],
+          [
+            "Opened",
+            "190"
+          ],
+          [
+            "Replied",
+            "19"
+          ],
+          [
+            "Meetings booked",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "bounce",
+          "label": "Bounce rate (of sent)",
+          "unit": "%",
+          "answer": 5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "reply",
+          "label": "Reply rate (of delivered)",
+          "unit": "%",
+          "answer": 4,
+          "tolerance": 0.1
+        },
+        {
+          "id": "meet",
+          "label": "Meetings per reply",
+          "unit": "%",
+          "answer": 26.3,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Bounce 25/500 = 5%. Delivered 475; replies 19/475 = 4%. Meetings 5/19 = 26.3%."
+    }
+  },
+  {
+    "id": "bd-cold-email-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": "bd-tool-apollo",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are launching a cold email campaign to 300 health-tech founders from a freshly bought list.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are launching a cold email campaign to 300 health-tech founders from a freshly bought list.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should happen before sending?",
+          "options": [
+            "Add every founder to the CC line of one email",
+            "Send to everyone twice to be safe",
+            "Send all 300 today from the main company domain",
+            "Verify the emails, use a warmed-up sending domain, and start with small daily volumes"
+          ],
+          "correctIndex": 3,
+          "explanation": "Verification and gradual volume protect deliverability and the main domain's reputation."
+        },
+        {
+          "id": "s2",
+          "question": "How should you personalise at this scale?",
+          "options": [
+            "Only swap in the first name",
+            "Segment by a shared situation and add one specific line per prospect for the top accounts",
+            "Write 300 entirely unique essays",
+            "Skip personalisation"
+          ],
+          "correctIndex": 1,
+          "explanation": "Segment-level relevance plus targeted custom lines balances quality and time."
+        },
+        {
+          "id": "s3",
+          "question": "Bounces hit 9% after the first batch. What do you do?",
+          "options": [
+            "Switch to a new domain and send more",
+            "Remove the unsubscribe link",
+            "Keep sending",
+            "Pause, clean the list, and re-verify before continuing"
+          ],
+          "correctIndex": 3,
+          "explanation": "High bounces damage sender reputation; stop and fix the data first."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-cold-email-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Write a cold email (subject line plus body) to this prospect.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a cold email (subject line plus body) to this prospect.",
+      "context": "Prospect: Maya Chen, Head of Operations at a 60-clinic physiotherapy chain. Trigger: they just posted three receptionist job ads and their reviews mention long phone hold times for booking. Your agency has built online booking and reminder apps for clinic groups; one past client cut no-shows by 30%. Goal: a short call.",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "relevance",
+          "label": "Relevant opening",
+          "description": "Opens with a specific observation about Maya's situation (hiring, hold times), not about the agency.",
+          "weight": 1
+        },
+        {
+          "id": "value",
+          "label": "Clear value and proof",
+          "description": "Links the problem to a concrete outcome with brief, credible proof (the no-show result).",
+          "weight": 1
+        },
+        {
+          "id": "cta",
+          "label": "Low-friction CTA",
+          "description": "Ends with one simple, easy-to-answer ask such as a short call or interest check.",
+          "weight": 1
+        },
+        {
+          "id": "brevity",
+          "label": "Short and skimmable",
+          "description": "Subject is short and specific; body is a few short sentences with no jargon or hype.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Subject: Booking calls at your clinics\n\nHi Maya, I noticed you're hiring three receptionists, and a few recent reviews mention long holds when booking. That usually means the phone is doing the job an online booking flow could.\n\nWe built booking and reminder apps for clinic groups; one cut no-shows by 30% and freed front-desk time for patients in the room.\n\nWould a 15-minute call next week to see if the same approach fits your 60 clinics be useful? If not, no worries.\n\nBest,\nSam"
+    }
+  },
+  {
+    "id": "bd-cold-email-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the parts of a strong cold email body, top to bottom.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the parts of a strong cold email body, top to bottom.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Brief proof of how you solved it for someone similar"
+        },
+        {
+          "id": "r4",
+          "label": "One clear, low-effort call to action"
+        },
+        {
+          "id": "r1",
+          "label": "A specific observation about the prospect"
+        },
+        {
+          "id": "r2",
+          "label": "The problem it likely causes"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Relevance earns attention, the problem earns interest, proof earns credibility, and a single ask makes replying easy."
+    }
+  },
+  {
+    "id": "bd-cold-email-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Two email variants were A/B tested. Work out the reply rate and the meetings per 100 delivered emails for each, then decide which drove more meetings.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Two email variants were A/B tested. Work out the reply rate and the meetings per 100 delivered emails for each, then decide which drove more meetings.",
+      "table": {
+        "columns": [
+          "Variant",
+          "Delivered",
+          "Replies",
+          "Meetings"
+        ],
+        "rows": [
+          [
+            "A: case-study hook",
+            "400",
+            "24",
+            "8"
+          ],
+          [
+            "B: question hook",
+            "400",
+            "36",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ra",
+          "label": "A: reply rate",
+          "unit": "%",
+          "answer": 6,
+          "tolerance": 0.1
+        },
+        {
+          "id": "rb",
+          "label": "B: reply rate",
+          "unit": "%",
+          "answer": 9,
+          "tolerance": 0.1
+        },
+        {
+          "id": "ma",
+          "label": "A: meetings per 100 delivered",
+          "unit": "",
+          "answer": 2,
+          "tolerance": 0.01
+        },
+        {
+          "id": "mb",
+          "label": "B: meetings per 100 delivered",
+          "unit": "",
+          "answer": 1.5,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "A: 24/400 = 6%, 8/4 = 2 meetings per 100. B: 36/400 = 9%, 6/4 = 1.5. B gets more replies but A books more meetings, which is the real goal."
+    }
+  },
+  {
+    "id": "bd-cold-email-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A prospect replies to your cold email: \"Not interested, we have an in-house team.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect replies to your cold email: \"Not interested, we have an in-house team.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best reply?",
+          "options": [
+            "Ignore and keep the sequence running",
+            "Send a discount offer",
+            "Argue that agencies are always better",
+            "Thank them, acknowledge the in-house team, and offer a narrow, useful angle (e.g. overflow or a specialist piece) with no pressure"
+          ],
+          "correctIndex": 3,
+          "explanation": "Respect the answer, leave one relevant door open, and keep it short."
+        },
+        {
+          "id": "s2",
+          "question": "What happens to the automated sequence?",
+          "options": [
+            "It keeps sending the remaining steps",
+            "Stop it for this contact immediately",
+            "Restart it next week",
+            "Add them to a second sequence"
+          ],
+          "correctIndex": 1,
+          "explanation": "Continuing to email someone who said no damages reputation and may breach consent rules."
+        },
+        {
+          "id": "s3",
+          "question": "How do you record this in the CRM?",
+          "options": [
+            "Mark as qualified",
+            "Leave it untouched",
+            "Delete the contact",
+            "Mark the reason (in-house team) and set a sensible re-engagement date if appropriate"
+          ],
+          "correctIndex": 3,
+          "explanation": "Logging the reason keeps data useful and allows a respectful revisit later."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-cold-email-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is the main job of a cold email's first line?",
+    "mcq": {
+      "options": [
+        "State the price",
+        "Introduce the agency's history",
+        "Show the prospect it is about them and worth reading on",
+        "List all services"
+      ],
+      "correctIndex": 2,
+      "explanation": "The first line, often shown as a preview, decides whether the rest gets read.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-cold-email-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why is a single call to action better than offering several options in a cold email?",
+    "mcq": {
+      "options": [
+        "It shortens the email to fit filters",
+        "It reduces the effort of deciding, which raises the chance of a reply",
+        "Multiple links are illegal",
+        "It hides the unsubscribe link"
+      ],
+      "correctIndex": 1,
+      "explanation": "One clear, low-effort ask is easier to say yes to than a menu of choices.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-cold-email-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-cold-email",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Open rates look strong but replies are near zero. What is the most likely issue?",
+    "mcq": {
+      "options": [
+        "The body or offer is not relevant enough to the recipients",
+        "The subject line is too good",
+        "The list is too small",
+        "Deliverability is failing"
+      ],
+      "correctIndex": 0,
+      "explanation": "Opens show the email arrived and the subject worked; weak replies point to the message, offer or targeting. Note that opens can also be inflated by privacy features, so treat them as a rough signal.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

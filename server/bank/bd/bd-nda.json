@@ -1,0 +1,328 @@
+[
+  {
+    "id": "bd-nda-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Respond to an NDA request before discovery.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect asks you to sign their NDA before a discovery call where they will share their product plans.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Sign it immediately",
+            "Refuse to sign any NDA",
+            "Follow your company's NDA process: use the approved template or send theirs to counsel for review",
+            "Sign it and ignore the terms"
+          ],
+          "correctIndex": 2,
+          "explanation": "NDAs are routine but still binding; follow the approved process."
+        },
+        {
+          "id": "s2",
+          "question": "The prospect wants to share details before the NDA is signed. What do you say?",
+          "options": [
+            "Encourage them to share everything now",
+            "Say NDAs don't matter for discovery",
+            "Record the call to use later",
+            "Suggest keeping the first call high-level until the NDA is in place"
+          ],
+          "correctIndex": 3,
+          "explanation": "Protect both sides: keep confidential details until the agreement exists."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-nda-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the NDA terms to flag to counsel.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the terms in this NDA summary that are unusual enough to flag to counsel before signing.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Both parties protect each other's confidential information (mutual).",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Confidentiality obligations last three years from disclosure.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "The supplier may not work for any company in the client's industry for two years.",
+          "issue": "A non-compete inside an NDA can block future business; flag to counsel."
+        },
+        {
+          "id": "p4",
+          "text": "Confidential information includes anything shared, even if already public.",
+          "issue": "Excluding public information is normal; including it is unusually broad."
+        },
+        {
+          "id": "p5",
+          "text": "Neither party may hire the other's staff for 24 months.",
+          "issue": "A non-solicitation of employees may be acceptable, but it is beyond a normal NDA and needs review."
+        },
+        {
+          "id": "p6",
+          "text": "Information must be returned or destroyed on request.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Each party may share information with its advisers under similar duties.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-nda-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank information by how much it needs NDA protection before receiving it.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these items a prospect might share, from most to least in need of an NDA before you receive them.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Content from their public website"
+        },
+        {
+          "id": "i1",
+          "label": "Unreleased product specification with sample customer data"
+        },
+        {
+          "id": "i2",
+          "label": "Internal financial projections"
+        },
+        {
+          "id": "i3",
+          "label": "Internal team structure and roles"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Personal data and unreleased plans are the most sensitive; public information needs no protection."
+    }
+  },
+  {
+    "id": "bd-nda-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle an accidental disclosure.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You accidentally forwarded a client's NDA-covered specification to another prospect.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Hope nobody notices",
+            "Ask the recipient to delete it and tell no one else",
+            "Delete the email from your sent folder",
+            "Tell your manager and counsel immediately, and ask the recipient to delete it"
+          ],
+          "correctIndex": 3,
+          "explanation": "Speed and honesty limit the harm; counsel decides on any notification duties."
+        },
+        {
+          "id": "s2",
+          "question": "Who should decide whether and how to tell the client?",
+          "options": [
+            "Leadership with counsel, following the NDA's terms",
+            "You alone, today",
+            "The other prospect",
+            "Nobody"
+          ],
+          "correctIndex": 0,
+          "explanation": "Notification can have legal implications; it needs counsel's guidance."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-nda-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Use AI tools with NDA-covered information.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You want to use an AI tool to summarise a 40-page NDA-covered requirements document.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you check?",
+          "options": [
+            "Only that the tool is popular",
+            "Nothing; summaries are internal",
+            "Whether company policy approves that tool for confidential client data and whether the NDA allows it",
+            "Whether the client is likely to find out"
+          ],
+          "correctIndex": 2,
+          "explanation": "Uploading confidential information to a third-party tool may breach the NDA or policy."
+        },
+        {
+          "id": "s2",
+          "question": "If you are unsure, what is the right path?",
+          "options": [
+            "Upload it and ask later",
+            "Use a personal account instead",
+            "Ask the client to cancel the NDA",
+            "Ask the person who owns AI or data policy, and work from a redacted version meanwhile"
+          ],
+          "correctIndex": 3,
+          "explanation": "Escalate and minimise what you share until the answer is clear."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-nda-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Push back on a broad NDA.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A large prospect insists their NDA is non-negotiable. Counsel says the two-year non-compete inside it is a serious problem.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Sign it anyway because the prospect is large",
+            "Tell the prospect the agency can sign a standard NDA, and ask counsel to propose wording without the non-compete",
+            "Remove the clause yourself and sign",
+            "Tell the prospect it is legally unenforceable"
+          ],
+          "correctIndex": 1,
+          "explanation": "Follow counsel's advice and keep the deal moving with an alternative; don't make legal claims yourself."
+        },
+        {
+          "id": "s2",
+          "question": "If the prospect refuses any change, who decides whether to proceed?",
+          "options": [
+            "The BD rep alone",
+            "The prospect",
+            "Leadership, on counsel's advice",
+            "The delivery team"
+          ],
+          "correctIndex": 2,
+          "explanation": "Accepting material legal risk is a leadership decision informed by counsel."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-nda-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of an NDA in agency sales?",
+    "mcq": {
+      "options": [
+        "To guarantee the agency wins the work",
+        "To protect confidential information shared during discussions and the project",
+        "To set the project's price",
+        "To transfer IP ownership"
+      ],
+      "correctIndex": 1,
+      "explanation": "NDAs cover confidentiality; ownership and pricing belong in other agreements.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-nda-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is a mutual NDA?",
+    "mcq": {
+      "options": [
+        "Only the agency protects the client's information",
+        "Only the client protects the agency's information",
+        "Both parties agree to protect each other's confidential information",
+        "An NDA with no expiry"
+      ],
+      "correctIndex": 2,
+      "explanation": "In agency work both sides often share sensitive information, so mutual NDAs are common.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-nda-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-nda",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A prospect's NDA includes a clause stopping you from working with competitors. What should you do?",
+    "mcq": {
+      "options": [
+        "Sign it; NDAs are standard",
+        "Strike it out yourself",
+        "Ignore it, since it is probably unenforceable",
+        "Flag it to counsel before signing; it goes beyond confidentiality"
+      ],
+      "correctIndex": 3,
+      "explanation": "Non-competes can block future business; counsel and leadership should decide.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

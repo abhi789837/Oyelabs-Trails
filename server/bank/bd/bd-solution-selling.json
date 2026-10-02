@@ -1,0 +1,331 @@
+[
+  {
+    "id": "bd-solution-selling-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of solution selling.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps of solution selling, first at the top.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Quantify what the pain costs"
+        },
+        {
+          "id": "i3",
+          "label": "Map capabilities to that specific pain"
+        },
+        {
+          "id": "i4",
+          "label": "Build a costed solution with the client"
+        },
+        {
+          "id": "i5",
+          "label": "Prove it with evidence or a small pilot"
+        },
+        {
+          "id": "i1",
+          "label": "Identify the business pain"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Pain, cost, fit, costed answer, proof. Mapping capabilities before you know the cost leaves you unable to justify the price."
+    }
+  },
+  {
+    "id": "bd-solution-selling-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Build the ROI case for a solution.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your solution costs $80,000 to build plus $1,000 a month to maintain. It saves the client $6,000 a month from go-live. Ignore the build period.",
+      "table": null,
+      "fields": [
+        {
+          "id": "year1",
+          "label": "Net result in the first year",
+          "unit": "$",
+          "answer": -20000,
+          "tolerance": 1
+        },
+        {
+          "id": "payback",
+          "label": "Payback period",
+          "unit": "months",
+          "answer": 16,
+          "tolerance": 0.05
+        },
+        {
+          "id": "roi",
+          "label": "Three-year ROI",
+          "unit": "%",
+          "answer": 86.21,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Year 1: 72,000 − 80,000 − 12,000 = $-20000. Payback = 80,000 ÷ (6,000 − 1,000) = 16 months. Three years: savings 216,000; costs 80,000 + 36,000 = 116,000; ROI = 100,000 ÷ 116,000 = 86.21%. A negative first year is fine if the client sees the payback clearly."
+    }
+  },
+  {
+    "id": "bd-solution-selling-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find where this proposal stops being solution selling.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this proposal summary that do not connect to the client's diagnosed pain (late deliveries caused by manual route planning).",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Problem: dispatchers plan 60 routes a day by hand, causing about 12% late deliveries.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Solution: automatic route planning from the existing order system.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Bonus features: dark mode, an animated splash screen and 12 themes.",
+          "issue": "Features unrelated to the pain dilute the case and add cost."
+        },
+        {
+          "id": "p4",
+          "text": "Expected impact: late deliveries reduced toward 5%, based on the pilot.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Built with the latest technology for maximum innovation.",
+          "issue": "Generic claim with no link to the client's problem."
+        },
+        {
+          "id": "p6",
+          "text": "We will also redesign your website.",
+          "issue": "Unrelated scope the client did not ask for."
+        },
+        {
+          "id": "p7",
+          "text": "Pilot: two depots for four weeks, measured on late-delivery rate.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-solution-selling-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Lead with the pain, then prove it.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A distributor's dispatchers lose 2 hours a day each reconciling orders across three systems. You can integrate the systems or rebuild them into one platform.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which solution do you lead with?",
+          "options": [
+            "The full rebuild, since it is the bigger project",
+            "Both at equal priority",
+            "Whichever the engineering team prefers",
+            "The integration that removes the reconciliation work, with the rebuild as a later option"
+          ],
+          "correctIndex": 3,
+          "explanation": "Lead with the smallest solution that solves the diagnosed pain; it is easier to approve and to prove."
+        },
+        {
+          "id": "s2",
+          "question": "The CFO asks for proof before approving $70,000. What do you offer?",
+          "options": [
+            "A short paid pilot on one team, measured on hours saved",
+            "A guarantee of 100% time savings",
+            "A larger discount",
+            "References from unrelated industries only"
+          ],
+          "correctIndex": 0,
+          "explanation": "A small, measured pilot turns your estimate into evidence on the client's own data."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-solution-selling-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Value a checkout improvement for an e-commerce client.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An online store starts 50,000 checkouts a month and converts 2.0% of them, with an average order value of $80. Your checkout redesign is expected to lift conversion to 2.4%. The store's gross margin is 30%.",
+      "table": null,
+      "fields": [
+        {
+          "id": "monthly",
+          "label": "Extra revenue per month",
+          "unit": "$",
+          "answer": 16000,
+          "tolerance": 1
+        },
+        {
+          "id": "annual",
+          "label": "Extra revenue per year",
+          "unit": "$",
+          "answer": 192000,
+          "tolerance": 1
+        },
+        {
+          "id": "gp",
+          "label": "Extra gross profit per year",
+          "unit": "$",
+          "answer": 57600,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "50,000 × 0.4 percentage points = 200 more orders × $80 = $16000 a month, $192000 a year. At 30% margin that is $57600 of gross profit, which is the number a CFO compares with your price."
+    }
+  },
+  {
+    "id": "bd-solution-selling-t3-4",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Move a feature comparison back to outcomes.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect sends a spreadsheet comparing three agencies on 40 features and asks you to tick yours.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best response?",
+          "options": [
+            "Tick every box to look strongest",
+            "Fill it in honestly, then ask which outcomes matter most and show how you would reach them",
+            "Refuse to fill it in",
+            "Add 20 more features to stand out"
+          ],
+          "correctIndex": 1,
+          "explanation": "Answer what they asked, then move the conversation to outcomes where the decision really sits."
+        },
+        {
+          "id": "s2",
+          "question": "They say outcome number one is cutting onboarding time for new customers. What do you share next?",
+          "options": [
+            "Your full portfolio",
+            "Your hourly rates",
+            "A relevant example with a measured result and how it maps to their case",
+            "A list of technologies you use"
+          ],
+          "correctIndex": 2,
+          "explanation": "Evidence tied to the outcome they named is what makes a solution credible."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-solution-selling-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In solution selling, what is a \"solution\"?",
+    "mcq": {
+      "options": [
+        "Your standard service package",
+        "The cheapest option you can offer",
+        "A list of everything your team can build",
+        "A response designed around the client's specific, diagnosed business pain"
+      ],
+      "correctIndex": 3,
+      "explanation": "A solution is defined by the pain it solves, not by your catalogue.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-solution-selling-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which opening best fits solution selling?",
+    "mcq": {
+      "options": [
+        "\"You mentioned late deliveries are costing you contracts. Can we look at what drives them?\"",
+        "\"Let me show you our 12 services.\"",
+        "\"We're the best agency in the region.\"",
+        "\"What's your budget?\""
+      ],
+      "correctIndex": 0,
+      "explanation": "It starts from the client's pain and invites diagnosis.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-solution-selling-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-solution-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "The client's pain is real but they cannot put a number on it. What should you do?",
+    "mcq": {
+      "options": [
+        "Work with them to estimate it from things they can measure, stating the assumptions",
+        "Invent an industry statistic to fill the gap",
+        "Skip the cost and focus on features",
+        "Assume the pain is not worth solving"
+      ],
+      "correctIndex": 0,
+      "explanation": "A rough, honest estimate from the client's own data beats a made-up benchmark.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,381 @@
+[
+  {
+    "id": "pm-scope-control-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Read these notes from a week on a fixed-scope project. Mark the events that are scope creep.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Read these notes from a week on a fixed-scope project. Mark the events that are scope creep.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "A developer added a CSV export \"because the client will probably want it\".",
+          "issue": "Gold-plating: unrequested work adds cost and test effort."
+        },
+        {
+          "id": "s2",
+          "text": "The client confirmed the agreed login flow in the design review.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "The client's product owner asked a developer on Slack for an extra filter, and it was built that day.",
+          "issue": "A change made outside change control, bypassing the PM and the baseline."
+        },
+        {
+          "id": "s4",
+          "text": "The team fixed a bug in the agreed checkout flow.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "QA ran regression tests on the release candidate.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "The PM agreed on a call to \"also cover tablets\" without checking the estimate.",
+          "issue": "A commitment made without impact assessment or approval."
+        },
+        {
+          "id": "s7",
+          "text": "The designer delivered the agreed 12 screens.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "A sprint review showed the agreed search feature.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-scope-control-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Rank these practices by how much they help prevent scope creep on a fixed-bid project, most first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these practices by how much they help prevent scope creep on a fixed-bid project, most first.",
+      "items": [
+        {
+          "id": "re70d1",
+          "label": "A signed scope with explicit out-of-scope items and acceptance criteria"
+        },
+        {
+          "id": "r87701",
+          "label": "A change-control process the client agreed to in the contract"
+        },
+        {
+          "id": "r87461",
+          "label": "One named client product owner who prioritises requests"
+        },
+        {
+          "id": "ra33a5",
+          "label": "Showing the scope baseline in every sprint review"
+        },
+        {
+          "id": "rc201e",
+          "label": "A shared Slack channel with the client"
+        }
+      ],
+      "correctOrder": [
+        "re70d1",
+        "r87701",
+        "r87461",
+        "ra33a5",
+        "rc201e"
+      ],
+      "explanation": "The baseline and the agreed process do the most; a single decision-maker and regular visibility reinforce them; an open channel without rules can make creep worse."
+    }
+  },
+  {
+    "id": "pm-scope-control-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A fixed-bid project was quoted at 800 hours. Small unlogged requests have crept in. Calculate the effect.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A fixed-bid project was quoted at 800 hours. Small unlogged requests have crept in. Calculate the effect.",
+      "table": {
+        "columns": [
+          "Item",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Original estimate",
+            "800"
+          ],
+          [
+            "Unlogged small requests so far",
+            "96"
+          ],
+          [
+            "Hours remaining on original scope",
+            "350"
+          ],
+          [
+            "Hours spent to date",
+            "520"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "forecast",
+          "label": "Forecast total hours (spent + remaining)",
+          "unit": "h",
+          "answer": 870,
+          "tolerance": 1
+        },
+        {
+          "id": "over",
+          "label": "Forecast overrun vs estimate",
+          "unit": "h",
+          "answer": 70,
+          "tolerance": 1
+        },
+        {
+          "id": "creep",
+          "label": "Unlogged requests as a share of the original estimate",
+          "unit": "%",
+          "answer": 12.0,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Forecast 870 hours, 70 over. The 96 hours of unlogged requests (12% of the estimate) explain the whole overrun."
+    }
+  },
+  {
+    "id": "pm-scope-control-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "In a demo, the client says: \"While you're in there, can the dashboard also show weekly trends? Should be quick.\"",
+    "task": {
+      "kind": "scenario",
+      "prompt": "In a demo, the client says: \"While you're in there, can the dashboard also show weekly trends? Should be quick.\"",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you say in the meeting?",
+          "options": [
+            "\"Sure, no problem.\"",
+            "\"Good idea. I'll log it and come back with the impact before we commit.\"",
+            "\"No, that's out of scope.\"",
+            "\"Let me ask the developer right now to build it.\""
+          ],
+          "correctIndex": 1,
+          "explanation": "Acknowledge, don't commit; assess through change control."
+        },
+        {
+          "id": "d2",
+          "question": "The team estimates 2 days. What next?",
+          "options": [
+            "Add it to the sprint since 2 days is small",
+            "Send the client the impact and options, and get approval before it enters a sprint",
+            "Ignore it unless they ask again",
+            "Build it and bill later"
+          ],
+          "correctIndex": 1,
+          "explanation": "Small changes add up; each still needs a decision on the record."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scope-control-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This is the scope section of a statement for an AI chatbot build. Mark the lines that leave the door open to scope creep.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This is the scope section of a statement for an AI chatbot build. Mark the lines that leave the door open to scope creep.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "In scope: a web chat widget answering questions from the client's 150-page help centre.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "In scope: integration with any of the client's internal systems as needed.",
+          "issue": "Unbounded; name the systems and the operations."
+        },
+        {
+          "id": "s3",
+          "text": "In scope: English and Spanish.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Out of scope: voice input and phone channels.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Accuracy: answers will be correct.",
+          "issue": "No measurable acceptance target or evaluation set; every wrong answer becomes a dispute."
+        },
+        {
+          "id": "s6",
+          "text": "Content updates: the bot is re-indexed when the help centre changes, up to 4 times a month.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Reasonable additional features requested during the project are included.",
+          "issue": "\"Reasonable\" invites unlimited additions without change control."
+        },
+        {
+          "id": "s8",
+          "text": "Hand-off: a 2-hour training session for the client's support team.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-scope-control-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A project is 15% over budget from accumulated small additions. Order the recovery steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A project is 15% over budget from accumulated small additions. Order the recovery steps.",
+      "items": [
+        {
+          "id": "r344b6",
+          "label": "Reconcile delivered work against the signed scope to list every addition"
+        },
+        {
+          "id": "r4de23",
+          "label": "Quantify the hours and cost of the additions"
+        },
+        {
+          "id": "r5f0d4",
+          "label": "Meet the client to agree how the additions are handled"
+        },
+        {
+          "id": "rb08bb",
+          "label": "Issue retrospective change requests for what was agreed"
+        },
+        {
+          "id": "r0b261",
+          "label": "Reinforce change control with the team and client going forward"
+        }
+      ],
+      "correctOrder": [
+        "r344b6",
+        "r4de23",
+        "r5f0d4",
+        "rb08bb",
+        "r0b261"
+      ],
+      "explanation": "Facts first, then numbers, then a conversation, then paperwork, then prevention."
+    }
+  },
+  {
+    "id": "pm-scope-control-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is gold-plating?",
+    "mcq": {
+      "options": [
+        "The client adding requirements after sign-off",
+        "Charging a premium rate for urgent work",
+        "Using expensive tools on a project",
+        "The team adding features or polish nobody asked for"
+      ],
+      "correctIndex": 3,
+      "explanation": "Gold-plating is internal scope creep: it spends budget on work outside the agreed scope and adds testing and support burden.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-scope-control-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "On an agile retainer, which approach controls scope best?",
+    "mcq": {
+      "options": [
+        "Freezing the backlog for the whole retainer",
+        "Accepting every request into the current sprint",
+        "A fixed capacity per sprint with a prioritised backlog: new items displace lower ones",
+        "Requiring a contract amendment for every new story"
+      ],
+      "correctIndex": 2,
+      "explanation": "On agile work scope flexes within fixed capacity; control comes from explicit trade-offs, not a frozen list.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-scope-control-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-scope-control",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The client's CEO asks a developer directly to add a feature. What should the PM do?",
+    "mcq": {
+      "options": [
+        "Let the developer build it since the CEO asked",
+        "Complain to the CEO about bypassing process",
+        "Remove the developer from client calls",
+        "Thank the CEO, route the request through the product owner and change process, and remind the team to redirect such asks"
+      ],
+      "correctIndex": 3,
+      "explanation": "Keep the relationship warm and the process intact: one intake path protects the plan and the team.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

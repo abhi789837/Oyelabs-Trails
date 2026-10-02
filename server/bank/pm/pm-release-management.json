@@ -1,0 +1,358 @@
+[
+  {
+    "id": "pm-release-management-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of a typical web release.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of a typical web release.",
+      "items": [
+        {
+          "id": "r8190a",
+          "label": "Code freeze and release branch cut"
+        },
+        {
+          "id": "rd9b8f",
+          "label": "Regression test the release candidate on staging"
+        },
+        {
+          "id": "r83be5",
+          "label": "Go/no-go decision with the release checklist"
+        },
+        {
+          "id": "rdba78",
+          "label": "Deploy to production in the agreed window"
+        },
+        {
+          "id": "rf8882",
+          "label": "Smoke test production and monitor errors"
+        },
+        {
+          "id": "r068a6",
+          "label": "Send release notes to the client"
+        }
+      ],
+      "correctOrder": [
+        "r8190a",
+        "rd9b8f",
+        "r83be5",
+        "rdba78",
+        "rf8882",
+        "r068a6"
+      ],
+      "explanation": "Freeze, verify, decide, deploy, check, communicate."
+    }
+  },
+  {
+    "id": "pm-release-management-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Review this release plan for a Friday release. Mark the risky lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this release plan for a Friday release. Mark the risky lines.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Release window: Friday 5 pm, after the client's office closes.",
+          "issue": "Late-Friday releases leave few people to respond to problems over the weekend; prefer early in the week unless agreed with on-call cover."
+        },
+        {
+          "id": "s2",
+          "text": "Database migration tested on a copy of production data on staging.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Rollback plan: we'll figure it out if needed.",
+          "issue": "A rollback plan must be written and tested before release."
+        },
+        {
+          "id": "s4",
+          "text": "On-call: tech lead and DevOps engineer until 9 pm.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Smoke tests: login, checkout, order history.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Client notified of release time two days ahead.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Feature flags: none; all changes go live at once.",
+          "issue": "Without flags, any issue requires a full rollback; risky features should be behind flags where possible."
+        },
+        {
+          "id": "s8",
+          "text": "Release notes drafted and reviewed.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-release-management-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Thirty minutes after a production release, error rates on the checkout API jump from 0.5% to 8%.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Thirty minutes after a production release, error rates on the checkout API jump from 0.5% to 8%.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should happen first?",
+          "options": [
+            "Investigate the root cause before doing anything",
+            "Wait an hour to see if it settles",
+            "Email the client a full report first",
+            "Follow the rollback plan or disable the feature flag to restore checkout, then investigate"
+          ],
+          "correctIndex": 3,
+          "explanation": "Restore service first; diagnose after."
+        },
+        {
+          "id": "d2",
+          "question": "Checkout is restored. What do you tell the client?",
+          "options": [
+            "Nothing, since it's fixed",
+            "A detailed technical analysis tomorrow only",
+            "A short factual update now (what happened, impact, current status, next update time), then a post-incident review",
+            "That the payment provider caused it, before you know"
+          ],
+          "correctIndex": 2,
+          "explanation": "Prompt, honest updates with no speculation."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-release-management-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Calculate these release metrics for last quarter.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate these release metrics for last quarter.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Production releases",
+            "24"
+          ],
+          [
+            "Releases that caused an incident or rollback",
+            "3"
+          ],
+          [
+            "Total time to restore across those incidents (minutes)",
+            "135"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cfr",
+          "label": "Change failure rate",
+          "unit": "%",
+          "answer": 12.5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "mttr",
+          "label": "Mean time to restore",
+          "unit": "min",
+          "answer": 45.0,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Change failure rate 3 / 24 = 12.5%. Mean time to restore 135 / 3 = 45 minutes."
+    }
+  },
+  {
+    "id": "pm-release-management-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "For a mobile app release, order these steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "For a mobile app release, order these steps.",
+      "items": [
+        {
+          "id": "re5b03",
+          "label": "Feature freeze and release candidate build"
+        },
+        {
+          "id": "r202f5",
+          "label": "QA regression on physical devices"
+        },
+        {
+          "id": "r0c2df",
+          "label": "Submit to App Store and Google Play review"
+        },
+        {
+          "id": "rfd4e5",
+          "label": "Staged rollout to a small percentage of users"
+        },
+        {
+          "id": "r9b795",
+          "label": "Monitor crash rate and reviews, then expand the rollout"
+        }
+      ],
+      "correctOrder": [
+        "re5b03",
+        "r202f5",
+        "r0c2df",
+        "rfd4e5",
+        "r9b795"
+      ],
+      "explanation": "Store review takes time and cannot be rolled back like a web deploy, so staged rollout and monitoring limit the blast radius."
+    }
+  },
+  {
+    "id": "pm-release-management-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The client wants to launch a new AI recommendations feature to all 200,000 users on the day of a marketing campaign.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client wants to launch a new AI recommendations feature to all 200,000 users on the day of a marketing campaign.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What release approach do you recommend?",
+          "options": [
+            "Deploy the code on campaign morning",
+            "Release to all users a month early",
+            "Deploy days before behind a feature flag, test with internal users, then switch on for everyone on campaign day",
+            "Skip the campaign date"
+          ],
+          "correctIndex": 2,
+          "explanation": "Separating deploy from release removes deploy risk from the big day."
+        },
+        {
+          "id": "d2",
+          "question": "On campaign day, latency of the recommendations service doubles. What is the safest move?",
+          "options": [
+            "Roll back the whole app",
+            "Leave it and hope it recovers",
+            "Turn the feature flag down to a smaller share of users while the team scales the service",
+            "Turn off monitoring alerts"
+          ],
+          "correctIndex": 2,
+          "explanation": "Flags let you shrink exposure instantly without a redeploy."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-release-management-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a release checklist?",
+    "mcq": {
+      "options": [
+        "To prove the team worked hard",
+        "To replace testing",
+        "To make sure nothing important is missed, by the same steps every time",
+        "To decide which features to build next"
+      ],
+      "correctIndex": 2,
+      "explanation": "Releases fail on forgotten steps (migrations, config, notifications); a checklist makes them routine.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-release-management-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which statement about feature flags is accurate?",
+    "mcq": {
+      "options": [
+        "They remove the need for testing",
+        "They separate deploying code from releasing a feature to users",
+        "They only work on mobile apps",
+        "They make code faster"
+      ],
+      "correctIndex": 1,
+      "explanation": "With flags, code can be deployed safely and turned on later, for some users or all.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-release-management-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-release-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is a rollback harder for a release that includes a database migration?",
+    "mcq": {
+      "options": [
+        "Databases cannot be backed up",
+        "Migrations are always irreversible by law",
+        "The schema or data may already have changed, so the old code may not work with it",
+        "Rollbacks only apply to front-end code"
+      ],
+      "correctIndex": 2,
+      "explanation": "Plan backward-compatible migrations (expand, then contract) so the previous version can still run.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,354 @@
+[
+  {
+    "id": "pm-work-management-tools-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order these columns for a simple delivery board in Trello, Asana or Monday.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these columns for a simple delivery board in Trello, Asana or Monday.",
+      "items": [
+        {
+          "id": "r5c7fa",
+          "label": "Backlog"
+        },
+        {
+          "id": "r91f19",
+          "label": "To do (this sprint)"
+        },
+        {
+          "id": "rb6e0b",
+          "label": "In progress"
+        },
+        {
+          "id": "r48127",
+          "label": "In review / QA"
+        },
+        {
+          "id": "rf9296",
+          "label": "Done"
+        }
+      ],
+      "correctOrder": [
+        "r5c7fa",
+        "r91f19",
+        "rb6e0b",
+        "r48127",
+        "rf9296"
+      ],
+      "explanation": "Work flows left to right from ideas to finished."
+    }
+  },
+  {
+    "id": "pm-work-management-tools-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A new board for a client project has these cards. Mark the poorly written cards.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A new board for a client project has these cards. Mark the poorly written cards.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Build login screen: email and password, with error messages. Assignee: Ana. Due: 12 May.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Stuff for the app.",
+          "issue": "No clear task, owner or outcome."
+        },
+        {
+          "id": "s3",
+          "text": "Fix crash when uploading photos over 10 MB on Android. Assignee: Raj.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Do everything for checkout.",
+          "issue": "Too large and vague; split into specific tasks."
+        },
+        {
+          "id": "s5",
+          "text": "Write release notes for v1.2. Due: Friday.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Set up staging environment. Assignee: DevOps.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-work-management-tools-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A client wants to see progress but should not see internal comments about costs.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client wants to see progress but should not see internal comments about costs.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you set up?",
+          "options": [
+            "A client-facing board or view with only the fields and tasks they should see",
+            "Give them full access to the internal board",
+            "Send screenshots of everything",
+            "Give them no access"
+          ],
+          "correctIndex": 0,
+          "explanation": "Separate views keep transparency without exposing internal data."
+        },
+        {
+          "id": "d2",
+          "question": "The client asks to add requests directly to the board. What do you allow?",
+          "options": [
+            "A request form or intake column that the PM triages before work starts",
+            "Direct edits to the sprint column",
+            "Nothing at all",
+            "Requests by phone only"
+          ],
+          "correctIndex": 0,
+          "explanation": "Controlled intake keeps the board honest."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-work-management-tools-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Count work in progress on your board and compare with the team's WIP limit.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Count work in progress on your board and compare with the team's WIP limit.",
+      "table": {
+        "columns": [
+          "Column",
+          "Cards"
+        ],
+        "rows": [
+          [
+            "To do",
+            "12"
+          ],
+          [
+            "In progress",
+            "9"
+          ],
+          [
+            "In review",
+            "6"
+          ],
+          [
+            "Done this week",
+            "7"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "wip",
+          "label": "Cards in progress or in review",
+          "unit": "cards",
+          "answer": 15,
+          "tolerance": 0
+        },
+        {
+          "id": "over",
+          "label": "Cards over a WIP limit of 10",
+          "unit": "cards",
+          "answer": 5,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "9 + 6 = 15 in progress; 5 over a limit of 10, so finish work before starting more."
+    }
+  },
+  {
+    "id": "pm-work-management-tools-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps for setting up a work-management board for a new client project.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps for setting up a work-management board for a new client project.",
+      "items": [
+        {
+          "id": "ra7c24",
+          "label": "Agree the team's workflow stages"
+        },
+        {
+          "id": "r9a7a2",
+          "label": "Create columns or statuses that match those stages"
+        },
+        {
+          "id": "r00282",
+          "label": "Add the first sprint's tasks with owners and due dates"
+        },
+        {
+          "id": "r15abd",
+          "label": "Set up views and permissions for the client"
+        },
+        {
+          "id": "rb9b85",
+          "label": "Review the board with the team in the first stand-up"
+        }
+      ],
+      "correctOrder": [
+        "ra7c24",
+        "r9a7a2",
+        "r00282",
+        "r15abd",
+        "rb9b85"
+      ],
+      "explanation": "Design the workflow before configuring the tool, then fill it, share it safely and check it works for the team."
+    }
+  },
+  {
+    "id": "pm-work-management-tools-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A PM's tool setup for a 4-person project. Mark the choices that add overhead without value.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's tool setup for a 4-person project. Mark the choices that add overhead without value.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "One board with columns matching the team's workflow.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Twelve custom statuses that nobody uses.",
+          "issue": "Unused statuses clutter the board and confuse updates."
+        },
+        {
+          "id": "s3",
+          "text": "Due dates on client deliverables.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Mandatory time estimates in minutes on every card.",
+          "issue": "Excessive precision for a small team; adds admin without better decisions."
+        },
+        {
+          "id": "s5",
+          "text": "Automatic notifications when a card moves to review.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "A weekly board review in the team meeting.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-work-management-tools-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a task board in a work management tool?",
+    "mcq": {
+      "options": [
+        "To replace conversation",
+        "To make the team's work and its status visible to everyone",
+        "To track personal performance",
+        "To store contracts"
+      ],
+      "correctIndex": 1,
+      "explanation": "Visibility helps the team coordinate and spot blockers.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-work-management-tools-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why set WIP limits on a board's in-progress column?",
+    "mcq": {
+      "options": [
+        "To finish work before starting more, which shortens cycle time",
+        "To keep people idle",
+        "To hide work from the client",
+        "To make the board look tidy"
+      ],
+      "correctIndex": 0,
+      "explanation": "Limiting WIP improves flow and exposes bottlenecks.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-work-management-tools-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-work-management-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client asks you to switch tools mid-project because they prefer Asana. What is the best approach?",
+    "mcq": {
+      "options": [
+        "Switch immediately",
+        "Refuse to discuss it",
+        "Use both tools without syncing",
+        "Weigh the migration cost and disruption against the benefit, and agree a plan or a shared view"
+      ],
+      "correctIndex": 3,
+      "explanation": "Tool changes have real costs; decide deliberately.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

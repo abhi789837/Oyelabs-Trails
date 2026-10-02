@@ -1,0 +1,414 @@
+[
+  {
+    "id": "bd-value-proposition-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which is the strongest value proposition line for an agency that builds MVPs for non-technical founders?",
+    "mcq": {
+      "options": [
+        "\"We use the latest cutting-edge technologies.\"",
+        "\"We have offices and a great culture.\"",
+        "\"We turn your idea into a launch-ready MVP in 12 weeks, with a fixed scope and price agreed upfront.\"",
+        "\"We are a passionate team of innovative developers.\""
+      ],
+      "correctIndex": 2,
+      "explanation": "It names the customer's outcome, a concrete timeframe and the risk it removes. The others are generic claims every agency makes.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-value-proposition-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect says \"every agency says they are fast and high quality\". What is the best way to differentiate?",
+    "mcq": {
+      "options": [
+        "Criticise other agencies by name",
+        "Give specific proof: a similar case with timeline and result, a named process, or a guarantee you can actually honour",
+        "Repeat that you are faster and higher quality",
+        "Lower your price immediately"
+      ],
+      "correctIndex": 1,
+      "explanation": "Differentiation needs evidence. Specific, verifiable proof beats adjectives; discounting and bashing competitors weaken your position.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-value-proposition-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Your agency wins 35% of health-tech deals but 8% of generic \"build my app\" deals. What positioning change does the data support?",
+    "mcq": {
+      "options": [
+        "Lead with health-tech specialism in messaging and profiles, while still accepting good-fit general work",
+        "Stop mentioning health-tech so you look more general",
+        "Drop prices on generic deals to raise their win rate",
+        "Change nothing; win rates are random"
+      ],
+      "correctIndex": 0,
+      "explanation": "Specialised positioning lets buyers see you as lower-risk in that domain. Focusing messaging where you already win is the cheapest improvement.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-value-proposition-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the sentences in this homepage value proposition that are weak or generic.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the sentences in this homepage value proposition that are weak or generic.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "We help logistics companies replace manual dispatch with a driver app and live tracking.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We are a world-class team of passionate innovators.",
+          "issue": "Generic self-praise with no customer outcome or proof."
+        },
+        {
+          "id": "p3",
+          "text": "Clients typically launch in 10–14 weeks with a fixed scope agreed upfront.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "We leverage synergies to deliver best-in-class solutions.",
+          "issue": "Buzzwords that say nothing specific."
+        },
+        {
+          "id": "p5",
+          "text": "After launch, we support and improve the app on a monthly plan.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-value-proposition-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these elevator-pitch lines for a startup founder audience, strongest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these elevator-pitch lines for a startup founder audience, strongest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "\"We are a software company.\""
+        },
+        {
+          "id": "r4",
+          "label": "\"We do everything tech-related.\""
+        },
+        {
+          "id": "r1",
+          "label": "\"We help seed-stage founders launch an investor-ready MVP in 12 weeks at a fixed price.\""
+        },
+        {
+          "id": "r2",
+          "label": "\"We build web and mobile apps for startups.\""
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Specific audience, outcome, timeframe and risk-reducer is best; a clear audience and service is decent; vague and over-broad lines tell the founder nothing."
+    }
+  },
+  {
+    "id": "bd-value-proposition-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A prospect, a mid-size insurer, is comparing you with a large consultancy and a cheap offshore freelancer team for an AI claims-triage tool.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect, a mid-size insurer, is comparing you with a large consultancy and a cheap offshore freelancer team for an AI claims-triage tool.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should you position against the large consultancy?",
+          "options": [
+            "Claim you are bigger than them",
+            "Say consultancies always fail",
+            "Faster start, senior people doing the work, and lower overhead for the same outcome"
+          ],
+          "correctIndex": 2,
+          "explanation": "Position on your real structural advantages, not on matching their size."
+        },
+        {
+          "id": "s2",
+          "question": "How should you position against the cheap freelancers?",
+          "options": [
+            "Delivery accountability: QA, project management, security practices and support after launch",
+            "Match their price",
+            "Say freelancers are unprofessional"
+          ],
+          "correctIndex": 0,
+          "explanation": "The risk of a cheap option is accountability and continuity; that is what to make visible."
+        },
+        {
+          "id": "s3",
+          "question": "What proof would most strengthen your case to this insurer?",
+          "options": [
+            "Your team's office photos",
+            "A relevant case study with measured results and a reference client they can call",
+            "A long list of every technology you know"
+          ],
+          "correctIndex": 1,
+          "explanation": "Relevant, verifiable proof reduces the buyer's perceived risk the most."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-value-proposition-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are rewriting a capabilities deck. Rank these proof points by how persuasive they are to a buyer, most first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "You are rewriting a capabilities deck. Rank these proof points by how persuasive they are to a buyer, most first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "\"Trusted by 100+ clients\" with no names"
+        },
+        {
+          "id": "r4",
+          "label": "\"We are passionate about quality\""
+        },
+        {
+          "id": "r1",
+          "label": "Case study: insurer cut claim triage time from 3 days to 4 hours with our AI tool"
+        },
+        {
+          "id": "r2",
+          "label": "Client testimonial with name and title praising communication"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Quantified outcomes in a similar context are strongest; a named testimonial is credible but less specific; unattributed counts are weak; unsupported adjectives persuade no one."
+    }
+  },
+  {
+    "id": "bd-value-proposition-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "To support a value proposition for an AI support assistant, calculate the client's annual saving and payback period.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "To support a value proposition for an AI support assistant, calculate the client's annual saving and payback period.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Support tickets per month",
+            "6,000"
+          ],
+          [
+            "Share the assistant resolves without an agent",
+            "30%"
+          ],
+          [
+            "Cost per agent-handled ticket",
+            "$4"
+          ],
+          [
+            "Project cost",
+            "$43,200"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "annual",
+          "label": "Annual saving",
+          "unit": "$",
+          "answer": 86400,
+          "tolerance": 1
+        },
+        {
+          "id": "payback",
+          "label": "Payback period",
+          "unit": "months",
+          "answer": 6,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "6,000 x 30% = 1,800 tickets/month x $4 = $7,200/month, so $86,400/year. Payback: 43,200 / 7,200 = 6 months."
+    }
+  },
+  {
+    "id": "bd-value-proposition-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your agency positions itself as \"AI platforms for healthcare\". A large, well-paying fintech lead arrives through a referral.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your agency positions itself as \"AI platforms for healthcare\". A large, well-paying fintech lead arrives through a referral.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Should you take the fintech discovery call?",
+          "options": [
+            "No, it damages your positioning",
+            "Only if they agree to rebrand as healthcare",
+            "Yes, if it fits your capabilities; positioning guides marketing focus, it does not forbid good-fit work"
+          ],
+          "correctIndex": 2,
+          "explanation": "Positioning focuses messaging; it is not a rule against profitable, deliverable work."
+        },
+        {
+          "id": "s2",
+          "question": "How do you present your agency to them?",
+          "options": [
+            "Lead with transferable proof (regulated-industry AI, security and compliance practices)",
+            "Pretend you specialise in fintech",
+            "Talk only about healthcare cases"
+          ],
+          "correctIndex": 0,
+          "explanation": "Regulated-data experience transfers honestly; inventing a specialism does not."
+        },
+        {
+          "id": "s3",
+          "question": "Fintech deals start arriving regularly and closing well. What do you do with positioning?",
+          "options": [
+            "Drop healthcare immediately",
+            "Review win data and consider adding \"regulated industries\" as a broader, still-specific position",
+            "Ignore the trend"
+          ],
+          "correctIndex": 1,
+          "explanation": "Positioning should follow evidence about where you win, and stay specific enough to differentiate."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-value-proposition-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-value-proposition",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Write a 2–3 sentence value proposition for an agency's AI document-processing offer, aimed at operations directors in mid-size logistics companies.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a 2–3 sentence value proposition for an agency's AI document-processing offer, aimed at operations directors in mid-size logistics companies.",
+      "context": "Facts you can use: the agency builds AI tools that extract data from shipping documents (bills of lading, invoices) into the client's system. In past projects, manual data entry time dropped by around 70%. Typical first version ships in 8–10 weeks. The agency supports the tool after launch.",
+      "wordLimit": 80,
+      "rubric": [
+        {
+          "id": "audience",
+          "label": "Speaks to the audience",
+          "description": "Addresses operations directors' concerns (manual work, errors, speed) rather than technology for its own sake.",
+          "weight": 1
+        },
+        {
+          "id": "outcome",
+          "label": "Concrete outcome",
+          "description": "States a specific, credible outcome using the given facts (e.g. ~70% less manual entry).",
+          "weight": 1
+        },
+        {
+          "id": "risk",
+          "label": "Reduces perceived risk",
+          "description": "Mentions timeline or post-launch support so the offer feels low-risk.",
+          "weight": 1
+        },
+        {
+          "id": "clarity",
+          "label": "Clear and jargon-free",
+          "description": "Plain language, no buzzwords, within the word limit.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Your team spends hours keying bills of lading and invoices into your system. We build an AI tool that reads those documents and enters the data for you, cutting manual entry by around 70% in past projects. A first version is live in 8–10 weeks, and we support and improve it after launch."
+    }
+  }
+]

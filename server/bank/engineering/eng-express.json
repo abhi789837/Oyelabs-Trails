@@ -1,0 +1,2292 @@
+[
+  {
+    "id": "eng-express-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`GET /users/:id` should return the user as JSON, or `404` with `{ error: 'User not found' }` when there is no such user. Fix `getUser`. Remember that route params are strings.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function getUser(req, res) {\n  const user = users.find((u) => u.id === req.params.id);\n  res.json(user);\n}\n\n// Test driver (leave as is).\nconst users = [{ id: 1, name: 'Ada' }, { id: 2, name: 'Linus' }];\nfunction run(id) {\n  const res = makeRes();\n  getUser({ params: { id } }, res);\n  return { status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "function getUser(req, res) {\n  const user = users.find((u) => u.id === Number(req.params.id));\n  if (!user) return res.status(404).json({ error: 'User not found' });\n  res.json(user);\n}\n\n// Test driver (leave as is).\nconst users = [{ id: 1, name: 'Ada' }, { id: 2, name: 'Linus' }];\nfunction run(id) {\n  const res = makeRes();\n  getUser({ params: { id } }, res);\n  return { status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "1"
+          ],
+          "expected": {
+            "status": 200,
+            "body": {
+              "id": 1,
+              "name": "Ada"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2"
+          ],
+          "expected": {
+            "status": 200,
+            "body": {
+              "id": 2,
+              "name": "Linus"
+            }
+          }
+        },
+        {
+          "args": [
+            "3"
+          ],
+          "expected": {
+            "status": 404,
+            "body": {
+              "error": "User not found"
+            }
+          }
+        },
+        {
+          "args": [
+            "abc"
+          ],
+          "expected": {
+            "status": 404,
+            "body": {
+              "error": "User not found"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `validateCreateUser(body)` for `POST /users`. Return an array of error messages (empty when valid), in this order:\n- `'name is required'` when `name` is missing or blank\n- `'email is invalid'` when `email` is not a string containing `@`\n- `'age must be a non-negative integer'` when `age` is present but not one\n\n`body` may be `null` if the client sent nothing.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "validateCreateUser",
+      "starterCode": "function validateCreateUser(body) {\n  const errors = [];\n  if (!body.name) errors.push('name is required');\n  if (!body.email) errors.push('email is invalid');\n  return errors;\n}",
+      "referenceSolution": "function validateCreateUser(body) {\n  const b = body || {};\n  const errors = [];\n  if (typeof b.name !== 'string' || !b.name.trim()) errors.push('name is required');\n  if (typeof b.email !== 'string' || !b.email.includes('@')) errors.push('email is invalid');\n  if (b.age !== undefined && !(Number.isInteger(b.age) && b.age >= 0)) errors.push('age must be a non-negative integer');\n  return errors;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "email": "ada@example.com"
+            }
+          ],
+          "expected": []
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": [
+            "name is required",
+            "email is invalid"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "   ",
+              "email": "ada@example.com"
+            }
+          ],
+          "expected": [
+            "name is required"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "email": "ada.example.com",
+              "age": -1
+            }
+          ],
+          "expected": [
+            "email is invalid",
+            "age must be a non-negative integer"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "email": "a@b.co",
+              "age": 30
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "email": "a@b.co",
+              "age": "30"
+            }
+          ],
+          "expected": [
+            "age must be a non-negative integer"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `matchRoute(pattern, path)`: return the params object when `path` matches a pattern like `/users/:id/orders/:orderId`, otherwise `null`. A path with more or fewer segments than the pattern does not match.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matchRoute",
+      "starterCode": "function matchRoute(pattern, path) {\n  const p = pattern.split('/');\n  const a = path.split('/');\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(':')) params[p[i].slice(1)] = a[i];\n    else if (p[i] !== a[i]) return null;\n  }\n  return params;\n}",
+      "referenceSolution": "function matchRoute(pattern, path) {\n  const p = pattern.split('/');\n  const a = path.split('/');\n  if (p.length !== a.length) return null;\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(':')) params[p[i].slice(1)] = a[i];\n    else if (p[i] !== a[i]) return null;\n  }\n  return params;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/users/:id",
+            "/users/42"
+          ],
+          "expected": {
+            "id": "42"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/users/:id",
+            "/users/42/orders"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/users/:id",
+            "/users"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/users/:id/orders/:orderId",
+            "/users/7/orders/99"
+          ],
+          "expected": {
+            "id": "7",
+            "orderId": "99"
+          }
+        },
+        {
+          "args": [
+            "/health",
+            "/health"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "/users/:id",
+            "/posts/42"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`req.query` values are always strings. Fix `queryToFilter` for `GET /users?active=false&role=admin&minAge=18`:\n- `active`: `'true'` → `true`, `'false'` → `false`, anything else is ignored\n- `role`: copied as is when non-empty\n- `minAge`: a number, ignored when not numeric\n\nOther keys are ignored.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "queryToFilter",
+      "starterCode": "function queryToFilter(query) {\n  const filter = {};\n  if (query.role) filter.role = query.role;\n  if (query.minAge) filter.minAge = Number(query.minAge);\n  if (query.active) filter.active = Boolean(query.active);\n  return filter;\n}",
+      "referenceSolution": "function queryToFilter(query) {\n  const filter = {};\n  if (query.role) filter.role = query.role;\n  if (query.minAge !== undefined && query.minAge !== '' && !Number.isNaN(Number(query.minAge))) filter.minAge = Number(query.minAge);\n  if (query.active === 'true') filter.active = true;\n  if (query.active === 'false') filter.active = false;\n  return filter;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "active": "true",
+              "role": "admin"
+            }
+          ],
+          "expected": {
+            "active": true,
+            "role": "admin"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "active": "false"
+            }
+          ],
+          "expected": {
+            "active": false
+          }
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "minAge": "abc",
+              "active": "yes"
+            }
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "minAge": "18",
+              "sort": "name"
+            }
+          ],
+          "expected": {
+            "minAge": 18
+          }
+        },
+        {
+          "args": [
+            {
+              "minAge": "0"
+            }
+          ],
+          "expected": {
+            "minAge": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Fix the `requireJson` middleware. For `POST`, `PUT` and `PATCH` it must reply `415` unless the `content-type` is JSON (`application/json`, with or without a `; charset=…` suffix, any case). Every other request, and every JSON request, goes on with `next()`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function requireJson(req, res, next) {\n  if (req.headers['content-type'] !== 'application/json') {\n    return res.status(415).json({ error: 'Content-Type must be application/json' });\n  }\n  next();\n}\n\n// Test driver (leave as is).\nfunction run(method, contentType) {\n  const req = { method, headers: contentType ? { 'content-type': contentType } : {} };\n  const res = makeRes();\n  let nextCalled = false;\n  requireJson(req, res, () => { nextCalled = true; });\n  return { status: res.statusCode, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "function requireJson(req, res, next) {\n  const hasBody = ['POST', 'PUT', 'PATCH'].includes(req.method);\n  const type = (req.headers['content-type'] || '').split(';')[0].trim().toLowerCase();\n  if (hasBody && type !== 'application/json') {\n    return res.status(415).json({ error: 'Content-Type must be application/json' });\n  }\n  next();\n}\n\n// Test driver (leave as is).\nfunction run(method, contentType) {\n  const req = { method, headers: contentType ? { 'content-type': contentType } : {} };\n  const res = makeRes();\n  let nextCalled = false;\n  requireJson(req, res, () => { nextCalled = true; });\n  return { status: res.statusCode, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "POST",
+            "application/json"
+          ],
+          "expected": {
+            "status": 200,
+            "next": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "GET",
+            null
+          ],
+          "expected": {
+            "status": 200,
+            "next": true
+          }
+        },
+        {
+          "args": [
+            "POST",
+            "application/json; charset=utf-8"
+          ],
+          "expected": {
+            "status": 200,
+            "next": true
+          }
+        },
+        {
+          "args": [
+            "POST",
+            "text/plain"
+          ],
+          "expected": {
+            "status": 415,
+            "next": false
+          }
+        },
+        {
+          "args": [
+            "PATCH",
+            null
+          ],
+          "expected": {
+            "status": 415,
+            "next": false
+          }
+        },
+        {
+          "args": [
+            "PUT",
+            "Application/JSON"
+          ],
+          "expected": {
+            "status": 200,
+            "next": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are building `POST /api/orders` for a shop's Express API. Pick the right response for each case.",
+    "task": {
+      "prompt": "You are building `POST /api/orders` for a shop's Express API. Pick the right response for each case.",
+      "kind": "scenario",
+      "steps": [
+        {
+          "id": "created",
+          "question": "The order is saved successfully.",
+          "options": [
+            "`200 OK` with the order",
+            "`201 Created` with the order and a `Location: /api/orders/123` header",
+            "`204 No Content`",
+            "`202 Accepted`"
+          ],
+          "correctIndex": 1,
+          "explanation": "A POST that creates a resource returns 201, ideally with a Location header pointing at the new resource."
+        },
+        {
+          "id": "invalid",
+          "question": "The body is missing the required `items` field.",
+          "options": [
+            "`400 Bad Request` with a message naming the missing field",
+            "`404 Not Found`",
+            "`500 Internal Server Error`",
+            "`200 OK` with `{ success: false }`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The client sent a bad request; say so with a 4xx and tell them what to fix. A 200 hides the failure from every client and monitor."
+        },
+        {
+          "id": "noauth",
+          "question": "The request has no `Authorization` header at all.",
+          "options": [
+            "`401 Unauthorized`",
+            "`403 Forbidden`",
+            "`400 Bad Request`",
+            "`404 Not Found`"
+          ],
+          "correctIndex": 0,
+          "explanation": "401 means \"we do not know who you are\". 403 is for an authenticated user who is not allowed to do this."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `app.use(express.json())` do?",
+    "mcq": {
+      "options": [
+        "Parses JSON request bodies and puts the result on `req.body`",
+        "Makes every response use `Content-Type: application/json`",
+        "Rejects any request that is not JSON",
+        "Lets you call `res.json()` in handlers"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without a body parser `req.body` is `undefined`. `express.json()` only parses requests whose Content-Type is JSON; it does not affect responses, and `res.json()` works without it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Route `app.get('/users/:id', handler)` receives `GET /users/42?sort=asc`. Where do you read `asc`?",
+    "mcq": {
+      "options": [
+        "`req.query.sort`",
+        "`req.params.sort`",
+        "`req.body.sort`",
+        "`req.params.id`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Path placeholders (`:id` → `'42'`) are in `req.params`; everything after `?` is in `req.query`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A middleware logs the request and then forgets to call `next()` and never sends a response. What does the client see?",
+    "mcq": {
+      "options": [
+        "The request hangs until the client or a proxy times out",
+        "Express automatically sends `404`",
+        "Express skips to the next middleware after a short delay",
+        "Express sends `500` with the error"
+      ],
+      "correctIndex": 0,
+      "explanation": "Express only moves on when you call `next()` (or end the response). Otherwise nothing happens and the socket stays open.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `compose(stack)`, a tiny version of how Express runs middleware. Each middleware gets `(req, res, next)`, and the next one runs **only if** the current one calls `next()`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runStack",
+      "starterCode": "function compose(stack) {\n  return (req, res) => {\n    for (const mw of stack) mw(req, res, () => {});\n  };\n}\n\n// Test driver (leave as is).\nconst middleware = {\n  logger: (req, res, next) => { req.log.push('logger'); next(); },\n  auth: (req, res, next) => {\n    req.log.push('auth');\n    if (!req.headers.authorization) return res.status(401).json({ error: 'Unauthorized' });\n    next();\n  },\n  addUser: (req, res, next) => { req.user = 'ada'; req.log.push('addUser'); next(); },\n  handler: (req, res) => { req.log.push('handler'); res.json({ user: req.user || null }); },\n};\nfunction runStack(names, headers) {\n  const req = { headers, log: [] };\n  const res = makeRes();\n  compose(names.map((n) => middleware[n]))(req, res);\n  return { log: req.log, status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "function compose(stack) {\n  return (req, res) => {\n    let i = 0;\n    const next = () => {\n      const mw = stack[i++];\n      if (mw) mw(req, res, next);\n    };\n    next();\n  };\n}\n\n// Test driver (leave as is).\nconst middleware = {\n  logger: (req, res, next) => { req.log.push('logger'); next(); },\n  auth: (req, res, next) => {\n    req.log.push('auth');\n    if (!req.headers.authorization) return res.status(401).json({ error: 'Unauthorized' });\n    next();\n  },\n  addUser: (req, res, next) => { req.user = 'ada'; req.log.push('addUser'); next(); },\n  handler: (req, res) => { req.log.push('handler'); res.json({ user: req.user || null }); },\n};\nfunction runStack(names, headers) {\n  const req = { headers, log: [] };\n  const res = makeRes();\n  compose(names.map((n) => middleware[n]))(req, res);\n  return { log: req.log, status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "logger",
+              "auth",
+              "handler"
+            ],
+            {}
+          ],
+          "expected": {
+            "log": [
+              "logger",
+              "auth"
+            ],
+            "status": 401,
+            "body": {
+              "error": "Unauthorized"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "logger",
+              "auth",
+              "addUser",
+              "handler"
+            ],
+            {
+              "authorization": "Bearer x"
+            }
+          ],
+          "expected": {
+            "log": [
+              "logger",
+              "auth",
+              "addUser",
+              "handler"
+            ],
+            "status": 200,
+            "body": {
+              "user": "ada"
+            }
+          }
+        },
+        {
+          "args": [
+            [],
+            {}
+          ],
+          "expected": {
+            "log": [],
+            "status": 200,
+            "body": null
+          }
+        },
+        {
+          "args": [
+            [
+              "handler",
+              "logger"
+            ],
+            {}
+          ],
+          "expected": {
+            "log": [
+              "handler"
+            ],
+            "status": 200,
+            "body": {
+              "user": null
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              "auth",
+              "addUser",
+              "handler"
+            ],
+            {}
+          ],
+          "expected": {
+            "log": [
+              "auth"
+            ],
+            "status": 401,
+            "body": {
+              "error": "Unauthorized"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Your error-handling middleware calls `errorToStatus(err)` to build the response. Fix it:\n- `ValidationError` → `400`, `NotFoundError` → `404` (by `err.name`)\n- otherwise a numeric `err.status` between 400 and 599 is used\n- anything else is `500`\n\nFor 5xx responses the body must be `{ error: 'Internal Server Error' }` so internals never leak; for 4xx it is `{ error: err.message }`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "errorToStatus",
+      "starterCode": "function errorToStatus(err) {\n  const status = err.status || (err.name === 'ValidationError' ? 400 : 500);\n  return { status, body: { error: err.message } };\n}",
+      "referenceSolution": "function errorToStatus(err) {\n  let status = 500;\n  if (err.name === 'ValidationError') status = 400;\n  else if (err.name === 'NotFoundError') status = 404;\n  else if (Number.isInteger(err.status) && err.status >= 400 && err.status <= 599) status = err.status;\n  const error = status >= 500 ? 'Internal Server Error' : err.message;\n  return { status, body: { error } };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "ValidationError",
+              "message": "email is invalid"
+            }
+          ],
+          "expected": {
+            "status": 400,
+            "body": {
+              "error": "email is invalid"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "NotFoundError",
+              "message": "order 9 not found"
+            }
+          ],
+          "expected": {
+            "status": 404,
+            "body": {
+              "error": "order 9 not found"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Error",
+              "message": "connect ECONNREFUSED 10.0.0.5:5432"
+            }
+          ],
+          "expected": {
+            "status": 500,
+            "body": {
+              "error": "Internal Server Error"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "HttpError",
+              "message": "Too many requests",
+              "status": 429
+            }
+          ],
+          "expected": {
+            "status": 429,
+            "body": {
+              "error": "Too many requests"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Error",
+              "message": "weird",
+              "status": 200
+            }
+          ],
+          "expected": {
+            "status": 500,
+            "body": {
+              "error": "Internal Server Error"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "HttpError",
+              "message": "upstream down",
+              "status": 503
+            }
+          ],
+          "expected": {
+            "status": 503,
+            "body": {
+              "error": "Internal Server Error"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix `routeRequest(routes, method, path)`. Return `{ status: 200, name, params }` for the first route that matches both method and path. When the path matches some route but not with this method, return `{ status: 405, allow }` listing the methods that do match the path, in route order. Otherwise `{ status: 404 }`. `matchPath` is done.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "routeRequest",
+      "starterCode": "function matchPath(pattern, path) {\n  const p = pattern.split('/');\n  const a = path.split('/');\n  if (p.length !== a.length) return null;\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(':')) params[p[i].slice(1)] = a[i];\n    else if (p[i] !== a[i]) return null;\n  }\n  return params;\n}\n\nfunction routeRequest(routes, method, path) {\n  for (const r of routes) {\n    const params = matchPath(r.pattern, path);\n    if (params && r.method === method) return { status: 200, name: r.name, params };\n  }\n  return { status: 404 };\n}",
+      "referenceSolution": "function matchPath(pattern, path) {\n  const p = pattern.split('/');\n  const a = path.split('/');\n  if (p.length !== a.length) return null;\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(':')) params[p[i].slice(1)] = a[i];\n    else if (p[i] !== a[i]) return null;\n  }\n  return params;\n}\n\nfunction routeRequest(routes, method, path) {\n  const allow = [];\n  for (const r of routes) {\n    const params = matchPath(r.pattern, path);\n    if (!params) continue;\n    if (r.method === method) return { status: 200, name: r.name, params };\n    if (!allow.includes(r.method)) allow.push(r.method);\n  }\n  return allow.length ? { status: 405, allow } : { status: 404 };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "method": "GET",
+                "pattern": "/users/:id",
+                "name": "getUser"
+              }
+            ],
+            "GET",
+            "/users/5"
+          ],
+          "expected": {
+            "status": 200,
+            "name": "getUser",
+            "params": {
+              "id": "5"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "method": "GET",
+                "pattern": "/users/:id",
+                "name": "getUser"
+              },
+              {
+                "method": "PUT",
+                "pattern": "/users/:id",
+                "name": "putUser"
+              }
+            ],
+            "DELETE",
+            "/users/5"
+          ],
+          "expected": {
+            "status": 405,
+            "allow": [
+              "GET",
+              "PUT"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "method": "GET",
+                "pattern": "/users/:id",
+                "name": "getUser"
+              }
+            ],
+            "GET",
+            "/orders/1"
+          ],
+          "expected": {
+            "status": 404
+          }
+        },
+        {
+          "args": [
+            [],
+            "GET",
+            "/"
+          ],
+          "expected": {
+            "status": 404
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "method": "GET",
+                "pattern": "/users/me",
+                "name": "me"
+              },
+              {
+                "method": "GET",
+                "pattern": "/users/:id",
+                "name": "getUser"
+              }
+            ],
+            "GET",
+            "/users/me"
+          ],
+          "expected": {
+            "status": 200,
+            "name": "me",
+            "params": {}
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Unauthenticated requests are getting `201` from this app. Fix the middleware `order` (only that line) so the body is parsed and the caller authenticated before the handler runs. A middleware that responds without calling `next()` ends the chain.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "request",
+      "starterCode": "const order = ['parseJson', 'handler', 'requireAuth'];\n\n// App and test driver (leave as is).\nconst mw = {\n  parseJson: (req, res, next) => { req.body = req.rawBody ? JSON.parse(req.rawBody) : null; next(); },\n  requireAuth: (req, res, next) => {\n    if (!req.headers.authorization) return res.status(401).json({ error: 'Unauthorized' });\n    next();\n  },\n  handler: (req, res) => res.status(201).json({ received: req.body }),\n};\nfunction request(headers, rawBody) {\n  const req = { headers, rawBody };\n  const res = makeRes();\n  let i = 0;\n  const next = () => { const name = order[i++]; if (name) mw[name](req, res, next); };\n  next();\n  return { status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "const order = ['parseJson', 'requireAuth', 'handler'];\n\n// App and test driver (leave as is).\nconst mw = {\n  parseJson: (req, res, next) => { req.body = req.rawBody ? JSON.parse(req.rawBody) : null; next(); },\n  requireAuth: (req, res, next) => {\n    if (!req.headers.authorization) return res.status(401).json({ error: 'Unauthorized' });\n    next();\n  },\n  handler: (req, res) => res.status(201).json({ received: req.body }),\n};\nfunction request(headers, rawBody) {\n  const req = { headers, rawBody };\n  const res = makeRes();\n  let i = 0;\n  const next = () => { const name = order[i++]; if (name) mw[name](req, res, next); };\n  next();\n  return { status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {},
+            "{\"a\":1}"
+          ],
+          "expected": {
+            "status": 401,
+            "body": {
+              "error": "Unauthorized"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "authorization": "Bearer t"
+            },
+            "{\"a\":1}"
+          ],
+          "expected": {
+            "status": 201,
+            "body": {
+              "received": {
+                "a": 1
+              }
+            }
+          }
+        },
+        {
+          "args": [
+            {},
+            null
+          ],
+          "expected": {
+            "status": 401,
+            "body": {
+              "error": "Unauthorized"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "authorization": "Bearer t"
+            },
+            null
+          ],
+          "expected": {
+            "status": 201,
+            "body": {
+              "received": null
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `parseCookies(header)` for the `Cookie` request header, like `cookie-parser`: pairs are separated by `;`, names and values are trimmed, values are URL-decoded (keep the raw value if decoding fails), and a value may itself contain `=`. A missing or empty header gives `{}`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseCookies",
+      "starterCode": "function parseCookies(header) {\n  const out = {};\n  for (const part of header.split('; ')) {\n    const [key, value] = part.split('=');\n    out[key] = value;\n  }\n  return out;\n}",
+      "referenceSolution": "function parseCookies(header) {\n  const out = {};\n  if (!header) return out;\n  for (const part of header.split(';')) {\n    const eq = part.indexOf('=');\n    if (eq === -1) continue;\n    const key = part.slice(0, eq).trim();\n    if (!key) continue;\n    const value = part.slice(eq + 1).trim();\n    try {\n      out[key] = decodeURIComponent(value);\n    } catch (err) {\n      out[key] = value;\n    }\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "sid=abc123; theme=dark"
+          ],
+          "expected": {
+            "sid": "abc123",
+            "theme": "dark"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "name=hello%20world;token=a=b=c"
+          ],
+          "expected": {
+            "name": "hello world",
+            "token": "a=b=c"
+          }
+        },
+        {
+          "args": [
+            "bad=%E0%A4%A; ok=1"
+          ],
+          "expected": {
+            "bad": "%E0%A4%A",
+            "ok": "1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Two routes in this `app.js` never behave as intended because of where things are registered. Mark the lines that are in the wrong place.",
+    "task": {
+      "prompt": "Two routes in this `app.js` never behave as intended because of where things are registered. Mark the lines that are in the wrong place.",
+      "kind": "spot",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const app = express();",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "app.use(cors({ origin: 'https://app.example.com' }));",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "app.use((err, req, res, next) => res.status(500).json({ error: 'Server error' }));",
+          "issue": "The error handler is registered before the routes, so errors from routes registered later never reach it."
+        },
+        {
+          "id": "l4",
+          "text": "app.use(express.json());",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "app.use('/api/users', usersRouter);",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "app.get('/health', (req, res) => res.send('ok'));",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "app.use((req, res) => res.status(404).json({ error: 'Not found' }));",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "app.get('/api/status', (req, res) => res.json({ up: true }));",
+          "issue": "Registered after the catch-all 404 handler, so it is never reached."
+        },
+        {
+          "id": "l9",
+          "text": "app.listen(process.env.PORT || 3000);",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-express-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How does Express recognise a middleware as an **error handler**?",
+    "mcq": {
+      "options": [
+        "It declares exactly four parameters: `(err, req, res, next)`",
+        "It is registered with `app.error()`",
+        "Its first parameter is named `err`",
+        "It is the last `app.use()` call in the file"
+      ],
+      "correctIndex": 0,
+      "explanation": "Express checks the function's arity (`fn.length === 4`). Parameter names do not matter, and a handler that drops the unused `next` is treated as normal middleware.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "These routes are registered in this order:\n\n```js\napp.get('/users/:id', getUser);\napp.get('/users/me', getMe);\n```\n\nWhat happens on `GET /users/me`?",
+    "mcq": {
+      "options": [
+        "`getUser` runs with `req.params.id === 'me'`",
+        "`getMe` runs, because static paths always win",
+        "Both handlers run",
+        "Express throws a duplicate-route error at startup"
+      ],
+      "correctIndex": 0,
+      "explanation": "Express tries routes in registration order and `/users/:id` matches `me`. Register the static `/users/me` first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In **Express 4**, an `async` route handler awaits a database call that rejects, and there is no `try/catch`. What happens?",
+    "mcq": {
+      "options": [
+        "The rejection is not passed to your error middleware; the request hangs and Node reports an unhandled rejection",
+        "Express catches it and calls your error middleware",
+        "Express responds `500` automatically",
+        "The route is retried once"
+      ],
+      "correctIndex": 0,
+      "explanation": "Express 4 does not look at the promise a handler returns. Wrap handlers (or use `express-async-errors`), or upgrade to Express 5, which forwards rejected promises to `next(err)`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Complete `asyncHandler(fn)` so that any error from the handler, a rejected promise **or** a synchronous `throw`, is passed to `next(err)` instead of escaping. The driver's error middleware turns it into a `500`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runRoute",
+      "starterCode": "function asyncHandler(fn) {\n  return (req, res, next) => fn(req, res, next);\n}\n\n// Test driver (leave as is).\nasync function runRoute(mode) {\n  const asyncRoute = asyncHandler(async (req, res) => {\n    if (req.mode === 'reject') throw new Error('db down');\n    if (req.mode === 'missing') return res.status(404).json({ error: 'not found' });\n    res.json({ ok: true });\n  });\n  const syncRoute = asyncHandler((req, res) => {\n    if (req.mode === 'throw') throw new Error('bad input');\n    res.json({ ok: true });\n  });\n  const route = mode === 'throw' || mode === 'sync' ? syncRoute : asyncRoute;\n  const res = makeRes();\n  let caught = null;\n  await route({ mode }, res, (err) => { caught = err; });\n  if (caught) res.status(500).json({ error: caught.message });\n  return { status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "function asyncHandler(fn) {\n  return (req, res, next) => Promise.resolve().then(() => fn(req, res, next)).catch(next);\n}\n\n// Test driver (leave as is).\nasync function runRoute(mode) {\n  const asyncRoute = asyncHandler(async (req, res) => {\n    if (req.mode === 'reject') throw new Error('db down');\n    if (req.mode === 'missing') return res.status(404).json({ error: 'not found' });\n    res.json({ ok: true });\n  });\n  const syncRoute = asyncHandler((req, res) => {\n    if (req.mode === 'throw') throw new Error('bad input');\n    res.json({ ok: true });\n  });\n  const route = mode === 'throw' || mode === 'sync' ? syncRoute : asyncRoute;\n  const res = makeRes();\n  let caught = null;\n  await route({ mode }, res, (err) => { caught = err; });\n  if (caught) res.status(500).json({ error: caught.message });\n  return { status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "ok"
+          ],
+          "expected": {
+            "status": 200,
+            "body": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "reject"
+          ],
+          "expected": {
+            "status": 500,
+            "body": {
+              "error": "db down"
+            }
+          }
+        },
+        {
+          "args": [
+            "missing"
+          ],
+          "expected": {
+            "status": 404,
+            "body": {
+              "error": "not found"
+            }
+          }
+        },
+        {
+          "args": [
+            "throw"
+          ],
+          "expected": {
+            "status": 500,
+            "body": {
+              "error": "bad input"
+            }
+          }
+        },
+        {
+          "args": [
+            "sync"
+          ],
+          "expected": {
+            "status": 200,
+            "body": {
+              "ok": true
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Fix this small request validator. For each field in `schema` (in schema order):\n- missing (`undefined` or `null`): `'<f> is required'` if `required`, otherwise skip it\n- wrong `typeof`: `'<f> must be a <type>'`\n- `min` / `max` apply to string length or number value: `'<f> must be at least <min>'` / `'<f> must be at most <max>'`\n\nThen every body field not in the schema adds `'<f> is not allowed'`. Return `{ ok, errors }`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "validate",
+      "starterCode": "function validate(schema, body) {\n  const errors = [];\n  for (const [field, rule] of Object.entries(schema)) {\n    const value = body[field];\n    if (value === undefined) {\n      if (rule.required) errors.push(field + ' is required');\n      continue;\n    }\n    if (typeof value !== rule.type) {\n      errors.push(field + ' must be a ' + rule.type);\n      continue;\n    }\n    const size = rule.type === 'string' ? value.length : value;\n    if (rule.min !== undefined && size < rule.min) errors.push(field + ' must be at least ' + rule.min);\n  }\n  return { ok: errors.length === 0, errors };\n}",
+      "referenceSolution": "function validate(schema, body) {\n  const errors = [];\n  for (const [field, rule] of Object.entries(schema)) {\n    const value = body[field];\n    if (value === undefined || value === null) {\n      if (rule.required) errors.push(field + ' is required');\n      continue;\n    }\n    if (typeof value !== rule.type) {\n      errors.push(field + ' must be a ' + rule.type);\n      continue;\n    }\n    const size = rule.type === 'string' ? value.length : value;\n    if (rule.min !== undefined && size < rule.min) errors.push(field + ' must be at least ' + rule.min);\n    if (rule.max !== undefined && size > rule.max) errors.push(field + ' must be at most ' + rule.max);\n  }\n  for (const field of Object.keys(body)) {\n    if (!(field in schema)) errors.push(field + ' is not allowed');\n  }\n  return { ok: errors.length === 0, errors };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": {
+                "type": "string",
+                "required": true,
+                "min": 2
+              }
+            },
+            {
+              "name": "Al"
+            }
+          ],
+          "expected": {
+            "ok": true,
+            "errors": []
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": {
+                "type": "string",
+                "required": true
+              }
+            },
+            {
+              "name": null
+            }
+          ],
+          "expected": {
+            "ok": false,
+            "errors": [
+              "name is required"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "qty": {
+                "type": "number",
+                "min": 1,
+                "max": 10
+              }
+            },
+            {
+              "qty": 11
+            }
+          ],
+          "expected": {
+            "ok": false,
+            "errors": [
+              "qty must be at most 10"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "name": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "x",
+              "role": "admin"
+            }
+          ],
+          "expected": {
+            "ok": false,
+            "errors": [
+              "role is not allowed"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "qty": {
+                "type": "number"
+              }
+            },
+            {
+              "qty": "3"
+            }
+          ],
+          "expected": {
+            "ok": false,
+            "errors": [
+              "qty must be a number"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "note": {
+                "type": "string",
+                "max": 5
+              }
+            },
+            {}
+          ],
+          "expected": {
+            "ok": true,
+            "errors": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "When a router is mounted with `app.use(mount, router)`, Express strips the mount path before the router sees the URL. Fix `stripMount(mount, path)`: return the remaining path (at least `'/'`), or `null` when the path is not under the mount. `/api/v1` must not match `/api/v10/users`, and a mount of `'/'` matches everything.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "stripMount",
+      "starterCode": "function stripMount(mount, path) {\n  if (!path.startsWith(mount)) return null;\n  return path.slice(mount.length) || '/';\n}",
+      "referenceSolution": "function stripMount(mount, path) {\n  if (mount === '/') return path;\n  if (path === mount) return '/';\n  if (path.startsWith(mount + '/')) return path.slice(mount.length);\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/api/v1",
+            "/api/v1/users"
+          ],
+          "expected": "/users"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/api/v1",
+            "/api/v10/users"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/api/v1",
+            "/api/v1"
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            "/",
+            "/users"
+          ],
+          "expected": "/users"
+        },
+        {
+          "args": [
+            "/admin",
+            "/administrator"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/api",
+            "/api/"
+          ],
+          "expected": "/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Fix this `cors(options)` middleware:\n- no `origin` header: just `next()`\n- origin not in `options.origins`: no CORS headers; a preflight (`OPTIONS`) gets `403`, other methods `next()`\n- allowed origin: set `access-control-allow-origin` to that origin and `vary` to `Origin`; a preflight also gets `access-control-allow-methods` (the methods joined by `', '`) and a `204` without calling `next()`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function cors(options) {\n  return (req, res, next) => {\n    res.set('Access-Control-Allow-Origin', '*');\n    next();\n  };\n}\n\n// Test driver (leave as is).\nfunction run(method, origin) {\n  const mw = cors({ origins: ['https://app.example.com'], methods: ['GET', 'POST'] });\n  const req = { method, headers: origin ? { origin } : {} };\n  const res = makeRes();\n  let nextCalled = false;\n  mw(req, res, () => { nextCalled = true; });\n  return { status: res.statusCode, headers: res.headers, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "function cors(options) {\n  return (req, res, next) => {\n    const origin = req.headers.origin;\n    if (!origin) return next();\n    const allowed = options.origins.includes(origin);\n    if (!allowed) {\n      if (req.method === 'OPTIONS') return res.status(403).end();\n      return next();\n    }\n    res.set('Access-Control-Allow-Origin', origin);\n    res.set('Vary', 'Origin');\n    if (req.method === 'OPTIONS') {\n      res.set('Access-Control-Allow-Methods', options.methods.join(', '));\n      return res.status(204).end();\n    }\n    next();\n  };\n}\n\n// Test driver (leave as is).\nfunction run(method, origin) {\n  const mw = cors({ origins: ['https://app.example.com'], methods: ['GET', 'POST'] });\n  const req = { method, headers: origin ? { origin } : {} };\n  const res = makeRes();\n  let nextCalled = false;\n  mw(req, res, () => { nextCalled = true; });\n  return { status: res.statusCode, headers: res.headers, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "GET",
+            "https://app.example.com"
+          ],
+          "expected": {
+            "status": 200,
+            "headers": {
+              "access-control-allow-origin": "https://app.example.com",
+              "vary": "Origin"
+            },
+            "next": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "GET",
+            null
+          ],
+          "expected": {
+            "status": 200,
+            "headers": {},
+            "next": true
+          }
+        },
+        {
+          "args": [
+            "GET",
+            "https://evil.example"
+          ],
+          "expected": {
+            "status": 200,
+            "headers": {},
+            "next": true
+          }
+        },
+        {
+          "args": [
+            "OPTIONS",
+            "https://evil.example"
+          ],
+          "expected": {
+            "status": 403,
+            "headers": {},
+            "next": false
+          }
+        },
+        {
+          "args": [
+            "OPTIONS",
+            "https://app.example.com"
+          ],
+          "expected": {
+            "status": 204,
+            "headers": {
+              "access-control-allow-origin": "https://app.example.com",
+              "vary": "Origin",
+              "access-control-allow-methods": "GET, POST"
+            },
+            "next": false
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Complete `negotiate(accept, available)`, what `res.format()` does: pick the type from `available` with the highest quality in the `Accept` header. Each entry may have `;q=` (default 1); `type/*` and `*/*` are wildcards, and the most specific matching entry decides a type's quality. `q=0` means not acceptable. Ties go to the earlier type in `available`. A missing or empty header accepts the first type; return `null` when nothing is acceptable (a `406`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "negotiate",
+      "starterCode": "function negotiate(accept, available) {\n  for (const part of (accept || '').split(',')) {\n    const type = part.split(';')[0].trim();\n    if (available.includes(type)) return type;\n  }\n  return available[0] || null;\n}",
+      "referenceSolution": "function negotiate(accept, available) {\n  if (!accept) return available[0] || null;\n  const ranges = accept.split(',').map((part) => {\n    const [type, ...params] = part.trim().split(';');\n    let q = 1;\n    for (const p of params) {\n      const [k, v] = p.trim().split('=');\n      if (k === 'q') q = Number(v);\n    }\n    return { type: type.trim().toLowerCase(), q };\n  });\n  const quality = (t) => {\n    const [major] = t.split('/');\n    let q = 0;\n    let specificity = -1;\n    for (const r of ranges) {\n      let s = -1;\n      if (r.type === t) s = 2;\n      else if (r.type === major + '/*') s = 1;\n      else if (r.type === '*/*') s = 0;\n      if (s > specificity) { specificity = s; q = r.q; }\n    }\n    return q;\n  };\n  let pick = null;\n  let best = 0;\n  for (const t of available) {\n    const q = quality(t);\n    if (q > best) { pick = t; best = q; }\n  }\n  return pick;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "text/html;q=0.8, application/json",
+            [
+              "text/html",
+              "application/json"
+            ]
+          ],
+          "expected": "application/json"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "text/*;q=0.5, */*;q=0.1",
+            [
+              "application/json",
+              "text/csv"
+            ]
+          ],
+          "expected": "text/csv"
+        },
+        {
+          "args": [
+            "application/json;q=0, */*",
+            [
+              "application/json",
+              "text/html"
+            ]
+          ],
+          "expected": "text/html"
+        },
+        {
+          "args": [
+            "image/png",
+            [
+              "application/json"
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "",
+            [
+              "application/json",
+              "text/html"
+            ]
+          ],
+          "expected": "application/json"
+        },
+        {
+          "args": [
+            "*/*",
+            [
+              "text/csv",
+              "application/json"
+            ]
+          ],
+          "expected": "text/csv"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Review this update handler. Mark the lines that are bugs or security problems.",
+    "task": {
+      "prompt": "Review this update handler. Mark the lines that are bugs or security problems.",
+      "kind": "spot",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "app.put('/users/:id', requireAuth, async (req, res) => {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const { name } = req.body;",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  if (!name) {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    res.status(400).json({ error: 'name is required' });",
+          "issue": "No `return`: the handler carries on and later tries to respond again (\"Cannot set headers after they are sent\")."
+        },
+        {
+          "id": "l5",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  const user = await User.findById(req.body.id);",
+          "issue": "Uses an id from the body instead of `req.params.id`, so a client can update a different user than the URL says."
+        },
+        {
+          "id": "l7",
+          "text": "  if (!user) return res.status(404).json({ error: 'Not found' });",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  Object.assign(user, req.body);",
+          "issue": "Mass assignment: any field in the body (`role`, `isAdmin`, `passwordHash`) is copied onto the user."
+        },
+        {
+          "id": "l9",
+          "text": "  await user.save();",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "  res.json(user);",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "});",
+          "issue": null
+        }
+      ],
+      "askExplanation": true
+    }
+  },
+  {
+    "id": "eng-express-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Your logs show `Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client`. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "A handler responds (e.g. `res.status(400).json(...)`) and then keeps running and responds again, often from a missing `return`",
+        "The response body is larger than the default limit",
+        "`express.json()` is registered twice",
+        "The client closed the connection before the response"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each request gets exactly one response. Use `return res.status(400).json(...)` for early exits, and do not call `next()` after responding.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`app.use('/admin', adminRouter)`, and inside the router `router.use(requireAdmin)` comes before its routes. Which requests run `requireAdmin`?",
+    "mcq": {
+      "options": [
+        "Only requests whose path starts with `/admin` that reach `adminRouter`",
+        "Every request to the app",
+        "Only `GET /admin` exactly",
+        "None, because router-level middleware needs `router.all`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Router-level middleware only runs for requests dispatched into that router, which here means paths under the `/admin` mount.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Behind a load balancer, `req.ip` is always the balancer's address, so your per-IP rate limit blocks everyone at once. What is the fix?",
+    "mcq": {
+      "options": [
+        "Set `app.set('trust proxy', 1)` (the number of trusted proxy hops) so Express reads the client IP from `X-Forwarded-For`",
+        "Read `req.headers['x-forwarded-for']` directly and trust whatever the first value is",
+        "Use `req.socket.remoteAddress` instead",
+        "Rate-limit by `User-Agent` instead"
+      ],
+      "correctIndex": 0,
+      "explanation": "With `trust proxy` set to the right hop count, Express takes the address added by your own proxy. Trusting the raw header lets any client spoof its IP.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Fix `runChain(stack, req, res)` so it follows Express's error rules:\n- functions with 4 parameters are error handlers and are **skipped** in normal flow\n- after `next(err)`, normal middleware is skipped until the next error handler, which gets `(err, req, res, next)`\n- a middleware that **throws** behaves like `next(thrownError)`\n- when nothing is left, stop",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function runChain(stack, req, res) {\n  let i = 0;\n  function next(err) {\n    const mw = stack[i++];\n    if (!mw) return;\n    if (err) return mw(err, req, res, next);\n    mw(req, res, next);\n  }\n  next();\n}\n\n// Test driver (leave as is).\nconst mws = {\n  ok: (req, res, next) => { req.log.push('ok'); next(); },\n  fail: (req, res, next) => { req.log.push('fail'); next(new Error('failed')); },\n  boom: (req, res, next) => { req.log.push('boom'); throw new Error('thrown'); },\n  handler: (req, res) => { req.log.push('handler'); res.json({ ok: true }); },\n  logError: (err, req, res, next) => { req.log.push('logError'); next(err); },\n  onError: (err, req, res, next) => { req.log.push('onError'); res.status(500).json({ error: err.message }); },\n};\nfunction run(names) {\n  const req = { log: [] };\n  const res = makeRes();\n  runChain(names.map((n) => mws[n]), req, res);\n  return { log: req.log, status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "function runChain(stack, req, res) {\n  let i = 0;\n  function next(err) {\n    while (i < stack.length) {\n      const mw = stack[i++];\n      const isErrorHandler = mw.length === 4;\n      if (Boolean(err) !== isErrorHandler) continue;\n      try {\n        return err ? mw(err, req, res, next) : mw(req, res, next);\n      } catch (thrown) {\n        return next(thrown);\n      }\n    }\n  }\n  next();\n}\n\n// Test driver (leave as is).\nconst mws = {\n  ok: (req, res, next) => { req.log.push('ok'); next(); },\n  fail: (req, res, next) => { req.log.push('fail'); next(new Error('failed')); },\n  boom: (req, res, next) => { req.log.push('boom'); throw new Error('thrown'); },\n  handler: (req, res) => { req.log.push('handler'); res.json({ ok: true }); },\n  logError: (err, req, res, next) => { req.log.push('logError'); next(err); },\n  onError: (err, req, res, next) => { req.log.push('onError'); res.status(500).json({ error: err.message }); },\n};\nfunction run(names) {\n  const req = { log: [] };\n  const res = makeRes();\n  runChain(names.map((n) => mws[n]), req, res);\n  return { log: req.log, status: res.statusCode, body: res.body };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "ok",
+              "onError",
+              "handler"
+            ]
+          ],
+          "expected": {
+            "log": [
+              "ok",
+              "handler"
+            ],
+            "status": 200,
+            "body": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "fail",
+              "handler",
+              "logError",
+              "onError"
+            ]
+          ],
+          "expected": {
+            "log": [
+              "fail",
+              "logError",
+              "onError"
+            ],
+            "status": 500,
+            "body": {
+              "error": "failed"
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              "boom",
+              "handler",
+              "onError"
+            ]
+          ],
+          "expected": {
+            "log": [
+              "boom",
+              "onError"
+            ],
+            "status": 500,
+            "body": {
+              "error": "thrown"
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              "fail",
+              "handler"
+            ]
+          ],
+          "expected": {
+            "log": [
+              "fail"
+            ],
+            "status": 200,
+            "body": null
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "log": [],
+            "status": 200,
+            "body": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Complete `bodyLimit(limit)` middleware. Reply `413` with `{ error: 'Payload too large' }` when the `content-length` header exceeds `limit`, or, when that header is missing, when `req.rawBody` is more than `limit` **bytes** in UTF-8 (not characters: `é` is 2 bytes, an emoji is 4). Otherwise call `next()`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function bodyLimit(limit) {\n  return (req, res, next) => {\n    if ((req.rawBody || '').length > limit) {\n      return res.status(413).json({ error: 'Payload too large' });\n    }\n    next();\n  };\n}\n\n// Test driver (leave as is).\nfunction run(limit, headers, rawBody) {\n  const res = makeRes();\n  let nextCalled = false;\n  bodyLimit(limit)({ headers, rawBody }, res, () => { nextCalled = true; });\n  return { status: res.statusCode, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "referenceSolution": "function utf8Bytes(s) {\n  let n = 0;\n  for (const ch of s) {\n    const c = ch.codePointAt(0);\n    n += c < 0x80 ? 1 : c < 0x800 ? 2 : c < 0x10000 ? 3 : 4;\n  }\n  return n;\n}\n\nfunction bodyLimit(limit) {\n  return (req, res, next) => {\n    const declared = req.headers['content-length'];\n    const size = declared !== undefined ? Number(declared) : utf8Bytes(req.rawBody || '');\n    if (size > limit) return res.status(413).json({ error: 'Payload too large' });\n    next();\n  };\n}\n\n// Test driver (leave as is).\nfunction run(limit, headers, rawBody) {\n  const res = makeRes();\n  let nextCalled = false;\n  bodyLimit(limit)({ headers, rawBody }, res, () => { nextCalled = true; });\n  return { status: res.statusCode, next: nextCalled };\n}\n// A plain-data stand-in for Express's res (leave as is).\nfunction makeRes() {\n  return {\n    statusCode: 200,\n    headers: {},\n    body: null,\n    status(code) { this.statusCode = code; return this; },\n    set(name, value) { this.headers[name.toLowerCase()] = value; return this; },\n    json(body) { this.body = body; return this; },\n    send(body) { this.body = body; return this; },\n    end() { return this; },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            5,
+            {},
+            "hello"
+          ],
+          "expected": {
+            "status": 200,
+            "next": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            5,
+            {},
+            "héllo"
+          ],
+          "expected": {
+            "status": 413,
+            "next": false
+          }
+        },
+        {
+          "args": [
+            3,
+            {},
+            "😀"
+          ],
+          "expected": {
+            "status": 413,
+            "next": false
+          }
+        },
+        {
+          "args": [
+            100,
+            {
+              "content-length": "10000"
+            },
+            "{}"
+          ],
+          "expected": {
+            "status": 413,
+            "next": false
+          }
+        },
+        {
+          "args": [
+            10,
+            {},
+            ""
+          ],
+          "expected": {
+            "status": 200,
+            "next": true
+          }
+        },
+        {
+          "args": [
+            4,
+            {},
+            "😀"
+          ],
+          "expected": {
+            "status": 200,
+            "next": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A login route passes `req.body` straight into a MongoDB query, so `{ \"password\": { \"$ne\": null } }` logs anyone in. Complete `sanitize(input)`: return `{ clean, removed }` where `clean` is a copy with every object key that starts with `$` or contains `.` removed, **at any depth** (including inside arrays), and `removed` counts the keys dropped.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "sanitize",
+      "starterCode": "function sanitize(input) {\n  let removed = 0;\n  const clean = {};\n  for (const [k, v] of Object.entries(input)) {\n    if (k.startsWith('$')) { removed++; continue; }\n    clean[k] = v;\n  }\n  return { clean, removed };\n}",
+      "referenceSolution": "function sanitize(input) {\n  let removed = 0;\n  const walk = (v) => {\n    if (Array.isArray(v)) return v.map(walk);\n    if (v && typeof v === 'object') {\n      const out = {};\n      for (const [k, val] of Object.entries(v)) {\n        if (k.startsWith('$') || k.includes('.')) { removed++; continue; }\n        out[k] = walk(val);\n      }\n      return out;\n    }\n    return v;\n  };\n  const clean = walk(input);\n  return { clean, removed };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "email": "a@b.co",
+              "$where": "1"
+            }
+          ],
+          "expected": {
+            "clean": {
+              "email": "a@b.co"
+            },
+            "removed": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "email": {
+                "$ne": null
+              },
+              "password": {
+                "$gt": ""
+              }
+            }
+          ],
+          "expected": {
+            "clean": {
+              "email": {},
+              "password": {}
+            },
+            "removed": 2
+          }
+        },
+        {
+          "args": [
+            {
+              "tags": [
+                {
+                  "$regex": ".*"
+                },
+                "ok"
+              ],
+              "profile.role": "admin"
+            }
+          ],
+          "expected": {
+            "clean": {
+              "tags": [
+                {},
+                "ok"
+              ]
+            },
+            "removed": 2
+          }
+        },
+        {
+          "args": [
+            "plain"
+          ],
+          "expected": {
+            "clean": "plain",
+            "removed": 0
+          }
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "clean": {},
+            "removed": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "To stop static routes being shadowed by params, order route patterns before registering them. Compare two patterns segment by segment: a static segment beats `:param`, which beats `*`. If all shared segments tie, the longer pattern goes first. Keep the input order for full ties. Fix `sortRoutes`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "sortRoutes",
+      "starterCode": "function sortRoutes(patterns) {\n  return [...patterns].sort((a, b) => b.length - a.length);\n}",
+      "referenceSolution": "function sortRoutes(patterns) {\n  const score = (seg) => (seg === '*' ? 0 : seg.startsWith(':') ? 1 : 2);\n  return [...patterns].sort((a, b) => {\n    const sa = a.split('/').filter(Boolean);\n    const sb = b.split('/').filter(Boolean);\n    for (let i = 0; i < Math.min(sa.length, sb.length); i++) {\n      const d = score(sb[i]) - score(sa[i]);\n      if (d !== 0) return d;\n    }\n    return sb.length - sa.length;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "/users/:id",
+              "/users/me"
+            ]
+          ],
+          "expected": [
+            "/users/me",
+            "/users/:id"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "/*",
+              "/users/:id",
+              "/users/:id/orders",
+              "/users/me"
+            ]
+          ],
+          "expected": [
+            "/users/me",
+            "/users/:id/orders",
+            "/users/:id",
+            "/*"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "/a/:x",
+              "/b/:y"
+            ]
+          ],
+          "expected": [
+            "/a/:x",
+            "/b/:y"
+          ]
+        },
+        {
+          "args": [
+            [
+              "/files/*",
+              "/files/:name",
+              "/files/readme"
+            ]
+          ],
+          "expected": [
+            "/files/readme",
+            "/files/:name",
+            "/files/*"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Complete `flattenRoutes(node)` to list every route of a nested router tree as `'METHOD /full/path'`, parent routes before children, depth-first. Join prefixes cleanly: no double slashes and no trailing slash (except the root `'/'`). `routes` or `children` may be missing.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "flattenRoutes",
+      "starterCode": "function flattenRoutes(node, base = '') {\n  const prefix = base + node.prefix;\n  const out = node.routes.map((r) => r.method + ' ' + prefix + r.path);\n  for (const child of node.children || []) out.push(...flattenRoutes(child, prefix));\n  return out;\n}",
+      "referenceSolution": "function joinPath(...parts) {\n  const p = parts.join('/').replace(/\\/+/g, '/');\n  if (p === '' || p === '/') return '/';\n  return p.endsWith('/') ? p.slice(0, -1) : p;\n}\n\nfunction flattenRoutes(node, base = '') {\n  const prefix = joinPath(base, node.prefix);\n  const out = (node.routes || []).map((r) => r.method + ' ' + joinPath(prefix, r.path));\n  for (const child of node.children || []) out.push(...flattenRoutes(child, prefix));\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "prefix": "/api",
+              "routes": [
+                {
+                  "method": "GET",
+                  "path": "/health"
+                }
+              ],
+              "children": [
+                {
+                  "prefix": "/users",
+                  "routes": [
+                    {
+                      "method": "GET",
+                      "path": "/"
+                    },
+                    {
+                      "method": "GET",
+                      "path": "/:id"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "expected": [
+            "GET /api/health",
+            "GET /api/users",
+            "GET /api/users/:id"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "prefix": "/",
+              "routes": [
+                {
+                  "method": "GET",
+                  "path": "/"
+                }
+              ]
+            }
+          ],
+          "expected": [
+            "GET /"
+          ]
+        },
+        {
+          "args": [
+            {
+              "prefix": "/"
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "prefix": "/v1/",
+              "children": [
+                {
+                  "prefix": "/orders/",
+                  "routes": [
+                    {
+                      "method": "POST",
+                      "path": "/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "prefix": "/:id",
+                      "routes": [
+                        {
+                          "method": "DELETE",
+                          "path": ""
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "expected": [
+            "POST /v1/orders",
+            "DELETE /v1/orders/:id"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "After moving your Express API behind an AWS Application Load Balancer (idle timeout 60 s), you see a small, steady rate of `502` errors. They only happen on reused connections, and the requests never appear in your app logs.",
+    "task": {
+      "prompt": "After moving your Express API behind an AWS Application Load Balancer (idle timeout 60 s), you see a small, steady rate of `502` errors. They only happen on reused connections, and the requests never appear in your app logs.",
+      "kind": "scenario",
+      "steps": [
+        {
+          "id": "cause",
+          "question": "What is the most likely cause?",
+          "options": [
+            "Node's `server.keepAliveTimeout` (5 s by default) is shorter than the load balancer's idle timeout, so Node closes idle connections the balancer then tries to reuse",
+            "`express.json()`'s body limit is too small",
+            "The event loop is blocked by a slow handler",
+            "The load balancer's health check is failing"
+          ],
+          "correctIndex": 0,
+          "explanation": "The request never reaches Express: the socket was closed by Node just as the balancer sent a request on it."
+        },
+        {
+          "id": "fix",
+          "question": "What is the right fix?",
+          "options": [
+            "Set `server.keepAliveTimeout` above the balancer's idle timeout (e.g. 65 s) and `headersTimeout` slightly above that",
+            "Disable keep-alive on the load balancer",
+            "Add more instances",
+            "Retry failed requests in the frontend"
+          ],
+          "correctIndex": 0,
+          "explanation": "The upstream must keep idle connections open longer than the proxy in front of it, so the proxy is always the side that closes them."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-express-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A middleware stores the current user with `app.locals.user = user`. Under load, some requests see another user's data. Why?",
+    "mcq": {
+      "options": [
+        "`app.locals` is shared by the whole app for its lifetime; per-request data belongs on `res.locals` (or `req`)",
+        "`app.locals` is cleared between requests, so it is sometimes empty",
+        "Express copies `app.locals` lazily, so the value arrives late",
+        "Middleware must be `async` to set locals safely"
+      ],
+      "correctIndex": 0,
+      "explanation": "Concurrent requests interleave on one process, so any app-wide variable is overwritten by whichever request ran last. `res.locals` lives for one request.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You add this error handler and lint removes the \"unused\" `next` parameter:\n\n```js\napp.use((err, req, res) => {\n  res.status(500).json({ error: 'Server error' });\n});\n```\n\nWhat happens now when a route calls `next(err)`?",
+    "mcq": {
+      "options": [
+        "Express no longer treats it as an error handler, skips it, and falls back to its default HTML error response",
+        "It still works, because the first parameter is named `err`",
+        "Express throws at startup",
+        "The request hangs"
+      ],
+      "correctIndex": 0,
+      "explanation": "Error handlers are detected by arity. With three parameters it is normal middleware, so it is skipped on the error path. Keep `next` (and disable the lint rule for that line).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-express-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-express",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "`GET /export` builds a CSV of 2 million rows as one string and sends it with `res.send()`. Memory spikes and the pod restarts. What is the best approach?",
+    "mcq": {
+      "options": [
+        "Stream rows from a DB cursor through a transform into `res` with `stream.pipeline`, so memory stays flat and backpressure is respected",
+        "Increase the pod's memory limit",
+        "Use `res.json()` instead of `res.send()`",
+        "Compress the string with gzip before sending it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Streaming writes chunks as the client can take them; `pipeline` pauses the source when `res` is full and cleans up if the client disconnects.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

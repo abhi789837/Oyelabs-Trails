@@ -1,0 +1,314 @@
+[
+  {
+    "id": "bd-referral-partners-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Calculate a referral fee.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your referral agreement pays partners 10% of the client's first-year revenue. A referred client signs an $80,000 build and starts a $3,000 a month retainer in month 4 of the first year.",
+      "table": null,
+      "fields": [
+        {
+          "id": "y1",
+          "label": "First-year revenue from the client",
+          "unit": "$",
+          "answer": 107000,
+          "tolerance": 1
+        },
+        {
+          "id": "fee",
+          "label": "Referral fee due",
+          "unit": "$",
+          "answer": 10700,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Retainer months in year 1: 4 through 12 = 9. Revenue = 80,000 + 9 × 3,000 = $107000. Fee = 10% = $10700."
+    }
+  },
+  {
+    "id": "bd-referral-partners-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Join a technology partner programme.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A SaaS vendor whose platform your clients often integrate with runs a partner programme for implementation agencies.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the main reason to join?",
+          "options": [
+            "Free software licences for every client",
+            "To be allowed to resell the vendor's product at a discount without effort",
+            "Listing, credibility and referrals from the vendor's customers who need implementation help",
+            "To avoid having to market yourself"
+          ],
+          "correctIndex": 2,
+          "explanation": "Technology partnerships bring demand and credibility from the vendor's ecosystem."
+        },
+        {
+          "id": "s2",
+          "question": "The programme requires two certified engineers. What do you do before committing?",
+          "options": [
+            "Commit and certify later",
+            "List two engineers as certified anyway",
+            "Skip the requirement",
+            "Check with delivery whether certification is realistic and worth the time against expected leads"
+          ],
+          "correctIndex": 3,
+          "explanation": "Partner tiers have real costs; confirm feasibility and never misrepresent certifications."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-referral-partners-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank referral partner candidates by fit.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these candidates as referral partners for an app development agency, best fit first.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Cloud consultancy whose clients often need custom apps"
+        },
+        {
+          "id": "i3",
+          "label": "General business networking group"
+        },
+        {
+          "id": "i4",
+          "label": "A competing app development agency"
+        },
+        {
+          "id": "i1",
+          "label": "UX design studio with no developers that regularly gets build requests"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "The best referral partners serve the same clients, regularly see the need, and do not compete for the work."
+    }
+  },
+  {
+    "id": "bd-referral-partners-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this referral agreement summary.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the terms in this referral agreement summary that are likely to cause disputes or trust problems.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Partner registers each referral by email before introducing it.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Fee: 10% of all revenue from the client, forever.",
+          "issue": "An open-ended fee on all future revenue is rarely sustainable; most programmes cap the period."
+        },
+        {
+          "id": "p3",
+          "text": "Fee is paid when the client signs, whether or not they pay.",
+          "issue": "Fees should follow cash received, or you may pay out on revenue you never collect."
+        },
+        {
+          "id": "p4",
+          "text": "A qualified referral is anyone the partner mentions us to.",
+          "issue": "Too loose; define a qualified referral (for example, an introduced, budgeted project)."
+        },
+        {
+          "id": "p5",
+          "text": "Fees are paid within 30 days of the client's payment.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Referred clients are told that the partner receives a referral fee.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-referral-partners-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Estimate referral programme profitability.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your 12 referral partners send 40 referrals a year. 25% become projects averaging $60,000. You pay a 10% referral fee, your gross margin is 35% and running the programme costs $20,000 a year.",
+      "table": null,
+      "fields": [
+        {
+          "id": "won",
+          "label": "Projects won per year",
+          "unit": "",
+          "answer": 10,
+          "tolerance": 0.01
+        },
+        {
+          "id": "rev",
+          "label": "Annual revenue from referrals",
+          "unit": "$",
+          "answer": 600000,
+          "tolerance": 1
+        },
+        {
+          "id": "net",
+          "label": "Gross profit after fees and programme cost",
+          "unit": "$",
+          "answer": 130000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Won = 40 × 0.25 = 10. Revenue = 10 × 60,000 = $600000. GP = 35% = $210000; minus fees $60000 and $20,000 = $130000."
+    }
+  },
+  {
+    "id": "bd-referral-partners-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle a partner who sends poor leads.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "One referral partner has sent 9 leads this year. None had budget, and two were outside your services.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Share specific feedback and a one-page description of a good referral",
+            "Stop answering their referrals",
+            "End the partnership by email",
+            "Pay them anyway to keep them motivated"
+          ],
+          "correctIndex": 0,
+          "explanation": "Most poor referrals come from a partner not knowing what a good one looks like."
+        },
+        {
+          "id": "s2",
+          "question": "Quality does not improve after two quarters. What next?",
+          "options": [
+            "Raise their fee",
+            "Have an honest conversation about fit and move them to a lighter, informal relationship",
+            "Keep things unchanged",
+            "Complain about them to other partners"
+          ],
+          "correctIndex": 1,
+          "explanation": "Not every partner fits; reduce the effort you put in while staying professional."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-referral-partners-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why tell a referred client that the partner receives a referral fee?",
+    "mcq": {
+      "options": [
+        "Transparency keeps trust with the client and avoids a conflict of interest surfacing later",
+        "It is a way to justify a higher price",
+        "Clients always ask for a share",
+        "So the client can negotiate the fee down"
+      ],
+      "correctIndex": 0,
+      "explanation": "Disclosure lets the client weigh the recommendation knowing the incentive.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-referral-partners-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Two partners introduce the same prospect a week apart. What prevents a dispute?",
+    "mcq": {
+      "options": [
+        "Paying both partners",
+        "Clear rules of engagement, such as fees going to the first registered referral",
+        "Letting the client choose which partner gets the fee",
+        "Paying neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registration rules agreed in advance turn a dispute into a simple lookup.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-referral-partners-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-referral-partners",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What makes a referral partnership last?",
+    "mcq": {
+      "options": [
+        "A high fee alone",
+        "Both sides get value: good referrals, reliable delivery, prompt fees and referrals back where possible",
+        "Exclusive contracts with long notice periods",
+        "Frequent sales pitches to the partner"
+      ],
+      "correctIndex": 1,
+      "explanation": "Partnerships are relationships: reliable delivery and reciprocity matter more than the fee.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

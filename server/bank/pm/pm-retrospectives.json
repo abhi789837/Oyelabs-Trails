@@ -1,0 +1,409 @@
+[
+  {
+    "id": "pm-retrospectives-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the five stages of a classic retrospective (Derby & Larsen).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Decide what to do"
+        },
+        {
+          "id": "r2",
+          "label": "Gather data"
+        },
+        {
+          "id": "r1",
+          "label": "Set the stage"
+        },
+        {
+          "id": "r3",
+          "label": "Generate insights"
+        },
+        {
+          "id": "r5",
+          "label": "Close the retrospective"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Esther Derby and Diana Larsen's structure: set the stage, gather data, generate insights, decide what to do, close."
+    }
+  },
+  {
+    "id": "pm-retrospectives-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "After dot voting, the team's retro topics got these votes. Rank them from most to fewest votes to decide which to discuss first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Late QA (5 votes)"
+        },
+        {
+          "id": "r2",
+          "label": "Unclear designs from client (7 votes)"
+        },
+        {
+          "id": "r1",
+          "label": "Flaky staging server (9 votes)"
+        },
+        {
+          "id": "r3",
+          "label": "Slow PR reviews (6 votes)"
+        },
+        {
+          "id": "r5",
+          "label": "Too many meetings (3 votes)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Discuss topics in vote order; usually the top one or two produce the improvement actions."
+    }
+  },
+  {
+    "id": "pm-retrospectives-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "These are the action items from a retro. Mark the ones that are poorly written.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Ravi sets up a staging health check that alerts in Slack, by Wed 12 June.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Communicate better.",
+          "issue": "Vague: no owner, no date, no observable change."
+        },
+        {
+          "id": "p3",
+          "text": "Sara asks the client for final designs 2 sprints ahead; check at next retro.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Everyone should try harder on code reviews.",
+          "issue": "No owner or concrete behaviour; 'try harder' is not actionable."
+        },
+        {
+          "id": "p5",
+          "text": "Limit PR review wait: reviews within 1 working day, tracked on the board; owner Tom.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Fix all our process problems next sprint.",
+          "issue": "Too broad to complete; retros work best with one or two focused improvements."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-retrospectives-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "In the retro after a missed client demo, the tech lead says 'the QA team ruined this sprint' and the QA engineer goes silent.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "In the retro after a missed client demo, the tech lead says 'the QA team ruined this sprint' and the QA engineer goes silent.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do in the moment?",
+          "options": [
+            "Let the argument continue",
+            "Restate the prime directive: we focus on the system, not blame; ask what in the process led to the late testing",
+            "End the retro",
+            "Agree with the tech lead"
+          ],
+          "correctIndex": 1,
+          "explanation": "A blameless frame keeps people safe to speak and points at causes you can fix."
+        },
+        {
+          "id": "s2",
+          "question": "The discussion shows stories reached QA on the last day of the sprint. Which action fits best?",
+          "options": [
+            "QA works overtime",
+            "Limit WIP and test each story as soon as it's done, not in a batch at the end",
+            "Remove QA from the team",
+            "Extend sprints to 4 weeks"
+          ],
+          "correctIndex": 1,
+          "explanation": "Flowing stories to testing continuously fixes the batch problem behind the late QA."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-retrospectives-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "You track whether retro actions actually get done. Over the last four retros the team agreed and completed these actions.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Retro",
+          "Actions agreed",
+          "Actions done"
+        ],
+        "rows": [
+          [
+            "Sprint 5",
+            "3",
+            "2"
+          ],
+          [
+            "Sprint 6",
+            "3",
+            "1"
+          ],
+          [
+            "Sprint 7",
+            "4",
+            "3"
+          ],
+          [
+            "Sprint 8",
+            "2",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "rate",
+          "label": "Completion rate of retro actions",
+          "unit": "%",
+          "answer": 66.7,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Completed 2+1+3+2 = 8 of 3+3+4+2 = 12 agreed: 8/12 = 66.7%."
+    }
+  },
+  {
+    "id": "pm-retrospectives-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A team's retros have become stale: same format every time, same complaints, few actions completed.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A team's retros have become stale: same format every time, same complaints, few actions completed.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which change most directly addresses this?",
+          "options": [
+            "Skip retros for a while",
+            "Vary the format (e.g. sailboat, timeline) and start each retro by reviewing last retro's actions",
+            "Make retros longer",
+            "Have the PM write the actions alone"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fresh formats change the conversation; reviewing old actions makes follow-through visible."
+        },
+        {
+          "id": "s2",
+          "question": "The same complaint, 'client changes designs mid-sprint', keeps coming up but is outside the team's control. What do you do?",
+          "options": [
+            "Ban the topic",
+            "Take it to the client as the PM, e.g. agree a design freeze before sprint planning, and report back at the next retro",
+            "Ask the developers to raise it with the client themselves",
+            "Keep logging it every retro"
+          ],
+          "correctIndex": 1,
+          "explanation": "When a cause sits outside the team, the PM owns raising it with the client and closing the loop."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-retrospectives-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write the retro summary to share with the team.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write the retrospective summary for the team's Slack channel from the board below. Keep it short: what went well, what to improve, and the actions with owners and dates.",
+      "context": "Sprint 12 retro board (mobile banking app):\nWent well: demo praised by client; pair programming on the KYC flow; zero bugs from last release.\nTo improve: staging down 2 days; PR reviews waiting 2–3 days; client sent design changes on day 6.\nVotes: staging (9), PR reviews (6), design changes (5).\nAgreed: Ravi adds staging health alert by Wed; review SLA of 1 working day (owner Tom); PM to agree a design freeze with the client before planning.",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "well",
+          "label": "What went well",
+          "description": "Briefly lists the real positives from the board.",
+          "weight": 1
+        },
+        {
+          "id": "improve",
+          "label": "What to improve",
+          "description": "States the top improvement themes, ideally in vote order.",
+          "weight": 1
+        },
+        {
+          "id": "actions",
+          "label": "Actions",
+          "description": "Every action has an owner and a date or check-in point.",
+          "weight": 2
+        },
+        {
+          "id": "tone",
+          "label": "Tone and brevity",
+          "description": "Blameless, short and readable in Slack.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Sprint 12 retro\n\nWent well: the client loved the demo, pairing on KYC paid off, and last release shipped with zero bugs.\n\nTo improve (by votes): staging was down for 2 days, PRs waited 2–3 days for review, and design changes arrived on day 6.\n\nActions:\n- Ravi: staging health alert in Slack, by Wednesday.\n- Tom: PR reviews within 1 working day; we'll check the board at next retro.\n- PM: agree a design freeze with the client before each sprint planning; update at next retro."
+    }
+  },
+  {
+    "id": "pm-retrospectives-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of the Sprint Retrospective in Scrum?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To plan ways to increase quality and effectiveness",
+        "To demo the increment to the client",
+        "To estimate the backlog",
+        "To report hours to finance"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Scrum Guide says the Retrospective's purpose is to plan ways to increase quality and effectiveness.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-retrospectives-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why do many facilitators read the 'prime directive' at the start of a retrospective?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To set a blameless tone: everyone did the best job they could with what they knew",
+        "To remind people the client is always right",
+        "Because Scrum requires it word for word",
+        "To shorten the meeting"
+      ],
+      "correctIndex": 0,
+      "explanation": "Norm Kerth's prime directive establishes psychological safety so people discuss problems honestly.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-retrospectives-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-retrospectives",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The client's product owner wants to attend every retro to 'see what the team thinks'. The team is uneasy. What is a good approach?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Explain the retro is the team's safe space; invite the PO to some retros by agreement, and share agreed actions with the client",
+        "Let the client attend every retro regardless",
+        "Cancel retros",
+        "Record retros and send the video to the client"
+      ],
+      "correctIndex": 0,
+      "explanation": "Psychological safety comes first. The PO is part of the Scrum Team, but on agency projects the client PO joining should be agreed with the team, with actions shared openly.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

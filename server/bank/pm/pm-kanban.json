@@ -1,0 +1,381 @@
+[
+  {
+    "id": "pm-kanban-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the columns of a Kanban board for a client's bug-fix retainer, left to right.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Done (deployed)"
+        },
+        {
+          "id": "r4",
+          "label": "Code review"
+        },
+        {
+          "id": "r2",
+          "label": "Ready (refined and prioritised)"
+        },
+        {
+          "id": "r1",
+          "label": "Backlog (requested)"
+        },
+        {
+          "id": "r3",
+          "label": "In progress"
+        },
+        {
+          "id": "r5",
+          "label": "Testing"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Work flows from requested to ready, is pulled into progress, reviewed, tested and finally deployed."
+    }
+  },
+  {
+    "id": "pm-kanban-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Your support board has WIP limits per column. Count the current WIP and say how many columns are over their limit.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Column",
+          "Items",
+          "WIP limit"
+        ],
+        "rows": [
+          [
+            "In progress",
+            "4",
+            "4"
+          ],
+          [
+            "Code review",
+            "3",
+            "2"
+          ],
+          [
+            "Testing",
+            "1",
+            "3"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "wip",
+          "label": "Total items in progress (In progress + Review + Testing)",
+          "unit": "items",
+          "answer": 8,
+          "tolerance": 0
+        },
+        {
+          "id": "over",
+          "label": "Columns over their WIP limit",
+          "unit": "",
+          "answer": 1,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "WIP = 4 + 3 + 1 = 8. Only Review (3 vs limit 2) is over its limit; In progress has 4 against a limit of 4, which is at the limit, not over."
+    }
+  },
+  {
+    "id": "pm-kanban-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The Code review column is full (at its WIP limit) and a developer has just finished coding a ticket.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The Code review column is full (at its WIP limit) and a developer has just finished coding a ticket.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should the developer do?",
+          "options": [
+            "Help review someone else's ticket to free up the Review column",
+            "Start a new ticket from Ready",
+            "Move their ticket into Review anyway",
+            "Wait silently"
+          ],
+          "correctIndex": 0,
+          "explanation": "WIP limits signal a bottleneck; the pull system asks people to help finish work before starting more."
+        },
+        {
+          "id": "s2",
+          "question": "This happens every week. What does it tell you?",
+          "options": [
+            "Review is a bottleneck; look at review capacity or policies, such as smaller pull requests",
+            "WIP limits should be removed",
+            "Developers are lazy",
+            "The board needs more columns"
+          ],
+          "correctIndex": 0,
+          "explanation": "A column that is always full shows where flow is constrained; improve that step rather than hiding it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-kanban-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A PM set up a Kanban board for a client's maintenance retainer. Mark the setup choices that work against Kanban.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Columns match the real workflow: Ready, Doing, Review, Testing, Done.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "No WIP limits, so the team can start as many tickets as they want.",
+          "issue": "Without WIP limits the board is only a to-do list; work piles up and flow slows."
+        },
+        {
+          "id": "p3",
+          "text": "Each column has a written policy for when an item can move on.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Items are pushed to developers by the PM every morning.",
+          "issue": "Kanban is a pull system; people pull work when they have capacity."
+        },
+        {
+          "id": "p5",
+          "text": "Blocked items are marked with a red flag.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "We review the board's flow every two weeks to improve it.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-kanban-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Over four weeks a Kanban team finished the items below. What was the average weekly throughput, and with 30 items in the backlog how many weeks will it take at that rate?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Week",
+          "Items finished"
+        ],
+        "rows": [
+          [
+            "1",
+            "6"
+          ],
+          [
+            "2",
+            "8"
+          ],
+          [
+            "3",
+            "5"
+          ],
+          [
+            "4",
+            "9"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "tp",
+          "label": "Average throughput",
+          "unit": "items/week",
+          "answer": 7.0,
+          "tolerance": 0.01
+        },
+        {
+          "id": "weeks",
+          "label": "Weeks to clear 30 items",
+          "unit": "weeks",
+          "answer": 4.3,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Throughput = (6 + 8 + 5 + 9) / 4 = 7 items per week. 30 / 7 ≈ 4.3 weeks."
+    }
+  },
+  {
+    "id": "pm-kanban-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A client with an ongoing app retainer sends 5–15 small requests a week with no predictable pattern, plus occasional urgent production bugs.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client with an ongoing app retainer sends 5–15 small requests a week with no predictable pattern, plus occasional urgent production bugs.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which way of working fits best?",
+          "options": [
+            "Kanban with WIP limits and an expedite lane for urgent bugs",
+            "Strict 4-week Scrum Sprints with no changes",
+            "A fixed-scope waterfall plan",
+            "No process; do what arrives"
+          ],
+          "correctIndex": 0,
+          "explanation": "Kanban handles unpredictable arrivals well, and an expedite class of service handles urgent items explicitly."
+        },
+        {
+          "id": "s2",
+          "question": "How do you stop the expedite lane being abused?",
+          "options": [
+            "Limit it to one item at a time and agree with the client what counts as urgent",
+            "Let the client mark anything urgent",
+            "Remove it",
+            "Charge double for everything"
+          ],
+          "correctIndex": 0,
+          "explanation": "An explicit policy and a WIP limit of one keep expedite for real emergencies."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-kanban-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a WIP limit?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Limit work started so items finish faster and bottlenecks become visible",
+        "Stop the client adding requests",
+        "Limit the number of developers",
+        "Cap how many hours people work"
+      ],
+      "correctIndex": 0,
+      "explanation": "Limiting WIP reduces multitasking and queueing, shortening cycle time and exposing constraints.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-kanban-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which of these does Kanban not prescribe?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Fixed-length sprints and set roles",
+        "Visualising the workflow",
+        "Limiting work in progress",
+        "Actively managing and improving flow"
+      ],
+      "correctIndex": 0,
+      "explanation": "Kanban has no sprints or required roles; it focuses on visualising, limiting WIP and managing flow.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-kanban-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-kanban",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An item has sat in 'In progress' for 12 days while similar items usually take 3. Which Kanban measure flags this?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Work item age",
+        "Velocity",
+        "Story points",
+        "Burndown"
+      ],
+      "correctIndex": 0,
+      "explanation": "Work item age tracks how long an unfinished item has been in progress, so ageing items can be acted on early.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

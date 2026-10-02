@@ -1,0 +1,331 @@
+[
+  {
+    "id": "pm-programme-governance-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order these from the narrowest to the broadest level of governance.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these from the narrowest to the broadest level of governance.",
+      "items": [
+        {
+          "id": "r6d99d",
+          "label": "Project: delivers a defined output such as the admin portal"
+        },
+        {
+          "id": "r5b650",
+          "label": "Programme: coordinates related projects to deliver a shared benefit"
+        },
+        {
+          "id": "re8a75",
+          "label": "Portfolio: chooses which programmes and projects to fund for the strategy"
+        }
+      ],
+      "correctOrder": [
+        "r6d99d",
+        "r5b650",
+        "re8a75"
+      ],
+      "explanation": "Projects deliver outputs, programmes deliver benefits across projects, portfolios decide what to do at all."
+    }
+  },
+  {
+    "id": "pm-programme-governance-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Notes from a programme board for a white-label platform rolled out to four brands. Mark the practices that weaken governance.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Notes from a programme board for a white-label platform rolled out to four brands. Mark the practices that weaken governance.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "The board meets fortnightly and spends most time on the cross-project dependency map.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Each project reports amber-trending-green; the board accepts this without evidence.",
+          "issue": "Unchallenged RAG statuses turn governance into theatre; ask for the measures behind them."
+        },
+        {
+          "id": "s3",
+          "text": "Decision rights: the programme manager approves changes under $10k; the board above.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Benefits are tracked per brand against baselines.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "No project has ever been paused or stopped, whatever its results.",
+          "issue": "Governance must be able to stop work; never stopping starves better work of resources."
+        },
+        {
+          "id": "s6",
+          "text": "Every project uses a different status format.",
+          "issue": "Without comparable measures the board cannot see across projects."
+        },
+        {
+          "id": "s7",
+          "text": "Risks that affect more than one project are owned at programme level.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Minutes record decisions, owners and dates.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-programme-governance-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The mobile app project in a programme wants to delay its release by a month. Two other projects (marketing launch, CRM integration) depend on it.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The mobile app project in a programme wants to delay its release by a month. Two other projects (marketing launch, CRM integration) depend on it.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "Who should decide on the delay?",
+          "options": [
+            "The mobile project's PM alone",
+            "The client's marketing team",
+            "The developers",
+            "The programme board, because the delay affects other projects and the shared benefit"
+          ],
+          "correctIndex": 3,
+          "explanation": "Cross-project impact moves the decision up a level."
+        },
+        {
+          "id": "d2",
+          "question": "What should the board see before deciding?",
+          "options": [
+            "The cause, the impact on each dependent project and on benefits, and options such as reduced scope at the original date",
+            "Only the new date",
+            "A list of who is to blame",
+            "The mobile team's velocity chart"
+          ],
+          "correctIndex": 0,
+          "explanation": "Decision-ready options with programme-level impact."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-programme-governance-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A programme's benefits depend on three projects. Calculate how much benefit is delayed if the mobile project slips.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A programme's benefits depend on three projects. Calculate how much benefit is delayed if the mobile project slips.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Monthly benefit when all three projects are live",
+            "$40,000"
+          ],
+          [
+            "Share of benefit that needs the mobile app",
+            "75%"
+          ],
+          [
+            "Mobile app delay",
+            "2 months"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "lost",
+          "label": "Benefit delayed by the slip",
+          "unit": "$",
+          "answer": 60000.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "40,000 x 75% x 2 months = 60,000 of benefit delayed; compare it with the cost of options to avoid the slip."
+    }
+  },
+  {
+    "id": "pm-programme-governance-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank what a programme board should spend most of its time on, most first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank what a programme board should spend most of its time on, most first.",
+      "items": [
+        {
+          "id": "rb7a44",
+          "label": "Cross-project dependencies and their risks"
+        },
+        {
+          "id": "r62c4c",
+          "label": "Benefits progress against targets"
+        },
+        {
+          "id": "r06c00",
+          "label": "Decisions escalated from projects"
+        },
+        {
+          "id": "r120b8",
+          "label": "Individual project task lists"
+        }
+      ],
+      "correctOrder": [
+        "rb7a44",
+        "r62c4c",
+        "r06c00",
+        "r120b8"
+      ],
+      "explanation": "Programmes fail at the joins; benefits are the point; escalated decisions need resolution; task detail belongs to projects."
+    }
+  },
+  {
+    "id": "pm-programme-governance-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A large client asks Oyelabs to run a programme of four projects but wants each project to report directly to a different client executive.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A large client asks Oyelabs to run a programme of four projects but wants each project to report directly to a different client executive.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the main governance risk?",
+          "options": [
+            "Too many status reports",
+            "No single place where cross-project trade-offs and dependencies are decided",
+            "Executives may be too busy",
+            "Projects will be too small"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fragmented reporting leaves dependencies and benefits unowned."
+        },
+        {
+          "id": "d2",
+          "question": "What do you propose?",
+          "options": [
+            "Accept their structure as is",
+            "Run four separate contracts",
+            "A programme board with a single sponsor and clear decision rights, while executives keep project-level involvement",
+            "Report only to the CEO"
+          ],
+          "correctIndex": 2,
+          "explanation": "Light structure: one forum for cross-project decisions."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-programme-governance-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What best distinguishes a programme from a large project?",
+    "mcq": {
+      "options": [
+        "A programme has a larger budget",
+        "A programme lasts more than a year",
+        "A programme has more than ten people",
+        "A programme coordinates several related projects to achieve benefits none could deliver alone"
+      ],
+      "correctIndex": 3,
+      "explanation": "Size does not define a programme; shared benefits and interdependent projects do.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-programme-governance-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which governance practice most often adds cost without value?",
+    "mcq": {
+      "options": [
+        "Clear decision rights",
+        "A regular decision forum",
+        "Collecting long RAG reports nobody uses to make decisions",
+        "Stop criteria for projects"
+      ],
+      "correctIndex": 2,
+      "explanation": "Governance should drive decisions; reporting without decisions is overhead.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-programme-governance-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-programme-governance",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why should cross-project risks be owned at programme level?",
+    "mcq": {
+      "options": [
+        "Projects should never own risks",
+        "It reduces the number of risk registers",
+        "Programme managers have more time",
+        "No single project can resolve them, and they threaten the shared benefit"
+      ],
+      "correctIndex": 3,
+      "explanation": "Risks that span projects need someone with authority across them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

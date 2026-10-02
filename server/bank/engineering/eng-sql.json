@@ -1,0 +1,1669 @@
+[
+  {
+    "id": "eng-sql-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Table `products(id, name, price, category, stock)`. Return `name` and `price` of products cheaper than 20, cheapest first.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name, price\nFROM products\nWHERE price > 20\nORDER BY price;",
+      "referenceSolution": "SELECT name, price\nFROM products\nWHERE price < 20\nORDER BY price;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Pen',2.5,'office',10),(2,'Lamp',35,'home',3),(3,'Mug',8,'home',0);",
+          "expected": [
+            {
+              "name": "Pen",
+              "price": 2.5
+            },
+            {
+              "name": "Mug",
+              "price": 8
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Desk',120,'home',1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'A',19.99,'x',1),(2,'B',20,'x',1),(3,'C',1,'x',1);",
+          "expected": [
+            {
+              "name": "C",
+              "price": 1
+            },
+            {
+              "name": "A",
+              "price": 19.99
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Cheap',5,'x',1),(2,'Pricey',50,'x',1);",
+          "expected": [
+            {
+              "name": "Cheap",
+              "price": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return the `name` of the 3 most expensive products, most expensive first.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM products\nORDER BY price\nLIMIT 3;",
+      "referenceSolution": "SELECT name\nFROM products\nORDER BY price DESC\nLIMIT 3;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Pen',2,'o',1),(2,'Desk',120,'h',1),(3,'Lamp',35,'h',1),(4,'Chair',80,'h',1);",
+          "expected": [
+            {
+              "name": "Desk"
+            },
+            {
+              "name": "Chair"
+            },
+            {
+              "name": "Lamp"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Only',9,'o',1);",
+          "expected": [
+            {
+              "name": "Only"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'A',1,'o',1),(2,'B',2,'o',1),(3,'C',3,'o',1),(4,'D',4,'o',1),(5,'E',5,'o',1);",
+          "expected": [
+            {
+              "name": "E"
+            },
+            {
+              "name": "D"
+            },
+            {
+              "name": "C"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Table `users(id, name, email, country)`. Return the `name` of users who have **no email**, ordered by name. The query returns nothing — fix it.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM users\nWHERE email = NULL\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM users\nWHERE email IS NULL\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Bo',NULL,'IN'),(2,'Ann','a@x.com','US'),(3,'Al',NULL,'UK');",
+          "expected": [
+            {
+              "name": "Al"
+            },
+            {
+              "name": "Bo"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Cy','c@x.com','IN');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Zoe',NULL,'IN');",
+          "expected": [
+            {
+              "name": "Zoe"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Kim','','IN'),(2,'Lee',NULL,'IN');",
+          "expected": [
+            {
+              "name": "Lee"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return each **distinct** `country` from `users`, alphabetically (one row per country).",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT country\nFROM users\nORDER BY country;",
+      "referenceSolution": "SELECT DISTINCT country\nFROM users\nORDER BY country;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'A',NULL,'US'),(2,'B',NULL,'IN'),(3,'C',NULL,'US');",
+          "expected": [
+            {
+              "country": "IN"
+            },
+            {
+              "country": "US"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'A',NULL,'UK');",
+          "expected": [
+            {
+              "country": "UK"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'A',NULL,'IN'),(2,'B',NULL,'IN'),(3,'C',NULL,'IN');",
+          "expected": [
+            {
+              "country": "IN"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return `name` of products in category `'toys'` that are **in stock** (`stock > 0`), ordered by name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM products\nWHERE category = 'toys' OR stock > 0\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM products\nWHERE category = 'toys' AND stock > 0\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Yoyo',3,'toys',5),(2,'Kite',9,'toys',0),(3,'Pen',1,'office',4);",
+          "expected": [
+            {
+              "name": "Yoyo"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Pen',1,'office',4);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Ball',3,'toys',1),(2,'Doll',9,'toys',2);",
+          "expected": [
+            {
+              "name": "Ball"
+            },
+            {
+              "name": "Doll"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Kite',9,'toys',0);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return `name` of users whose email ends with `@oyelabs.com`, ordered by name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM users\nWHERE email LIKE 'oyelabs.com'\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM users\nWHERE email LIKE '%@oyelabs.com'\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Ann','ann@oyelabs.com','IN'),(2,'Bo','bo@gmail.com','IN');",
+          "expected": [
+            {
+              "name": "Ann"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Bo','bo@gmail.com','IN');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Zed','z@oyelabs.com','IN'),(2,'Cy','cy@oyelabs.com','US'),(3,'Di',NULL,'US');",
+          "expected": [
+            {
+              "name": "Cy"
+            },
+            {
+              "name": "Zed"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Eve','eve@oyelabs.com.evil.io','IN');",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which `name` does this query return?",
+    "mcq": {
+      "options": [
+        "Desk",
+        "Lamp",
+        "Pen",
+        "Desk and Lamp"
+      ],
+      "correctIndex": 0,
+      "explanation": "Two rows pass `price > 10` (Desk, Lamp); sorting by price descending puts Desk first, and `LIMIT 1` keeps only it.",
+      "snippet": "CREATE TABLE products(name TEXT, price REAL);\nINSERT INTO products VALUES ('Pen', 2), ('Desk', 120), ('Lamp', 35);\nSELECT name FROM products WHERE price > 10 ORDER BY price DESC LIMIT 1;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "3",
+        "4",
+        "2",
+        "1"
+      ],
+      "correctIndex": 0,
+      "explanation": "`DISTINCT` removes duplicate rows from the result: IN, US and UK — three rows.",
+      "snippet": "CREATE TABLE users(name TEXT, country TEXT);\nINSERT INTO users VALUES ('A','IN'), ('B','US'), ('C','IN'), ('D','UK');\nSELECT DISTINCT country FROM users;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "With no `ASC`/`DESC`, in which order does `ORDER BY price` sort?",
+    "mcq": {
+      "options": [
+        "Ascending (A, B, C)",
+        "Descending (C, B, A)",
+        "Insertion order (B, A, C)",
+        "Random"
+      ],
+      "correctIndex": 0,
+      "explanation": "`ASC` is the default, so the cheapest row comes first.",
+      "snippet": "CREATE TABLE p(name TEXT, price REAL);\nINSERT INTO p VALUES ('B', 5), ('A', 1), ('C', 9);\nSELECT name FROM p ORDER BY price;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Table `orders(id, customer, total, created_at)` with dates as `'YYYY-MM-DD'`. Return `id` of orders placed in **January 2024**, by id.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT id\nFROM orders\nWHERE created_at BETWEEN '2024-01-01' AND '2024-01-30'\nORDER BY id;",
+      "referenceSolution": "SELECT id\nFROM orders\nWHERE created_at >= '2024-01-01' AND created_at < '2024-02-01'\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer TEXT, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,'a',10,'2024-01-05'),(2,'b',5,'2024-02-01'),(3,'c',7,'2023-12-31');",
+          "expected": [
+            {
+              "id": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer TEXT, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,'a',10,'2024-01-31'),(2,'b',5,'2024-01-01');",
+          "expected": [
+            {
+              "id": 1
+            },
+            {
+              "id": 2
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer TEXT, total REAL, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INTEGER, customer TEXT, total REAL, created_at TEXT); INSERT INTO orders VALUES (4,'a',10,'2024-01-30'),(5,'a',1,'2024-01-31'),(6,'a',1,'2024-02-02');",
+          "expected": [
+            {
+              "id": 4
+            },
+            {
+              "id": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Table `contacts(id, name, phone)`. Return `name` and `phone` by id, showing `'n/a'` when the phone is missing.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name, phone\nFROM contacts\nORDER BY id;",
+      "referenceSolution": "SELECT name, COALESCE(phone, 'n/a') AS phone\nFROM contacts\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE contacts(id INTEGER, name TEXT, phone TEXT); INSERT INTO contacts VALUES (1,'Ann','555'),(2,'Bo',NULL);",
+          "expected": [
+            {
+              "name": "Ann",
+              "phone": "555"
+            },
+            {
+              "name": "Bo",
+              "phone": "n/a"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE contacts(id INTEGER, name TEXT, phone TEXT); INSERT INTO contacts VALUES (1,'Cy',NULL);",
+          "expected": [
+            {
+              "name": "Cy",
+              "phone": "n/a"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE contacts(id INTEGER, name TEXT, phone TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE contacts(id INTEGER, name TEXT, phone TEXT); INSERT INTO contacts VALUES (1,'Di','1'),(2,'Ed','2');",
+          "expected": [
+            {
+              "name": "Di",
+              "phone": "1"
+            },
+            {
+              "name": "Ed",
+              "phone": "2"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Table `customers(id, name, spent)`. Return `name` and `tier` by id: `'gold'` when spent ≥ 1000, `'silver'` when ≥ 500, otherwise `'bronze'`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name,\n  CASE\n    WHEN spent >= 500 THEN 'silver'\n    WHEN spent >= 1000 THEN 'gold'\n    ELSE 'bronze'\n  END AS tier\nFROM customers\nORDER BY id;",
+      "referenceSolution": "SELECT name,\n  CASE\n    WHEN spent >= 1000 THEN 'gold'\n    WHEN spent >= 500 THEN 'silver'\n    ELSE 'bronze'\n  END AS tier\nFROM customers\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, spent REAL); INSERT INTO customers VALUES (1,'Ann',1200),(2,'Bo',600),(3,'Cy',10);",
+          "expected": [
+            {
+              "name": "Ann",
+              "tier": "gold"
+            },
+            {
+              "name": "Bo",
+              "tier": "silver"
+            },
+            {
+              "name": "Cy",
+              "tier": "bronze"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, spent REAL); INSERT INTO customers VALUES (1,'Di',1000);",
+          "expected": [
+            {
+              "name": "Di",
+              "tier": "gold"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, spent REAL); INSERT INTO customers VALUES (1,'Ed',500),(2,'Fy',499.99);",
+          "expected": [
+            {
+              "name": "Ed",
+              "tier": "silver"
+            },
+            {
+              "name": "Fy",
+              "tier": "bronze"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, spent REAL);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Products are shown 3 per page, ordered by `id`. Return `id` and `name` for **page 2**.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT id, name\nFROM products\nORDER BY id\nLIMIT 3 OFFSET 2;",
+      "referenceSolution": "SELECT id, name\nFROM products\nORDER BY id\nLIMIT 3 OFFSET 3;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'a',1,'x',1),(2,'b',1,'x',1),(3,'c',1,'x',1),(4,'d',1,'x',1),(5,'e',1,'x',1);",
+          "expected": [
+            {
+              "id": 4,
+              "name": "d"
+            },
+            {
+              "id": 5,
+              "name": "e"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'a',1,'x',1),(2,'b',1,'x',1),(3,'c',1,'x',1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (7,'g',1,'x',1),(1,'a',1,'x',1),(3,'c',1,'x',1),(9,'i',1,'x',1),(5,'e',1,'x',1),(8,'h',1,'x',1),(2,'b',1,'x',1);",
+          "expected": [
+            {
+              "id": 5,
+              "name": "e"
+            },
+            {
+              "id": 7,
+              "name": "g"
+            },
+            {
+              "id": 8,
+              "name": "h"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'a',1,'x',1),(2,'b',1,'x',1),(3,'c',1,'x',1),(4,'d',1,'x',1);",
+          "expected": [
+            {
+              "id": 4,
+              "name": "d"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return `name` of products in category `'books'` **or** `'games'` that cost less than 30, ordered by name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM products\nWHERE category = 'books' OR category = 'games' AND price < 30\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM products\nWHERE category IN ('books', 'games') AND price < 30\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Novel',12,'books',1),(2,'Atlas',45,'books',1),(3,'Chess',25,'games',1);",
+          "expected": [
+            {
+              "name": "Chess"
+            },
+            {
+              "name": "Novel"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Atlas',45,'books',1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Pen',2,'office',1),(2,'Go',29.5,'games',1);",
+          "expected": [
+            {
+              "name": "Go"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Bible',30,'books',1),(2,'Comic',5,'books',1);",
+          "expected": [
+            {
+              "name": "Comic"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Return `name` of products whose name contains `pro` in **any case** (`Pro`, `PRO`, `pro`), ordered by name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM products\nWHERE instr(name, 'pro') > 0\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM products\nWHERE lower(name) LIKE '%pro%'\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'MacBook Pro',1,'x',1),(2,'propeller',1,'x',1),(3,'Air',1,'x',1);",
+          "expected": [
+            {
+              "name": "MacBook Pro"
+            },
+            {
+              "name": "propeller"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Air',1,'x',1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'PRO MAX',1,'x',1);",
+          "expected": [
+            {
+              "name": "PRO MAX"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Approve',1,'x',1),(2,'Pr o',1,'x',1);",
+          "expected": [
+            {
+              "name": "Approve"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `r` come back as?",
+    "mcq": {
+      "options": [
+        "NULL",
+        "1 (true)",
+        "0 (false)",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "Any comparison with `NULL` using `=` is unknown, so the result is `NULL`. That is why filters must use `IS NULL` / `IS NOT NULL`.",
+      "snippet": "SELECT NULL = NULL AS r;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "2",
+        "1",
+        "3",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "`AND` binds tighter than `OR`, so this reads `books OR (games AND price < 30)`: rows `a` and `c`. Parentheses (or `IN`) are needed to apply the price filter to both categories.",
+      "snippet": "CREATE TABLE p(name TEXT, category TEXT, price REAL);\nINSERT INTO p VALUES ('a','books',50), ('b','games',50), ('c','games',10);\nSELECT name FROM p WHERE category = 'books' OR category = 'games' AND price < 30;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which ids does this return?",
+    "mcq": {
+      "options": [
+        "3, 4",
+        "2, 3",
+        "1, 2",
+        "4, 5"
+      ],
+      "correctIndex": 0,
+      "explanation": "`OFFSET 2` skips the first two rows (1, 2) and `LIMIT 2` returns the next two: 3 and 4.",
+      "snippet": "CREATE TABLE t(id INTEGER);\nINSERT INTO t VALUES (1),(2),(3),(4),(5),(6);\nSELECT id FROM t ORDER BY id LIMIT 2 OFFSET 2;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Return `name`, `category` and `price` ordered by category A–Z, and within a category by price **highest first**.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name, category, price\nFROM products\nORDER BY category, price;",
+      "referenceSolution": "SELECT name, category, price\nFROM products\nORDER BY category, price DESC;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Mug',8,'home',1),(2,'Lamp',35,'home',1),(3,'Pen',2,'office',1);",
+          "expected": [
+            {
+              "name": "Lamp",
+              "category": "home",
+              "price": 35
+            },
+            {
+              "name": "Mug",
+              "category": "home",
+              "price": 8
+            },
+            {
+              "name": "Pen",
+              "category": "office",
+              "price": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'A',1,'x',1),(2,'B',3,'x',1),(3,'C',2,'x',1);",
+          "expected": [
+            {
+              "name": "B",
+              "category": "x",
+              "price": 3
+            },
+            {
+              "name": "C",
+              "category": "x",
+              "price": 2
+            },
+            {
+              "name": "A",
+              "category": "x",
+              "price": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Z',5,'b',1),(2,'Y',9,'a',1);",
+          "expected": [
+            {
+              "name": "Y",
+              "category": "a",
+              "price": 9
+            },
+            {
+              "name": "Z",
+              "category": "b",
+              "price": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Return `name` of users **not** in the `'US'`, ordered by name. Users with an unknown (`NULL`) country count as not in the US.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM users\nWHERE country != 'US'\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM users\nWHERE country IS NOT 'US'\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Ann',NULL,'US'),(2,'Bo',NULL,'IN'),(3,'Cy',NULL,NULL);",
+          "expected": [
+            {
+              "name": "Bo"
+            },
+            {
+              "name": "Cy"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Ann',NULL,'US');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Di',NULL,NULL);",
+          "expected": [
+            {
+              "name": "Di"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'Ed',NULL,'UK'),(2,'Fi',NULL,'US'),(3,'Al',NULL,NULL);",
+          "expected": [
+            {
+              "name": "Al"
+            },
+            {
+              "name": "Ed"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Return `name` of products priced **above the average price**, ordered by name. The query errors — fix it.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM products\nWHERE price > AVG(price)\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM products\nWHERE price > (SELECT AVG(price) FROM products)\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Pen',2,'o',1),(2,'Desk',120,'h',1),(3,'Lamp',40,'h',1);",
+          "expected": [
+            {
+              "name": "Desk"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'A',10,'o',1),(2,'B',10,'o',1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'A',1,'o',1),(2,'B',2,'o',1),(3,'C',3,'o',1),(4,'D',4,'o',1);",
+          "expected": [
+            {
+              "name": "C"
+            },
+            {
+              "name": "D"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Raise prices by 10% **only for the `'toys'` category**, then return every product's `id` and `price` by id.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "UPDATE products SET price = price * 1.1;\nSELECT id, price FROM products ORDER BY id;",
+      "referenceSolution": "UPDATE products SET price = price * 1.1 WHERE category = 'toys';\nSELECT id, price FROM products ORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Yoyo',10,'toys',1),(2,'Pen',2,'office',1);",
+          "expected": [
+            {
+              "id": 1,
+              "price": 11
+            },
+            {
+              "id": 2,
+              "price": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Pen',5,'office',1);",
+          "expected": [
+            {
+              "id": 1,
+              "price": 5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Kite',20,'toys',1),(2,'Ball',0,'toys',1);",
+          "expected": [
+            {
+              "id": 1,
+              "price": 22
+            },
+            {
+              "id": 2,
+              "price": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, price REAL, category TEXT, stock INTEGER); INSERT INTO products VALUES (1,'Doll',100,'toys',1),(2,'Desk',100,'home',1);",
+          "expected": [
+            {
+              "id": 1,
+              "price": 110
+            },
+            {
+              "id": 2,
+              "price": 100
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Table `signups(id, name, created_at)` with timestamps like `'2023-12-31 18:45:00'`. Return `name` of everyone who signed up **in 2023**, by id.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM signups\nWHERE created_at BETWEEN '2023-01-01' AND '2023-12-31'\nORDER BY id;",
+      "referenceSolution": "SELECT name\nFROM signups\nWHERE created_at >= '2023-01-01' AND created_at < '2024-01-01'\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, name TEXT, created_at TEXT); INSERT INTO signups VALUES (1,'Ann','2023-03-01 10:00:00'),(2,'Bo','2024-01-01 00:00:00'),(3,'Cy','2023-12-31 18:45:00');",
+          "expected": [
+            {
+              "name": "Ann"
+            },
+            {
+              "name": "Cy"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, name TEXT, created_at TEXT); INSERT INTO signups VALUES (1,'Di','2022-12-31 23:59:59');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, name TEXT, created_at TEXT); INSERT INTO signups VALUES (1,'Ed','2023-12-31 00:00:01'),(2,'Fi','2023-01-01 00:00:00');",
+          "expected": [
+            {
+              "name": "Ed"
+            },
+            {
+              "name": "Fi"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE signups(id INTEGER, name TEXT, created_at TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Table `people(id, first, last)`. Return `full_name` (`first last`) by id. When `last` is `NULL`, return just `first` — right now those rows come back `NULL`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT first || ' ' || last AS full_name\nFROM people\nORDER BY id;",
+      "referenceSolution": "SELECT first || COALESCE(' ' || last, '') AS full_name\nFROM people\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE people(id INTEGER, first TEXT, last TEXT); INSERT INTO people VALUES (1,'Ann','Lee'),(2,'Bo',NULL);",
+          "expected": [
+            {
+              "full_name": "Ann Lee"
+            },
+            {
+              "full_name": "Bo"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE people(id INTEGER, first TEXT, last TEXT); INSERT INTO people VALUES (1,'Cy',NULL);",
+          "expected": [
+            {
+              "full_name": "Cy"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE people(id INTEGER, first TEXT, last TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE people(id INTEGER, first TEXT, last TEXT); INSERT INTO people VALUES (1,'Di','Ng'),(2,'Ed','Fox');",
+          "expected": [
+            {
+              "full_name": "Di Ng"
+            },
+            {
+              "full_name": "Ed Fox"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "1",
+        "3",
+        "2",
+        "4"
+      ],
+      "correctIndex": 0,
+      "explanation": "`NULL != 'US'` is `NULL`, not true, so rows with an unknown country are filtered out. Only `b` remains. Use `IS NOT 'US'` or add `OR country IS NULL`.",
+      "snippet": "CREATE TABLE users(name TEXT, country TEXT);\nINSERT INTO users VALUES ('a','US'), ('b','IN'), ('c',NULL), ('d',NULL);\nSELECT name FROM users WHERE country != 'US';",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is `r`?",
+    "mcq": {
+      "options": [
+        "1 (true)",
+        "0 (false)",
+        "NULL",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both values are text, so they compare character by character: `'1'` sorts before `'9'`. Numbers stored as text sort wrongly — cast them or store them as numbers.",
+      "snippet": "SELECT '10' < '9' AS r;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "`full_name` is NULL",
+        "`Bo `",
+        "`Bo`",
+        "`Bo NULL`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Concatenating anything with `NULL` gives `NULL`. Wrap the nullable part in `COALESCE`.",
+      "snippet": "CREATE TABLE p(first TEXT, last TEXT);\nINSERT INTO p VALUES ('Bo', NULL);\nSELECT first || ' ' || last AS full_name FROM p;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Tables `items(id, name)` and `sales(id, item_id)`; `item_id` may be `NULL` for manual sales. Return `name` of items that were **never sold**, by name. The query returns nothing whenever a manual sale exists.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name\nFROM items\nWHERE id NOT IN (SELECT item_id FROM sales)\nORDER BY name;",
+      "referenceSolution": "SELECT name\nFROM items i\nWHERE NOT EXISTS (SELECT 1 FROM sales s WHERE s.item_id = i.id)\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE items(id INTEGER, name TEXT); INSERT INTO items VALUES (1,'Pen'),(2,'Mug'),(3,'Cap'); CREATE TABLE sales(id INTEGER, item_id INTEGER); INSERT INTO sales VALUES (1,1),(2,NULL);",
+          "expected": [
+            {
+              "name": "Cap"
+            },
+            {
+              "name": "Mug"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE items(id INTEGER, name TEXT); INSERT INTO items VALUES (1,'Pen'); CREATE TABLE sales(id INTEGER, item_id INTEGER); INSERT INTO sales VALUES (1,NULL);",
+          "expected": [
+            {
+              "name": "Pen"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE items(id INTEGER, name TEXT); INSERT INTO items VALUES (1,'Pen'),(2,'Mug'); CREATE TABLE sales(id INTEGER, item_id INTEGER); INSERT INTO sales VALUES (1,1),(2,2);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE items(id INTEGER, name TEXT); INSERT INTO items VALUES (1,'Pen'); CREATE TABLE sales(id INTEGER, item_id INTEGER);",
+          "expected": [
+            {
+              "name": "Pen"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Table `inventory(sku PRIMARY KEY, qty)`. **Add** 5 units of sku `'A'` — create the row if it is missing — then return `sku` and `qty` by sku. The current statement overwrites the quantity.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "INSERT OR REPLACE INTO inventory(sku, qty) VALUES ('A', 5);\nSELECT sku, qty FROM inventory ORDER BY sku;",
+      "referenceSolution": "INSERT INTO inventory(sku, qty) VALUES ('A', 5)\nON CONFLICT(sku) DO UPDATE SET qty = qty + excluded.qty;\nSELECT sku, qty FROM inventory ORDER BY sku;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INTEGER); INSERT INTO inventory VALUES ('A', 3), ('B', 1);",
+          "expected": [
+            {
+              "sku": "A",
+              "qty": 8
+            },
+            {
+              "sku": "B",
+              "qty": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INTEGER);",
+          "expected": [
+            {
+              "sku": "A",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INTEGER); INSERT INTO inventory VALUES ('B', 2);",
+          "expected": [
+            {
+              "sku": "A",
+              "qty": 5
+            },
+            {
+              "sku": "B",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INTEGER); INSERT INTO inventory VALUES ('A', 2), ('C', 1);",
+          "expected": [
+            {
+              "sku": "A",
+              "qty": 7
+            },
+            {
+              "sku": "C",
+              "qty": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`users` has duplicate emails. Delete the duplicates, **keeping the lowest `id`** for each email, then return `id` and `email` by id.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "DELETE FROM users\nWHERE id NOT IN (SELECT MAX(id) FROM users GROUP BY email);\nSELECT id, email FROM users ORDER BY id;",
+      "referenceSolution": "DELETE FROM users\nWHERE id NOT IN (SELECT MIN(id) FROM users GROUP BY email);\nSELECT id, email FROM users ORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (1,'a','a@x.com','IN'),(2,'b','b@x.com','IN'),(3,'a2','a@x.com','IN');",
+          "expected": [
+            {
+              "id": 1,
+              "email": "a@x.com"
+            },
+            {
+              "id": 2,
+              "email": "b@x.com"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (5,'x','x@x.com','IN');",
+          "expected": [
+            {
+              "id": 5,
+              "email": "x@x.com"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT); INSERT INTO users VALUES (4,'q','q@x.com','IN'),(2,'q','q@x.com','IN'),(9,'q','q@x.com','IN');",
+          "expected": [
+            {
+              "id": 2,
+              "email": "q@x.com"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INTEGER, name TEXT, email TEXT, country TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Table `ratings(id, name, total_stars, votes)`. Return `name` and `avg_rating` (`total_stars / votes` as a decimal, `NULL` when there are no votes) by id. `7` stars over `2` votes must give `3.5`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name, total_stars / votes AS avg_rating\nFROM ratings\nORDER BY id;",
+      "referenceSolution": "SELECT name, total_stars * 1.0 / NULLIF(votes, 0) AS avg_rating\nFROM ratings\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE ratings(id INTEGER, name TEXT, total_stars INTEGER, votes INTEGER); INSERT INTO ratings VALUES (1,'Cafe',7,2),(2,'Bar',9,3);",
+          "expected": [
+            {
+              "name": "Cafe",
+              "avg_rating": 3.5
+            },
+            {
+              "name": "Bar",
+              "avg_rating": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE ratings(id INTEGER, name TEXT, total_stars INTEGER, votes INTEGER); INSERT INTO ratings VALUES (1,'New',0,0);",
+          "expected": [
+            {
+              "name": "New",
+              "avg_rating": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE ratings(id INTEGER, name TEXT, total_stars INTEGER, votes INTEGER); INSERT INTO ratings VALUES (1,'Inn',9,2);",
+          "expected": [
+            {
+              "name": "Inn",
+              "avg_rating": 4.5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE ratings(id INTEGER, name TEXT, total_stars INTEGER, votes INTEGER);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Tables `products(id, name)` and `orders(id, product_id, created_at)`. Return each product's `name` and `last_order` date (`NULL` if never ordered), by name. Every product shows the same date — fix the subquery.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT p.name,\n  (SELECT MAX(o.created_at) FROM orders o WHERE o.product_id = product_id) AS last_order\nFROM products p\nORDER BY p.name;",
+      "referenceSolution": "SELECT p.name,\n  (SELECT MAX(o.created_at) FROM orders o WHERE o.product_id = p.id) AS last_order\nFROM products p\nORDER BY p.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT); CREATE TABLE orders(id INTEGER, product_id INTEGER, created_at TEXT); INSERT INTO products VALUES (1,'Pen'),(2,'Mug'); INSERT INTO orders VALUES (1,1,'2024-01-01'),(2,2,'2024-03-01'),(3,1,'2024-02-01');",
+          "expected": [
+            {
+              "name": "Mug",
+              "last_order": "2024-03-01"
+            },
+            {
+              "name": "Pen",
+              "last_order": "2024-02-01"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT); CREATE TABLE orders(id INTEGER, product_id INTEGER, created_at TEXT); INSERT INTO products VALUES (1,'Pen'),(2,'Cap'); INSERT INTO orders VALUES (1,1,'2024-05-05');",
+          "expected": [
+            {
+              "name": "Cap",
+              "last_order": null
+            },
+            {
+              "name": "Pen",
+              "last_order": "2024-05-05"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT); CREATE TABLE orders(id INTEGER, product_id INTEGER, created_at TEXT); INSERT INTO products VALUES (1,'Pen');",
+          "expected": [
+            {
+              "name": "Pen",
+              "last_order": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT); CREATE TABLE orders(id INTEGER, product_id INTEGER, created_at TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Table `codes(id, code)`. Return `code` values that contain a literal underscore `_`, by id. The query returns every row.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT code\nFROM codes\nWHERE code LIKE '%_%'\nORDER BY id;",
+      "referenceSolution": "SELECT code\nFROM codes\nWHERE code LIKE '%\\_%' ESCAPE '\\'\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE codes(id INTEGER, code TEXT); INSERT INTO codes VALUES (1,'SALE_10'),(2,'WELCOME'),(3,'X_Y');",
+          "expected": [
+            {
+              "code": "SALE_10"
+            },
+            {
+              "code": "X_Y"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE codes(id INTEGER, code TEXT); INSERT INTO codes VALUES (1,'ABC');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE codes(id INTEGER, code TEXT); INSERT INTO codes VALUES (1,'_'),(2,'-');",
+          "expected": [
+            {
+              "code": "_"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE codes(id INTEGER, code TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How many rows does the final `SELECT` return?",
+    "mcq": {
+      "options": [
+        "0",
+        "1",
+        "2",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "`2 NOT IN (1, NULL)` is `2 <> 1 AND 2 <> NULL`, which is `NULL`, never true. One `NULL` in the subquery hides every row. `NOT EXISTS` does not have this problem.",
+      "snippet": "CREATE TABLE items(id INTEGER, name TEXT);\nCREATE TABLE sales(item_id INTEGER);\nINSERT INTO items VALUES (1,'Pen'), (2,'Mug');\nINSERT INTO sales VALUES (1), (NULL);\nSELECT name FROM items WHERE id NOT IN (SELECT item_id FROM sales);",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What are `a` and `b`?",
+    "mcq": {
+      "options": [
+        "3 and 3.5",
+        "3.5 and 3.5",
+        "3 and 3",
+        "4 and 3.5"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dividing two integers is integer division (truncated). Making either side a real — `2.0` or `x * 1.0` — gives a decimal result.",
+      "snippet": "SELECT 7 / 2 AS a, 7 / 2.0 AS b;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "3",
+        "1",
+        "0",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "In `LIKE`, `_` is a wildcard for any single character, so `'%_%'` matches every non-empty string. Escape it (`'%\\_%' ESCAPE '\\'`) to match a literal underscore.",
+      "snippet": "CREATE TABLE c(code TEXT);\nINSERT INTO c VALUES ('A_B'), ('AB'), ('ABC');\nSELECT code FROM c WHERE code LIKE '%_%';",
+      "snippetLanguage": "sql"
+    }
+  }
+]

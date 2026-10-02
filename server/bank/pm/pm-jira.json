@@ -1,0 +1,355 @@
+[
+  {
+    "id": "pm-jira-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the standard Jira issue hierarchy from largest to smallest.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "Story / Task / Bug"
+        },
+        {
+          "id": "r1",
+          "label": "Epic"
+        },
+        {
+          "id": "r3",
+          "label": "Sub-task"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "explanation": "Epics group stories, tasks and bugs at the standard level; sub-tasks break a single issue down."
+    }
+  },
+  {
+    "id": "pm-jira-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A PM saved these JQL filters with the purpose in brackets. Mark the queries that do NOT do what their purpose says.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "[My open work] assignee = currentUser() AND resolution = Unresolved",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "[Bugs in the current sprint] project = SHOP AND issuetype = Bug AND sprint in openSprints()",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "[Everything created this week] project = SHOP AND created <= -7d",
+          "issue": "created <= -7d returns issues created MORE than 7 days ago; the purpose needs created >= -7d."
+        },
+        {
+          "id": "p4",
+          "text": "[Highest priority first] project = SHOP AND resolution = Unresolved ORDER BY priority DESC",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "[Unassigned stories] project = SHOP AND issuetype = Story AND assignee = currentUser()",
+          "issue": "currentUser() returns the PM's own issues; unassigned needs assignee is EMPTY."
+        },
+        {
+          "id": "p6",
+          "text": "[Release 2.1 scope] project = SHOP AND fixVersion = \"2.1\"",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-jira-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Put these steps in order to set up Jira for a new Scrum client project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Add stories under the epics and rank the backlog"
+        },
+        {
+          "id": "r2",
+          "label": "Configure the workflow statuses and map them to board columns"
+        },
+        {
+          "id": "r1",
+          "label": "Create the project from the Scrum template"
+        },
+        {
+          "id": "r3",
+          "label": "Create epics for the agreed feature areas"
+        },
+        {
+          "id": "r5",
+          "label": "Start the first sprint with the selected issues"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Project, workflow and board, then structure (epics), then content (stories), then sprints."
+    }
+  },
+  {
+    "id": "pm-jira-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The Jira sprint report for Sprint 6 shows the figures below (story points).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Sprint report line",
+          "Points"
+        ],
+        "rows": [
+          [
+            "Committed at start",
+            "34"
+          ],
+          [
+            "Added during sprint",
+            "3"
+          ],
+          [
+            "Removed during sprint",
+            "5"
+          ],
+          [
+            "Not completed (carried over)",
+            "8"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "done",
+          "label": "Completed points",
+          "unit": "points",
+          "answer": 24,
+          "tolerance": 0
+        },
+        {
+          "id": "pct",
+          "label": "Completed as % of the points committed at sprint start",
+          "unit": "%",
+          "answer": 70.6,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Completed = committed 34 + added 3 − removed 5 − not completed 8 = 24. 24 / 34 = 70.6%."
+    }
+  },
+  {
+    "id": "pm-jira-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Your client's product owner keeps adding comments to Done stories asking for changes, and developers reopen them, so the sprint report keeps changing after the sprint closes.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your client's product owner keeps adding comments to Done stories asking for changes, and developers reopen them, so the sprint report keeps changing after the sprint closes.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best Jira practice?",
+          "options": [
+            "Keep reopening Done stories",
+            "Leave Done stories closed and create new linked stories or bugs for the changes",
+            "Delete the old stories",
+            "Turn off the sprint report"
+          ],
+          "correctIndex": 1,
+          "explanation": "New issues linked to the original keep history and reporting accurate, and the new work gets estimated and prioritised."
+        },
+        {
+          "id": "s2",
+          "question": "How do you stop it recurring?",
+          "options": [
+            "Remove the PO's Jira access",
+            "Agree with the PO that feedback after sprint review becomes new backlog items, and add a 'relates to' link convention",
+            "Ask developers to ignore comments",
+            "Close sprints a week late"
+          ],
+          "correctIndex": 1,
+          "explanation": "A clear agreement plus a convention fixes the behaviour without cutting the client out."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-jira-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Your agency runs three client projects in Jira and leadership wants one dashboard showing open bugs by client and sprint progress.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your agency runs three client projects in Jira and leadership wants one dashboard showing open bugs by client and sprint progress.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the right building block?",
+          "options": [
+            "Export to Excel every Friday",
+            "Saved JQL filters per client used by dashboard gadgets (e.g. filter results, pie chart by project, sprint burndown)",
+            "Create a new project that duplicates every bug",
+            "Screenshots of each board"
+          ],
+          "correctIndex": 1,
+          "explanation": "Dashboards in Jira are built from saved filters feeding gadgets, so they stay live."
+        },
+        {
+          "id": "s2",
+          "question": "One client must not see the other clients' data, but wants to view their own dashboard. What do you check?",
+          "options": [
+            "Nothing; dashboards are private by default",
+            "Share the dashboard and its filters only with that client's group, and confirm project permissions restrict their view",
+            "Make the dashboard public",
+            "Email the client your login"
+          ],
+          "correctIndex": 1,
+          "explanation": "Dashboard and filter sharing plus project permissions control who can see what."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-jira-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In Jira, what controls which statuses an issue can move through (for example To Do → In Progress → In Review → Done)?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The workflow",
+        "The dashboard",
+        "The component",
+        "The fix version"
+      ],
+      "correctIndex": 0,
+      "explanation": "A workflow defines statuses and the transitions between them; boards display those statuses as columns.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-jira-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You want every issue planned for the 'v2.0 launch' to be tracked together for release notes. Which Jira field is designed for this?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Fix version",
+        "Labels",
+        "Priority",
+        "Reporter"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fix versions (releases) group issues into a release and power the release page and notes.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-jira-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-jira",
+    "trackId": null,
+    "stackId": "pm-tool-jira",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Developers complain that tickets jump straight from 'In Progress' to 'Done' without QA. What Jira change most directly prevents this?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Change the workflow so Done can only be reached from 'In QA', optionally with a condition on who can transition",
+        "Add a label called QA",
+        "Ask QA to check the board daily",
+        "Rename 'Done' to 'Finished'"
+      ],
+      "correctIndex": 0,
+      "explanation": "Workflow transitions and conditions enforce the process instead of relying on memory.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

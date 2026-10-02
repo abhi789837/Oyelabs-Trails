@@ -1,0 +1,375 @@
+[
+  {
+    "id": "bd-meeting-prep-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You have a discovery call tomorrow with a founder who filled in your website form. Order your preparation steps, first first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "You have a discovery call tomorrow with a founder who filled in your website form. Order your preparation steps, first first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Write 3-5 discovery questions specific to their situation"
+        },
+        {
+          "id": "r4",
+          "label": "Pick one or two relevant case studies to mention if they fit"
+        },
+        {
+          "id": "r5",
+          "label": "Send a short agenda and confirm the time and meeting link"
+        },
+        {
+          "id": "r1",
+          "label": "Re-read the form submission and any earlier emails"
+        },
+        {
+          "id": "r2",
+          "label": "Research the company and the founder (website, LinkedIn, recent news)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Start from what they told you, add context, plan questions, prepare proof, then confirm logistics with the client."
+    }
+  },
+  {
+    "id": "bd-meeting-prep-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the problems in this meeting confirmation email.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problems in this meeting confirmation email.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Leila, looking forward to our call.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Time: Thursday at 3pm.",
+          "issue": "No time zone; with international clients this causes missed calls."
+        },
+        {
+          "id": "p3",
+          "text": "Link: I'll send it later.",
+          "issue": "The meeting link should be in the confirmation and calendar invite now."
+        },
+        {
+          "id": "p4",
+          "text": "Agenda: your goals for the marketplace app, current blockers, and next steps (30 minutes).",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "If anyone else from your team should join, feel free to forward this.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Thanks, Omar",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-meeting-prep-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": "bd-tool-calendly",
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You use Calendly to let inbound leads book discovery calls.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You use Calendly to let inbound leads book discovery calls.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which booking form setup is best?",
+          "options": [
+            "Name, email, company and one optional question: 'What would you like to build?'",
+            "Fifteen required fields including budget, tech stack and full requirements",
+            "Only a first name",
+            "No form, just a time slot"
+          ],
+          "correctIndex": 0,
+          "explanation": "A short form gives you enough to prepare without scaring people away from booking."
+        },
+        {
+          "id": "s2",
+          "question": "A lead books for tomorrow from another country. What should you check?",
+          "options": [
+            "That they have a budget over a set amount",
+            "Nothing, the tool handles everything",
+            "That the time shows correctly in both time zones and the video link is in the invite",
+            "That they have signed an NDA"
+          ],
+          "correctIndex": 2,
+          "explanation": "Time zone and link issues are the most common causes of no-shows; confirm both."
+        },
+        {
+          "id": "s3",
+          "question": "How can you reduce no-shows?",
+          "options": [
+            "Send a short reminder the day before with the agenda and link",
+            "Call them hourly on the day",
+            "Book them twice in case they forget",
+            "Avoid reminders so you do not annoy them"
+          ],
+          "correctIndex": 0,
+          "explanation": "A brief, useful reminder is the standard way to cut no-shows."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-meeting-prep-t1-4",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Last month's booked discovery calls. Work out the show rate and no-show count.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Last month's booked discovery calls. Work out the show rate and no-show count.",
+      "table": {
+        "columns": [
+          "Metric",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Calls booked",
+            "40"
+          ],
+          [
+            "Calls held",
+            "30"
+          ],
+          [
+            "Rescheduled and later held (included in held)",
+            "4"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "show",
+          "label": "Show rate",
+          "unit": "%",
+          "answer": 75,
+          "tolerance": 0.5
+        },
+        {
+          "id": "noshow",
+          "label": "Booked calls that were never held",
+          "unit": "",
+          "answer": 10,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Show rate = 30 / 40 = 75%. Never held = 40 - 30 = 10."
+    }
+  },
+  {
+    "id": "bd-meeting-prep-t1-5",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these meeting agendas for a 30-minute first call with a prospect, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these meeting agendas for a 30-minute first call with a prospect, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Open conversation, no plan"
+        },
+        {
+          "id": "r4",
+          "label": "Full demo of five past projects (30 min)"
+        },
+        {
+          "id": "r1",
+          "label": "Their goals and current situation (10 min), challenges (10 min), how we might help and next steps (10 min)"
+        },
+        {
+          "id": "r2",
+          "label": "Our company introduction (20 min), their questions (10 min)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "A first call should centre on the prospect. Long intros, unstructured chats and back-to-back demos leave no time to learn their needs."
+    }
+  },
+  {
+    "id": "bd-meeting-prep-t1-6",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the weak items in this pre-call research note.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the weak items in this pre-call research note.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Company: GreenCart, online grocery delivery in two cities, about 40 staff.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Contact: Maria, co-founder and COO, ex-logistics manager.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Recent news: raised a seed round two months ago.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Need: probably wants everything, will figure out on the call.",
+          "issue": "No hypothesis; research should suggest what they likely need, e.g. a driver or customer app."
+        },
+        {
+          "id": "p5",
+          "text": "Questions: 'What do you do?'",
+          "issue": "Asks for facts the research already answers; it wastes call time and looks unprepared."
+        },
+        {
+          "id": "p6",
+          "text": "Relevant proof: our delivery-tracking app for a courier client.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-meeting-prep-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why send a short agenda before a sales call?",
+    "mcq": {
+      "options": [
+        "It replaces the need to prepare",
+        "It is a legal requirement",
+        "It guarantees the deal",
+        "It sets expectations and lets the prospect add what matters to them"
+      ],
+      "correctIndex": 3,
+      "explanation": "An agenda shows respect for their time and lets them shape the call, which improves attendance and focus.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-meeting-prep-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect books a call and you have 10 minutes to prepare. What is the most useful thing to do?",
+    "mcq": {
+      "options": [
+        "Rehearse your company pitch",
+        "Prepare a price quote",
+        "Draft the contract",
+        "Read what they submitted and check their website and LinkedIn quickly"
+      ],
+      "correctIndex": 3,
+      "explanation": "Knowing who they are and what they asked for lets you ask good questions; quotes and contracts come later.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-meeting-prep-m1-3",
+    "departmentId": "bd",
+    "skillId": "bd-meeting-prep",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What should the calendar invite for a client call always include?",
+    "mcq": {
+      "options": [
+        "Your full company brochure",
+        "Your pricing table",
+        "Only the date",
+        "Date, time with time zone, video link and a one-line purpose"
+      ],
+      "correctIndex": 3,
+      "explanation": "Those details prevent confusion and no-shows; sales material does not belong in the invite.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

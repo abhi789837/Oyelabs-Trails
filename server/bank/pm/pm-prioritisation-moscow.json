@@ -1,0 +1,364 @@
+[
+  {
+    "id": "pm-prioritisation-moscow-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An MVP for a food-delivery white-label app has a hard launch date. Rank these by MoSCoW category, Must first, Won't last.",
+    "task": {
+      "kind": "rank",
+      "prompt": "An MVP for a food-delivery white-label app has a hard launch date. Rank these by MoSCoW category, Must first, Won't last.",
+      "items": [
+        {
+          "id": "rb9002",
+          "label": "Customers can place and pay for an order"
+        },
+        {
+          "id": "r522bf",
+          "label": "Restaurant receives the order in the merchant app"
+        },
+        {
+          "id": "r5c972",
+          "label": "Push notification when the order is out for delivery"
+        },
+        {
+          "id": "r5eca4",
+          "label": "Saved favourite restaurants"
+        },
+        {
+          "id": "r092be",
+          "label": "AI-generated meal recommendations (agreed for phase 2)"
+        }
+      ],
+      "correctOrder": [
+        "rb9002",
+        "r522bf",
+        "r5c972",
+        "r5eca4",
+        "r092be"
+      ],
+      "explanation": "Ordering and order receipt are Musts (no product without them); delivery notifications are a Should; favourites a Could; recommendations are an explicit Won't for this release."
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A client sent their MoSCoW list for a 10-week build. Mark the lines that misuse MoSCoW.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A client sent their MoSCoW list for a 10-week build. Mark the lines that misuse MoSCoW.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Must: users can sign up and log in.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Must: admin can export reports to PDF, Excel, CSV and Google Sheets.",
+          "issue": "Four export formats are unlikely all to be essential for launch; probably one Must and the rest Should or Could."
+        },
+        {
+          "id": "s3",
+          "text": "Must: dark mode.",
+          "issue": "A cosmetic preference is rarely essential to launch."
+        },
+        {
+          "id": "s4",
+          "text": "Should: password reset by email.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Could: social login.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Won't (this release): multi-currency payments.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Must: everything else in the backlog.",
+          "issue": "If everything is a Must, nothing is prioritised; MoSCoW needs real Shoulds and Coulds as a contingency."
+        },
+        {
+          "id": "s8",
+          "text": "Should: order history.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A common MoSCoW guideline is that Must items take no more than about 60% of the available effort, leaving Should and Could as contingency. Check this release plan.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A common MoSCoW guideline is that Must items take no more than about 60% of the available effort, leaving Should and Could as contingency. Check this release plan.",
+      "table": {
+        "columns": [
+          "Category",
+          "Story points"
+        ],
+        "rows": [
+          [
+            "Must",
+            "84"
+          ],
+          [
+            "Should",
+            "36"
+          ],
+          [
+            "Could",
+            "20"
+          ],
+          [
+            "Team capacity for the release",
+            "120"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "mustpct",
+          "label": "Must as a share of capacity",
+          "unit": "%",
+          "answer": 70.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "over",
+          "label": "Points of Must work above the 60% guideline",
+          "unit": "pts",
+          "answer": 12.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "total",
+          "label": "Total planned points minus capacity",
+          "unit": "pts",
+          "answer": 20,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Must = 84 / 120 = 70%, which is 12 points over the 72-point guideline. The plan also exceeds capacity by 20 points, so some Coulds (and probably Shoulds) will not fit."
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Two weeks before launch the team is behind. The plan has 3 Must stories left (13 points), 2 Should stories (8 points) and 2 Could stories (5 points). Remaining capacity is 18 points.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Two weeks before launch the team is behind. The plan has 3 Must stories left (13 points), 2 Should stories (8 points) and 2 Could stories (5 points). Remaining capacity is 18 points.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you drop first?",
+          "options": [
+            "One Must story",
+            "The Could stories",
+            "The Should stories",
+            "Nothing; ask the team to work weekends"
+          ],
+          "correctIndex": 1,
+          "explanation": "Coulds exist precisely to be dropped when time runs short."
+        },
+        {
+          "id": "d2",
+          "question": "After dropping the Coulds, 21 points remain against 18 points of capacity. What next?",
+          "options": [
+            "Drop a Must story",
+            "Agree with the client which Should moves to the next release",
+            "Quietly reduce testing",
+            "Re-estimate the Musts lower"
+          ],
+          "correctIndex": 1,
+          "explanation": "Musts protect the launch. Moving a Should is a client decision that the PM should bring with the numbers."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-t2-5",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Put these steps for running a MoSCoW session with a client in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these steps for running a MoSCoW session with a client in order.",
+      "items": [
+        {
+          "id": "r8d8c8",
+          "label": "Agree the release goal and the fixed constraint (date or budget)"
+        },
+        {
+          "id": "rf4ed8",
+          "label": "Agree what Must means: the release fails without it"
+        },
+        {
+          "id": "r4a59a",
+          "label": "Sort each item, challenging every Must"
+        },
+        {
+          "id": "r89d02",
+          "label": "Check Musts fit within about 60% of capacity"
+        },
+        {
+          "id": "r3eb11",
+          "label": "Record the Won'ts in the scope document and share"
+        }
+      ],
+      "correctOrder": [
+        "r8d8c8",
+        "rf4ed8",
+        "r4a59a",
+        "r89d02",
+        "r3eb11"
+      ],
+      "explanation": "Definitions and the goal come before sorting; capacity checks the result; Won'ts are written down so they are not re-litigated."
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-t2-6",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The client's CEO joins a sprint review and says a new chatbot feature \"is a Must\" for the release that ships in three weeks. The team is already at capacity.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client's CEO joins a sprint review and says a new chatbot feature \"is a Must\" for the release that ships in three weeks. The team is already at capacity.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is your first response?",
+          "options": [
+            "Accept it as a Must and add it to the sprint",
+            "Refuse because the scope is signed",
+            "Ask what fails at launch without it, to test whether it meets the agreed meaning of Must",
+            "Tell the CEO the team will work overtime"
+          ],
+          "correctIndex": 2,
+          "explanation": "Testing against the agreed definition keeps MoSCoW honest without dismissing the CEO."
+        },
+        {
+          "id": "d2",
+          "question": "It really is essential for a partner launch. What now?",
+          "options": [
+            "Add it and hope velocity rises",
+            "Drop testing on other features",
+            "Show what must leave the release to make room, or what date or budget change is needed, and let the client choose",
+            "Swap it in for the lowest-priority Must without telling anyone"
+          ],
+          "correctIndex": 2,
+          "explanation": "A new Must displaces something. Present the trade explicitly and record the decision."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does a Won't item mean in MoSCoW?",
+    "mcq": {
+      "options": [
+        "It is agreed as out of scope for this release, though it may come later",
+        "It will never be built",
+        "It is a low-priority item the team will do if time allows",
+        "It was rejected by the developers"
+      ],
+      "correctIndex": 0,
+      "explanation": "Won't means \"won't have this time\". Recording it manages expectations for the current release without closing the door.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why does MoSCoW work best with a fixed date or fixed budget?",
+    "mcq": {
+      "options": [
+        "Because it estimates effort automatically",
+        "The fixed constraint forces real trade-offs, so Should and Could items act as contingency",
+        "Because clients prefer fixed dates",
+        "Because it removes the need for a backlog"
+      ],
+      "correctIndex": 1,
+      "explanation": "Without a fixed constraint, everything can drift into Must. A timebox makes the categories meaningful.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-prioritisation-moscow-m2-3",
+    "departmentId": "pm",
+    "skillId": "pm-prioritisation-moscow",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client marks 90% of the backlog as Must. What is the most useful thing to do?",
+    "mcq": {
+      "options": [
+        "Accept it; the client knows their business",
+        "Re-label some items yourself",
+        "Switch to a different framework without discussion",
+        "Revisit the definition of Must against the launch goal and ask which items the launch truly fails without"
+      ],
+      "correctIndex": 3,
+      "explanation": "MoSCoW only helps when Musts are scarce. Re-anchoring on the definition is the usual fix.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,345 @@
+[
+  {
+    "id": "pm-documentation-tools-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the pages of a project space in Notion or Confluence, from the one a new team member should read first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the pages of a project space in Notion or Confluence, from the one a new team member should read first.",
+      "items": [
+        {
+          "id": "r88312",
+          "label": "Project overview: goals, client, team and links"
+        },
+        {
+          "id": "r8a32b",
+          "label": "Scope and requirements (PRD)"
+        },
+        {
+          "id": "rfcb29",
+          "label": "Decision log"
+        },
+        {
+          "id": "r5bb23",
+          "label": "Meeting notes archive"
+        }
+      ],
+      "correctOrder": [
+        "r88312",
+        "r8a32b",
+        "rfcb29",
+        "r5bb23"
+      ],
+      "explanation": "Overview first, then what we are building, then key decisions, then history."
+    }
+  },
+  {
+    "id": "pm-documentation-tools-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A project wiki page. Mark the problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A project wiki page. Mark the problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Owner: Sam (PM). Last updated: 3 May.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Staging login: admin / Pass1234!",
+          "issue": "Credentials must never be stored in wiki pages; use a password manager."
+        },
+        {
+          "id": "s3",
+          "text": "Links to the PRD, designs and the Jira board.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Requirements: see the old doc somewhere in Drive.",
+          "issue": "Vague link; point to the exact current document."
+        },
+        {
+          "id": "s5",
+          "text": "Client contacts and roles.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Decision log: linked below.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-documentation-tools-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "The team keeps asking the same questions about how the staging environment works.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The team keeps asking the same questions about how the staging environment works.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do?",
+          "options": [
+            "Write a short how-to page in the project space and link it from the overview",
+            "Answer each time in chat",
+            "Tell them to ask the tech lead",
+            "Record a long video only"
+          ],
+          "correctIndex": 0,
+          "explanation": "Write it once where people look."
+        },
+        {
+          "id": "d2",
+          "question": "Six months later the page is out of date. How do you prevent that?",
+          "options": [
+            "Delete it",
+            "Give it an owner and a review date",
+            "Add a warning banner forever",
+            "Copy it into every project"
+          ],
+          "correctIndex": 1,
+          "explanation": "Owned pages stay current."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-documentation-tools-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the fields of a decision-log entry.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the fields of a decision-log entry.",
+      "items": [
+        {
+          "id": "r54984",
+          "label": "Date and decision title"
+        },
+        {
+          "id": "rde40a",
+          "label": "Context: why the decision was needed"
+        },
+        {
+          "id": "r88426",
+          "label": "Options considered"
+        },
+        {
+          "id": "re5887",
+          "label": "Decision and who made it"
+        },
+        {
+          "id": "r44cc9",
+          "label": "Consequences and follow-up actions"
+        }
+      ],
+      "correctOrder": [
+        "r54984",
+        "rde40a",
+        "r88426",
+        "re5887",
+        "r44cc9"
+      ],
+      "explanation": "Readers need when and what, why, the alternatives, who decided, and what changes."
+    }
+  },
+  {
+    "id": "pm-documentation-tools-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A Confluence space for a client project. Mark the setup choices that will cause problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A Confluence space for a client project. Mark the setup choices that will cause problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Space permissions: the client can see requirements and meeting notes.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Internal margin calculations are on a page the client can view.",
+          "issue": "Commercial data is exposed to the client; restrict it."
+        },
+        {
+          "id": "s3",
+          "text": "Page templates for meeting notes and decisions.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "No owner listed on any page.",
+          "issue": "Unowned pages go stale; add owners."
+        },
+        {
+          "id": "s5",
+          "text": "Requirements pages link to the Jira epics.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Archived pages are moved to an Archive section.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-documentation-tools-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Audit a project space for stale pages. Pages not reviewed in 90 days are stale.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Audit a project space for stale pages. Pages not reviewed in 90 days are stale.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Total pages",
+            "64"
+          ],
+          [
+            "Reviewed in the last 90 days",
+            "40"
+          ],
+          [
+            "Pages with no owner",
+            "18"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "stale",
+          "label": "Stale pages",
+          "unit": "pages",
+          "answer": 24,
+          "tolerance": 0
+        },
+        {
+          "id": "pct",
+          "label": "Share of pages that are stale",
+          "unit": "%",
+          "answer": 37.5,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "64 - 40 = 24 stale pages = 37.5%."
+    }
+  },
+  {
+    "id": "pm-documentation-tools-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why keep a decision log in the project wiki?",
+    "mcq": {
+      "options": [
+        "To blame people later",
+        "Because tools require it",
+        "So the team and client can see what was decided, when and why",
+        "To replace meetings"
+      ],
+      "correctIndex": 2,
+      "explanation": "Decision logs prevent re-arguing settled questions.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-documentation-tools-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What should never be stored in a project wiki page?",
+    "mcq": {
+      "options": [
+        "Passwords and API keys",
+        "Meeting notes",
+        "Requirements",
+        "Contact details of the project team"
+      ],
+      "correctIndex": 0,
+      "explanation": "Secrets belong in a password manager or secrets store.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-documentation-tools-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-documentation-tools",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client and the team need different views of documentation. What is the best approach?",
+    "mcq": {
+      "options": [
+        "Keep two copies of every page",
+        "Share everything",
+        "Share nothing",
+        "Use page permissions so clients see shared pages and internal pages stay private"
+      ],
+      "correctIndex": 3,
+      "explanation": "Permissions avoid duplication and leaks.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

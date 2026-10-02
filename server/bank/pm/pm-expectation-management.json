@@ -1,0 +1,359 @@
+[
+  {
+    "id": "pm-expectation-management-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the statements in this client call recap that set expectations the agency may not be able to meet.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "We'll demo the new search feature at the sprint review on 12 June.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The app will have zero bugs at launch.",
+          "issue": "No software ships bug-free; promise a quality bar (e.g. no open critical bugs) instead."
+        },
+        {
+          "id": "p3",
+          "text": "Apple will approve the app within 24 hours of submission.",
+          "issue": "App-store review time is outside the agency's control; give a typical range and plan a buffer."
+        },
+        {
+          "id": "p4",
+          "text": "You'll get a weekly status report every Friday.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Any small change you think of can be added without affecting the date.",
+          "issue": "Every change has a cost; small changes still go through the change process."
+        },
+        {
+          "id": "p6",
+          "text": "We need your feedback on designs within two working days.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-expectation-management-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Your team's last five sprints delivered 28, 32, 30, 26 and 34 points. The client asks how many sprints the remaining 180 points will take. Use the average and the slowest sprint to give a range.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "avg",
+          "label": "Average velocity",
+          "unit": "pts",
+          "answer": 30.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "best",
+          "label": "Sprints needed at the average velocity",
+          "unit": "sprints",
+          "answer": 6,
+          "tolerance": 0
+        },
+        {
+          "id": "worst",
+          "label": "Sprints needed at the slowest velocity (round up)",
+          "unit": "sprints",
+          "answer": 7,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Average = 150 / 5 = 30 points, so 180 / 30 = 6 sprints. At 26 points, 180 / 26 = 6.9, rounded up to 7. Give the client a range of 6–7 sprints, not a single optimistic number."
+    }
+  },
+  {
+    "id": "pm-expectation-management-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A client sees a polished clickable Figma prototype and asks, 'Great, so we can launch next week?' The real app is three months from launch.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client sees a polished clickable Figma prototype and asks, 'Great, so we can launch next week?' The real app is three months from launch.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you say?",
+          "options": [
+            "'Yes, roughly.'",
+            "Explain that the prototype is a design simulation with no backend, and walk them through the plan to launch",
+            "Say nothing and change the subject",
+            "Tell them the developers are slow"
+          ],
+          "correctIndex": 1,
+          "explanation": "Correcting a misunderstanding immediately, with a reason and the real plan, prevents disappointment later."
+        },
+        {
+          "id": "s2",
+          "question": "How do you prevent this in future demos?",
+          "options": [
+            "Stop showing prototypes",
+            "Label prototypes clearly as designs and show progress against the milestone plan in every demo",
+            "Only show finished features",
+            "Show prototypes to the developers only"
+          ],
+          "correctIndex": 1,
+          "explanation": "Framing each demo against the plan keeps expectations aligned."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-expectation-management-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A client asks for a new reporting module halfway through a fixed-price project. Order your response steps.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Get the client's decision in writing"
+        },
+        {
+          "id": "r2",
+          "label": "Assess effort, cost and impact on the timeline with the team"
+        },
+        {
+          "id": "r1",
+          "label": "Acknowledge the request and the business need"
+        },
+        {
+          "id": "r3",
+          "label": "Present options (add via change request, swap for lower-priority scope, or defer to phase 2)"
+        },
+        {
+          "id": "r5",
+          "label": "Update the plan and tell the team"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Acknowledge, analyse, give options, record the decision, then re-plan."
+    }
+  },
+  {
+    "id": "pm-expectation-management-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A long-standing retainer client assumes your agency will keep one specific developer on their account forever. That developer is moving to another project next month.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A long-standing retainer client assumes your agency will keep one specific developer on their account forever. That developer is moving to another project next month.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When do you tell the client?",
+          "options": [
+            "After the move, if they notice",
+            "Now, with the reason and the transition plan",
+            "On the developer's last day",
+            "Never, the retainer is for the team not a person"
+          ],
+          "correctIndex": 1,
+          "explanation": "Telling early, with a plan, keeps trust; surprises damage it."
+        },
+        {
+          "id": "s2",
+          "question": "What transition plan do you offer?",
+          "options": [
+            "None",
+            "Name the new developer, a two-week overlap with knowledge handover, and an introduction call",
+            "A discount",
+            "Let the client interview ten candidates"
+          ],
+          "correctIndex": 1,
+          "explanation": "A concrete handover plan addresses the real fear: losing knowledge and continuity."
+        },
+        {
+          "id": "s3",
+          "question": "What should the next retainer renewal clarify?",
+          "options": [
+            "That the client owns the developer",
+            "That the retainer covers a team with named roles and continuity commitments, not specific individuals",
+            "Nothing",
+            "That staff changes will never happen"
+          ],
+          "correctIndex": 1,
+          "explanation": "Writing the expectation into the contract prevents the same misunderstanding next time."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-expectation-management-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this PM's reply to a client asking whether a feature will be ready for their trade-show demo in 10 days.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Thanks for checking. The feature is about 70% done.",
+          "issue": "'Percent done' tells the client little; say what will and will not work by the demo date."
+        },
+        {
+          "id": "p2",
+          "text": "Login, product list and checkout will be ready for the demo.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Order history won't be ready; we can show it as a design mock-up.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "We'll definitely make it, the team will work the weekend if needed.",
+          "issue": "Promising certainty and unplanned overtime sets a risky expectation."
+        },
+        {
+          "id": "p5",
+          "text": "I'll send a demo build to you by Tuesday so you can rehearse.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-expectation-management-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the best time to set expectations about a client's feedback turnaround?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "At kickoff, written into the plan",
+        "When the first delay happens",
+        "At the final invoice",
+        "Never, clients dislike rules"
+      ],
+      "correctIndex": 0,
+      "explanation": "Expectations set early and in writing are easier to hold to than ones introduced after a problem.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-expectation-management-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client keeps asking for daily calls during a calm phase of the project. What is a good response?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Agree to daily calls indefinitely",
+        "Understand what worries them and offer a format that addresses it, such as a short written daily update",
+        "Refuse all extra contact",
+        "Pass them to the developers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Frequent contact requests usually signal anxiety; addressing the cause with a lighter format meets the need sustainably.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-expectation-management-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-expectation-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which phrase best manages expectations when giving a delivery date early in a project?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "'We'll be done on 1 March.'",
+        "'Based on current scope and velocity, we expect late February to mid-March; we'll narrow it after sprint 3.'",
+        "'It will be done when it's done.'",
+        "'Probably soon.'"
+      ],
+      "correctIndex": 1,
+      "explanation": "A range with its assumptions and a date for narrowing it is honest and still useful for planning.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

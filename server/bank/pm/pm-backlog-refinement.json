@@ -1,0 +1,387 @@
+[
+  {
+    "id": "pm-backlog-refinement-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "These items sit at the top of a food-delivery app's backlog, due for next sprint. Mark the ones that are NOT ready.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "As a customer, I can filter restaurants by cuisine. AC: 3 scenarios written, estimated 3 pts.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Improve the app.",
+          "issue": "Vague, no user, no value, no acceptance criteria; cannot be estimated."
+        },
+        {
+          "id": "p3",
+          "text": "As a rider, I can mark an order as delivered. AC agreed with client, estimated 2 pts.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "As an admin, I can manage everything about restaurants, menus, payouts and promotions. Estimated 40 pts.",
+          "issue": "Far too big for one sprint; it needs splitting."
+        },
+        {
+          "id": "p5",
+          "text": "As a customer, I get a push notification when my order is out for delivery. AC written, estimated 5 pts.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Integrate with the client's loyalty API (API docs not yet received).",
+          "issue": "Blocked by a missing dependency; not ready until the docs arrive."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-backlog-refinement-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order these refinement activities for a newly requested epic.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Estimate the stories"
+        },
+        {
+          "id": "r2",
+          "label": "Team asks questions and splits the epic into smaller stories"
+        },
+        {
+          "id": "r1",
+          "label": "PO explains the user problem and the value"
+        },
+        {
+          "id": "r3",
+          "label": "Write acceptance criteria for the top stories"
+        },
+        {
+          "id": "r5",
+          "label": "PO orders the stories in the Product Backlog"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Understand first, split, make each story testable, size it, then order with size known."
+    }
+  },
+  {
+    "id": "pm-backlog-refinement-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Split the epic 'Customers can pay for orders' into thin vertical slices. Order the slices so the most basic usable flow comes first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Pay with Apple Pay / Google Pay"
+        },
+        {
+          "id": "r2",
+          "label": "Show a clear error when a card is declined"
+        },
+        {
+          "id": "r1",
+          "label": "Pay by card with a single saved test gateway (happy path)"
+        },
+        {
+          "id": "r3",
+          "label": "Save a card for future orders"
+        },
+        {
+          "id": "r5",
+          "label": "Split payment across two cards"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Deliver the thinnest end-to-end path first, then error handling, then conveniences and rare cases."
+    }
+  },
+  {
+    "id": "pm-backlog-refinement-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Refinement sessions on a client CRM project keep running 2 hours and the team estimates only 3 stories each time, because the client's PO brings ideas that have never been written down.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Refinement sessions on a client CRM project keep running 2 hours and the team estimates only 3 stories each time, because the client's PO brings ideas that have never been written down.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What change helps most?",
+          "options": [
+            "Cancel refinement",
+            "Ask the PO to write a short draft (user, goal, rough AC) before the session, and timebox each item",
+            "Let the PM estimate alone",
+            "Refine only on the first day of the sprint"
+          ],
+          "correctIndex": 1,
+          "explanation": "Pre-work and timeboxing make sessions productive; refinement stays collaborative."
+        },
+        {
+          "id": "s2",
+          "question": "How much of the backlog should be refined ahead?",
+          "options": [
+            "The entire backlog for the whole project",
+            "Roughly enough ready items for the next one or two sprints",
+            "Only the item being worked on today",
+            "None; refine during the sprint"
+          ],
+          "correctIndex": 1,
+          "explanation": "Refining 1–2 sprints ahead balances readiness against wasted effort on items that may change."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-backlog-refinement-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Your team's velocity is 25 points. You aim to keep about two sprints of ready work at the top of the backlog. Today these items are ready.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Story",
+          "Points",
+          "Ready?"
+        ],
+        "rows": [
+          [
+            "Login with Google",
+            "5",
+            "Yes"
+          ],
+          [
+            "Order history",
+            "8",
+            "Yes"
+          ],
+          [
+            "Edit profile",
+            "3",
+            "Yes"
+          ],
+          [
+            "Logout everywhere",
+            "3",
+            "Yes"
+          ],
+          [
+            "Dark mode",
+            "2",
+            "Yes"
+          ],
+          [
+            "Invoice PDF",
+            "5",
+            "Yes"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ready",
+          "label": "Points currently ready",
+          "unit": "points",
+          "answer": 26,
+          "tolerance": 0
+        },
+        {
+          "id": "gap",
+          "label": "Additional points to refine to reach two sprints",
+          "unit": "points",
+          "answer": 24,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Ready = 5+8+3+3+2+5 = 26. Target = 2 × 25 = 50. Gap = 50 − 26 = 24 points."
+    }
+  },
+  {
+    "id": "pm-backlog-refinement-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Read this Definition of Ready drafted by a PM for a client project. Mark the lines that would make it harmful.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Story follows the 'As a… I want… so that…' format or states the user need clearly.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Has testable acceptance criteria.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Is estimated by the team.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Has a full technical design approved by the client CTO before it can be discussed.",
+          "issue": "Front-loads design and creates a gate that turns refinement into waterfall; design can evolve with the team."
+        },
+        {
+          "id": "p5",
+          "text": "Is small enough to finish in one sprint.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Is guaranteed to have zero unknowns.",
+          "issue": "No story has zero unknowns; this makes nothing ever ready."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-backlog-refinement-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does the Scrum Guide 2020 call the activity of breaking down and adding detail to Product Backlog items?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Product Backlog refinement",
+        "Sprint Retrospective",
+        "Daily Scrum",
+        "Release planning"
+      ],
+      "correctIndex": 0,
+      "explanation": "Product Backlog refinement is the ongoing act of breaking down and adding detail, such as description, order and size.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-backlog-refinement-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which split of the story 'Customers can search products' is a vertical slice?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Search by product name, end to end (UI, API and database)",
+        "Build the search database index only",
+        "Design the search screen only",
+        "Write the search API without a UI"
+      ],
+      "correctIndex": 0,
+      "explanation": "A vertical slice delivers a small piece of user-visible value across all layers, so it can be demoed and tested.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-backlog-refinement-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-backlog-refinement",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A client PO adds 30 new ideas to the backlog every week, and the team never reaches most of them. What is the healthiest response?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Regularly prune and order the backlog with the PO, removing or archiving items unlikely to be done",
+        "Estimate every idea in detail",
+        "Stop accepting ideas",
+        "Move them all into the current sprint"
+      ],
+      "correctIndex": 0,
+      "explanation": "A long unrefined tail costs attention. Ordering and pruning keeps the top of the backlog meaningful.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

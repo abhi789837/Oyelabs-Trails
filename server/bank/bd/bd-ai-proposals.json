@@ -1,0 +1,323 @@
+[
+  {
+    "id": "bd-ai-proposals-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find what must not go out in this Claude-drafted proposal.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Claude drafted this proposal excerpt from your discovery notes. Mark the lines that need fixing before it goes to the client.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "You need a booking app that lets clinic patients choose a slot and pay a deposit.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We recently built a similar platform for a major international sportswear brand.",
+          "issue": "Invented case study; only reference work you can name and evidence from your approved list."
+        },
+        {
+          "id": "p3",
+          "text": "Our team is ISO 27001 certified.",
+          "issue": "Certification claims must be confirmed; if not verified it is a false statement."
+        },
+        {
+          "id": "p4",
+          "text": "Phase 1 covers booking, payments and reminders.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Delivery in 4 weeks at a fixed price of $12,000.",
+          "issue": "Timeline and price must come from engineering's estimate and your rate card, not from the model."
+        },
+        {
+          "id": "p6",
+          "text": "Next step: a 30-minute call to confirm the clinic's opening-hours rules.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-ai-proposals-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order a Claude-assisted proposal workflow.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for drafting a proposal with Claude, first at the top.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Give Claude the brief, discovery notes and your approved template"
+        },
+        {
+          "id": "i3",
+          "label": "Review the draft's structure and fill the gaps it flagged"
+        },
+        {
+          "id": "i4",
+          "label": "Have engineering confirm the scope, estimate and timeline"
+        },
+        {
+          "id": "i5",
+          "label": "Fact-check every claim, number and case study, then send"
+        },
+        {
+          "id": "i1",
+          "label": "Check what client information policy allows you to share with the AI tool"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Policy first, then draft, then expert checks. Nothing goes out until every number and claim has been verified by a person."
+    }
+  },
+  {
+    "id": "bd-ai-proposals-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Resolve a conflict between Claude's draft and engineering.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Claude's draft says the integration will take 6 weeks. Your lead engineer reviews it and says 10 weeks.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which timeline goes in the proposal?",
+          "options": [
+            "Engineering's 10 weeks, with their stated assumptions",
+            "Claude's 6 weeks, because it is more competitive",
+            "The average, 8 weeks",
+            "Leave the timeline out"
+          ],
+          "correctIndex": 0,
+          "explanation": "Estimates come from the people who will do the work. The model has no knowledge of your team or this integration."
+        },
+        {
+          "id": "s2",
+          "question": "The client says a competitor promised 6 weeks. What do you do?",
+          "options": [
+            "Change to 6 weeks to match",
+            "Explain what the 10 weeks covers and offer a phased option that delivers the core sooner",
+            "Say the competitor is lying",
+            "Ask Claude to justify 6 weeks"
+          ],
+          "correctIndex": 1,
+          "explanation": "Defend the honest estimate with its reasons and give the client a faster path through scope, not by shrinking the estimate."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-proposals-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Work out the time saved by drafting with AI.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Before using Claude, a proposal took you 5 hours. Now it takes 2 hours, including review and fact-checking. You write 12 proposals a month and your time is valued at $30 an hour.",
+      "table": null,
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Hours saved per month",
+          "unit": "h",
+          "answer": 36,
+          "tolerance": 0.1
+        },
+        {
+          "id": "value",
+          "label": "Value of the time saved per month",
+          "unit": "$",
+          "answer": 1080,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Saved = (5 − 2) × 12 = 36 hours, worth 36 × $30 = $1080. Keep the review time in the 2 hours; skipping it is not a saving."
+    }
+  },
+  {
+    "id": "bd-ai-proposals-t2-4",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Decide whether you can paste a client's spec into an AI tool.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect sends a detailed product spec under a signed NDA. You want Claude to help summarise it for the proposal.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you check first?",
+          "options": [
+            "Nothing; summaries are always allowed",
+            "Whether the spec is long enough to need summarising",
+            "Whether your company's approved AI tool and policy allow this, and what the NDA says about sharing",
+            "Whether the prospect will find out"
+          ],
+          "correctIndex": 2,
+          "explanation": "An NDA may restrict where confidential information goes. Check policy and the approved tool, and ask if unclear."
+        },
+        {
+          "id": "s2",
+          "question": "Policy is unclear for this client. What do you do?",
+          "options": [
+            "Paste it in and ask later",
+            "Upload it to a free online AI tool instead",
+            "Ask the client to remove the NDA",
+            "Ask your manager or whoever owns AI policy, and meanwhile work from a redacted version without confidential details"
+          ],
+          "correctIndex": 3,
+          "explanation": "When unsure, escalate and minimise what you share."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-ai-proposals-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Write the prompt you would give Claude for a proposal section.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write a prompt asking Claude to draft the \"Our approach\" section of a proposal for the brief below. The prompt should stop Claude from inventing facts.",
+      "context": "Brief: a regional gym chain wants a member app (class booking, payments, push notifications). You have discovery-call notes and a list of three approved case studies. Engineering will provide the estimate separately.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "context",
+          "label": "Gives the needed context",
+          "description": "Says who the client is, what they need, and points to the notes provided.",
+          "weight": 1
+        },
+        {
+          "id": "limits",
+          "label": "Prevents invented facts",
+          "description": "Tells Claude to use only the provided notes and approved case studies, and not to state prices, timelines or certifications.",
+          "weight": 1
+        },
+        {
+          "id": "gaps",
+          "label": "Asks for gaps to be flagged",
+          "description": "Asks Claude to mark missing information (for example [NEEDS INPUT]) rather than guess.",
+          "weight": 1
+        },
+        {
+          "id": "format",
+          "label": "Specifies the output",
+          "description": "Sets length, tone and structure for the section.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "You are helping draft the \"Our approach\" section of a proposal for a regional gym chain that wants a member app with class booking, payments and push notifications. Use only the discovery notes and the three approved case studies pasted below. Do not state prices, timelines, team size or certifications; engineering will supply the estimate. If information is missing, write [NEEDS INPUT: ...] instead of guessing. Write about 250 words in a clear, plain tone with three short sub-headings: understanding the goal, how we will build it, how we will work together. Then list any assumptions you made."
+    }
+  },
+  {
+    "id": "bd-ai-proposals-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the most effective way to stop Claude inventing case studies in a proposal draft?",
+    "mcq": {
+      "options": [
+        "Ask it to make the case studies sound realistic",
+        "Tell it to be creative",
+        "Give it your approved case studies and tell it to use only those and flag gaps",
+        "Let it write freely and remove anything odd later"
+      ],
+      "correctIndex": 2,
+      "explanation": "Constrain the model to sources you provide and ask it to mark what is missing; review still follows.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-proposals-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Who is accountable for the accuracy of a proposal drafted with AI?",
+    "mcq": {
+      "options": [
+        "The AI vendor",
+        "The client, who should check it",
+        "Nobody, because AI drafted it",
+        "The person who sends it"
+      ],
+      "correctIndex": 3,
+      "explanation": "AI is a drafting tool. The sender owns every claim, number and commitment in the document.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-ai-proposals-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-ai-proposals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Claude's draft includes a price of $18,500 that nobody gave it. What should you do?",
+    "mcq": {
+      "options": [
+        "Keep it if it seems reasonable",
+        "Round it to $18,000",
+        "Ask Claude where the number came from and keep it if the reason sounds right",
+        "Replace it with the price from the agreed estimate and rate card"
+      ],
+      "correctIndex": 3,
+      "explanation": "Prices must come from your own estimate and pricing, never from the model's guess.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

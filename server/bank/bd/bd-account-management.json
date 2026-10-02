@@ -1,0 +1,317 @@
+[
+  {
+    "id": "bd-account-management-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank account warning signs by churn risk.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these signals from a client account by churn risk, highest first.",
+      "items": [
+        {
+          "id": "i3",
+          "label": "Invoices are 60 days overdue with no reply"
+        },
+        {
+          "id": "i4",
+          "label": "Fewer feature requests than last quarter"
+        },
+        {
+          "id": "i5",
+          "label": "Client asked for the monthly report in a different format"
+        },
+        {
+          "id": "i1",
+          "label": "Client has issued an RFP for a \"maintenance vendor\""
+        },
+        {
+          "id": "i2",
+          "label": "Your champion left and their replacement has not met you"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "An active search for a replacement is the clearest risk; losing your champion and going silent on payments come next. A format request is a sign of engagement, not risk."
+    }
+  },
+  {
+    "id": "bd-account-management-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the gaps in this account plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this account plan that are weak or missing what an account plan needs.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Account: regional retail chain, $180,000 a year (mobile app and retainer).",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Goal: grow the account.",
+          "issue": "No measurable goal; set a target such as a specific revenue or new project by a date."
+        },
+        {
+          "id": "p3",
+          "text": "Stakeholders: Head of Digital (champion), CFO (approves budget), IT lead (neutral).",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Client's priorities: we will find out next year.",
+          "issue": "An account plan starts from the client's priorities; without them, growth ideas are guesses."
+        },
+        {
+          "id": "p5",
+          "text": "Risks: champion's contract ends in June.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Next steps: none scheduled.",
+          "issue": "No owners or dates, so nothing will happen."
+        },
+        {
+          "id": "p7",
+          "text": "Last QBR: 12 March; satisfaction 8/10.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-account-management-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Calculate net and gross revenue retention.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "At the start of the year your existing clients brought $500,000 in annual revenue. Over the year: expansion from existing clients $80,000, reductions $30,000, and lost clients $50,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "nrr",
+          "label": "Net revenue retention",
+          "unit": "%",
+          "answer": 100,
+          "tolerance": 0.1
+        },
+        {
+          "id": "grr",
+          "label": "Gross revenue retention",
+          "unit": "%",
+          "answer": 84,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "NRR = (500 + 80 − 30 − 50) ÷ 500 = 100%. GRR = (500 − 30 − 50) ÷ 500 = 84% (no expansion counted). Expansion is hiding real losses here."
+    }
+  },
+  {
+    "id": "bd-account-management-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Recover an account after a delivery slip.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A key client's release slipped by three weeks and their COO emailed your CEO to complain.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Wait for delivery to finish before replying",
+            "Reply with a long email explaining it was the client's fault",
+            "Call the COO, acknowledge the impact, and share the facts and a recovery plan within a day",
+            "Offer a 30% discount immediately"
+          ],
+          "correctIndex": 2,
+          "explanation": "Fast, factual ownership calms an escalation better than explanations or reflexive discounts."
+        },
+        {
+          "id": "s2",
+          "question": "The recovery plan is agreed. How do you rebuild trust?",
+          "options": [
+            "Avoid contact until the release is done",
+            "Send a gift and move on",
+            "Change the account manager without explanation",
+            "Weekly progress updates against the plan until delivery is stable"
+          ],
+          "correctIndex": 3,
+          "explanation": "Trust comes back through visible, reliable follow-through."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-account-management-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Raise rates at renewal.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client's retainer renews in two months. Your costs rose and you plan an 8% rate increase.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When and how do you raise it?",
+          "options": [
+            "On the renewal invoice without notice",
+            "Early, in a conversation, with the reason and the value delivered this year",
+            "Only if they ask about pricing",
+            "After they have renewed at the old rate"
+          ],
+          "correctIndex": 1,
+          "explanation": "Early, explained increases are accepted far more often than surprises."
+        },
+        {
+          "id": "s2",
+          "question": "The client pushes back on 8%. What is a reasonable response?",
+          "options": [
+            "Cancel the retainer",
+            "Drop the increase entirely without discussion",
+            "Offer to keep the old rate for a longer commitment, or adjust the hours to fit their budget",
+            "Insist on 8% with no options"
+          ],
+          "correctIndex": 2,
+          "explanation": "Trade rather than cave; give them options that protect your margin."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-account-management-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Work out your share of a client's wallet.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client spends about $400,000 a year on outsourced development. Your annual revenue from them is $120,000. Your goal is 50% share of wallet.",
+      "table": null,
+      "fields": [
+        {
+          "id": "share",
+          "label": "Current share of wallet",
+          "unit": "%",
+          "answer": 30,
+          "tolerance": 0.1
+        },
+        {
+          "id": "gap",
+          "label": "Extra annual revenue needed to reach 50%",
+          "unit": "$",
+          "answer": 80000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Share = 120,000 ÷ 400,000 = 30%. 50% = $200,000, so you need $80,000 more. Knowing the wallet shows where expansion is possible."
+    }
+  },
+  {
+    "id": "bd-account-management-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does an account manager primarily own?",
+    "mcq": {
+      "options": [
+        "The health and growth of the client relationship over time",
+        "Writing the code for the client's features",
+        "The client's internal budget decisions",
+        "Only sending invoices"
+      ],
+      "correctIndex": 0,
+      "explanation": "Account management connects delivery, satisfaction and growth into one ongoing relationship.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-account-management-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How often should an account manager talk to a key client?",
+    "mcq": {
+      "options": [
+        "Only at renewal",
+        "On a regular, planned cadence, plus whenever something important happens",
+        "Only when there is a problem",
+        "Only when there is something to sell"
+      ],
+      "correctIndex": 1,
+      "explanation": "Steady contact builds the relationship and catches problems early.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-account-management-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-account-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "All your contact at a $250,000-a-year account runs through one person. What is the main risk?",
+    "mcq": {
+      "options": [
+        "Too many meetings",
+        "If that person leaves or loses influence, you lose your position in the account",
+        "The client paying too quickly",
+        "Your invoices being too detailed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Single-threaded accounts are fragile; build relationships with several stakeholders.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

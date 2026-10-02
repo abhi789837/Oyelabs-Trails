@@ -1,0 +1,495 @@
+[
+  {
+    "id": "bd-proposals-sows-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Engineering estimated the work below for a fixed-price SOW. The blended rate is $40/hour and the agency adds a 15% contingency to the labour total. Calculate the total hours, labour cost, and the quoted price including contingency.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Engineering estimated the work below for a fixed-price SOW. The blended rate is $40/hour and the agency adds a 15% contingency to the labour total. Calculate the total hours, labour cost, and the quoted price including contingency.",
+      "table": {
+        "columns": [
+          "Work item",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Discovery & UX",
+            "60"
+          ],
+          [
+            "Mobile app (cross-platform)",
+            "320"
+          ],
+          [
+            "Admin web panel",
+            "160"
+          ],
+          [
+            "Backend & APIs",
+            "200"
+          ],
+          [
+            "QA & UAT support",
+            "100"
+          ],
+          [
+            "Project management",
+            "80"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Total hours",
+          "unit": "h",
+          "answer": 920,
+          "tolerance": 0
+        },
+        {
+          "id": "labour",
+          "label": "Labour cost",
+          "unit": "$",
+          "answer": 36800,
+          "tolerance": 1
+        },
+        {
+          "id": "price",
+          "label": "Quoted price with 15% contingency",
+          "unit": "$",
+          "answer": 42320,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "60+320+160+200+100+80 = 920 h; 920 x $40 = $36,800; x 1.15 = $42,320."
+    }
+  },
+  {
+    "id": "bd-proposals-sows-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A $50,000 fixed-price SOW is billed by milestone. Calculate the invoice amount for each milestone.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A $50,000 fixed-price SOW is billed by milestone. Calculate the invoice amount for each milestone.",
+      "table": {
+        "columns": [
+          "Milestone",
+          "Share of fee"
+        ],
+        "rows": [
+          [
+            "Signing / kickoff",
+            "20%"
+          ],
+          [
+            "Design sign-off",
+            "20%"
+          ],
+          [
+            "Beta delivered to UAT",
+            "40%"
+          ],
+          [
+            "Launch",
+            "20%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "m1",
+          "label": "Signing invoice",
+          "unit": "$",
+          "answer": 10000,
+          "tolerance": 1
+        },
+        {
+          "id": "m2",
+          "label": "Design sign-off invoice",
+          "unit": "$",
+          "answer": 10000,
+          "tolerance": 1
+        },
+        {
+          "id": "m3",
+          "label": "Beta invoice",
+          "unit": "$",
+          "answer": 20000,
+          "tolerance": 1
+        },
+        {
+          "id": "m4",
+          "label": "Launch invoice",
+          "unit": "$",
+          "answer": 10000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "20% of $50,000 = $10,000; 40% = $20,000. The milestones total $50,000."
+    }
+  },
+  {
+    "id": "bd-proposals-sows-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the SOW lines that are too vague or risky to sign as written.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the SOW lines that are too vague or risky to sign as written.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Deliverables: iOS and Android app (one cross-platform codebase) and a web admin panel, per the feature list in Appendix A.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The app will include all features needed for a modern marketplace.",
+          "issue": "Open-ended scope; anything the client thinks is 'needed' becomes a dispute."
+        },
+        {
+          "id": "p3",
+          "text": "Out of scope: data migration from the legacy system, and third-party subscription fees.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Acceptance: each milestone is accepted after 5 business days of UAT or written sign-off, whichever comes first.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Unlimited revisions until the client is fully satisfied.",
+          "issue": "Unbounded revisions make a fixed price impossible to protect."
+        },
+        {
+          "id": "p6",
+          "text": "Changes to scope are handled through a written change request with a cost and timeline impact.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Timeline: launch in about 16 weeks, assuming client feedback within 3 business days.",
+          "issue": null
+        },
+        {
+          "id": "p8",
+          "text": "The agency will integrate with any payment provider the client chooses later.",
+          "issue": "Unnamed integrations cannot be estimated; name the provider or price it as a change."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-proposals-sows-t2-4",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order these steps for turning a qualified opportunity into a signed SOW, first to last.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for turning a qualified opportunity into a signed SOW, first to last.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "BD drafts the proposal with scope, assumptions, price and timeline"
+        },
+        {
+          "id": "r4",
+          "label": "Engineering reviews the draft for accuracy"
+        },
+        {
+          "id": "r5",
+          "label": "Walk the client through it on a call and agree changes"
+        },
+        {
+          "id": "r6",
+          "label": "Send the final SOW for e-signature"
+        },
+        {
+          "id": "r1",
+          "label": "Confirm requirements and priorities in discovery"
+        },
+        {
+          "id": "r2",
+          "label": "Engineering estimates the scope with assumptions"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Scope before estimate, estimate before proposal, engineering review before the client sees it, then a walkthrough and signature."
+    }
+  },
+  {
+    "id": "bd-proposals-sows-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client wants an AI document-extraction platform. Accuracy depends on their documents, which you have not seen. They want one fixed price for everything.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client wants an AI document-extraction platform. Accuracy depends on their documents, which you have not seen. They want one fixed price for everything.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should the proposal be structured?",
+          "options": [
+            "Refuse until they provide every document",
+            "A fixed-price proof-of-concept phase on sample documents, then a firm quote for the full build",
+            "One fixed price for the whole platform with a guaranteed accuracy",
+            "Hourly with no estimate at all"
+          ],
+          "correctIndex": 1,
+          "explanation": "Phasing turns the unknown (accuracy on their data) into a small, bounded risk before the large commitment."
+        },
+        {
+          "id": "s2",
+          "question": "How should accuracy appear in the SOW?",
+          "options": [
+            "As a guarantee of 99% on all documents",
+            "As a target measured on an agreed test set, with low-confidence results routed to human review",
+            "Left out entirely",
+            "As 'best effort' with no measure"
+          ],
+          "correctIndex": 1,
+          "explanation": "A measurable target on an agreed test set is fair to both sides; human review handles the remainder."
+        },
+        {
+          "id": "s3",
+          "question": "Who should own ongoing model and API usage costs?",
+          "options": [
+            "Nobody: leave it undefined",
+            "The client, stated as a pass-through or separate line with an estimate",
+            "The agency, hidden in the build price"
+          ],
+          "correctIndex": 1,
+          "explanation": "Usage costs grow with volume after launch; stating them separately avoids disputes and margin loss."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-proposals-sows-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Compare two quotes for the same project. Option A: fixed price at estimated 900 hours x $45 plus 20% risk premium. Option B: time and materials at $45/hour, where the client expects 900-1,100 hours. Calculate Option A's price, and Option B's cost at the low and high end.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare two quotes for the same project. Option A: fixed price at estimated 900 hours x $45 plus 20% risk premium. Option B: time and materials at $45/hour, where the client expects 900-1,100 hours. Calculate Option A's price, and Option B's cost at the low and high end.",
+      "table": {
+        "columns": [
+          "Option",
+          "Basis"
+        ],
+        "rows": [
+          [
+            "A: fixed price",
+            "900 h x $45 + 20%"
+          ],
+          [
+            "B: time & materials",
+            "900-1,100 h x $45"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Option A price",
+          "unit": "$",
+          "answer": 48600,
+          "tolerance": 1
+        },
+        {
+          "id": "blow",
+          "label": "Option B, low end",
+          "unit": "$",
+          "answer": 40500,
+          "tolerance": 1
+        },
+        {
+          "id": "bhigh",
+          "label": "Option B, high end",
+          "unit": "$",
+          "answer": 49500,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "A: 900 x 45 = 40,500 x 1.2 = $48,600. B: 900 x 45 = $40,500 to 1,100 x 45 = $49,500. Fixed price buys certainty; T&M is cheaper if scope stays tight."
+    }
+  },
+  {
+    "id": "bd-proposals-sows-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": "bd-tool-pandadoc",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A rep is about to send a proposal from PandaDoc. Mark the pre-send checklist items that are wrong.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A rep is about to send a proposal from PandaDoc. Mark the pre-send checklist items that are wrong.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Pricing table matches the engineering estimate version that was reviewed.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Client's company name and signer are correct on every page.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "The template still shows the previous client's name in the appendix, but no one reads appendices.",
+          "issue": "Another client's name in the document is a confidentiality and credibility problem; fix it."
+        },
+        {
+          "id": "p4",
+          "text": "Signing order: client signer first, then the agency's authorised signatory.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Proposal valid for 30 days, with that date shown.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The rep signs on behalf of the agency even though they are not an authorised signatory.",
+          "issue": "Only an authorised signatory should sign contracts for the agency."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-proposals-sows-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why should engineering review a proposal before it goes to the client?",
+    "mcq": {
+      "options": [
+        "To confirm scope, assumptions and estimates match what can actually be delivered",
+        "Because clients require an engineer's signature",
+        "To make the document longer",
+        "So engineering can add more features for free"
+      ],
+      "correctIndex": 0,
+      "explanation": "BD wins the deal, delivery has to live with it; a review catches scope and estimate gaps before they become commitments.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-proposals-sows-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of an 'assumptions' section in a SOW?",
+    "mcq": {
+      "options": [
+        "To state the conditions the price and timeline depend on, so changes to them trigger a change request",
+        "To list the agency's company values",
+        "To repeat the deliverables",
+        "To describe the payment schedule"
+      ],
+      "correctIndex": 0,
+      "explanation": "Assumptions (feedback times, provided content, named integrations) define when the price still holds.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-proposals-sows-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-proposals-sows",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client asks to remove the out-of-scope section because it 'looks negative'. What is the best response?",
+    "mcq": {
+      "options": [
+        "Remove it to close faster",
+        "Replace it with 'everything else is included'",
+        "Move it to an internal document the client never sees",
+        "Keep it, explaining it protects both sides from surprise costs, and soften the wording if needed"
+      ],
+      "correctIndex": 3,
+      "explanation": "Out-of-scope lines prevent disputes; tone can change, the clarity should not.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

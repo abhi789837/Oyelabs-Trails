@@ -1,0 +1,357 @@
+[
+  {
+    "id": "pm-ai-risk-analysis-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Claude produced this first-pass risk list for a telehealth app brief. Mark the entries that are too generic to act on.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Claude produced this first-pass risk list for a telehealth app brief. Mark the entries that are too generic to act on.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Because video consultations depend on a third-party SDK, an SDK outage could stop appointments. Trigger: vendor status alerts.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Communication issues.",
+          "issue": "Generic; name the specific communication failure and its effect."
+        },
+        {
+          "id": "s3",
+          "text": "Because patient data is health data, a data-protection review may delay launch. Owner: client DPO.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Scope creep.",
+          "issue": "Generic label with no cause or response."
+        },
+        {
+          "id": "s5",
+          "text": "Because app stores review health apps strictly, submission may be rejected. Response: early review of guidelines.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Because the model provider may deprecate the triage model, prompts may need re-testing. Trigger: deprecation notice.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order a responsible process for AI-assisted risk identification.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order a responsible process for AI-assisted risk identification.",
+      "items": [
+        {
+          "id": "r67815",
+          "label": "Remove confidential details the model does not need"
+        },
+        {
+          "id": "r9d5fd",
+          "label": "Ask the model for risks by category, citing evidence in the brief"
+        },
+        {
+          "id": "r6f41e",
+          "label": "Compare its list with the team's own list and past projects"
+        },
+        {
+          "id": "r85020",
+          "label": "Rate probability and impact using your team's data"
+        },
+        {
+          "id": "r69734",
+          "label": "Assign owners and responses in the RAID log"
+        }
+      ],
+      "correctOrder": [
+        "r67815",
+        "r9d5fd",
+        "r6f41e",
+        "r85020",
+        "r69734"
+      ],
+      "explanation": "Minimise data, widen thinking, cross-check, rate with real data, then humans own the register."
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Claude rated \"App Store rejection\" as low probability. Your agency's last three health apps were each rejected once.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Claude rated \"App Store rejection\" as low probability. Your agency's last three health apps were each rejected once.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "Which rating do you use?",
+          "options": [
+            "Claude's rating, since it is objective",
+            "An average of both",
+            "Leave it unrated",
+            "Your own historical data: rate it higher"
+          ],
+          "correctIndex": 3,
+          "explanation": "Models lack your history; reference data wins."
+        },
+        {
+          "id": "d2",
+          "question": "How should you use Claude's ratings in general?",
+          "options": [
+            "As a starting point to challenge against your team's experience",
+            "As final values",
+            "Never",
+            "Only for low risks"
+          ],
+          "correctIndex": 0,
+          "explanation": "Model ratings are generic hypotheses."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A PM's prompt for AI risk analysis. Mark the parts that are risky or unhelpful.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's prompt for AI risk analysis. Mark the parts that are risky or unhelpful.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Here is the project brief and work breakdown, with client names replaced by placeholders.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "List risks by category, and quote the line in the brief that suggests each one.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Here are the client's production database credentials so you can check the data.",
+          "issue": "Never share secrets in prompts."
+        },
+        {
+          "id": "s4",
+          "text": "Give exact probabilities to two decimal places; I'll use them as final.",
+          "issue": "False precision; model probabilities are not evidence and must not be final."
+        },
+        {
+          "id": "s5",
+          "text": "Also list risks that are commonly missed on similar projects.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Mark anything you inferred rather than read in the brief.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Compare AI-assisted and team-only risk identification on a project retrospective.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare AI-assisted and team-only risk identification on a project retrospective.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Risks that actually occurred",
+            "12"
+          ],
+          [
+            "Of those, on the team-only list",
+            "7"
+          ],
+          [
+            "Of those, on the AI-assisted list",
+            "9"
+          ],
+          [
+            "On both lists",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "team",
+          "label": "Team-only list: share of actual risks caught",
+          "unit": "%",
+          "answer": 58.3333,
+          "tolerance": 0.1
+        },
+        {
+          "id": "ai",
+          "label": "AI-assisted list: share caught",
+          "unit": "%",
+          "answer": 75.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "combined",
+          "label": "Combined lists: share caught",
+          "unit": "%",
+          "answer": 83.3333,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Team 58.3%; AI-assisted 75%; combined (7 + 9 - 6) / 12 = 83.3%. Using both is better than either."
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client's security team asks whether project documents were shared with AI tools during risk analysis.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client's security team asks whether project documents were shared with AI tools during risk analysis.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you show them?",
+          "options": [
+            "Nothing; it's internal",
+            "A general statement that AI is safe",
+            "The project's AI-use register: tools, accounts, what data was shared, and approvals",
+            "The prompts with all data included"
+          ],
+          "correctIndex": 2,
+          "explanation": "An AI-use register makes the answer factual and auditable."
+        },
+        {
+          "id": "d2",
+          "question": "The client's contract requires approval before sharing documents with third parties, and none was sought. What now?",
+          "options": [
+            "Hope it doesn't come up",
+            "Stop the practice, tell the client openly, and agree the approval going forward",
+            "Delete the prompts and say nothing",
+            "Argue the AI tool isn't a third party"
+          ],
+          "correctIndex": 1,
+          "explanation": "Breaches of contract terms must be disclosed and fixed."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the main strength of using AI for risk identification?",
+    "mcq": {
+      "options": [
+        "It widens the list with categories teams often forget",
+        "It knows your client's politics",
+        "It gives accurate probabilities",
+        "It removes the need for a risk owner"
+      ],
+      "correctIndex": 0,
+      "explanation": "AI is a broad sparring partner; it lacks your project's context.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why should the team list risks before seeing the AI's list?",
+    "mcq": {
+      "options": [
+        "To avoid anchoring on the AI's output and to compare two independent views",
+        "To save time",
+        "Because AI lists are always wrong",
+        "To keep the AI's list secret"
+      ],
+      "correctIndex": 0,
+      "explanation": "Independent lists reveal blind spots on both sides.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-risk-analysis-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-risk-analysis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which framework organises AI risk work into Govern, Map, Measure and Manage?",
+    "mcq": {
+      "options": [
+        "The NIST AI Risk Management Framework",
+        "PRINCE2",
+        "SAFe",
+        "ITIL"
+      ],
+      "correctIndex": 0,
+      "explanation": "NIST AI RMF uses those four functions.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

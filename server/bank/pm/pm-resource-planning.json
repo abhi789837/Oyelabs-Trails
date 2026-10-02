@@ -1,0 +1,388 @@
+[
+  {
+    "id": "pm-resource-planning-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Calculate the team's capacity for a 2-week sprint (10 working days, 8 hours a day).",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate the team's capacity for a 2-week sprint (10 working days, 8 hours a day).",
+      "table": {
+        "columns": [
+          "Person",
+          "Days off",
+          "Focus factor"
+        ],
+        "rows": [
+          [
+            "Dev 1",
+            "0",
+            "70%"
+          ],
+          [
+            "Dev 2",
+            "2",
+            "70%"
+          ],
+          [
+            "Dev 3",
+            "1",
+            "70%"
+          ],
+          [
+            "QA",
+            "0",
+            "70%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "gross",
+          "label": "Available person-hours before focus factor",
+          "unit": "h",
+          "answer": 296,
+          "tolerance": 0.5
+        },
+        {
+          "id": "net",
+          "label": "Focused capacity in hours",
+          "unit": "h",
+          "answer": 207.2,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Days: 10 + 8 + 9 + 10 = 37 x 8 = 296 hours; x 0.7 = 207.2 focused hours."
+    }
+  },
+  {
+    "id": "pm-resource-planning-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Check whether the team can take on a new project next month.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Check whether the team can take on a new project next month.",
+      "table": {
+        "columns": [
+          "Item",
+          "Hours/month"
+        ],
+        "rows": [
+          [
+            "Team focused capacity",
+            "1,200"
+          ],
+          [
+            "Committed to existing projects",
+            "980"
+          ],
+          [
+            "Support retainer reservation",
+            "120"
+          ],
+          [
+            "New project demand",
+            "250"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "free",
+          "label": "Free capacity before the new project",
+          "unit": "h",
+          "answer": 100,
+          "tolerance": 0.5
+        },
+        {
+          "id": "gap",
+          "label": "Shortfall if the new project is taken",
+          "unit": "h",
+          "answer": 150,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Free 100 hours; the new project needs 250, so 150 hours short. Hire, re-plan or delay."
+    }
+  },
+  {
+    "id": "pm-resource-planning-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A resource plan for next quarter. Mark the problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A resource plan for next quarter. Mark the problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Each developer is planned at 100% of 40 hours on project work.",
+          "issue": "No allowance for meetings, support and switching; plan at a focus factor."
+        },
+        {
+          "id": "s2",
+          "text": "Public holidays and approved leave are deducted.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "The one ML engineer is allocated 150% across three projects.",
+          "issue": "Over-allocation of a specialist; the team total hides it."
+        },
+        {
+          "id": "s4",
+          "text": "A probable new deal is modelled at 60% of its demand.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Support retainers have a fixed reservation each month.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Junior developers are counted as equal in output to seniors on the AI work.",
+          "issue": "Skills are not fungible; plan by skill and seniority."
+        },
+        {
+          "id": "s7",
+          "text": "The plan is reviewed weekly across all projects.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "New hires are planned at half capacity in their first month.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-resource-planning-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps to build a quarterly capacity plan.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps to build a quarterly capacity plan.",
+      "items": [
+        {
+          "id": "r9ea29",
+          "label": "List people, skills and contracted hours"
+        },
+        {
+          "id": "rd6192",
+          "label": "Subtract leave and holidays, then apply a focus factor"
+        },
+        {
+          "id": "r95867",
+          "label": "List committed demand by skill"
+        },
+        {
+          "id": "ra951a",
+          "label": "Add pipeline demand weighted by probability"
+        },
+        {
+          "id": "re6bd1",
+          "label": "Compare demand and supply by skill and resolve gaps"
+        }
+      ],
+      "correctOrder": [
+        "r9ea29",
+        "rd6192",
+        "r95867",
+        "ra951a",
+        "re6bd1"
+      ],
+      "explanation": "Supply, adjusted supply, committed demand, probable demand, then gap analysis by skill."
+    }
+  },
+  {
+    "id": "pm-resource-planning-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Weight the sales pipeline to forecast next quarter's demand for developers.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Weight the sales pipeline to forecast next quarter's demand for developers.",
+      "table": {
+        "columns": [
+          "Deal",
+          "Developer hours",
+          "Win probability"
+        ],
+        "rows": [
+          [
+            "Retail app",
+            "900",
+            "70%"
+          ],
+          [
+            "Clinic portal",
+            "600",
+            "40%"
+          ],
+          [
+            "AI chatbot",
+            "400",
+            "90%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "weighted",
+          "label": "Probability-weighted demand",
+          "unit": "h",
+          "answer": 1230.0,
+          "tolerance": 1
+        },
+        {
+          "id": "full",
+          "label": "Demand if every deal closes",
+          "unit": "h",
+          "answer": 1900,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Weighted: 630 + 240 + 360 = 1,230 hours. All deals: 1,900. Plan for the weighted figure and have a contingency for the upside."
+    }
+  },
+  {
+    "id": "pm-resource-planning-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Utilisation targets say developers should be 85% billable. The team is at 92% and incidents on live client apps keep derailing sprints.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Utilisation targets say developers should be 85% billable. The team is at 92% and incidents on live client apps keep derailing sprints.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the main problem?",
+          "options": [
+            "Developers are not working hard enough",
+            "Running too close to full utilisation leaves no slack, so any interruption causes delays",
+            "The target is too low",
+            "Incidents are unrelated to capacity"
+          ],
+          "correctIndex": 1,
+          "explanation": "Queueing theory: as utilisation nears 100%, wait times grow sharply."
+        },
+        {
+          "id": "d2",
+          "question": "What do you propose?",
+          "options": [
+            "Ask for 100% utilisation to catch up",
+            "Stop handling incidents",
+            "Reserve explicit capacity for support and incidents, and plan sprints on the remaining capacity",
+            "Add incidents to sprint scope with no capacity change"
+          ],
+          "correctIndex": 2,
+          "explanation": "A fixed reservation makes interruptions planned rather than disruptive."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-resource-planning-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why plan with a focus factor rather than full contracted hours?",
+    "mcq": {
+      "options": [
+        "To make estimates look larger",
+        "Meetings, reviews, support and switching take real time that is not available for planned work",
+        "Because clients pay for focus time only",
+        "To reduce salaries"
+      ],
+      "correctIndex": 1,
+      "explanation": "Planning at 100% guarantees slippage; focus factors of 60-80% are common for agency teams.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-resource-planning-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "The team's total capacity covers demand, but projects are still late. What is the likely cause?",
+    "mcq": {
+      "options": [
+        "A specialist skill is over-allocated even though the total looks fine",
+        "The team is too large",
+        "The focus factor is too low",
+        "Clients are paying too much"
+      ],
+      "correctIndex": 0,
+      "explanation": "Aggregate numbers hide bottlenecks; plan by skill.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-resource-planning-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-resource-planning",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How should an unconfirmed but likely deal appear in the capacity plan?",
+    "mcq": {
+      "options": [
+        "Ignored until signed",
+        "Fully booked as if signed",
+        "Weighted by its probability, with a plan for what happens if it closes",
+        "Only in the sales team's plan"
+      ],
+      "correctIndex": 2,
+      "explanation": "Probability weighting avoids both surprise and over-reservation.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

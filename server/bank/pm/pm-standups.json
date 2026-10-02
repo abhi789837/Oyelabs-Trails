@@ -1,0 +1,342 @@
+[
+  {
+    "id": "pm-standups-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Here are notes on how one team runs its daily stand-up. Mark the habits that hurt it.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Same time and place every day, 15 minutes.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Each developer reports to the PM, who writes down hours spent.",
+          "issue": "Stand-up is for the team to plan the day toward the goal, not a status report to the PM."
+        },
+        {
+          "id": "p3",
+          "text": "Blockers are raised and owners named.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Two developers debug a crash for 20 minutes in the middle of the stand-up.",
+          "issue": "Detailed problem-solving belongs in a follow-up after the stand-up."
+        },
+        {
+          "id": "p5",
+          "text": "The board is shared on screen during the stand-up.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Remote members post a written update when they can't attend.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-standups-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "At stand-up a developer says: 'Still waiting on the payment sandbox keys from the client. Blocked since Tuesday.' It is Thursday.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "At stand-up a developer says: 'Still waiting on the payment sandbox keys from the client. Blocked since Tuesday.' It is Thursday.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Note the blocker, take ownership of chasing it, and agree a follow-up time",
+            "Tell the developer to keep waiting",
+            "Discuss Stripe's API for 15 minutes",
+            "Remove the story from the Sprint immediately"
+          ],
+          "correctIndex": 0,
+          "explanation": "Blockers need an owner and a deadline; chasing the client is a PM job."
+        },
+        {
+          "id": "s2",
+          "question": "Why should this have been raised earlier?",
+          "options": [
+            "Two days of blocked work is lost capacity the team could have planned around",
+            "It shouldn't; Thursday is fine",
+            "Because the client pays by the day",
+            "Because stand-ups are only on Tuesdays"
+          ],
+          "correctIndex": 0,
+          "explanation": "Raising blockers at once lets the PM chase sooner and the team switch to other work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-standups-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A common running order for a board-focused stand-up is to 'walk the board' from right to left. Order the columns you would discuss.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "In progress"
+        },
+        {
+          "id": "r2",
+          "label": "Testing"
+        },
+        {
+          "id": "r1",
+          "label": "Done / ready to release"
+        },
+        {
+          "id": "r3",
+          "label": "Code review"
+        },
+        {
+          "id": "r5",
+          "label": "To do"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Walking right to left focuses on finishing work closest to Done before starting new work."
+    }
+  },
+  {
+    "id": "pm-standups-t1-4",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A team of 8 holds a 15-minute stand-up every working day of a 2-week Sprint (10 days). How many person-hours does the stand-up cost per Sprint, and how many if it overruns to 30 minutes?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "normal",
+          "label": "Person-hours at 15 minutes",
+          "unit": "hours",
+          "answer": 20.0,
+          "tolerance": 0
+        },
+        {
+          "id": "long",
+          "label": "Person-hours at 30 minutes",
+          "unit": "hours",
+          "answer": 40.0,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "8 people × 10 days × 0.25 h = 20 person-hours. At 30 minutes it doubles to 40 person-hours, a full working week of one person."
+    }
+  },
+  {
+    "id": "pm-standups-t1-5",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "The client's product manager starts attending your team's stand-up and asks each developer for detailed progress and estimates.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client's product manager starts attending your team's stand-up and asks each developer for detailed progress and estimates.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the issue?",
+          "options": [
+            "The stand-up becomes a status meeting and developers stop discussing real problems",
+            "None, more transparency is always better",
+            "The client should run the stand-up",
+            "Stand-ups should be cancelled"
+          ],
+          "correctIndex": 0,
+          "explanation": "When stand-up turns into reporting to a client, the team's planning purpose is lost."
+        },
+        {
+          "id": "s2",
+          "question": "What do you offer the client instead?",
+          "options": [
+            "Access to the board and a short written daily or weekly update, with the Sprint Review for detail",
+            "Nothing",
+            "A separate 1-hour daily status call",
+            "Ask them to read the code"
+          ],
+          "correctIndex": 0,
+          "explanation": "Give stakeholders transparency through the board and reviews while keeping stand-up for the team."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-standups-t1-6",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order these stand-up steps for a remote team.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Capture blockers with owners"
+        },
+        {
+          "id": "r2",
+          "label": "Share the board on screen"
+        },
+        {
+          "id": "r1",
+          "label": "Start on time, even if someone is late"
+        },
+        {
+          "id": "r3",
+          "label": "Each person: progress toward the Sprint Goal and plans for today"
+        },
+        {
+          "id": "r5",
+          "label": "Close and start any follow-up discussions with only the people needed"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Start on time, use the board, focus on the goal, name blocker owners, and take details offline."
+    }
+  },
+  {
+    "id": "pm-standups-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of the daily stand-up?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "For the team to check progress toward the goal and adapt the day's plan",
+        "To report hours to the PM",
+        "To demo features to the client",
+        "To estimate new stories"
+      ],
+      "correctIndex": 0,
+      "explanation": "The stand-up (Daily Scrum) is a planning event for the team, not a report.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-standups-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A detailed technical discussion starts during stand-up. What should happen?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Park it and continue after stand-up with only the people involved",
+        "Let it run; it's important",
+        "End the stand-up early",
+        "Ask the client to decide"
+      ],
+      "correctIndex": 0,
+      "explanation": "Keep stand-up short; detailed problem-solving happens straight after with the right people.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-standups-m1-3",
+    "departmentId": "pm",
+    "skillId": "pm-standups",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a blocker?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Something that stops a team member from progressing their work",
+        "A low-priority bug",
+        "A finished task",
+        "A team member who talks too long"
+      ],
+      "correctIndex": 0,
+      "explanation": "A blocker prevents progress, such as missing access or a decision, and needs an owner to clear it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

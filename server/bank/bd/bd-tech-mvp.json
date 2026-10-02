@@ -1,0 +1,390 @@
+[
+  {
+    "id": "bd-tech-mvp-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A founder wants a dog-walking marketplace app. For phase 1 (MVP), rank these features by priority, must-have first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A founder wants a dog-walking marketplace app. For phase 1 (MVP), rank these features by priority, must-have first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Walkers and owners can rate each other"
+        },
+        {
+          "id": "r4",
+          "label": "In-app chat with photo sharing during the walk"
+        },
+        {
+          "id": "r5",
+          "label": "AI-generated personalised dog health tips"
+        },
+        {
+          "id": "r1",
+          "label": "Owners can book a walk with an available walker"
+        },
+        {
+          "id": "r2",
+          "label": "Owners pay for the walk in the app"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Booking and payment are the core transaction; ratings build trust; chat is helpful but can start simple; AI tips are a later-phase nice-to-have."
+    }
+  },
+  {
+    "id": "bd-tech-mvp-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the items in this proposed 'MVP' scope that do not belong in a first release for a small budget.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the items in this proposed 'MVP' scope that do not belong in a first release for a small budget.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "User sign-up and login",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Create and browse service listings",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Book and pay for a service",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Support for 12 languages at launch",
+          "issue": "Localisation for many languages is rarely needed to validate the idea; start with the main market's language."
+        },
+        {
+          "id": "p5",
+          "text": "Admin panel to approve providers",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Custom-built video calling between users",
+          "issue": "Expensive and not core to the transaction; use a link to an existing tool if needed."
+        },
+        {
+          "id": "p7",
+          "text": "Email notifications for bookings",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-mvp-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client says: 'I want the MVP to have everything our competitor has, so we look serious.' Their budget covers about a third of that list.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client says: 'I want the MVP to have everything our competitor has, so we look serious.' Their budget covers about a third of that list.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best response?",
+          "options": [
+            "Explain that an MVP tests the core value with real users, and offer to pick the features that prove it first",
+            "Agree and quote the full list at the same price",
+            "Tell them the idea will fail",
+            "Cut features at random to fit the budget"
+          ],
+          "correctIndex": 0,
+          "explanation": "Reframing the MVP around the core value lets the budget buy learning, not a thin copy of everything."
+        },
+        {
+          "id": "s2",
+          "question": "How should you handle the features left out?",
+          "options": [
+            "Promise to add them for free later",
+            "Hide them in the contract small print",
+            "List them as phase 2 and later, so the client sees the full roadmap",
+            "Do not mention them again"
+          ],
+          "correctIndex": 2,
+          "explanation": "A visible phased roadmap keeps the vision intact and sets up future work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-mvp-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client's full wish list is estimated below. They choose the must-haves for phase 1. Work out the phase 1 hours and its share of the full scope.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client's full wish list is estimated below. They choose the must-haves for phase 1. Work out the phase 1 hours and its share of the full scope.",
+      "table": {
+        "columns": [
+          "Feature",
+          "Priority",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Sign-up and profiles",
+            "Must",
+            "60"
+          ],
+          [
+            "Listings and search",
+            "Must",
+            "120"
+          ],
+          [
+            "Booking and payments",
+            "Must",
+            "140"
+          ],
+          [
+            "Admin panel",
+            "Must",
+            "80"
+          ],
+          [
+            "Reviews and ratings",
+            "Should",
+            "50"
+          ],
+          [
+            "Chat",
+            "Could",
+            "90"
+          ],
+          [
+            "Referral programme",
+            "Could",
+            "60"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "p1",
+          "label": "Phase 1 (must-haves) hours",
+          "unit": "h",
+          "answer": 400,
+          "tolerance": 0
+        },
+        {
+          "id": "share",
+          "label": "Phase 1 share of the full wish list",
+          "unit": "%",
+          "answer": 66.7,
+          "tolerance": 0.2
+        }
+      ],
+      "explanation": "Must-haves = 60+120+140+80 = 400 h. Full list = 600 h. 400/600 = 66.7%."
+    }
+  },
+  {
+    "id": "bd-tech-mvp-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A healthcare startup is unsure whether doctors will trust AI-drafted visit notes. They have budget for either a full platform or a smaller first step.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A healthcare startup is unsure whether doctors will trust AI-drafted visit notes. They have budget for either a full platform or a smaller first step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What should you recommend first?",
+          "options": [
+            "A short proof of concept with a few doctors and real (anonymised) notes to test accuracy and trust",
+            "The full platform, since AI always works",
+            "A marketing website only",
+            "Waiting until AI improves"
+          ],
+          "correctIndex": 0,
+          "explanation": "A PoC tests the riskiest assumption, AI quality and doctor trust, before a big spend."
+        },
+        {
+          "id": "s2",
+          "question": "The PoC works: doctors accept most drafts after small edits. What is the right next phase?",
+          "options": [
+            "Rebuild the PoC from scratch for no reason",
+            "Stop, since the PoC proved it works",
+            "An MVP used daily by a small group of doctors, with editing, sign-off and basic integration",
+            "A national rollout to every clinic at once"
+          ],
+          "correctIndex": 2,
+          "explanation": "The MVP turns a proven idea into a usable product for real users, before scaling."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-mvp-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order these stages of phased delivery for a new product, earliest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these stages of phased delivery for a new product, earliest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "MVP: smallest real product live with early users"
+        },
+        {
+          "id": "r4",
+          "label": "Phase 2: add the features users actually ask for"
+        },
+        {
+          "id": "r5",
+          "label": "Scale: performance, more markets, more integrations"
+        },
+        {
+          "id": "r1",
+          "label": "Discovery: agree the goal, the core users and the one problem to solve"
+        },
+        {
+          "id": "r2",
+          "label": "Clickable prototype: test the flow with a few users"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Each stage reduces risk before spending more: agree the problem, test the flow, get real usage, then grow."
+    }
+  },
+  {
+    "id": "bd-tech-mvp-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is the main goal of an MVP?",
+    "mcq": {
+      "options": [
+        "To launch with every feature competitors have",
+        "To build a demo that is never used",
+        "To avoid talking to users",
+        "To learn whether real users value the core idea, with the least build effort"
+      ],
+      "correctIndex": 3,
+      "explanation": "An MVP is the smallest product that gets real learning from real users.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-mvp-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "How does a prototype differ from an MVP?",
+    "mcq": {
+      "options": [
+        "They are the same thing",
+        "A prototype is always more expensive",
+        "An MVP never includes a user interface",
+        "A prototype shows how the product could look and work; an MVP is a working product real users rely on"
+      ],
+      "correctIndex": 3,
+      "explanation": "Prototypes test flows and ideas, often clickable designs; an MVP is live, working software.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-mvp-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-mvp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client wants a fixed price for 'phase 1 and whatever phase 2 ends up being'. What is the best approach?",
+    "mcq": {
+      "options": [
+        "Refuse to quote anything",
+        "Quote phase 2 at zero to win the deal",
+        "Fix the price for a clearly scoped phase 1 and estimate phase 2 once phase 1 feedback is in",
+        "Give one fixed price for both now"
+      ],
+      "correctIndex": 2,
+      "explanation": "Phase 2 depends on what users learn in phase 1, so fixing it now means guessing; scope and price it later.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

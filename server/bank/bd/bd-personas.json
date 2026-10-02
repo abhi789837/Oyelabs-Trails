@@ -1,0 +1,409 @@
+[
+  {
+    "id": "bd-personas-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "How is a buyer persona different from an ideal customer profile (ICP)?",
+    "mcq": {
+      "options": [
+        "They are the same thing with different names",
+        "A persona is a list of companies; an ICP is one person",
+        "A persona is only used for marketing, never for sales",
+        "A persona describes a role inside the company (goals, worries, how they buy); the ICP describes the company"
+      ],
+      "correctIndex": 3,
+      "explanation": "The ICP tells you which companies to target; personas tell you how to talk to the people inside them.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-personas-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A non-technical founder of a seed-stage startup is evaluating your agency. What do they usually care about most?",
+    "mcq": {
+      "options": [
+        "The exact database indexing strategy",
+        "Your agency's internal code-review tooling",
+        "The CI pipeline's YAML configuration",
+        "Getting a working product to market fast and within budget, and trusting the team to guide technical choices"
+      ],
+      "correctIndex": 3,
+      "explanation": "Non-technical founders buy speed, cost certainty and trust. Lead with outcomes, timeline and how you de-risk; save deep technical detail for when they ask.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-personas-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "On a call, a CTO asks how you handle code ownership, tests and documentation. What does this tell you about how to sell to this persona?",
+    "mcq": {
+      "options": [
+        "They want a lower price; offer a discount",
+        "They are the end user and do not influence the decision",
+        "They are judging quality and long-term maintainability; bring an engineer, show examples of code standards and handover docs",
+        "They are not interested; move to pricing"
+      ],
+      "correctIndex": 2,
+      "explanation": "CTOs fear inheriting a mess. Proof of engineering quality and a clean handover addresses their real objection.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-personas-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "In a mid-size company, the head of operations wants a new dispatch app, but the CFO signs contracts over $50k. Your deal is $90k. What is the CFO's role?",
+    "mcq": {
+      "options": [
+        "Technical evaluator: they review the code",
+        "Gatekeeper with no influence",
+        "Economic buyer: they release the money, so the business case must speak to cost and return",
+        "End user: they will use the app daily"
+      ],
+      "correctIndex": 2,
+      "explanation": "The person who signs is the economic buyer. Arm your operations champion with the numbers the CFO will ask for.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-personas-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A mid-size retailer is buying a custom inventory app. Rank these people by how much final say they have over signing the contract, most first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A mid-size retailer is buying a custom inventory app. Rank these people by how much final say they have over signing the contract, most first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "IT manager who will review security"
+        },
+        {
+          "id": "r4",
+          "label": "Warehouse supervisor who will use the app daily"
+        },
+        {
+          "id": "r1",
+          "label": "CFO who approves spend above $50k (deal is $120k)"
+        },
+        {
+          "id": "r2",
+          "label": "Head of operations who requested the app"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "The economic buyer signs; the requester champions it; IT can block on security but rarely signs; daily users influence requirements but not the contract."
+    }
+  },
+  {
+    "id": "bd-personas-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You have a first call with Maya, the non-technical founder of a pet-care marketplace startup. She has $60k from an angel round.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You have a first call with Maya, the non-technical founder of a pet-care marketplace startup. She has $60k from an angel round.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you open the conversation?",
+          "options": [
+            "Present your preferred tech stack in detail",
+            "Ask for her budget breakdown by feature",
+            "Ask about her business goals, customers and what launch success looks like"
+          ],
+          "correctIndex": 2,
+          "explanation": "Founders engage when you start with their business and outcomes."
+        },
+        {
+          "id": "s2",
+          "question": "She asks \"React Native or Flutter?\". How do you answer?",
+          "options": [
+            "Briefly explain both suit her app and recommend one with a plain-language reason (cost, speed, team)",
+            "Give a 20-minute technical comparison",
+            "Tell her it does not matter and change the subject"
+          ],
+          "correctIndex": 0,
+          "explanation": "Give a confident recommendation in business terms; she is relying on your judgement."
+        },
+        {
+          "id": "s3",
+          "question": "She mentions her advisor, a former CTO, will review your proposal. What do you do?",
+          "options": [
+            "Ask Maya to keep the advisor out of it",
+            "Offer a short technical call with the advisor and include architecture notes in the proposal",
+            "Ignore the advisor, Maya decides"
+          ],
+          "correctIndex": 1,
+          "explanation": "The advisor is a technical evaluator who can block the deal; engage them early."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-personas-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A BD rep wrote this persona card for \"Startup CTO\". Mark the lines that are wrong or unhelpful for selling.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A BD rep wrote this persona card for \"Startup CTO\". Mark the lines that are wrong or unhelpful for selling.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Goals: ship a reliable product quickly without accumulating debt the in-house team will struggle with.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Worries: code quality, security, and losing control of architecture decisions.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Best approach: avoid technical detail, they only care about price.",
+          "issue": "CTOs evaluate technical quality; avoiding detail loses them."
+        },
+        {
+          "id": "p4",
+          "text": "Proof that persuades: sample code standards, case studies with similar stacks, an engineer on the call.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Never involve them before the contract is signed.",
+          "issue": "CTOs are usually key evaluators or decision-makers; excluding them stalls or kills deals."
+        },
+        {
+          "id": "p6",
+          "text": "Common objection: \"We could hire in-house instead.\"",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-personas-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are selling an AI document-search tool to a 300-person law firm. The managing partner is enthusiastic after a demo; the IT director has gone quiet.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are selling an AI document-search tool to a 300-person law firm. The managing partner is enthusiastic after a demo; the IT director has gone quiet.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the likely concern behind the IT director's silence?",
+          "options": [
+            "The colour scheme of the interface",
+            "The managing partner's enthusiasm",
+            "Security, data privacy and integration with their document systems"
+          ],
+          "correctIndex": 2,
+          "explanation": "IT directors are accountable for security and integration risk, especially with client documents and AI."
+        },
+        {
+          "id": "s2",
+          "question": "What should you send next?",
+          "options": [
+            "A short security and data-handling summary and an offer of a technical session with your engineer",
+            "A discount to the managing partner",
+            "A follow-up asking the IT director to hurry up"
+          ],
+          "correctIndex": 0,
+          "explanation": "Address the evaluator's real concern with the right material and the right person."
+        },
+        {
+          "id": "s3",
+          "question": "Who is your best champion here?",
+          "options": [
+            "A junior associate who attended the demo",
+            "The managing partner, provided they are willing to push the deal internally",
+            "The IT director"
+          ],
+          "correctIndex": 1,
+          "explanation": "A champion has influence and acts for you; the managing partner has both if they commit to pushing it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-personas-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You ran the same outbound campaign to three personas. Calculate the founders' reply rate and meeting rate (meetings per email sent), and the CTOs' meeting rate.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "You ran the same outbound campaign to three personas. Calculate the founders' reply rate and meeting rate (meetings per email sent), and the CTOs' meeting rate.",
+      "table": {
+        "columns": [
+          "Persona",
+          "Emails sent",
+          "Replies",
+          "Meetings booked"
+        ],
+        "rows": [
+          [
+            "Founders",
+            "400",
+            "32",
+            "12"
+          ],
+          [
+            "CTOs",
+            "300",
+            "15",
+            "6"
+          ],
+          [
+            "Heads of product",
+            "250",
+            "10",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "reply",
+          "label": "Founders: reply rate",
+          "unit": "%",
+          "answer": 8,
+          "tolerance": 0.1
+        },
+        {
+          "id": "meet",
+          "label": "Founders: meeting rate",
+          "unit": "%",
+          "answer": 3,
+          "tolerance": 0.1
+        },
+        {
+          "id": "cto",
+          "label": "CTOs: meeting rate",
+          "unit": "%",
+          "answer": 2,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Founders: 32/400 = 8% replies, 12/400 = 3% meetings. CTOs: 6/300 = 2% meetings. Heads of product: 2/250 = 0.8%. Founders respond best to this message; the CTO copy probably needs more technical proof."
+    }
+  },
+  {
+    "id": "bd-personas-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-personas",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You will email one message to a startup's head of product. Rank these opening lines by how well they match that persona's priorities, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "You will email one message to a startup's head of product. Rank these opening lines by how well they match that persona's priorities, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "\"We are a full-service agency with 10 years of experience.\""
+        },
+        {
+          "id": "r4",
+          "label": "\"Are you the right person to talk to about software?\""
+        },
+        {
+          "id": "r1",
+          "label": "\"Saw your roadmap mentions an offline mode; we shipped one for a field-sales app last quarter and cut sync bugs by half.\""
+        },
+        {
+          "id": "r2",
+          "label": "\"We help product teams ship features faster with a dedicated squad that plugs into your sprints.\""
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Specific to their roadmap with a relevant outcome is best; a generic benefit for product teams is next; agency self-description is weak; asking if they are the right person wastes the opener."
+    }
+  }
+]

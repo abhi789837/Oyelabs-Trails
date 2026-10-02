@@ -1,0 +1,365 @@
+[
+  {
+    "id": "pm-requirements-gathering-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "These requirements came out of a discovery call for a property-rental app. Mark the ones that are not testable as written.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Tenants can filter listings by city, price range and number of bedrooms.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The app must be fast.",
+          "issue": "Not measurable; state a target such as 'search results load in under 2 seconds on 4G'."
+        },
+        {
+          "id": "p3",
+          "text": "Landlords receive an email when a tenant sends an enquiry.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "The design should look premium.",
+          "issue": "Subjective; tie it to approved designs or a reference style guide."
+        },
+        {
+          "id": "p5",
+          "text": "Payments are taken by card through Stripe, in GBP.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The app supports iOS 16+ and Android 10+.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-requirements-gathering-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order these steps of gathering requirements for a new client project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Review and validate them with the client"
+        },
+        {
+          "id": "r2",
+          "label": "Run interviews and workshops to elicit needs"
+        },
+        {
+          "id": "r1",
+          "label": "Identify the stakeholders to talk to"
+        },
+        {
+          "id": "r3",
+          "label": "Document the requirements and acceptance criteria"
+        },
+        {
+          "id": "r5",
+          "label": "Get sign-off and baseline the requirements"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "You need to know whom to ask before eliciting; you document, then validate with the client, and only then sign off and baseline."
+    }
+  },
+  {
+    "id": "pm-requirements-gathering-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "In a discovery workshop for a logistics dashboard, the client's operations director says: 'We need real-time tracking of every driver.'",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "In a discovery workshop for a logistics dashboard, the client's operations director says: 'We need real-time tracking of every driver.'",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best follow-up question?",
+          "options": [
+            "'What decision would you make with real-time tracking that you can't make today?'",
+            "'Do you want it in blue or green?'",
+            "'Is next month OK for launch?'",
+            "'Should we use Google Maps or Mapbox?'"
+          ],
+          "correctIndex": 0,
+          "explanation": "Asking about the underlying need reveals the real requirement, which may not need second-by-second updates at all."
+        },
+        {
+          "id": "s2",
+          "question": "He explains dispatchers only need to see which drivers are near a pickup. What do you write down?",
+          "options": [
+            "Dispatchers can see each driver's position, updated at least every 60 seconds, on a map of active pickups",
+            "Real-time tracking of every driver",
+            "GPS",
+            "Use websockets"
+          ],
+          "correctIndex": 0,
+          "explanation": "Capture the need with a measurable update interval and who uses it, not a solution or a vague phrase."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-requirements-gathering-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "After discovery you classified the requirements for a booking platform. What share are must-haves, and how many requirements are still awaiting a client answer?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Category",
+          "Count",
+          "Open questions"
+        ],
+        "rows": [
+          [
+            "Must have",
+            "18",
+            "4"
+          ],
+          [
+            "Should have",
+            "15",
+            "2"
+          ],
+          [
+            "Could have",
+            "12",
+            "1"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "must",
+          "label": "Share of requirements that are must-haves",
+          "unit": "%",
+          "answer": 40.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "open",
+          "label": "Requirements awaiting a client answer",
+          "unit": "",
+          "answer": 7,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Total = 18 + 15 + 12 = 45; must-haves 18 / 45 = 40%. The open-questions column sums to 4 + 2 + 1 = 7."
+    }
+  },
+  {
+    "id": "pm-requirements-gathering-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Two senior client stakeholders give conflicting requirements for a loan-application app: compliance wants ID verification before an applicant sees any rates; sales wants rates shown first to reduce drop-off.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Two senior client stakeholders give conflicting requirements for a loan-application app: compliance wants ID verification before an applicant sees any rates; sales wants rates shown first to reduce drop-off.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Pick the one that's easier to build",
+            "Document both with their reasons and bring them together, with the sponsor, to decide",
+            "Build both behind a toggle without telling anyone",
+            "Go with sales because revenue matters most"
+          ],
+          "correctIndex": 1,
+          "explanation": "Conflicting requirements are resolved by the people accountable, with the reasons visible; the PM facilitates rather than chooses."
+        },
+        {
+          "id": "s2",
+          "question": "Compliance confirms rates shown before ID checks breach a regulation. How do you record the outcome?",
+          "options": [
+            "As a requirement with its source regulation noted, and the rejected option logged in the decision log",
+            "Only in your meeting notes",
+            "Verbally to the team",
+            "Not at all, it's obvious"
+          ],
+          "correctIndex": 0,
+          "explanation": "Tracing a requirement to its source and logging the decision stops the debate from reopening later."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-requirements-gathering-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "During the build, a developer finds the requirement 'users get a discount on their first order' is ambiguous (which discount, which users?). Order how it gets resolved.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "The PM updates the requirement and acceptance criteria and logs the decision"
+        },
+        {
+          "id": "r2",
+          "label": "The PM takes it to the client contact with two or three concrete options"
+        },
+        {
+          "id": "r1",
+          "label": "The developer flags the question on the ticket"
+        },
+        {
+          "id": "r3",
+          "label": "The client decides"
+        },
+        {
+          "id": "r5",
+          "label": "The developer continues building"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Flag, clarify with concrete options, decide, record, then build. Building on a guess risks rework."
+    }
+  },
+  {
+    "id": "pm-requirements-gathering-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which is a non-functional requirement?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The app's API responds within 500 ms for 95% of requests",
+        "Users can reset their password by email",
+        "Admins can export orders to CSV",
+        "Drivers can mark a delivery as complete"
+      ],
+      "correctIndex": 0,
+      "explanation": "Non-functional requirements describe qualities such as performance, security and availability rather than features.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-requirements-gathering-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A client keeps describing solutions ('add a dropdown here') instead of needs. What elicitation technique helps most?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Asking 'why' and what problem the change would solve",
+        "Writing down every request exactly as said",
+        "Asking developers to guess the need",
+        "Sending a 100-question survey"
+      ],
+      "correctIndex": 0,
+      "explanation": "Asking why surfaces the underlying need, which often has a simpler or better solution.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-requirements-gathering-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-requirements-gathering",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the main purpose of a requirements traceability matrix?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Linking each requirement to its source, design, build and test so nothing is lost or untested",
+        "Tracking developer hours",
+        "Listing every stakeholder's phone number",
+        "Recording sprint velocity"
+      ],
+      "correctIndex": 0,
+      "explanation": "Traceability shows every requirement is delivered and tested, and makes the impact of a change visible.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

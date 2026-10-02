@@ -1,0 +1,363 @@
+[
+  {
+    "id": "pm-qa-coordination-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Rank these bugs by triage priority, most urgent first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these bugs by triage priority, most urgent first.",
+      "items": [
+        {
+          "id": "r2bae5",
+          "label": "Checkout charges the card twice for some users in production"
+        },
+        {
+          "id": "rc59ba",
+          "label": "Login fails on Android 12 for all users in staging, release on Friday"
+        },
+        {
+          "id": "r9ba80",
+          "label": "Admin report export is slow (30 s) but works"
+        },
+        {
+          "id": "r33b71",
+          "label": "Button colour is slightly off-brand on one screen"
+        }
+      ],
+      "correctOrder": [
+        "r2bae5",
+        "rc59ba",
+        "r9ba80",
+        "r33b71"
+      ],
+      "explanation": "Live financial harm first, then a release blocker, then degraded but working function; cosmetic issues last."
+    }
+  },
+  {
+    "id": "pm-qa-coordination-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A tester filed this bug report. Mark the parts that make it hard to act on.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A tester filed this bug report. Mark the parts that make it hard to act on.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Title: Search broken.",
+          "issue": "Not specific; say what fails, e.g. \"Search returns no results for queries with accents\"."
+        },
+        {
+          "id": "s2",
+          "text": "Environment: staging, build 1.4.2, iPhone 14, iOS 17.4.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Steps: search for \"cafe\" with an accent on the e; tap Search.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Expected: matching cafés listed.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Actual: it doesn't work.",
+          "issue": "Describe the observed result, e.g. empty list or an error message."
+        },
+        {
+          "id": "s6",
+          "text": "Severity: critical.",
+          "issue": "Overstated for a search edge case; severity should follow agreed definitions."
+        },
+        {
+          "id": "s7",
+          "text": "Attachments: screen recording.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Reproducible: 5 of 5 attempts.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-qa-coordination-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Calculate these QA metrics for the sprint.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate these QA metrics for the sprint.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Test cases planned",
+            "120"
+          ],
+          [
+            "Test cases executed",
+            "108"
+          ],
+          [
+            "Executed and passed",
+            "90"
+          ],
+          [
+            "Bugs found in QA",
+            "24"
+          ],
+          [
+            "Bugs found by the client in UAT",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "exec",
+          "label": "Execution rate (executed / planned)",
+          "unit": "%",
+          "answer": 90.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "pass",
+          "label": "Pass rate (passed / executed)",
+          "unit": "%",
+          "answer": 83.3333,
+          "tolerance": 0.1
+        },
+        {
+          "id": "dre",
+          "label": "Defect removal efficiency (QA bugs / all bugs)",
+          "unit": "%",
+          "answer": 80.0,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Execution 90%; pass rate 83.3%; DRE 24 / (24 + 6) = 80%."
+    }
+  },
+  {
+    "id": "pm-qa-coordination-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "It's two days before a release. QA has 14 open bugs: 1 critical, 3 major, 10 minor. The client wants the release to go ahead.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "It's two days before a release. QA has 14 open bugs: 1 critical, 3 major, 10 minor. The client wants the release to go ahead.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you bring to the go/no-go meeting?",
+          "options": [
+            "The open bugs by severity with user impact, what fixes fit in two days, and a recommendation",
+            "Just the total bug count",
+            "Nothing; QA will present",
+            "A request to delay without details"
+          ],
+          "correctIndex": 0,
+          "explanation": "Decision-makers need impact and options, not raw numbers."
+        },
+        {
+          "id": "d2",
+          "question": "The critical bug blocks password reset. What do you recommend?",
+          "options": [
+            "Ship and fix next sprint",
+            "Delay until all 14 are fixed",
+            "Fix it before release, or delay; the minor bugs can ship with known-issue notes",
+            "Hide the password reset button"
+          ],
+          "correctIndex": 2,
+          "explanation": "Criticals block release; minors with notes are normal; a full freeze until zero bugs is rarely right."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-qa-coordination-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order these QA activities for a two-week sprint.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these QA activities for a two-week sprint.",
+      "items": [
+        {
+          "id": "rc2750",
+          "label": "QA reviews stories and acceptance criteria in refinement"
+        },
+        {
+          "id": "r50086",
+          "label": "QA writes test cases while development starts"
+        },
+        {
+          "id": "r27ef1",
+          "label": "QA tests each story on the dev or QA environment as it is finished"
+        },
+        {
+          "id": "r1c230",
+          "label": "Regression testing on the release candidate"
+        },
+        {
+          "id": "r8f4fa",
+          "label": "Bug triage and sign-off for release"
+        }
+      ],
+      "correctOrder": [
+        "rc2750",
+        "r50086",
+        "r27ef1",
+        "r1c230",
+        "r8f4fa"
+      ],
+      "explanation": "Shift left: QA involved from refinement, testing continuously, with regression and sign-off at the end."
+    }
+  },
+  {
+    "id": "pm-qa-coordination-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The client's QA team and your QA team keep disagreeing on whether issues are bugs or change requests.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client's QA team and your QA team keep disagreeing on whether issues are bugs or change requests.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What reference should settle each disagreement?",
+          "options": [
+            "Whoever is more senior",
+            "A vote of both teams",
+            "The signed acceptance criteria and design for that story",
+            "The developer's opinion"
+          ],
+          "correctIndex": 2,
+          "explanation": "Agreed acceptance criteria are the contract between teams; without them every opinion is equal."
+        },
+        {
+          "id": "d2",
+          "question": "What process change helps most?",
+          "options": [
+            "A short joint triage meeting with agreed severity and bug-vs-change definitions",
+            "Separate bug trackers for each team",
+            "Only the agency's QA can raise bugs",
+            "Accept every client issue as a bug"
+          ],
+          "correctIndex": 0,
+          "explanation": "Shared definitions and a shared forum stop the same argument recurring."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-qa-coordination-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between severity and priority in bug triage?",
+    "mcq": {
+      "options": [
+        "They mean the same thing",
+        "Severity is how badly the bug affects the system; priority is how soon it should be fixed",
+        "Severity is set by the client, priority by QA",
+        "Priority is about cost, severity about time"
+      ],
+      "correctIndex": 1,
+      "explanation": "A typo on the homepage can be low severity but high priority; a crash in a rare admin flow can be high severity but lower priority.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-qa-coordination-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why is regression testing needed before each release?",
+    "mcq": {
+      "options": [
+        "To test new features for the first time",
+        "To measure performance under load",
+        "To check that new changes did not break features that already worked",
+        "To check the design matches the mock-ups"
+      ],
+      "correctIndex": 2,
+      "explanation": "New code can break old behaviour; regression testing, ideally automated, catches it before users do.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-qa-coordination-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-qa-coordination",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A sprint keeps ending with a pile of untested stories. What is the most likely fix?",
+    "mcq": {
+      "options": [
+        "Hire more testers to work at sprint end",
+        "Skip testing on small stories",
+        "Extend each sprint by a week",
+        "Limit work in progress so stories are tested as they finish, and involve QA earlier"
+      ],
+      "correctIndex": 3,
+      "explanation": "End-of-sprint QA queues come from starting too much at once; finishing stories one by one spreads testing through the sprint.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

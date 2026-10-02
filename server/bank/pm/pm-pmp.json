@@ -1,0 +1,332 @@
+[
+  {
+    "id": "pm-pmp-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The 2026 PMP Examination Content Outline weights the domains as People 33%, Process 41%, Business Environment 26%. For a practice test of 150 questions in the same proportions, how many questions per domain?",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The 2026 PMP Examination Content Outline weights the domains as People 33%, Process 41%, Business Environment 26%. For a practice test of 150 questions in the same proportions, how many questions per domain?",
+      "table": null,
+      "fields": [
+        {
+          "id": "people",
+          "label": "People",
+          "unit": "questions",
+          "answer": 49.5,
+          "tolerance": 1
+        },
+        {
+          "id": "process",
+          "label": "Process",
+          "unit": "questions",
+          "answer": 61.5,
+          "tolerance": 1
+        },
+        {
+          "id": "be",
+          "label": "Business Environment",
+          "unit": "questions",
+          "answer": 39.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "49.5, 61.5 and 39: round to about 50, 61 and 39."
+    }
+  },
+  {
+    "id": "pm-pmp-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "PMP-style situation: a team member repeatedly misses deadlines and others are complaining.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "PMP-style situation: a team member repeatedly misses deadlines and others are complaining.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should the project manager do first?",
+          "options": [
+            "Report them to their functional manager",
+            "Talk privately with the team member to understand the cause",
+            "Reassign their work immediately",
+            "Raise it in the team meeting"
+          ],
+          "correctIndex": 1,
+          "explanation": "PMP answers favour investigating and working with people before escalating."
+        },
+        {
+          "id": "d2",
+          "question": "The cause is unclear priorities across two projects. What next?",
+          "options": [
+            "Tell the person to work longer hours",
+            "Work with the other project's manager or the resource manager to agree priorities",
+            "Ignore it; it's the other project's problem",
+            "Escalate to the sponsor at once"
+          ],
+          "correctIndex": 1,
+          "explanation": "Resolve at the lowest effective level, collaboratively."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-pmp-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "PMP-style situation: a stakeholder asks a developer directly to add a feature to a predictive project with an approved baseline.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "PMP-style situation: a stakeholder asks a developer directly to add a feature to a predictive project with an approved baseline.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should the project manager do?",
+          "options": [
+            "Approve it since it is small",
+            "Tell the developer to build it",
+            "Reject it outright",
+            "Ask for the request to go through the change control process and assess its impact"
+          ],
+          "correctIndex": 3,
+          "explanation": "In predictive work, changes to the baseline go through integrated change control."
+        },
+        {
+          "id": "d2",
+          "question": "The change control board approves it. What happens next?",
+          "options": [
+            "Start work without updating documents",
+            "Add it to the lessons learned only",
+            "Update the baselines and plans, and communicate the change to stakeholders",
+            "Ask the sponsor to sign again"
+          ],
+          "correctIndex": 2,
+          "explanation": "Approved changes are reflected in the plan and communicated."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-pmp-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "For a typical PMP situational question, order the PM's response pattern.",
+    "task": {
+      "kind": "rank",
+      "prompt": "For a typical PMP situational question, order the PM's response pattern.",
+      "items": [
+        {
+          "id": "rc4717",
+          "label": "Assess or investigate the situation"
+        },
+        {
+          "id": "r467e4",
+          "label": "Consult the plan and relevant stakeholders"
+        },
+        {
+          "id": "r872e4",
+          "label": "Act through the agreed process"
+        },
+        {
+          "id": "r3001c",
+          "label": "Escalate only if it cannot be resolved at this level"
+        }
+      ],
+      "correctOrder": [
+        "rc4717",
+        "r467e4",
+        "r872e4",
+        "r3001c"
+      ],
+      "explanation": "PMI rewards assessing first, collaborating, following process, and escalating last."
+    }
+  },
+  {
+    "id": "pm-pmp-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A study note a colleague wrote for the PMP exam taken under the 2026 outline. Mark the outdated or wrong statements.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A study note a colleague wrote for the PMP exam taken under the 2026 outline. Mark the outdated or wrong statements.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "The domains are People, Process and Business Environment.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Business Environment is about 8% of the exam.",
+          "issue": "That is the previous outline; the 2026 ECO weights Business Environment at 26%."
+        },
+        {
+          "id": "s3",
+          "text": "The exam mixes predictive, agile and hybrid approaches.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Study the five process groups as the exam's structure, as in PMBOK 6.",
+          "issue": "The current exam follows the ECO domains and PMBOK 8; process groups are not its structure."
+        },
+        {
+          "id": "s5",
+          "text": "Situational questions often ask what the PM should do first or next.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Value delivery and benefits are emphasised.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Check eligibility and fees on pmi.org before booking.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "The best answer is usually to escalate to the sponsor.",
+          "issue": "PMI's answers usually favour assessing and resolving at the right level before escalating."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-pmp-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "PMP-style situation (agile project): the team's velocity has dropped for three sprints and the product owner wants the PM to \"push the team harder\".",
+    "task": {
+      "kind": "scenario",
+      "prompt": "PMP-style situation (agile project): the team's velocity has dropped for three sprints and the product owner wants the PM to \"push the team harder\".",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the best first action?",
+          "options": [
+            "Assign overtime",
+            "Report the team's low performance to management",
+            "Facilitate a retrospective to find the cause with the team",
+            "Re-estimate stories to raise velocity"
+          ],
+          "correctIndex": 2,
+          "explanation": "Servant leadership: let the team diagnose and remove impediments."
+        },
+        {
+          "id": "d2",
+          "question": "The cause is frequent mid-sprint requests from stakeholders. What next?",
+          "options": [
+            "Accept the requests; stakeholders are important",
+            "Work with the product owner to route requests through the backlog and protect the sprint",
+            "Lengthen sprints to fit requests",
+            "Ban stakeholders from talking to the team"
+          ],
+          "correctIndex": 1,
+          "explanation": "Protect focus while keeping a channel for new work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-pmp-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In the 2026 PMP ECO, which domain has the largest weighting?",
+    "mcq": {
+      "options": [
+        "People",
+        "Business Environment",
+        "Process",
+        "All three are equal"
+      ],
+      "correctIndex": 2,
+      "explanation": "Process is 41%, People 33% and Business Environment 26%.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-pmp-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does the jump in the Business Environment weighting signal about the PMP?",
+    "mcq": {
+      "options": [
+        "Less emphasis on agile",
+        "That finance professionals should take the exam",
+        "That process groups are back",
+        "A stronger focus on value, benefits, governance and compliance, not only scope, schedule and cost"
+      ],
+      "correctIndex": 3,
+      "explanation": "PMI expects PMs to connect delivery to business outcomes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-pmp-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-pmp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why should you check the date on PMP prep material?",
+    "mcq": {
+      "options": [
+        "Older material has more questions",
+        "PMI bans older books",
+        "Exam questions are published each year",
+        "Older material uses the previous domain weightings and structure, which no longer match the exam"
+      ],
+      "correctIndex": 3,
+      "explanation": "Outlines change; prep should match the current ECO.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

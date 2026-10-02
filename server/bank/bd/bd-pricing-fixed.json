@@ -1,0 +1,364 @@
+[
+  {
+    "id": "bd-pricing-fixed-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Price a fixed bid from an estimate.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Engineering estimates a booking web app at 600 hours. Your blended rate is $45 an hour and policy is to add 20% contingency to fixed bids.",
+      "table": null,
+      "fields": [
+        {
+          "id": "hours",
+          "label": "Hours including contingency",
+          "unit": "h",
+          "answer": 720,
+          "tolerance": 0.5
+        },
+        {
+          "id": "price",
+          "label": "Fixed price",
+          "unit": "$",
+          "answer": 32400,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "600 × 1.2 = 720 hours; 720 × $45 = $32400. The contingency pays for the risk you take on by fixing the price."
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Check the margin on a fixed bid that includes AI API costs.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You are reviewing a $90,000 fixed bid for an app with an AI assistant. The price includes AI API costs during the build ($1,500) and for 6 months after launch, estimated at 25,000 requests a month at $0.02 each. Labour costs are in the table. Round percentages to two decimals.",
+      "table": {
+        "columns": [
+          "Role",
+          "Hours",
+          "Cost per hour"
+        ],
+        "rows": [
+          [
+            "Senior engineer",
+            "400",
+            "$38"
+          ],
+          [
+            "Engineer",
+            "900",
+            "$24"
+          ],
+          [
+            "QA",
+            "250",
+            "$18"
+          ],
+          [
+            "Project manager",
+            "150",
+            "$32"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Total delivery cost (labour + AI)",
+          "unit": "$",
+          "answer": 50600,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Gross margin",
+          "unit": "%",
+          "answer": 43.78,
+          "tolerance": 0.01
+        },
+        {
+          "id": "margin2",
+          "label": "Gross margin if hours overrun by 15% (AI unchanged)",
+          "unit": "%",
+          "answer": 36.09,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Labour = 15,200 + 21,600 + 4,500 + 4,800 = $46100. AI = 1,500 + 25,000 × 0.02 × 6 = $4500. Cost = $50600; margin = (90,000 − 50600) ÷ 90,000 = 43.78%. With a 15% overrun labour is $53015, cost $57515, margin 36.09%. On a fixed bid the agency absorbs every overrun."
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the risky lines in this fixed-price proposal.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this fixed-price proposal excerpt that expose the agency to unpaid work.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Fixed price: $32,400 for the features listed in Appendix A.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Unlimited design revisions until the client is fully satisfied.",
+          "issue": "Open-ended revisions make the fixed scope unbounded."
+        },
+        {
+          "id": "p3",
+          "text": "Assumes the client provides API credentials for the payment gateway by week 2.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Includes any additional features the client may need before launch.",
+          "issue": "Makes the scope whatever the client asks for, at a fixed price."
+        },
+        {
+          "id": "p5",
+          "text": "Payment: 30% on signature, 40% at beta, 30% at launch.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Changes are handled informally as the project progresses.",
+          "issue": "No change-request process, so scope creep has no price."
+        },
+        {
+          "id": "p7",
+          "text": "Out of scope: content writing and data migration.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Handle a feature request in the middle of a fixed-price build.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Halfway through a fixed-price build, the client asks for social login \"since you're in that area anyway\".",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the right first step?",
+          "options": [
+            "Log it as a change request and get an estimate from the team",
+            "Add it quietly to keep the client happy",
+            "Refuse because the scope is fixed",
+            "Ask the developer to squeeze it in over the weekend"
+          ],
+          "correctIndex": 0,
+          "explanation": "A change-request process keeps the fixed price honest without saying no to the client."
+        },
+        {
+          "id": "s2",
+          "question": "The estimate is 24 hours. The client says: \"It's tiny, just do it.\" What next?",
+          "options": [
+            "Do it free this once",
+            "Explain the change process and offer to add it for a price or swap out a feature of similar size",
+            "Tell them every change costs double",
+            "Escalate to your CEO"
+          ],
+          "correctIndex": 1,
+          "explanation": "Giving options (pay, swap, defer) keeps goodwill and the margin."
+        },
+        {
+          "id": "s3",
+          "question": "They choose to swap out the export-to-PDF feature (about 24 hours). What must happen?",
+          "options": [
+            "Nothing; a verbal agreement is fine",
+            "Just tell the developers",
+            "Record the swap in writing as a change to the SOW, signed off by the client",
+            "Raise the price anyway"
+          ],
+          "correctIndex": 2,
+          "explanation": "Undocumented swaps cause disputes at acceptance. Put every scope change in writing."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank projects by how suitable they are for a fixed price.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these projects from most suitable for a fixed price to least suitable.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Clone of an existing app with a documented feature list"
+        },
+        {
+          "id": "i3",
+          "label": "MVP with a clickable prototype but two integrations still undefined"
+        },
+        {
+          "id": "i4",
+          "label": "AI chatbot whose data sources are not yet decided"
+        },
+        {
+          "id": "i5",
+          "label": "R&D to find out whether ML can detect defects in photos"
+        },
+        {
+          "id": "i1",
+          "label": "Five-page marketing site from signed-off designs"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Fixed price works when scope is known. The more unknowns (undefined integrations, data, feasibility), the more the agency is betting rather than pricing."
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Turn a wide estimate into a fixed-price offer.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Engineering estimates a marketplace MVP at 800–1,100 hours because the payments flow is not yet specified. The client insists on a fixed price.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best approach?",
+          "options": [
+            "Quote 800 hours to win the deal",
+            "Quote the midpoint with no assumptions",
+            "Refuse to quote",
+            "Propose a short paid discovery phase to firm up scope, then fix the price of the build"
+          ],
+          "correctIndex": 3,
+          "explanation": "Paid discovery removes the unknown that makes the range wide, so the fixed price becomes a calculation."
+        },
+        {
+          "id": "s2",
+          "question": "The client won't pay for discovery. If you still fix the price, what must the proposal include?",
+          "options": [
+            "Pricing near the top of the range, written assumptions for payments and a change-request process",
+            "A price at the bottom of the range so they say yes",
+            "No assumptions, so the proposal looks confident",
+            "A promise to absorb any overrun"
+          ],
+          "correctIndex": 0,
+          "explanation": "If you carry the risk, price it and write down what the price assumes."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "On a fixed-price project, who carries the risk of the work taking longer than estimated?",
+    "mcq": {
+      "options": [
+        "The client",
+        "The agency",
+        "It is shared equally by default",
+        "The developers personally"
+      ],
+      "correctIndex": 1,
+      "explanation": "That is the trade: the client gets cost certainty and the agency absorbs overruns, which is why contingency and clear scope matter.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which project is the best fit for a fixed price?",
+    "mcq": {
+      "options": [
+        "An AI prototype where feasibility is unknown",
+        "Ongoing improvements to a live product",
+        "A landing page and blog built from approved designs",
+        "Integrating with an undocumented legacy system"
+      ],
+      "correctIndex": 2,
+      "explanation": "Fixed price suits work with a clear, stable scope. The others carry unknowns the agency would be guessing at.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-fixed-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-fixed",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A fixed-price quote of $40,000 is about to go out. Which addition most protects both sides?",
+    "mcq": {
+      "options": [
+        "A note that the price may change at the agency's discretion",
+        "A larger font on the price",
+        "A list of assumptions, explicit exclusions and how change requests are priced",
+        "A promise of unlimited revisions to reassure the client"
+      ],
+      "correctIndex": 2,
+      "explanation": "Assumptions, exclusions and change control define what the fixed price buys, which prevents disputes later.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

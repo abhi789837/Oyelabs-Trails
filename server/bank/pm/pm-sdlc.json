@@ -1,0 +1,375 @@
+[
+  {
+    "id": "pm-sdlc-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the stages of the software development lifecycle for a new feature.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Maintenance: monitor, fix and improve"
+        },
+        {
+          "id": "r4",
+          "label": "Testing: QA verifies it works"
+        },
+        {
+          "id": "r2",
+          "label": "Design: UX screens and technical design"
+        },
+        {
+          "id": "r1",
+          "label": "Requirements: agree what the feature must do"
+        },
+        {
+          "id": "r3",
+          "label": "Development: write the code"
+        },
+        {
+          "id": "r5",
+          "label": "Deployment: release to production"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Requirements, design, build, test, deploy, maintain. Agile teams repeat this loop in small slices every sprint."
+    }
+  },
+  {
+    "id": "pm-sdlc-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order what happens to a single user story in a typical agency sprint.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Product owner accepts it at the sprint review"
+        },
+        {
+          "id": "r4",
+          "label": "Merged and deployed to the QA/staging environment"
+        },
+        {
+          "id": "r2",
+          "label": "Developer picks it up and creates a branch"
+        },
+        {
+          "id": "r1",
+          "label": "Story refined with acceptance criteria"
+        },
+        {
+          "id": "r3",
+          "label": "Pull request opened and code reviewed"
+        },
+        {
+          "id": "r5",
+          "label": "QA tests it against the acceptance criteria"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Refine, build on a branch, review, merge and deploy to a test environment, test, then accept."
+    }
+  },
+  {
+    "id": "pm-sdlc-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this project plan for a client mobile app.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Weeks 1-2: discovery and requirements.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Weeks 3-4: UX design and technical architecture.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Weeks 5-14: development.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Testing: none planned, developers will test their own code.",
+          "issue": "No independent QA; bugs reach the client and production."
+        },
+        {
+          "id": "p5",
+          "text": "Week 15: launch to app stores on Monday, client announces it on Tuesday.",
+          "issue": "No buffer for app-store review, which can take days and may reject the build."
+        },
+        {
+          "id": "p6",
+          "text": "Weeks 16-20: hypercare and bug fixes.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-sdlc-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fixing a defect gets more expensive the later it is found. Using the agency's rule-of-thumb costs, work out the cost of these bugs.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Stage found",
+          "Bugs",
+          "Cost to fix each"
+        ],
+        "rows": [
+          [
+            "Design review",
+            "10",
+            "$100"
+          ],
+          [
+            "QA testing",
+            "6",
+            "$400"
+          ],
+          [
+            "Production",
+            "2",
+            "$1,500"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total cost of fixing all bugs found",
+          "unit": "$",
+          "answer": 6400,
+          "tolerance": 1
+        },
+        {
+          "id": "saved",
+          "label": "Saving if the 2 production bugs had been caught in QA instead",
+          "unit": "$",
+          "answer": 2200,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Design: 10 × $100 = $1,000; QA: 6 × $400 = $2,400; production: 2 × $1,500 = $3,000. Total $6,400. Catching the 2 production bugs in QA saves 2 × $1,100 = $2,200."
+    }
+  },
+  {
+    "id": "pm-sdlc-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A client asks why the team needs a 'technical design' step before coding a new loyalty-points feature. They want developers to start today.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks why the team needs a 'technical design' step before coding a new loyalty-points feature. They want developers to start today.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you explain it?",
+          "options": [
+            "'It's just process.'",
+            "A short design catches data-model and integration problems early, when they are cheap to change",
+            "'Developers like to plan.'",
+            "'It's required by law.'"
+          ],
+          "correctIndex": 1,
+          "explanation": "Explain value in the client's terms: lower cost and risk."
+        },
+        {
+          "id": "s2",
+          "question": "The feature is tiny (one new label). What do you do?",
+          "options": [
+            "Insist on a full design document",
+            "Scale the design to the risk: a quick note in the ticket is enough",
+            "Skip testing too",
+            "Delay it to next quarter"
+          ],
+          "correctIndex": 1,
+          "explanation": "SDLC steps should be proportionate to the size and risk of the change."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-sdlc-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A developer says a feature is 'done' because the code works on their laptop.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A developer says a feature is 'done' because the code works on their laptop.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Is the feature done?",
+          "options": [
+            "Yes, the code works",
+            "Not yet: it still needs review, testing and deployment per the Definition of Done",
+            "Yes, if the client has not complained",
+            "Only if it has comments in the code"
+          ],
+          "correctIndex": 1,
+          "explanation": "'Works on my machine' is just the development step; done includes review, testing and deployment."
+        },
+        {
+          "id": "s2",
+          "question": "What helps the team share one meaning of 'done'?",
+          "options": [
+            "A written Definition of Done",
+            "A longer stand-up",
+            "A new Jira theme",
+            "More developers"
+          ],
+          "correctIndex": 0,
+          "explanation": "A Definition of Done makes the quality bar explicit and shared."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-sdlc-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does QA mean in a software team?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Quality assurance: checking the software meets requirements and finding defects",
+        "Quick approval by the client",
+        "Quarterly accounts",
+        "Queue administration"
+      ],
+      "correctIndex": 0,
+      "explanation": "QA verifies that what was built works as intended before it reaches users.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-sdlc-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In which SDLC stage are wireframes and screen designs usually produced?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Design",
+        "Deployment",
+        "Maintenance",
+        "Testing"
+      ],
+      "correctIndex": 0,
+      "explanation": "Wireframes and UI designs come out of the design stage, before development.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-sdlc-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-sdlc",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How does an agile team use the SDLC differently from a waterfall team?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It runs all the stages in small loops each sprint instead of once for the whole project",
+        "It skips testing",
+        "It has no requirements",
+        "It only deploys once at the end"
+      ],
+      "correctIndex": 0,
+      "explanation": "Agile still plans, designs, builds, tests and deploys, but in short iterations on small slices of work.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

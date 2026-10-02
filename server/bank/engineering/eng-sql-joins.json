@@ -1,0 +1,1758 @@
+[
+  {
+    "id": "eng-sql-joins-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Tables `customers(id, name, city)` and `orders(id, customer_id, total, created_at)`. Return each order's `id` and the customer's `name`, by order id. The join uses the wrong column.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT o.id, c.name\nFROM orders o\nJOIN customers c ON o.id = c.id\nORDER BY o.id;",
+      "referenceSolution": "SELECT o.id, c.name\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nORDER BY o.id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'),(2,'Bo','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,2,10,'2024-01-01'),(2,1,5,'2024-01-02');",
+          "expected": [
+            {
+              "id": 1,
+              "name": "Bo"
+            },
+            {
+              "id": 2,
+              "name": "Ann"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'),(2,'Bo','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (5,1,10,'2024-01-01'),(6,1,5,'2024-01-02');",
+          "expected": [
+            {
+              "id": 5,
+              "name": "Ann"
+            },
+            {
+              "id": 6,
+              "name": "Ann"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (7,'Cy','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,7,3,'2024-01-01');",
+          "expected": [
+            {
+              "id": 1,
+              "name": "Cy"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Tables `products(id, name, category_id, price)` and `categories(id, name)`. Return **every** product's name as `product` and its category name as `category` (`NULL` when it has none), by product name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT p.name AS product, c.name AS category\nFROM products p\nJOIN categories c ON c.id = p.category_id\nORDER BY p.name;",
+      "referenceSolution": "SELECT p.name AS product, c.name AS category\nFROM products p\nLEFT JOIN categories c ON c.id = p.category_id\nORDER BY p.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE categories(id INTEGER, name TEXT); INSERT INTO categories VALUES (1,'home'); CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL); INSERT INTO products VALUES (1,'Mug',1,8),(2,'Gift card',NULL,50);",
+          "expected": [
+            {
+              "product": "Gift card",
+              "category": null
+            },
+            {
+              "product": "Mug",
+              "category": "home"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE categories(id INTEGER, name TEXT); CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL); INSERT INTO products VALUES (1,'Pen',9,1);",
+          "expected": [
+            {
+              "product": "Pen",
+              "category": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE categories(id INTEGER, name TEXT); INSERT INTO categories VALUES (1,'home'),(2,'office'); CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL); INSERT INTO products VALUES (1,'Pen',2,1),(2,'Lamp',1,30);",
+          "expected": [
+            {
+              "product": "Lamp",
+              "category": "home"
+            },
+            {
+              "product": "Pen",
+              "category": "office"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE categories(id INTEGER, name TEXT); INSERT INTO categories VALUES (1,'home'); CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return `order_id` and the customer `name` for every order, by order id. The query fails with *ambiguous column name* — fix it.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT id AS order_id, name\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nORDER BY id;",
+      "referenceSolution": "SELECT o.id AS order_id, c.name\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nORDER BY o.id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (10,1,5,'2024-01-01');",
+          "expected": [
+            {
+              "order_id": 10,
+              "name": "Ann"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'),(2,'Bo','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (3,2,1,'2024-01-01'),(1,1,1,'2024-01-01');",
+          "expected": [
+            {
+              "order_id": 1,
+              "name": "Ann"
+            },
+            {
+              "order_id": 3,
+              "name": "Bo"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (2,1,1,'2024-01-01'),(4,1,1,'2024-01-01');",
+          "expected": [
+            {
+              "order_id": 2,
+              "name": "Ann"
+            },
+            {
+              "order_id": 4,
+              "name": "Ann"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return the `name` of customers who placed **at least one order over 100**, each name once, alphabetically.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE o.total > 100\nORDER BY c.name;",
+      "referenceSolution": "SELECT DISTINCT c.name\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE o.total > 100\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'),(2,'Bo','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,150,'d'),(2,1,200,'d'),(3,2,50,'d');",
+          "expected": [
+            {
+              "name": "Ann"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,100,'d');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Zed','Pune'),(2,'Bo','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,101,'d'),(2,2,300,'d'),(3,2,400,'d'),(4,1,500,'d');",
+          "expected": [
+            {
+              "name": "Bo"
+            },
+            {
+              "name": "Zed"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Tables `order_items(order_id, product_id, qty)` and `products(id, name, category_id, price)`. Return the product `name` and `qty` for **order 1**, by name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT p.name, oi.qty\nFROM order_items oi\nJOIN products p ON p.id = oi.order_id\nWHERE oi.order_id = 1\nORDER BY p.name;",
+      "referenceSolution": "SELECT p.name, oi.qty\nFROM order_items oi\nJOIN products p ON p.id = oi.product_id\nWHERE oi.order_id = 1\nORDER BY p.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL); INSERT INTO products VALUES (1,'Pen',NULL,1),(2,'Mug',NULL,8); CREATE TABLE order_items(order_id INTEGER, product_id INTEGER, qty INTEGER); INSERT INTO order_items VALUES (1,2,3),(2,1,1);",
+          "expected": [
+            {
+              "name": "Mug",
+              "qty": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL); INSERT INTO products VALUES (1,'Pen',NULL,1),(2,'Mug',NULL,8),(3,'Cap',NULL,5); CREATE TABLE order_items(order_id INTEGER, product_id INTEGER, qty INTEGER); INSERT INTO order_items VALUES (1,3,1),(1,2,2);",
+          "expected": [
+            {
+              "name": "Cap",
+              "qty": 1
+            },
+            {
+              "name": "Mug",
+              "qty": 2
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL); INSERT INTO products VALUES (1,'Pen',NULL,1); CREATE TABLE order_items(order_id INTEGER, product_id INTEGER, qty INTEGER); INSERT INTO order_items VALUES (2,1,1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category_id INTEGER, price REAL); INSERT INTO products VALUES (1,'Pen',NULL,1),(5,'Ink',NULL,2); CREATE TABLE order_items(order_id INTEGER, product_id INTEGER, qty INTEGER); INSERT INTO order_items VALUES (1,5,4);",
+          "expected": [
+            {
+              "name": "Ink",
+              "qty": 4
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Tables `staff(id, name, dept_id)` and `departments(id, name)`. Return `employee` and `department` names, by employee. The query fails with *no such column* — fix it.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT s.name AS employee, departments.name AS department\nFROM staff s\nJOIN departments d ON d.id = s.dept_id\nORDER BY s.name;",
+      "referenceSolution": "SELECT s.name AS employee, d.name AS department\nFROM staff s\nJOIN departments d ON d.id = s.dept_id\nORDER BY s.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE departments(id INTEGER, name TEXT); INSERT INTO departments VALUES (1,'Sales'),(2,'Tech'); CREATE TABLE staff(id INTEGER, name TEXT, dept_id INTEGER); INSERT INTO staff VALUES (1,'Bo',2),(2,'Ann',1);",
+          "expected": [
+            {
+              "employee": "Ann",
+              "department": "Sales"
+            },
+            {
+              "employee": "Bo",
+              "department": "Tech"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE departments(id INTEGER, name TEXT); INSERT INTO departments VALUES (1,'Sales'); CREATE TABLE staff(id INTEGER, name TEXT, dept_id INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE departments(id INTEGER, name TEXT); INSERT INTO departments VALUES (1,'Ops'); CREATE TABLE staff(id INTEGER, name TEXT, dept_id INTEGER); INSERT INTO staff VALUES (1,'Cy',1),(2,'Al',1);",
+          "expected": [
+            {
+              "employee": "Al",
+              "department": "Ops"
+            },
+            {
+              "employee": "Cy",
+              "department": "Ops"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE departments(id INTEGER, name TEXT); INSERT INTO departments VALUES (1,'Ops'); CREATE TABLE staff(id INTEGER, name TEXT, dept_id INTEGER); INSERT INTO staff VALUES (1,'Di',1);",
+          "expected": [
+            {
+              "employee": "Di",
+              "department": "Ops"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "How many rows does each query return?",
+    "mcq": {
+      "options": [
+        "inner 3, left 4",
+        "inner 3, left 3",
+        "inner 2, left 3",
+        "inner 4, left 4"
+      ],
+      "correctIndex": 0,
+      "explanation": "The inner join returns one row per matching order (3). The left join also keeps Cy, who has no orders, with `NULL`s on the order side — 4 rows.",
+      "snippet": "CREATE TABLE customers(id INTEGER, name TEXT);\nCREATE TABLE orders(id INTEGER, customer_id INTEGER);\nINSERT INTO customers VALUES (1,'Ann'), (2,'Bo'), (3,'Cy');\nINSERT INTO orders VALUES (1,1), (2,1), (3,2);\nSELECT 'inner' AS q, COUNT(*) AS n FROM customers c JOIN orders o ON o.customer_id = c.id;\nSELECT 'left' AS q, COUNT(*) AS n FROM customers c LEFT JOIN orders o ON o.customer_id = c.id;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "You need every row from `customers`, plus matching `orders` where they exist. Which join?",
+    "mcq": {
+      "options": [
+        "`customers LEFT JOIN orders`",
+        "`customers JOIN orders`",
+        "`customers CROSS JOIN orders`",
+        "`orders LEFT JOIN customers`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `LEFT JOIN` keeps every row of the left table and fills the right side with `NULL` where nothing matches. An inner join drops customers without orders.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-sql-joins-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does the `SELECT` return for Cy?",
+    "mcq": {
+      "options": [
+        "One row: Cy with total NULL",
+        "No rows",
+        "One row: Cy with total 0",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "With no matching order, the left join still returns Cy and fills the order columns with `NULL` (not 0).",
+      "snippet": "CREATE TABLE customers(id INTEGER, name TEXT);\nCREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL);\nINSERT INTO customers VALUES (1,'Cy');\nSELECT c.name, o.total FROM customers c LEFT JOIN orders o ON o.customer_id = c.id;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return the `name` of customers who have **never** placed an order, alphabetically.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'),(3,'Cy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d');",
+          "expected": [
+            {
+              "name": "Bo"
+            },
+            {
+              "name": "Cy"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Zed','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": [
+            {
+              "name": "Zed"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d'),(2,1,6,'d');",
+          "expected": [
+            {
+              "name": "Bo"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Table `employees(id, name, manager_id)`. Return each employee's `name` and their manager's name as `manager` (`NULL` for the top boss), by employee name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT e.name, m.name AS manager\nFROM employees e\nJOIN employees m ON m.id = e.manager_id\nORDER BY e.name;",
+      "referenceSolution": "SELECT e.name, m.name AS manager\nFROM employees e\nLEFT JOIN employees m ON m.id = e.manager_id\nORDER BY e.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER); INSERT INTO employees VALUES (1,'Ceo',NULL),(2,'Ann',1),(3,'Bo',2);",
+          "expected": [
+            {
+              "name": "Ann",
+              "manager": "Ceo"
+            },
+            {
+              "name": "Bo",
+              "manager": "Ann"
+            },
+            {
+              "name": "Ceo",
+              "manager": null
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER); INSERT INTO employees VALUES (1,'Solo',NULL);",
+          "expected": [
+            {
+              "name": "Solo",
+              "manager": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER); INSERT INTO employees VALUES (1,'Ann',NULL),(2,'Bo',NULL);",
+          "expected": [
+            {
+              "name": "Ann",
+              "manager": null
+            },
+            {
+              "name": "Bo",
+              "manager": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return each customer's `name` and `spent` (sum of their order totals), for customers with orders only, highest `spent` first. The query returns a single row — fix it.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name, SUM(o.total) AS spent\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nORDER BY spent DESC;",
+      "referenceSolution": "SELECT c.name, SUM(o.total) AS spent\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nGROUP BY c.id\nORDER BY spent DESC;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,10,'d'),(2,2,30,'d'),(3,1,5,'d');",
+          "expected": [
+            {
+              "name": "Bo",
+              "spent": 30
+            },
+            {
+              "name": "Ann",
+              "spent": 15
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Cy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,4,'d'),(2,2,9,'d');",
+          "expected": [
+            {
+              "name": "Cy",
+              "spent": 9
+            },
+            {
+              "name": "Ann",
+              "spent": 4
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'),(3,'Cy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,3,1,'d'),(2,3,1,'d'),(3,2,100,'d');",
+          "expected": [
+            {
+              "name": "Bo",
+              "spent": 100
+            },
+            {
+              "name": "Cy",
+              "spent": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Tables `students(id, name)`, `courses(id, title)` and `enrollments(student_id, course_id)`. Return `name` and `title` for every enrollment, ordered by name then title.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT s.name, c.title\nFROM enrollments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.student_id\nORDER BY s.name, c.title;",
+      "referenceSolution": "SELECT s.name, c.title\nFROM enrollments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.course_id\nORDER BY s.name, c.title;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE students(id INTEGER, name TEXT); INSERT INTO students VALUES (1,'Ann'),(2,'Bo'); CREATE TABLE courses(id INTEGER, title TEXT); INSERT INTO courses VALUES (1,'SQL'),(2,'Java'); CREATE TABLE enrollments(student_id INTEGER, course_id INTEGER); INSERT INTO enrollments VALUES (1,2),(2,1),(1,1);",
+          "expected": [
+            {
+              "name": "Ann",
+              "title": "Java"
+            },
+            {
+              "name": "Ann",
+              "title": "SQL"
+            },
+            {
+              "name": "Bo",
+              "title": "SQL"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE students(id INTEGER, name TEXT); INSERT INTO students VALUES (1,'Ann'); CREATE TABLE courses(id INTEGER, title TEXT); INSERT INTO courses VALUES (1,'SQL'); CREATE TABLE enrollments(student_id INTEGER, course_id INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE students(id INTEGER, name TEXT); INSERT INTO students VALUES (1,'Cy'); CREATE TABLE courses(id INTEGER, title TEXT); INSERT INTO courses VALUES (1,'SQL'),(5,'Dart'); CREATE TABLE enrollments(student_id INTEGER, course_id INTEGER); INSERT INTO enrollments VALUES (1,5);",
+          "expected": [
+            {
+              "name": "Cy",
+              "title": "Dart"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE students(id INTEGER, name TEXT); INSERT INTO students VALUES (3,'Di'); CREATE TABLE courses(id INTEGER, title TEXT); INSERT INTO courses VALUES (3,'Go'),(4,'Rust'); CREATE TABLE enrollments(student_id INTEGER, course_id INTEGER); INSERT INTO enrollments VALUES (3,4);",
+          "expected": [
+            {
+              "name": "Di",
+              "title": "Rust"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Tables `payments(id, currency, day, amount)` and `rates(currency, day, rate)` (one rate per currency per day). Return each payment's `id` and `usd` (`amount * rate` for its currency **on its day**), by id. Payments show up more than once.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT p.id, p.amount * r.rate AS usd\nFROM payments p\nJOIN rates r ON r.currency = p.currency\nORDER BY p.id;",
+      "referenceSolution": "SELECT p.id, p.amount * r.rate AS usd\nFROM payments p\nJOIN rates r ON r.currency = p.currency AND r.day = p.day\nORDER BY p.id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE rates(currency TEXT, day TEXT, rate REAL); INSERT INTO rates VALUES ('EUR','d1',2),('EUR','d2',3); CREATE TABLE payments(id INTEGER, currency TEXT, day TEXT, amount REAL); INSERT INTO payments VALUES (1,'EUR','d2',10);",
+          "expected": [
+            {
+              "id": 1,
+              "usd": 30
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE rates(currency TEXT, day TEXT, rate REAL); INSERT INTO rates VALUES ('EUR','d1',2),('INR','d1',0.5),('INR','d2',0.25); CREATE TABLE payments(id INTEGER, currency TEXT, day TEXT, amount REAL); INSERT INTO payments VALUES (1,'INR','d2',8),(2,'EUR','d1',1);",
+          "expected": [
+            {
+              "id": 1,
+              "usd": 2
+            },
+            {
+              "id": 2,
+              "usd": 2
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE rates(currency TEXT, day TEXT, rate REAL); INSERT INTO rates VALUES ('EUR','d1',2); CREATE TABLE payments(id INTEGER, currency TEXT, day TEXT, amount REAL);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE rates(currency TEXT, day TEXT, rate REAL); INSERT INTO rates VALUES ('GBP','d1',4),('GBP','d2',5),('GBP','d3',6); CREATE TABLE payments(id INTEGER, currency TEXT, day TEXT, amount REAL); INSERT INTO payments VALUES (7,'GBP','d3',1);",
+          "expected": [
+            {
+              "id": 7,
+              "usd": 6
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return **every** customer's `name` and `spent` (sum of order totals), with `0` for customers without orders, by name.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name, SUM(o.total) AS spent\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nGROUP BY c.id\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name, COALESCE(SUM(o.total), 0) AS spent\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nGROUP BY c.id\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,10,'d'),(2,1,5,'d');",
+          "expected": [
+            {
+              "name": "Ann",
+              "spent": 15
+            },
+            {
+              "name": "Bo",
+              "spent": 0
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Cy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": [
+            {
+              "name": "Cy",
+              "spent": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Di','x'),(2,'Ed','x'),(3,'Al','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,2,7,'d');",
+          "expected": [
+            {
+              "name": "Al",
+              "spent": 0
+            },
+            {
+              "name": "Di",
+              "spent": 0
+            },
+            {
+              "name": "Ed",
+              "spent": 7
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "12",
+        "7",
+        "4",
+        "3"
+      ],
+      "correctIndex": 0,
+      "explanation": "A cross join pairs every row of one table with every row of the other: 3 × 4 = 12.",
+      "snippet": "CREATE TABLE sizes(s TEXT);\nCREATE TABLE colors(c TEXT);\nINSERT INTO sizes VALUES ('S'), ('M'), ('L');\nINSERT INTO colors VALUES ('red'), ('blue'), ('green'), ('black');\nSELECT s, c FROM sizes CROSS JOIN colors;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "4",
+        "2",
+        "3",
+        "8"
+      ],
+      "correctIndex": 0,
+      "explanation": "A join returns one row per matching pair, so Ann appears three times (one per login) and Bo once. Joins can multiply rows; that is why `DISTINCT` or aggregation is often needed after them.",
+      "snippet": "CREATE TABLE users(id INTEGER, name TEXT);\nCREATE TABLE logins(user_id INTEGER, day TEXT);\nINSERT INTO users VALUES (1,'Ann'), (2,'Bo');\nINSERT INTO logins VALUES (1,'mon'), (1,'tue'), (1,'wed'), (2,'mon');\nSELECT u.name FROM users u JOIN logins l ON l.user_id = u.id;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this self-join return?",
+    "mcq": {
+      "options": [
+        "Ann–Ceo and Bo–Ann (2 rows)",
+        "3 rows, Ceo with a NULL manager",
+        "Ceo–Ann and Ann–Bo",
+        "An error: the table is used twice"
+      ],
+      "correctIndex": 0,
+      "explanation": "The two aliases make the same table act as employee and manager. The inner join drops `Ceo`, whose `manager_id` is `NULL`. A `LEFT JOIN` would keep him.",
+      "snippet": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER);\nINSERT INTO employees VALUES (1,'Ceo',NULL), (2,'Ann',1), (3,'Bo',2);\nSELECT e.name, m.name AS manager FROM employees e JOIN employees m ON m.id = e.manager_id ORDER BY e.name;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Return **every** customer's `name` and `orders_2024` — how many orders they placed in 2024 (`created_at` is `'YYYY-MM-DD'`), `0` if none — by name. Customers without 2024 orders disappear.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name, COUNT(o.id) AS orders_2024\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.created_at LIKE '2024-%'\nGROUP BY c.id\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name, COUNT(o.id) AS orders_2024\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id AND o.created_at LIKE '2024-%'\nGROUP BY c.id\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'2024-02-01'),(2,2,5,'2023-05-01');",
+          "expected": [
+            {
+              "name": "Ann",
+              "orders_2024": 1
+            },
+            {
+              "name": "Bo",
+              "orders_2024": 0
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Cy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": [
+            {
+              "name": "Cy",
+              "orders_2024": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Di','x'),(2,'Ed','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'2024-01-01'),(2,1,5,'2024-12-31'),(3,1,5,'2025-01-01');",
+          "expected": [
+            {
+              "name": "Di",
+              "orders_2024": 2
+            },
+            {
+              "name": "Ed",
+              "orders_2024": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Fy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'2022-01-01');",
+          "expected": [
+            {
+              "name": "Fy",
+              "orders_2024": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Tables `customers`, `orders(id, customer_id, …)` and `payments(id, customer_id, amount)`. Return `name`, `order_count` and `payment_count` for every customer, by name. The counts come out multiplied.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name, COUNT(o.id) AS order_count, COUNT(p.id) AS payment_count\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nLEFT JOIN payments p ON p.customer_id = c.id\nGROUP BY c.id\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name, COUNT(DISTINCT o.id) AS order_count, COUNT(DISTINCT p.id) AS payment_count\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nLEFT JOIN payments p ON p.customer_id = c.id\nGROUP BY c.id\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d'),(2,1,5,'d'); CREATE TABLE payments(id INTEGER, customer_id INTEGER, amount REAL); INSERT INTO payments VALUES (1,1,5),(2,1,5),(3,1,5);",
+          "expected": [
+            {
+              "name": "Ann",
+              "order_count": 2,
+              "payment_count": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Bo','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); CREATE TABLE payments(id INTEGER, customer_id INTEGER, amount REAL);",
+          "expected": [
+            {
+              "name": "Bo",
+              "order_count": 0,
+              "payment_count": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Cy','x'),(2,'Di','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d'),(2,1,5,'d'); CREATE TABLE payments(id INTEGER, customer_id INTEGER, amount REAL); INSERT INTO payments VALUES (1,2,5);",
+          "expected": [
+            {
+              "name": "Cy",
+              "order_count": 2,
+              "payment_count": 0
+            },
+            {
+              "name": "Di",
+              "order_count": 0,
+              "payment_count": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ed','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d'),(2,1,5,'d'); CREATE TABLE payments(id INTEGER, customer_id INTEGER, amount REAL); INSERT INTO payments VALUES (1,1,5),(2,1,5);",
+          "expected": [
+            {
+              "name": "Ed",
+              "order_count": 2,
+              "payment_count": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Table `products(id, name, category)`. Return every **pair** of different products in the same category as `a` and `b` (names), each pair **once** with the lower id first, ordered by `a`, `b`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT x.name AS a, y.name AS b\nFROM products x\nJOIN products y ON y.category = x.category AND y.id != x.id\nORDER BY a, b;",
+      "referenceSolution": "SELECT x.name AS a, y.name AS b\nFROM products x\nJOIN products y ON y.category = x.category AND x.id < y.id\nORDER BY a, b;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT); INSERT INTO products VALUES (1,'Mug','home'),(2,'Lamp','home'),(3,'Pen','office');",
+          "expected": [
+            {
+              "a": "Mug",
+              "b": "Lamp"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT); INSERT INTO products VALUES (1,'Pen','office');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT); INSERT INTO products VALUES (1,'A','x'),(2,'B','x'),(3,'C','x');",
+          "expected": [
+            {
+              "a": "A",
+              "b": "B"
+            },
+            {
+              "a": "A",
+              "b": "C"
+            },
+            {
+              "a": "B",
+              "b": "C"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INTEGER, name TEXT, category TEXT); INSERT INTO products VALUES (1,'A','x'),(2,'B','y');",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Return each customer's `name` and the `total` of their **latest** order (by `created_at`), for customers with orders, by name. Customers come back once per order.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name, o.total\nFROM customers c\nJOIN (SELECT customer_id, MAX(created_at) AS last_at\n      FROM orders GROUP BY customer_id) l ON l.customer_id = c.id\nJOIN orders o ON o.customer_id = c.id\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name, o.total\nFROM customers c\nJOIN (SELECT customer_id, MAX(created_at) AS last_at\n      FROM orders GROUP BY customer_id) l ON l.customer_id = c.id\nJOIN orders o ON o.customer_id = c.id AND o.created_at = l.last_at\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,10,'2024-01-01'),(2,1,99,'2024-03-01'),(3,2,7,'2024-02-01');",
+          "expected": [
+            {
+              "name": "Ann",
+              "total": 99
+            },
+            {
+              "name": "Bo",
+              "total": 7
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Cy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Di','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,3,'2024-05-01'),(2,1,4,'2023-05-01'),(3,1,5,'2024-04-30');",
+          "expected": [
+            {
+              "name": "Di",
+              "total": 3
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ed','x'),(2,'Fy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,2,8,'2024-01-01');",
+          "expected": [
+            {
+              "name": "Fy",
+              "total": 8
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Tables `products(id, name, price)` and `bands(name, min_price, max_price)`. A product is in a band when `min_price ≤ price < max_price`. Return `product` and `band` names by product id. Products on a band's lower edge go missing.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT p.name AS product, b.name AS band\nFROM products p\nJOIN bands b ON p.price > b.min_price AND p.price < b.max_price\nORDER BY p.id;",
+      "referenceSolution": "SELECT p.name AS product, b.name AS band\nFROM products p\nJOIN bands b ON p.price >= b.min_price AND p.price < b.max_price\nORDER BY p.id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE bands(name TEXT, min_price REAL, max_price REAL); INSERT INTO bands VALUES ('cheap',0,10),('mid',10,100); CREATE TABLE products(id INTEGER, name TEXT, price REAL); INSERT INTO products VALUES (1,'Pen',5),(2,'Lamp',10);",
+          "expected": [
+            {
+              "product": "Pen",
+              "band": "cheap"
+            },
+            {
+              "product": "Lamp",
+              "band": "mid"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE bands(name TEXT, min_price REAL, max_price REAL); INSERT INTO bands VALUES ('cheap',0,10); CREATE TABLE products(id INTEGER, name TEXT, price REAL); INSERT INTO products VALUES (1,'Free',0);",
+          "expected": [
+            {
+              "product": "Free",
+              "band": "cheap"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE bands(name TEXT, min_price REAL, max_price REAL); INSERT INTO bands VALUES ('cheap',0,10),('mid',10,100); CREATE TABLE products(id INTEGER, name TEXT, price REAL); INSERT INTO products VALUES (1,'Desk',100),(2,'Mug',50);",
+          "expected": [
+            {
+              "product": "Mug",
+              "band": "mid"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE bands(name TEXT, min_price REAL, max_price REAL); INSERT INTO bands VALUES ('cheap',0,10); CREATE TABLE products(id INTEGER, name TEXT, price REAL);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Return customers **in Pune** with their number of orders as `orders` (including 0), by name. Customers from other cities are showing up.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name, COUNT(o.id) AS orders\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id AND c.city = 'Pune'\nGROUP BY c.id\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name, COUNT(o.id) AS orders\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE c.city = 'Pune'\nGROUP BY c.id\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','Pune'),(2,'Bo','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d'),(2,2,5,'d');",
+          "expected": [
+            {
+              "name": "Ann",
+              "orders": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Bo','Goa'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Cy','Pune'),(2,'Al','Pune'),(3,'Zed','Delhi'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'d'),(2,1,5,'d');",
+          "expected": [
+            {
+              "name": "Al",
+              "orders": 0
+            },
+            {
+              "name": "Cy",
+              "orders": 2
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Di','Pune'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": [
+            {
+              "name": "Di",
+              "orders": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "1",
+        "3",
+        "2",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "The `WHERE` runs after the join; for Cy (and Bo) `o.status` is `NULL` or not `'paid'`, so they are removed and the left join behaves like an inner join. Put the filter in the `ON` clause to keep every customer.",
+      "snippet": "CREATE TABLE customers(id INTEGER, name TEXT);\nCREATE TABLE orders(id INTEGER, customer_id INTEGER, status TEXT);\nINSERT INTO customers VALUES (1,'Ann'), (2,'Bo'), (3,'Cy');\nINSERT INTO orders VALUES (1,1,'paid'), (2,2,'refunded');\nSELECT c.name, o.id FROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'paid';",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Each customer has 2 orders and 3 payments. What does `SUM(p.amount)` return per customer in this query?",
+    "mcq": {
+      "options": [
+        "60 — every payment is counted once per order",
+        "30",
+        "20",
+        "10"
+      ],
+      "correctIndex": 0,
+      "explanation": "Joining two one-to-many tables on the same key produces 2 × 3 = 6 rows, so each payment is summed twice. Aggregate each table separately (subquery) before joining.",
+      "snippet": "CREATE TABLE orders(id INTEGER, customer_id INTEGER);\nCREATE TABLE payments(id INTEGER, customer_id INTEGER, amount REAL);\nINSERT INTO orders VALUES (1,1), (2,1);\nINSERT INTO payments VALUES (1,1,10), (2,1,10), (3,1,10);\nSELECT o.customer_id, SUM(p.amount) AS paid\nFROM orders o JOIN payments p ON p.customer_id = o.customer_id\nGROUP BY o.customer_id;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is `n` for Cy, who has no orders?",
+    "mcq": {
+      "options": [
+        "1",
+        "0",
+        "NULL",
+        "No row is returned"
+      ],
+      "correctIndex": 0,
+      "explanation": "The left join produces one row for Cy (with `NULL` order columns) and `COUNT(*)` counts rows. Use `COUNT(o.id)`, which skips `NULL`, to get 0.",
+      "snippet": "CREATE TABLE customers(id INTEGER, name TEXT);\nCREATE TABLE orders(id INTEGER, customer_id INTEGER);\nINSERT INTO customers VALUES (1,'Cy');\nSELECT c.name, COUNT(*) AS n FROM customers c LEFT JOIN orders o ON o.customer_id = c.id GROUP BY c.id;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Tables `list_a(email)` and `list_b(email)` (no duplicates within a list). Return every email in **either** list with flags `in_a` and `in_b` (1/0), ordered by email. SQLite 3.36 has no `FULL OUTER JOIN` — rewrite it.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT COALESCE(a.email, b.email) AS email,\n  a.email IS NOT NULL AS in_a,\n  b.email IS NOT NULL AS in_b\nFROM list_a a\nFULL OUTER JOIN list_b b ON b.email = a.email\nORDER BY 1;",
+      "referenceSolution": "SELECT a.email, 1 AS in_a, b.email IS NOT NULL AS in_b\nFROM list_a a\nLEFT JOIN list_b b ON b.email = a.email\nUNION ALL\nSELECT b.email, 0, 1\nFROM list_b b\nWHERE b.email NOT IN (SELECT email FROM list_a)\nORDER BY 1;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE list_a(email TEXT); INSERT INTO list_a VALUES ('a@x'),('b@x'); CREATE TABLE list_b(email TEXT); INSERT INTO list_b VALUES ('b@x'),('c@x');",
+          "expected": [
+            {
+              "email": "a@x",
+              "in_a": 1,
+              "in_b": 0
+            },
+            {
+              "email": "b@x",
+              "in_a": 1,
+              "in_b": 1
+            },
+            {
+              "email": "c@x",
+              "in_a": 0,
+              "in_b": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE list_a(email TEXT); CREATE TABLE list_b(email TEXT); INSERT INTO list_b VALUES ('z@x');",
+          "expected": [
+            {
+              "email": "z@x",
+              "in_a": 0,
+              "in_b": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE list_a(email TEXT); INSERT INTO list_a VALUES ('q@x'); CREATE TABLE list_b(email TEXT);",
+          "expected": [
+            {
+              "email": "q@x",
+              "in_a": 1,
+              "in_b": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE list_a(email TEXT); CREATE TABLE list_b(email TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Return the `name` of customers who placed **no order in 2024** (they may have older orders), alphabetically. The query returns nobody.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL AND o.created_at LIKE '2024-%'\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id AND o.created_at LIKE '2024-%'\nWHERE o.id IS NULL\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'),(2,'Bo','x'),(3,'Cy','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'2024-02-01'),(2,2,5,'2023-01-01');",
+          "expected": [
+            {
+              "name": "Bo"
+            },
+            {
+              "name": "Cy"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ann','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'2024-01-01');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Di','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT);",
+          "expected": [
+            {
+              "name": "Di"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INTEGER, name TEXT, city TEXT); INSERT INTO customers VALUES (1,'Ed','x'),(2,'Al','x'); CREATE TABLE orders(id INTEGER, customer_id INTEGER, total REAL, created_at TEXT); INSERT INTO orders VALUES (1,1,5,'2025-01-01'),(2,2,5,'2024-12-31');",
+          "expected": [
+            {
+              "name": "Ed"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Table `employees(id, name, manager_id)`. Return every employee's `name`, their `manager` and their manager's manager as `grand_manager` (`NULL` where missing), by name. People near the top disappear.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT e.name, m.name AS manager, g.name AS grand_manager\nFROM employees e\nLEFT JOIN employees m ON m.id = e.manager_id\nJOIN employees g ON g.id = m.manager_id\nORDER BY e.name;",
+      "referenceSolution": "SELECT e.name, m.name AS manager, g.name AS grand_manager\nFROM employees e\nLEFT JOIN employees m ON m.id = e.manager_id\nLEFT JOIN employees g ON g.id = m.manager_id\nORDER BY e.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER); INSERT INTO employees VALUES (1,'Ceo',NULL),(2,'Vp',1),(3,'Dev',2);",
+          "expected": [
+            {
+              "name": "Ceo",
+              "manager": null,
+              "grand_manager": null
+            },
+            {
+              "name": "Dev",
+              "manager": "Vp",
+              "grand_manager": "Ceo"
+            },
+            {
+              "name": "Vp",
+              "manager": "Ceo",
+              "grand_manager": null
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER); INSERT INTO employees VALUES (1,'Solo',NULL);",
+          "expected": [
+            {
+              "name": "Solo",
+              "manager": null,
+              "grand_manager": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE employees(id INTEGER, name TEXT, manager_id INTEGER); INSERT INTO employees VALUES (1,'A',NULL),(2,'B',1),(3,'C',2),(4,'D',3);",
+          "expected": [
+            {
+              "name": "A",
+              "manager": null,
+              "grand_manager": null
+            },
+            {
+              "name": "B",
+              "manager": "A",
+              "grand_manager": null
+            },
+            {
+              "name": "C",
+              "manager": "B",
+              "grand_manager": "A"
+            },
+            {
+              "name": "D",
+              "manager": "C",
+              "grand_manager": "B"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Tables `sales(id, product_id, day)` and `prices(product_id, effective_from, price)`. Each sale uses the price that was in effect **on its day** (latest `effective_from` ≤ `day`). Return `id` and `price` by sale id. Old sales get today's price.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT s.id, p.price\nFROM sales s\nJOIN prices p ON p.product_id = s.product_id\n AND p.effective_from = (SELECT MAX(effective_from) FROM prices\n                         WHERE product_id = s.product_id)\nORDER BY s.id;",
+      "referenceSolution": "SELECT s.id, p.price\nFROM sales s\nJOIN prices p ON p.product_id = s.product_id\n AND p.effective_from = (SELECT MAX(effective_from) FROM prices\n                         WHERE product_id = s.product_id AND effective_from <= s.day)\nORDER BY s.id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE prices(product_id INTEGER, effective_from TEXT, price REAL); INSERT INTO prices VALUES (1,'2024-01-01',10),(1,'2024-06-01',12); CREATE TABLE sales(id INTEGER, product_id INTEGER, day TEXT); INSERT INTO sales VALUES (1,1,'2024-03-01'),(2,1,'2024-07-01');",
+          "expected": [
+            {
+              "id": 1,
+              "price": 10
+            },
+            {
+              "id": 2,
+              "price": 12
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE prices(product_id INTEGER, effective_from TEXT, price REAL); INSERT INTO prices VALUES (1,'2024-01-01',10),(1,'2024-06-01',12); CREATE TABLE sales(id INTEGER, product_id INTEGER, day TEXT); INSERT INTO sales VALUES (1,1,'2024-06-01');",
+          "expected": [
+            {
+              "id": 1,
+              "price": 12
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE prices(product_id INTEGER, effective_from TEXT, price REAL); INSERT INTO prices VALUES (1,'2024-01-01',5),(2,'2024-01-01',7),(2,'2024-02-01',8); CREATE TABLE sales(id INTEGER, product_id INTEGER, day TEXT); INSERT INTO sales VALUES (1,2,'2024-01-15'),(2,1,'2024-09-09');",
+          "expected": [
+            {
+              "id": 1,
+              "price": 7
+            },
+            {
+              "id": 2,
+              "price": 5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE prices(product_id INTEGER, effective_from TEXT, price REAL); INSERT INTO prices VALUES (1,'2024-01-01',5); CREATE TABLE sales(id INTEGER, product_id INTEGER, day TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Tables `stores(id, name)`, `months(month)` and `store_sales(store_id, month, amount)`. Build a report with **every store × month** combination: `name`, `month`, `total` (sum of amounts, `0` when none), ordered by name, month.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT st.name, ss.month, SUM(ss.amount) AS total\nFROM store_sales ss\nLEFT JOIN stores st ON st.id = ss.store_id\nGROUP BY st.name, ss.month\nORDER BY st.name, ss.month;",
+      "referenceSolution": "SELECT st.name, m.month, COALESCE(SUM(ss.amount), 0) AS total\nFROM stores st\nCROSS JOIN months m\nLEFT JOIN store_sales ss ON ss.store_id = st.id AND ss.month = m.month\nGROUP BY st.id, m.month\nORDER BY st.name, m.month;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE stores(id INTEGER, name TEXT); INSERT INTO stores VALUES (1,'North'),(2,'South'); CREATE TABLE months(month TEXT); INSERT INTO months VALUES ('2024-01'),('2024-02'); CREATE TABLE store_sales(store_id INTEGER, month TEXT, amount REAL); INSERT INTO store_sales VALUES (1,'2024-01',5),(1,'2024-01',5),(2,'2024-02',3);",
+          "expected": [
+            {
+              "name": "North",
+              "month": "2024-01",
+              "total": 10
+            },
+            {
+              "name": "North",
+              "month": "2024-02",
+              "total": 0
+            },
+            {
+              "name": "South",
+              "month": "2024-01",
+              "total": 0
+            },
+            {
+              "name": "South",
+              "month": "2024-02",
+              "total": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE stores(id INTEGER, name TEXT); INSERT INTO stores VALUES (1,'Only'); CREATE TABLE months(month TEXT); INSERT INTO months VALUES ('2024-01'); CREATE TABLE store_sales(store_id INTEGER, month TEXT, amount REAL);",
+          "expected": [
+            {
+              "name": "Only",
+              "month": "2024-01",
+              "total": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE stores(id INTEGER, name TEXT); CREATE TABLE months(month TEXT); INSERT INTO months VALUES ('2024-01'); CREATE TABLE store_sales(store_id INTEGER, month TEXT, amount REAL);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE stores(id INTEGER, name TEXT); INSERT INTO stores VALUES (1,'A'); CREATE TABLE months(month TEXT); INSERT INTO months VALUES ('2024-01'),('2024-02'),('2024-03'); CREATE TABLE store_sales(store_id INTEGER, month TEXT, amount REAL); INSERT INTO store_sales VALUES (1,'2024-02',4);",
+          "expected": [
+            {
+              "name": "A",
+              "month": "2024-01",
+              "total": 0
+            },
+            {
+              "name": "A",
+              "month": "2024-02",
+              "total": 4
+            },
+            {
+              "name": "A",
+              "month": "2024-03",
+              "total": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Tables `accounts(id, name)` and `addresses(account_id, city, is_primary)`. Return every account's `name` and its **primary** address `city` (`NULL` when it has no primary address), by name. Accounts show up once per address.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT a.name, ad.city\nFROM accounts a\nLEFT JOIN addresses ad ON ad.account_id = a.id\nORDER BY a.name;",
+      "referenceSolution": "SELECT a.name, ad.city\nFROM accounts a\nLEFT JOIN addresses ad ON ad.account_id = a.id AND ad.is_primary = 1\nORDER BY a.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE accounts(id INTEGER, name TEXT); INSERT INTO accounts VALUES (1,'Ann'); CREATE TABLE addresses(account_id INTEGER, city TEXT, is_primary INTEGER); INSERT INTO addresses VALUES (1,'Pune',0),(1,'Goa',1);",
+          "expected": [
+            {
+              "name": "Ann",
+              "city": "Goa"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE accounts(id INTEGER, name TEXT); INSERT INTO accounts VALUES (1,'Bo'); CREATE TABLE addresses(account_id INTEGER, city TEXT, is_primary INTEGER); INSERT INTO addresses VALUES (1,'Pune',0);",
+          "expected": [
+            {
+              "name": "Bo",
+              "city": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE accounts(id INTEGER, name TEXT); INSERT INTO accounts VALUES (1,'Cy'),(2,'Al'); CREATE TABLE addresses(account_id INTEGER, city TEXT, is_primary INTEGER); INSERT INTO addresses VALUES (2,'Delhi',1);",
+          "expected": [
+            {
+              "name": "Al",
+              "city": "Delhi"
+            },
+            {
+              "name": "Cy",
+              "city": null
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE accounts(id INTEGER, name TEXT); INSERT INTO accounts VALUES (1,'Di'); CREATE TABLE addresses(account_id INTEGER, city TEXT, is_primary INTEGER); INSERT INTO addresses VALUES (1,'A',0),(1,'B',0),(1,'C',1);",
+          "expected": [
+            {
+              "name": "Di",
+              "city": "C"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How many rows does the `SELECT` return?",
+    "mcq": {
+      "options": [
+        "1",
+        "2",
+        "4",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "`NULL = NULL` is not true, so rows with a `NULL` key never match each other. Only the `k = 1` pair joins.",
+      "snippet": "CREATE TABLE a(k INTEGER, v TEXT);\nCREATE TABLE b(k INTEGER, w TEXT);\nINSERT INTO a VALUES (1,'x'), (NULL,'y');\nINSERT INTO b VALUES (1,'p'), (NULL,'q');\nSELECT a.v, b.w FROM a JOIN b ON b.k = a.k;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-sql-joins-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Which query reliably returns customers with no orders, even if `orders.customer_id` contains `NULL`s?",
+    "mcq": {
+      "options": [
+        "`SELECT name FROM customers c WHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id)`",
+        "`SELECT name FROM customers WHERE id NOT IN (SELECT customer_id FROM orders)`",
+        "`SELECT name FROM customers c JOIN orders o ON o.customer_id = c.id WHERE o.id IS NULL`",
+        "`SELECT name FROM customers c LEFT JOIN orders o ON o.customer_id = c.id WHERE o.customer_id = NULL`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`NOT IN` returns nothing as soon as the list contains a `NULL`; the inner join can never produce `o.id IS NULL`; and `= NULL` is never true. `NOT EXISTS` (or `LEFT JOIN … WHERE o.id IS NULL`) is the safe anti-join.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-sql-joins-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why does this report miss months with zero sales, and what fixes it?",
+    "mcq": {
+      "options": [
+        "It starts from `sales`, so months without sales never appear; start from `months` and LEFT JOIN `sales`",
+        "`SUM` ignores zero rows; use `COUNT` instead",
+        "`GROUP BY` drops empty groups; add `HAVING total >= 0`",
+        "LEFT JOIN is not supported with `GROUP BY` in SQLite"
+      ],
+      "correctIndex": 0,
+      "explanation": "A left join keeps every row of the **left** table. To keep every month, `months` must be the left table: `FROM months m LEFT JOIN sales s …`, with `COALESCE(SUM(s.amount), 0)`.",
+      "snippet": "CREATE TABLE months(month TEXT);\nCREATE TABLE sales(month TEXT, amount REAL);\nINSERT INTO months VALUES ('jan'), ('feb');\nINSERT INTO sales VALUES ('jan', 5);\nSELECT s.month, SUM(s.amount) AS total FROM sales s LEFT JOIN months m ON m.month = s.month GROUP BY s.month;",
+      "snippetLanguage": "sql"
+    }
+  }
+]

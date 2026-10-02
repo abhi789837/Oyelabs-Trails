@@ -1,0 +1,381 @@
+[
+  {
+    "id": "pm-project-recovery-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "You have taken over a troubled fixed-price project. Order your first recovery steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "You have taken over a troubled fixed-price project. Order your first recovery steps.",
+      "items": [
+        {
+          "id": "r90460",
+          "label": "Pause new commitments and gather facts: scope, spend, progress, quality"
+        },
+        {
+          "id": "r6eb4c",
+          "label": "Interview the team and client to find root causes"
+        },
+        {
+          "id": "r5377d",
+          "label": "Build a realistic re-plan with options"
+        },
+        {
+          "id": "r5ddbf",
+          "label": "Agree the recovery plan with the client sponsor"
+        },
+        {
+          "id": "r0a7c4",
+          "label": "Run the plan with tighter tracking and frequent check-ins"
+        }
+      ],
+      "correctOrder": [
+        "r90460",
+        "r6eb4c",
+        "r5377d",
+        "r5ddbf",
+        "r0a7c4"
+      ],
+      "explanation": "Stop digging, understand, re-plan, agree, then execute visibly."
+    }
+  },
+  {
+    "id": "pm-project-recovery-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A PM drafted this recovery plan for a project six weeks late. Mark the parts that are unlikely to work.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM drafted this recovery plan for a project six weeks late. Mark the parts that are unlikely to work.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Root cause: requirements changed after sign-off without change control.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Fix: add four new developers next week to catch up.",
+          "issue": "Adding people to a late project usually slows it further at first (onboarding and coordination); Brooks's law."
+        },
+        {
+          "id": "s3",
+          "text": "Re-baseline scope with the client, separating must-haves for launch.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Team will work 60-hour weeks until launch.",
+          "issue": "Sustained overtime raises defects and attrition; not a credible plan."
+        },
+        {
+          "id": "s5",
+          "text": "Weekly steering call with the client sponsor and a one-page status.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Testing will be compressed into the final week.",
+          "issue": "Squeezing testing is how recovery projects fail at launch; protect it."
+        },
+        {
+          "id": "s7",
+          "text": "Change control reinstated for all new requests.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Report progress as a burn-up against the re-baselined scope.",
+          "issue": null
+        },
+        {
+          "id": "s9",
+          "text": "No need to tell the client about the delay until the plan is ready.",
+          "issue": "The client should hear about a six-week slip promptly, before a plan is final."
+        },
+        {
+          "id": "s10",
+          "text": "Daily stand-up with the full team.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-project-recovery-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A recovery forecast. Remaining work and the team's actual velocity are below.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A recovery forecast. Remaining work and the team's actual velocity are below.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Remaining scope (points)",
+            "180"
+          ],
+          [
+            "Average velocity, last 4 sprints",
+            "24"
+          ],
+          [
+            "Sprints until the contractual date",
+            "5"
+          ],
+          [
+            "Points the client agreed can move to phase 2",
+            "48"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "now",
+          "label": "Sprints needed for full scope",
+          "unit": "sprints",
+          "answer": 7.5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "cut",
+          "label": "Sprints needed after moving the phase-2 items",
+          "unit": "sprints",
+          "answer": 5.5,
+          "tolerance": 0.1
+        },
+        {
+          "id": "gap",
+          "label": "Points that still do not fit in 5 sprints after the move",
+          "unit": "pts",
+          "answer": 12,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Full scope 7.5 sprints. After the move, 132 / 24 = 5.5 sprints; 5 sprints fit 120 points, so 12 points still do not fit."
+    }
+  },
+  {
+    "id": "pm-project-recovery-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client project has had three missed demos. The client's sponsor emails: \"I've lost confidence. Convince me why we shouldn't move to another agency.\"",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client project has had three missed demos. The client's sponsor emails: \"I've lost confidence. Convince me why we shouldn't move to another agency.\"",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you respond first?",
+          "options": [
+            "Acknowledge the problem plainly, take responsibility, and ask for a meeting this week with a fact-based recovery proposal",
+            "Defend the team and explain the client's own delays",
+            "Offer a large discount immediately",
+            "Wait for the sponsor to calm down"
+          ],
+          "correctIndex": 0,
+          "explanation": "Ownership and a prompt plan rebuild trust; blame or silence end relationships."
+        },
+        {
+          "id": "d2",
+          "question": "In the meeting, what should the proposal include?",
+          "options": [
+            "A promise to deliver everything on the original date",
+            "A new team with no explanation",
+            "Root causes, a re-baselined scope and date with confidence ranges, and how progress will be shown weekly",
+            "A list of the client's mistakes"
+          ],
+          "correctIndex": 2,
+          "explanation": "Credibility comes from realism and visibility, not optimism."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-project-recovery-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A project is 40% over budget with 30% of scope left. Your director asks for recovery options for the agency's leadership meeting.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A project is 40% over budget with 30% of scope left. Your director asks for recovery options for the agency's leadership meeting.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "Which option set is most useful to leadership?",
+          "options": [
+            "Just the cheapest option",
+            "Only what the delivery team prefers",
+            "Options with cost, margin, client and risk impact: re-scope with the client, negotiate a commercial change, absorb the loss to protect the account, or exit",
+            "One recommendation with no alternatives"
+          ],
+          "correctIndex": 2,
+          "explanation": "Leadership needs real choices with trade-offs to make a commercial decision."
+        },
+        {
+          "id": "d2",
+          "question": "Leadership chooses to absorb part of the loss to protect a strategic account. What do you do?",
+          "options": [
+            "Quietly reduce quality to save hours",
+            "Tell the client the agency is losing money on them",
+            "Stop reporting the budget",
+            "Agree with the client a re-baselined plan that records any concessions, and track the reduced margin openly"
+          ],
+          "correctIndex": 3,
+          "explanation": "A conscious commercial decision still needs a controlled plan and honest tracking."
+        },
+        {
+          "id": "d3",
+          "question": "What should the lessons-learned capture?",
+          "options": [
+            "Where estimation, scope control or governance failed, with changes to the agency's process",
+            "Which team members made mistakes",
+            "Nothing, since the project survived",
+            "Only the client's faults"
+          ],
+          "correctIndex": 0,
+          "explanation": "Blameless, process-focused lessons prevent the next overrun."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-project-recovery-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "These root causes were found in a failing project. Rank them by how much fixing each will improve delivery, most first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "These root causes were found in a failing project. Rank them by how much fixing each will improve delivery, most first.",
+      "items": [
+        {
+          "id": "rbba84",
+          "label": "No single client decision-maker; three stakeholders give conflicting direction"
+        },
+        {
+          "id": "r12c4e",
+          "label": "Stories enter sprints without acceptance criteria"
+        },
+        {
+          "id": "r71ee8",
+          "label": "QA happens only at the end of each release"
+        },
+        {
+          "id": "r48c7f",
+          "label": "Status reports are sent late"
+        }
+      ],
+      "correctOrder": [
+        "rbba84",
+        "r12c4e",
+        "r71ee8",
+        "r48c7f"
+      ],
+      "explanation": "Conflicting direction drives rework across everything; missing acceptance criteria cause rework per story; late QA delays detection; late reports are a symptom."
+    }
+  },
+  {
+    "id": "pm-project-recovery-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is adding developers to a late project often a poor first move?",
+    "mcq": {
+      "options": [
+        "Developers cost more on late projects",
+        "New people need onboarding and add coordination overhead, which slows the team in the short term",
+        "Clients never allow team changes",
+        "Larger teams always produce worse code"
+      ],
+      "correctIndex": 1,
+      "explanation": "Brooks's law: adding people to a late software project makes it later, at least at first. Re-scoping usually has more effect.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-project-recovery-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the strongest sign that a recovery plan is credible?",
+    "mcq": {
+      "options": [
+        "It promises the original date",
+        "It is based on the team's measured velocity and an agreed, reduced scope, not on hoped-for improvement",
+        "It assumes velocity will double",
+        "It was written by the most senior person"
+      ],
+      "correctIndex": 1,
+      "explanation": "Plans built on actual performance and smaller scope hold; plans built on hope repeat the failure.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-project-recovery-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-project-recovery",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "When should a PM recommend stopping a troubled project rather than recovering it?",
+    "mcq": {
+      "options": [
+        "Whenever it is over budget",
+        "When the remaining value no longer justifies the remaining cost and risk, even after re-scoping",
+        "Never; agencies always finish projects",
+        "When the team is tired"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sunk cost is irrelevant; the question is whether finishing creates more value than it costs from here.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

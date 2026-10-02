@@ -1,0 +1,397 @@
+[
+  {
+    "id": "pm-spreadsheets-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Your time log is in a sheet with Client in column A, Role in B and Hours in C (rows 2–7). Work out what each formula returns.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Client (A)",
+          "Role (B)",
+          "Hours (C)"
+        ],
+        "rows": [
+          [
+            "Acme",
+            "Dev",
+            "30"
+          ],
+          [
+            "Acme",
+            "QA",
+            "10"
+          ],
+          [
+            "Beta",
+            "Dev",
+            "25"
+          ],
+          [
+            "Acme",
+            "Dev",
+            "12"
+          ],
+          [
+            "Beta",
+            "Design",
+            "8"
+          ],
+          [
+            "Beta",
+            "QA",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "acme",
+          "label": "=SUMIF(A2:A7, \"Acme\", C2:C7)",
+          "unit": "hours",
+          "answer": 52,
+          "tolerance": 0
+        },
+        {
+          "id": "dev",
+          "label": "=SUMIF(B2:B7, \"Dev\", C2:C7)",
+          "unit": "hours",
+          "answer": 67,
+          "tolerance": 0
+        },
+        {
+          "id": "beta",
+          "label": "=COUNTIF(A2:A7, \"Beta\")",
+          "unit": "rows",
+          "answer": 3,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Acme hours = 30+10+12 = 52; Dev hours = 30+25+12 = 67; Beta appears 3 times."
+    }
+  },
+  {
+    "id": "pm-spreadsheets-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A budget tracker: B1 holds the hourly rate $50. Column A has hours per task. A PM wrote =A2*$B$1 in C2 and filled it down.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "c4",
+          "label": "Value in C4 when A4 is 12",
+          "unit": "$",
+          "answer": 600,
+          "tolerance": 0
+        },
+        {
+          "id": "total",
+          "label": "Total cost of A2:A5 = 10, 6, 12, 4",
+          "unit": "$",
+          "answer": 1600,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "The $B$1 absolute reference keeps the rate fixed when filling down: C4 = 12 × 50 = 600; total = 32 × 50 = 1,600."
+    }
+  },
+  {
+    "id": "pm-spreadsheets-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A project budget sheet has these formulas. Mark the ones that are wrong for their stated purpose.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Total hours (rows 2–20): =SUM(C2:C20)",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Cost per row, filled down from D2: =C2*B1",
+          "issue": "Without $B$1 the rate reference shifts to B2, B3… as it's filled down."
+        },
+        {
+          "id": "p3",
+          "text": "Budget remaining: =Budget - SUM(D2:D20)",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Average hours per task (rows 2–20): =SUM(C2:C20)/20",
+          "issue": "Rows 2–20 are 19 rows; use AVERAGE(C2:C20) instead of dividing by a hard-coded count."
+        },
+        {
+          "id": "p5",
+          "text": "Count of tasks marked Done: =COUNTIF(E2:E20, \"Done\")",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Look up a developer's rate: =VLOOKUP(G2, Rates!A:B, 2, FALSE)",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-spreadsheets-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order these steps to build a pivot table of hours by client from a raw timesheet export.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Put Client in Rows and Hours in Values (SUM)"
+        },
+        {
+          "id": "r2",
+          "label": "Select the data range"
+        },
+        {
+          "id": "r1",
+          "label": "Clean the data: one header row, no blank rows, consistent client names"
+        },
+        {
+          "id": "r3",
+          "label": "Insert a pivot table on a new sheet"
+        },
+        {
+          "id": "r5",
+          "label": "Filter or sort the result and check the total against the raw data"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Clean data first, then build, then verify the total matches the source."
+    }
+  },
+  {
+    "id": "pm-spreadsheets-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "You share a Google Sheet tracker with a client, and their team keeps overwriting your formulas.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You share a Google Sheet tracker with a client, and their team keeps overwriting your formulas.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best first fix?",
+          "options": [
+            "Stop sharing the sheet",
+            "Protect the formula ranges or sheets so only you can edit them, leaving input cells open",
+            "Ask them to be careful",
+            "Convert formulas to values every day"
+          ],
+          "correctIndex": 1,
+          "explanation": "Protected ranges keep formulas safe while the client still updates their inputs."
+        },
+        {
+          "id": "s2",
+          "question": "The client also needs a weekly snapshot of progress. What do you do?",
+          "options": [
+            "Let them look at the live sheet whenever",
+            "Add a summary tab with key numbers (or a chart) and share that view or a PDF each week",
+            "Email them the whole raw data",
+            "Change the formulas each week"
+          ],
+          "correctIndex": 1,
+          "explanation": "A clean summary is what clients read; raw data stays behind it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-spreadsheets-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A project tracker lists milestone budgets and spend. Use these values as a spreadsheet would.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Milestone",
+          "Budget ($)",
+          "Spent ($)"
+        ],
+        "rows": [
+          [
+            "Design",
+            "5000",
+            "4000"
+          ],
+          [
+            "Build",
+            "8000",
+            "7500"
+          ],
+          [
+            "QA",
+            "6000",
+            "2200"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "spent",
+          "label": "Total spent",
+          "unit": "$",
+          "answer": 13700,
+          "tolerance": 0
+        },
+        {
+          "id": "pct",
+          "label": "Percent of total budget spent",
+          "unit": "%",
+          "answer": 72.1,
+          "tolerance": 0.5
+        },
+        {
+          "id": "over",
+          "label": "Number of milestones over budget (COUNTIF of spend > budget)",
+          "unit": "",
+          "answer": 0,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Spent = 13,700; budget = 19,000; 13,700/19,000 = 72.1%. No milestone exceeds its own budget."
+    }
+  },
+  {
+    "id": "pm-spreadsheets-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which formula returns the hourly rate of the developer named in G2 from a Rates sheet where names are in column A and rates in column B?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "=VLOOKUP(G2, Rates!A:B, 2, FALSE)",
+        "=SUM(Rates!A:B)",
+        "=COUNTIF(Rates!A:A, G2)",
+        "=VLOOKUP(G2, Rates!A:B, 1, TRUE)"
+      ],
+      "correctIndex": 0,
+      "explanation": "VLOOKUP with column index 2 and exact match (FALSE) returns the rate; COUNTIF only counts matches.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-spreadsheets-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You want overdue tasks to turn red automatically in your tracker. What do you use?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Conditional formatting with a rule comparing the due date to TODAY()",
+        "A pivot table",
+        "Data validation",
+        "Freeze panes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Conditional formatting changes cell styles based on rules, such as due date < TODAY() and status not Done.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-spreadsheets-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-spreadsheets",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why use data validation (a dropdown) for the Status column in a shared tracker?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "So everyone uses the same values and COUNTIF/pivot reports stay accurate",
+        "To make the sheet load faster",
+        "To hide the column from the client",
+        "To lock the whole sheet"
+      ],
+      "correctIndex": 0,
+      "explanation": "Free-text statuses like 'done', 'Done ' and 'complete' break counts; a dropdown keeps values consistent.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

@@ -1,0 +1,338 @@
+[
+  {
+    "id": "bd-white-label-partnerships-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Set up a white-label partnership.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A digital marketing agency with 200 small-business clients wants to resell your app development under its own brand.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you agree first?",
+          "options": [
+            "Who owns the end-client relationship, who handles support, and how work is handed over",
+            "Your logo placement on their website",
+            "The price of the first project only",
+            "Nothing; start with one project and see"
+          ],
+          "correctIndex": 0,
+          "explanation": "Roles and the client relationship must be clear before the first project, or every issue becomes a dispute."
+        },
+        {
+          "id": "s2",
+          "question": "They ask for a clause stopping you from contacting their clients directly. What do you do?",
+          "options": [
+            "Refuse; you need direct access",
+            "Accept the principle and have counsel review the wording of the non-solicitation clause",
+            "Draft the legal clause yourself",
+            "Ignore it and handle it informally"
+          ],
+          "correctIndex": 1,
+          "explanation": "Non-solicitation is normal in white-label work; the exact terms are for counsel."
+        },
+        {
+          "id": "s3",
+          "question": "How do you price your work to them?",
+          "options": [
+            "Your full retail price",
+            "Whatever they say their client will pay",
+            "A wholesale rate that leaves them room to mark up and covers your margin",
+            "Cost price to win volume"
+          ],
+          "correctIndex": 2,
+          "explanation": "Both sides need margin for the partnership to last."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Work out wholesale pricing and both margins.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your partner sells an app to its client for $50,000. You charge the partner 65% of the retail price. Your delivery cost is $22,000. Round percentages to two decimals.",
+      "table": null,
+      "fields": [
+        {
+          "id": "wholesale",
+          "label": "Your price to the partner",
+          "unit": "$",
+          "answer": 32500,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Your gross margin",
+          "unit": "%",
+          "answer": 32.31,
+          "tolerance": 0.01
+        },
+        {
+          "id": "partner",
+          "label": "Partner's gross profit",
+          "unit": "$",
+          "answer": 17500,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Wholesale = 0.65 × 50,000 = $32500. Your margin = (32500 − 22,000) ÷ 32500 = 32.31%. Partner keeps $17500 for sales and account management."
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this white-label partnership proposal.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that would damage a white-label partnership.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "All deliverables are unbranded or carry the partner's brand.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Our sales team may contact the partner's clients directly to offer extra services.",
+          "issue": "Bypassing the partner breaks the core trust of white-label work."
+        },
+        {
+          "id": "p3",
+          "text": "The partner may promise any timeline to its clients.",
+          "issue": "Timelines must come from your estimates, or you inherit commitments you never made."
+        },
+        {
+          "id": "p4",
+          "text": "Wholesale rates are reviewed every 12 months.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "No support levels are defined; issues are fixed when possible.",
+          "issue": "Without agreed support levels, the partner cannot promise anything to its clients."
+        },
+        {
+          "id": "p6",
+          "text": "A named account manager handles all partner communication.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Partner and agency hold a monthly pipeline call.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank partner candidates by strategic value.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these potential white-label partners from most to least strategic value for an app development agency.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Design studio that sometimes gets app requests and has a small front-end team"
+        },
+        {
+          "id": "i3",
+          "label": "Freelance consultant who might refer one project a year"
+        },
+        {
+          "id": "i4",
+          "label": "Another app development agency that competes for the same clients"
+        },
+        {
+          "id": "i1",
+          "label": "Marketing agency with 200 SMB clients regularly asking for apps, and no development team"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "The best partners have steady demand they cannot serve themselves. A direct competitor has every reason to keep the work."
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Estimate the economics of a white-label partner programme.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You have 6 white-label partners. Each brings an average of 3 projects a year at $30,000 wholesale. Your gross margin on partner work is 30%, and running the programme costs $40,000 a year.",
+      "table": null,
+      "fields": [
+        {
+          "id": "rev",
+          "label": "Annual partner revenue",
+          "unit": "$",
+          "answer": 540000,
+          "tolerance": 1
+        },
+        {
+          "id": "gp",
+          "label": "Annual gross profit",
+          "unit": "$",
+          "answer": 162000,
+          "tolerance": 1
+        },
+        {
+          "id": "net",
+          "label": "Contribution after programme cost",
+          "unit": "$",
+          "answer": 122000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Revenue = 6 × 3 × 30,000 = $540000. GP = 30% = $162000. After $40,000 programme cost: $122000."
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle an end client who contacts you directly.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An end client of your white-label partner finds your company and emails you directly to complain about a bug.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Reply directly and offer to work with them without the partner",
+            "Tell the partner straight away, agree the reply with them, and fix the bug",
+            "Ignore the email",
+            "Explain that you are the real developer"
+          ],
+          "correctIndex": 1,
+          "explanation": "Protect the partner relationship and the white-label arrangement while solving the problem."
+        },
+        {
+          "id": "s2",
+          "question": "The end client later asks to hire you directly for new work. What applies?",
+          "options": [
+            "Accept; they approached you",
+            "Accept and keep it quiet",
+            "Check the partnership agreement's non-solicitation terms and involve the partner; escalate wording questions to counsel",
+            "Refuse without telling the partner"
+          ],
+          "correctIndex": 2,
+          "explanation": "Agreements usually cover this; follow them and be transparent with the partner."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is a white-label partnership in an agency context?",
+    "mcq": {
+      "options": [
+        "You resell another company's software under your brand without telling them",
+        "A partnership where neither side has a brand",
+        "A joint venture with shared ownership",
+        "You build the product and the partner sells and delivers it to its clients under its own brand"
+      ],
+      "correctIndex": 3,
+      "explanation": "The partner owns the client relationship and the brand; you supply the delivery capability behind it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the biggest delivery risk in white-label work?",
+    "mcq": {
+      "options": [
+        "The partner promising scope, timelines or quality that you did not agree to",
+        "Having too much work",
+        "Using the wrong colour scheme",
+        "Clients liking the product too much"
+      ],
+      "correctIndex": 0,
+      "explanation": "You deliver against commitments someone else made; align on estimates and support levels before they sell.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-white-label-partnerships-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-white-label-partnerships",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which topics should a white-label agreement cover, with counsel reviewing the wording?",
+    "mcq": {
+      "options": [
+        "Non-solicitation, IP ownership, support levels, branding and liability",
+        "Only the wholesale price",
+        "Only the partner's logo usage",
+        "Only the payment date"
+      ],
+      "correctIndex": 0,
+      "explanation": "BD should know these topics exist and matter; legal wording and risk allocation are for counsel.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

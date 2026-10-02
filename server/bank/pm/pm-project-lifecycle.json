@@ -1,0 +1,425 @@
+[
+  {
+    "id": "pm-project-lifecycle-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put the five PMBOK-style process groups of a project in the order a typical agency project moves through them.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Monitoring & controlling: track progress and handle changes"
+        },
+        {
+          "id": "r2",
+          "label": "Planning: scope, schedule, budget and risks"
+        },
+        {
+          "id": "r1",
+          "label": "Initiating: agree the goal, sponsor and charter"
+        },
+        {
+          "id": "r3",
+          "label": "Executing: the team builds and delivers the work"
+        },
+        {
+          "id": "r5",
+          "label": "Closing: client sign-off, handover and lessons learned"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Initiating authorises the project, planning sets the baselines, executing produces the work while monitoring and controlling runs alongside it, and closing formally ends it. Monitoring is listed after executing because it compares execution against the plan."
+    }
+  },
+  {
+    "id": "pm-project-lifecycle-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A client has signed for a white-label food-delivery app. Order these activities as they would happen across the project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Hand over and hold the lessons-learned review"
+        },
+        {
+          "id": "r4",
+          "label": "Run UAT with the client"
+        },
+        {
+          "id": "r2",
+          "label": "Run discovery workshops and agree the scope"
+        },
+        {
+          "id": "r1",
+          "label": "Sign the contract and name the client sponsor"
+        },
+        {
+          "id": "r3",
+          "label": "Build the app in sprints"
+        },
+        {
+          "id": "r5",
+          "label": "Launch to the app stores"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Authorise first, define scope before building, test with the client (UAT) before launch, and close with handover and lessons learned after go-live."
+    }
+  },
+  {
+    "id": "pm-project-lifecycle-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A junior PM wrote this closure checklist for a finished client portal. Mark the steps that are wrong or missing the point of closing.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Get written acceptance of the final deliverables from the client sponsor.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Hand over credentials, source code and documentation as the contract specifies.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Keep developers' time logging open on the project code for any small extras the client asks for.",
+          "issue": "Closing means stopping work on the code; new requests after acceptance belong in a support contract or change request, not an open time code."
+        },
+        {
+          "id": "p4",
+          "text": "Skip the lessons-learned session because the project went well.",
+          "issue": "Lessons learned are captured whether or not it went well; good practice is worth repeating too."
+        },
+        {
+          "id": "p5",
+          "text": "Send the final invoice and confirm the last milestone payment.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Release the team members back to the resource pool.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Archive the project files and update the project status to closed.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-project-lifecycle-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "You are two weeks into execution on a fixed-scope booking app when you realise nobody ever signed a project charter or named a client sponsor. The client's marketing lead and CTO are giving the team conflicting instructions.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are two weeks into execution on a fixed-scope booking app when you realise nobody ever signed a project charter or named a client sponsor. The client's marketing lead and CTO are giving the team conflicting instructions.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the first thing to fix?",
+          "options": [
+            "Keep building and let the two of them sort it out",
+            "Go back and get a named sponsor and a short charter agreed, since that belongs to initiating",
+            "Pause the project until a full requirements document is rewritten",
+            "Ask the developers which instructions they prefer"
+          ],
+          "correctIndex": 1,
+          "explanation": "Missing initiation outputs (sponsor, authority, goal) cause exactly this conflict. Fixing it is quick and does not require stopping all work."
+        },
+        {
+          "id": "s2",
+          "question": "The client names the CTO as sponsor. What do you do with the conflicting instructions already given?",
+          "options": [
+            "Implement both versions",
+            "Log them, take them to the sponsor to decide, and update the plan from that decision",
+            "Follow whichever came last",
+            "Ignore the marketing lead from now on"
+          ],
+          "correctIndex": 1,
+          "explanation": "The sponsor now decides; logging and routing the conflict keeps a record and keeps the marketing lead involved as a stakeholder."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-project-lifecycle-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An agency project has this phase plan. Work out the totals and the share of effort in execution.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Phase",
+          "Planned weeks"
+        ],
+        "rows": [
+          [
+            "Initiating",
+            "1"
+          ],
+          [
+            "Planning",
+            "3"
+          ],
+          [
+            "Executing",
+            "10"
+          ],
+          [
+            "UAT & launch",
+            "2"
+          ],
+          [
+            "Closing",
+            "2"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total planned duration",
+          "unit": "weeks",
+          "answer": 18,
+          "tolerance": 0
+        },
+        {
+          "id": "exec",
+          "label": "Execution share of the total duration",
+          "unit": "%",
+          "answer": 55.6,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Total = 1 + 3 + 10 + 2 + 2 = 18 weeks. Execution is 10 / 18 = 55.6%."
+    }
+  },
+  {
+    "id": "pm-project-lifecycle-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A client wants an AI-powered recruitment platform. They know the problem well but have not decided the features, and they want a first version live in four months.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client wants an AI-powered recruitment platform. They know the problem well but have not decided the features, and they want a first version live in four months.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which life-cycle approach fits best?",
+          "options": [
+            "Predictive (waterfall): fix every requirement up front",
+            "Adaptive (agile): deliver in short iterations and learn as you go",
+            "No formal life cycle, just start coding",
+            "Predictive, but skip planning to save time"
+          ],
+          "correctIndex": 1,
+          "explanation": "When requirements are uncertain and early feedback matters, an adaptive life cycle reduces risk."
+        },
+        {
+          "id": "s2",
+          "question": "The client's legal team insists on a fixed budget. What do you propose?",
+          "options": [
+            "Refuse the contract",
+            "A hybrid: fixed budget and timebox, with the feature list prioritised and flexed inside it",
+            "Fixed price for a fully specified scope written in week one",
+            "Time and materials with no cap"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fixing time and cost while flexing prioritised scope is the usual hybrid answer for an uncertain scope with a fixed budget."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-project-lifecycle-t2-5",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 3,
+    "prompt": "Write the lessons-learned summary for a finished project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a short lessons-learned summary (for the agency wiki) from the notes below. Cover what went well, what did not, and at least two concrete actions for the next project.",
+      "context": "Notes from closing a 5-month white-label fitness app project:\n- Launched on time; client happy with design quality.\n- Apple review rejected build twice (missing account-deletion flow) and cost 9 days.\n- Scope creep: 14 'small' changes accepted verbally in Slack, none estimated.\n- QA started only in month 4; 60% of bugs found in the last 3 weeks.\n- Weekly demos kept the client engaged.",
+      "wordLimit": 150,
+      "rubric": [
+        {
+          "id": "good",
+          "label": "What went well",
+          "description": "Names the real positives (on-time launch, design quality, weekly demos) briefly.",
+          "weight": 1
+        },
+        {
+          "id": "bad",
+          "label": "What went wrong",
+          "description": "Identifies the main problems: store rejection, unmanaged verbal changes, late QA.",
+          "weight": 1
+        },
+        {
+          "id": "actions",
+          "label": "Concrete actions",
+          "description": "Gives at least two specific, owned actions (e.g. store-guideline checklist before submission, every change through a written CR, QA from sprint 1).",
+          "weight": 2
+        },
+        {
+          "id": "concise",
+          "label": "Clear and factual",
+          "description": "Blameless, factual tone; readable by a PM who was not on the project.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Lessons learned: FitPro white-label app\n\nWent well: we launched on the agreed date, the client praised the design, and weekly demos kept them engaged and decisions fast.\n\nDid not go well: Apple rejected two builds for a missing account-deletion flow, costing 9 days. Fourteen 'small' changes were agreed verbally in Slack and never estimated, which squeezed the last month. QA only started in month 4, so 60% of bugs landed in the final three weeks.\n\nActions for next projects:\n1. PM runs the app-store guideline checklist (incl. account deletion) before the first submission.\n2. Every change, however small, goes through a written change request with an estimate.\n3. QA joins from sprint 1 and tests each story inside the sprint."
+    }
+  },
+  {
+    "id": "pm-project-lifecycle-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which document formally authorises a project and names the sponsor and the PM?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The project charter",
+        "The sprint backlog",
+        "The lessons-learned register",
+        "The test plan"
+      ],
+      "correctIndex": 0,
+      "explanation": "The charter is the initiating output that authorises the project, names the sponsor and gives the PM authority to use resources.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-project-lifecycle-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Halfway through a project the client asks to add a loyalty module. Which life-cycle activity handles this request?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Initiating",
+        "Monitoring & controlling, through change control",
+        "Closing",
+        "It needs no process because the project is already running"
+      ],
+      "correctIndex": 1,
+      "explanation": "Changes to agreed scope are assessed and approved through change control, part of monitoring and controlling, before the plan is updated.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-project-lifecycle-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-project-lifecycle",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why does an agency still run a closing phase when the app is already live and the client is happy?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To get formal acceptance, settle the final invoice, hand over assets and capture lessons",
+        "Because the contract always requires a second launch",
+        "To restart development on the next version immediately",
+        "It is optional when the client is happy"
+      ],
+      "correctIndex": 0,
+      "explanation": "Closing secures formal acceptance and payment, hands over what the client owns, releases the team and captures lessons. A happy client does not make those unnecessary.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

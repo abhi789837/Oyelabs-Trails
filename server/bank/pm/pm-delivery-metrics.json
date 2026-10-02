@@ -1,0 +1,355 @@
+[
+  {
+    "id": "pm-delivery-metrics-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A 10-day sprint starts with 40 points. On the burndown chart, the ideal line falls evenly to zero. At the end of day 4 the actual remaining work is 31 points.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "ideal",
+          "label": "Ideal remaining at end of day 4",
+          "unit": "points",
+          "answer": 24.0,
+          "tolerance": 0
+        },
+        {
+          "id": "gap",
+          "label": "Points behind the ideal line",
+          "unit": "points",
+          "answer": 7.0,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Ideal burn = 40 / 10 = 4 points/day, so after day 4: 40 − 16 = 24. Actual 31 is 7 points above (behind) the ideal line."
+    }
+  },
+  {
+    "id": "pm-delivery-metrics-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A release burnup chart for a client's marketplace shows: original scope 100 points, current scope 130 points, completed 64 points. The team averages 16 points per sprint.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "pctorig",
+          "label": "Completed as % of the original scope",
+          "unit": "%",
+          "answer": 64.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "pctnow",
+          "label": "Completed as % of the current scope",
+          "unit": "%",
+          "answer": 49.2,
+          "tolerance": 0.5
+        },
+        {
+          "id": "left",
+          "label": "Sprints left at current velocity (current scope)",
+          "unit": "sprints",
+          "answer": 4.12,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "64/100 = 64%; 64/130 = 49.2%; (130 − 64) / 16 = 4.12 sprints. The scope line rising is why the burnup is more honest than a burndown here."
+    }
+  },
+  {
+    "id": "pm-delivery-metrics-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A burndown shows these remaining points at the end of each day of a 10-day sprint so far. Work out the average daily burn so far and project remaining work at that rate.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "End of day",
+          "Remaining points"
+        ],
+        "rows": [
+          [
+            "0 (start)",
+            "50"
+          ],
+          [
+            "1",
+            "48"
+          ],
+          [
+            "2",
+            "46"
+          ],
+          [
+            "3",
+            "40"
+          ],
+          [
+            "4",
+            "35"
+          ],
+          [
+            "5",
+            "30"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "rate",
+          "label": "Average points burned per day (days 1–5)",
+          "unit": "points/day",
+          "answer": 4.0,
+          "tolerance": 0.01
+        },
+        {
+          "id": "end",
+          "label": "Projected remaining points at the end of day 10",
+          "unit": "points",
+          "answer": 10.0,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "From 50 at the start to 30 after day 5: 20 / 5 = 4 per day. Five more days × 4 = 20, so about 10 points left over at the end."
+    }
+  },
+  {
+    "id": "pm-delivery-metrics-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Read the PM's commentary on a sprint burndown for a client. Mark the misreadings.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The line was flat for the first three days, then dropped sharply on day 9.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "This pattern shows the team is working very efficiently.",
+          "issue": "A flat line followed by a late cliff usually means work is finished in big batches or tasks aren't being closed; it signals risk, not efficiency."
+        },
+        {
+          "id": "p3",
+          "text": "The line went up on day 5 because 8 points were added mid-sprint.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Adding scope mid-sprint has no effect on whether we meet the Sprint Goal.",
+          "issue": "Added scope competes for the same capacity and can endanger the goal."
+        },
+        {
+          "id": "p5",
+          "text": "We'll split stories smaller next sprint so progress shows earlier.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "A burndown ending exactly on zero every sprint proves estimates are perfect.",
+          "issue": "A perfect burndown every time more often signals gaming or padding than perfect estimation."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-delivery-metrics-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Four client teams run 10-day sprints with an even ideal burndown. At the end of day 5 their burndowns show the values below. Rank the teams from furthest behind the ideal line to furthest ahead.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Team D: 20 points planned, 9 remaining"
+        },
+        {
+          "id": "r2",
+          "label": "Team C: 50 points planned, 32 remaining"
+        },
+        {
+          "id": "r1",
+          "label": "Team A: 40 points planned, 30 remaining"
+        },
+        {
+          "id": "r3",
+          "label": "Team B: 30 points planned, 18 remaining"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Ideal remaining at day 5 is half the plan. Gaps: A 30 − 20 = 10 behind, C 32 − 25 = 7 behind, B 18 − 15 = 3 behind, D 9 − 10 = 1 ahead."
+    }
+  },
+  {
+    "id": "pm-delivery-metrics-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Your Jira sprint burndown on a client project goes UP on day 3 and the client's PO asks what happened.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your Jira sprint burndown on a client project goes UP on day 3 and the client's PO asks what happened.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the most likely explanation to check first?",
+          "options": [
+            "The server clock is wrong",
+            "Work was added to the sprint or an item was re-estimated upward",
+            "Developers deleted completed work",
+            "Burndowns always rise on day 3"
+          ],
+          "correctIndex": 1,
+          "explanation": "A rising burndown means remaining work increased: added scope or re-estimation."
+        },
+        {
+          "id": "s2",
+          "question": "You confirm the PO added two urgent stories. How should you report it?",
+          "options": [
+            "Hide the stories from the board",
+            "Show the added scope explicitly, explain its impact on the Sprint Goal, and agree what to drop if needed",
+            "Blame the developers",
+            "Remove the chart from the report"
+          ],
+          "correctIndex": 1,
+          "explanation": "Transparency on scope change keeps trust and makes the trade-off a decision."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-delivery-metrics-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does the vertical axis of a sprint burndown chart show?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Work remaining",
+        "Work completed",
+        "Number of developers",
+        "Hours logged"
+      ],
+      "correctIndex": 0,
+      "explanation": "A burndown plots remaining work over time; a burnup plots completed work (and usually total scope).",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-delivery-metrics-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why do many agency PMs prefer a release burnup to a burndown when reporting to clients?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It shows completed work and total scope as separate lines, so scope changes are visible",
+        "It always looks better",
+        "Clients cannot read burndowns",
+        "Burnups don't need estimates"
+      ],
+      "correctIndex": 0,
+      "explanation": "Separating scope from progress shows clearly whether the finish line moved or the team slowed down.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-delivery-metrics-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-delivery-metrics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A burndown's actual line runs well below the ideal line from day 2 onwards. What is the best interpretation?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Work is getting done faster than planned or the sprint was under-loaded; check whether more can be pulled in",
+        "The team is behind schedule",
+        "The chart is broken",
+        "Scope was added"
+      ],
+      "correctIndex": 0,
+      "explanation": "Below the ideal line means less remaining than planned: ahead of schedule or under-committed.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

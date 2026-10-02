@@ -1,0 +1,369 @@
+[
+  {
+    "id": "bd-rfp-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Make a bid/no-bid call.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An RFP arrives for a hospital patient portal. It requires five years of healthcare projects and a security certification you do not hold. Responses are due in six days.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the right decision?",
+          "options": [
+            "No-bid, or bid only with a qualified partner who meets the mandatory requirements",
+            "Bid anyway and hope they waive the requirements",
+            "Claim the certification is in progress",
+            "Bid the lowest price to compensate"
+          ],
+          "correctIndex": 0,
+          "explanation": "Missing a mandatory requirement usually means automatic disqualification. Spend the effort where you can win."
+        },
+        {
+          "id": "s2",
+          "question": "A partner who meets the requirements wants to bid with you. Before agreeing, what do you need?",
+          "options": [
+            "Nothing; partner bids are informal",
+            "Clear roles, who is prime, and how the work and liability are split, reviewed with leadership",
+            "A promise they will share the fee equally",
+            "Approval from the hospital's IT staff"
+          ],
+          "correctIndex": 1,
+          "explanation": "Joint bids need agreed roles and responsibilities in writing before submission."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-rfp-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this RFP response excerpt.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this RFP response that would cost points or credibility.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Section 3.2 (Data migration): We will migrate 1.2M records with validation reports at each stage.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We're excited to partner with Acme Logistics on this project.",
+          "issue": "Wrong client name, copied from another bid; evaluators notice."
+        },
+        {
+          "id": "p3",
+          "text": "Section 4.1 (Security) is covered in our brochure, attached.",
+          "issue": "Answers must be in the format and section requested; pointing elsewhere scores poorly."
+        },
+        {
+          "id": "p4",
+          "text": "We have delivered 300+ apps for Fortune 500 companies.",
+          "issue": "Unsupported claim; give named, verifiable examples you can evidence."
+        },
+        {
+          "id": "p5",
+          "text": "Section 5 (Timeline): 24 weeks, with milestones in the table below.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Section 6 (Pricing): as per the required pricing template.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "References: three named clients with contact details, as requested.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-rfp-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Score an RFP with weighted criteria.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "The RFP scores technical approach 40%, price 30%, experience 20% and timeline 10%, each out of 10. Estimated scores: you 8, 6, 7, 9; the main competitor 7, 9, 6, 7.",
+      "table": {
+        "columns": [
+          "Criterion",
+          "Weight",
+          "You",
+          "Competitor"
+        ],
+        "rows": [
+          [
+            "Technical",
+            "40%",
+            "8",
+            "7"
+          ],
+          [
+            "Price",
+            "30%",
+            "6",
+            "9"
+          ],
+          [
+            "Experience",
+            "20%",
+            "7",
+            "6"
+          ],
+          [
+            "Timeline",
+            "10%",
+            "9",
+            "7"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "you",
+          "label": "Your weighted score",
+          "unit": "",
+          "answer": 7.3,
+          "tolerance": 0.01
+        },
+        {
+          "id": "comp",
+          "label": "Competitor's weighted score",
+          "unit": "",
+          "answer": 7.4,
+          "tolerance": 0.01
+        },
+        {
+          "id": "need",
+          "label": "Price score you would need to tie",
+          "unit": "",
+          "answer": 6.33,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "You: 3.2 + 1.8 + 1.4 + 0.9 = 7.3. Competitor: 2.8 + 2.7 + 1.2 + 0.7 = 7.4. To tie: (7.4 − 5.5) ÷ 0.3 = 6.33. Know which criterion moves the result before deciding where to invest effort or price."
+    }
+  },
+  {
+    "id": "bd-rfp-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the RFP response process.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for responding to an RFP, first at the top.",
+      "items": [
+        {
+          "id": "i6",
+          "label": "Check against the matrix and submit before the deadline"
+        },
+        {
+          "id": "i1",
+          "label": "Read the whole RFP, including evaluation criteria and deadlines"
+        },
+        {
+          "id": "i2",
+          "label": "Make the bid/no-bid decision"
+        },
+        {
+          "id": "i3",
+          "label": "Build a compliance matrix of every requirement"
+        },
+        {
+          "id": "i4",
+          "label": "Submit clarification questions before the question deadline"
+        },
+        {
+          "id": "i5",
+          "label": "Draft answers around your win themes, with pricing and legal review"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "Decide whether to bid before spending effort, track every requirement, ask questions early (their deadline comes first), then write, review and check."
+    }
+  },
+  {
+    "id": "bd-rfp-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Decide whether an RFP is worth the bid cost.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An RFP is worth $400,000. You estimate a 15% chance of winning and a 30% gross margin if you win. Preparing the bid will take 120 hours at an internal cost of $40 an hour.",
+      "table": null,
+      "fields": [
+        {
+          "id": "egp",
+          "label": "Expected gross profit from bidding",
+          "unit": "$",
+          "answer": 18000,
+          "tolerance": 1
+        },
+        {
+          "id": "net",
+          "label": "Expected value after bid cost",
+          "unit": "$",
+          "answer": 13200,
+          "tolerance": 1
+        },
+        {
+          "id": "bep",
+          "label": "Win probability at which the bid only breaks even",
+          "unit": "%",
+          "answer": 4,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Expected GP = 400,000 × 0.15 × 0.30 = $18000. Bid cost = $4800, so expected net = $13200. Break-even probability = 4800 ÷ 120,000 = 4%. This counts only cost; the team's time could also go to better opportunities."
+    }
+  },
+  {
+    "id": "bd-rfp-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle risky contract terms in an RFP.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The RFP's draft contract requires unlimited liability for the supplier and assigns all pre-existing IP to the client.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do?",
+          "options": [
+            "Accept them; you can renegotiate later",
+            "Flag both terms to leadership and legal counsel before deciding to bid",
+            "Delete the clauses from the contract you return",
+            "Explain to the client what the clauses legally mean"
+          ],
+          "correctIndex": 1,
+          "explanation": "These are legal and commercial risks for counsel and leadership; BD flags them, it does not interpret or edit them."
+        },
+        {
+          "id": "s2",
+          "question": "Counsel advises proposing changes. How do you include them in the response?",
+          "options": [
+            "Mention them on a sales call only",
+            "Hide them in an appendix",
+            "Use the RFP's process for exceptions or clarifications, worded as counsel approved",
+            "Raise them after winning"
+          ],
+          "correctIndex": 2,
+          "explanation": "Follow the RFP's stated route for exceptions so the response stays compliant and transparent."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-rfp-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is a compliance matrix for in an RFP response?",
+    "mcq": {
+      "options": [
+        "Listing the laws your company must follow",
+        "Scoring competitors",
+        "Calculating your price",
+        "Tracking every requirement in the RFP and where your response addresses it"
+      ],
+      "correctIndex": 3,
+      "explanation": "Missing a requirement can disqualify a bid; the matrix makes sure every one is answered.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-rfp-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is a \"win theme\" in an RFP response?",
+    "mcq": {
+      "options": [
+        "A key reason to choose you, tied to what the buyer values and repeated with evidence throughout",
+        "The project's code name",
+        "Your lowest price",
+        "A slogan on the cover page"
+      ],
+      "correctIndex": 0,
+      "explanation": "Win themes connect your strengths to the buyer's evaluation criteria across the whole response.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-rfp-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-rfp",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "An RFP's requirements closely match one competitor's product, and you had no contact before it was issued. What does this suggest?",
+    "mcq": {
+      "options": [
+        "It may be written around an incumbent; qualify hard before investing heavily",
+        "It is a great fit because it is detailed",
+        "You should bid the lowest price",
+        "You should complain publicly"
+      ],
+      "correctIndex": 0,
+      "explanation": "RFPs shaped before you arrived are hard to win. Ask clarification questions and be ready to no-bid.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

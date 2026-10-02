@@ -1,0 +1,370 @@
+[
+  {
+    "id": "pm-ai-estimating-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Estimate a feature with AI-assisted coding by task type, using your team's measured adjustments.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Estimate a feature with AI-assisted coding by task type, using your team's measured adjustments.",
+      "table": {
+        "columns": [
+          "Task",
+          "Hours (no AI)",
+          "Measured change with AI"
+        ],
+        "rows": [
+          [
+            "CRUD screens and boilerplate",
+            "40",
+            "-30%"
+          ],
+          [
+            "Integration with client API",
+            "30",
+            "0%"
+          ],
+          [
+            "Unit tests",
+            "20",
+            "-25%"
+          ],
+          [
+            "Extra review of AI code",
+            "0",
+            "+8 hours"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Estimated hours with AI",
+          "unit": "h",
+          "answer": 81.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "saving",
+          "label": "Hours saved vs no-AI estimate",
+          "unit": "h",
+          "answer": 9,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "28 + 30 + 15 + 8 = 81 hours vs 90; a 10% saving, not the 50% often assumed."
+    }
+  },
+  {
+    "id": "pm-ai-estimating-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A proposal estimate section. Mark the claims that are not sound.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A proposal estimate section. Mark the claims that are not sound.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Estimates are by task type, with AI adjustments from our last four sprints.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "AI makes developers twice as fast, so we halved every estimate.",
+          "issue": "A global discount is not evidence-based; adjust by task type from measured data."
+        },
+        {
+          "id": "s3",
+          "text": "Review time for AI-generated code is added explicitly.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "AI-feature work (evaluation, prompt iteration) is estimated at full effort.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "We will pass the full AI speed-up to the client in the price before measuring it.",
+          "issue": "Selling an unmeasured speed-up is a margin and delivery risk."
+        },
+        {
+          "id": "s6",
+          "text": "Estimates are given as ranges.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-estimating-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Claude estimated a feature at \"112 hours\". Your team has no comparable data yet.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Claude estimated a feature at \"112 hours\". Your team has no comparable data yet.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How should you treat the number?",
+          "options": [
+            "Use it in the quote",
+            "Ignore AI entirely",
+            "Round it to 100 and use it",
+            "As a hypothesis: compare with the team's own estimate and similar past work"
+          ],
+          "correctIndex": 3,
+          "explanation": "Model numbers have no historical basis for your team."
+        },
+        {
+          "id": "d2",
+          "question": "What is a better use of Claude here?",
+          "options": [
+            "Ask it to confirm 112 hours is right",
+            "Ask it to list missing work items and what could make the task take twice as long",
+            "Ask for a more precise number",
+            "Ask it to estimate the whole project"
+          ],
+          "correctIndex": 1,
+          "explanation": "Use AI to challenge and complete the breakdown, not to produce totals."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-estimating-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Rank these task types by how much AI coding assistance typically speeds them up, most first.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these task types by how much AI coding assistance typically speeds them up, most first.",
+      "items": [
+        {
+          "id": "r433b6",
+          "label": "Boilerplate and scaffolding"
+        },
+        {
+          "id": "rc4ac6",
+          "label": "Unit tests for well-specified code"
+        },
+        {
+          "id": "r0a488",
+          "label": "Integration with an unfamiliar, poorly documented client API"
+        },
+        {
+          "id": "r32160",
+          "label": "Novel architecture decisions"
+        }
+      ],
+      "correctOrder": [
+        "r433b6",
+        "rc4ac6",
+        "r0a488",
+        "r32160"
+      ],
+      "explanation": "AI helps most on repetitive, well-specified work and least on novel design and integration with missing context."
+    }
+  },
+  {
+    "id": "pm-ai-estimating-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "After three sprints with AI tools, compare delivery measures.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "After three sprints with AI tools, compare delivery measures.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Before",
+          "After"
+        ],
+        "rows": [
+          [
+            "Median cycle time (days)",
+            "5.0",
+            "4.2"
+          ],
+          [
+            "Stories per sprint",
+            "20",
+            "23"
+          ],
+          [
+            "Escaped defects per sprint",
+            "2",
+            "4"
+          ],
+          [
+            "Median PR review wait (hours)",
+            "6",
+            "14"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ct",
+          "label": "Change in cycle time",
+          "unit": "%",
+          "answer": -16.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "tp",
+          "label": "Change in throughput",
+          "unit": "%",
+          "answer": 15,
+          "tolerance": 0.5
+        },
+        {
+          "id": "def",
+          "label": "Change in escaped defects",
+          "unit": "%",
+          "answer": 100,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Cycle time -16%, throughput +15%, but escaped defects +100% and review wait more than doubled: the bottleneck moved to review."
+    }
+  },
+  {
+    "id": "pm-ai-estimating-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client asks for a 40% discount because \"AI writes your code now\".",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks for a 40% discount because \"AI writes your code now\".",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "How do you respond?",
+          "options": [
+            "Agree to keep the client",
+            "Deny using AI",
+            "Refuse to discuss it",
+            "Explain where AI helps and where it does not, and share measured gains on comparable work"
+          ],
+          "correctIndex": 3,
+          "explanation": "Evidence beats assumptions on both sides."
+        },
+        {
+          "id": "d2",
+          "question": "What commercial approach is fair?",
+          "options": [
+            "Pass on an unmeasured 40% discount",
+            "Keep all gains secret",
+            "Charge more for AI use",
+            "Agree how measured efficiency gains are shared, e.g. more scope for the same budget"
+          ],
+          "correctIndex": 3,
+          "explanation": "Transparent sharing of measured gains builds trust without risking margin."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-estimating-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What did METR's early-2025 study of experienced open-source developers find?",
+    "mcq": {
+      "options": [
+        "They were twice as fast",
+        "AI had no effect at all",
+        "They took about 19% longer with AI tools on their own repositories, despite expecting to be faster",
+        "Only juniors used AI"
+      ],
+      "correctIndex": 2,
+      "explanation": "The study is a snapshot, but it shows why gains must be measured, not assumed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-estimating-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How does DORA's 2025 report describe AI's effect on software organisations?",
+    "mcq": {
+      "options": [
+        "As an amplifier of existing strengths and weaknesses",
+        "As a replacement for testing",
+        "As always reducing delivery speed",
+        "As irrelevant to delivery"
+      ],
+      "correctIndex": 0,
+      "explanation": "Teams with strong practices gain; weak ones ship instability faster.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-estimating-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-estimating",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which measure is best for judging whether AI tools help a team deliver?",
+    "mcq": {
+      "options": [
+        "Lines of code written",
+        "Number of prompts used",
+        "Self-reported speed-up surveys alone",
+        "Delivery measures such as cycle time, throughput and escaped defects"
+      ],
+      "correctIndex": 3,
+      "explanation": "Outcome measures show real effect; activity measures can rise without value.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

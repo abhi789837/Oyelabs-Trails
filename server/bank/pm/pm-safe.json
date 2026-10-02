@@ -1,0 +1,371 @@
+[
+  {
+    "id": "pm-safe-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order these items from the largest to the smallest scope in SAFe.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these items from the largest to the smallest scope in SAFe.",
+      "items": [
+        {
+          "id": "rd4f85",
+          "label": "Portfolio"
+        },
+        {
+          "id": "ra200e",
+          "label": "Agile Release Train (ART)"
+        },
+        {
+          "id": "r45b9b",
+          "label": "Agile team"
+        },
+        {
+          "id": "r86c1e",
+          "label": "Iteration"
+        }
+      ],
+      "correctOrder": [
+        "rd4f85",
+        "ra200e",
+        "r45b9b",
+        "r86c1e"
+      ],
+      "explanation": "A portfolio funds value streams served by ARTs; an ART is a team of agile teams; each team works in iterations."
+    }
+  },
+  {
+    "id": "pm-safe-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An enterprise client runs SAFe. Oyelabs' mobile team is joining their Agile Release Train for the next Planning Interval (PI).",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An enterprise client runs SAFe. Oyelabs' mobile team is joining their Agile Release Train for the next Planning Interval (PI).",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should you bring to PI planning?",
+          "options": [
+            "A fixed-scope Gantt chart for the whole PI",
+            "The team's real capacity per iteration, known dependencies and draft objectives for your features",
+            "Nothing; the client will assign work",
+            "Your velocity from a different client"
+          ],
+          "correctIndex": 1,
+          "explanation": "PI planning needs credible capacity and dependencies to build committed objectives."
+        },
+        {
+          "id": "d2",
+          "question": "During planning you find your feature depends on another team's API in iteration 2. What do you do?",
+          "options": [
+            "Assume it will be ready",
+            "Agree the dependency with that team and record it on the program board",
+            "Plan to build the API yourselves",
+            "Raise it at the end of the PI"
+          ],
+          "correctIndex": 1,
+          "explanation": "Dependencies are made visible and agreed during planning."
+        },
+        {
+          "id": "d3",
+          "question": "At the end of PI planning, teams vote on confidence. Yours is low because of an unclear integration. What is the right move?",
+          "options": [
+            "Say so, explain the cause, and help re-plan until confidence is acceptable",
+            "Vote high to avoid holding up the room",
+            "Leave the event",
+            "Agree and fix it later"
+          ],
+          "correctIndex": 0,
+          "explanation": "The confidence vote exists to surface problems while they can be fixed."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-safe-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client's description of their SAFe setup. Mark the parts that contradict SAFe practice.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A client's description of their SAFe setup. Mark the parts that contradict SAFe practice.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Each ART has a Release Train Engineer who facilitates ART events.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "PI planning is attended only by managers, who then tell teams what was decided.",
+          "issue": "PI planning should include the teams who do the work; they plan and commit."
+        },
+        {
+          "id": "s3",
+          "text": "Epics are prioritised with WSJF in Lean Portfolio Management.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Teams plan in fixed iterations within each PI.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "The ART's teams change membership every PI to keep things fresh.",
+          "issue": "ARTs are long-lived teams of teams; constant reshuffling destroys their stability."
+        },
+        {
+          "id": "s6",
+          "text": "An Inspect and Adapt event is held at the end of each PI.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Integration across teams happens only at the end of the PI.",
+          "issue": "SAFe expects frequent integration (a system demo each iteration), not end-of-PI integration."
+        },
+        {
+          "id": "s8",
+          "text": "Business owners review and score PI objectives.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-safe-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "At the end of a PI, the ART's predictability measure compares actual business value achieved with planned business value for committed objectives.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "At the end of a PI, the ART's predictability measure compares actual business value achieved with planned business value for committed objectives.",
+      "table": {
+        "columns": [
+          "Team",
+          "Planned value",
+          "Actual value"
+        ],
+        "rows": [
+          [
+            "Team A",
+            "40",
+            "34"
+          ],
+          [
+            "Team B",
+            "30",
+            "30"
+          ],
+          [
+            "Oyelabs mobile",
+            "20",
+            "14"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "a",
+          "label": "Predictability: Team A",
+          "unit": "%",
+          "answer": 85,
+          "tolerance": 0.5
+        },
+        {
+          "id": "c",
+          "label": "Predictability: Oyelabs mobile",
+          "unit": "%",
+          "answer": 70,
+          "tolerance": 0.5
+        },
+        {
+          "id": "art",
+          "label": "ART predictability (total actual / total planned)",
+          "unit": "%",
+          "answer": 86.6667,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Team A 34/40 = 85%; Oyelabs 14/20 = 70%; ART 78/90 = 86.7%. SAFe's guidance suggests roughly 80-100% as a predictable range."
+    }
+  },
+  {
+    "id": "pm-safe-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order these activities across one SAFe Planning Interval.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these activities across one SAFe Planning Interval.",
+      "items": [
+        {
+          "id": "rdfc7d",
+          "label": "PI Planning: teams commit to PI objectives"
+        },
+        {
+          "id": "ra5cbd",
+          "label": "Development iterations, each ending in a system demo"
+        },
+        {
+          "id": "rb0fbe",
+          "label": "Inspect and Adapt: the PI system demo"
+        },
+        {
+          "id": "r5efe6",
+          "label": "Inspect and Adapt: quantitative and qualitative measurement"
+        },
+        {
+          "id": "r86917",
+          "label": "Inspect and Adapt: retrospective and problem-solving workshop"
+        }
+      ],
+      "correctOrder": [
+        "rdfc7d",
+        "ra5cbd",
+        "rb0fbe",
+        "r5efe6",
+        "r86917"
+      ],
+      "explanation": "The PI starts with PI Planning, runs iterations with a system demo each, and ends with Inspect and Adapt: demo, measures, then retrospective and problem-solving."
+    }
+  },
+  {
+    "id": "pm-safe-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A mid-size client with two development teams asks Oyelabs whether they should adopt SAFe.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A mid-size client with two development teams asks Oyelabs whether they should adopt SAFe.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the most likely answer?",
+          "options": [
+            "Yes, SAFe is required for any agile team",
+            "Yes, because it adds certification",
+            "Only if they buy the full framework training",
+            "Probably not; two teams can usually coordinate with good Scrum or Kanban and a shared backlog and dependency board"
+          ],
+          "correctIndex": 3,
+          "explanation": "Scaling frameworks address multi-team coordination; two teams rarely need that weight."
+        },
+        {
+          "id": "d2",
+          "question": "What would change your answer?",
+          "options": [
+            "Growth to many teams on one product with frequent cross-team dependencies",
+            "A bigger marketing budget",
+            "A new office",
+            "Hiring a new CTO"
+          ],
+          "correctIndex": 0,
+          "explanation": "Coordination load across many teams is what justifies a scaling framework."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-safe-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is an Agile Release Train in SAFe?",
+    "mcq": {
+      "options": [
+        "A deployment pipeline",
+        "A long-lived team of agile teams aligned to a value stream that plans and delivers together",
+        "A monthly release schedule",
+        "A group of managers who approve releases"
+      ],
+      "correctIndex": 1,
+      "explanation": "ARTs are typically 5-12 teams that share a PI cadence and mission.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-safe-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the purpose of the Innovation and Planning (IP) iteration?",
+    "mcq": {
+      "options": [
+        "To give teams a holiday",
+        "To fix all remaining bugs only",
+        "To write documentation for auditors",
+        "To provide time for innovation, Inspect and Adapt, PI planning and as a buffer for objectives"
+      ],
+      "correctIndex": 3,
+      "explanation": "The IP iteration protects time for improvement and planning and acts as a schedule buffer.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-safe-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-safe",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which criticism of SAFe is most often raised?",
+    "mcq": {
+      "options": [
+        "It does not support multiple teams",
+        "It can add process and preserve hierarchy if adopted without its lean-agile principles",
+        "It forbids WSJF",
+        "It has no planning events"
+      ],
+      "correctIndex": 1,
+      "explanation": "\"SAFe theatre\" adopts ceremonies without the principles behind them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,321 @@
+[
+  {
+    "id": "bd-team-leadership-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Check whether the team can hit the target.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You have 4 reps, each with a $600,000 annual quota. Historically reps reach 75% of quota on average. The company target is $2,100,000. A new rep would carry the same quota but, while ramping, deliver 50% of the usual attainment in year 1.",
+      "table": null,
+      "fields": [
+        {
+          "id": "exp",
+          "label": "Expected revenue from the current team",
+          "unit": "$",
+          "answer": 1800000,
+          "tolerance": 1
+        },
+        {
+          "id": "gap",
+          "label": "Gap to the target",
+          "unit": "$",
+          "answer": 300000,
+          "tolerance": 1
+        },
+        {
+          "id": "newRep",
+          "label": "Expected year-1 contribution from one new rep",
+          "unit": "$",
+          "answer": 225000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Expected = 4 × 600,000 × 0.75 = $1800000. Gap = $300000. A new rep adds 600,000 × 0.75 × 0.5 = $225000, so one hire alone does not close the gap."
+    }
+  },
+  {
+    "id": "bd-team-leadership-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Prioritise coaching from stage data.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A rep's stage conversion rates compared with the team average: Discovery to proposal: team 50%, rep 35%; Proposal to negotiation: team 40%, rep 38%; Negotiation to won: team 70%, rep 45%; Lead to discovery: team 30%, rep 29%. Rank the stages by the size of the rep's gap, biggest first.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Lead to discovery"
+        },
+        {
+          "id": "i1",
+          "label": "Negotiation to won"
+        },
+        {
+          "id": "i2",
+          "label": "Discovery to proposal"
+        },
+        {
+          "id": "i3",
+          "label": "Proposal to negotiation"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Gaps: Negotiation to won 25-point gap, Discovery to proposal 15-point gap, Proposal to negotiation 2-point gap, Lead to discovery 1-point gap. Coach where the gap is largest, here closing and negotiation."
+    }
+  },
+  {
+    "id": "bd-team-leadership-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Coach an underperforming rep.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A rep is at 45% of quota after two quarters. Activity levels are high.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Put them on a performance plan immediately",
+            "Tell them to make more calls",
+            "Review their stage conversion and a few deals with them to find where deals are lost",
+            "Reassign their accounts"
+          ],
+          "correctIndex": 2,
+          "explanation": "High activity with poor results points to a skill gap at a specific stage; find it with data."
+        },
+        {
+          "id": "s2",
+          "question": "Deals stall after proposals because discovery was shallow. What coaching helps most?",
+          "options": [
+            "Sending them a book",
+            "Telling them to send more proposals",
+            "Lowering their quota",
+            "Joining discovery calls, giving specific feedback and practising questioning together"
+          ],
+          "correctIndex": 3,
+          "explanation": "Targeted coaching on the weak stage changes outcomes fastest."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-team-leadership-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this commission plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this draft BD commission plan that create bad incentives.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Commission is 5% of revenue up to quota and 8% above quota.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Commission is paid when the contract is signed, whether or not the client pays.",
+          "issue": "Paying on signature rewards deals that never collect; tie it to cash received."
+        },
+        {
+          "id": "p3",
+          "text": "Reps may discount up to 30% without approval.",
+          "issue": "With revenue-based commission, unlimited discounting trades company margin for easy closes."
+        },
+        {
+          "id": "p4",
+          "text": "Commission is calculated on revenue only; margin is not considered.",
+          "issue": "Ignoring margin rewards low-margin deals; consider margin in the plan or the approval rules."
+        },
+        {
+          "id": "p5",
+          "text": "Plans are reviewed every year with the team.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Clawback applies if a client cancels within 60 days.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-team-leadership-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Hold reps accountable for forecast accuracy.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "One rep's forecasts are consistently 40% too high; another is consistently 30% too low and \"surprises\" at quarter end.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you treat both?",
+          "options": [
+            "As forecast accuracy problems to coach, using evidence per deal in pipeline reviews",
+            "Praise the one who over-delivers and ignore the other",
+            "Ignore both; results matter more",
+            "Cut both reps' quotas"
+          ],
+          "correctIndex": 0,
+          "explanation": "Both sandbagging and over-optimism hurt planning; accuracy is a skill to coach."
+        },
+        {
+          "id": "s2",
+          "question": "What practice improves accuracy most?",
+          "options": [
+            "Asking reps how confident they feel",
+            "Weekly deal reviews against clear stage exit criteria and evidence",
+            "Using only the CEO's estimate",
+            "Removing probabilities from the CRM"
+          ],
+          "correctIndex": 1,
+          "explanation": "Evidence-based reviews replace feelings with facts."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-team-leadership-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Calculate a rep's commission.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A rep's quota is $500,000. The plan pays 5% on collected revenue up to quota and 8% on collected revenue above quota. The rep collected $620,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "base",
+          "label": "Commission up to quota",
+          "unit": "$",
+          "answer": 25000,
+          "tolerance": 1
+        },
+        {
+          "id": "acc",
+          "label": "Commission above quota",
+          "unit": "$",
+          "answer": 9600,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total commission",
+          "unit": "$",
+          "answer": 34600,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Up to quota: 500,000 × 5% = $25,000. Above: 120,000 × 8% = $9,600. Total $34600."
+    }
+  },
+  {
+    "id": "bd-team-leadership-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the best basis for setting BD quotas?",
+    "mcq": {
+      "options": [
+        "Last year's number plus 50% for everyone",
+        "Each rep's own wish",
+        "The highest performer's result",
+        "Company targets, historical attainment and realistic territory or pipeline capacity"
+      ],
+      "correctIndex": 3,
+      "explanation": "Quotas that are achievable for most of the team keep motivation and forecasts reliable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-team-leadership-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A top-performing rep is promoted to team lead but struggles. What is the most likely reason?",
+    "mcq": {
+      "options": [
+        "Leading requires coaching and process skills that differ from selling",
+        "They no longer care about sales",
+        "Teams cannot be led by former reps",
+        "They need a higher quota"
+      ],
+      "correctIndex": 0,
+      "explanation": "Selling and leading are different skills; new leads need training and support.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-team-leadership-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-team-leadership",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why tie commission to collected revenue rather than signed contracts?",
+    "mcq": {
+      "options": [
+        "It is simpler to calculate",
+        "It rewards deals that actually pay, not just those that sign",
+        "It delays all payments by a year",
+        "It lowers commission costs to zero"
+      ],
+      "correctIndex": 1,
+      "explanation": "Incentives should match the outcome the business needs: revenue received.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

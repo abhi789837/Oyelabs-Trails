@@ -1,0 +1,354 @@
+[
+  {
+    "id": "bd-consultative-selling-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Diagnose before you prescribe.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A laundry business owner opens the call: \"We want an app like Uber, but for laundry.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your best first response?",
+          "options": [
+            "Ask what business problem the app should solve and how they measure it today",
+            "Start describing the features you would build",
+            "Quote a typical price range for on-demand apps",
+            "Show a demo of a marketplace you built"
+          ],
+          "correctIndex": 0,
+          "explanation": "A consultative seller diagnoses first; the request for an app is a proposed solution, not the problem."
+        },
+        {
+          "id": "s2",
+          "question": "You learn their real issue is missed pickups from existing customers, about 15% a week. What do you recommend?",
+          "options": [
+            "The full on-demand marketplace they asked for",
+            "A smaller solution aimed at that problem, such as booking with reminders, before any marketplace",
+            "A new brand website",
+            "Nothing; the problem is operational"
+          ],
+          "correctIndex": 1,
+          "explanation": "Recommend what solves the diagnosed problem, even when it is smaller than the request."
+        },
+        {
+          "id": "s3",
+          "question": "They push back: \"We still want the full app eventually.\" How do you respond?",
+          "options": [
+            "Drop your recommendation and quote the full app",
+            "Insist the marketplace is a bad idea",
+            "Agree a phased plan: fix missed pickups first, measure it, then decide on the marketplace",
+            "Ask them to come back when they are sure"
+          ],
+          "correctIndex": 2,
+          "explanation": "Respect their ambition while keeping the first spend tied to a measurable result."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-consultative-selling-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order a consultative sales conversation.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these stages of a consultative engagement, first at the top.",
+      "items": [
+        {
+          "id": "i3",
+          "label": "Agree how success will be measured"
+        },
+        {
+          "id": "i4",
+          "label": "Recommend options with their trade-offs"
+        },
+        {
+          "id": "i5",
+          "label": "Confirm the decision and next steps"
+        },
+        {
+          "id": "i1",
+          "label": "Research the client's business before the first call"
+        },
+        {
+          "id": "i2",
+          "label": "Diagnose the problem and its cost together with the client"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Research, diagnose, define success, recommend, confirm. Recommending before success is defined leaves nothing to judge options against."
+    }
+  },
+  {
+    "id": "bd-consultative-selling-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the non-consultative moments in these call notes.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A manager reviewed a rep's discovery call. Mark the moments where the rep stopped selling consultatively.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Opened by asking what prompted the client to look for help now.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Within two minutes, presented the agency's full list of services.",
+          "issue": "Pitching before understanding the need turns the call into a brochure."
+        },
+        {
+          "id": "p3",
+          "text": "Asked how many orders are lost to the current manual process.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Spoke for about 80% of the call.",
+          "issue": "In discovery the client should do most of the talking."
+        },
+        {
+          "id": "p5",
+          "text": "When the client mentioned an existing CRM, said: \"We'd replace that anyway.\"",
+          "issue": "Dismisses the client's setup without understanding why it is there or what replacing it costs."
+        },
+        {
+          "id": "p6",
+          "text": "Summarised the problem in the client's words and checked it was right.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Agreed to send two options with trade-offs by Friday.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-consultative-selling-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Quantify the problem before proposing a solution.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "An online retailer's 8-agent support team handles 12,000 tickets a month; 40% are \"where is my order?\". Each takes 6 minutes at a loaded cost of $22 an hour. A self-service order-tracking feature is expected to deflect 70% of those tickets. Your quote is $60,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "tickets",
+          "label": "Tickets deflected per month",
+          "unit": "",
+          "answer": 3360,
+          "tolerance": 1
+        },
+        {
+          "id": "monthly",
+          "label": "Monthly saving",
+          "unit": "$",
+          "answer": 7392,
+          "tolerance": 1
+        },
+        {
+          "id": "annual",
+          "label": "Annual saving",
+          "unit": "$",
+          "answer": 88704,
+          "tolerance": 5
+        },
+        {
+          "id": "payback",
+          "label": "Payback period",
+          "unit": "months",
+          "answer": 8.12,
+          "tolerance": 0.05
+        }
+      ],
+      "explanation": "Deflected = 12,000 × 0.4 × 0.7 = 3360 tickets = 336 hours. Saving = 336 × $22 = $7392 a month, $88704 a year. Payback = 60,000 ÷ 7392 ≈ 8.12 months. Present these as estimates built from the client's own numbers."
+    }
+  },
+  {
+    "id": "bd-consultative-selling-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Recommend honestly when it costs you revenue.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "After discovery, you conclude the client's need (an internal approval workflow for 12 staff) is met well by a low-code tool for about $3,000, rather than your proposed $45,000 custom build.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you recommend?",
+          "options": [
+            "The custom build, since you are a development agency",
+            "Both, without a recommendation",
+            "The low-code option, explaining when a custom build would become worth it",
+            "Nothing until they ask"
+          ],
+          "correctIndex": 2,
+          "explanation": "Advice that serves the client builds the trust that brings the larger work later."
+        },
+        {
+          "id": "s2",
+          "question": "The client then asks you to also run their SEO, which you do not offer. What do you do?",
+          "options": [
+            "Say yes and figure it out",
+            "Say yes and subcontract it without telling them",
+            "Ignore the request",
+            "Say it is not your expertise and suggest they find a specialist"
+          ],
+          "correctIndex": 3,
+          "explanation": "A trusted advisor is clear about what they do not do."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-consultative-selling-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Write a discovery recap that earns the next meeting.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write a short recap email after the discovery call described below. It should show you understood the problem and its cost, and propose a next step.",
+      "context": "Client: Head of Operations at a 40-truck delivery company. Dispatchers spend about 2 hours a day each (4 dispatchers) reconciling driver paper logs with the billing system. Errors cause roughly $5,000 a month in billing disputes. They want to reduce disputes before peak season in 4 months. Decision involves the CFO.",
+      "wordLimit": 180,
+      "rubric": [
+        {
+          "id": "problem",
+          "label": "States the problem in the client's terms",
+          "description": "Restates the reconciliation problem and its causes accurately.",
+          "weight": 1
+        },
+        {
+          "id": "cost",
+          "label": "Quantifies the impact",
+          "description": "Uses the client's numbers (dispatcher hours, $5,000 a month disputes, peak-season deadline).",
+          "weight": 1
+        },
+        {
+          "id": "check",
+          "label": "Invites correction",
+          "description": "Asks the client to confirm or correct the summary.",
+          "weight": 1
+        },
+        {
+          "id": "next",
+          "label": "Proposes a sensible next step",
+          "description": "Suggests a next step that involves the CFO or defines success, without pitching a full solution yet.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Maria, thanks for the time today. My summary: your four dispatchers each spend about 2 hours a day matching paper driver logs to billing, and the errors that slip through cost around $5,000 a month in disputes. The goal is to cut those disputes before peak season in four months. Did I miss or misstate anything? As a next step, I suggest a 30-minute session with you and your CFO to agree what success looks like, for example disputes under $1,000 a month, and then I will come back with two options and their trade-offs. Does Tuesday or Wednesday next week work?"
+    }
+  },
+  {
+    "id": "bd-consultative-selling-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What most clearly separates consultative selling from product pitching?",
+    "mcq": {
+      "options": [
+        "Using more slides",
+        "Offering discounts early to build goodwill",
+        "Talking about the agency's history first",
+        "Diagnosing the client's problem and its impact before recommending anything"
+      ],
+      "correctIndex": 3,
+      "explanation": "The consultative seller earns the right to recommend by understanding the problem first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-consultative-selling-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "During a discovery call, who should do most of the talking?",
+    "mcq": {
+      "options": [
+        "The client",
+        "The salesperson",
+        "The technical lead",
+        "Both equally, by design"
+      ],
+      "correctIndex": 0,
+      "explanation": "Discovery is for learning; if you are talking most of the time, you are pitching.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-consultative-selling-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-consultative-selling",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "After discovery you realise an off-the-shelf SaaS tool would meet the client's need better than a custom build. What is the consultative move?",
+    "mcq": {
+      "options": [
+        "Recommend the SaaS tool and explain when custom would make sense later",
+        "Propose the custom build anyway",
+        "Stay quiet about the SaaS option",
+        "Run down the SaaS tool so custom looks better"
+      ],
+      "correctIndex": 0,
+      "explanation": "Honest advice costs a deal now but builds the trust that wins larger work later.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,312 @@
+[
+  {
+    "id": "bd-social-proof-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank social proof by persuasive strength for an enterprise buyer.",
+    "task": {
+      "kind": "rank",
+      "prompt": "An enterprise healthcare buyer is evaluating you. Rank these forms of social proof from most to least persuasive for them.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "A detailed healthcare case study with measured results"
+        },
+        {
+          "id": "i3",
+          "label": "Verified reviews on a B2B review platform"
+        },
+        {
+          "id": "i4",
+          "label": "A wall of client logos"
+        },
+        {
+          "id": "i5",
+          "label": "An unattributed one-line testimonial"
+        },
+        {
+          "id": "i1",
+          "label": "A reference call with a similar healthcare client"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Proof is stronger when it is specific, similar to the buyer and verifiable. A conversation with a peer beats anything you write yourself."
+    }
+  },
+  {
+    "id": "bd-social-proof-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this review request email.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this email asking a client for a review that should not be sent.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Sam, thanks again for working with us on the clinic app.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Would you be willing to share an honest review of your experience on our review profile?",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "As a thank-you, we'll send a $100 gift card for every 5-star review.",
+          "issue": "Paying for positive reviews is misleading and usually breaks review platforms' rules."
+        },
+        {
+          "id": "p4",
+          "text": "To save time, I've written the review for you; just post it under your name.",
+          "issue": "Reviews must be the client's own words; ghost-writing is deceptive."
+        },
+        {
+          "id": "p5",
+          "text": "It takes about five minutes and here is the direct link.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Either way, thank you for the great collaboration.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-social-proof-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Respond to a negative public review.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A former client posts a 2-star review on a B2B review site saying your team missed deadlines. Part of it is accurate; the delays were also caused by late content from the client.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you respond publicly?",
+          "options": [
+            "Argue point by point that it was their fault",
+            "Ask the platform to delete it",
+            "Calmly thank them, acknowledge what went wrong, briefly note what you've changed, and invite a direct conversation",
+            "Ignore it"
+          ],
+          "correctIndex": 2,
+          "explanation": "Prospects read your reply more than the review; a calm, accountable response builds trust."
+        },
+        {
+          "id": "s2",
+          "question": "Internally, what should happen next?",
+          "options": [
+            "Blame the delivery team",
+            "Post fake positive reviews to bury it",
+            "Nothing",
+            "Review the project to find what you can improve, such as clearer content deadlines in contracts"
+          ],
+          "correctIndex": 3,
+          "explanation": "Treat the review as feedback; fix the process that caused it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-social-proof-t3-4",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Work out how many reviews you need to lift your rating.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your profile has 25 reviews averaging 4.6. Assume all new reviews are 5 stars.",
+      "table": null,
+      "fields": [
+        {
+          "id": "points",
+          "label": "Total stars from the current reviews",
+          "unit": "",
+          "answer": 115,
+          "tolerance": 0.01
+        },
+        {
+          "id": "needed",
+          "label": "New 5-star reviews needed to reach a 4.8 average",
+          "unit": "",
+          "answer": 25,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Current total = 25 × 4.6 = 115. Solve (115 + 5n) ÷ (25 + n) = 4.8: 115 + 5n = 120 + 4.8n, so n = 25. Ratings move slowly, so a steady habit of asking happy clients matters more than a one-off push."
+    }
+  },
+  {
+    "id": "bd-social-proof-t3-5",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Prepare a reference call.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect in final evaluation asks to speak with a past client.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which client do you offer?",
+          "options": [
+            "A happy client with a similar project who has agreed to be a reference",
+            "Your biggest client, without asking them first",
+            "A friend who used to work at a client",
+            "Any client who answers the phone"
+          ],
+          "correctIndex": 0,
+          "explanation": "References should be relevant, willing and prepared."
+        },
+        {
+          "id": "s2",
+          "question": "How do you prepare the reference?",
+          "options": [
+            "Give them a script to read",
+            "Ask permission, explain who will call and what they care about, and let them speak freely",
+            "Offer them a discount to say good things",
+            "Don't contact them before the call"
+          ],
+          "correctIndex": 1,
+          "explanation": "Brief them on context, never on what to say; scripted references sound scripted."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-social-proof-t3-6",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Measure your review request rate.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Last year you asked 40 clients for a review after project completion. 14 posted one, averaging 4.7 stars.",
+      "table": null,
+      "fields": [
+        {
+          "id": "rate",
+          "label": "Review response rate",
+          "unit": "%",
+          "answer": 35,
+          "tolerance": 0.1
+        },
+        {
+          "id": "noReply",
+          "label": "Clients who did not post a review",
+          "unit": "",
+          "answer": 26,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "14 ÷ 40 = 35%. 26 did not post. Asking at the right moment (just after a successful launch) and making it easy usually lifts the rate."
+    }
+  },
+  {
+    "id": "bd-social-proof-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which piece of social proof is most credible to a careful buyer?",
+    "mcq": {
+      "options": [
+        "A testimonial with no name or company",
+        "A statement that you are \"trusted by hundreds\"",
+        "Your own description of your quality",
+        "A named, verifiable review from a client in a similar business"
+      ],
+      "correctIndex": 3,
+      "explanation": "Specific and verifiable beats vague and self-reported.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-social-proof-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A client asks if they can review you in exchange for a discount on their next project. What should you do?",
+    "mcq": {
+      "options": [
+        "Decline the exchange and ask only for an honest review if they wish to give one",
+        "Accept; it is a fair trade",
+        "Accept if the review is 5 stars",
+        "Offer a larger discount for a longer review"
+      ],
+      "correctIndex": 0,
+      "explanation": "Incentivised reviews mislead readers and can breach review platforms' rules.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-social-proof-m3-3",
+    "departmentId": "bd",
+    "skillId": "bd-social-proof",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "When is the best time to ask a client for a review or testimonial?",
+    "mcq": {
+      "options": [
+        "Before the project starts",
+        "Soon after a successful milestone, such as launch, when results are fresh",
+        "Only after the contract ends a year later",
+        "During a dispute, to show goodwill"
+      ],
+      "correctIndex": 1,
+      "explanation": "Satisfaction and memory are highest right after a visible success.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

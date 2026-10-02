@@ -1,0 +1,371 @@
+[
+  {
+    "id": "pm-contract-management-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The client is 45 days late paying a milestone invoice. The contract allows Oyelabs to suspend work after 30 days' non-payment with written notice.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client is 45 days late paying a milestone invoice. The contract allows Oyelabs to suspend work after 30 days' non-payment with written notice.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is your first step?",
+          "options": [
+            "Suspend work today",
+            "Send a legal letter",
+            "Keep working and say nothing",
+            "Contact the client's finance and project contacts to find out why and agree a payment date"
+          ],
+          "correctIndex": 3,
+          "explanation": "Find out what is wrong before using contractual remedies."
+        },
+        {
+          "id": "d2",
+          "question": "Two weeks later, still no payment and no reply. What next?",
+          "options": [
+            "Delete the client's code",
+            "Threaten on social media",
+            "Quietly slow the team down",
+            "With your director's agreement, send formal written notice of suspension as the contract allows"
+          ],
+          "correctIndex": 3,
+          "explanation": "Use the remedy formally, in writing, with authority."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-contract-management-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "These are notes from a PM's contract handover. Mark the risky practices.",
+    "task": {
+      "kind": "spot",
+      "prompt": "These are notes from a PM's contract handover. Mark the risky practices.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "All changes are recorded as signed change orders against the master agreement.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "We agreed extra scope with the client on a call; the contract is fine as it is.",
+          "issue": "Undocumented scope changes leave the agency unprotected; confirm in writing."
+        },
+        {
+          "id": "s3",
+          "text": "Renewal date is 1 March; the client must be notified 60 days before.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "The SLA promises 99.99% uptime, but hosting is on the client's single server.",
+          "issue": "An SLA the agency cannot control or meet creates liability."
+        },
+        {
+          "id": "s5",
+          "text": "IP transfers to the client on final payment.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "We use an open-source library under AGPL in the delivered SaaS without telling the client.",
+          "issue": "AGPL obligations can conflict with the client's licensing expectations; licences must be reviewed and disclosed."
+        },
+        {
+          "id": "s7",
+          "text": "Liability is capped at fees paid in the previous 12 months.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "Contract documents are stored in the shared contracts folder.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-contract-management-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order these contract-closure steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these contract-closure steps.",
+      "items": [
+        {
+          "id": "r05b64",
+          "label": "Confirm all deliverables are accepted in writing"
+        },
+        {
+          "id": "rb7478",
+          "label": "Reconcile invoices and payments"
+        },
+        {
+          "id": "ra8633",
+          "label": "Transfer IP, credentials and documentation"
+        },
+        {
+          "id": "r147b3",
+          "label": "Revoke the agency's access to client systems"
+        },
+        {
+          "id": "r46159",
+          "label": "Archive contract records and lessons learned"
+        }
+      ],
+      "correctOrder": [
+        "r05b64",
+        "rb7478",
+        "ra8633",
+        "r147b3",
+        "r46159"
+      ],
+      "explanation": "Acceptance, money, handover, access, archive: closure ends obligations cleanly."
+    }
+  },
+  {
+    "id": "pm-contract-management-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A contract has a service credit for missed uptime. Calculate the credit.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A contract has a service credit for missed uptime. Calculate the credit.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Monthly fee",
+            "$12,000"
+          ],
+          [
+            "Committed uptime",
+            "99.5%"
+          ],
+          [
+            "Actual uptime",
+            "98.9%"
+          ],
+          [
+            "Credit",
+            "10% of the monthly fee per full 0.5% below commitment, max 30%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "shortfall",
+          "label": "Shortfall in percentage points",
+          "unit": "pts",
+          "answer": 0.6,
+          "tolerance": 0.01
+        },
+        {
+          "id": "steps",
+          "label": "Full 0.5% steps",
+          "unit": "",
+          "answer": 1,
+          "tolerance": 0
+        },
+        {
+          "id": "credit",
+          "label": "Service credit",
+          "unit": "$",
+          "answer": 1200,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Shortfall 0.6 points = one full 0.5 step, so 10% of 12,000 = 1,200."
+    }
+  },
+  {
+    "id": "pm-contract-management-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "The client says a feature does not meet an acceptance criterion and withholds the final 30% payment. Your team says the criterion is ambiguous and the build matches the most reasonable reading.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client says a feature does not meet an acceptance criterion and withholds the final 30% payment. Your team says the criterion is ambiguous and the build matches the most reasonable reading.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the best first move?",
+          "options": [
+            "Meet with the client, walk through the criterion and evidence, and look for a fair interpretation together",
+            "Stop all support immediately",
+            "Send the matter to lawyers",
+            "Fix it for free without discussion"
+          ],
+          "correctIndex": 0,
+          "explanation": "Most disputes resolve at working level with evidence and good faith."
+        },
+        {
+          "id": "d2",
+          "question": "Working-level talks stall. What next?",
+          "options": [
+            "Publish the dispute",
+            "Withhold the source code",
+            "Ignore it",
+            "Follow the contract's dispute-resolution clause, starting with escalation to named senior contacts"
+          ],
+          "correctIndex": 3,
+          "explanation": "The agreed escalation path exists for this and keeps it professional."
+        },
+        {
+          "id": "d3",
+          "question": "What lesson goes into future contracts?",
+          "options": [
+            "Avoid final payments",
+            "Never accept criticism",
+            "Use longer contracts",
+            "Write acceptance criteria as testable conditions and agree them before build"
+          ],
+          "correctIndex": 3,
+          "explanation": "Ambiguous criteria cause disputes; testable ones prevent them."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-contract-management-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A client email arrives that may affect the contract. Rank these from most to least urgent to act on.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A client email arrives that may affect the contract. Rank these from most to least urgent to act on.",
+      "items": [
+        {
+          "id": "r19c2e",
+          "label": "The client says they will terminate for breach in 10 days unless a defect is fixed"
+        },
+        {
+          "id": "r5b84d",
+          "label": "The client's data-protection officer asks where their customer data is stored"
+        },
+        {
+          "id": "r78674",
+          "label": "The renewal notice window for the support agreement closes in 3 weeks"
+        },
+        {
+          "id": "r735b9",
+          "label": "The client asks for a copy of the signed SOW for their records"
+        }
+      ],
+      "correctOrder": [
+        "r19c2e",
+        "r5b84d",
+        "r78674",
+        "r735b9"
+      ],
+      "explanation": "A breach notice starts a contractual clock; a data-protection query can carry legal duties and needs a prompt, accurate answer; renewal has time; a copy request is routine."
+    }
+  },
+  {
+    "id": "pm-contract-management-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is the difference between a master services agreement and a statement of work?",
+    "mcq": {
+      "options": [
+        "They are the same document",
+        "The MSA sets the general legal terms; each SOW defines the specific project's scope, timeline and price",
+        "An SOW overrides all legal terms",
+        "An MSA is only for fixed-bid work"
+      ],
+      "correctIndex": 1,
+      "explanation": "MSAs avoid renegotiating legal terms for every project; SOWs carry the project specifics.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-contract-management-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why must a PM track contractual notice dates, such as renewal or termination notice periods?",
+    "mcq": {
+      "options": [
+        "They are only for the legal team",
+        "Missing them can lock the agency or client into terms, or lose a right, without anyone deciding",
+        "Notice dates never matter in agency work",
+        "So invoices can be sent earlier"
+      ],
+      "correctIndex": 1,
+      "explanation": "Auto-renewals and notice windows act whether or not anyone remembers them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-contract-management-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-contract-management",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A client asks the PM to sign a contract amendment increasing liability limits. What should the PM do?",
+    "mcq": {
+      "options": [
+        "Sign to keep the client happy",
+        "Refer it to the agency's authorised signatory and legal review, explaining the business context",
+        "Refuse and end the call",
+        "Sign but add a note saying it is not binding"
+      ],
+      "correctIndex": 1,
+      "explanation": "PMs manage contracts day to day but rarely have authority to change legal risk terms.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

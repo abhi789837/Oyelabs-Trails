@@ -1,0 +1,330 @@
+[
+  {
+    "id": "bd-playbooks-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of building a BD playbook.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these steps for building a BD playbook, first at the top.",
+      "items": [
+        {
+          "id": "i5",
+          "label": "Measure results and update the playbook"
+        },
+        {
+          "id": "i1",
+          "label": "Analyse recent won and lost deals"
+        },
+        {
+          "id": "i2",
+          "label": "Define the ICP and deal stages with exit criteria"
+        },
+        {
+          "id": "i3",
+          "label": "Document the plays for each stage: questions, assets, templates"
+        },
+        {
+          "id": "i4",
+          "label": "Pilot the playbook with a few reps"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5"
+      ],
+      "explanation": "Start from evidence, define the structure, write the plays, test them, then improve. A playbook written without deal data codifies opinions."
+    }
+  },
+  {
+    "id": "bd-playbooks-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the weaknesses in this playbook step.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this \"Proposal\" stage of a BD playbook that are weak.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Entry criteria: discovery done, budget range and decision-maker confirmed.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Do: send a proposal when it feels right.",
+          "issue": "Vague; define the trigger (for example, after the client confirms the summary of needs)."
+        },
+        {
+          "id": "p3",
+          "text": "Use the approved proposal template and get engineering to review the estimate.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Exit criteria: the client seems interested.",
+          "issue": "Not observable; use a verifiable exit such as a scheduled review call or written feedback."
+        },
+        {
+          "id": "p5",
+          "text": "Target: proposal sent within 3 business days of discovery.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Pricing: use whatever price the rep thinks will win.",
+          "issue": "Pricing should follow the rate card and approval rules, not individual guesses."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-playbooks-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Diagnose why reps ignore the playbook.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Three months after launch, most reps are not using the new playbook, and results have not changed.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Mandate it with penalties",
+            "Abandon the playbook",
+            "Rewrite it alone over a weekend",
+            "Ask reps what is not working and review deals where it was or was not used"
+          ],
+          "correctIndex": 3,
+          "explanation": "Low adoption usually means the playbook does not fit reality; find out why."
+        },
+        {
+          "id": "s2",
+          "question": "Reps say it is too long and the templates are outdated. Next?",
+          "options": [
+            "Cut it to the essentials per stage, update templates and involve top reps in the revision",
+            "Add more detail so it covers everything",
+            "Keep it and retrain",
+            "Remove all templates"
+          ],
+          "correctIndex": 0,
+          "explanation": "Short, practical and co-created playbooks get used."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-playbooks-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Measure a playbook's impact.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Before the playbook: 100 qualified leads produced 20 proposals and 5 wins. During the pilot: 100 qualified leads produced 25 proposals and 8 wins. Average deal is $40,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "before",
+          "label": "Proposal win rate before",
+          "unit": "%",
+          "answer": 25,
+          "tolerance": 0.1
+        },
+        {
+          "id": "after",
+          "label": "Proposal win rate during the pilot",
+          "unit": "%",
+          "answer": 32,
+          "tolerance": 0.1
+        },
+        {
+          "id": "extra",
+          "label": "Extra revenue per 100 qualified leads",
+          "unit": "$",
+          "answer": 120000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Before: 5 ÷ 20 = 25%. After: 8 ÷ 25 = 32%. 3 extra wins × $40,000 = $120,000 per 100 leads. Check the pilot leads were similar to earlier ones before crediting the playbook."
+    }
+  },
+  {
+    "id": "bd-playbooks-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 3,
+    "prompt": "Write one play for a BD playbook.",
+    "task": {
+      "kind": "write",
+      "prompt": "Write the \"Discovery call\" play for a BD playbook used by a software agency's reps. Include the purpose, what to do, and clear exit criteria.",
+      "context": "",
+      "wordLimit": 170,
+      "rubric": [
+        {
+          "id": "purpose",
+          "label": "Clear purpose",
+          "description": "States what the discovery call must achieve.",
+          "weight": 1
+        },
+        {
+          "id": "actions",
+          "label": "Practical actions",
+          "description": "Gives concrete steps or questions a new rep could follow.",
+          "weight": 1
+        },
+        {
+          "id": "exit",
+          "label": "Observable exit criteria",
+          "description": "Defines checkable conditions to move to the next stage (for example, budget range, decision-maker and timeline confirmed).",
+          "weight": 1
+        },
+        {
+          "id": "brevity",
+          "label": "Concise",
+          "description": "Short enough to use on the job; no filler.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Discovery call\nPurpose: understand the client's problem, its cost and how they will decide, so we only propose to qualified deals.\nBefore: read their website and LinkedIn; note one hypothesis about their problem.\nOn the call (30–45 min): ask what prompted them to look now; what the problem costs; what they have tried; who else is involved in deciding; their budget range and timeline. Let them talk most of the time. Summarise back in their words.\nAfter: send a recap within 24 hours and log it in the CRM.\nExit criteria: problem and impact confirmed in writing, budget range known, decision-maker identified, and a next meeting booked."
+    }
+  },
+  {
+    "id": "bd-playbooks-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Update the playbook for AI tools.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Reps have started using AI tools to draft emails and proposals in different ways.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should the playbook handle this?",
+          "options": [
+            "Add approved tools, where they help, and mandatory human checks for facts, numbers and client data",
+            "Ban AI tools entirely",
+            "Leave it to each rep",
+            "Require AI for every email"
+          ],
+          "correctIndex": 0,
+          "explanation": "A playbook sets a consistent, safe way to use tools, including accuracy and privacy checks."
+        },
+        {
+          "id": "s2",
+          "question": "What must the AI section always state?",
+          "options": [
+            "Only the tools' prices",
+            "Which client information may be shared with which tools, and that the rep owns accuracy",
+            "Which prompts are funniest",
+            "That AI output can be sent as is"
+          ],
+          "correctIndex": 1,
+          "explanation": "Data rules and accountability are the core of safe AI use in sales."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-playbooks-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What makes a playbook stage's exit criteria useful?",
+    "mcq": {
+      "options": [
+        "They describe how the rep feels about the deal",
+        "They are the same for every stage",
+        "They are observable and verifiable, such as a booked meeting or confirmed budget",
+        "They are optional"
+      ],
+      "correctIndex": 2,
+      "explanation": "Verifiable criteria make pipeline stages consistent and forecasts reliable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-playbooks-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Where should a BD playbook's content mainly come from?",
+    "mcq": {
+      "options": [
+        "A generic template from the internet",
+        "The newest rep's ideas",
+        "Only the CEO's opinion",
+        "Analysis of real won and lost deals and what top performers do"
+      ],
+      "correctIndex": 3,
+      "explanation": "Evidence from your own deals makes the playbook fit your market.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-playbooks-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-playbooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "How often should a playbook be updated?",
+    "mcq": {
+      "options": [
+        "Regularly, as results and market conditions change",
+        "Never, once written",
+        "Only when a rep leaves",
+        "Every day"
+      ],
+      "correctIndex": 0,
+      "explanation": "A playbook is a living document; review it on a set cadence with data.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

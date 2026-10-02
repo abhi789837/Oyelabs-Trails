@@ -1,0 +1,372 @@
+[
+  {
+    "id": "bd-business-writing-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the sentences in this client email that are unprofessional or unclear.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the sentences in this client email that are unprofessional or unclear.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Mark,",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Thanks for your time on the call today.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "As discussed, we will send the revised estimate for the booking app by Friday 14 March.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "btw ur designer's files r kinda messy lol, pls fix asap!!!",
+          "issue": "Text-speak, a joke at the client's expense and shouting punctuation are unprofessional."
+        },
+        {
+          "id": "p5",
+          "text": "We might maybe be able to possibly start sometime soonish depending on stuff.",
+          "issue": "Vague hedging with no date or condition; the client cannot plan around it."
+        },
+        {
+          "id": "p6",
+          "text": "Please let me know if the Friday date works for you.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Best regards, Anita",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-business-writing-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Order the parts of a clear follow-up email after a sales call, top of the email first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the parts of a clear follow-up email after a sales call, top of the email first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "What you will deliver next and by when"
+        },
+        {
+          "id": "r4",
+          "label": "One clear question or action you need from the client"
+        },
+        {
+          "id": "r5",
+          "label": "Sign-off with your name and contact details"
+        },
+        {
+          "id": "r1",
+          "label": "Greeting and a one-line thank you for the call"
+        },
+        {
+          "id": "r2",
+          "label": "Short recap of what the client needs, in their words"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Lead with context, confirm understanding, commit to the next step, make the ask, then sign off."
+    }
+  },
+  {
+    "id": "bd-business-writing-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client emails, upset: the staging build you promised for Monday is late, and they found out from their own team.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client emails, upset: the staging build you promised for Monday is late, and they found out from their own team.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should your reply open?",
+          "options": [
+            "Acknowledge the miss and apologise plainly, without excuses",
+            "Explain at length why the delay was the developers' fault",
+            "Ignore the delay and share an unrelated update",
+            "Say the deadline was never really agreed"
+          ],
+          "correctIndex": 0,
+          "explanation": "Owning the miss first lowers the temperature; blaming or deflecting makes it worse."
+        },
+        {
+          "id": "s2",
+          "question": "What should the body contain?",
+          "options": [
+            "A promise that it will 'be soon'",
+            "A discount offer before any facts",
+            "A new specific date, what caused the slip in one sentence, and what changes to prevent it",
+            "A long technical explanation with logs"
+          ],
+          "correctIndex": 2,
+          "explanation": "Clients need a reliable new date and confidence it will not repeat. Vague promises erode trust further."
+        },
+        {
+          "id": "s3",
+          "question": "How should you close?",
+          "options": [
+            "Offer a short call if they want to talk it through, and confirm when they will hear from you next",
+            "Ask them to stop emailing the team directly",
+            "Close with 'Hope this helps!!'",
+            "Copy the CEO to show seriousness"
+          ],
+          "correctIndex": 0,
+          "explanation": "An open, calm close with a defined next update rebuilds confidence."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-business-writing-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the problems in this subject line and opening of a proposal email.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problems in this subject line and opening of a proposal email.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Subject: Proposal",
+          "issue": "Too vague to find or prioritise; name the project and what is attached."
+        },
+        {
+          "id": "p2",
+          "text": "Hi Sarah,",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Please find attached the proposal for the delivery-tracking app we discussed on Tuesday.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "It contains a lot of things and information about various different aspects and stuff that may or may not be relevant.",
+          "issue": "Wordy filler that says nothing; summarise what the reader will find."
+        },
+        {
+          "id": "p5",
+          "text": "The fixed price is USD 38,000 for phase 1, delivered over 10 weeks.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "The proposal is valid until 30 April.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-business-writing-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rewrite this message to a client as a clear, professional email.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Rewrite this message to a client as a clear, professional email.",
+      "context": "Original draft: 'hey so basically the API from your payment provider is kinda not working how we thought and we need like 2 more weeks maybe, sorry, also need your login for their dashboard thx'. Facts: the payment provider's API does not support split payouts the way the spec assumed; the team needs 2 extra weeks to build a workaround; you need the client to share sandbox dashboard access with dev@ (not their personal password).",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "tone",
+          "label": "Professional tone",
+          "description": "Polite, plain and calm; no slang or excessive apology.",
+          "weight": 1
+        },
+        {
+          "id": "clarity",
+          "label": "Explains the issue simply",
+          "description": "States the cause in one or two non-technical sentences.",
+          "weight": 1
+        },
+        {
+          "id": "impact",
+          "label": "Clear impact",
+          "description": "States the 2-week extension concretely.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Correct, safe ask",
+          "description": "Asks for sandbox access for the team account, not personal login credentials.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Rahul,\n\nA quick update on payments. While integrating, we found the payment provider's API does not support split payouts the way the spec assumed. We can build a workaround, and it will add about two weeks to the payments milestone; I will share the revised timeline tomorrow.\n\nTo start, could you invite dev@ourteam.com to the provider's sandbox dashboard? Please do not share your personal login.\n\nHappy to walk through this on a call if useful.\n\nBest,\nAnita"
+    }
+  },
+  {
+    "id": "bd-business-writing-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these subject lines for a recap email after a discovery call, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these subject lines for a recap email after a discovery call, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Hi!"
+        },
+        {
+          "id": "r4",
+          "label": "URGENT!!! PLEASE READ"
+        },
+        {
+          "id": "r1",
+          "label": "Recap and next steps: delivery app discovery call (12 June)"
+        },
+        {
+          "id": "r2",
+          "label": "Following up on our call"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Specific subjects are easy to find and act on; vague ones are skipped, and fake urgency damages trust."
+    }
+  },
+  {
+    "id": "bd-business-writing-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client asks a yes-or-no question by email: 'Can you start on 3 June?' What is the best reply structure?",
+    "mcq": {
+      "options": [
+        "Describe your team's workload first and answer at the end",
+        "Reply only with a calendar invite",
+        "Wait until you can call them",
+        "Answer yes or no in the first line, then add any conditions"
+      ],
+      "correctIndex": 3,
+      "explanation": "Busy readers want the answer first. Put conditions after the direct answer.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-business-writing-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "You need three decisions from a client by Friday. How should you present them in an email?",
+    "mcq": {
+      "options": [
+        "Three separate emails sent minutes apart",
+        "Mention them casually at the end of a status update",
+        "A short numbered list, one decision per item, with the deadline stated",
+        "One long paragraph covering all three"
+      ],
+      "correctIndex": 2,
+      "explanation": "A numbered list makes each decision visible and easy to answer point by point.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-business-writing-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-business-writing",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which sentence is the clearest for a non-technical client?",
+    "mcq": {
+      "options": [
+        "Auth will be social-enabled leveraging synergies.",
+        "Login stuff will be handled somehow.",
+        "We will add login with Google, so users do not need a new password.",
+        "We will implement OAuth 2.0 with OIDC via a third-party IdP."
+      ],
+      "correctIndex": 2,
+      "explanation": "Plain language tells the client what the user experiences. Jargon and buzzwords hide the meaning.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

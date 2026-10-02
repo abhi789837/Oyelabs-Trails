@@ -1,0 +1,379 @@
+[
+  {
+    "id": "pm-roles-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A tester finds a bug in a client's white-label taxi app. Put the people in the order the bug normally passes through them, from finding it to the client seeing the fix.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Client confirms the fix in UAT"
+        },
+        {
+          "id": "r4",
+          "label": "Tech lead reviews and merges the fix"
+        },
+        {
+          "id": "r2",
+          "label": "PM (or tech lead) sets its priority in the backlog"
+        },
+        {
+          "id": "r1",
+          "label": "QA engineer logs the bug with steps to reproduce"
+        },
+        {
+          "id": "r3",
+          "label": "Developer fixes it and opens a pull request"
+        },
+        {
+          "id": "r5",
+          "label": "QA engineer retests it on staging"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "QA reports, the PM prioritises, a developer fixes, the tech lead reviews, QA verifies, and the client accepts in UAT."
+    }
+  },
+  {
+    "id": "pm-roles-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "Your agency is starting a white-label e-commerce app for a retail client. The client's CEO signed the contract; their e-commerce manager will use the app daily.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your agency is starting a white-label e-commerce app for a retail client. The client's CEO signed the contract; their e-commerce manager will use the app daily.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Who is the project sponsor on the client side?",
+          "options": [
+            "The CEO who signed and funds the project",
+            "The e-commerce manager",
+            "Your agency's tech lead",
+            "The end customers of the shop"
+          ],
+          "correctIndex": 0,
+          "explanation": "The sponsor funds and champions the project and has the authority to make the big decisions."
+        },
+        {
+          "id": "s2",
+          "question": "Who should you invite to review screens and answer day-to-day product questions?",
+          "options": [
+            "Only the CEO",
+            "The e-commerce manager, as the client's day-to-day product contact",
+            "The agency's finance team",
+            "Nobody until the app is built"
+          ],
+          "correctIndex": 1,
+          "explanation": "The daily user of the product is the right day-to-day contact; the sponsor gets involved for big decisions."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-roles-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This is a junior PM's description of who does what on a mobile app project. Mark the lines that give the job to the wrong role.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The UI/UX designer creates wireframes and the clickable prototype.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "The QA engineer decides which features go into the next release.",
+          "issue": "Deciding release scope is a PM / product owner call with the client, not QA's."
+        },
+        {
+          "id": "p3",
+          "text": "Developers build features and fix bugs.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "The client sponsor approves budget changes.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "The PM writes the production database migration scripts.",
+          "issue": "Migration scripts are developer or tech-lead work; the PM coordinates, not codes."
+        },
+        {
+          "id": "p6",
+          "text": "The business analyst documents requirements and acceptance criteria.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "The tech lead makes architecture decisions and reviews code.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-roles-t1-4",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A client wants a new 'order history' screen. Order the hand-offs between roles.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Developer builds the screen"
+        },
+        {
+          "id": "r2",
+          "label": "UI/UX designer produces the screen design"
+        },
+        {
+          "id": "r1",
+          "label": "Business analyst writes the requirement and acceptance criteria"
+        },
+        {
+          "id": "r3",
+          "label": "Client approves the design"
+        },
+        {
+          "id": "r5",
+          "label": "QA engineer tests it against the acceptance criteria"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Requirement first, then design, client approval before build, build, then QA verifies against the agreed criteria."
+    }
+  },
+  {
+    "id": "pm-roles-t1-5",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A developer messages you: the client's marketing manager has been DM'ing him directly asking for 'quick tweaks' to the home screen.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A developer messages you: the client's marketing manager has been DM'ing him directly asking for 'quick tweaks' to the home screen.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you tell the developer?",
+          "options": [
+            "Do whatever the client asks; they pay us",
+            "Politely redirect the requests to you so they can be logged and prioritised",
+            "Block the marketing manager on Slack",
+            "Ignore the messages"
+          ],
+          "correctIndex": 1,
+          "explanation": "The PM is the single channel for scope; requests reach the backlog where they can be estimated and prioritised."
+        },
+        {
+          "id": "s2",
+          "question": "What do you do with the marketing manager?",
+          "options": [
+            "Thank them, explain that requests go through you, and log the tweaks for prioritisation",
+            "Tell the sponsor she broke the rules",
+            "Add all the tweaks into the current sprint",
+            "Say no to all of them"
+          ],
+          "correctIndex": 0,
+          "explanation": "Keep the relationship friendly, set up the channel, and treat the tweaks as backlog items."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-roles-t1-6",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Your agency staffs a standard app team as below. How many people are on the team, and what share of the team are developers?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Role",
+          "Headcount"
+        ],
+        "rows": [
+          [
+            "Project manager",
+            "1"
+          ],
+          [
+            "UI/UX designer",
+            "1"
+          ],
+          [
+            "Developers",
+            "3"
+          ],
+          [
+            "QA engineer",
+            "1"
+          ],
+          [
+            "Tech lead",
+            "1"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "people",
+          "label": "People on the team",
+          "unit": "people",
+          "answer": 7,
+          "tolerance": 0
+        },
+        {
+          "id": "devshare",
+          "label": "Share of the team who are developers",
+          "unit": "%",
+          "answer": 42.9,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "1 PM + 1 designer + 3 developers + 1 QA + 1 tech lead = 7 people. Developers are 3 / 7 = 42.9%."
+    }
+  },
+  {
+    "id": "pm-roles-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Who usually owns the day-to-day relationship with the client on an agency project?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The project manager",
+        "The most senior developer",
+        "The QA engineer",
+        "The agency's finance team"
+      ],
+      "correctIndex": 0,
+      "explanation": "The PM is the client's main day-to-day contact; other roles talk to the client too, but the PM coordinates the relationship.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-roles-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does a QA engineer do on an app project?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Tests the product against requirements and reports defects",
+        "Signs the contract with the client",
+        "Designs the app's colour scheme",
+        "Approves the project budget"
+      ],
+      "correctIndex": 0,
+      "explanation": "QA verifies the product works as specified and reports defects so they can be fixed before release.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-roles-m1-3",
+    "departmentId": "pm",
+    "skillId": "pm-roles",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "On an agency project, who normally makes the final call on a technical architecture choice such as which database to use?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The tech lead, after discussing trade-offs with the team",
+        "The client's marketing manager",
+        "The QA engineer",
+        "The UI/UX designer"
+      ],
+      "correctIndex": 0,
+      "explanation": "Architecture is the tech lead's area; the PM makes sure the decision is made, recorded and explained to the client.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

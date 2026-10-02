@@ -1,0 +1,464 @@
+[
+  {
+    "id": "bd-agency-services-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect writes: \"We have a working web app but it is slow and the original freelancer has gone. Can you help?\" Which agency service fits this request first?",
+    "mcq": {
+      "options": [
+        "A code audit followed by ongoing maintenance and performance work",
+        "A brand-new MVP build from scratch",
+        "A UI/UX redesign of the marketing site",
+        "A white-label app licence"
+      ],
+      "correctIndex": 0,
+      "explanation": "They already have a product; the risk is unknown code quality. An audit tells you what you are inheriting, and a maintenance or improvement retainer is the natural follow-on. Rebuilding from scratch is a later decision, not the first offer.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-agency-services-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which description best separates a fixed-price project from a dedicated team (staff augmentation) engagement?",
+    "mcq": {
+      "options": [
+        "Fixed price sells a defined scope for an agreed sum; a dedicated team sells engineers' time each month and the client directs the work",
+        "Fixed price is always cheaper for the client than a dedicated team",
+        "A dedicated team always includes a project manager and QA, fixed price never does",
+        "Fixed price is only used for mobile apps, dedicated teams only for web"
+      ],
+      "correctIndex": 0,
+      "explanation": "The difference is what is being bought: an outcome against a scope, or capacity over time. Cost, staffing and platform vary case by case.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-agency-services-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A founder asks for \"an Uber-like app\" with a firm launch date in 10 weeks, a fixed budget and a scope that is still changing weekly. Which engagement model do you recommend?",
+    "mcq": {
+      "options": [
+        "Fixed price for the whole idea as described today",
+        "Hourly with no estimate, since the scope keeps changing",
+        "A dedicated team of six engineers from day one",
+        "A short paid discovery phase to fix the MVP scope, then fixed price for that phase"
+      ],
+      "correctIndex": 3,
+      "explanation": "A moving scope makes a fixed price for everything a loss or a fight later, and open-ended hourly with a fixed budget worries the founder. Paid discovery turns the moving idea into a scope you can price honestly.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-agency-services-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "An existing client's app has launched. Which follow-on offer usually creates recurring revenue for an agency while genuinely helping the client?",
+    "mcq": {
+      "options": [
+        "A second, separate discovery phase for the same app",
+        "A one-off logo redesign",
+        "Reselling them the same app under a new name",
+        "A monthly maintenance and support retainer covering fixes, OS/library updates and small improvements"
+      ],
+      "correctIndex": 3,
+      "explanation": "Launched software needs updates, monitoring and fixes; a retainer prices that predictable need and keeps the relationship alive for the next phase.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-agency-services-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client wants to go from idea to a launched mobile app. Put the agency services in the order they would normally be delivered.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A client wants to go from idea to a launched mobile app. Put the agency services in the order they would normally be delivered.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Development in sprints"
+        },
+        {
+          "id": "r4",
+          "label": "QA and user acceptance testing"
+        },
+        {
+          "id": "r5",
+          "label": "Launch and app store submission"
+        },
+        {
+          "id": "r6",
+          "label": "Maintenance & support retainer"
+        },
+        {
+          "id": "r1",
+          "label": "Discovery & scoping workshop"
+        },
+        {
+          "id": "r2",
+          "label": "UI/UX design (wireframes, then visual design)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Scope first, then design what you scoped, build it, test it, ship it, and keep it running. Selling maintenance before launch is fine, but delivery follows this order."
+    }
+  },
+  {
+    "id": "bd-agency-services-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "An inbound lead, a regional gym chain, writes: \"We want members to book classes and pay from their phones. We have a website on WordPress. Budget not decided.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "An inbound lead, a regional gym chain, writes: \"We want members to book classes and pay from their phones. We have a website on WordPress. Budget not decided.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which service line is the core of this request?",
+          "options": [
+            "Staff augmentation of one QA engineer",
+            "Mobile app development with booking and payments",
+            "SEO for the WordPress site",
+            "Data analytics dashboards"
+          ],
+          "correctIndex": 1,
+          "explanation": "Booking and paying from phones is a mobile product with payments; the website is context."
+        },
+        {
+          "id": "s2",
+          "question": "They mention their WordPress site often breaks. What do you do with that?",
+          "options": [
+            "Ignore it, it is not what they asked for",
+            "Lead with a full website rebuild instead of the app",
+            "Note it as a possible second service (maintenance or a rebuild) and raise it after the main need is scoped"
+          ],
+          "correctIndex": 2,
+          "explanation": "It is a real cross-sell, but leading with it derails the call from the need they came with."
+        },
+        {
+          "id": "s3",
+          "question": "Budget is undecided. What is the best next step?",
+          "options": [
+            "Offer a short discovery call, then a ballpark range for an MVP so they can anchor a budget",
+            "Send a fixed quote for the full app today",
+            "Wait until they tell you a budget"
+          ],
+          "correctIndex": 0,
+          "explanation": "Buyers rarely know a budget for something new; a range after discovery gives them something real to plan with."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-agency-services-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "This is a draft \"Services\" paragraph a new BD hire wrote for a capabilities one-pager. Mark the sentences that are problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "This is a draft \"Services\" paragraph a new BD hire wrote for a capabilities one-pager. Mark the sentences that are problems.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "We design, build and maintain web and mobile apps for startups and growing businesses.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We can build absolutely anything in any technology within any budget.",
+          "issue": "Overpromises; no agency can, and buyers stop trusting the rest of the page."
+        },
+        {
+          "id": "p3",
+          "text": "Typical engagements run as fixed-price projects or monthly dedicated teams.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "We add AI features such as chat assistants and document search where they solve a real problem.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Our apps never have bugs, so you will not need support after launch.",
+          "issue": "False claim, and it talks the client out of a maintenance retainer."
+        },
+        {
+          "id": "p6",
+          "text": "After launch we offer maintenance plans covering updates, fixes and small improvements.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-agency-services-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A prospect sends five requests. Rank them by how well each fits a typical web/mobile/AI product agency, best fit first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A prospect sends five requests. Rank them by how well each fits a typical web/mobile/AI product agency, best fit first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Take over maintenance of their existing React Native app"
+        },
+        {
+          "id": "r4",
+          "label": "Run their paid social media ads"
+        },
+        {
+          "id": "r5",
+          "label": "Supply office IT hardware"
+        },
+        {
+          "id": "r1",
+          "label": "Build an MVP of a marketplace web app with payments"
+        },
+        {
+          "id": "r2",
+          "label": "Add an AI support chatbot to their existing SaaS product"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Product builds, AI features and app maintenance are core software services. Paid ads are a marketing agency's work and hardware is not a software service at all; refer those out."
+    }
+  },
+  {
+    "id": "bd-agency-services-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client asks for a rough comparison of two engagement models for a 3-month build. Calculate both totals.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A client asks for a rough comparison of two engagement models for a 3-month build. Calculate both totals.",
+      "table": {
+        "columns": [
+          "Model",
+          "Detail"
+        ],
+        "rows": [
+          [
+            "Fixed price",
+            "Scope estimated at 960 hours at $40/hour, plus a 15% risk buffer"
+          ],
+          [
+            "Dedicated team",
+            "2 developers at $4,800/month each + 1 part-time QA at $2,000/month, for 3 months"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "fixed",
+          "label": "Fixed-price quote",
+          "unit": "$",
+          "answer": 44160,
+          "tolerance": 1
+        },
+        {
+          "id": "team",
+          "label": "Dedicated team total",
+          "unit": "$",
+          "answer": 34800,
+          "tolerance": 1
+        },
+        {
+          "id": "diff",
+          "label": "Fixed price minus dedicated team",
+          "unit": "$",
+          "answer": 9360,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Fixed: 960 x 40 = 38,400; x 1.15 = 44,160. Team: (2 x 4,800 + 2,000) x 3 = 34,800. The difference is the client paying the agency to carry scope risk."
+    }
+  },
+  {
+    "id": "bd-agency-services-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "An existing client, a logistics startup, has a web app you built last year. Their CTO emails: \"Can you lend us two React developers for six months? We will manage them.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "An existing client, a logistics startup, has a web app you built last year. Their CTO emails: \"Can you lend us two React developers for six months? We will manage them.\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which engagement model is this?",
+          "options": [
+            "Discovery workshop",
+            "Staff augmentation / dedicated team",
+            "Fixed-price project",
+            "White-label licence"
+          ],
+          "correctIndex": 1,
+          "explanation": "They direct the work and buy capacity over time."
+        },
+        {
+          "id": "s2",
+          "question": "What should you clarify before quoting?",
+          "options": [
+            "Their full feature list and a signed SOW",
+            "Which logo they want on the app",
+            "Seniority needed, overlap hours/time zone, start date, and how tasks and reviews will be run"
+          ],
+          "correctIndex": 2,
+          "explanation": "For augmentation the scope is the people and the working arrangement, not a feature list."
+        },
+        {
+          "id": "s3",
+          "question": "Halfway through they ask the two developers to also design the new UI. What do you do?",
+          "options": [
+            "Flag that design is a different role and offer a designer for agreed hours",
+            "Tell the developers to do the design quietly",
+            "Refuse and end the engagement"
+          ],
+          "correctIndex": 0,
+          "explanation": "In augmentation the scope is the roles bought; adding a role is a change you price, not a favour you absorb."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-agency-services-t2-4",
+    "departmentId": "bd",
+    "skillId": "bd-agency-services",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A BD rep's notes describing the agency's services for a prospect call. Mark the statements that would mislead the prospect.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A BD rep's notes describing the agency's services for a prospect call. Mark the statements that would mislead the prospect.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Discovery is a short paid phase that produces a scope, wireframes and an estimate.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Fixed price means the client can add features at any time without changing the price.",
+          "issue": "Fixed price covers the agreed scope; additions go through change requests."
+        },
+        {
+          "id": "p3",
+          "text": "A dedicated team bills monthly for the people assigned, and the client sets priorities.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Maintenance retainers include unlimited new features every month.",
+          "issue": "Retainers usually cover fixes, updates and a set number of hours, not unlimited new development."
+        },
+        {
+          "id": "p5",
+          "text": "QA runs throughout development, not only at the end.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Launch includes help with app store submission.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  }
+]

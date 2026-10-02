@@ -1,0 +1,426 @@
+[
+  {
+    "id": "bd-icp-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is an ideal customer profile (ICP)?",
+    "mcq": {
+      "options": [
+        "A description of the type of company that gets the most value from your services and is most valuable to you",
+        "A biography of one specific person you want to sell to",
+        "The list of every company that has ever contacted you",
+        "Your agency's own company profile on a directory"
+      ],
+      "correctIndex": 0,
+      "explanation": "An ICP describes companies (firmographics, needs, budget, triggers). The individual people inside them are buyer personas.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-icp-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which of these is a firmographic attribute you would use in an ICP?",
+    "mcq": {
+      "options": [
+        "Company size and funding stage",
+        "The buyer's favourite podcast",
+        "The colour of their website",
+        "The day of the week they replied"
+      ],
+      "correctIndex": 0,
+      "explanation": "Firmographics describe the company: industry, size, stage, location, revenue. They let you filter lists before you research individuals.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-icp-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Your last 20 closed-won deals show that seed-stage founders with no technical co-founder close 3x faster than larger companies but churn after launch. What should you do with the ICP?",
+    "mcq": {
+      "options": [
+        "Drop them, since churn is all that matters",
+        "Make them the only ICP and stop selling to anyone else",
+        "Ignore the data; ICPs should be based on intuition",
+        "Keep them in the ICP but add an offer (maintenance, phase 2) aimed at the post-launch drop-off, and track lifetime value, not just close speed"
+      ],
+      "correctIndex": 3,
+      "explanation": "An ICP should weigh speed, deal size and lifetime value. The data shows a fixable retention gap, not a reason to discard a fast-closing segment.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-icp-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which signal is a trigger event that makes an ICP-fit company worth contacting now?",
+    "mcq": {
+      "options": [
+        "They have had the same website for five years",
+        "Their CEO likes a post about football",
+        "They are listed in a business directory",
+        "They just raised a seed round and posted a job for a mobile developer"
+      ],
+      "correctIndex": 3,
+      "explanation": "New funding plus a hiring need signals budget and an active build: timing that makes outreach relevant.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-icp-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Your agency's ICP: funded startups (seed to Series A) and SMEs that need a web or mobile product built, with a budget of $25k+, English-speaking, decision-maker is the founder or CTO. Rank these leads by ICP fit, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Your agency's ICP: funded startups (seed to Series A) and SMEs that need a web or mobile product built, with a budget of $25k+, English-speaking, decision-maker is the founder or CTO. Rank these leads by ICP fit, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Bootstrapped SME wanting an internal booking tool, budget $15k"
+        },
+        {
+          "id": "r4",
+          "label": "Student with an app idea and no budget yet"
+        },
+        {
+          "id": "r1",
+          "label": "Series A health-tech startup, CTO looking for a team to build a patient app, budget $80k"
+        },
+        {
+          "id": "r2",
+          "label": "Seed-funded marketplace, founder needs an MVP in 3 months, budget $40k"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Funded, clear need, budget above threshold and the decision-maker engaged ranks highest; below-budget SMEs are partial fits; no budget is not a fit."
+    }
+  },
+  {
+    "id": "bd-icp-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A new BD hire drafted this ICP. Mark the lines that make it unusable for targeting.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A new BD hire drafted this ICP. Mark the lines that make it unusable for targeting.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Industry: health-tech, logistics and marketplaces.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Company size: any company in the world.",
+          "issue": "Too broad to filter on; an ICP must narrow the list."
+        },
+        {
+          "id": "p3",
+          "text": "Stage: seed to Series B, or profitable SMEs.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Budget: whatever they can afford.",
+          "issue": "No budget threshold means you will spend time on leads you cannot serve profitably."
+        },
+        {
+          "id": "p5",
+          "text": "Buying trigger: new funding, a new product launch, or an unhappy current vendor.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Decision-maker: founder, CTO or head of product.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-icp-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You are building a list for outbound. The ICP is \"US/UK logistics companies, 50–500 employees, using manual dispatch, likely to need a driver app\".",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are building a list for outbound. The ICP is \"US/UK logistics companies, 50–500 employees, using manual dispatch, likely to need a driver app\".",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which filter would you apply first in your prospecting tool?",
+          "options": [
+            "Any company with 'app' in its name",
+            "Industry = logistics, region = US/UK, headcount 50–500",
+            "Companies whose CEO posted recently"
+          ],
+          "correctIndex": 1,
+          "explanation": "Firmographic filters cut the list to ICP companies before you do slower research."
+        },
+        {
+          "id": "s2",
+          "question": "How do you check the 'manual dispatch' criterion?",
+          "options": [
+            "Assume all logistics firms dispatch manually",
+            "Skip it, it cannot be checked",
+            "Research job posts, websites and reviews for signs like dispatcher roles or no driver app"
+          ],
+          "correctIndex": 2,
+          "explanation": "Need-based criteria are checked with signals; that is what separates a fit from a lookalike."
+        },
+        {
+          "id": "s3",
+          "question": "A 2,000-employee firm matches every criterion except size. What do you do?",
+          "options": [
+            "Keep it in a separate list for a different approach rather than forcing it into this sequence",
+            "Delete it permanently",
+            "Add it to the same sequence unchanged"
+          ],
+          "correctIndex": 0,
+          "explanation": "It may be a good account, but larger firms buy differently (procurement, more stakeholders) and need different messaging."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-icp-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Score this lead on the agency's weighted ICP scorecard. Each criterion is scored 0–10 and multiplied by its weight. What is the total, and does it pass the 70-point threshold (enter 1 for yes, 0 for no)?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Score this lead on the agency's weighted ICP scorecard. Each criterion is scored 0–10 and multiplied by its weight. What is the total, and does it pass the 70-point threshold (enter 1 for yes, 0 for no)?",
+      "table": {
+        "columns": [
+          "Criterion",
+          "Weight",
+          "Score (0–10)"
+        ],
+        "rows": [
+          [
+            "Industry fit",
+            "2",
+            "8"
+          ],
+          [
+            "Budget $25k+",
+            "3",
+            "6"
+          ],
+          [
+            "Funding/revenue stage",
+            "2",
+            "9"
+          ],
+          [
+            "Decision-maker engaged",
+            "2",
+            "5"
+          ],
+          [
+            "Timeline under 3 months",
+            "1",
+            "7"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Weighted score",
+          "unit": "points",
+          "answer": 69,
+          "tolerance": 0
+        },
+        {
+          "id": "pass",
+          "label": "Passes threshold (1 = yes, 0 = no)",
+          "unit": "",
+          "answer": 0,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "2x8 + 3x6 + 2x9 + 2x5 + 1x7 = 16 + 18 + 18 + 10 + 7 = 69, one point short of 70, so it does not pass. The weak spot is the decision-maker; getting the founder or CTO engaged would lift it over."
+    }
+  },
+  {
+    "id": "bd-icp-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You compare two segments from last year's closed deals to decide which belongs in the ICP. Calculate the revenue per deal and the win rate for each segment.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "You compare two segments from last year's closed deals to decide which belongs in the ICP. Calculate the revenue per deal and the win rate for each segment.",
+      "table": {
+        "columns": [
+          "Segment",
+          "Proposals sent",
+          "Deals won",
+          "Revenue won"
+        ],
+        "rows": [
+          [
+            "Seed-stage startups",
+            "40",
+            "10",
+            "$350,000"
+          ],
+          [
+            "SMEs (non-tech)",
+            "25",
+            "4",
+            "$220,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "rpdA",
+          "label": "Startups: revenue per deal",
+          "unit": "$",
+          "answer": 35000,
+          "tolerance": 1
+        },
+        {
+          "id": "rpdB",
+          "label": "SMEs: revenue per deal",
+          "unit": "$",
+          "answer": 55000,
+          "tolerance": 1
+        },
+        {
+          "id": "wrA",
+          "label": "Startups: win rate",
+          "unit": "%",
+          "answer": 25,
+          "tolerance": 0.1
+        },
+        {
+          "id": "wrB",
+          "label": "SMEs: win rate",
+          "unit": "%",
+          "answer": 16,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Startups: 350,000 / 10 = 35,000 per deal, 10/40 = 25%. SMEs: 220,000 / 4 = 55,000 per deal, 4/25 = 16%. SMEs pay more per deal but are harder to win; both numbers matter for the ICP."
+    }
+  },
+  {
+    "id": "bd-icp-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-icp",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You have time to research only some accounts this week. Rank these ICP-fit companies by how timely outreach is, most timely first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "You have time to research only some accounts this week. Rank these ICP-fit companies by how timely outreach is, most timely first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Leaving a bad review of their current dev vendor two months ago"
+        },
+        {
+          "id": "r4",
+          "label": "No news in the last year"
+        },
+        {
+          "id": "r1",
+          "label": "Raised Series A last week and posted three engineering jobs"
+        },
+        {
+          "id": "r2",
+          "label": "Announced a new product line launching next quarter"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Fresh funding plus active hiring is the strongest current signal; an upcoming launch is next; an old vendor complaint is weaker as it ages; no signal means no reason to reach out now."
+    }
+  }
+]

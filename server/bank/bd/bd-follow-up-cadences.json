@@ -1,0 +1,430 @@
+[
+  {
+    "id": "bd-follow-up-cadences-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A prospect received your proposal and has gone quiet. Order these follow-ups as a sensible cadence, earliest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A prospect received your proposal and has gone quiet. Order these follow-ups as a sensible cadence, earliest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Day 10: ask a specific question about their timeline or decision process"
+        },
+        {
+          "id": "r4",
+          "label": "Day 20: polite final email saying you will close the file unless timing changes"
+        },
+        {
+          "id": "r5",
+          "label": "Day 60+: move to a light nurture list with occasional useful content"
+        },
+        {
+          "id": "r1",
+          "label": "Day 2: short check that they received it and offer to walk through it"
+        },
+        {
+          "id": "r2",
+          "label": "Day 5: send a relevant case study answering a concern they raised on the call"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Start close to the send, add value with each touch, then close the loop and nurture rather than chasing forever."
+    }
+  },
+  {
+    "id": "bd-follow-up-cadences-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the follow-up messages in this sequence that are weak.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the follow-up messages in this sequence that are weak.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Touch 1: 'Hi Jon, sharing the 2-minute video of the booking flow we discussed, in case it helps your team review.'",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Touch 2: 'Just checking in!'",
+          "issue": "No new value or reason to reply."
+        },
+        {
+          "id": "p3",
+          "text": "Touch 3: 'Did you see my last two emails???'",
+          "issue": "Guilt-tripping and shouting punctuation damage the relationship."
+        },
+        {
+          "id": "p4",
+          "text": "Touch 4: 'One question: is the launch still planned for Q3, or has timing moved?'",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Touch 5: 'I'll close the file for now; happy to pick it up whenever timing suits.'",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Touch 6: identical copy of touch 1 sent again",
+          "issue": "Repeating an earlier email adds nothing and looks automated."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-follow-up-cadences-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": "bd-tool-lemlist",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A 4-step email sequence went to 500 prospects. Replies by step are below (each prospect replies at most once). Work out the figures.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A 4-step email sequence went to 500 prospects. Replies by step are below (each prospect replies at most once). Work out the figures.",
+      "table": {
+        "columns": [
+          "Step",
+          "Replies"
+        ],
+        "rows": [
+          [
+            "Email 1",
+            "15"
+          ],
+          [
+            "Email 2",
+            "12"
+          ],
+          [
+            "Email 3",
+            "8"
+          ],
+          [
+            "Email 4",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Overall reply rate",
+          "unit": "%",
+          "answer": 8,
+          "tolerance": 0.1
+        },
+        {
+          "id": "after",
+          "label": "Share of all replies that came after email 1",
+          "unit": "%",
+          "answer": 62.5,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Total replies = 15+12+8+5 = 40, so 40/500 = 8%. Replies after email 1 = 25, and 25/40 = 62.5%: most replies come from follow-ups."
+    }
+  },
+  {
+    "id": "bd-follow-up-cadences-t2-4",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Write a follow-up email to a prospect who went quiet after your proposal. Add value and make it easy to reply.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a follow-up email to a prospect who went quiet after your proposal. Add value and make it easy to reply.",
+      "context": "Prospect: Elena, operations head at a chain of 8 physiotherapy clinics. You sent a proposal 9 days ago for an appointment-booking app (phase 1, 10 weeks). On the call she worried that older patients would not use an app. Your agency built a booking app for a dental group where about 40% of bookings came from patients over 55 within six months. You have had no reply.",
+      "wordLimit": 110,
+      "rubric": [
+        {
+          "id": "value",
+          "label": "Adds new value",
+          "description": "Shares the dental-group result as an answer to her stated concern, not a bare check-in.",
+          "weight": 1
+        },
+        {
+          "id": "brief",
+          "label": "Short and respectful",
+          "description": "Brief, no guilt-tripping or pressure.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Easy reply",
+          "description": "Ends with one simple question or a yes/no option.",
+          "weight": 1
+        },
+        {
+          "id": "relevance",
+          "label": "Tied to her situation",
+          "description": "Refers to her clinics and her concern about older patients.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Elena,\n\nYou mentioned older patients might not use a booking app, so I thought this would help: for a dental group we worked with, about 40% of app bookings came from patients over 55 within six months, mostly because reminders and rescheduling were simpler than calling.\n\nWould it be useful if I added a short section to the proposal on how we would design for older patients?\n\nBest,\nOmar"
+    }
+  },
+  {
+    "id": "bd-follow-up-cadences-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A warm deal (USD 45k web platform) has stalled. The champion, a product manager, replied two weeks ago: 'Still keen, waiting on budget sign-off.' Since then, silence through two follow-ups.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A warm deal (USD 45k web platform) has stalled. The champion, a product manager, replied two weeks ago: 'Still keen, waiting on budget sign-off.' Since then, silence through two follow-ups.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the best next touch?",
+          "options": [
+            "Email the CEO directly, skipping the champion",
+            "Stop all contact until they reach out",
+            "Ask the champion what the budget sign-off needs and offer a one-page summary they can forward to the approver",
+            "Send a 15% discount to speed things up"
+          ],
+          "correctIndex": 2,
+          "explanation": "Help the champion sell internally. Discounting early or going around them damages the deal."
+        },
+        {
+          "id": "s2",
+          "question": "The champion replies: approval is delayed to next quarter. How should you adjust the cadence?",
+          "options": [
+            "Agree a date to reconnect before next quarter and send occasional useful updates until then",
+            "Keep emailing weekly asking for a decision",
+            "Mark the deal closed-lost and never contact them",
+            "Insist they sign now to hold the price forever"
+          ],
+          "correctIndex": 0,
+          "explanation": "Match the cadence to their real timeline and keep the relationship warm."
+        },
+        {
+          "id": "s3",
+          "question": "How should the deal be recorded in the CRM?",
+          "options": [
+            "Delete it to keep the pipeline clean",
+            "Mark it won since they are 'keen'",
+            "Move the close date to next quarter, log the reason and set a dated follow-up task",
+            "Leave the original close date so the forecast looks good"
+          ],
+          "correctIndex": 2,
+          "explanation": "An accurate close date, reason and next task keep the forecast honest and the follow-up from being forgotten."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-follow-up-cadences-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these reasons to send a follow-up by how much value they give the prospect, most valuable first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these reasons to send a follow-up by how much value they give the prospect, most valuable first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "A reminder of a deadline they set themselves (e.g. their launch date)"
+        },
+        {
+          "id": "r4",
+          "label": "A generic newsletter"
+        },
+        {
+          "id": "r5",
+          "label": "'Just bumping this to the top of your inbox'"
+        },
+        {
+          "id": "r1",
+          "label": "Answering an objection they raised with a specific proof point"
+        },
+        {
+          "id": "r2",
+          "label": "A short insight about a change in their market relevant to the project"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Follow-ups that address their own concerns or context earn replies; generic content and bumps add little."
+    }
+  },
+  {
+    "id": "bd-follow-up-cadences-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the problems in this follow-up policy written by a new BD lead.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problems in this follow-up policy written by a new BD lead.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Every new lead gets a follow-up within 24 hours of first contact.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "All leads get the same 12-email sequence regardless of source or stage.",
+          "issue": "Ignores context: an Upwork client, a referral and a cold lead need different cadences."
+        },
+        {
+          "id": "p3",
+          "text": "Follow-ups stop immediately when a prospect replies or asks to stop.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Prospects who say 'not now' get emailed every 2 days until they agree to a call.",
+          "issue": "Ignoring a stated 'not now' is pushy and harms reputation; set a later reconnect date instead."
+        },
+        {
+          "id": "p5",
+          "text": "Each follow-up should add something new: an answer, an example or a question.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Every touch is logged in the CRM with the next step and date.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-follow-up-cadences-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which follow-up is most likely to get a reply after a proposal went quiet?",
+    "mcq": {
+      "options": [
+        "A short email answering a concern they raised, ending with one simple question",
+        "'Any update?'",
+        "A copy of the full proposal sent again",
+        "A message saying you are disappointed they have not replied"
+      ],
+      "correctIndex": 0,
+      "explanation": "Relevant value plus an easy question gives them a reason and a way to respond.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-follow-up-cadences-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A prospect replies 'Interesting, but we are not ready until next year.' What is the best cadence response?",
+    "mcq": {
+      "options": [
+        "Thank them, agree a reconnect point, and add them to a light nurture track",
+        "Keep the active sequence running",
+        "Delete them from the CRM",
+        "Ask for a call this week anyway"
+      ],
+      "correctIndex": 0,
+      "explanation": "Respecting their timing and setting a date keeps the opportunity alive without annoying them.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-follow-up-cadences-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-follow-up-cadences",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Your sequence data shows replies peak at email 3, but unsubscribes spike on email 5. What should you change?",
+    "mcq": {
+      "options": [
+        "Add more emails after email 5",
+        "Remove emails 2 and 3",
+        "Send all five on the same day",
+        "Shorten the sequence or make later steps more valuable, especially email 5"
+      ],
+      "correctIndex": 3,
+      "explanation": "The later steps cost more goodwill than they earn; trimming or improving them keeps reply volume while protecting reputation.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

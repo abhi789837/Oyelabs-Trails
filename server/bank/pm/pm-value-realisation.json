@@ -1,0 +1,363 @@
+[
+  {
+    "id": "pm-value-realisation-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order this chain from what the project builds to what the business gains.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order this chain from what the project builds to what the business gains.",
+      "items": [
+        {
+          "id": "r9357b",
+          "label": "Output: AI triage model in production"
+        },
+        {
+          "id": "r5d457",
+          "label": "Capability: agents receive suggested categories for each ticket"
+        },
+        {
+          "id": "rad53a",
+          "label": "Outcome: agents use the suggestions on 70% of tickets"
+        },
+        {
+          "id": "rb4583",
+          "label": "Benefit: average handling time down 25%"
+        }
+      ],
+      "correctOrder": [
+        "r9357b",
+        "r5d457",
+        "rad53a",
+        "rb4583"
+      ],
+      "explanation": "Outputs enable capabilities, which lead to changed behaviour (outcomes), which produce measurable benefits."
+    }
+  },
+  {
+    "id": "pm-value-realisation-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Six months after launch, measure benefit realisation for the AI triage feature.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Six months after launch, measure benefit realisation for the AI triage feature.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Baseline",
+          "Target",
+          "Actual"
+        ],
+        "rows": [
+          [
+            "Average handling time (min)",
+            "10",
+            "7.5",
+            "8.5"
+          ],
+          [
+            "Tickets per month",
+            "20,000",
+            "-",
+            "20,000"
+          ],
+          [
+            "Agent cost per minute",
+            "$0.60",
+            "-",
+            "$0.60"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "target",
+          "label": "Target reduction realised",
+          "unit": "%",
+          "answer": 60.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "saving",
+          "label": "Monthly saving achieved",
+          "unit": "$",
+          "answer": 18000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "gap",
+          "label": "Further monthly saving if the target is reached",
+          "unit": "$",
+          "answer": 12000.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "1.5 of the 2.5-minute target = 60%. Saving 1.5 x 20,000 x 0.60 = 18,000 a month; reaching target adds 12,000."
+    }
+  },
+  {
+    "id": "pm-value-realisation-t4-3",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A benefits register for a client's AI booking assistant. Mark the weak entries.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A benefits register for a client's AI booking assistant. Mark the weak entries.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Benefit: phone bookings down from 4,000 to 2,500 a month by Q3. Owner: head of operations.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Benefit: number of AI conversations. Target: as many as possible.",
+          "issue": "A vanity measure that grows regardless of value; measure outcomes."
+        },
+        {
+          "id": "s3",
+          "text": "Benefit: staff happier. Owner: TBC.",
+          "issue": "Not measurable and no owner."
+        },
+        {
+          "id": "s4",
+          "text": "Benefit: no-show rate down from 12% to 8% through reminders. Measured monthly.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Enabler: front-desk staff trained to promote the assistant by launch.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Dis-benefit: some customers may call more because of confusing answers; monitored via call reasons.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Benefit owner: Oyelabs project manager.",
+          "issue": "Benefits must be owned by the client's business, which must change processes to capture them."
+        },
+        {
+          "id": "s8",
+          "text": "Review dates: 3, 6 and 12 months after launch.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-value-realisation-t4-4",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handling time fell 20% after the AI feature launched, but the client also hired 10 more experienced agents in the same month.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Handling time fell 20% after the AI feature launched, but the client also hired 10 more experienced agents in the same month.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What is the issue in claiming the 20% as the feature's benefit?",
+          "options": [
+            "None; the target was met",
+            "The baseline was wrong",
+            "Handling time is not a valid measure",
+            "Attribution: the hiring could explain part of the change"
+          ],
+          "correctIndex": 3,
+          "explanation": "Confounding changes make attribution unreliable."
+        },
+        {
+          "id": "d2",
+          "question": "How could the benefit be isolated?",
+          "options": [
+            "Compare tickets handled with and without the AI suggestions, or agents with similar tenure",
+            "Ignore the new hires",
+            "Ask agents how they feel",
+            "Extend the measurement period without a method"
+          ],
+          "correctIndex": 0,
+          "explanation": "A comparison group isolates the feature's effect."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-value-realisation-t4-5",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of benefits management across a project's life.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps of benefits management across a project's life.",
+      "items": [
+        {
+          "id": "r2595c",
+          "label": "Define benefits with baselines, targets and owners"
+        },
+        {
+          "id": "r15905",
+          "label": "Map deliverables and business changes that enable each benefit"
+        },
+        {
+          "id": "re38c3",
+          "label": "Track leading indicators during delivery"
+        },
+        {
+          "id": "r94b86",
+          "label": "Hand over the benefits register at project close"
+        },
+        {
+          "id": "r794a7",
+          "label": "Review realised benefits after launch"
+        }
+      ],
+      "correctOrder": [
+        "r2595c",
+        "r15905",
+        "re38c3",
+        "r94b86",
+        "r794a7"
+      ],
+      "explanation": "Define, map, track, transfer, review: benefits often appear only after the project has closed."
+    }
+  },
+  {
+    "id": "pm-value-realisation-t4-6",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A client wants to renew a retainer but their CFO asks what value the last year delivered.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client wants to renew a retainer but their CFO asks what value the last year delivered.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What evidence is most persuasive?",
+          "options": [
+            "The number of features shipped",
+            "Measured benefits against the agreed baselines, with the method stated",
+            "Hours delivered",
+            "Positive comments from the client's team"
+          ],
+          "correctIndex": 1,
+          "explanation": "Outcomes and benefits matter to a CFO more than outputs or effort."
+        },
+        {
+          "id": "d2",
+          "question": "Some benefits are below target. How do you present them?",
+          "options": [
+            "Leave them out",
+            "Change the targets",
+            "Honestly, with the causes and what the next year would change to close the gap",
+            "Blame the client's adoption"
+          ],
+          "correctIndex": 2,
+          "explanation": "Credibility comes from candour; it also frames next year's work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-value-realisation-m4-1",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Who should own a business benefit such as reduced call volume?",
+    "mcq": {
+      "options": [
+        "A manager in the client's business who can change the processes needed",
+        "The agency's PM",
+        "The development team",
+        "The project sponsor's assistant"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only the business can capture benefits; the project only provides capability.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-value-realisation-m4-2",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is a dis-benefit?",
+    "mcq": {
+      "options": [
+        "A benefit that arrives late",
+        "A benefit below target",
+        "A cost of building the project",
+        "A negative consequence of the change, such as extra review work created by an AI feature"
+      ],
+      "correctIndex": 3,
+      "explanation": "Dis-benefits are real outcomes someone experiences as negative; tracking them keeps the case honest.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-value-realisation-m4-3",
+    "departmentId": "pm",
+    "skillId": "pm-value-realisation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why do benefits often appear only after the project closes?",
+    "mcq": {
+      "options": [
+        "Accounts are only updated yearly",
+        "Projects hide benefits until the end",
+        "Benefits are always overstated",
+        "They depend on people adopting the new capability and changing how they work"
+      ],
+      "correctIndex": 3,
+      "explanation": "Adoption and process change take time, so reviews must be scheduled after handover.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

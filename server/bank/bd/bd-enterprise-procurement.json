@@ -1,0 +1,331 @@
+[
+  {
+    "id": "bd-enterprise-procurement-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps of an enterprise purchase.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the typical steps of an enterprise buying a development project, first at the top.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "Procurement negotiates the commercial terms"
+        },
+        {
+          "id": "i5",
+          "label": "Purchase order issued"
+        },
+        {
+          "id": "i6",
+          "label": "Work starts"
+        },
+        {
+          "id": "i1",
+          "label": "Business sponsor approves the project and budget"
+        },
+        {
+          "id": "i2",
+          "label": "Vendor onboarding and security questionnaire"
+        },
+        {
+          "id": "i3",
+          "label": "Legal review of the MSA and data-processing terms"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4",
+        "i5",
+        "i6"
+      ],
+      "explanation": "Need and budget come first; then the supplier is vetted, contracts reviewed and terms negotiated. Starting before the PO risks unpaid work."
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Find the risks in this enterprise deal plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this enterprise deal plan that put the deal at risk.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Champion: Head of Digital, who owns the budget for the project.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Only contact so far is the champion; no meetings with IT, security or procurement.",
+          "issue": "Single-threaded: if the champion is busy or leaves, the deal stalls."
+        },
+        {
+          "id": "p3",
+          "text": "Security questionnaire: we'll answer \"yes\" to everything to save time.",
+          "issue": "Inaccurate security answers create legal and trust problems; answer accurately with engineering."
+        },
+        {
+          "id": "p4",
+          "text": "Allow 4–6 weeks for vendor onboarding and legal review.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Team booked to start on 1 March, before the PO is expected.",
+          "issue": "Starting work before the PO means working without a contract or payment commitment."
+        },
+        {
+          "id": "p6",
+          "text": "Mutual action plan shared with the champion and updated weekly.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Work out the cash gap on enterprise payment terms.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A 12-month enterprise contract is worth $240,000, invoiced monthly in equal amounts at the end of each month, with net-60 payment terms. Your delivery cost is $14,000 a month.",
+      "table": null,
+      "fields": [
+        {
+          "id": "invoice",
+          "label": "Monthly invoice",
+          "unit": "$",
+          "answer": 20000,
+          "tolerance": 1
+        },
+        {
+          "id": "months",
+          "label": "Months from project start until the first payment arrives",
+          "unit": "months",
+          "answer": 3,
+          "tolerance": 0.1
+        },
+        {
+          "id": "funded",
+          "label": "Delivery cost you fund before the first payment",
+          "unit": "$",
+          "answer": 42000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "240,000 ÷ 12 = $20,000 a month. The first invoice goes out at the end of month 1 and is paid 60 days later, at the end of month 3. By then you have spent 3 × $14,000 = $42,000. Long payment terms are a real cost to plan for."
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Handle a procurement discount demand after the business has agreed.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The business sponsor has approved your $300,000 proposal. Procurement now says company policy is to get 20% off every supplier.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first move?",
+          "options": [
+            "Agree to the 20% to keep the deal",
+            "Go around procurement and complain to the sponsor",
+            "Refuse to discuss price",
+            "Acknowledge their role, ask what the target is based on, and offer trades rather than a straight cut"
+          ],
+          "correctIndex": 3,
+          "explanation": "Procurement is measured on savings; give them something to show without giving away margin for nothing."
+        },
+        {
+          "id": "s2",
+          "question": "Procurement needs a visible saving. Which trade fits best?",
+          "options": [
+            "A modest discount for a multi-year commitment or prepayment, or removal of an optional module",
+            "20% off with no change",
+            "Agree to net-120 payment terms",
+            "Promise unlimited support hours"
+          ],
+          "correctIndex": 0,
+          "explanation": "Trades that reduce your risk or scope let procurement report a saving while you protect margin."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Recover when your champion leaves mid-deal.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your champion at a bank, who was driving a $400,000 deal through approval, has just left the company.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Wait for the bank to contact you",
+            "Follow the champion to their new company and drop this deal",
+            "Contact the other stakeholders you know and find out who now owns the initiative",
+            "Send the contract to the CEO for signature"
+          ],
+          "correctIndex": 2,
+          "explanation": "Find the new owner quickly; this is why deals need several contacts."
+        },
+        {
+          "id": "s2",
+          "question": "The new owner did not build the business case. Next?",
+          "options": [
+            "Assume the plan stands and push for signature",
+            "Lower the price to win them over",
+            "Restart with a brand-new proposal",
+            "Meet them, re-confirm the problem and success measures, and update the plan with them"
+          ],
+          "correctIndex": 3,
+          "explanation": "A new owner needs to own the case; re-validate rather than assume."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Work out total and annual contract value.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A 3-year enterprise contract totals $540,000, including a one-time setup fee of $60,000. The recurring fees are spread evenly across the three years.",
+      "table": null,
+      "fields": [
+        {
+          "id": "tcv",
+          "label": "Total contract value (TCV)",
+          "unit": "$",
+          "answer": 540000,
+          "tolerance": 1
+        },
+        {
+          "id": "acv",
+          "label": "Annual contract value, excluding the one-time setup",
+          "unit": "$",
+          "answer": 160000,
+          "tolerance": 1
+        },
+        {
+          "id": "y1",
+          "label": "Year 1 billing (setup plus one year of recurring)",
+          "unit": "$",
+          "answer": 220000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "TCV = $540000. ACV = (540,000 − 60,000) ÷ 3 = $160000. Year 1 = $220000. Keep one-time fees out of ACV so it reflects recurring value."
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why should an enterprise deal be \"multi-threaded\"?",
+    "mcq": {
+      "options": [
+        "So more invoices can be sent",
+        "Because procurement requires at least five contacts",
+        "To create more meetings for the sales team",
+        "Several stakeholders know and support it, so it survives if one person is busy or leaves"
+      ],
+      "correctIndex": 3,
+      "explanation": "Enterprise decisions involve many people; relying on one contact is the most common reason big deals stall.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-m3-2",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A security questionnaire asks about controls you are not sure your team has. What should you do?",
+    "mcq": {
+      "options": [
+        "Ask engineering or security to answer accurately, and say where a control is planned rather than in place",
+        "Answer yes to keep the deal moving",
+        "Skip the question",
+        "Copy answers from a competitor's public documents"
+      ],
+      "correctIndex": 0,
+      "explanation": "Inaccurate answers become contractual representations. Accuracy and honest gaps are always better.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-enterprise-procurement-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-enterprise-procurement",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is procurement's main role in an enterprise purchase?",
+    "mcq": {
+      "options": [
+        "Getting good commercial terms and managing supplier risk once the need is approved",
+        "Deciding whether the business needs the project",
+        "Writing the technical specification",
+        "Managing the project after kickoff"
+      ],
+      "correctIndex": 0,
+      "explanation": "The business decides the need; procurement shapes the terms and vets the supplier, so treat them as a separate audience.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

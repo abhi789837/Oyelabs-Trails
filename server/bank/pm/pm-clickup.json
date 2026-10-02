@@ -1,0 +1,370 @@
+[
+  {
+    "id": "pm-clickup-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order ClickUp's hierarchy from the top level down.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Subtask"
+        },
+        {
+          "id": "r4",
+          "label": "List"
+        },
+        {
+          "id": "r2",
+          "label": "Space"
+        },
+        {
+          "id": "r1",
+          "label": "Workspace"
+        },
+        {
+          "id": "r3",
+          "label": "Folder"
+        },
+        {
+          "id": "r5",
+          "label": "Task"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "ClickUp nests Workspace > Space > Folder > List > Task > Subtask (Folders are optional)."
+    }
+  },
+  {
+    "id": "pm-clickup-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Your agency uses one ClickUp Workspace. Order these levels for a new client project from the broadest container to the most specific.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Task: 'Build checkout screen'"
+        },
+        {
+          "id": "r2",
+          "label": "Folder: 'Acme Food App'"
+        },
+        {
+          "id": "r1",
+          "label": "Space: 'Client Projects'"
+        },
+        {
+          "id": "r3",
+          "label": "List: 'Sprint 3'"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "A Space for the department or type of work, a Folder per client project, Lists for sprints or phases, Tasks for work."
+    }
+  },
+  {
+    "id": "pm-clickup-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A PM describes their ClickUp set-up for a client project. Mark the choices that will cause problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "One Folder per client project inside the 'Client Projects' Space.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "A custom status flow: To do → In progress → In review → QA → Done.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Every task, for all clients, kept in a single List called 'Tasks'.",
+          "issue": "A single List for everything breaks reporting, permissions and sprint planning by client."
+        },
+        {
+          "id": "p4",
+          "text": "Custom field 'Billable' (checkbox) on tasks for T&M reporting.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Client guests given full edit access to the whole Workspace.",
+          "issue": "Guests should get access only to their own project's Folder or List, ideally view or comment."
+        },
+        {
+          "id": "p6",
+          "text": "Tasks without assignees or due dates are allowed in active sprints.",
+          "issue": "Unassigned, undated tasks in a sprint go unowned and slip unnoticed."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-clickup-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A ClickUp time-tracking report for a T&M client shows the tracked hours below for the week. The rate is $45/hour for billable tasks only.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Task",
+          "Billable",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Checkout API",
+            "Yes",
+            "12.5"
+          ],
+          [
+            "Checkout UI",
+            "Yes",
+            "8"
+          ],
+          [
+            "Internal team sync",
+            "No",
+            "3"
+          ],
+          [
+            "Bug fixes",
+            "Yes",
+            "6.5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "bill",
+          "label": "Billable hours",
+          "unit": "hours",
+          "answer": 27.0,
+          "tolerance": 0.01
+        },
+        {
+          "id": "inv",
+          "label": "Invoice amount",
+          "unit": "$",
+          "answer": 1215.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Billable = 12.5 + 8 + 6.5 = 27 hours (the internal meeting is not billable). 27 × $45 = $1,215."
+    }
+  },
+  {
+    "id": "pm-clickup-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The client wants an email every time a task in their project moves to 'Ready for UAT'. You are doing it by hand and forgetting.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client wants an email every time a task in their project moves to 'Ready for UAT'. You are doing it by hand and forgetting.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What ClickUp feature fits?",
+          "options": [
+            "A Dashboard",
+            "An Automation: when status changes to 'Ready for UAT', notify or email the client contact",
+            "A Doc",
+            "A Goal"
+          ],
+          "correctIndex": 1,
+          "explanation": "Automations trigger actions on events like status changes."
+        },
+        {
+          "id": "s2",
+          "question": "The client then complains about too many emails. What is a better option?",
+          "options": [
+            "Turn off all notifications",
+            "Send a daily or weekly digest, e.g. a saved view of 'Ready for UAT' tasks shared with the client",
+            "Ask them to filter their inbox",
+            "Move tasks to UAT less often"
+          ],
+          "correctIndex": 1,
+          "explanation": "A shared view or digest gives visibility without noise."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-clickup-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Developers keep starting tasks whose API isn't ready, then getting blocked.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Developers keep starting tasks whose API isn't ready, then getting blocked.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which ClickUp feature makes this visible?",
+          "options": [
+            "Task dependencies ('waiting on' / 'blocking')",
+            "Tags with colours",
+            "Priorities only",
+            "Task templates"
+          ],
+          "correctIndex": 0,
+          "explanation": "Dependencies show which tasks are waiting on others."
+        },
+        {
+          "id": "s2",
+          "question": "How do you use it in planning?",
+          "options": [
+            "Ignore it in sprint planning",
+            "Use the Gantt or board view to spot waiting tasks and schedule blocked work after its dependency",
+            "Assign blocked tasks to QA",
+            "Delete dependent tasks"
+          ],
+          "correctIndex": 1,
+          "explanation": "Seeing the chain lets you sequence the sprint realistically."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-clickup-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which ClickUp view is best for showing a client a timeline of tasks with dependencies?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Gantt view",
+        "List view",
+        "Chat view",
+        "Doc view"
+      ],
+      "correctIndex": 0,
+      "explanation": "Gantt view shows tasks on a timeline with dependency lines.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-clickup-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You want each task to record the client's budget code. What do you add in ClickUp?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A Custom Field",
+        "A new Space",
+        "A Goal",
+        "A Whiteboard"
+      ],
+      "correctIndex": 0,
+      "explanation": "Custom Fields add structured data (text, dropdown, number, money) to tasks.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-clickup-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-clickup",
+    "trackId": null,
+    "stackId": "pm-tool-clickup",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A shared 'Design review' task belongs to both the website project and the app project. What is the cleanest way to show it in both Lists?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Enable 'Tasks in Multiple Lists' and add the task to both",
+        "Duplicate it and keep both copies in sync manually",
+        "Move it back and forth weekly",
+        "Create a third Space"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tasks in Multiple Lists keeps one task visible in several Lists, avoiding duplicate copies.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

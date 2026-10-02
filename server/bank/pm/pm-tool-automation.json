@@ -1,0 +1,340 @@
+[
+  {
+    "id": "pm-tool-automation-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the parts of a typical automation rule in Jira or ClickUp.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the parts of a typical automation rule in Jira or ClickUp.",
+      "items": [
+        {
+          "id": "raa2b0",
+          "label": "Trigger: a ticket moves to In Review"
+        },
+        {
+          "id": "r979a4",
+          "label": "Condition: the ticket type is Bug"
+        },
+        {
+          "id": "rf675b",
+          "label": "Action: assign the QA lead and post to the QA Slack channel"
+        }
+      ],
+      "correctOrder": [
+        "raa2b0",
+        "r979a4",
+        "rf675b"
+      ],
+      "explanation": "Rules run as trigger, then optional conditions, then actions."
+    }
+  },
+  {
+    "id": "pm-tool-automation-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A PM's list of new automation rules. Mark the risky ones.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM's list of new automation rules. Mark the risky ones.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "When a story moves to Done, add a comment with the release version.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "When any ticket is updated, post a message to the client's Slack channel.",
+          "issue": "Floods the client with noise and may leak internal comments."
+        },
+        {
+          "id": "s3",
+          "text": "When a bug is created with priority Critical, page the on-call engineer.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "When a ticket is untouched for 30 days, delete it.",
+          "issue": "Deleting loses history; flag or close with a label instead."
+        },
+        {
+          "id": "s5",
+          "text": "When a sprint starts, post the sprint goal to the team channel.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "When a PR is merged, move the linked ticket to In QA.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-tool-automation-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The team spends 30 minutes a day moving tickets after pull requests are merged.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The team spends 30 minutes a day moving tickets after pull requests are merged.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What automation helps?",
+          "options": [
+            "A rule that moves the linked ticket when its pull request is merged",
+            "A rule that closes every ticket nightly",
+            "A daily reminder to move tickets",
+            "Remove the review column"
+          ],
+          "correctIndex": 0,
+          "explanation": "Automate the repetitive, rule-based step."
+        },
+        {
+          "id": "d2",
+          "question": "After launch, some tickets move wrongly because PRs aren't linked. What next?",
+          "options": [
+            "Turn off the automation",
+            "Agree a branch or PR naming convention that links tickets, and monitor the rule's audit log",
+            "Move tickets manually again",
+            "Ignore it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fix the input convention and check the rule's history."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-tool-automation-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Estimate time saved by an automation.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Estimate time saved by an automation.",
+      "table": {
+        "columns": [
+          "Item",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Manual updates per week",
+            "120"
+          ],
+          [
+            "Minutes per manual update",
+            "1.5"
+          ],
+          [
+            "Weeks per year",
+            "46"
+          ],
+          [
+            "Setup and maintenance per year",
+            "10 hours"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "weekly",
+          "label": "Hours saved per week",
+          "unit": "h",
+          "answer": 3.0,
+          "tolerance": 0.05
+        },
+        {
+          "id": "net",
+          "label": "Net hours saved per year",
+          "unit": "h",
+          "answer": 128.0,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "120 x 1.5 = 180 min = 3 h a week; x 46 = 138 h, minus 10 = 128 net hours a year."
+    }
+  },
+  {
+    "id": "pm-tool-automation-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An automation design for client notifications. Mark the problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "An automation design for client notifications. Mark the problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Trigger: a release ticket moves to Released.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Action: email the client's product owner the release notes field.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "The rule runs as the PM's personal account.",
+          "issue": "If the PM leaves or loses access, the rule breaks; use a service or admin account."
+        },
+        {
+          "id": "s4",
+          "text": "Release notes are reviewed before the ticket moves to Released.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "No logging of sent emails.",
+          "issue": "Without an audit trail nobody can confirm what the client received."
+        },
+        {
+          "id": "s6",
+          "text": "Rule tested on a sandbox project first.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-tool-automation-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An automation loop: rule A updates a field, which triggers rule B, which triggers rule A again. The tool's execution limit is hit.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An automation loop: rule A updates a field, which triggers rule B, which triggers rule A again. The tool's execution limit is hit.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do first?",
+          "options": [
+            "Disable one of the rules to stop the loop, then investigate",
+            "Increase the limit",
+            "Delete all automation",
+            "Wait for it to stop"
+          ],
+          "correctIndex": 0,
+          "explanation": "Stop the damage first."
+        },
+        {
+          "id": "d2",
+          "question": "How do you prevent it?",
+          "options": [
+            "Never use more than one rule",
+            "Run rules only at night",
+            "Remove all conditions",
+            "Add conditions so each rule only fires on the change it is meant for, and stop rules triggering other rules unless intended"
+          ],
+          "correctIndex": 3,
+          "explanation": "Tight conditions prevent cascades."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-tool-automation-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which task is best automated in a PM tool?",
+    "mcq": {
+      "options": [
+        "A repetitive, rule-based step such as moving a ticket when its PR merges",
+        "Deciding sprint priorities",
+        "Negotiating scope",
+        "Writing acceptance criteria"
+      ],
+      "correctIndex": 0,
+      "explanation": "Automate predictable steps; keep judgement with people.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-tool-automation-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why test automation rules on a sandbox project first?",
+    "mcq": {
+      "options": [
+        "Because live projects forbid rules",
+        "To make rules run faster",
+        "To catch mistakes before they change real tickets or notify clients",
+        "Sandboxes are free"
+      ],
+      "correctIndex": 2,
+      "explanation": "Bad rules can cause mass changes quickly.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-tool-automation-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What is a good practice for team-wide automation rules?",
+    "mcq": {
+      "options": [
+        "Let anyone create rules without notes",
+        "Never change a rule once made",
+        "Hide rules from the team",
+        "Document each rule's purpose and owner and review them regularly"
+      ],
+      "correctIndex": 3,
+      "explanation": "Undocumented rules become mysterious behaviour.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

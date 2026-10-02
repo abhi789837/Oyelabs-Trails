@@ -1,0 +1,366 @@
+[
+  {
+    "id": "pm-environments-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the environments a change normally passes through, from first to last.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Production: real users and real data"
+        },
+        {
+          "id": "r2",
+          "label": "Development: shared integration environment"
+        },
+        {
+          "id": "r1",
+          "label": "Local: the developer's machine"
+        },
+        {
+          "id": "r3",
+          "label": "Staging: production-like, for QA and client UAT"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Code moves from a developer's machine to a shared dev environment, then to production-like staging for testing and approval, and finally to production."
+    }
+  },
+  {
+    "id": "pm-environments-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this message a PM sent to a client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The new checkout is ready for you to test on staging: staging.shopapp.io",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Please use the test card 4242 4242 4242 4242; no real money will be charged.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Feel free to try it with your real customer list too, staging is fine for that.",
+          "issue": "Real customer personal data should not be loaded into staging; use anonymised or test data."
+        },
+        {
+          "id": "p4",
+          "text": "Once you approve it on staging, we'll deploy it to production on Thursday.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "If you find a bug, just fix the text directly in production, it's quicker.",
+          "issue": "Changing production directly skips testing and leaves environments out of sync."
+        },
+        {
+          "id": "p6",
+          "text": "Send any feedback in the shared Jira board.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-environments-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2,
+    "prompt": "A client reports that a bug the team 'fixed' last week is still happening.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client reports that a bug the team 'fixed' last week is still happening.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you ask first?",
+          "options": [
+            "Which environment (and app version) they saw it in",
+            "Why they are testing at all",
+            "For their password",
+            "Nothing, reopen the ticket"
+          ],
+          "correctIndex": 0,
+          "explanation": "The fix may be on staging but not yet in production; the environment tells you which."
+        },
+        {
+          "id": "s2",
+          "question": "They saw it in production; the fix is only on staging. What do you tell them?",
+          "options": [
+            "That they were wrong",
+            "The fix is approved on staging and will reach production in the next release, with the date",
+            "That production is broken",
+            "To use staging instead"
+          ],
+          "correctIndex": 1,
+          "explanation": "Explain where the fix is and when it will be live."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-environments-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A client asks what the hosting for their app will cost per month across environments. Production is the most expensive; staging is sized at 40% of production; dev at 20%.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Environment",
+          "Size vs production"
+        ],
+        "rows": [
+          [
+            "Production",
+            "100% ($500/month)"
+          ],
+          [
+            "Staging",
+            "40%"
+          ],
+          [
+            "Dev",
+            "20%"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "stg",
+          "label": "Staging cost per month",
+          "unit": "$",
+          "answer": 200.0,
+          "tolerance": 1
+        },
+        {
+          "id": "dev",
+          "label": "Dev cost per month",
+          "unit": "$",
+          "answer": 100.0,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total per month for all three",
+          "unit": "$",
+          "answer": 799.9999999999999,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Staging: 40% × $500 = $200. Dev: 20% × $500 = $100. Total = $500 + $200 + $100 = $800 per month."
+    }
+  },
+  {
+    "id": "pm-environments-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The client wants to skip the staging environment to save $200 a month on a payments app.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The client wants to skip the staging environment to save $200 a month on a payments app.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you advise?",
+          "options": [
+            "Agree, staging is a luxury",
+            "Keep staging: payment changes need a production-like place for QA and UAT before real money is involved",
+            "Use production for testing",
+            "Test only on developers' laptops"
+          ],
+          "correctIndex": 1,
+          "explanation": "For payments, the risk of untested releases is far higher than the cost of staging."
+        },
+        {
+          "id": "s2",
+          "question": "They still want to save money. What compromise do you offer?",
+          "options": [
+            "Delete dev and staging",
+            "A smaller staging that is switched off when not in use",
+            "Test in production at night",
+            "Skip UAT"
+          ],
+          "correctIndex": 1,
+          "explanation": "Reduce cost without removing the safety net."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-environments-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the problems in this release checklist for a staging-to-production deploy.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client UAT signed off on staging.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Staging uses the production database so test data is realistic.",
+          "issue": "Staging tests can then change or corrupt real production data; staging needs its own database."
+        },
+        {
+          "id": "p3",
+          "text": "Environment variables (API keys) set for production, not copied from staging.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Third-party integrations switched from sandbox to live accounts.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Deploy on Friday at 18:00 so nobody is disturbed.",
+          "issue": "Late Friday deploys leave no one available if something breaks; deploy when the team can monitor."
+        },
+        {
+          "id": "p6",
+          "text": "Smoke test key journeys after deploy.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-environments-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the staging environment mainly used for?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Testing and client approval in a production-like setup before release",
+        "Serving real customers",
+        "Writing code",
+        "Storing backups"
+      ],
+      "correctIndex": 0,
+      "explanation": "Staging mirrors production closely so QA and UAT reflect what users will experience.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-environments-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which environment do real customers use?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Production",
+        "Staging",
+        "Development",
+        "Local"
+      ],
+      "correctIndex": 0,
+      "explanation": "Production is the live environment with real users and real data.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-environments-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-environments",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why do apps use different API keys and settings per environment?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "So test environments use sandbox services and never touch real payments or data",
+        "To make deployment harder",
+        "Because each developer needs their own price plan",
+        "It is only for decoration"
+      ],
+      "correctIndex": 0,
+      "explanation": "Environment-specific configuration keeps test activity away from live services such as payments and email.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

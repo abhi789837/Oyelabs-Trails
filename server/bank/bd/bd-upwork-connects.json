@@ -1,0 +1,395 @@
+[
+  {
+    "id": "bd-upwork-connects-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Assume (for this exercise only) that the team buys Connects at $0.15 each and an average proposal uses 12 Connects. Last month the team sent 80 proposals and won 4 projects. Calculate the Connects cost per proposal, the total Connects spend, and the Connects cost per won project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Assume (for this exercise only) that the team buys Connects at $0.15 each and an average proposal uses 12 Connects. Last month the team sent 80 proposals and won 4 projects. Calculate the Connects cost per proposal, the total Connects spend, and the Connects cost per won project.",
+      "table": {
+        "columns": [
+          "Metric",
+          "Value"
+        ],
+        "rows": [
+          [
+            "Price per Connect (assumed)",
+            "$0.15"
+          ],
+          [
+            "Connects per proposal",
+            "12"
+          ],
+          [
+            "Proposals sent",
+            "80"
+          ],
+          [
+            "Projects won",
+            "4"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "cpp",
+          "label": "Cost per proposal",
+          "unit": "$",
+          "answer": 1.8,
+          "tolerance": 0.01
+        },
+        {
+          "id": "total",
+          "label": "Total spend",
+          "unit": "$",
+          "answer": 144,
+          "tolerance": 0.5
+        },
+        {
+          "id": "cpw",
+          "label": "Cost per won project",
+          "unit": "$",
+          "answer": 36,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "12 x $0.15 = $1.80 per proposal; 80 x $1.80 = $144; $144 / 4 wins = $36 per win."
+    }
+  },
+  {
+    "id": "bd-upwork-connects-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "You have Connects left for only a few bids this week. Rank these jobs from most to least deserving of them.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "You have Connects left for only a few bids this week. Rank these jobs from most to least deserving of them.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Posted 3 days ago, unverified payment, partial fit, 50+ proposals"
+        },
+        {
+          "id": "r4",
+          "label": "Posted a week ago, budget far below scope, client has never hired"
+        },
+        {
+          "id": "r1",
+          "label": "Posted 15 minutes ago, payment verified, strong fit with your best case study, under 5 proposals"
+        },
+        {
+          "id": "r2",
+          "label": "Posted yesterday, payment verified, good fit, 20 to 50 proposals"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Freshness, verified payment, fit and low competition maximise the return on each bid; stale, crowded and unrealistic jobs waste Connects."
+    }
+  },
+  {
+    "id": "bd-upwork-connects-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Assume a bid costs 16 Connects and Connects cost $0.15 each. You are deciding whether to boost bids for a category. Normal bids win 1 in 25; boosted bids cost 40 Connects each in total and win 1 in 10. Calculate the Connects cost per win for each approach (in Connects), and how many dollars per win boosting saves.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Assume a bid costs 16 Connects and Connects cost $0.15 each. You are deciding whether to boost bids for a category. Normal bids win 1 in 25; boosted bids cost 40 Connects each in total and win 1 in 10. Calculate the Connects cost per win for each approach (in Connects), and how many dollars per win boosting saves.",
+      "table": {
+        "columns": [
+          "Approach",
+          "Connects per bid",
+          "Win rate"
+        ],
+        "rows": [
+          [
+            "Normal",
+            "16",
+            "1 in 25"
+          ],
+          [
+            "Boosted",
+            "40",
+            "1 in 10"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "normal",
+          "label": "Connects per win, normal",
+          "unit": "connects",
+          "answer": 400,
+          "tolerance": 0
+        },
+        {
+          "id": "boosted",
+          "label": "Connects per win, boosted",
+          "unit": "connects",
+          "answer": 400,
+          "tolerance": 0
+        },
+        {
+          "id": "saving",
+          "label": "Dollar saving per win from boosting",
+          "unit": "$",
+          "answer": 0,
+          "tolerance": 0.01
+        }
+      ],
+      "explanation": "Normal: 16 x 25 = 400 Connects per win. Boosted: 40 x 10 = 400. No saving: the decision then rests on other factors such as how fast you need wins or deal size."
+    }
+  },
+  {
+    "id": "bd-upwork-connects-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Compare two job categories by return on Connects. Calculate revenue won per 100 Connects spent for each category.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare two job categories by return on Connects. Calculate revenue won per 100 Connects spent for each category.",
+      "table": {
+        "columns": [
+          "Category",
+          "Connects spent",
+          "Revenue won"
+        ],
+        "rows": [
+          [
+            "AI chatbot builds",
+            "1,200",
+            "$36,000"
+          ],
+          [
+            "Small WordPress fixes",
+            "2,000",
+            "$8,000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ai",
+          "label": "AI chatbots: revenue per 100 Connects",
+          "unit": "$",
+          "answer": 3000,
+          "tolerance": 1
+        },
+        {
+          "id": "wp",
+          "label": "WordPress fixes: revenue per 100 Connects",
+          "unit": "$",
+          "answer": 400,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "$36,000 / 12 = $3,000 per 100 Connects; $8,000 / 20 = $400. Move budget toward AI chatbot builds."
+    }
+  },
+  {
+    "id": "bd-upwork-connects-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "It is the middle of the month and the team has used 70% of its monthly Connects budget, with no wins yet this month.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "It is the middle of the month and the team has used 70% of its monthly Connects budget, with no wins yet this month.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the first thing to check?",
+          "options": [
+            "Stop bidding for the rest of the month",
+            "Buy more Connects immediately",
+            "Which jobs the Connects went to, and whether they matched the selection criteria",
+            "Whether a competitor has more Connects"
+          ],
+          "correctIndex": 2,
+          "explanation": "Before spending more, find out whether bids are going to poor-fit jobs or proposals are weak."
+        },
+        {
+          "id": "s2",
+          "question": "You find half the bids went to jobs with 50+ proposals posted days earlier. What do you change?",
+          "options": [
+            "Write longer proposals for those jobs",
+            "Lower your hourly rate",
+            "Tighten the rule: bid early on fresh, verified, good-fit jobs and skip stale crowded posts",
+            "Nothing, it is just bad luck"
+          ],
+          "correctIndex": 2,
+          "explanation": "Stale, crowded jobs have low odds; the fix is in selection, not price or length."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-upwork-connects-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A BD lead proposed this monthly Connects plan. Mark the parts that would waste Connects or hurt results.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A BD lead proposed this monthly Connects plan. Mark the parts that would waste Connects or hurt results.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Track Connects spent, interviews and wins per job category every week.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Boost every proposal, whatever the job, so we always appear at the top.",
+          "issue": "Boosting everything burns budget on poor-fit jobs; boost selectively where fit and value are high."
+        },
+        {
+          "id": "p3",
+          "text": "Reserve part of the budget for high-value jobs that appear late in the month.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Send the same generic proposal to as many jobs as possible to maximise volume.",
+          "issue": "Generic volume bids lower win rate and waste Connects on proposals that cannot stand out."
+        },
+        {
+          "id": "p5",
+          "text": "Review which categories return the most revenue per Connect and shift budget toward them.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Skip reading the client's history to save time.",
+          "issue": "Client history (payment, hires, reviews) is the main signal of whether a bid is worth it."
+        },
+        {
+          "id": "p7",
+          "text": "Agree a monthly cap so spending is planned, not reactive.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-upwork-connects-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which metric best tells you whether Connects are being spent well?",
+    "mcq": {
+      "options": [
+        "Total number of proposals sent",
+        "Number of Connects bought this month",
+        "How many jobs were viewed",
+        "Revenue won per Connect (or per 100 Connects) by job category"
+      ],
+      "correctIndex": 3,
+      "explanation": "Volume metrics say nothing about return; revenue per Connect ties spend directly to outcomes.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-connects-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why does bidding early on a fresh job usually give better return on Connects?",
+    "mcq": {
+      "options": [
+        "Early bids cost fewer Connects on every job",
+        "Late proposals are hidden from clients",
+        "Clients must hire from the first ten proposals",
+        "Clients often review the first proposals and start interviews before the list gets long"
+      ],
+      "correctIndex": 3,
+      "explanation": "Clients tend to engage with early proposals; arriving after dozens of others lowers your odds. Avoid claiming platform rules that may change.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-upwork-connects-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-upwork-connects",
+    "trackId": null,
+    "stackId": "bd-tool-upwork",
+    "difficulty": 3,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Boosted bids raise your interview rate but cost more. When is boosting most justified?",
+    "mcq": {
+      "options": [
+        "On low-budget jobs, because they are easy to win",
+        "Only on jobs that already have many proposals",
+        "On high-value, strong-fit jobs where the higher win odds outweigh the extra cost",
+        "On every job, to stay visible"
+      ],
+      "correctIndex": 2,
+      "explanation": "Boost where expected value (win odds x deal size) rises more than the extra Connects cost.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

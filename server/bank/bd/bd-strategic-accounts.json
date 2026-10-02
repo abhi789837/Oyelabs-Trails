@@ -1,0 +1,319 @@
+[
+  {
+    "id": "bd-strategic-accounts-t4-1",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Rank accounts by strategic value.",
+    "task": {
+      "kind": "rank",
+      "prompt": "You can designate only a few strategic accounts. Rank these by strategic value, highest first.",
+      "items": [
+        {
+          "id": "i4",
+          "label": "One-off client: $20,000 project, no further plans"
+        },
+        {
+          "id": "i1",
+          "label": "Healthcare platform: $250,000 a year, growing, 35% margin, strong champion, will act as a reference"
+        },
+        {
+          "id": "i2",
+          "label": "Fintech scale-up: $90,000 a year, three business units not yet served, 40% margin"
+        },
+        {
+          "id": "i3",
+          "label": "Retail chain: $600,000 a year, 12% margin after rate cuts, planning to move work offshore"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "Strategic value combines growth potential, profitability and relationship strength, not just current revenue. A big account with low margin and plans to leave needs a plan, but it is not where future value lies."
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-t4-2",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Find the weaknesses in this strategic account plan.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this strategic account plan that are weak.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Client goal for the year: reduce cost-to-serve by 15% through automation.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Our goal: double revenue from the account.",
+          "issue": "Our goal is not linked to the client's goal; growth should come from helping them reach theirs."
+        },
+        {
+          "id": "p3",
+          "text": "Relationship map: CIO (sponsor), CFO (budget), two directors (users).",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Whitespace: claims, billing and customer-support units not yet served.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Risk: none identified.",
+          "issue": "Every strategic account has risks; list them (champion changes, competitors, budget cuts)."
+        },
+        {
+          "id": "p6",
+          "text": "Executive sponsor on our side: to be decided.",
+          "issue": "Strategic accounts need a named senior sponsor on your side."
+        },
+        {
+          "id": "p7",
+          "text": "Quarterly business review dates agreed for the year.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-t4-3",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Compare account contribution.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Account A: revenue $600,000, delivery cost $528,000, account management cost $30,000. Account B: revenue $250,000, delivery cost $162,500, account management cost $15,000.",
+      "table": null,
+      "fields": [
+        {
+          "id": "ma",
+          "label": "Account A gross margin",
+          "unit": "%",
+          "answer": 12,
+          "tolerance": 0.1
+        },
+        {
+          "id": "ca",
+          "label": "Account A contribution after account management",
+          "unit": "$",
+          "answer": 42000,
+          "tolerance": 1
+        },
+        {
+          "id": "cb",
+          "label": "Account B contribution after account management",
+          "unit": "$",
+          "answer": 72500,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "A: margin = 72,000 ÷ 600,000 = 12%; contribution = $42000. B: contribution = $72500 on less than half the revenue. Size is not the same as value."
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-t4-4",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Respond to a volume rate-cut request from a strategic account.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your largest account asks for a 15% rate cut \"because of our volume\". Your margin on the account is already 18%.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is your first move?",
+          "options": [
+            "Accept to protect the relationship",
+            "Refuse and risk the account",
+            "Cut the rate and quietly reduce seniority on the team",
+            "Show the account's economics and explore trades such as longer commitments, a blended team, or scope changes"
+          ],
+          "correctIndex": 3,
+          "explanation": "A 15% cut would nearly wipe out an 18% margin; trade on structure, and never reduce quality covertly."
+        },
+        {
+          "id": "s2",
+          "question": "They agree to a two-year commitment. What can you offer?",
+          "options": [
+            "A smaller rate reduction tied to the commitment and guaranteed volume",
+            "The full 15%",
+            "No change at all",
+            "A one-off discount without any commitment"
+          ],
+          "correctIndex": 0,
+          "explanation": "Price follows risk: committed volume justifies some movement."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-t4-5",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Decide how many strategic accounts to run.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your team of three account managers wants to label 20 accounts as strategic.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you advise?",
+          "options": [
+            "Make all 20 strategic",
+            "Make the 20 largest by revenue strategic",
+            "Limit it to the few accounts that justify deep investment, based on agreed criteria",
+            "Avoid the label entirely"
+          ],
+          "correctIndex": 2,
+          "explanation": "Strategic status means heavier investment; spreading it across many accounts dilutes it."
+        },
+        {
+          "id": "s2",
+          "question": "Which criteria should drive the choice?",
+          "options": [
+            "Revenue only",
+            "Which clients are easiest to talk to",
+            "Which clients signed most recently",
+            "Growth potential, profitability, relationship strength and strategic fit"
+          ],
+          "correctIndex": 3,
+          "explanation": "Balanced criteria stop the biggest but least profitable accounts from crowding out better ones."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-t4-6",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Estimate whitespace in a strategic account.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "You serve one business unit of a client at $200,000 a year. Three other units each have an estimated $150,000 a year of relevant work. You estimate a 30% chance of winning each within 18 months.",
+      "table": null,
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total whitespace across the three units",
+          "unit": "$",
+          "answer": 450000,
+          "tolerance": 1
+        },
+        {
+          "id": "expected",
+          "label": "Probability-weighted whitespace",
+          "unit": "$",
+          "answer": 135000,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Total = 3 × 150,000 = $450,000. Weighted = 450,000 × 0.3 = $135000. Whitespace analysis shows where to focus relationship-building next."
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-m4-1",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the purpose of a strategic account plan?",
+    "mcq": {
+      "options": [
+        "To list every invoice sent",
+        "To align your growth in the account with the client's own goals over 1–3 years",
+        "To track daily tickets",
+        "To set the client's internal budget"
+      ],
+      "correctIndex": 1,
+      "explanation": "A good plan starts from the client's goals and maps how you help reach them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-m4-2",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your strategic account's revenue is high but margin has dropped to 10% after repeated rate cuts. What is the best approach?",
+    "mcq": {
+      "options": [
+        "Keep accepting cuts to protect revenue",
+        "Exit the account without discussion",
+        "Review the account economics openly with the client and restructure the engagement",
+        "Lower quality to restore margin"
+      ],
+      "correctIndex": 2,
+      "explanation": "Revenue at very thin margin is risky; restructuring (scope, team mix, commitments) is better than silent erosion.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-strategic-accounts-m4-3",
+    "departmentId": "bd",
+    "skillId": "bd-strategic-accounts",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why should a strategic account have an executive sponsor on your side?",
+    "mcq": {
+      "options": [
+        "To sign all invoices",
+        "To replace the account manager",
+        "To run delivery directly",
+        "To build senior relationships and unblock decisions that the account manager cannot"
+      ],
+      "correctIndex": 3,
+      "explanation": "Executive-to-executive relationships give strategic accounts resilience and access.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,408 @@
+[
+  {
+    "id": "pm-velocity-capacity-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A team completed the story points below in the last four sprints. Work out their average velocity.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Sprint",
+          "Points completed"
+        ],
+        "rows": [
+          [
+            "1",
+            "21"
+          ],
+          [
+            "2",
+            "27"
+          ],
+          [
+            "3",
+            "24"
+          ],
+          [
+            "4",
+            "30"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "avg",
+          "label": "Average velocity (all four sprints)",
+          "unit": "points",
+          "answer": 25.5,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "(21 + 27 + 24 + 30) / 4 = 102 / 4 = 25.5 points."
+    }
+  },
+  {
+    "id": "pm-velocity-capacity-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Using the same team (sprints 1–4 completed 21, 27, 24 and 30 points), many PMs forecast with the last three sprints only. Work out that rolling average and the points in a 2-sprint range if you plan between the lowest and highest of those three.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "roll",
+          "label": "Average of the last three sprints",
+          "unit": "points",
+          "answer": 27.0,
+          "tolerance": 0.1
+        },
+        {
+          "id": "low",
+          "label": "Low end over 2 sprints (lowest of last three × 2)",
+          "unit": "points",
+          "answer": 48,
+          "tolerance": 0
+        },
+        {
+          "id": "high",
+          "label": "High end over 2 sprints (highest of last three × 2)",
+          "unit": "points",
+          "answer": 60,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Last three: 27, 24, 30 → average 27. Range over two sprints: 24×2 = 48 to 30×2 = 60."
+    }
+  },
+  {
+    "id": "pm-velocity-capacity-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Plan capacity for a 10-day sprint. Uma works part-time (5 days per sprint). Apply a 70% focus factor for meetings, support and interruptions.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Person",
+          "Sprint days",
+          "Days off"
+        ],
+        "rows": [
+          [
+            "Ravi",
+            "10",
+            "0"
+          ],
+          [
+            "Sara",
+            "10",
+            "3"
+          ],
+          [
+            "Tom",
+            "10",
+            "1"
+          ],
+          [
+            "Uma",
+            "5",
+            "0"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "pd",
+          "label": "Available person-days",
+          "unit": "days",
+          "answer": 31,
+          "tolerance": 0
+        },
+        {
+          "id": "focused",
+          "label": "Focused person-days (× 0.7)",
+          "unit": "days",
+          "answer": 21.7,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "Available = 10 + 7 + 9 + 5 = 31. Focused = 31 × 0.7 = 21.7 person-days."
+    }
+  },
+  {
+    "id": "pm-velocity-capacity-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Normally all four developers are fully available (40 person-days) and the team's velocity is 30 points. Next sprint they have 31 person-days. Scale the velocity by availability.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "ratio",
+          "label": "Availability ratio",
+          "unit": "",
+          "answer": 0.775,
+          "tolerance": 0.01
+        },
+        {
+          "id": "pts",
+          "label": "Points to plan",
+          "unit": "points",
+          "answer": 23.2,
+          "tolerance": 0.3
+        }
+      ],
+      "explanation": "31 / 40 = 0.775; 30 × 0.775 = 23.25 ≈ 23 points."
+    }
+  },
+  {
+    "id": "pm-velocity-capacity-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A PM's sprint report to agency leadership. Mark the statements that misuse velocity.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Velocity this sprint: 26 points, in line with our 3-sprint average of 25.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Team A (26 points) is underperforming compared with Team B (48 points).",
+          "issue": "Story points are team-relative; velocities can't be compared between teams."
+        },
+        {
+          "id": "p3",
+          "text": "We counted 8 points for the checkout story even though QA hasn't passed it yet.",
+          "issue": "Only Done items count toward velocity; partial credit inflates it."
+        },
+        {
+          "id": "p4",
+          "text": "Two developers were on leave for 3 days, so we planned slightly fewer points this sprint.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Next sprint has a public holiday, so we'll plan about 10% fewer points.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Target for next quarter: increase velocity by 20% every sprint.",
+          "issue": "Velocity is a planning measure, not a performance target; targeting it leads to point inflation."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-velocity-capacity-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Velocity on a client's SaaS project has dropped from about 30 to 18 over two sprints. The client asks if the team is slacking.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Velocity on a client's SaaS project has dropped from about 30 to 18 over two sprints. The client asks if the team is slacking.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Tell the client the team is fine without checking",
+            "Look at the causes with the team: unplanned support work, leave, unclear stories, blockers",
+            "Ask the team to re-estimate stories larger",
+            "Add a developer immediately"
+          ],
+          "correctIndex": 1,
+          "explanation": "Find the cause before acting; velocity drops usually come from capacity or flow issues."
+        },
+        {
+          "id": "s2",
+          "question": "You find 35% of time went on production bug fixes for a previous release. What do you propose?",
+          "options": [
+            "Hide the bug work",
+            "Make support work visible, reserve explicit capacity for it, and agree with the client how it's paid for",
+            "Stop fixing bugs",
+            "Count bug fixes as feature points"
+          ],
+          "correctIndex": 1,
+          "explanation": "Visible, budgeted support capacity gives a realistic forecast and an honest conversation about cost."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-velocity-capacity-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Order these steps to plan a sprint's capacity.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Compare the result with recent velocity"
+        },
+        {
+          "id": "r2",
+          "label": "Subtract leave, holidays and other commitments"
+        },
+        {
+          "id": "r1",
+          "label": "List each person's working days in the sprint"
+        },
+        {
+          "id": "r3",
+          "label": "Apply a focus factor for meetings and interruptions"
+        },
+        {
+          "id": "r5",
+          "label": "Select backlog items to fit"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Start from raw availability, remove known absences, adjust for real focus, sanity-check against history, then select."
+    }
+  },
+  {
+    "id": "pm-velocity-capacity-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is velocity?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The amount of work a team completes (to Done) in a sprint, usually in story points",
+        "The number of hours each developer logs",
+        "How fast the app loads",
+        "The number of stories started in a sprint"
+      ],
+      "correctIndex": 0,
+      "explanation": "Velocity is a team's completed work per sprint; it is used for forecasting, not for comparing people.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-velocity-capacity-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your team's velocity has been 22, 40, 15 and 31. What is the most honest way to forecast?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Give a range and say velocity is not yet stable",
+        "Use 40 because it shows what's possible",
+        "Use only the latest sprint",
+        "Refuse to forecast"
+      ],
+      "correctIndex": 0,
+      "explanation": "Highly variable velocity means a single number misleads; a range plus investigating the variability is honest.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-velocity-capacity-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-velocity-capacity",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A new developer joins a team mid-project. What usually happens to velocity in the next sprint or two?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "It often dips as the team onboards them, then rises",
+        "It doubles immediately",
+        "It stays exactly the same",
+        "It can no longer be measured"
+      ],
+      "correctIndex": 0,
+      "explanation": "Onboarding takes time from existing members (Brooks's law in miniature), so short-term velocity often falls.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

@@ -1,0 +1,393 @@
+[
+  {
+    "id": "pm-schedule-basics-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Here are the tasks of a small app release. B and C both start after A; D starts when both B and C are done; E follows D. Find the project duration and the float on task C.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Task",
+          "Duration (days)",
+          "Depends on"
+        ],
+        "rows": [
+          [
+            "A: API design",
+            "3",
+            "-"
+          ],
+          [
+            "B: Backend build",
+            "5",
+            "A"
+          ],
+          [
+            "C: Email templates",
+            "2",
+            "A"
+          ],
+          [
+            "D: Integration",
+            "4",
+            "B, C"
+          ],
+          [
+            "E: QA & release",
+            "2",
+            "D"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "dur",
+          "label": "Project duration (critical path)",
+          "unit": "days",
+          "answer": 14,
+          "tolerance": 0
+        },
+        {
+          "id": "float",
+          "label": "Float on task C",
+          "unit": "days",
+          "answer": 3,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Paths: A-B-D-E = 14 days, A-C-D-E = 11 days. The longest path is the critical path: 14 days. C can slip 3 days before it delays D."
+    }
+  },
+  {
+    "id": "pm-schedule-basics-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A project starts on Monday 2 March. Phases run back-to-back in working weeks. In which week number (week 1 = the starting week) does UAT start, and how many weeks is the whole project?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Phase",
+          "Weeks"
+        ],
+        "rows": [
+          [
+            "Discovery",
+            "2"
+          ],
+          [
+            "Build",
+            "6"
+          ],
+          [
+            "UAT",
+            "2"
+          ],
+          [
+            "Launch",
+            "1"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "uat",
+          "label": "Week number UAT starts",
+          "unit": "",
+          "answer": 9,
+          "tolerance": 0
+        },
+        {
+          "id": "total",
+          "label": "Total project length",
+          "unit": "weeks",
+          "answer": 11,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Discovery weeks 1–2, build weeks 3–8, UAT starts in week 9 and runs weeks 9–10, launch week 11: 11 weeks in total."
+    }
+  },
+  {
+    "id": "pm-schedule-basics-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order these milestones for a white-label ride-hailing app.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r6",
+          "label": "Public launch"
+        },
+        {
+          "id": "r4",
+          "label": "UAT sign-off"
+        },
+        {
+          "id": "r2",
+          "label": "Designs approved"
+        },
+        {
+          "id": "r1",
+          "label": "Contract signed"
+        },
+        {
+          "id": "r3",
+          "label": "Feature complete on staging"
+        },
+        {
+          "id": "r5",
+          "label": "App store approval"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Designs are approved before build, the build is complete before UAT, UAT sign-off comes before submitting the release, and store approval comes before launch."
+    }
+  },
+  {
+    "id": "pm-schedule-basics-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Review this Gantt plan summary for a 10-week food-ordering app. Mark the lines that are scheduling mistakes.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Week 1–2: discovery and wireframes.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Week 3–8: development in three 2-week sprints.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Week 4: design approval by the client.",
+          "issue": "Design approval in week 4 comes after development started in week 3; build would start on unapproved designs."
+        },
+        {
+          "id": "p4",
+          "text": "Week 9: UAT with the client.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "Week 9: App Store submission.",
+          "issue": "Submitting in the same week as UAT leaves no time to fix UAT findings; submission should follow UAT sign-off."
+        },
+        {
+          "id": "p6",
+          "text": "Week 10: launch, with 0 days of buffer for store review.",
+          "issue": "Apple/Google review can take days and may reject; a launch date needs buffer for review."
+        },
+        {
+          "id": "p7",
+          "text": "Milestones shown as diamonds with owners named.",
+          "issue": null
+        },
+        {
+          "id": "p8",
+          "text": "Dependencies drawn between design approval and sprint 1.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-schedule-basics-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The backend task on the critical path is running 4 days late. The launch date is fixed for a marketing campaign.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "The backend task on the critical path is running 4 days late. The launch date is fixed for a marketing campaign.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Which option is 'crashing' the schedule?",
+          "options": [
+            "Adding a second backend developer to the late task",
+            "Starting QA on finished screens before the backend is fully done",
+            "Moving the launch date",
+            "Cutting the onboarding tutorial"
+          ],
+          "correctIndex": 0,
+          "explanation": "Crashing adds resources (usually at extra cost) to shorten a critical-path task; overlapping tasks is fast-tracking."
+        },
+        {
+          "id": "s2",
+          "question": "You fast-track instead. What risk do you tell the client about?",
+          "options": [
+            "More rework, because work starts before its inputs are final",
+            "Higher hourly rates",
+            "The launch date moves",
+            "None, fast-tracking has no risk"
+          ],
+          "correctIndex": 0,
+          "explanation": "Fast-tracking overlaps tasks that were sequential, which raises the risk of rework."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-schedule-basics-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Your schedule has 30 working days of planned work and you want a 15% schedule buffer before the client launch. How many working days long is the plan with buffer, and on which working day does the buffer begin?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "total",
+          "label": "Plan length with buffer",
+          "unit": "days",
+          "answer": 34.5,
+          "tolerance": 0.5
+        },
+        {
+          "id": "start",
+          "label": "Working day the buffer begins",
+          "unit": "",
+          "answer": 31,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Buffer = 15% of 30 = 4.5 days, so the plan is 34.5 working days (34–35 after rounding). The buffer begins on day 31, after the planned work."
+    }
+  },
+  {
+    "id": "pm-schedule-basics-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the critical path?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The longest chain of dependent tasks, which sets the shortest possible project duration",
+        "The list of the most important features",
+        "The tasks the client cares most about",
+        "The path through the app most users take"
+      ],
+      "correctIndex": 0,
+      "explanation": "Any delay on a critical-path task delays the project end date, because those tasks have zero float.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-schedule-basics-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a milestone in a project schedule?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A significant point or event with zero duration, such as 'designs approved'",
+        "A task that takes more than a week",
+        "A sprint",
+        "The budget for a phase"
+      ],
+      "correctIndex": 0,
+      "explanation": "Milestones mark key events and decisions; they have no duration and are good for client reporting.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-schedule-basics-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-schedule-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Design approval (task A) must happen before front-end build (task B) can start. What kind of dependency is this?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Finish-to-start",
+        "Start-to-start",
+        "Finish-to-finish",
+        "Start-to-finish"
+      ],
+      "correctIndex": 0,
+      "explanation": "B can only start when A finishes: finish-to-start, the most common dependency type.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

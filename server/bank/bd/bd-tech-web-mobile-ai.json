@@ -1,0 +1,354 @@
+[
+  {
+    "id": "bd-tech-web-mobile-ai-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A restaurant owner says: 'I want an app so customers can order food.' They have one location, a small budget and most orders come from regulars who already visit their website.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A restaurant owner says: 'I want an app so customers can order food.' They have one location, a small budget and most orders come from regulars who already visit their website.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the most sensible first suggestion to explore?",
+          "options": [
+            "A desktop application",
+            "A blockchain loyalty platform",
+            "A mobile-friendly web ordering page on their existing site",
+            "Native iOS and Android apps plus a custom AI recommendation engine"
+          ],
+          "correctIndex": 2,
+          "explanation": "A responsive web page reaches customers without app-store downloads and fits a small budget."
+        },
+        {
+          "id": "s2",
+          "question": "The owner later wants push notifications for daily specials and a loyalty card on the phone. What changes?",
+          "options": [
+            "A mobile app (often cross-platform) becomes worth discussing, since those features suit apps",
+            "Nothing; websites do everything apps do",
+            "They need a separate desktop app",
+            "They must hire an in-house AI team"
+          ],
+          "correctIndex": 0,
+          "explanation": "Push notifications and on-device loyalty are strengths of mobile apps, so the case for one gets stronger."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these client needs by how strongly they point to a native or cross-platform mobile app rather than a web app, strongest first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these client needs by how strongly they point to a native or cross-platform mobile app rather than a web app, strongest first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "A marketing site that should rank on Google"
+        },
+        {
+          "id": "r4",
+          "label": "An internal admin dashboard used on office desktops"
+        },
+        {
+          "id": "r1",
+          "label": "Field workers must capture photos and GPS location offline in areas with no signal"
+        },
+        {
+          "id": "r2",
+          "label": "Customers want reminders through push notifications"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Offline device features are the strongest reason for mobile; push is strong; SEO and desktop admin work point to web."
+    }
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A new BD rep wrote these notes explaining product types to a client. Mark the incorrect statements.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "A new BD rep wrote these notes explaining product types to a client. Mark the incorrect statements.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "A web app runs in the browser, so users do not need to install anything.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Native mobile apps are built separately for iOS and Android.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Cross-platform frameworks like React Native or Flutter let one codebase target both iOS and Android.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "A web app can never work on a phone.",
+          "issue": "Responsive web apps work well on phones; they just cannot use every device feature."
+        },
+        {
+          "id": "p5",
+          "text": "An AI feature means the app needs no human review, ever.",
+          "issue": "AI output can be wrong; most products need review, guardrails or fallbacks."
+        },
+        {
+          "id": "p6",
+          "text": "Mobile apps usually need app-store review before each release.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A logistics client wants an 'AI app' that reads delivery notes (photos of handwritten slips) and fills in their order system.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A logistics client wants an 'AI app' that reads delivery notes (photos of handwritten slips) and fills in their order system.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What is the most important question to ask first?",
+          "options": [
+            "What colour should the app be?",
+            "Can we skip testing to launch faster?",
+            "What samples of slips exist, and how accurate does extraction need to be before it saves time?",
+            "Which AI model is the newest?"
+          ],
+          "correctIndex": 2,
+          "explanation": "AI feasibility depends on real data and an agreed accuracy bar; model choice comes later."
+        },
+        {
+          "id": "s2",
+          "question": "They say about 10% of slips are barely readable. What should the solution include?",
+          "options": [
+            "A review screen where staff check low-confidence results before they enter the system",
+            "Nothing; the AI will learn to read them automatically",
+            "Reject the project",
+            "Promise 100% accuracy"
+          ],
+          "correctIndex": 0,
+          "explanation": "A human-in-the-loop step for low-confidence cases keeps bad data out while still saving time."
+        },
+        {
+          "id": "s3",
+          "question": "How should you describe ongoing costs to the client?",
+          "options": [
+            "Only hosting costs a fixed small amount forever",
+            "Costs only go down over time automatically",
+            "Besides build cost, AI usage costs scale with the number of slips processed, plus monitoring and maintenance",
+            "There are no ongoing costs once it is built"
+          ],
+          "correctIndex": 2,
+          "explanation": "AI features usually carry per-use model costs and need monitoring; clients should hear that upfront."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A client has a fixed budget and wants to reach both iPhone and Android users quickly. Rank these approaches by fit, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "A client has a fixed budget and wants to reach both iPhone and Android users quickly. Rank these approaches by fit, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "Two separate native apps built in parallel"
+        },
+        {
+          "id": "r4",
+          "label": "An iOS-only native app"
+        },
+        {
+          "id": "r1",
+          "label": "One cross-platform app (e.g. Flutter or React Native) for both platforms"
+        },
+        {
+          "id": "r2",
+          "label": "A responsive web app first, mobile app later"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Cross-platform covers both stores with one codebase; a web app is a cheaper reach option without store presence; two native apps cost the most; iOS-only misses Android users."
+    }
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the overpromises in this proposal paragraph about an AI support chatbot.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the overpromises in this proposal paragraph about an AI support chatbot.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "The chatbot will answer common questions using your help-centre articles.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "It will never give a wrong answer.",
+          "issue": "No AI system can guarantee this; promise guardrails and escalation instead."
+        },
+        {
+          "id": "p3",
+          "text": "Questions it cannot answer confidently are handed to a human agent.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "It will replace your entire support team in month one.",
+          "issue": "Unrealistic and alarming; position it as reducing repetitive tickets."
+        },
+        {
+          "id": "p5",
+          "text": "We will review accuracy with your team weekly during the first month.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "What is a key advantage of a web app over a mobile app for a new product?",
+    "mcq": {
+      "options": [
+        "It never needs updates",
+        "Users can open it from a link without installing anything",
+        "It can always work fully offline",
+        "It gets automatic access to every phone sensor"
+      ],
+      "correctIndex": 1,
+      "explanation": "No install lowers the barrier to try a product. Offline use and full device access are strengths of native apps.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client asks what 'cross-platform' means. Which explanation is best?",
+    "mcq": {
+      "options": [
+        "Two teams build two separate apps",
+        "One codebase builds apps for both iOS and Android",
+        "The app runs only in a web browser",
+        "The app works only on tablets"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cross-platform frameworks share most code across iOS and Android, saving time and cost.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-tech-web-mobile-ai-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-tech-web-mobile-ai",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A client wants an AI feature that summarises customer reviews. What should BD make clear early?",
+    "mcq": {
+      "options": [
+        "Output quality depends on their data, and there are ongoing usage costs and review needs",
+        "AI features are free to run once built",
+        "The summaries will always be perfect",
+        "No data is needed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Data, accuracy expectations and running costs are what make AI projects succeed or disappoint.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

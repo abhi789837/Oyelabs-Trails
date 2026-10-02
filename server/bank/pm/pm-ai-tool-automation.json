@@ -1,0 +1,356 @@
+[
+  {
+    "id": "pm-ai-tool-automation-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "An AI feature in your PM tool summarised a ticket thread. Compare with the facts and mark what is wrong.\n\nFacts: the bug occurs only on Android 13; QA reproduced it; the fix is in review; no release date agreed.",
+    "task": {
+      "kind": "spot",
+      "prompt": "An AI feature in your PM tool summarised a ticket thread. Compare with the facts and mark what is wrong.\n\nFacts: the bug occurs only on Android 13; QA reproduced it; the fix is in review; no release date agreed.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Bug affects Android 13 devices.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "QA has reproduced the bug.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "The bug affects all Android versions.",
+          "issue": "Contradicts the facts: only Android 13."
+        },
+        {
+          "id": "s4",
+          "text": "Fix is in code review.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Release is scheduled for Friday.",
+          "issue": "Invented; no date was agreed."
+        },
+        {
+          "id": "s6",
+          "text": "Next step: complete review and test on Android 13.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps for adopting an AI feature (such as ticket summaries) in your team's PM tool.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps for adopting an AI feature (such as ticket summaries) in your team's PM tool.",
+      "items": [
+        {
+          "id": "r6d60d",
+          "label": "Check the feature's data terms and whether client contracts allow it"
+        },
+        {
+          "id": "r5513e",
+          "label": "Get approval from the company and, where needed, the client"
+        },
+        {
+          "id": "rea5f6",
+          "label": "Pilot on one project and verify the output"
+        },
+        {
+          "id": "rba20e",
+          "label": "Write a short guideline on when to trust and check it"
+        },
+        {
+          "id": "r2144f",
+          "label": "Roll out to other projects"
+        }
+      ],
+      "correctOrder": [
+        "r6d60d",
+        "r5513e",
+        "rea5f6",
+        "rba20e",
+        "r2144f"
+      ],
+      "explanation": "Terms, approval, pilot, guideline, rollout."
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Your PM tool's AI can auto-generate subtasks for stories. A developer says the generated subtasks look complete.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your PM tool's AI can auto-generate subtasks for stories. A developer says the generated subtasks look complete.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What should the team do before relying on them?",
+          "options": [
+            "Accept them as is",
+            "Review the subtasks in refinement; the team decides what work is needed",
+            "Delete them",
+            "Use them only for estimates"
+          ],
+          "correctIndex": 1,
+          "explanation": "AI suggestions are drafts for the team to review."
+        },
+        {
+          "id": "d2",
+          "question": "The AI often misses testing and deployment subtasks. What helps?",
+          "options": [
+            "Add a story template with standard subtasks and keep reviewing AI suggestions",
+            "Stop using templates",
+            "Trust the AI more",
+            "Skip testing subtasks"
+          ],
+          "correctIndex": 0,
+          "explanation": "Templates catch systematic omissions."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A PM configured an AI automation in the team's tool. Mark the risky settings.",
+    "task": {
+      "kind": "spot",
+      "prompt": "A PM configured an AI automation in the team's tool. Mark the risky settings.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "AI drafts a weekly summary of the project board for the PM to review.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "AI automatically sends that summary to the client without review.",
+          "issue": "Unreviewed AI output goes straight to the client."
+        },
+        {
+          "id": "s3",
+          "text": "AI suggests labels for new bugs; a human confirms.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "AI has permission to close tickets it judges as duplicates.",
+          "issue": "Lets the model make decisions without a human check; suggest instead."
+        },
+        {
+          "id": "s5",
+          "text": "AI features are off for the client whose contract forbids them.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Workspace AI is enabled for all projects by default, including restricted clients.",
+          "issue": "Restricted clients' data would be processed; enable per approved project."
+        },
+        {
+          "id": "s7",
+          "text": "AI-generated summaries are labelled as AI drafts.",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "The PM reviews AI suggestions in weekly backlog review.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Measure the accuracy of AI-suggested bug labels during a pilot.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Measure the accuracy of AI-suggested bug labels during a pilot.",
+      "table": {
+        "columns": [
+          "Measure",
+          "Count"
+        ],
+        "rows": [
+          [
+            "Bugs labelled by AI",
+            "80"
+          ],
+          [
+            "Labels a human confirmed unchanged",
+            "64"
+          ],
+          [
+            "Labels a human changed",
+            "16"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "acc",
+          "label": "Acceptance rate",
+          "unit": "%",
+          "answer": 80,
+          "tolerance": 0.1
+        },
+        {
+          "id": "err",
+          "label": "Change rate",
+          "unit": "%",
+          "answer": 20,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "64 / 80 = 80% accepted; 20% changed, so human confirmation should stay."
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A client asks whether the AI features in your project tool can see their data.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A client asks whether the AI features in your project tool can see their data.",
+      "steps": [
+        {
+          "id": "d1",
+          "question": "What do you do?",
+          "options": [
+            "Say no without checking",
+            "Say yes and move on",
+            "Check the vendor's AI data terms and your workspace settings, then answer precisely",
+            "Turn off the tool"
+          ],
+          "correctIndex": 2,
+          "explanation": "Answer from the actual terms and configuration."
+        },
+        {
+          "id": "d2",
+          "question": "The client asks you to disable AI for their project. What next?",
+          "options": [
+            "Disable it for their project, confirm in writing, and note it in the AI-use register",
+            "Refuse because it's useful",
+            "Disable it for all clients",
+            "Agree but leave it on"
+          ],
+          "correctIndex": 0,
+          "explanation": "Respect client restrictions and document them."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the safest default for AI-generated content in a PM tool?",
+    "mcq": {
+      "options": [
+        "Treat it as final",
+        "Hide it from the team",
+        "Send it to the client automatically",
+        "Treat it as a draft that a person reviews before it is used or shared"
+      ],
+      "correctIndex": 3,
+      "explanation": "Human review keeps quality and accountability.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Before enabling a PM tool's AI features on a client project, what should be checked?",
+    "mcq": {
+      "options": [
+        "Only the price",
+        "The vendor's data terms and whether the client's contract allows it",
+        "Whether the AI has a nice interface",
+        "The team's favourite AI model"
+      ],
+      "correctIndex": 1,
+      "explanation": "Data handling and contract terms come first.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "pm-ai-tool-automation-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-ai-tool-automation",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which task is best suited to AI in a PM tool with human review?",
+    "mcq": {
+      "options": [
+        "Deciding release go/no-go",
+        "Approving change requests",
+        "Closing tickets without review",
+        "Summarising long ticket threads for a quick overview"
+      ],
+      "correctIndex": 3,
+      "explanation": "Summaries save time and are easy to check; decisions stay with people.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

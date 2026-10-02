@@ -1,0 +1,335 @@
+[
+  {
+    "id": "bd-pricing-tm-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Work out a monthly time-and-materials invoice.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "Your T&M client's timesheets for March are below. Calculate the invoice total before tax.",
+      "table": {
+        "columns": [
+          "Role",
+          "Hours",
+          "Rate"
+        ],
+        "rows": [
+          [
+            "Senior engineer",
+            "120",
+            "$70"
+          ],
+          [
+            "Engineer",
+            "160",
+            "$50"
+          ],
+          [
+            "QA",
+            "60",
+            "$35"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "March invoice total",
+          "unit": "$",
+          "answer": 18500,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "120 × 70 + 160 × 50 + 60 × 35 = 8,400 + 8,000 + 2,100 = $18500."
+    }
+  },
+  {
+    "id": "bd-pricing-tm-t3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Project whether a capped T&M project will exceed its cap.",
+    "task": {
+      "kind": "calculate",
+      "prompt": "A T&M project was estimated at 1,000 hours at a blended $55 an hour, with a not-to-exceed (NTE) cap set 10% above the estimated cost. After 700 hours, about 60% of the agreed scope is done. Assume the same pace for the rest.",
+      "table": null,
+      "fields": [
+        {
+          "id": "cap",
+          "label": "NTE cap",
+          "unit": "$",
+          "answer": 60500,
+          "tolerance": 1
+        },
+        {
+          "id": "hours",
+          "label": "Projected total hours",
+          "unit": "h",
+          "answer": 1166.67,
+          "tolerance": 1
+        },
+        {
+          "id": "over",
+          "label": "Projected amount over the cap",
+          "unit": "$",
+          "answer": 3666.67,
+          "tolerance": 5
+        }
+      ],
+      "explanation": "Cap = 1,000 × 55 × 1.1 = $60500. Projected hours = 700 ÷ 0.6 ≈ 1166.67. Projected cost ≈ $64166.67, about $3666.67 over the cap. Raise it now, with options, while there is still scope to adjust."
+    }
+  },
+  {
+    "id": "bd-pricing-tm-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Answer a client who sees T&M as a blank cheque.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A prospect says: \"Time and materials sounds like a blank cheque. How do we know it won't run forever?\"",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What reassures them best?",
+          "options": [
+            "Weekly timesheets and burn reports against an agreed budget, with a cap you will not pass without approval",
+            "Telling them your developers are very efficient",
+            "Switching to a fixed price for the whole project at the same estimate",
+            "Promising the estimate is guaranteed"
+          ],
+          "correctIndex": 0,
+          "explanation": "Transparency and an approval point give the client control without pretending the scope is fixed."
+        },
+        {
+          "id": "s2",
+          "question": "They still want some certainty for the first month, while scope is unclear. What fits?",
+          "options": [
+            "Fixed price for everything",
+            "A small fixed-price discovery phase, then T&M with a cap for the build",
+            "No estimate at all until the build is done",
+            "A retainer with unlimited hours"
+          ],
+          "correctIndex": 1,
+          "explanation": "A hybrid fixes what can be known now and keeps flexibility where scope is still moving."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-tm-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Find the problems in this T&M SOW summary.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this time-and-materials SOW summary that are unclear or unfair.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Work is billed monthly in arrears on approved timesheets.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Rates: our standard rates apply.",
+          "issue": "No rate per role is stated, so the client cannot check invoices."
+        },
+        {
+          "id": "p3",
+          "text": "Time is billed in 4-hour minimum blocks per task.",
+          "issue": "Minimum blocks inflate bills for small tasks and are rarely accepted in T&M."
+        },
+        {
+          "id": "p4",
+          "text": "The estimate of 400 hours is guaranteed not to change.",
+          "issue": "A guaranteed estimate contradicts T&M; the client would expect a fixed price."
+        },
+        {
+          "id": "p5",
+          "text": "A burn report is shared every Friday.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Work above 110% of the estimate needs the client's written approval.",
+          "issue": null
+        },
+        {
+          "id": "p7",
+          "text": "Either party may end the engagement with 14 days' notice.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-pricing-tm-t3-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Rank engagements by how well they suit T&M.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these engagements from best suited to time-and-materials to least suited.",
+      "items": [
+        {
+          "id": "i2",
+          "label": "Integration with a legacy system whose API is undocumented"
+        },
+        {
+          "id": "i3",
+          "label": "MVP from a detailed clickable prototype, with two integrations still to be confirmed"
+        },
+        {
+          "id": "i4",
+          "label": "Five-page brochure site from approved designs"
+        },
+        {
+          "id": "i1",
+          "label": "AI prototype where it is unknown whether the target accuracy is achievable"
+        }
+      ],
+      "correctOrder": [
+        "i1",
+        "i2",
+        "i3",
+        "i4"
+      ],
+      "explanation": "T&M fits uncertainty: the client pays for the effort actually needed. When scope is fully known, a fixed price gives the client certainty at little risk to you."
+    }
+  },
+  {
+    "id": "bd-pricing-tm-t3-3",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Handle a T&M project burning faster than estimated.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Three weeks in, a T&M project has used 25% more hours than planned for the work done, because the client's data is messier than described.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When and how do you tell the client?",
+          "options": [
+            "At the end of the month on the invoice",
+            "Only if they ask",
+            "Now, with the burn data, the cause and a revised projection",
+            "After the team has tried to catch up"
+          ],
+          "correctIndex": 2,
+          "explanation": "In T&M the client carries the cost, so they need early, factual warning to make choices."
+        },
+        {
+          "id": "s2",
+          "question": "The client asks how to stay within the original budget. What do you offer?",
+          "options": [
+            "A discount on the extra hours",
+            "Billing fewer hours than worked",
+            "Stopping work immediately",
+            "Options: reduce or defer lower-priority scope, have the client clean the data, or raise the cap"
+          ],
+          "correctIndex": 3,
+          "explanation": "Present real options with their effect on scope and budget; quietly under-billing hides the problem."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-pricing-tm-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In a time-and-materials engagement, who carries most of the risk that scope takes longer than expected?",
+    "mcq": {
+      "options": [
+        "The agency",
+        "Neither, because hours are capped by law",
+        "The client",
+        "The project manager personally"
+      ],
+      "correctIndex": 2,
+      "explanation": "The client pays for actual hours, which is why T&M needs transparent reporting and, often, an agreed cap.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-tm-m2-2",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What most builds a T&M client's trust month to month?",
+    "mcq": {
+      "options": [
+        "Sending invoices only at the end of the project",
+        "A single total with no breakdown",
+        "Changing rates without notice when the team changes",
+        "Regular timesheets and burn reports against the agreed budget"
+      ],
+      "correctIndex": 3,
+      "explanation": "Visibility of hours and budget is what makes T&M feel controlled rather than open-ended.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "bd-pricing-tm-m3-1",
+    "departmentId": "bd",
+    "skillId": "bd-pricing-tm",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Engineering estimates 400–500 hours at $60 an hour. The client's budget is exactly $24,000. What should you do?",
+    "mcq": {
+      "options": [
+        "Quote $24,000 as a fixed price",
+        "Say nothing; the low estimate fits",
+        "Ask engineering to lower the estimate",
+        "Flag that the upper estimate is $30,000, agree priorities, and set a cap at the budget with scope ordered by importance"
+      ],
+      "correctIndex": 3,
+      "explanation": "400 × 60 = $24,000 is the best case and 500 × 60 = $30,000 the upper end. Make the gap visible and agree what gets cut if hours run high.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

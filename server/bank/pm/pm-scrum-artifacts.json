@@ -1,0 +1,372 @@
+[
+  {
+    "id": "pm-scrum-artifacts-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Each Scrum artifact has a commitment. Order the artifacts as work flows through them, from first to last.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "Sprint Backlog (commitment: Sprint Goal)"
+        },
+        {
+          "id": "r1",
+          "label": "Product Backlog (commitment: Product Goal)"
+        },
+        {
+          "id": "r3",
+          "label": "Increment (commitment: Definition of Done)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "explanation": "Items are pulled from the Product Backlog into the Sprint Backlog, and become part of the Increment once they meet the Definition of Done."
+    }
+  },
+  {
+    "id": "pm-scrum-artifacts-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Here is a team's Definition of Done for a client mobile app. Mark the lines that do not belong in a Definition of Done.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Code reviewed and merged to the main branch.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Automated tests pass in CI.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Deployed to the staging environment.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Done if the developer is confident it works.",
+          "issue": "Not verifiable; the DoD must be objective checks anyone can confirm."
+        },
+        {
+          "id": "p5",
+          "text": "Acceptance criteria verified by QA.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "Skip testing when the Sprint is running late.",
+          "issue": "The DoD is a quality bar; relaxing it under pressure creates hidden undone work."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-scrum-artifacts-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "On the last day of the Sprint, two stories are 'code complete' but have not been tested on staging, which your Definition of Done requires.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On the last day of the Sprint, two stories are 'code complete' but have not been tested on staging, which your Definition of Done requires.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Can they be shown as Done at the Sprint Review?",
+          "options": [
+            "No, they are not part of the Increment until they meet the Definition of Done",
+            "Yes, code complete is close enough",
+            "Yes, if the client agrees",
+            "Only one of them"
+          ],
+          "correctIndex": 0,
+          "explanation": "Work that does not meet the DoD cannot be released or presented as Done."
+        },
+        {
+          "id": "s2",
+          "question": "What happens to them?",
+          "options": [
+            "They return to the Product Backlog for the Product Owner to reorder",
+            "They count as Done and are tested later",
+            "They are deleted",
+            "The Sprint is extended by two days"
+          ],
+          "correctIndex": 0,
+          "explanation": "Undone items go back to the Product Backlog; the Sprint length does not change."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-scrum-artifacts-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "At the end of a Sprint, the Sprint Backlog had these items. Only items that meet the Definition of Done count. How many points are Done and what share of the planned points is that?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Item",
+          "Points",
+          "Status"
+        ],
+        "rows": [
+          [
+            "Login with Apple",
+            "5",
+            "Done"
+          ],
+          [
+            "Push notifications",
+            "3",
+            "Done"
+          ],
+          [
+            "Order tracking",
+            "8",
+            "Done"
+          ],
+          [
+            "Promo codes",
+            "5",
+            "Code complete"
+          ],
+          [
+            "Profile photo",
+            "2",
+            "In QA"
+          ],
+          [
+            "Referral link",
+            "3",
+            "Not started"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "done",
+          "label": "Points Done",
+          "unit": "points",
+          "answer": 16,
+          "tolerance": 0
+        },
+        {
+          "id": "share",
+          "label": "Share of planned points Done",
+          "unit": "%",
+          "answer": 61.5,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Done items: 5 + 3 + 8 = 16 points. Planned: 5 + 3 + 8 + 5 + 2 + 3 = 26. Share = 16 / 26 = 61.5%. 'Code complete' and 'In QA' items do not count."
+    }
+  },
+  {
+    "id": "pm-scrum-artifacts-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Review this Sprint Backlog summary posted to the client. Mark the lines that misuse the Scrum artifacts.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Sprint Goal: customers can pay for an order with a saved card.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Selected items: save card, pay with saved card, payment receipts.",
+          "issue": null
+        },
+        {
+          "id": "p3",
+          "text": "Plan: tasks broken down by the Developers on the board.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "The Product Owner will add three new features to this Sprint Backlog on Wednesday.",
+          "issue": "The Sprint Backlog belongs to the Developers; new items can be negotiated but the PO cannot push scope in mid-Sprint without them."
+        },
+        {
+          "id": "p5",
+          "text": "No Product Goal has been defined yet; we will decide after launch.",
+          "issue": "The Product Backlog's commitment is the Product Goal; without it the backlog has no direction."
+        },
+        {
+          "id": "p6",
+          "text": "Increment will be deployed to staging when it meets the Definition of Done.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-scrum-artifacts-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order these Product Backlog items as a Product Owner should, for an app whose Product Goal is 'first paying customers by launch'.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Dark mode"
+        },
+        {
+          "id": "r2",
+          "label": "Order confirmation emails"
+        },
+        {
+          "id": "r1",
+          "label": "Card checkout (needed for any revenue)"
+        },
+        {
+          "id": "r3",
+          "label": "Discount codes for launch promotion"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Ordering follows value toward the Product Goal: no revenue without checkout, confirmations support paying customers, promotions help adoption, dark mode is nice to have."
+    }
+  },
+  {
+    "id": "pm-scrum-artifacts-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the commitment for the Sprint Backlog?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The Sprint Goal",
+        "The Product Goal",
+        "The Definition of Done",
+        "The release date"
+      ],
+      "correctIndex": 0,
+      "explanation": "Scrum Guide 2020: Product Backlog → Product Goal, Sprint Backlog → Sprint Goal, Increment → Definition of Done.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scrum-artifacts-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is an Increment?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "A concrete stepping stone toward the Product Goal that meets the Definition of Done",
+        "Any code written during the Sprint",
+        "The list of items for the next Sprint",
+        "A sprint report sent to the client"
+      ],
+      "correctIndex": 0,
+      "explanation": "An Increment is usable, Done work; it adds to all prior Increments.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-scrum-artifacts-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-scrum-artifacts",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your agency serves several client apps with different teams. Where should the Definition of Done come from?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The organisation's standard if one exists; otherwise the Scrum Team creates one appropriate for the product",
+        "Each developer decides their own",
+        "The client's legal department",
+        "It is optional in Scrum"
+      ],
+      "correctIndex": 0,
+      "explanation": "If the organisation has a DoD standard, teams follow it as a minimum; otherwise the Scrum Team creates one.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

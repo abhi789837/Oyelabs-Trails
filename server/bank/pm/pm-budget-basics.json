@@ -1,0 +1,357 @@
+[
+  {
+    "id": "pm-budget-basics-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Build a simple time-and-materials estimate for a client app from the table, then add a 10% contingency.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Role",
+          "Hours",
+          "Rate ($/h)"
+        ],
+        "rows": [
+          [
+            "Developer",
+            "320",
+            "40"
+          ],
+          [
+            "Designer",
+            "80",
+            "35"
+          ],
+          [
+            "QA",
+            "100",
+            "30"
+          ],
+          [
+            "PM",
+            "60",
+            "45"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "labour",
+          "label": "Labour cost",
+          "unit": "$",
+          "answer": 21300,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total with 10% contingency",
+          "unit": "$",
+          "answer": 23430.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Developers 320 × 40 = 12800, design 80 × 35 = 2800, QA 100 × 30 = 3000, PM 60 × 45 = 2700. Labour = 21300. Contingency 10% = 2130, total = 23430."
+    }
+  },
+  {
+    "id": "pm-budget-basics-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A project has a $60,000 budget. After 6 of 12 planned weeks you have spent $36,000. The burn rate is steady.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "burn",
+          "label": "Weekly burn rate",
+          "unit": "$/week",
+          "answer": 6000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "forecast",
+          "label": "Forecast cost at completion at this burn rate",
+          "unit": "$",
+          "answer": 72000.0,
+          "tolerance": 1
+        },
+        {
+          "id": "over",
+          "label": "Forecast overrun",
+          "unit": "$",
+          "answer": 12000.0,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Burn = 36,000 / 6 = $6,000 per week. At that rate 12 weeks cost $72,000, which is $12,000 over budget."
+    }
+  },
+  {
+    "id": "pm-budget-basics-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A fixed-bid project is priced at $50,000. The team's internal cost is $28/h and the project has used 1,100 hours so far, with 300 hours estimated to finish.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "cost",
+          "label": "Total cost at completion",
+          "unit": "$",
+          "answer": 39200,
+          "tolerance": 1
+        },
+        {
+          "id": "margin",
+          "label": "Gross margin",
+          "unit": "%",
+          "answer": 21.6,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Cost = (1,100 + 300) × 28 = $39,200. Margin = (50,000 − 39,200) / 50,000 = 21.6%."
+    }
+  },
+  {
+    "id": "pm-budget-basics-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Review this weekly budget note from a junior PM. Mark the lines that are wrong or misleading.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Budget: $80,000. Spent to date: $40,000.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "We have spent 50% of the budget, so we are exactly on track.",
+          "issue": "Spend alone does not show progress; 50% spent is only on track if about 50% of the work is done."
+        },
+        {
+          "id": "p3",
+          "text": "The team logged 210 hours this week against 200 planned.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Contingency of $8,000 is untouched.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "We will use the contingency to add the chat feature the client mentioned.",
+          "issue": "Contingency covers identified risks, not new scope; new features need a change request."
+        },
+        {
+          "id": "p6",
+          "text": "Next update: Friday.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-budget-basics-t1-3",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put these budgeting steps in the order you would do them when pricing a new project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Add contingency for identified risks"
+        },
+        {
+          "id": "r2",
+          "label": "Estimate hours per work package and role"
+        },
+        {
+          "id": "r1",
+          "label": "Break the scope into work packages (WBS)"
+        },
+        {
+          "id": "r3",
+          "label": "Multiply hours by role rates to get labour cost"
+        },
+        {
+          "id": "r5",
+          "label": "Get the budget approved as the cost baseline"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Cost estimates are built bottom-up from the WBS, priced by rate, padded with a risk-based contingency, then approved as the baseline you track against."
+    }
+  },
+  {
+    "id": "pm-budget-basics-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Midway through a time-and-materials project you forecast that the client's $40,000 cap will run out two weeks before the planned end.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Midway through a time-and-materials project you forecast that the client's $40,000 cap will run out two weeks before the planned end.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When do you tell the client?",
+          "options": [
+            "Now, with the forecast and the reason",
+            "When the money actually runs out",
+            "After the project ends",
+            "Only if they ask"
+          ],
+          "correctIndex": 0,
+          "explanation": "Early warning gives the client options; surprising them at the cap damages trust."
+        },
+        {
+          "id": "s2",
+          "question": "What do you bring to the conversation?",
+          "options": [
+            "Options: increase the cap, cut lower-priority scope, or extend with a smaller team, each with its cost",
+            "Just a request for more money",
+            "An apology and nothing else",
+            "A plan to work unpaid overtime"
+          ],
+          "correctIndex": 0,
+          "explanation": "Concrete options with numbers let the client decide quickly."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-budget-basics-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a cost baseline?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The approved, time-phased budget you measure actual spending against",
+        "The cheapest possible price for the project",
+        "The client's total annual IT budget",
+        "The hourly rate of a junior developer"
+      ],
+      "correctIndex": 0,
+      "explanation": "The cost baseline is the approved budget spread over time (excluding management reserve); actuals are compared against it.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-budget-basics-m1-2",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is contingency in a project budget?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Money set aside for identified risks that may happen",
+        "Profit the agency keeps",
+        "The cost of new features the client adds",
+        "The first invoice"
+      ],
+      "correctIndex": 0,
+      "explanation": "Contingency covers known risks; new scope should be funded through change requests.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-budget-basics-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-budget-basics",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Your project is 40% complete and has spent 60% of its budget. What does this suggest?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "The project is likely to overrun its budget unless something changes",
+        "The project is under budget",
+        "The project is exactly on budget",
+        "Nothing, spend and progress are unrelated"
+      ],
+      "correctIndex": 0,
+      "explanation": "Spending faster than progress means each unit of work is costing more than planned, pointing to an overrun.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]

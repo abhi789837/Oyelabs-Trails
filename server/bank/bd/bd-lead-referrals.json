@@ -1,0 +1,380 @@
+[
+  {
+    "id": "bd-lead-referrals-t1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Rank these moments by how good they are for asking a client for a referral, best first.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Rank these moments by how good they are for asking a client for a referral, best first.",
+      "items": [
+        {
+          "id": "r3",
+          "label": "The project kickoff call, before any work"
+        },
+        {
+          "id": "r4",
+          "label": "The day after a production bug caused downtime"
+        },
+        {
+          "id": "r1",
+          "label": "The client just told you the launched app cut their support tickets in half"
+        },
+        {
+          "id": "r2",
+          "label": "You delivered a milestone on time and the client said thanks"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Ask when the client feels the value most; never right after a failure, and kickoff is too early because nothing is proven yet."
+    }
+  },
+  {
+    "id": "bd-lead-referrals-t1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Mark the lines in this referral request that weaken it.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this referral request that weaken it.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Hi Priya, great to see the booking app live and the no-show rate dropping.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "Do you know anyone at all who might need anything built?",
+          "issue": "Too vague: the client cannot think of anyone without a clear profile to match."
+        },
+        {
+          "id": "p3",
+          "text": "We work best with clinic groups that still run scheduling on spreadsheets.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "If someone comes to mind, I can send a short note you could forward.",
+          "issue": null
+        },
+        {
+          "id": "p5",
+          "text": "We will pay you 50% of the project value for every name you send.",
+          "issue": "An oversized cash reward makes the intro feel transactional and may breach the client's own policies."
+        },
+        {
+          "id": "p6",
+          "text": "Thanks again for a great project.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "bd-lead-referrals-t1-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Compare referral leads with cold outbound leads this year. Work out the close rate of each (deals won as a percentage of leads).",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Compare referral leads with cold outbound leads this year. Work out the close rate of each (deals won as a percentage of leads).",
+      "table": {
+        "columns": [
+          "Source",
+          "Leads",
+          "Deals won"
+        ],
+        "rows": [
+          [
+            "Referrals",
+            "20",
+            "8"
+          ],
+          [
+            "Cold outbound",
+            "150",
+            "6"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "ref",
+          "label": "Referral close rate",
+          "unit": "%",
+          "answer": 40,
+          "tolerance": 0.1
+        },
+        {
+          "id": "cold",
+          "label": "Cold outbound close rate",
+          "unit": "%",
+          "answer": 4,
+          "tolerance": 0.1
+        }
+      ],
+      "explanation": "8 / 20 = 40%; 6 / 150 = 4%. Referrals arrive with trust already built."
+    }
+  },
+  {
+    "id": "bd-lead-referrals-t2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A partner agency refers work in exchange for a 10% referral fee on the first project. Work out the fee and the agency's net revenue after the fee for each referred deal, and the total fees paid.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "A partner agency refers work in exchange for a 10% referral fee on the first project. Work out the fee and the agency's net revenue after the fee for each referred deal, and the total fees paid.",
+      "table": {
+        "columns": [
+          "Referred deal",
+          "First project value ($)"
+        ],
+        "rows": [
+          [
+            "Clinic app",
+            "30000"
+          ],
+          [
+            "Fleet dashboard",
+            "18000"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "fee1",
+          "label": "Clinic app: referral fee",
+          "unit": "$",
+          "answer": 3000,
+          "tolerance": 1
+        },
+        {
+          "id": "net2",
+          "label": "Fleet dashboard: net after fee",
+          "unit": "$",
+          "answer": 16200,
+          "tolerance": 1
+        },
+        {
+          "id": "total",
+          "label": "Total fees paid",
+          "unit": "$",
+          "answer": 4800,
+          "tolerance": 1
+        }
+      ],
+      "explanation": "Clinic fee 30,000 x 10% = 3,000. Fleet fee 1,800, net 16,200. Total fees 3,000 + 1,800 = 4,800."
+    }
+  },
+  {
+    "id": "bd-lead-referrals-t2-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "A happy client, Marco, introduces you by email to a founder friend, Lena, who is \"thinking about building an app\".",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "A happy client, Marco, introduces you by email to a founder friend, Lena, who is \"thinking about building an app\".",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How should you reply to the introduction?",
+          "options": [
+            "Send Lena your full price list",
+            "Reply only to Marco",
+            "Reply-all thanking Marco, move him to BCC, and suggest a short call with Lena",
+            "Wait for Lena to reach out first"
+          ],
+          "correctIndex": 2,
+          "explanation": "Thank the introducer publicly, spare him the thread, and make the next step easy for Lena."
+        },
+        {
+          "id": "s2",
+          "question": "Lena's need turns out to be a small website, well below your usual project size. What now?",
+          "options": [
+            "Ignore her",
+            "Be honest, help where reasonable, and point her to a good-fit option so Marco's goodwill is protected",
+            "Quote your full minimum anyway without explanation",
+            "Take it and staff a junior to save time"
+          ],
+          "correctIndex": 1,
+          "explanation": "How you treat a referral reflects on the referrer; an honest, helpful no keeps the relationship."
+        },
+        {
+          "id": "s3",
+          "question": "What do you do with Marco afterwards?",
+          "options": [
+            "Ask him for five more names right away",
+            "Send him a discount code",
+            "Nothing",
+            "Thank him and tell him how it went, without sharing confidential details"
+          ],
+          "correctIndex": 3,
+          "explanation": "Closing the loop shows respect and makes future introductions more likely."
+        }
+      ]
+    }
+  },
+  {
+    "id": "bd-lead-referrals-t2-3",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "task",
+    "estMinutes": 2,
+    "prompt": "Write a short message asking a satisfied client for a referral.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Write a short message asking a satisfied client for a referral.",
+      "context": "Client: Anita, COO of a regional logistics company. Your agency built their driver app and dispatch dashboard; on-time deliveries rose from 82% to 94% in three months. Your best-fit clients are mid-size logistics or delivery firms still dispatching manually.",
+      "wordLimit": 120,
+      "rubric": [
+        {
+          "id": "value",
+          "label": "Anchors on the result",
+          "description": "References the concrete outcome (on-time deliveries up) so the ask follows value.",
+          "weight": 1
+        },
+        {
+          "id": "profile",
+          "label": "Clear referral profile",
+          "description": "Describes the specific kind of company or person to introduce, so Anita can think of a name.",
+          "weight": 1
+        },
+        {
+          "id": "easy",
+          "label": "Easy and low pressure",
+          "description": "Offers to make the intro effortless (e.g. a forwardable note) and makes it fine to say no.",
+          "weight": 1
+        },
+        {
+          "id": "tone",
+          "label": "Warm, concise tone",
+          "description": "Reads as personal and brief, not templated or transactional.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Anita, seeing on-time deliveries go from 82% to 94% has been a highlight of our year, thank you for trusting us with it. We do our best work with mid-size logistics or delivery firms still dispatching by phone and spreadsheet. If a peer comes to mind who is wrestling with that, I would be grateful for an introduction. I can send you a two-line note to forward so it takes you a minute. No pressure at all if nobody fits right now. Thanks again, Sam"
+    }
+  },
+  {
+    "id": "bd-lead-referrals-m1-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Why do referred leads usually close at a higher rate than cold leads?",
+    "mcq": {
+      "options": [
+        "They are already under contract",
+        "They always have bigger budgets",
+        "Trust is transferred from the person who referred them",
+        "They do not need a proposal"
+      ],
+      "correctIndex": 2,
+      "explanation": "The referrer's credibility shortens the trust-building phase, which is the slowest part of a cold sale.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-referrals-m1-2",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 1,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "Which referral ask is most likely to produce an introduction?",
+    "mcq": {
+      "options": [
+        "\"Refer us and we'll give you a gift.\"",
+        "\"Let me know if you hear of anyone.\"",
+        "\"Do you know another clinic owner still booking patients by phone who might want what we built for you?\"",
+        "\"Please share our website with your network.\""
+      ],
+      "correctIndex": 2,
+      "explanation": "A specific profile tied to the client's own experience lets them think of a real person.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  },
+  {
+    "id": "bd-lead-referrals-m2-1",
+    "departmentId": "bd",
+    "skillId": "bd-lead-referrals",
+    "trackId": null,
+    "stackId": null,
+    "difficulty": 2,
+    "type": "mcq",
+    "estMinutes": 1,
+    "prompt": "A referral partner sends several leads, none of which fit your services. What is the best response?",
+    "mcq": {
+      "options": [
+        "Stop talking to the partner",
+        "Thank them and clarify your ideal client with a concrete example so future referrals fit",
+        "Accept every lead regardless of fit",
+        "Pay them anyway to keep them happy"
+      ],
+      "correctIndex": 1,
+      "explanation": "Partners refer what they understand; teaching them your ICP improves referral quality without losing goodwill.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "coding": null,
+    "task": null
+  }
+]

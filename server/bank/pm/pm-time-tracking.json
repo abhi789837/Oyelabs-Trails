@@ -1,0 +1,385 @@
+[
+  {
+    "id": "pm-time-tracking-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A developer's timesheet for the week shows the entries below. Billable work is client project work; internal meetings and training are non-billable.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Entry",
+          "Type",
+          "Hours"
+        ],
+        "rows": [
+          [
+            "Acme app: bug fixes",
+            "Client",
+            "6"
+          ],
+          [
+            "Acme app: checkout",
+            "Client",
+            "14"
+          ],
+          [
+            "Beta CRM: reports",
+            "Client",
+            "9"
+          ],
+          [
+            "Internal meetings",
+            "Internal",
+            "4"
+          ],
+          [
+            "Training",
+            "Internal",
+            "5"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "total",
+          "label": "Total hours logged",
+          "unit": "hours",
+          "answer": 38,
+          "tolerance": 0
+        },
+        {
+          "id": "bill",
+          "label": "Billable hours",
+          "unit": "hours",
+          "answer": 29,
+          "tolerance": 0
+        }
+      ],
+      "explanation": "Total = 38 hours. Billable = 6 + 14 + 9 = 29 hours."
+    }
+  },
+  {
+    "id": "pm-time-tracking-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Work out each person's billable utilisation (billable ÷ available hours) and the team's overall utilisation for the week.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": {
+        "columns": [
+          "Person",
+          "Available hours",
+          "Billable hours"
+        ],
+        "rows": [
+          [
+            "Ana",
+            "40",
+            "34"
+          ],
+          [
+            "Bo",
+            "40",
+            "28"
+          ],
+          [
+            "Cy",
+            "32",
+            "30"
+          ]
+        ]
+      },
+      "fields": [
+        {
+          "id": "bo",
+          "label": "Bo's utilisation",
+          "unit": "%",
+          "answer": 70.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "team",
+          "label": "Team utilisation",
+          "unit": "%",
+          "answer": 82.1,
+          "tolerance": 0.5
+        }
+      ],
+      "explanation": "Bo: 28/40 = 70%. Team: 92/112 = 82.1%."
+    }
+  },
+  {
+    "id": "pm-time-tracking-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A T&M client has a monthly cap of 160 hours at $40/hour. By day 15 of a 30-day month the team has logged 104 billable hours.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "calculate",
+      "prompt": "Calculate each value from the data.",
+      "table": null,
+      "fields": [
+        {
+          "id": "burn",
+          "label": "Share of the cap used",
+          "unit": "%",
+          "answer": 65.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "proj",
+          "label": "Projected hours for the month at the same rate",
+          "unit": "hours",
+          "answer": 208.0,
+          "tolerance": 0.5
+        },
+        {
+          "id": "over",
+          "label": "Projected overage cost above the cap",
+          "unit": "$",
+          "answer": 1920.0,
+          "tolerance": 5
+        }
+      ],
+      "explanation": "104/160 = 65% used at the half-way point. Projected = 104 × 2 = 208 hours, 48 over the cap, worth 48 × $40 = $1,920 that the client hasn't approved. Raise it now."
+    }
+  },
+  {
+    "id": "pm-time-tracking-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A PM's timesheet guidelines for the team. Mark the rules that cause problems.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark every segment that is a problem. Leave the sound ones unmarked.",
+      "segments": [
+        {
+          "id": "p1",
+          "text": "Log time daily against the right task, with a short description.",
+          "issue": null
+        },
+        {
+          "id": "p2",
+          "text": "It's fine to fill in the whole month's timesheet on the last day from memory.",
+          "issue": "Memory-based monthly entries are inaccurate and make invoices hard to defend."
+        },
+        {
+          "id": "p3",
+          "text": "Separate billable client work from internal time.",
+          "issue": null
+        },
+        {
+          "id": "p4",
+          "text": "Log everything to one general 'Project' task to save time.",
+          "issue": "No task-level detail means you can't compare estimates to actuals or explain invoices."
+        },
+        {
+          "id": "p5",
+          "text": "Timesheets are approved by the PM every Friday.",
+          "issue": null
+        },
+        {
+          "id": "p6",
+          "text": "If you go over an estimate, log the extra to a different task that has budget left.",
+          "issue": "Moving hours hides overruns and misleads estimates and invoices."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "pm-time-tracking-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the weekly time-tracking cycle for a T&M client.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag the items into the right order, first at the top.",
+      "items": [
+        {
+          "id": "r4",
+          "label": "Billable hours are exported for the invoice"
+        },
+        {
+          "id": "r2",
+          "label": "PM reviews and approves timesheets on Friday"
+        },
+        {
+          "id": "r1",
+          "label": "Team logs time daily against tasks"
+        },
+        {
+          "id": "r3",
+          "label": "PM compares hours with estimates and the client's cap"
+        },
+        {
+          "id": "r5",
+          "label": "Variances are discussed with the client in the status update"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Capture, review, compare, bill, communicate."
+    }
+  },
+  {
+    "id": "pm-time-tracking-t2-5",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "On a fixed-bid project, a developer has logged 60 hours to a task estimated at 24, but the task shows as 50% done.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a fixed-bid project, a developer has logged 60 hours to a task estimated at 24, but the task shows as 50% done.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Nothing, fixed bid means hours don't matter",
+            "Talk to the developer to understand the cause and remaining effort",
+            "Remove 36 hours from the timesheet",
+            "Bill the client the extra hours"
+          ],
+          "correctIndex": 1,
+          "explanation": "Hours still matter on a fixed bid: they are your margin. Understand before acting."
+        },
+        {
+          "id": "s2",
+          "question": "The cause was an undocumented third-party API that the client chose. What next?",
+          "options": [
+            "Absorb it silently",
+            "Re-forecast, and if the cause is outside the agreed scope or assumptions, raise it with the client as a possible change request",
+            "Blame the developer",
+            "Stop work on the task"
+          ],
+          "correctIndex": 1,
+          "explanation": "Reforecast the budget, and check assumptions in the SOW: client-caused effort may be chargeable."
+        }
+      ]
+    }
+  },
+  {
+    "id": "pm-time-tracking-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why do agencies separate billable and non-billable time?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "To invoice clients correctly and see how much time actually earns revenue",
+        "Because non-billable time is not allowed",
+        "To pay developers less",
+        "Because clients ask to see internal meetings"
+      ],
+      "correctIndex": 0,
+      "explanation": "The split drives invoices and utilisation, and shows where non-revenue time goes.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-time-tracking-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A developer logs 45 billable hours in a 40-hour week on a T&M project. What should the PM do?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Check the entries are accurate, and confirm the client approved any overtime before invoicing",
+        "Delete 5 hours",
+        "Invoice all 45 hours without checking",
+        "Move 5 hours to next week"
+      ],
+      "correctIndex": 0,
+      "explanation": "Over-normal hours need verifying and, on T&M, must fit what the client agreed to pay for.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  },
+  {
+    "id": "pm-time-tracking-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-time-tracking",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is a realistic billable utilisation target for a developer in a services agency?",
+    "coding": null,
+    "mcq": {
+      "options": [
+        "Around 70–85%, leaving time for meetings, learning and internal work",
+        "100% every week",
+        "Under 30%",
+        "Utilisation targets aren't used in agencies"
+      ],
+      "correctIndex": 0,
+      "explanation": "100% is neither achievable nor healthy; most agencies target roughly 70–85% for delivery staff.",
+      "snippet": null,
+      "snippetLanguage": null
+    },
+    "task": null
+  }
+]
