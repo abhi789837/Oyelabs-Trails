@@ -183,6 +183,92 @@ describe("personalised assessments", () => {
     expect(lowReport.reused).toBeGreaterThan(highReport.reused);
   }, 240_000);
 
+  test("the mock provider's stand-ins personalise from the description: themes, generated items in context, bank for the rest", async () => {
+    const ctx = await createTestApp({}, { provider: new MockProvider() });
+    const admin = await adminSession(ctx);
+    const learner = await activeLearner(ctx, admin);
+    const res = await ctx.app.inject({
+      method: "PUT",
+      url: `/api/admin/users/${learner.id}/setup`,
+      ...as(admin),
+      payload: {
+        departmentId: "engineering", trackId: "frontend", stackIds: ["stack-react"], experienceBand: "1-2", level: 2,
+        priorities: [{ skillId: "eng-javascript", slider: 5 }, { skillId: "eng-typescript", slider: 4 }],
+        skip: [], hoursPerWeek: 15,
+        description: "React developer, building checkout flows for overseas clients",
+        advanced: { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "high" },
+        assign: true,
+      },
+    });
+    expect(res.statusCode).toBe(200);
+    const id = res.json().issued.assessmentId as string;
+    await ctx.drainJobs();
+
+    const report = configOf(ctx, id).personalisation as { understandingSource: string; themes: string[]; intent: string[]; generated: number; fromBankAfterFailures: number; estSeconds: number };
+    expect(report.understandingSource).toBe("ai");
+    expect(report.themes).toEqual(expect.arrayContaining(["checkout flows", "overseas clients"]));
+    expect(report.intent.join(" ")).toMatch(/overseas clients/);
+    expect(report.generated).toBeGreaterThan(0);
+    // The stand-in writes no spot-the-bug tasks, so those slots come from the bank after the retries.
+    expect(report.fromBankAfterFailures).toBeGreaterThan(0);
+
+    const items = itemsOf(ctx, id);
+    expect(items).toHaveLength(25);
+    const generated = items.filter((i) => i.origin === "generated");
+    expect(generated.length).toBe(report.generated);
+    expect(generated.some((i) => i.kind === "code")).toBe(true);
+    for (const item of generated) {
+      const prompt = (item.payload as { prompt: string }).prompt;
+      expect(prompt).toMatch(/checkout flows|overseas clients|React/);
+    }
+    const bankRows = ctx.db.select().from(schema.questionBank).where(eq(schema.questionBank.source, "generated")).all();
+    expect(bankRows.some((r) => (r.tags ?? []).includes("checkout flows"))).toBe(true);
+    const total = items.reduce((s, i) => s + (i.estSeconds ?? 0), 0);
+    expect(total).toBeGreaterThanOrEqual(TOTAL_MIN_SEC);
+    expect(total).toBeLessThanOrEqual(TOTAL_MAX_SEC);
+    await ctx.close();
+  }, 180_000);
+
+  test("for a PM, the stand-ins write email, explain, Excel and screen-check tasks set in the description's world", async () => {
+    const ctx = await createTestApp({}, { provider: new MockProvider() });
+    const admin = await adminSession(ctx);
+    const learner = await activeLearner(ctx, admin);
+    const res = await ctx.app.inject({
+      method: "PUT",
+      url: `/api/admin/users/${learner.id}/setup`,
+      ...as(admin),
+      payload: {
+        departmentId: "pm", trackId: "pm-agile", stackIds: [], experienceBand: "3-5", level: 3,
+        priorities: [
+          { skillId: "pm-client-meetings", slider: 5 }, { skillId: "pm-excel-for-pms", slider: 5 }, { skillId: "pm-email-etiquette", slider: 5 },
+          { skillId: "pm-tech-terms", slider: 4 }, { skillId: "pm-keka", slider: 3 },
+        ],
+        skip: [], hoursPerWeek: 15,
+        description: "Handles 3 overseas clients, weak on client calls and Excel",
+        advanced: { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "high" },
+        assign: true,
+      },
+    });
+    expect(res.statusCode).toBe(200);
+    const id = res.json().issued.assessmentId as string;
+    await ctx.drainJobs();
+
+    const report = configOf(ctx, id).personalisation as { themes: string[]; generated: number };
+    expect(report.themes).toEqual(expect.arrayContaining(["overseas clients", "client calls", "Excel"]));
+    const generated = itemsOf(ctx, id).filter((i) => i.origin === "generated");
+    expect(generated.length).toBe(report.generated);
+    const kinds = new Set(generated.map((i) => {
+      const task = (i.key as { task?: { kind: string; variant?: string } } | null)?.task;
+      return task ? `${task.kind}${task.variant ? `/${task.variant}` : ""}` : i.kind;
+    }));
+    expect([...kinds]).toEqual(expect.arrayContaining(["excel", "write/email", "write/explain", "mcq"]));
+    for (const item of generated) expect((item.payload as { prompt: string }).prompt).toMatch(/overseas clients|client calls|Excel/);
+    const total = itemsOf(ctx, id).reduce((s, i) => s + (i.estSeconds ?? 0), 0);
+    expect(total).toBeGreaterThanOrEqual(TOTAL_MIN_SEC);
+    expect(total).toBeLessThanOrEqual(TOTAL_MAX_SEC);
+    await ctx.close();
+  }, 180_000);
+
   test("with no AI available it falls back to the bank at once and says so", async () => {
     const ctx = await createTestApp({}, { noAi: true });
     const admin = await adminSession(ctx);

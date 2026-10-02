@@ -142,10 +142,14 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
       case "allocate":
         shape.cells = ((t.people as unknown[]).length || 0) * ((t.projects as unknown[]).length || 0);
         break;
-      case "sim":
-        shape.extraWords = ((t.rows as unknown[][] | undefined)?.flat().length ?? 0) * 1;
-        shape.decisions = (t.questions as unknown[] | undefined)?.length ?? 1;
+      case "sim": {
+        // Rows are objects ({ id, cells, issue }), so count their cells, plus the questions' text.
+        const rows = (t.rows as { cells: string[] }[] | undefined) ?? [];
+        const questions = (t.questions as { question: string; options: string[] }[] | undefined) ?? [];
+        shape.extraWords = rows.reduce((s, r) => s + r.cells.length, 0) + questions.reduce((s, q) => s + words(q.question) + q.options.reduce((x, o) => x + words(o), 0), 0);
+        shape.decisions = questions.length || 1;
         break;
+      }
     }
   }
   return shape;

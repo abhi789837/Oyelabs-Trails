@@ -38,3 +38,10 @@ Each entry: the decision, the alternatives, and why.
 ## D6. The diagnostic refresh course is per department
 - **Decision:** the "refresh" course that opens Part 1 is looked up within the learner's own
   department. It was found catalog-wide, so an engineer could have received the PM refresh.
+
+## D7. The description can lean the split, within limits
+- **Decision:** when the model proposes more hands-on slots for a skill than the sliders gave it, up
+  to 3 slots move there (one per emphasised skill), taken from the lowest-priority skills that still
+  have two or more. Totals never change and no skill drops to zero.
+- **Why:** "weak on client calls" should mean more meeting and email tasks, which the brief asks for.
+  The sliders stay the admin's main control, so the lean is small and bounded.

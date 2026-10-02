@@ -2,7 +2,7 @@
   "name": "oyelearn",
   "description": "Oyelearn - the internal learning platform for the Oyelabs dev team.",
   "private": true,
-  "version": "4.0.0",
+  "version": "4.1.0",
   "type": "module",
   "scripts": {
     "predev": "node scripts/content/build-manifest.mjs && node scripts/content/build-server-content.mjs",

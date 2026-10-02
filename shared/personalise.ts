@@ -102,7 +102,7 @@ export function enforceBlueprint(input: {
   const slots: Slot[] = [];
   const usable = input.proposed.filter((p) => !skip.has(p.skillId));
 
-  for (const line of input.mix.lines) {
+  for (const line of shiftTowardEmphasis(input.mix.lines, usable)) {
     if (skip.has(line.skillId)) continue;
     const mine = usable.filter((p) => p.skillId === line.skillId);
     const handsOnProposals = mine.filter((p) => p.kind === "handsOn" && !p.subtype.startsWith("mcq"));
@@ -123,6 +123,38 @@ export function enforceBlueprint(input: {
     }
   }
   return slots.map((slot, index) => ({ ...slot, index }));
+}
+
+/** At most this many hands-on slots move toward what the description stresses. */
+export const EMPHASIS_SHIFT_MAX = 3;
+
+/**
+ * The sliders fix the split; the description may lean it. When the model proposes more hands-on
+ * slots for a skill than the sliders gave it ("weak on client calls" → more meeting tasks), up to
+ * EMPHASIS_SHIFT_MAX slots move there, one per emphasised skill, each taken from the lowest-priority
+ * skill that still has two or more hands-on slots. Totals never change and no skill drops to zero.
+ */
+export function shiftTowardEmphasis(lines: readonly AssessmentMix["lines"][number][], proposed: UnderstandingResponse["slots"]): AssessmentMix["lines"] {
+  const out = lines.map((l) => ({ ...l }));
+  const asked = new Map<string, number>();
+  for (const p of proposed) if (p.kind === "handsOn" && !p.subtype.startsWith("mcq")) asked.set(p.skillId, (asked.get(p.skillId) ?? 0) + 1);
+  const excess = (l: (typeof out)[number]) => (asked.get(l.skillId) ?? 0) - l.handsOn;
+  const receivers = out.filter((l) => excess(l) > 0).sort((a, b) => excess(b) - excess(a));
+  const gained = new Set<string>();
+  let moved = 0;
+  for (const to of receivers) {
+    if (moved >= EMPHASIS_SHIFT_MAX) break;
+    // Lines are in asking order (focus, other, basics), so the donor search runs from the end.
+    const donor = [...out].reverse().find((l) => l !== to && !gained.has(l.skillId) && l.handsOn >= 2 && excess(l) <= 0);
+    if (!donor) break;
+    donor.handsOn -= 1;
+    donor.count -= 1;
+    to.handsOn += 1;
+    to.count += 1;
+    gained.add(to.skillId);
+    moved += 1;
+  }
+  return out;
 }
 
 export function splitOf(slots: readonly Slot[]): Understanding["split"] {

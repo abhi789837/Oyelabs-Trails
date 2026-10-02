@@ -26,13 +26,14 @@ Spec: `OYELEARN_V4_1_PROMPT.md`. Decisions: `DECISIONS.md`. Resume from the firs
 - [x] Checkpoint + commit `feat(v4.1-p2)`
 
 ## Phase 3: Tests, deploy, verify
-- [ ] Tests (1d, task graders, course schema + verification timestamps, PM defaults, PM path order)
-- [ ] Playwright e2e: PM with description; Engineering with description
-- [ ] Deploy (one command) + smoke + AI usage check
-- [ ] RESULTS.md + chat summary
-- [ ] Tag v4.1.0
+- [x] Tests (1d, task graders, course schema + verification timestamps, PM defaults, PM path order)
+- [x] Playwright e2e: PM with description; Engineering with description
+- [ ] Deploy (one command) + smoke + AI usage check — the user runs `cd ~/oyelearn && git pull && docker compose up -d --build`; then check /admin/ai-usage
+- [x] RESULTS.md + chat summary
+- [x] Tag v4.1.0
 
 ## Needs Abhishek
+- **Real AI cost per personalised assessment:** estimated ≈ $0.07 (target ≤ $0.15); read the actual on /admin/ai-usage after deploy.
 - **56 `[Oyelabs SOP – admin to fill]` blocks** across the 13 agency PM courses (Keka timesheet/leave/PSA billing and rate cards, meeting cadence and MoM template, email templates and signature, support SLAs, time-zone overlap, AI tool rules). Fill them at **Admin → Company SOPs** (`/admin/sop`); learners see them on the topic.
 - Keka PSA has no per-feature public videos; short screen recordings from our own Keka would improve those topics.
 - Agency-specific material with no outside source (fixed-bid vs T&M wording, white-label resellers) is covered only through SOP blocks.

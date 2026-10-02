@@ -6,7 +6,7 @@ import { getPriorities, setPriorities } from "../builder/repo";
 import { now } from "../lib/ids";
 import { activeLearner, adminSession, createTestApp, type Session, type TestContext } from "../test/harness";
 import { listTargets, setTargets } from "../targets/repo";
-import { getSetup, listSkillPriorities, listSkip, migrateLegacyPriorities, saveSetup } from "./repo";
+import { applyDepartmentDefaults, getSetup, listSkillPriorities, listSkip, migrateLegacyPriorities, saveSetup } from "./repo";
 
 /**
  * The slider table is the one source of truth; every v3 reader is a projection of it. The
@@ -133,5 +133,39 @@ describe("the one-time migration", () => {
     saveSetup(ctx.db, learner.id, { ...base, priorities: [] }, admin.user.id);
     expect(migrateLegacyPriorities(ctx.db)).toBe(0);
     expect(listSkillPriorities(ctx.db, learner.id)).toHaveLength(0);
+  });
+});
+
+describe("v4.1 default PM priorities for existing learners", () => {
+  function makePm(userId: string) {
+    ctx.db.update(schema.learnerProfiles).set({ departmentId: "pm" }).where(eq(schema.learnerProfiles.userId, userId)).run();
+  }
+
+  test("a PM learner with no sliders gets the agency defaults once, and a path rebuild is queued", async () => {
+    makePm(learner.id);
+    ctx.db.delete(schema.appMeta).where(eq(schema.appMeta.key, "v4.1.department_defaults_applied")).run();
+    const before = ctx.db.select().from(schema.jobs).where(eq(schema.jobs.type, "path.build")).all().length;
+
+    expect(applyDepartmentDefaults(ctx.db)).toBeGreaterThanOrEqual(1);
+    const sliders = new Map(listSkillPriorities(ctx.db, learner.id).map((p) => [p.skillId, p.slider]));
+    expect(sliders.get("pm-client-management")).toBe(5);
+    expect(sliders.get("pm-client-meetings")).toBe(5);
+    expect(sliders.get("pm-email-etiquette")).toBe(5);
+    expect(sliders.get("pm-excel-for-pms")).toBe(4);
+    expect(sliders.get("pm-keka")).toBe(3);
+    expect(sliders.get("pm-foundations-theory")).toBe(2);
+    expect(ctx.db.select().from(schema.jobs).where(eq(schema.jobs.type, "path.build")).all().length).toBeGreaterThan(before);
+
+    // Runs once: a second boot changes nothing.
+    expect(applyDepartmentDefaults(ctx.db)).toBe(0);
+  });
+
+  test("never overwrites sliders an admin already set", async () => {
+    makePm(learner.id);
+    const [own] = anySkills(1, "pm").filter((id) => id !== "pm-client-management");
+    saveSetup(ctx.db, learner.id, { ...base, departmentId: "pm", trackId: null, stackIds: [], priorities: [{ skillId: own, slider: 3 }] }, admin.user.id);
+    ctx.db.delete(schema.appMeta).where(eq(schema.appMeta.key, "v4.1.department_defaults_applied")).run();
+    applyDepartmentDefaults(ctx.db);
+    expect(listSkillPriorities(ctx.db, learner.id).map((p) => [p.skillId, p.slider])).toEqual([[own, 3]]);
   });
 });

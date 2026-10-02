@@ -314,7 +314,13 @@ async function onboard(admin: Page, spec: DeptSpec, username: string, c: Checks)
     c.ok(saved?.slider === skill.slider, `saved priority ${skill.name} = ${SLIDER_LABEL[skill.slider]} (got ${saved ? SLIDER_LABEL[saved.slider] : "missing"})`);
   }
 
-  const { assessments } = await getJson<{ assessments: { id: string; status: string }[] }>(admin.request, `/api/admin/users/${user.id}/assessments`);
+  // v4.1: with AI available the assessment is personalised in a background job, so it starts as
+  // "generating" and turns "ready" when the job finishes.
+  let assessments: { id: string; status: string }[] = [];
+  for (const deadline = Date.now() + JOB_TIMEOUT_MS; Date.now() < deadline; await new Promise((r) => setTimeout(r, 1000))) {
+    ({ assessments } = await getJson<{ assessments: { id: string; status: string }[] }>(admin.request, `/api/admin/users/${user.id}/assessments`));
+    if (assessments[0]?.status === "ready") break;
+  }
   c.ok(assessments[0]?.status === "ready", `assessment issued and ready (got ${assessments[0]?.status})`);
   return { userId: user.id, tempPassword };
 }
@@ -393,14 +399,15 @@ async function passPreflight(page: Page, request: APIRequestContext, assessmentI
   }
   await page.waitForSelector("text=/Question \\d+ of \\d+|Return to fullscreen/", { timeout: 30_000 });
   await ensureFullscreen(page, c);
-  await page.getByText(/^Question \d+ of \d+$/).waitFor({ timeout: 20_000 });
+  // v4.1: "About N minutes" follows the count directly in the header text.
+  await page.getByText(/^Question \d+ of \d+(?!\d)/).waitFor({ timeout: 20_000 });
 }
 
 const chip = (page: Page, index: number) => page.getByRole("navigation", { name: "Questions" }).getByRole("button", { name: new RegExp(`^Question ${index + 1}:`) });
 
 async function goTo(page: Page, index: number, total: number): Promise<void> {
   await chip(page, index).click();
-  await page.getByText(`Question ${index + 1} of ${total}`, { exact: true }).waitFor();
+  await page.getByText(new RegExp(`^Question ${index + 1} of ${total}(?!\\d)`)).waitFor();
 }
 
 async function chipLabel(page: Page, index: number): Promise<string> {
@@ -537,7 +544,7 @@ async function takeEngineering(page: Page, request: APIRequestContext, assessmen
   const last = plan[plan.length - 1].index;
   step(`navigator: back from Q${last + 1} to Q${first + 1}`);
   await goTo(page, first, total);
-  c.ok(await page.getByText(`Question ${first + 1} of ${total}`, { exact: true }).isVisible(), `navigator moved back to Q${first + 1}`);
+  c.ok(await page.getByText(new RegExp(`^Question ${first + 1} of ${total}(?!\\d)`)).isVisible(), `navigator moved back to Q${first + 1}`);
   await shot(page, "eng", "08-navigator-back");
 
   const sheet = await readSheet(request, assessmentId);
@@ -587,8 +594,10 @@ async function takeTasks(page: Page, request: APIRequestContext, assessmentId: s
   }
   const mcq = items.findIndex((it) => it.type === "mcq");
   c.ok(mcq >= 0, "an MCQ is on the sheet");
-  c.ok(picks.some((p) => p.label === "rank") && picks.some((p) => p.label === "calculate") && picks.some((p) => p.label === "scenario" || p.label === "spot"),
-    `sheet has rank, calculate and scenario/spot tasks (${items.map((i) => i.task?.kind ?? i.type).join(",")})`);
+  // v4.1: a personalised sheet picks task kinds to fit the description (email, Excel, sims…), so
+  // the check is variety, not a fixed set of kinds.
+  const kinds = new Set(items.filter((i) => i.type === "task").map((i) => i.task?.kind));
+  c.ok(kinds.size >= 3, `sheet has at least three task kinds (${items.map((i) => i.task?.kind ?? i.type).join(",")})`);
   if (mcq >= 0) picks.push({ index: mcq, label: "mcq" });
   picks.sort((x, y) => x.index - y.index);
 
@@ -708,7 +717,9 @@ async function checkPath(admin: Page, userId: string, spec: DeptSpec, c: Checks)
   }
 
   // AI-found extras: never a path item of their own, only under "Also suggested".
-  const priorityNames = spec.skills.map((s) => s.name);
+  // What was saved, not only what this script set: v4.1 pre-fills a PM's department defaults.
+  const saved = await getJson<{ setup: { priorities: { skillName: string }[] } }>(admin.request, `/api/admin/users/${userId}/setup`);
+  const priorityNames = [...new Set([...spec.skills.map((s) => s.name), ...saved.setup.priorities.map((p) => p.skillName)])];
   const extras = data.gaps.filter((g) => !g.skipped && !priorityNames.some((n) => sameSkill(g.skill, n)));
   const general = items.filter((i) => (i.partNumber ?? 0) >= 3);
   c.ok(general.every((i) => priorityNames.some((n) => sameSkill(i.targetSkill, n))), "every Part 3+ item serves an admin priority");

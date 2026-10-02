@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { bankItemSchema, codingSpecSchema, mcqSpecSchema, type BankItem } from "../../../../shared/bank";
 import { REUSE_RATIO, type Personalisation, type Slot, type Understanding } from "../../../../shared/personalise";
-import { estimateSeconds, sizeProblems, SIZE_LIMITS, TOTAL_MAX_SEC, TOTAL_MIN_SEC, type TimingConstants } from "../../../../shared/timing";
+import { estimateSeconds, sizeProblems, SIZE_LIMITS, SLOT_FLOOR_SEC, TOTAL_MAX_SEC, TOTAL_MIN_SEC, type TimingConstants } from "../../../../shared/timing";
 import { taskSchema } from "../../../../shared/tasks";
 import { AiBudgetPausedError } from "../../ai/router";
 import type { AiService } from "../../ai/service";
@@ -197,10 +197,18 @@ function subtypeOf(item: BankItem): Slot["subtype"] {
   return (item.task?.kind ?? "scenario") as Slot["subtype"];
 }
 
+/** A reused bank item must take at least this share of its slot's target time. */
+const REUSE_MIN_SHARE = 0.7;
+
 function fitScore(slot: Slot, item: BankItem, themes: readonly string[], constants: TimingConstants): number | null {
   if (item.skillId !== slot.skillId || item.type !== slot.type) return null;
   if (sizeProblems(item).length > 0) return null;
-  if (estimateSeconds(item, constants) > slot.targetSec * 1.15) return null;
+  const seconds = estimateSeconds(item, constants);
+  if (seconds > slot.targetSec * 1.15) return null;
+  // Generated items are never swapped by the balancer, so a reused item must carry most of its
+  // slot's time or the sheet cannot reach 26 minutes (short PM bank items left it near 23).
+  // Only the relaxed last-resort fallback takes shorter ones.
+  if (seconds < Math.max(SLOT_FLOOR_SEC[slot.type === "mcq" ? "mcq" : "handsOn"], slot.targetSec * REUSE_MIN_SHARE)) return null;
   let score = 10 - Math.abs(item.difficulty - slot.difficulty) * 3;
   if (subtypeOf(item) === slot.subtype) score += 4;
   const haystack = `${(item.tags ?? []).join(" ")} ${item.prompt}`.toLowerCase();
@@ -253,7 +261,7 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
     costMicros: 0,
   };
 
-  const chosen = new Map<number, { item: BankItem; origin: "bank" | "generated" | "fallback"; bankItemId: string | null }>();
+  const chosen = new Map<number, { item: BankItem; origin: "bank" | "generated" | "fallback"; bankItemId: string | null; filler?: boolean }>();
 
   // 1. Reuse: the best-fitting bank items, up to the level's share, strongest matches first.
   const reuseCap = Math.round(slots.length * REUSE_RATIO[level]);
@@ -368,10 +376,17 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
   // 5. Whatever is still open comes from the bank (relaxing limits only as a last resort).
   for (const slot of slots) {
     if (chosen.has(slot.index)) continue;
-    const item = bestFor(slot, pool, used, understanding.themes, constants) ?? bestFor(slot, pool, used, understanding.themes, constants, true);
+    let item = bestFor(slot, pool, used, understanding.themes, constants) ?? bestFor(slot, pool, used, understanding.themes, constants, true);
+    let filler = false;
+    if (!item) {
+      // Nothing left for this skill: like the bank assembler, fill with the same type from another
+      // skill rather than issue a sheet short of its 25 questions.
+      item = pool.filter((i) => !used.has(i.id) && i.type === slot.type && sizeProblems(i).length === 0).sort((a, b) => Math.abs(a.difficulty - slot.difficulty) - Math.abs(b.difficulty - slot.difficulty))[0] ?? null;
+      filler = true;
+    }
     if (!item) continue;
     used.add(item.id);
-    chosen.set(slot.index, { item, origin: "fallback", bankItemId: item.id });
+    chosen.set(slot.index, { item, origin: "fallback", bankItemId: item.id, filler });
     report.fromBankAfterFailures += 1;
   }
 
@@ -389,7 +404,9 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
     .filter((s) => chosen.has(s.index))
     .map((slot) => {
       const c = chosen.get(slot.index)!;
-      return { item: c.item, skillId: slot.skillId, skillName: slot.skillName, group: slot.group, origin: c.origin, swappable: c.origin !== "generated", bankItemId: c.bankItemId };
+      return c.filler
+        ? { item: c.item, skillId: c.item.skillId, skillName: skillsById.get(c.item.skillId)?.name ?? c.item.skillId, group: "filler" as const, origin: c.origin, swappable: true, bankItemId: c.bankItemId }
+        : { item: c.item, skillId: slot.skillId, skillName: slot.skillName, group: slot.group, origin: c.origin, swappable: c.origin !== "generated", bankItemId: c.bankItemId };
     });
   const balanced = balanceTiming(ordered, pool.filter((i) => !used.has(i.id)), constants);
   report.estSeconds = balanced.reduce((s, p) => s + estimateSeconds(p.item, constants), 0);

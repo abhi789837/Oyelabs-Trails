@@ -2,6 +2,7 @@ import type { ProviderId } from "../../../../shared/enums";
 import { toProviderJsonSchema } from "../jsonSchema";
 import { AiOutputError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "../types";
 import { fixtureBlueprint, fixtureCritic, fixtureExplainItems, fixtureItems } from "./mockFixtures";
+import { fixtureGeneratedItems, fixtureMcqCheck, fixturePlan } from "./mockPersonalise";
 
 /**
  * A deterministic stand-in for a real provider, for development and tests only.
@@ -27,6 +28,10 @@ export interface MockHints {
 export class MockProvider implements AiProvider {
   readonly id: ProviderId = "mock";
   private calls = 0;
+  /** Keys of the MCQs this mock wrote for `assessment_items`, so its `mcq_check` agrees with them. */
+  private readonly mcqKeys = new Map<string, number>();
+  /** Slots `assessment_items` was already asked for, so a left-out slot is written on the retry. */
+  private readonly askedSlots = new Set<string>();
 
   constructor(
     private readonly hints: MockHints = {},
@@ -93,7 +98,8 @@ export class MockProvider implements AiProvider {
   /**
    * Hand-built output for the pipeline's known call shapes; undefined means "synthesise".
    *
-   * The names "blueprint", "items", "explain_items" and "critic" are reserved: any call using one
+   * The names "blueprint", "items", "explain_items", "critic" and the v4.1 personalisation calls
+   * ("assessment_plan", "assessment_items", "mcq_check"; see mockPersonalise.ts) are reserved: any call using one
    * gets the matching fixture, and a mismatch is a loud error rather than a silent fallback, so
    * fixture drift is caught the moment a schema changes. Other callers should use another name.
    */
@@ -118,6 +124,12 @@ export class MockProvider implements AiProvider {
         const count = (request.user.match(/^### Item \d+$/gm) ?? []).length;
         return { verdicts: fixtureCritic({ length: Math.max(1, count) }) };
       }
+      case "assessment_plan":
+        return fixturePlan(request.user);
+      case "assessment_items":
+        return { items: fixtureGeneratedItems(request.user, this.mcqKeys, this.askedSlots) };
+      case "mcq_check":
+        return fixtureMcqCheck(request.user, this.mcqKeys);
       default:
         return undefined;
     }
