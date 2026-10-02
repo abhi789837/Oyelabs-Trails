@@ -54,8 +54,8 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - [x] 6.3 Prompt caching, max_tokens caps, compact context
 - [x] 6.4 Batch API for bulk jobs
 - [x] 6.5 Call log with tokens/cost; Admin → AI usage page; budget 80% warn / 100% pause
-- [ ] 6.6 RESULTS.md before/after
-- [ ] 6.7 Checkpoint + commit `feat(v4-p6)`
+- [x] 6.6 RESULTS.md before/after
+- [x] 6.7 Checkpoint + commit `feat(v4-p6)`
 
 ## Phase 7: PM and BD curricula
 - [x] 7.1 Research + verified sources (RESEARCH.md)
