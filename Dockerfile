@@ -58,17 +58,19 @@ RUN if [ "$INSTALL_CLAUDE_CLI" = "1" ]; then npm install -g @anthropic-ai/claude
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/dist-server ./dist-server
-COPY --from=build /app/server/content ./server/content
-COPY --from=build /app/server/drizzle ./server/drizzle
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/package.json ./package.json
+COPY --from=build --chown=node:node /app/dist ./dist
+COPY --from=build --chown=node:node /app/dist-server ./dist-server
+COPY --from=build --chown=node:node /app/server/content ./server/content
+COPY --from=build --chown=node:node /app/server/drizzle ./server/drizzle
 # v4: the validated question bank seed, inserted at boot when absent.
-COPY --from=build /app/server/bank ./server/bank
+COPY --from=build --chown=node:node /app/server/bank ./server/bank
 
 # The mounted volume: SQLite, proctoring snapshots and nightly backups.
-RUN mkdir -p /data && chown -R node:node /data /app
+# --chown on each COPY above rather than `chown -R /app` here: a recursive chown rewrites every
+# file into a new layer and doubled the image.
+RUN mkdir -p /data && chown node:node /data /app
 VOLUME /data
 
 ENV DATA_DIR=/data \

@@ -36,6 +36,11 @@ export interface OpenDbOptions {
   /** ":memory:" for tests. */
   file?: string;
   runMigrations?: boolean;
+  /**
+   * Tests: an already migrated and seeded database image (`sqlite.serialize()`), opened in memory.
+   * Migrating and seeding ~4,000 catalog and bank rows per test was half a second each time.
+   */
+  template?: Buffer;
 }
 
 /**
@@ -50,14 +55,14 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
   const file = options.file ?? env.dbPath;
   if (file !== ":memory:") fs.mkdirSync(path.dirname(file), { recursive: true });
 
-  const sqlite = new Database(file);
+  const sqlite = options.template ? new Database(options.template) : new Database(file);
   sqlite.pragma("journal_mode = WAL");
   sqlite.pragma("foreign_keys = ON");
   sqlite.pragma("busy_timeout = 5000");
   sqlite.pragma("synchronous = NORMAL");
 
   const db = drizzle(sqlite, { schema });
-  if (options.runMigrations !== false) {
+  if (options.runMigrations !== false && !options.template) {
     migrate(db, { migrationsFolder: migrationsFolder() });
     // Seed rows are inserted only when absent, so this never undoes an admin's edit.
     ensureCatalogSeed(db);

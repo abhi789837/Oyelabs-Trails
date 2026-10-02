@@ -43,6 +43,17 @@ function testContent(): ContentStore {
   return sharedContent;
 }
 
+/** One migrated, seeded database per test worker, cloned for every test. */
+let template: Buffer | null = null;
+function databaseTemplate(env: Env): Buffer {
+  if (!template) {
+    const { sqlite } = openDb(env, { file: ":memory:" });
+    template = sqlite.serialize();
+    sqlite.close();
+  }
+  return template;
+}
+
 /**
  * Builds a fully wired app against a fresh in-memory database with migrations applied.
  *
@@ -59,7 +70,7 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
     ...overrides,
   } as NodeJS.ProcessEnv);
 
-  const { db, sqlite } = openDb(env, { file: ":memory:" });
+  const { db, sqlite } = openDb(env, { file: ":memory:", template: databaseTemplate(env) });
   const content = testContent();
   // Tests use the worker sandbox: it grades identically (one shared runtime source) and starting
   // a V8 isolate per case would slow the suite down for no extra coverage. sandbox.test.ts runs
