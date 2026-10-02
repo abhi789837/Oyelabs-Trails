@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { resetGlossary } from "@/features/handbook/useGlossary";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
@@ -133,9 +134,14 @@ export default function AdminHandbookPage() {
       .sort((a, b) => Number(statusOf(a) === "confirmed") - Number(statusOf(b) === "confirmed") || nameOf(a).localeCompare(nameOf(b)));
   }, [ofKind, archived, status, category, projectType, q]);
 
-  /** Swaps one entry in place, so a save never reorders the list under the person's eyes until reload. */
-  const replace = (next: HandbookEntry) =>
+  /**
+   * Swaps one entry in place, so a save never reorders the list under the person's eyes until reload.
+   * Also drops the session glossary, so tooltips and the glossary page in this tab reload the edit.
+   */
+  const replace = (next: HandbookEntry) => {
+    resetGlossary();
     setEntries((all) => (all?.some((e) => e.kind === next.kind && e.id === next.id) ? all.map((e) => (e.kind === next.kind && e.id === next.id ? next : e)) : [...(all ?? []), next]));
+  };
 
   const confirm = async (entry: HandbookEntry) => {
     setBusyId(entry.id);

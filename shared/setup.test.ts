@@ -64,6 +64,20 @@ describe("planAssessmentMix", () => {
     expect(mix.total).toBe(25);
   });
 
+  it("turns the lowest-priority single questions into MCQs first, so Critical and High skills keep a hands-on one", () => {
+    // v4.2 PM defaults: 4 Critical, 6 High, 7 Medium, 1 Low, 2 basics; most skills get one question.
+    const sliders = [5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 2];
+    const mix = planAssessmentMix(sliders.map((s, i) => skill(`s${i}`, s)), basics);
+    expect(mix.mcq).toBe(7);
+    const mcqOnly = mix.lines.filter((l) => l.handsOn === 0);
+    expect(mcqOnly.length).toBeGreaterThan(0);
+    for (const line of mix.lines.filter((l) => l.group === "focus")) expect(line.handsOn, line.skillId).toBeGreaterThan(0);
+    // Every skill that lost its hands-on question asks no more than one that kept it, priority-wise.
+    const rank = (id: string) => mix.lines.findIndex((l) => l.skillId === id);
+    const kept = mix.lines.filter((l) => l.handsOn > 0 && l.count === 1);
+    for (const line of mcqOnly) expect(kept.every((k) => rank(k.skillId) < rank(line.skillId))).toBe(true);
+  });
+
   it("still builds a full test with no priorities at all", () => {
     const mix = planAssessmentMix([], basics);
     expect(mix.total).toBe(25);

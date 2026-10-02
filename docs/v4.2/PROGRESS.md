@@ -29,21 +29,21 @@ Resume from the first unticked item. Plan: `docs/v4.2/PLAN.md`. Decisions: `docs
 ## Phase 4: Simulations
 - [x] 4.1 AI client role-play (personas, scenarios, 8 turns, Haiku, rubric, cost cap)
 - [x] 4.2 Task kinds: classify, order (rank), CR form, MoM from transcript, status report, spot-the-gap, gap analysis
-- [ ] 4.3 Checkpoint + commit `feat(v4.2-p4)`
+- [x] 4.3 Checkpoint + commit `feat(v4.2-p4)`
 
 ## Phase 5: Assessment, priorities, paths
 - [x] 5.1 New PM default priorities
 - [x] 5.2 Bank items for new skills with handbook citations; re-validation when a term changes
 - [x] 5.3 Generation grounded in the handbook (citations required)
 - [x] 5.4 PM path order + Advanced unlock; BD optional catalog
-- [ ] 5.5 Checkpoint + commit `feat(v4.2-p5)`
+- [x] 5.5 Checkpoint + commit `feat(v4.2-p5)`
 
 ## Phase 6: Tests, deploy, report
-- [ ] 6.1 Tests (handbook end-to-end, decision table ≥30, simulations, role-play caps, schema, ≥150 terms, defaults, path, PM assessment)
-- [ ] 6.2 Playwright e2e
-- [ ] 6.3 Deploy (Abhishek runs the one command) + smoke
-- [ ] 6.4 RESULTS.md + chat summary
-- [ ] 6.5 Tag v4.2.0
+- [x] 6.1 Tests (handbook end-to-end, decision table ≥30, simulations, role-play caps, schema, ≥150 terms, defaults, path, PM assessment)
+- [x] 6.2 Playwright e2e
+- [ ] 6.3 Deploy (Abhishek runs the one command) + smoke — Needs Abhishek
+- [x] 6.4 RESULTS.md + chat summary
+- [x] 6.5 Tag v4.2.0
 
 ## Session 2 (resume) notes
 - PROGRESS was behind the code: research, Course B/D/E, role-play, bank (70 cited items), grounding, re-validation, path order and Advanced unlock were already built but unticked and uncommitted. Audited and ticked.
@@ -51,6 +51,8 @@ Resume from the first unticked item. Plan: `docs/v4.2/PLAN.md`. Decisions: `docs
 - `polyglot.test.ts` java case times out only under full-suite load on the local Piston; passes alone. Not a v4.2 change.
 
 ## Needs Abhishek
+- Deploy and smoke-test (RESULTS.md → Deploy), then push tag `v4.2.0`.
+- Confirm the top-20 handbook items listed in RESULTS.md.
 - `docs/oyelabs-process/` does not exist, so no Oyelabs material was ingested. Every handbook entry starts as "industry standard – to confirm". Add the documents and re-run Phase 1.1, or confirm and edit the entries at `/admin/handbook`.
 
 ## Notes

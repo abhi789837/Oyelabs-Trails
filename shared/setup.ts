@@ -281,12 +281,15 @@ export function planAssessmentMix(priorities: readonly MixSkill[], basics: reado
   const totalAssigned = lines.reduce((sum, l) => sum + l.count, 0);
   let mcqLeft = Math.round((ASSESSMENT_MCQ / ASSESSMENT_TOTAL) * totalAssigned);
   const bySize = [...lines].sort((a, b) => b.count - a.count);
+  // Same sizes, lowest priority first (lines are in asking order): when a skill's only question has
+  // to become multiple choice, a Critical or High skill keeps its hands-on one longest.
+  const lowestFirst = [...lines].reverse().sort((a, b) => b.count - a.count);
   // First pass keeps at least one hands-on question per skill; the second may use the last one.
   for (const floor of [1, 0]) {
     let moved = true;
     while (mcqLeft > 0 && moved) {
       moved = false;
-      for (const line of bySize) {
+      for (const line of floor === 1 ? bySize : lowestFirst) {
         if (mcqLeft === 0) break;
         if (line.handsOn > floor && line.mcq < Math.ceil(line.count / 2)) {
           line.handsOn -= 1;

@@ -1,26 +1,27 @@
 /**
- * Oyelearn v4.1 end-to-end check: AI-personalised assessments, one PM pass and one Engineering pass.
+ * Oyelearn v4.2 end-to-end check: the Agency PM Processes Academy, through the real UI.
  *
  *   npm run build          # once; this script serves dist/ + dist-server/ and does not rebuild
- *   npx tsx scripts/e2e/v41-personalise.ts           # both passes
- *   npx tsx scripts/e2e/v41-personalise.ts pm        # one pass (pm | eng)
+ *   npx tsx scripts/e2e/v42-pm-processes.ts
+ *   npx tsx scripts/e2e/v42-pm-processes.ts handbook   # step 4 only
  *
- * PM: superadmin onboards a PM through the real Setup UI with a free-text description, checks the
- * department's default sliders were prefilled, raises two to Critical, reads the "How the AI
- * understood this" panel, assigns, and checks the personalised sheet (26–32 min, weighted to the
- * description). The learner then answers an Excel task, an email and an explain-it task through the
- * real UI and hands in; the superadmin checks the path order (diagnostic refresh first, Critical
- * client/Excel skills in Part 1, PM theory last).
+ * 1. The superadmin onboards a PM on the Setup screen with the description "handles white-label
+ *    clients, confuses CRs and enhancements", checks the v4.2 default sliders were prefilled (the
+ *    four process courses Critical, templates High), and assigns. The personalised sheet must hold a
+ *    classify-the-request item and a white-label item and fit 26–32 minutes.
+ * 2. The learner answers a classification (categorize) item and a mini role-play (the mock AI plays
+ *    the client) through the real UI, and hands in.
+ * 3. The path: Part 1 opens with the diagnostic refresh (if present), then the lifecycle courses,
+ *    terminology and client meetings, before every other skill.
+ * 4. The superadmin opens a course topic that links [[term:change-request]] (the tooltip reads "to
+ *    confirm"), goes to /admin/handbook in the same tab, edits and confirms the term, comes back:
+ *    the tooltip and the glossary show the confirmed status and the new text.
  *
- * Engineering: a PHP/Laravel description; the understanding and the generated items must carry it.
- *
- * Needs a Piston at http://127.0.0.1:2000 (override with PISTON_URL) for the PHP items. Uses a
- * throwaway DATA_DIR under %TEMP%, port 8799 and the deterministic mock AI provider
- * (NODE_ENV=development), whose v4.1 stand-ins are description-aware (server/src/ai/adapters/
- * mockPersonalise.ts). Screenshots go to %TEMP%/claude/e2e-shots-v41 (override with E2E_SHOTS).
+ * Uses a throwaway DATA_DIR under %TEMP%, port 8800 and the deterministic mock AI provider
+ * (NODE_ENV=development). Screenshots go to %TEMP%/claude/e2e-shots-v42 (override with E2E_SHOTS).
  * Set E2E_HEADED=1 to watch. Exits non-zero when any assertion fails, and always stops its server.
  *
- * Helpers are copied from v4-departments.ts on purpose, so neither script's changes can break the other.
+ * Helpers are copied from v41-personalise.ts on purpose, so neither script's changes can break the other.
  */
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
@@ -35,26 +36,21 @@ import { chromium, type APIRequestContext, type Browser, type BrowserContext, ty
 // ---------------------------------------------------------------------------
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const PORT = Number(process.env.E2E_PORT ?? 8799);
+const PORT = Number(process.env.E2E_PORT ?? 8800);
 const BASE = `http://127.0.0.1:${PORT}`;
 const SUPER_USER = "admin";
 const SUPER_INITIAL = "E2e-Super-Pass-2026!";
 const SUPER_NEW = "Ridge-Camp-7319-Qv!";
 const LEARNER_NEW = "Waypoint-Lantern-5824-Zk!";
-const SHOTS = process.env.E2E_SHOTS ?? path.join(os.tmpdir(), "claude", "e2e-shots-v41");
+const SHOTS = process.env.E2E_SHOTS ?? path.join(os.tmpdir(), "claude", "e2e-shots-v42");
 const HEADED = process.env.E2E_HEADED === "1";
 const JOB_TIMEOUT_MS = Number(process.env.E2E_JOB_TIMEOUT_MS ?? 6 * 60_000);
 
 const SLIDER_LABEL: Record<number, string> = { 1: "Optional", 2: "Low", 3: "Medium", 4: "High", 5: "Critical" };
 
-const PM_DESCRIPTION = "Handles 3 overseas clients, weak on client calls and Excel";
-const ENG_DESCRIPTION = "Laravel API developer, building payment webhooks for a UK client";
+const DESCRIPTION = "handles white-label clients, confuses CRs and enhancements";
 
-/**
- * What the PM department pre-selects for a new learner. v4.2 (server/src/catalog/seed/pmProcess.ts
- * and pmAgency.ts): the process academy is Critical (templates High); client management drops to
- * High, meetings and email to Medium; AI for PMs is Medium.
- */
+/** What the PM department pre-selects in v4.2 (server/src/catalog/seed/pmProcess.ts + pmAgency.ts). */
 const PM_DEFAULTS: { name: string; slider: number }[] = [
   { name: "Custom project lifecycle", slider: 5 },
   { name: "White-label project lifecycle", slider: 5 },
@@ -62,12 +58,12 @@ const PM_DEFAULTS: { name: string; slider: number }[] = [
   { name: "Handling every client meeting", slider: 5 },
   { name: "Process templates in practice", slider: 4 },
   { name: "Client management", slider: 4 },
-  { name: "Client update meetings & presenting", slider: 3 },
-  { name: "Email etiquette & professional writing", slider: 3 },
   { name: "Excel for PMs", slider: 4 },
   { name: "Agency resource management", slider: 4 },
   { name: "Tech terms in plain language", slider: 4 },
   { name: "The SDLC in an agency", slider: 4 },
+  { name: "Client update meetings & presenting", slider: 3 },
+  { name: "Email etiquette & professional writing", slider: 3 },
   { name: "Microsoft Teams for PMs", slider: 3 },
   { name: "Word & PowerPoint for PMs", slider: 3 },
   { name: "Keka for PMs", slider: 3 },
@@ -75,19 +71,15 @@ const PM_DEFAULTS: { name: string; slider: number }[] = [
   { name: "AI for PMs (Copilot & Claude)", slider: 3 },
   { name: "PM foundations and advanced theory", slider: 2 },
 ];
-/**
- * The description's skills, raised to Critical and moved to the top of Critical. v4.2 made email
- * Medium and put the process academy first, so the admin raises email too (it was a v4.1 Critical
- * default) and moves these above the process courses, as an admin who wrote this description would.
- */
-const PM_CRITICAL = ["Client update meetings & presenting", "Email etiquette & professional writing", "Excel for PMs"];
-/** The skills the description is about: client calls (meetings), email to clients, Excel. */
-const PM_STRESSED = ["Client update meetings & presenting", "Email etiquette & professional writing", "Excel for PMs"];
 
-const ENG_SKILLS: { name: string; slider: 5 | 4 | 3 }[] = [
-  { name: "Laravel APIs & API resources", slider: 5 },
-  { name: "Laravel queues, events & scheduling", slider: 4 },
-];
+const LIFECYCLE = ["Custom project lifecycle", "White-label project lifecycle"];
+const TERMS = "Project terminology mastery";
+const MEETINGS = "Handling every client meeting";
+
+/** A course topic whose text links [[term:change-request]]. */
+const TERM_ID = "change-request";
+const TERM_TEXT = "Change request";
+const TOPIC_URL = "/track/pm/module/pmp-a09/topic/pmp-a09-classifying-requests";
 
 // ---------------------------------------------------------------------------
 // Assertions and logging
@@ -126,10 +118,6 @@ async function shot(page: Page, pass: string, name: string): Promise<void> {
   await page.screenshot({ path: path.join(SHOTS, `${pass}-${name}.png`), fullPage: true }).catch(() => undefined);
 }
 
-function escapeRegex(text: string): string {
-  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 function sameSkill(a: string | null | undefined, b: string): boolean {
   if (!a) return false;
   const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -161,6 +149,15 @@ async function sendJson<T>(request: APIRequestContext, method: "post" | "put", u
   const response = await request[method](`${BASE}${url}`, { data });
   if (!response.ok()) throw new Error(`${method.toUpperCase()} ${url} -> ${response.status()} ${await response.text()}`);
   return (await response.json()) as T;
+}
+
+/** An in-app navigation (what a link click does): same document, so in-memory caches survive. */
+async function spaNavigate(page: Page, to: string): Promise<void> {
+  await page.evaluate((url) => {
+    window.history.pushState({}, "", url);
+    window.dispatchEvent(new PopStateEvent("popstate", { state: {} }));
+  }, to);
+  await page.waitForURL((u) => `${u.pathname}${u.search}` === to, { timeout: 10_000 });
 }
 
 // ---------------------------------------------------------------------------
@@ -251,28 +248,19 @@ async function signIn(page: Page, username: string, password: string, nextPasswo
 // Onboarding through the Setup UI
 // ---------------------------------------------------------------------------
 
-interface OnboardSpec {
-  key: "pm" | "eng";
-  department: string;
-  track: RegExp;
-  stack: string;
-  experience: RegExp;
-  description: string;
-}
-
-async function openOnboarding(admin: Page, spec: OnboardSpec, username: string): Promise<void> {
+async function openOnboarding(admin: Page, username: string): Promise<void> {
   await admin.goto(`${BASE}/admin/onboard`, { waitUntil: "networkidle" });
   await admin.getByRole("heading", { name: "Onboard a learner" }).waitFor();
   await admin.getByRole("radiogroup", { name: "Department" }).waitFor({ timeout: 20_000 });
   await admin.getByLabel(/^username/i).fill(username);
-  await admin.getByLabel(/^full name/i).fill(`E2E v4.1 ${spec.department}`);
-  await admin.getByRole("radiogroup", { name: "Department" }).getByRole("radio", { name: spec.department, exact: true }).click();
-  await admin.getByRole("radiogroup", { name: "Track" }).getByRole("radio", { name: spec.track }).click();
+  await admin.getByLabel(/^full name/i).fill("E2E v4.2 Project Management");
+  await admin.getByRole("radiogroup", { name: "Department" }).getByRole("radio", { name: "Project Management", exact: true }).click();
+  await admin.getByRole("radiogroup", { name: "Track" }).getByRole("radio", { name: /^Agile Delivery PM/ }).click();
   await admin.getByRole("button", { name: /Choose (stacks|tools)/ }).click();
-  await admin.getByRole("option", { name: spec.stack, exact: true }).click();
+  await admin.getByRole("option", { name: "Jira", exact: true }).click();
   await admin.keyboard.press("Escape");
-  await admin.getByRole("radiogroup", { name: "Experience (years)" }).getByRole("radio", { name: spec.experience }).click();
-  await admin.getByLabel("About this person and what you want").fill(spec.description);
+  await admin.getByRole("radiogroup", { name: "Experience (years)" }).getByRole("radio", { name: /^3–5/ }).click();
+  await admin.getByLabel("About this person and what you want").fill(DESCRIPTION);
 }
 
 const sliderOf = (admin: Page, skill: string) => admin.getByRole("slider", { name: `${skill} priority`, exact: true });
@@ -281,20 +269,6 @@ async function sliderValue(admin: Page, skill: string): Promise<string | null> {
   const thumb = sliderOf(admin, skill);
   if ((await thumb.count()) === 0) return null;
   return thumb.getAttribute("aria-valuetext");
-}
-
-/** Moves a skill to the top of its slider level with its "Move up" button. */
-async function moveToTop(admin: Page, skill: string, level: string): Promise<void> {
-  const up = admin.getByRole("button", { name: `Move ${skill} up within ${level}`, exact: true });
-  for (let guard = 0; guard < 40 && (await up.isEnabled()); guard += 1) await up.click();
-}
-
-async function raiseSlider(admin: Page, skill: string, from: number, to: number): Promise<void> {
-  for (let i = from; i < to; i += 1) {
-    const thumb = sliderOf(admin, skill);
-    await thumb.focus();
-    await thumb.press("ArrowRight");
-  }
 }
 
 /** The desktop "How the AI understood this" panel, once it shows a reading that passes `ready`. */
@@ -307,21 +281,26 @@ async function readUnderstanding(admin: Page, ready: (text: string) => boolean):
   }, 500);
 }
 
-async function createAndAssign(admin: Page, spec: OnboardSpec, username: string, c: Checks): Promise<{ userId: string; tempPassword: string; assessmentId: string }> {
+async function createAndAssign(admin: Page, username: string, c: Checks): Promise<{ userId: string; tempPassword: string; assessmentId: string }> {
   await admin.getByRole("button", { name: "Create & assign assessment" }).click();
   const notice = admin.getByRole("status").filter({ hasText: "Account created for" });
   await notice.waitFor({ timeout: 30_000 });
   const message = (await notice.locator("pre").textContent()) ?? "";
   const tempPassword = /Temporary password: (\S+)/.exec(message)?.[1] ?? "";
   c.ok(tempPassword.length >= 8, "temporary password captured from the notice");
-  await shot(admin, spec.key, "03-onboard-created");
+  await shot(admin, "pm", "03-onboard-created");
 
   const { users } = await getJson<{ users: { id: string; username: string }[] }>(admin.request, "/api/admin/users");
   const user = users.find((u) => u.username === username);
   if (!user) throw new Error(`created user ${username} not found in /api/admin/users`);
 
-  const { setup } = await getJson<{ setup: { description: string } }>(admin.request, `/api/admin/users/${user.id}/setup`);
-  c.ok(setup.description === spec.description, "the description was saved with the setup");
+  const { setup } = await getJson<{ setup: { description: string; priorities: { skillId: string; slider: number }[] } }>(admin.request, `/api/admin/users/${user.id}/setup`);
+  c.ok(setup.description === DESCRIPTION, "the description was saved with the setup");
+  const saved = new Map(setup.priorities.map((p) => [p.skillId, p.slider]));
+  c.ok(
+    ["pm-proc-custom", "pm-proc-whitelabel", "pm-proc-terms", "pm-proc-meetings"].every((id) => saved.get(id) === 5) && saved.get("pm-proc-templates") === 4,
+    "saved priorities: the four process courses Critical, templates High",
+  );
 
   step("wait for the personalisation job");
   const assessment = await poll("assessment ready", JOB_TIMEOUT_MS, async () => {
@@ -340,8 +319,10 @@ async function createAndAssign(admin: Page, spec: OnboardSpec, username: string,
 interface LearnerTaskLite {
   kind: string;
   variant?: string;
-  grid?: string[][];
-  editable?: string[];
+  mode?: string;
+  categories?: { id: string; label: string }[];
+  items?: { id: string; text: string }[];
+  maxTurns?: number;
 }
 
 interface V4AdminItemLite {
@@ -352,53 +333,17 @@ interface V4AdminItemLite {
   prompt: string;
   origin: "bank" | "generated" | "fallback" | null;
   estSeconds?: number;
-  language?: string;
-  snippetLanguage?: string | null;
   task?: LearnerTaskLite;
 }
 
-interface PersonalisationReport {
-  level: string;
-  understandingSource: "ai" | "rules";
-  intent: string[];
-  themes: string[];
-  reused: number;
-  generated: number;
-  fromBankAfterFailures: number;
-  estSeconds: number;
-  fallbackReason: string | null;
-}
-
 interface V4Detail {
-  config: { personalisation?: PersonalisationReport };
+  config: { personalisation?: { understandingSource: "ai" | "rules"; themes: string[]; reused: number; generated: number; fallbackReason: string | null } };
   items: V4AdminItemLite[];
 }
 
-const kindOf = (i: V4AdminItemLite) => (i.task ? `${i.task.kind}${i.task.variant ? `/${i.task.variant}` : ""}` : i.type === "mcq" ? "mcq" : i.type);
+const kindOf = (i: { type: string; task?: LearnerTaskLite }) => (i.task ? `${i.task.kind}${i.task.variant ? `/${i.task.variant}` : ""}${i.task.mode ? `/${i.task.mode}` : ""}` : i.type);
 
-async function adminDetail(admin: Page, assessmentId: string): Promise<V4Detail> {
-  return getJson<V4Detail>(admin.request, `/api/admin/assessments/${assessmentId}/v4`);
-}
-
-function describeMix(items: V4AdminItemLite[]): Map<string, number> {
-  const counts = new Map<string, number>();
-  for (const item of items) counts.set(item.skillName, (counts.get(item.skillName) ?? 0) + 1);
-  return counts;
-}
-
-/** Opens the learner's Assessment tab and the question list; returns how many "generated" badges show. */
-async function adminQuestionList(admin: Page, userId: string, pass: string): Promise<number> {
-  await admin.goto(`${BASE}/admin/people/${userId}?tab=assessment`, { waitUntil: "networkidle" });
-  const toggle = admin.getByRole("button", { name: /^Show all \d+ questions and answers$/ });
-  await toggle.waitFor({ timeout: 20_000 });
-  await shot(admin, pass, "04-admin-assessment-tab");
-  await toggle.click();
-  const list = admin.locator("ol[id^='v4-questions-']");
-  await list.waitFor();
-  const badges = await list.getByText("generated", { exact: true }).count();
-  await shot(admin, pass, "05-admin-questions");
-  return badges;
-}
+const isClassify = (task: LearnerTaskLite | undefined) => task?.kind === "categorize" && (task.mode === "classify-request" || (task.categories ?? []).some((cat) => cat.id === "change-request"));
 
 // ---------------------------------------------------------------------------
 // The learner: pre-flight and the sheet
@@ -430,7 +375,7 @@ async function ensureFullscreen(page: Page, c: Checks): Promise<void> {
   await gate.waitFor({ state: "hidden", timeout: 10_000 });
 }
 
-async function passPreflight(page: Page, request: APIRequestContext, assessmentId: string, pass: string, c: Checks): Promise<void> {
+async function passPreflight(page: Page, request: APIRequestContext, assessmentId: string, c: Checks): Promise<void> {
   step("pre-flight");
   await page.getByRole("heading", { name: "Before you start" }).waitFor({ timeout: 20_000 });
   await page.getByRole("button", { name: "I agree, check my camera" }).click();
@@ -466,9 +411,8 @@ async function passPreflight(page: Page, request: APIRequestContext, assessmentI
   }
   await page.waitForSelector("text=/Question \\d+ of \\d+|Return to fullscreen/", { timeout: 30_000 });
   await ensureFullscreen(page, c);
-  // The header reads "Question 1 of 25" followed by "About 26 minutes" (v4.1).
   await page.getByText(/^Question \d+ of \d+/).waitFor({ timeout: 20_000 });
-  await shot(page, pass, "07-sheet-open");
+  await shot(page, "pm", "07-sheet-open");
 }
 
 const chip = (page: Page, index: number) => page.getByRole("navigation", { name: "Questions" }).getByRole("button", { name: new RegExp(`^Question ${index + 1}:`) });
@@ -488,23 +432,81 @@ async function readSheet(request: APIRequestContext, assessmentId: string): Prom
 
 const article = (page: Page): Locator => page.locator("article").first();
 
-/** A formula for an editable cell: the sum of the numbers above it in its column. */
-function formulaFor(ref: string): string {
-  const col = ref[0];
-  const row = Number(ref.slice(1));
-  return row > 2 ? `=SUM(${col}2:${col}${row - 1})` : `=SUM(${col}${row + 1}:${col}${row + 3})`;
-}
-
-async function finishSheet(page: Page, pass: string, c: Checks): Promise<void> {
+async function finishSheet(page: Page, c: Checks): Promise<void> {
   step("Finish");
   await page.getByRole("button", { name: "Finish", exact: true }).click();
   const dialog = page.getByRole("alertdialog").or(page.getByRole("dialog")).filter({ hasText: "Finish the assessment?" });
   await dialog.waitFor({ timeout: 10_000 });
-  await shot(page, pass, "11-finish-confirm");
+  await shot(page, "pm", "11-finish-confirm");
   await dialog.getByRole("button", { name: "Finish and hand in" }).click();
   await page.getByText(/Your answers are handed in|Your assessment is done/).first().waitFor({ timeout: 30_000 });
   c.ok(true, "sheet handed in");
-  await shot(page, pass, "12-after-finish");
+  await shot(page, "pm", "12-after-finish");
+}
+
+/** Sorts every request of a categorize item through its segmented pickers; one through the decision tool. */
+async function answerCategorize(page: Page, item: SheetItemLite, index: number, c: Checks): Promise<void> {
+  const task = item.task!;
+  const groups = article(page).getByRole("radiogroup");
+  const count = await groups.count();
+  c.ok(count === (task.items ?? []).length, `classification Q${index + 1}: one picker per request (${count} of ${(task.items ?? []).length})`);
+  const tool = article(page).getByRole("button", { name: "Use the decision tool" });
+  c.ok((await tool.count()) === count, `classification Q${index + 1}: every request offers the decision tool`);
+  // The first request through the decision tool: keep answering its first option until it decides.
+  await tool.first().click();
+  const helper = article(page).getByRole("group", { name: "Decision tool" }).first();
+  await helper.waitFor();
+  for (let guard = 0; guard < 6; guard += 1) {
+    const outcome = helper.getByRole("status");
+    if (await outcome.isVisible().catch(() => false)) break;
+    await helper.locator("fieldset button").first().click();
+    await page.waitForTimeout(100);
+  }
+  const decided = (await helper.getByRole("status").textContent().catch(() => null)) ?? "";
+  c.fact(`decision tool for request 1: ${decided.trim()}`);
+  const firstChecked = await groups.first().getByRole("radio", { checked: true }).count();
+  if (!firstChecked) await groups.first().getByRole("radio").first().click();
+  for (let i = 1; i < count; i += 1) {
+    const radios = groups.nth(i).getByRole("radio");
+    await radios.nth(i % (await radios.count())).click();
+  }
+  await page.waitForTimeout(300);
+  const sorted = (await article(page).getByText(/^\d+ of \d+ sorted$/).textContent()) ?? "";
+  c.ok(sorted.startsWith(`${count} of ${count}`), `classification Q${index + 1}: all ${count} requests sorted ("${sorted}")`);
+  c.ok((await chipLabel(page, index)).includes("answered"), `Q${index + 1} (classification) answered`);
+  await shot(page, "pm", "08-classification");
+}
+
+/** Holds the short client conversation: two replies, the mock AI client answers each, then finish. */
+async function answerRoleplay(page: Page, item: SheetItemLite, index: number, c: Checks): Promise<void> {
+  const turns = item.task?.maxTurns ?? 2;
+  c.ok(turns >= 2 && turns <= 3, `role-play Q${index + 1} allows ${turns} replies (2-3)`);
+  await article(page).getByRole("button", { name: "Start the conversation" }).click();
+  const log = article(page).getByRole("log", { name: "Conversation" });
+  await log.waitFor({ timeout: 20_000 });
+  const replies = [
+    "Thanks for flagging this. What you describe changes the flow we agreed and signed off, so it is a change request, not a bug. I will write it up with the impact on time and cost.",
+    "I will send the change request form with the estimate by tomorrow 5 pm your time. Once you approve it, we plan it into the next sprint without moving the current release.",
+  ];
+  for (let t = 0; t < turns; t += 1) {
+    const before = await log.locator("li").count();
+    const box = article(page).getByLabel(/^Your reply to /);
+    await box.waitFor({ timeout: 10_000 });
+    await box.fill(replies[t % replies.length]);
+    await article(page).getByRole("button", { name: "Send", exact: true }).click();
+    await poll(`client reply ${t + 1}`, 30_000, async () => {
+      const typing = await log.getByText(/is typing/).count();
+      return !typing && (await log.locator("li").count()) >= before + 2 ? true : null;
+    }, 300);
+  }
+  const lines = await log.locator("li").allInnerTexts();
+  c.ok(lines.length >= turns * 2, `role-play: ${turns} PM replies and the client's answers are in the log (${lines.length} lines)`);
+  c.fact(`role-play transcript: ${lines.map((l) => l.replace(/\s+/g, " ").slice(0, 90)).join(" | ")}`);
+  await article(page).getByRole("region", { name: "Finish" }).getByRole("button", { name: "Finish the conversation" }).click();
+  await article(page).getByText("Conversation finished.", { exact: false }).waitFor({ timeout: 20_000 });
+  c.ok(true, "role-play finished (scored with the rest at hand-in)");
+  c.ok((await chipLabel(page, index)).includes("answered"), `Q${index + 1} (role-play) answered`);
+  await shot(page, "pm", "09-roleplay");
 }
 
 // ---------------------------------------------------------------------------
@@ -519,7 +521,7 @@ interface PathItem {
   reason: string;
 }
 
-async function waitForPath(admin: Page, userId: string, pass: string, c: Checks): Promise<PathItem[]> {
+async function waitForPath(admin: Page, userId: string, c: Checks): Promise<PathItem[]> {
   step("wait for evaluation");
   await poll("assessment completed", JOB_TIMEOUT_MS, async () => {
     const { assessments } = await getJson<{ assessments: { status: string }[] }>(admin.request, `/api/admin/users/${userId}/assessments`);
@@ -536,25 +538,106 @@ async function waitForPath(admin: Page, userId: string, pass: string, c: Checks)
   c.ok(data.path!.status === "ready", `path status ready (got ${data.path!.status}${data.path!.failureReason ? `: ${data.path!.failureReason}` : ""})`);
   await admin.goto(`${BASE}/admin/people/${userId}?tab=path`, { waitUntil: "networkidle" });
   await admin.getByRole("heading", { name: "Learning path" }).waitFor();
-  await shot(admin, pass, "13-admin-path-tab");
+  await shot(admin, "pm", "13-admin-path-tab");
   return [...data.path!.items].sort((x, y) => x.position - y.position);
 }
 
+/** 0 lifecycle, 1 terminology, 2 meetings, 3 anything else. */
+function part1Rank(targetSkill: string): number {
+  if (LIFECYCLE.some((n) => sameSkill(targetSkill, n))) return 0;
+  if (sameSkill(targetSkill, TERMS)) return 1;
+  if (sameSkill(targetSkill, MEETINGS)) return 2;
+  return 3;
+}
+
 // ---------------------------------------------------------------------------
-// PM pass
+// Handbook: confirm a term, see it in the course tooltip and the glossary
+// ---------------------------------------------------------------------------
+
+/** Hovers the first inline link for the term and returns the card's text. */
+async function termCard(page: Page): Promise<string> {
+  const link = page.locator("main").getByRole("button", { name: /^(change request|change requests|CR|CRs)$/i }).first();
+  await link.waitFor({ timeout: 20_000 });
+  await link.scrollIntoViewIfNeeded();
+  await page.mouse.move(0, 0);
+  await link.hover();
+  const card = page.getByRole("dialog").filter({ hasText: "Open in glossary" }).filter({ hasText: TERM_TEXT }).first();
+  await card.waitFor({ timeout: 10_000 });
+  const text = (await card.innerText()).replace(/\s+/g, " ");
+  await page.mouse.move(0, 0);
+  await page.keyboard.press("Escape");
+  await card.waitFor({ state: "hidden", timeout: 5_000 }).catch(() => undefined);
+  return text;
+}
+
+async function runHandbook(admin: Page, stamp: string, c: Checks): Promise<void> {
+  const meaning = `At Oyelabs a change request is any change to signed-off scope; the PM raises it with the CR form within one working day (e2e ${stamp}).`;
+
+  step(`open a course topic that links [[term:${TERM_ID}]]`);
+  await admin.goto(`${BASE}${TOPIC_URL}`, { waitUntil: "networkidle" });
+  const before = await termCard(admin);
+  c.ok(/Industry standard – to confirm/.test(before), `before: the tooltip reads "to confirm" (${before.slice(0, 120)})`);
+  c.ok(!before.includes(meaning), "before: the tooltip does not have the new text yet");
+  await shot(admin, "pm", "14-tooltip-before");
+
+  step("in the same tab, Admin → Handbook: edit and confirm the term");
+  await spaNavigate(admin, `/admin/handbook?q=${TERM_ID}`);
+  await admin.getByRole("heading", { name: "Handbook", exact: true }).waitFor({ timeout: 20_000 });
+  const row = admin.locator("li").filter({ has: admin.getByRole("button", { name: /^Edit Change request$/i }) });
+  await row.waitFor({ timeout: 20_000 });
+  c.ok(await row.getByText("To confirm", { exact: true }).isVisible(), "the term is listed as To confirm");
+  c.ok(await row.getByRole("button", { name: /^Confirm Change request$/i }).isVisible(), "a one-click Confirm is offered");
+  await row.getByRole("button", { name: /^Edit Change request$/i }).click();
+  const field = admin.getByLabel(/^What it means at Oyelabs/);
+  await field.waitFor({ timeout: 10_000 });
+  await field.fill(meaning);
+  await shot(admin, "pm", "15-handbook-edit");
+  await admin.getByRole("button", { name: "Save & confirm", exact: true }).click();
+  await field.waitFor({ state: "hidden", timeout: 15_000 });
+  await row.getByText("Confirmed", { exact: true }).waitFor({ timeout: 10_000 });
+  c.ok(true, "the list shows the term Confirmed");
+  await shot(admin, "pm", "16-handbook-confirmed");
+
+  const { terms } = await getJson<{ terms: { id: string; status: string; oyelabsMeaning: string }[] }>(admin.request, "/api/handbook/glossary");
+  const saved = terms.find((t) => t.id === TERM_ID);
+  c.ok(saved?.status === "confirmed" && saved.oyelabsMeaning === meaning, "server: the glossary API serves the confirmed term with the new text");
+
+  step("back to the topic in the same tab: the tooltip shows the confirmed entry");
+  await spaNavigate(admin, TOPIC_URL);
+  const after = await termCard(admin);
+  c.ok(/Confirmed by Oyelabs/.test(after), `after (same tab): the tooltip reads "Confirmed by Oyelabs" (${after.slice(0, 120)})`);
+  c.ok(after.includes(meaning), "after (same tab): the tooltip shows the new Oyelabs meaning");
+  await shot(admin, "pm", "17-tooltip-after");
+
+  step("after a reload too");
+  await admin.goto(`${BASE}${TOPIC_URL}`, { waitUntil: "networkidle" });
+  const reloaded = await termCard(admin);
+  c.ok(/Confirmed by Oyelabs/.test(reloaded) && reloaded.includes(meaning), "after reload: the tooltip shows the confirmed entry and the new text");
+
+  step("the glossary");
+  await admin.goto(`${BASE}/glossary/${TERM_ID}`, { waitUntil: "networkidle" });
+  const main = admin.locator("main");
+  await main.getByText(meaning).first().waitFor({ timeout: 20_000 });
+  c.ok(await main.getByText(meaning).first().isVisible(), "the glossary entry shows the new Oyelabs meaning");
+  c.ok((await main.getByText("Confirmed by Oyelabs").count()) > 0, "the glossary shows Confirmed by Oyelabs");
+  await shot(admin, "pm", "18-glossary");
+}
+
+// ---------------------------------------------------------------------------
+// The pass
 // ---------------------------------------------------------------------------
 
 async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Checks> {
-  const c = new Checks("Project Management (personalised)");
+  const c = new Checks("PM processes academy (v4.2)");
   console.log(`\n=== ${c.name} ===`);
-  const spec: OnboardSpec = { key: "pm", department: "Project Management", track: /^Agile Delivery PM/, stack: "Jira", experience: /^3–5/, description: PM_DESCRIPTION };
-  const username = `e2e41-pm-${stamp}`;
+  const username = `e2e42-pm-${stamp}`;
   let learnerCtx: BrowserContext | null = null;
   try {
+    // ---- 1. Onboarding ----
     step("onboard on /admin/onboard");
-    await openOnboarding(admin, spec, username);
+    await openOnboarding(admin, username);
 
-    step("default PM sliders are prefilled");
+    step("v4.2 default PM sliders are prefilled");
     await admin.getByText(/Suggested defaults for Project Management/).waitFor({ timeout: 10_000 });
     for (const d of PM_DEFAULTS) {
       const value = await sliderValue(admin, d.name);
@@ -562,57 +645,33 @@ async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Chec
     }
     await shot(admin, "pm", "01-defaults-prefilled");
 
-    step("raise the description's skills to Critical");
-    for (const name of PM_CRITICAL) {
-      const before = PM_DEFAULTS.find((d) => d.name === name)!.slider;
-      await raiseSlider(admin, name, before, 5);
-      c.ok((await sliderValue(admin, name)) === "Critical", `${name} slider reads Critical`);
-    }
-    for (const name of [...PM_CRITICAL].reverse()) await moveToTop(admin, name, "Critical");
-
     step("read the understanding panel");
-    const text = await readUnderstanding(admin, (t) => t.includes("Excel for PMs") && /client calls/i.test(t) && /Critical for the admin: .*Excel for PMs/.test(t));
-    c.ok(/client (calls|meetings|update meetings)/i.test(text), "understanding mentions client calls/meetings");
-    c.ok(/Excel/.test(text), "understanding mentions Excel");
+    const text = await readUnderstanding(admin, (t) => /white-label/i.test(t) && /Custom project lifecycle/.test(t));
+    c.ok(/white-label/i.test(text), "understanding carries the description (white-label)");
     c.ok(!/Rules only/.test(text), "understanding came from the AI (not rules only)");
     c.fact(`understanding: ${text.slice(0, 400)}`);
     await shot(admin, "pm", "02-understanding");
 
-    const { userId, tempPassword, assessmentId } = await createAndAssign(admin, spec, username, c);
+    const { userId, tempPassword, assessmentId } = await createAndAssign(admin, username, c);
 
     step("check the personalised sheet");
-    const detail = await adminDetail(admin, assessmentId);
+    const detail = await getJson<V4Detail>(admin.request, `/api/admin/assessments/${assessmentId}/v4`);
     const report = detail.config.personalisation;
     c.ok(report?.understandingSource === "ai", `personalisation read by the AI (got ${report?.understandingSource})`);
     c.ok(!report?.fallbackReason, `no bank-only fallback${report?.fallbackReason ? ` (${report.fallbackReason})` : ""}`);
-    c.ok((report?.themes ?? []).some((t) => /client calls/i.test(t)) && (report?.themes ?? []).some((t) => /excel/i.test(t)), `themes carry the description (${(report?.themes ?? []).join(", ")})`);
     const items = detail.items;
     c.ok(items.length === 25, `25 questions (got ${items.length})`);
     const est = items.reduce((s, i) => s + (i.estSeconds ?? 0), 0);
-    c.fact(`estimate ${est} s = ${(est / 60).toFixed(1)} min (report ${report?.estSeconds} s); reused ${report?.reused}, generated ${report?.generated}, from bank after failures ${report?.fromBankAfterFailures}`);
+    c.fact(`estimate ${est} s = ${(est / 60).toFixed(1)} min; reused ${report?.reused}, generated ${report?.generated}; themes: ${(report?.themes ?? []).join(", ")}`);
     c.ok(est >= 26 * 60 && est <= 32 * 60, `sheet estimate ${(est / 60).toFixed(1)} min is within 26–32`);
+    c.fact(`kinds: ${items.map((i) => `${i.skillName.split(" ")[0]}:${kindOf(i)}`).join(", ")}`);
+    const classifyItems = items.filter((i) => isClassify(i.task));
+    c.ok(classifyItems.length > 0, `a classify-the-request item is on the sheet (${classifyItems.length})`);
+    const whiteLabel = items.filter((i) => sameSkill(i.skillName, "White-label project lifecycle") || /white[- ]label/i.test(JSON.stringify([i.prompt, i.task ?? null])));
+    c.ok(whiteLabel.length > 0, `a white-label item is on the sheet (${whiteLabel.length})`);
+    c.ok(items.some((i) => i.task?.kind === "roleplay"), "a mini role-play is on the sheet");
 
-    const mix = describeMix(items);
-    c.fact(`mix by skill: ${[...mix.entries()].map(([k, v]) => `${k} ${v}`).join("; ")}`);
-    c.fact(`kinds: ${items.map(kindOf).join(", ")}`);
-    const stressed = PM_STRESSED.map((s) => mix.get(s) ?? 0);
-    const others = [...mix.entries()].filter(([k]) => !PM_STRESSED.includes(k) && k !== "Client management");
-    const otherMax = Math.max(0, ...others.map(([, v]) => v));
-    const avgStressed = stressed.reduce((a, b) => a + b, 0) / stressed.length;
-    const avgOthers = others.reduce((a, [, v]) => a + v, 0) / Math.max(1, others.length);
-    c.ok(stressed.every((n) => n >= otherMax), `each of meetings/email/Excel has at least as many items as any other PM skill (${stressed.join("/")} vs max ${otherMax})`);
-    c.ok(avgStressed > avgOthers, `meetings/email/Excel average more items per skill than the other PM skills (${avgStressed.toFixed(2)} vs ${avgOthers.toFixed(2)})`);
-    const themed = items.filter((i) => /meeting|call|email|excel|spreadsheet/i.test(`${i.skillName} ${i.prompt}`) || ["excel", "write/email", "sim"].includes(kindOf(i)));
-    c.fact(`${themed.length} of 25 items are about meetings, email or Excel by skill, prompt or task kind`);
-    c.ok(themed.length > items.length - themed.length, `meeting/email/Excel items outnumber the rest (${themed.length} vs ${items.length - themed.length})`);
-    const generated = items.filter((i) => i.origin === "generated");
-    c.ok(generated.length > 0, `generated items on the sheet (${generated.length})`);
-    const offContext = generated.filter((i) => !/overseas clients?|client calls?|Excel|Jira/i.test(i.prompt));
-    c.ok(offContext.length === 0, `every generated item is set in the description's context${offContext.length ? ` (not: ${offContext.map((i) => `${i.skillName}: ${i.prompt.slice(0, 90)}`).join(" | ")})` : ""}`);
-    const badges = await adminQuestionList(admin, userId, "pm");
-    c.ok(badges === generated.length, `admin V4 detail shows ${badges} "generated" badges (expected ${generated.length})`);
-
-    // ---- The learner ----
+    // ---- 2. The learner ----
     learnerCtx = await browser.newContext({ viewport: { width: 1440, height: 900 }, permissions: ["camera", "microphone"] });
     const page = await learnerCtx.newPage();
     page.on("pageerror", (error) => console.log(`    [learner pageerror] ${error.message}`));
@@ -620,68 +679,19 @@ async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Chec
     await signIn(page, username, tempPassword, LEARNER_NEW);
     await page.goto(`${BASE}/assessment`, { waitUntil: "networkidle" });
     await shot(page, "pm", "06-learner-assessment");
-    await passPreflight(page, learnerCtx.request, assessmentId, "pm", c);
+    await passPreflight(page, learnerCtx.request, assessmentId, c);
     const sheet = await readSheet(learnerCtx.request, assessmentId);
     const total = sheet.length;
-    const find = (pred: (i: SheetItemLite) => boolean) => sheet.findIndex(pred);
-    const excel = find((i) => i.task?.kind === "excel");
-    const email = find((i) => i.task?.kind === "write" && i.task.variant === "email");
-    const explain = find((i) => i.task?.kind === "write" && i.task.variant === "explain");
-    c.ok(excel >= 0, "an Excel task is on the sheet");
-    c.ok(email >= 0, "an email write task is on the sheet");
-    c.ok(explain >= 0, "an explain-it write task is on the sheet");
+    const categorize = sheet.findIndex((i) => isClassify(i.task));
+    const roleplay = sheet.findIndex((i) => i.task?.kind === "roleplay");
+    c.ok(categorize >= 0, "learner sheet: a classification (categorize) item is present");
+    c.ok(roleplay >= 0, "learner sheet: a role-play item is present");
 
-    const plan: { index: number; label: string; run: () => Promise<void> }[] = [];
-    if (excel >= 0) {
-      plan.push({
-        index: excel,
-        label: "excel",
-        run: async () => {
-          const ref = sheet[excel].task!.editable![0];
-          const formula = formulaFor(ref);
-          step(`Excel Q${excel + 1}: type ${formula} into ${ref}`);
-          const cell = article(page).getByLabel(new RegExp(`^Cell ${ref}(,|$)`));
-          await cell.click();
-          await cell.fill(formula);
-          await cell.press("Enter");
-          await page.waitForTimeout(300);
-          c.ok((await chipLabel(page, excel)).includes("answered"), `Q${excel + 1} (Excel) answered`);
-          await shot(page, "pm", "08-excel");
-        },
-      });
-    }
-    if (email >= 0) {
-      plan.push({
-        index: email,
-        label: "email",
-        run: async () => {
-          step(`email Q${email + 1}`);
-          c.ok(await article(page).getByLabel("Subject").isVisible(), "email task shows an email composer (Subject field)");
-          await article(page).getByLabel("Subject").fill("Release date: new plan");
-          await article(page).locator("textarea").first().fill("Hi Sarah, the build slipped after payment testing found a bug. New date is Wednesday. I will share the test link on Tuesday.");
-          await page.waitForTimeout(300);
-          c.ok((await chipLabel(page, email)).includes("answered"), `Q${email + 1} (email) answered`);
-          await shot(page, "pm", "09-email");
-        },
-      });
-    }
-    if (explain >= 0) {
-      plan.push({
-        index: explain,
-        label: "explain",
-        run: async () => {
-          step(`explain-it Q${explain + 1}`);
-          c.ok(await article(page).getByText("Your explanation").isVisible(), "explain task asks for an explanation");
-          await article(page).locator("textarea").first().fill("An API is how our app asks another system for data, like a waiter taking an order to the kitchen. Theirs changed, so we adapt before release.");
-          await page.waitForTimeout(300);
-          c.ok((await chipLabel(page, explain)).includes("answered"), `Q${explain + 1} (explain) answered`);
-          await shot(page, "pm", "10-explain");
-        },
-      });
-    }
-    // One MCQ answered quickly; everything else is left for "unanswered".
-    const mcq = find((i) => i.type === "mcq");
-    if (mcq >= 0) plan.push({ index: mcq, label: "mcq", run: async () => void (await article(page).locator('input[type="radio"]').first().check()) });
+    const plan: { index: number; run: () => Promise<void> }[] = [];
+    if (categorize >= 0) plan.push({ index: categorize, run: () => answerCategorize(page, sheet[categorize], categorize, c) });
+    if (roleplay >= 0) plan.push({ index: roleplay, run: () => answerRoleplay(page, sheet[roleplay], roleplay, c) });
+    const mcq = sheet.findIndex((i) => i.type === "mcq");
+    if (mcq >= 0) plan.push({ index: mcq, run: async () => void (await article(page).locator('input[type="radio"]').first().check()) });
     plan.sort((a, b) => a.index - b.index);
     for (const entry of plan) {
       await goTo(page, entry.index, total);
@@ -692,34 +702,45 @@ async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Chec
 
     const drafts = await poll("drafts saved", 15_000, async () => {
       const s = await readSheet(learnerCtx!.request, assessmentId);
-      const ok = plan.every((p) => s[p.index].draft !== null);
-      return ok ? s : null;
+      return plan.every((p) => s[p.index].draft !== null) ? s : null;
     }, 500).catch(() => null);
     c.ok(drafts !== null, "server: every answered item has a draft");
-    if (drafts && excel >= 0) {
-      const cells = (drafts[excel].draft as { task?: { cells?: Record<string, string> } } | null)?.task?.cells ?? {};
-      c.ok(Object.values(cells).some((v) => v.startsWith("=SUM(")), `server: the Excel draft holds the typed formula (${JSON.stringify(cells)})`);
+    if (drafts && categorize >= 0) {
+      const picks = (drafts[categorize].draft as { task?: { picks?: Record<string, string> } } | null)?.task?.picks ?? {};
+      c.ok(Object.keys(picks).length === (sheet[categorize].task?.items ?? []).length, `server: the classification draft has every pick (${JSON.stringify(picks)})`);
     }
-    if (drafts && email >= 0) c.ok(/new date is wednesday/i.test(JSON.stringify(drafts[email].draft)), "server: the email body was saved");
+    if (drafts && roleplay >= 0) {
+      const draft = (drafts[roleplay].draft as { task?: { sessionId?: string; transcript?: unknown[] } } | null)?.task;
+      c.ok(Boolean(draft?.sessionId) && (draft?.transcript?.length ?? 0) >= 4, `server: the role-play draft points at its session with the transcript (${draft?.transcript?.length ?? 0} lines)`);
+    }
 
-    await finishSheet(page, "pm", c);
+    await finishSheet(page, c);
 
-    // ---- The path ----
-    const path = await waitForPath(admin, userId, "pm", c);
-    const lines = path.map((i) => `[P${i.partNumber}] ${i.courseTitle} <- ${i.targetSkill ?? "-"}`);
+    // ---- 3. The path ----
+    const pathItems = await waitForPath(admin, userId, c);
+    const lines = pathItems.map((i) => `[P${i.partNumber}] ${i.courseTitle} <- ${i.targetSkill ?? "-"}`);
     console.log(lines.map((l) => `      ${l}`).join("\n"));
     c.fact(`path: ${lines.join(" | ")}`);
-    c.ok(/Improving your existing PM skills/i.test(`${path[0]?.courseTitle} ${path[0]?.reason}`), `the path opens with the diagnostic refresh (got "${path[0]?.courseTitle}")`);
-    const part1 = path.filter((i) => i.partNumber === 1);
-    c.ok(part1.some((i) => sameSkill(i.targetSkill, "Client update meetings & presenting") || sameSkill(i.targetSkill, "Client management")), "client meetings/management is in Part 1");
-    c.ok(part1.some((i) => sameSkill(i.targetSkill, "Excel for PMs")), "Excel for PMs is in Part 1");
-    const theory = path.map((i, index) => ({ i, index })).filter(({ i }) => sameSkill(i.targetSkill, "PM foundations and advanced theory") || /PM foundations and advanced theory/i.test(i.courseTitle));
-    c.ok(theory.length > 0, "PM foundations and advanced theory is on the path");
-    if (theory.length) {
-      const first = theory[0].index;
-      c.ok(path.slice(first).every((i) => sameSkill(i.targetSkill, "PM foundations and advanced theory") || /PM foundations/i.test(i.courseTitle)), "everything else comes before PM foundations and advanced theory");
-    }
-    c.ok(path.every((item, i) => i === 0 || (item.partNumber ?? 0) >= (path[i - 1].partNumber ?? 0)), "part numbers never go backwards");
+    const refreshAt = pathItems.findIndex((i) => /Improving your existing PM skills/i.test(`${i.courseTitle} ${i.targetSkill ?? ""}`) && !LIFECYCLE.some((n) => sameSkill(i.targetSkill, n)));
+    if (refreshAt >= 0) c.ok(refreshAt === 0, `the diagnostic refresh opens the path (at ${refreshAt})`);
+    else c.note("no diagnostic refresh on this path (the assessment found no gaps for it)");
+    const part1 = pathItems.filter((i) => i.partNumber === 1 && i.targetSkill);
+    const firstOf = (pred: (name: string) => boolean) => part1.findIndex((i) => pred(i.targetSkill!));
+    const lifecycleAt = firstOf((n) => part1Rank(n) === 0);
+    const termsAt = firstOf((n) => part1Rank(n) === 1);
+    const meetingsAt = firstOf((n) => part1Rank(n) === 2);
+    const otherAt = firstOf((n) => part1Rank(n) === 3);
+    c.ok(LIFECYCLE.every((n) => part1.some((i) => sameSkill(i.targetSkill, n))), "both lifecycle courses (custom, white-label) are in Part 1");
+    c.ok(termsAt >= 0 && meetingsAt >= 0, "terminology and client meetings are in Part 1");
+    c.ok(lifecycleAt === 0, `Part 1 starts with a lifecycle course (got "${part1[0]?.targetSkill}")`);
+    c.ok(lifecycleAt < termsAt && termsAt < meetingsAt, `lifecycle (${lifecycleAt}) < terminology (${termsAt}) < meetings (${meetingsAt}) in Part 1`);
+    c.ok(otherAt < 0 || meetingsAt < otherAt, `every other skill comes after the process courses in Part 1 (first other at ${otherAt})`);
+    const ranks = part1.map((i) => part1Rank(i.targetSkill!));
+    c.ok(ranks.every((r, i) => i === 0 || r >= ranks[i - 1]), `Part 1 never goes back to an earlier process group (${ranks.join(",")})`);
+    c.ok(pathItems.every((item, i) => i === 0 || (item.partNumber ?? 0) >= (pathItems[i - 1].partNumber ?? 0)), "part numbers never go backwards");
+
+    // ---- 4. Handbook ----
+    await runHandbook(admin, stamp, c);
   } catch (error) {
     c.failures.push(`aborted: ${(error as Error).message.split("\n")[0]}`);
     console.log(`    \u001b[31mABORT\u001b[0m ${(error as Error).stack ?? error}`);
@@ -732,77 +753,13 @@ async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Chec
 }
 
 // ---------------------------------------------------------------------------
-// Engineering pass
-// ---------------------------------------------------------------------------
-
-async function runEng(admin: Page, stamp: string): Promise<Checks> {
-  const c = new Checks("Engineering (personalised, PHP/Laravel)");
-  console.log(`\n=== ${c.name} ===`);
-  const spec: OnboardSpec = { key: "eng", department: "Engineering", track: /^Backend/, stack: "PHP/Laravel", experience: /^1–2/, description: ENG_DESCRIPTION };
-  const username = `e2e41-eng-${stamp}`;
-  try {
-    step("onboard on /admin/onboard");
-    await openOnboarding(admin, spec, username);
-    await admin.getByRole("button", { name: "Add a priority skill" }).click();
-    const search = admin.getByPlaceholder("Search by name, alias or tag");
-    for (const skill of ENG_SKILLS) {
-      await search.fill(skill.name);
-      const option = admin.getByRole("option").filter({ hasText: new RegExp(`^${escapeRegex(skill.name)}`) }).first();
-      await option.waitFor({ timeout: 10_000 });
-      await option.click();
-    }
-    await admin.keyboard.press("Escape");
-    for (const skill of ENG_SKILLS) {
-      await raiseSlider(admin, skill.name, 3, skill.slider);
-      c.ok((await sliderValue(admin, skill.name)) === SLIDER_LABEL[skill.slider], `${skill.name} slider reads ${SLIDER_LABEL[skill.slider]}`);
-    }
-
-    step("read the understanding panel");
-    const text = await readUnderstanding(admin, (t) => /Laravel APIs/.test(t) && /webhooks/i.test(t));
-    c.ok(/Laravel/.test(text), "understanding mentions Laravel");
-    c.ok(/webhooks/i.test(text), "understanding mentions webhooks");
-    c.fact(`understanding: ${text.slice(0, 400)}`);
-    await shot(admin, "eng", "02-understanding");
-
-    const { userId, assessmentId } = await createAndAssign(admin, spec, username, c);
-    const detail = await adminDetail(admin, assessmentId);
-    const report = detail.config.personalisation;
-    const themes = report?.themes ?? [];
-    c.fact(`themes: ${themes.join(", ")}; reused ${report?.reused}, generated ${report?.generated}, from bank after failures ${report?.fromBankAfterFailures}`);
-    c.ok(themes.some((t) => /laravel/i.test(t)), "themes mention Laravel");
-    c.ok(themes.some((t) => /webhook/i.test(t)), "themes mention webhooks");
-    const items = detail.items;
-    const est = items.reduce((s, i) => s + (i.estSeconds ?? 0), 0);
-    c.fact(`estimate ${(est / 60).toFixed(1)} min; kinds: ${items.map((i) => `${kindOf(i)}${i.language ? `:${i.language}` : i.snippetLanguage ? `:${i.snippetLanguage}` : ""}`).join(", ")}`);
-    c.ok(est >= 26 * 60 && est <= 32 * 60, `sheet estimate ${(est / 60).toFixed(1)} min is within 26–32`);
-    const generated = items.filter((i) => i.origin === "generated");
-    c.ok(generated.length > 0, `generated items on the sheet (${generated.length})`);
-    const php = generated.filter((i) => i.language === "php" || i.snippetLanguage === "php");
-    c.ok(php.length > 0, `generated items use PHP (${php.length}: ${php.map(kindOf).join(", ")})`);
-    c.ok(generated.every((i) => i.language === "php" || i.snippetLanguage === "php" || /Laravel|webhook|UK client/i.test(i.prompt)), "every generated item uses PHP or the description's context");
-    c.ok(generated.filter((i) => i.type === "coding").every((i) => i.language === "php"), "generated coding items are in PHP");
-    const badges = await adminQuestionList(admin, userId, "eng");
-    c.ok(badges === generated.length, `admin V4 detail shows ${badges} "generated" badges (expected ${generated.length})`);
-    const firstGenerated = admin.locator("ol[id^='v4-questions-'] > li").filter({ has: admin.getByText("generated", { exact: true }) }).first();
-    c.ok(/Laravel|webhook|UK client/i.test(await firstGenerated.innerText()), "a generated question in the admin list reads in the learner's context");
-  } catch (error) {
-    c.failures.push(`aborted: ${(error as Error).message.split("\n")[0]}`);
-    console.log(`    \u001b[31mABORT\u001b[0m ${(error as Error).stack ?? error}`);
-    await shot(admin, "eng", "99-admin-at-failure");
-  }
-  return c;
-}
-
-// ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<number> {
-  const only = process.argv.slice(2).filter((a) => a === "pm" || a === "eng");
-  const passes = only.length ? only : ["pm", "eng"];
   fs.mkdirSync(SHOTS, { recursive: true });
   const stamp = Date.now().toString(36);
-  const dataDir = path.join(os.tmpdir(), `oyelearn-e2e41-${stamp}`);
+  const dataDir = path.join(os.tmpdir(), `oyelearn-e2e42-${stamp}`);
   fs.mkdirSync(dataDir, { recursive: true });
   console.log(`data dir: ${dataDir}\nshots:    ${SHOTS}`);
 
@@ -820,9 +777,17 @@ async function main(): Promise<number> {
     await signIn(admin, SUPER_USER, SUPER_INITIAL, SUPER_NEW);
     await admin.waitForURL((u) => u.pathname.startsWith("/admin"), { timeout: 20_000 });
     await sendJson(admin.request, "put", "/api/admin/assessment-settings", { minFinishMinutes: null });
-
-    if (passes.includes("pm")) results.push(await runPm(browser, admin, stamp));
-    if (passes.includes("eng")) results.push(await runEng(admin, stamp));
+    if (process.argv.includes("handbook")) {
+      // Step 4 alone, for quick iteration on the handbook checks.
+      const c = new Checks("Handbook confirm, tooltip and glossary (v4.2)");
+      console.log(`\n=== ${c.name} ===`);
+      await runHandbook(admin, stamp, c).catch(async (error: Error) => {
+        c.failures.push(`aborted: ${error.message.split("\n")[0]}`);
+        console.log(`    \u001b[31mABORT\u001b[0m ${error.stack ?? error}`);
+        await shot(admin, "pm", "99-admin-at-failure");
+      });
+      results.push(c);
+    } else results.push(await runPm(browser, admin, stamp));
   } finally {
     await browser.close().catch(() => undefined);
     stopServer();
@@ -836,7 +801,7 @@ async function main(): Promise<number> {
     for (const f of r.facts) console.log(`        fact: ${f}`);
     for (const n of r.notes) console.log(`        note: ${n}`);
   }
-  return results.length === passes.length && results.every((r) => r.failures.length === 0) ? 0 : 1;
+  return results.length === 1 && results.every((r) => r.failures.length === 0) ? 0 : 1;
 }
 
 main()

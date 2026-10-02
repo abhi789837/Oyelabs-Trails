@@ -24,3 +24,11 @@
 - **Why:** both are pure JavaScript, MIT-licensed and widely used, so there is no native build, no
   external converter and no licence question. Generating from the entry means an admin's edit to a
   template's sections shows up in the download at once. Both stay external to the server bundle.
+
+## D4. Hands-on questions move off the lowest-priority skills first
+- **Decision:** when single-question skills have to become MCQs to fit the time budget, the lowest-priority skills are converted first (`shared/setup.ts`).
+- **Why:** with the v4.2 defaults, the old order left Critical/High skills (Excel, client management) with only an MCQ while Medium skills kept hands-on tasks.
+
+## D5. The v4.1 e2e regression raises its own skills to the top of Critical
+- **Decision:** `scripts/e2e/v41-personalise.ts` now uses the v4.2 defaults, and its scripted admin moves meetings, email and Excel to the top of Critical. None of its assertions changed.
+- **Why:** the process courses now hold the top Critical slots by default, so v4.1's "these skills get more questions" checks need the admin to rank them explicitly, as a real admin would.

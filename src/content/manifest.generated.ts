@@ -9332,6 +9332,1614 @@ export const manifest: TrackMeta[] = [
     "accentToken": "ridge",
     "modules": [
       {
+        "id": "pmp-a00",
+        "trackId": "pm",
+        "name": "Custom lifecycle: The custom lifecycle at a glance",
+        "description": "The whole custom-project lifecycle at Oyelabs on one page: the fifteen stages from BD handover to closure, the gates where a written decision is required, how the commercial model changes the shape of the project, and who is responsible and accountable at each step.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a00-lifecycle-map",
+            "moduleId": "pmp-a00",
+            "trackId": "pm",
+            "title": "The custom delivery lifecycle map",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 6
+          },
+          {
+            "id": "pmp-a00-raci-roles",
+            "moduleId": "pmp-a00",
+            "trackId": "pm",
+            "title": "Who does what: RACI across the lifecycle",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a01",
+        "trackId": "pm",
+        "name": "Custom lifecycle: BD handover to delivery",
+        "description": "How a custom project moves from the people who sold it to the people who build it: what a complete handover pack contains, how to read an MSA and SOW like a delivery PM, and how to find the risky assumptions before the team commits to a plan.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a01-handover-checklist",
+            "moduleId": "pmp-a01",
+            "trackId": "pm",
+            "title": "The BD-to-delivery handover checklist",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-a01-reading-sow",
+            "moduleId": "pmp-a01",
+            "trackId": "pm",
+            "title": "Reading a SOW and MSA like a PM",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a01-risky-assumptions",
+            "moduleId": "pmp-a01",
+            "trackId": "pm",
+            "title": "Spotting risky assumptions before you commit",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-a02",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Estimation & commercial models",
+        "description": "How the price and the plan come to rest on the same assumptions: choosing between fixed bid, time and materials, retainer and dedicated team, supporting the tech lead's estimate as a PM, and tying milestone billing to deliverables the client can actually accept.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a02-commercial-models",
+            "moduleId": "pmp-a02",
+            "trackId": "pm",
+            "title": "Commercial models: fixed bid, T&M, retainer, dedicated team",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a02-estimation-support",
+            "moduleId": "pmp-a02",
+            "trackId": "pm",
+            "title": "Supporting estimation as a PM",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a02-milestone-billing",
+            "moduleId": "pmp-a02",
+            "trackId": "pm",
+            "title": "Milestone billing and payment triggers",
+            "level": "expert",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-a03",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Internal kickoff",
+        "description": "Getting the Oyelabs delivery team aligned before the client sees it: what was sold and what was not, who does what, the first plan and milestones, the initial risk register, and the environments and access the team needs before Sprint 0.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a03-internal-kickoff",
+            "moduleId": "pmp-a03",
+            "trackId": "pm",
+            "title": "Running the internal kickoff",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a03-plan-risks-environments",
+            "moduleId": "pmp-a03",
+            "trackId": "pm",
+            "title": "Plan, risk register and environments",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a04",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Client kickoff",
+        "description": "The first delivery meeting with the client: confirming goals, scope and the plan, naming SPOCs and approvers, agreeing cadence and the escalation path, and turning the client's own obligations into dated dependencies. Then the governance that keeps those expectations true for the rest of the project.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a04-client-kickoff",
+            "moduleId": "pmp-a04",
+            "trackId": "pm",
+            "title": "Running the client kickoff",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a04-expectations-governance",
+            "moduleId": "pmp-a04",
+            "trackId": "pm",
+            "title": "Setting expectations and governance",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a05",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Discovery & requirements",
+        "description": "Turning the sold scope into testable requirements: running discovery workshops that surface the real decisions, writing user stories with acceptance criteria a tester can use, and freezing and signing off the requirements so change control has a baseline to protect.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a05-discovery",
+            "moduleId": "pmp-a05",
+            "trackId": "pm",
+            "title": "Running discovery",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a05-stories-acceptance",
+            "moduleId": "pmp-a05",
+            "trackId": "pm",
+            "title": "User stories and acceptance criteria",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a05-freeze-signoff",
+            "moduleId": "pmp-a05",
+            "trackId": "pm",
+            "title": "Requirements freeze and sign-off",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a06",
+        "trackId": "pm",
+        "name": "Custom lifecycle: UI/UX & design approval",
+        "description": "How a custom project moves from signed requirements to approved designs that developers can build from: wireframes, mockups and prototypes, review rounds, written approval and hand-off. The advanced topic is about running review rounds so design does not become an unpaid, open-ended loop.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a06-design-process",
+            "moduleId": "pmp-a06",
+            "trackId": "pm",
+            "title": "The design process: wireframes to approved UI",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a06-review-rounds",
+            "moduleId": "pmp-a06",
+            "trackId": "pm",
+            "title": "Managing design review rounds",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-a07",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Architecture & Sprint 0",
+        "description": "The foundations a custom project needs before feature sprints start: repositories, environments, CI/CD, a refined backlog, a definition of ready and done, and architecture decisions written down so they survive the people who made them.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a07-sprint0",
+            "moduleId": "pmp-a07",
+            "trackId": "pm",
+            "title": "Sprint 0: setting up to deliver",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a07-architecture-decisions",
+            "moduleId": "pmp-a07",
+            "trackId": "pm",
+            "title": "Architecture decisions and ADRs",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-a08",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Sprint execution",
+        "description": "How an Oyelabs custom project is actually built, sprint after sprint: the cadence of planning, standups, demos and retros, the daily EOD update the client reads, and turning demo feedback into the right kind of work without giving scope away.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a08-sprint-cadence",
+            "moduleId": "pmp-a08",
+            "trackId": "pm",
+            "title": "Sprint cadence and Scrum events",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a08-eod-updates",
+            "moduleId": "pmp-a08",
+            "trackId": "pm",
+            "title": "Daily standups and EOD updates",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-a08-demos-feedback",
+            "moduleId": "pmp-a08",
+            "trackId": "pm",
+            "title": "Sprint demos and client feedback",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a09",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Scope control: CR, enhancement, bug",
+        "description": "The module that protects every fixed-bid project's margin and every client relationship: classifying each request as a bug, enhancement, change request, new feature or clarification, writing and pricing the CR, and replanning honestly once a change is approved.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a09-classifying-requests",
+            "moduleId": "pmp-a09",
+            "trackId": "pm",
+            "title": "Classifying requests: CR, enhancement or bug",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-a09-writing-crs",
+            "moduleId": "pmp-a09",
+            "trackId": "pm",
+            "title": "Writing and pricing change requests",
+            "level": "advanced",
+            "estMinutes": 55,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-a09-replanning",
+            "moduleId": "pmp-a09",
+            "trackId": "pm",
+            "title": "Replanning and re-baselining after change",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a10",
+        "trackId": "pm",
+        "name": "Custom lifecycle: QA, UAT & sign-off",
+        "description": "How a custom build moves from internal QA to client UAT and ends in a clean, written UAT sign-off. You learn who owns each kind of testing, how to triage UAT feedback into bugs, change requests and clarifications, and how to close UAT without letting it turn into a second requirements phase.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a10-qa-vs-uat",
+            "moduleId": "pmp-a10",
+            "trackId": "pm",
+            "title": "QA vs UAT",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a10-uat-signoff",
+            "moduleId": "pmp-a10",
+            "trackId": "pm",
+            "title": "Running UAT to a clean sign-off",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a11",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Release & go-live",
+        "description": "Taking a custom build to production without drama: running a go/no-go decision against agreed criteria, planning a cutover with a rehearsed rollback, and getting mobile apps through App Store and Play Store review on the client's own accounts.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a11-go-no-go",
+            "moduleId": "pmp-a11",
+            "trackId": "pm",
+            "title": "The go/no-go decision",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a11-store-submission",
+            "moduleId": "pmp-a11",
+            "trackId": "pm",
+            "title": "App Store and Play Store submission",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a11-cutover-rollback",
+            "moduleId": "pmp-a11",
+            "trackId": "pm",
+            "title": "Cutover and rollback planning",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a12",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Hypercare & warranty",
+        "description": "The weeks right after launch: running hypercare with a log, clear severities and an exit, and handling warranty claims fairly by telling real defects apart from support work, enhancements and change requests.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a12-hypercare",
+            "moduleId": "pmp-a12",
+            "trackId": "pm",
+            "title": "Running hypercare after go-live",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a12-warranty-claims",
+            "moduleId": "pmp-a12",
+            "trackId": "pm",
+            "title": "Handling warranty claims",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a13",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Handover & KT",
+        "description": "Giving the client a product they can own and run without you: a handover checklist that covers code, documentation, credentials, hosting and store accounts, knowledge transfer that is recorded and tested, and an ownership transfer that leaves no account in the wrong name.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a13-handover-checklist",
+            "moduleId": "pmp-a13",
+            "trackId": "pm",
+            "title": "The handover and KT checklist",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-a13-ownership-credentials",
+            "moduleId": "pmp-a13",
+            "trackId": "pm",
+            "title": "Transferring ownership, accounts and credentials",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a14",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Support, AMC & retainers",
+        "description": "Life after the warranty: choosing a support model, running L1/L2/L3 support against an SLA the team can actually meet, and moving a client onto an AMC or a retainer that is scoped, tracked and renewed on time.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a14-support-models",
+            "moduleId": "pmp-a14",
+            "trackId": "pm",
+            "title": "Support models, levels and SLAs",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-a14-amc-retainer",
+            "moduleId": "pmp-a14",
+            "trackId": "pm",
+            "title": "AMC and retainer engagements",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-a15",
+        "trackId": "pm",
+        "name": "Custom lifecycle: Closure",
+        "description": "Ending a custom project properly: a blameless retrospective that produces real actions, a closure report the client signs, an archive with all access removed, and, once it has been earned, a case study and the conversation about the next phase.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-a15-retro-closure",
+            "moduleId": "pmp-a15",
+            "trackId": "pm",
+            "title": "Retrospective and project closure",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-a15-case-study-upsell",
+            "moduleId": "pmp-a15",
+            "trackId": "pm",
+            "title": "Case study and upsell after closure",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          }
+        ]
+      },
+      {
+        "id": "pmp-b01",
+        "trackId": "pm",
+        "name": "White-label lifecycle: What white-label means",
+        "description": "The mental model behind every white-label project at an agency: one core product, many branded client instances, and three layers of change (branding, configuration and customisation) that carry very different costs.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b01-core-vs-instance",
+            "moduleId": "pmp-b01",
+            "trackId": "pm",
+            "title": "Core product vs client instance",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pmp-b01-what-can-change",
+            "moduleId": "pmp-b01",
+            "trackId": "pm",
+            "title": "What a client can and cannot change",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-b02",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Demo & requirement call",
+        "description": "Running the white-label product demo honestly and capturing everything a branded instance needs (brand, markets, providers, accounts and gaps) so that the gap analysis starts from facts, not from promises made on a call.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b02-demo-call",
+            "moduleId": "pmp-b02",
+            "trackId": "pm",
+            "title": "Running the product demo call",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-b02-requirement-capture",
+            "moduleId": "pmp-b02",
+            "trackId": "pm",
+            "title": "Capturing white-label requirements",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-b03",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Gap analysis",
+        "description": "The core skill of white-label delivery: sorting every client need into out of the box, configuration, customisation or new feature, estimating and pricing the gaps as separate approved items, and stopping customisation creep before it turns an instance into a fork.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b03-ootb-config-custom",
+            "moduleId": "pmp-b03",
+            "trackId": "pm",
+            "title": "Out of the box vs configuration vs customisation",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-b03-estimating-billing-gaps",
+            "moduleId": "pmp-b03",
+            "trackId": "pm",
+            "title": "Estimating and billing the gaps",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-b03-avoiding-custom-creep",
+            "moduleId": "pmp-b03",
+            "trackId": "pm",
+            "title": "Avoiding customisation creep",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-b04",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Collecting the brand kit",
+        "description": "Getting every brand asset a rebranded instance needs, in the right formats and sizes, checked before builds start, so that rebranding is a day of work and not three weeks of chasing logos.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b04-brand-kit",
+            "moduleId": "pmp-b04",
+            "trackId": "pm",
+            "title": "The brand kit checklist",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-b05",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Client-owned accounts",
+        "description": "Making sure the client opens and owns every account the product runs on (Apple, Google Play, domain, hosting, payment and messaging), why App Review Guideline 4.2.6 makes this non-negotiable for white-label apps, and how to get organisation enrolment done before it blocks launch.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b05-accounts-ownership",
+            "moduleId": "pmp-b05",
+            "trackId": "pm",
+            "title": "Who owns what: accounts, domains and keys",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-b05-store-developer-accounts",
+            "moduleId": "pmp-b05",
+            "trackId": "pm",
+            "title": "Apple and Google developer accounts",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-b06",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Configuration & custom modules",
+        "description": "Setting up a client instance from recorded configuration rather than code edits, and running every approved custom module as its own change request, with clear code ownership and upgrade cost.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b06-configuration-setup",
+            "moduleId": "pmp-b06",
+            "trackId": "pm",
+            "title": "Setting up a client's configuration",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-b06-custom-modules-as-crs",
+            "moduleId": "pmp-b06",
+            "trackId": "pm",
+            "title": "Custom modules as change requests",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-b07",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Rebranded builds, QA & UAT",
+        "description": "Turning a configured white-label instance into rebranded builds the client can test: build variants, what a rebrand QA pass must catch, test distribution through TestFlight and Play testing tracks, and a UAT sign-off that separates real defects from disguised customisation.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b07-rebranded-builds-qa",
+            "moduleId": "pmp-b07",
+            "trackId": "pm",
+            "title": "Rebranded builds, QA and UAT",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-b08",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Store listing preparation",
+        "description": "Getting each white-label client's App Store and Google Play listing ready: the assets and text limits, the identifiers you can never change, the privacy policy and data declarations, and the review notes that keep a reviewer from rejecting a working app.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b08-listing-assets",
+            "moduleId": "pmp-b08",
+            "trackId": "pm",
+            "title": "Store listing assets and identifiers",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-b08-privacy-review-guidelines",
+            "moduleId": "pmp-b08",
+            "trackId": "pm",
+            "title": "Privacy declarations and review guidelines",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-b09",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Submission, rejection & resubmission",
+        "description": "Getting each rebranded app through App Store and Google Play review: the submission flow from the client's own accounts, realistic review times, and how to read, answer and fix a rejection, including the template and spam guidelines that hit white-label apps hardest.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b09-submission",
+            "moduleId": "pmp-b09",
+            "trackId": "pm",
+            "title": "Submitting to the App Store and Google Play",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-b09-rejections",
+            "moduleId": "pmp-b09",
+            "trackId": "pm",
+            "title": "Handling rejections, including 4.2.6 and spam",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-b10",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Go-live, licence & support plan",
+        "description": "Launching a white-label client for real: the go-live checklist, how phased release and staged rollout actually work for a first release versus an update, starting the licence or subscription, and handing over a support plan the client can use.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b10-golive-licence-support",
+            "moduleId": "pmp-b10",
+            "trackId": "pm",
+            "title": "Go-live, licence and support plan",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-b11",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Core product upgrades",
+        "description": "Keeping every white-label client on a supported version of the core: reading a release in SemVer terms, planning upgrades in rings, telling clients what changes, and pricing the customisation debt that makes forked or heavily customised instances expensive to upgrade.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b11-version-sync",
+            "moduleId": "pmp-b11",
+            "trackId": "pm",
+            "title": "Keeping client instances in sync with the core",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-b11-customisation-debt",
+            "moduleId": "pmp-b11",
+            "trackId": "pm",
+            "title": "Customisation debt and merge-conflict risk",
+            "level": "expert",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-b12",
+        "trackId": "pm",
+        "name": "White-label lifecycle: Running many white-label clients",
+        "description": "Running a white-label portfolio rather than one launch at a time: the client register, per-client configuration, shared code signing, automated store metadata, matrix builds and a release calendar, so the tenth client is easier than the first.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-b12-portfolio-templates",
+            "moduleId": "pmp-b12",
+            "trackId": "pm",
+            "title": "Templates and automation for a white-label portfolio",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-c01",
+        "trackId": "pm",
+        "name": "Terminology: Commercial & contract terms",
+        "description": "The contract and money words a PM uses every week, taught as side-by-side comparisons: MSA vs SOW vs NDA, estimate vs quote vs PO vs invoice, the pricing models, and who owns the code at handover. Each pair shows what changes for time and billing when you pick the wrong word.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c01-msa-sow-nda",
+            "moduleId": "pmp-c01",
+            "trackId": "pm",
+            "title": "MSA vs SOW vs NDA",
+            "level": "beginner",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          },
+          {
+            "id": "pmp-c01-estimate-quote-po",
+            "moduleId": "pmp-c01",
+            "trackId": "pm",
+            "title": "Estimate vs quote vs PO vs invoice",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c01-pricing-models",
+            "moduleId": "pmp-c01",
+            "trackId": "pm",
+            "title": "Fixed bid vs T&M vs retainer vs dedicated team",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c01-ip-licence-handover",
+            "moduleId": "pmp-c01",
+            "trackId": "pm",
+            "title": "IP ownership vs licence vs source-code handover",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-c02",
+        "trackId": "pm",
+        "name": "Terminology: Scope terms",
+        "description": "The words that decide whether work is free or billable: assumption vs dependency vs constraint, scope creep vs gold plating, change request vs enhancement vs bug vs new feature, and configuration vs customisation. Every comparison ends with the consequence for time and billing and the sentence to use with the client.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c02-assumption-dependency-constraint",
+            "moduleId": "pmp-c02",
+            "trackId": "pm",
+            "title": "Assumption vs dependency vs constraint",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c02-creep-goldplating",
+            "moduleId": "pmp-c02",
+            "trackId": "pm",
+            "title": "Scope creep vs gold plating",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c02-cr-enh-bug-feature",
+            "moduleId": "pmp-c02",
+            "trackId": "pm",
+            "title": "Change request vs enhancement vs bug vs new feature",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-c02-config-vs-custom",
+            "moduleId": "pmp-c02",
+            "trackId": "pm",
+            "title": "Configuration vs customisation",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-c03",
+        "trackId": "pm",
+        "name": "Terminology: Delivery terms",
+        "description": "The delivery words that teams and clients swap without noticing: BRD vs PRD vs user story, Definition of Ready vs Definition of Done, release vs deployment vs go-live, and hotfix vs patch vs version. Every comparison ends with what the difference changes for scope, dates or billing, and the sentence to use with the client.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c03-brd-prd-story",
+            "moduleId": "pmp-c03",
+            "trackId": "pm",
+            "title": "BRD vs PRD vs user story",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c03-dor-dod",
+            "moduleId": "pmp-c03",
+            "trackId": "pm",
+            "title": "Definition of Ready and Definition of Done",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-c03-release-deploy-golive",
+            "moduleId": "pmp-c03",
+            "trackId": "pm",
+            "title": "Release vs deployment vs go-live",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-c03-hotfix-patch-version",
+            "moduleId": "pmp-c03",
+            "trackId": "pm",
+            "title": "Hotfix, patch and version numbers",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-c04",
+        "trackId": "pm",
+        "name": "Terminology: Quality & support terms",
+        "description": "The quality and support words that decide what gets fixed first and how fast: severity vs priority, QA vs UAT vs smoke vs regression testing, response time vs resolution time vs TAT, and RCA vs known errors vs known issues. Side-by-side comparisons, worked agency examples and the sentences that keep support conversations calm.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c04-severity-priority",
+            "moduleId": "pmp-c04",
+            "trackId": "pm",
+            "title": "Severity vs priority",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-c04-qa-uat-smoke-regression",
+            "moduleId": "pmp-c04",
+            "trackId": "pm",
+            "title": "QA, UAT, smoke and regression testing",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-c04-response-resolution-tat",
+            "moduleId": "pmp-c04",
+            "trackId": "pm",
+            "title": "Response time, resolution time and TAT",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-c04-rca-known-issues",
+            "moduleId": "pmp-c04",
+            "trackId": "pm",
+            "title": "RCA, known errors and known issues",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-c05",
+        "trackId": "pm",
+        "name": "Terminology: Warranty, support & maintenance",
+        "description": "The four after-launch words clients and PMs mix up most: warranty, support, maintenance and AMC. How to tell them apart on a real request, what each one costs whom, and how to say it to a client without a fight.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c05-warranty-support-amc",
+            "moduleId": "pmp-c05",
+            "trackId": "pm",
+            "title": "Warranty vs support vs maintenance vs AMC",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-c06",
+        "trackId": "pm",
+        "name": "Terminology: Communication & governance",
+        "description": "Who does, who decides and who is told: RACI, SPOC and the steering committee; risk versus issue and the RAID log; and the escalation matrix. Side-by-side comparisons, worked agency examples and the mistakes that turn governance words into noise.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c06-raci-spoc-steerco",
+            "moduleId": "pmp-c06",
+            "trackId": "pm",
+            "title": "RACI, SPOC and the steering committee",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c06-risk-vs-issue-raid",
+            "moduleId": "pmp-c06",
+            "trackId": "pm",
+            "title": "Risk vs issue, and the RAID log",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c06-escalation-matrix",
+            "moduleId": "pmp-c06",
+            "trackId": "pm",
+            "title": "The escalation matrix",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-c07",
+        "trackId": "pm",
+        "name": "Terminology: White-label terms",
+        "description": "The white-label words that decide price, ownership and upgrade cost: white-label vs private label vs reseller, single- vs multi-tenant, client instance vs client fork, and who owns the store, cloud and code accounts.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c07-whitelabel-reseller-private",
+            "moduleId": "pmp-c07",
+            "trackId": "pm",
+            "title": "White-label vs private label vs reseller",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-c07-tenancy-instance-fork",
+            "moduleId": "pmp-c07",
+            "trackId": "pm",
+            "title": "Single- vs multi-tenant, client instance vs fork",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-c07-client-owned-accounts",
+            "moduleId": "pmp-c07",
+            "trackId": "pm",
+            "title": "Client-owned store, cloud and code accounts",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-c08",
+        "trackId": "pm",
+        "name": "Terminology: Drills",
+        "description": "Practice that closes the terminology course: classify twenty real-sounding client requests with the decision tool, correct a PM's email that misuses the words that cost money, and keep the whole handbook fresh with spaced-repetition flashcards.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-c08-classification-drill",
+            "moduleId": "pmp-c08",
+            "trackId": "pm",
+            "title": "Classification drill: twenty client requests",
+            "level": "advanced",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 11
+          },
+          {
+            "id": "pmp-c08-fix-the-wrong-term",
+            "moduleId": "pmp-c08",
+            "trackId": "pm",
+            "title": "Fix the wrong term",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          },
+          {
+            "id": "pmp-c08-flashcards",
+            "moduleId": "pmp-c08",
+            "trackId": "pm",
+            "title": "Terminology flashcards",
+            "level": "beginner",
+            "estMinutes": 20,
+            "challengeType": "quiz",
+            "challengeSize": 5
+          }
+        ]
+      },
+      {
+        "id": "pmp-d01",
+        "trackId": "pm",
+        "name": "Client meetings: Starting a project",
+        "description": "Step-by-step playbooks for the four meetings that start a project: the internal kickoff, the client kickoff, discovery workshops and the client design review. Each one gives the purpose, attendees, prep checklist, a timed agenda, a sample script for overseas clients on Teams, traps and the follow-up.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-d01-internal-kickoff",
+            "moduleId": "pmp-d01",
+            "trackId": "pm",
+            "title": "Internal kickoff meeting",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d01-client-kickoff",
+            "moduleId": "pmp-d01",
+            "trackId": "pm",
+            "title": "Client kickoff meeting",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d01-discovery-workshop",
+            "moduleId": "pmp-d01",
+            "trackId": "pm",
+            "title": "Discovery and requirements workshops",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d01-design-review",
+            "moduleId": "pmp-d01",
+            "trackId": "pm",
+            "title": "Design review with the client",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-d02",
+        "trackId": "pm",
+        "name": "Client meetings: Running delivery",
+        "description": "Step-by-step playbooks for the recurring delivery meetings: the daily stand-up, sprint planning, the weekly client status call and the sprint demo. Each gives the purpose, attendees, prep checklist, a timed agenda, a sample script for overseas clients on Teams, traps and the follow-up.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-d02-daily-standup",
+            "moduleId": "pmp-d02",
+            "trackId": "pm",
+            "title": "The daily stand-up (Daily Scrum)",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d02-sprint-planning",
+            "moduleId": "pmp-d02",
+            "trackId": "pm",
+            "title": "Sprint planning",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d02-weekly-status",
+            "moduleId": "pmp-d02",
+            "trackId": "pm",
+            "title": "Weekly client status meeting",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d02-sprint-demo",
+            "moduleId": "pmp-d02",
+            "trackId": "pm",
+            "title": "Sprint review and client demo",
+            "level": "advanced",
+            "estMinutes": 55,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-d03",
+        "trackId": "pm",
+        "name": "Client meetings: Hard conversations",
+        "description": "The four meetings PMs dread: negotiating a change request, announcing a delay, handling an unhappy client's escalation and running a white-label gap call. Each is a step-by-step tutorial with a timed agenda, a script, traps and the 24-hour follow-up, plus a live client role-play.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-d03-cr-negotiation",
+            "moduleId": "pmp-d03",
+            "trackId": "pm",
+            "title": "Change-request negotiation",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-d03-bad-news-delay",
+            "moduleId": "pmp-d03",
+            "trackId": "pm",
+            "title": "Delivering bad news and delays",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-d03-whitelabel-gap-call",
+            "moduleId": "pmp-d03",
+            "trackId": "pm",
+            "title": "White-label gap-analysis call",
+            "level": "advanced",
+            "estMinutes": 50,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-d03-unhappy-escalation",
+            "moduleId": "pmp-d03",
+            "trackId": "pm",
+            "title": "Handling escalations with unhappy clients",
+            "level": "expert",
+            "estMinutes": 60,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-d04",
+        "trackId": "pm",
+        "name": "Client meetings: Releasing & closing",
+        "description": "The meetings at the end of a project: the UAT walkthrough, the go/no-go, the retrospective, the closure and handover meeting, and the quarterly account review that keeps a live client. Each is a step-by-step tutorial with a timed agenda, a script, traps and the 24-hour follow-up.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-d04-uat-walkthrough",
+            "moduleId": "pmp-d04",
+            "trackId": "pm",
+            "title": "UAT walkthrough",
+            "level": "intermediate",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d04-retrospective",
+            "moduleId": "pmp-d04",
+            "trackId": "pm",
+            "title": "Retrospectives",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d04-go-no-go",
+            "moduleId": "pmp-d04",
+            "trackId": "pm",
+            "title": "Go/no-go meeting",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-d04-closure-handover",
+            "moduleId": "pmp-d04",
+            "trackId": "pm",
+            "title": "Project closure and handover meeting",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d04-account-review",
+            "moduleId": "pmp-d04",
+            "trackId": "pm",
+            "title": "Quarterly business / account review",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
+        "id": "pmp-d05",
+        "trackId": "pm",
+        "name": "Client meetings: Meeting craft",
+        "description": "The skills under every client meeting: clear English for clients and colleagues whose first language is not English, demoing and screen sharing in Microsoft Teams without accidents, and timeboxing a meeting so it ends with real decisions.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-d05-craft-non-native",
+            "moduleId": "pmp-d05",
+            "trackId": "pm",
+            "title": "Communicating with non-native English speakers",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d05-craft-demo-screenshare",
+            "moduleId": "pmp-d05",
+            "trackId": "pm",
+            "title": "Demoing and screen sharing in Teams",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-d05-craft-timebox-decisions",
+            "moduleId": "pmp-d05",
+            "trackId": "pm",
+            "title": "Timeboxing and getting decisions",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-e01",
+        "trackId": "pm",
+        "name": "Templates: Scope & sign-off templates",
+        "description": "The four documents that fix what Oyelabs will build and what the client has accepted: the kickoff agenda, the requirement sign-off, the UAT sign-off and the change request form. Each topic walks the template field by field and ends with you filling it in from a real-looking scenario.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-e01-kickoff-agenda",
+            "moduleId": "pmp-e01",
+            "trackId": "pm",
+            "title": "Kickoff agenda",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-e01-requirement-signoff",
+            "moduleId": "pmp-e01",
+            "trackId": "pm",
+            "title": "Requirement sign-off",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-e01-uat-signoff",
+            "moduleId": "pmp-e01",
+            "trackId": "pm",
+            "title": "UAT sign-off",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-e01-cr-form",
+            "moduleId": "pmp-e01",
+            "trackId": "pm",
+            "title": "Change request (CR) form",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 10
+          }
+        ]
+      },
+      {
+        "id": "pmp-e02",
+        "trackId": "pm",
+        "name": "Templates: Running-the-project templates",
+        "description": "The four documents that keep an agency project honest while it runs: minutes of meeting, the weekly RAG status report, the RAID log and the escalation matrix. For each one: when it is used, who fills, approves and receives it, a field-by-field walkthrough, and a practice task where you complete it from a real-looking scenario.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-e02-mom",
+            "moduleId": "pmp-e02",
+            "trackId": "pm",
+            "title": "Minutes of meeting (MoM)",
+            "level": "intermediate",
+            "estMinutes": 35,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-e02-status-report",
+            "moduleId": "pmp-e02",
+            "trackId": "pm",
+            "title": "RAG status report",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-e02-raid-log",
+            "moduleId": "pmp-e02",
+            "trackId": "pm",
+            "title": "RAID log",
+            "level": "advanced",
+            "estMinutes": 45,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          },
+          {
+            "id": "pmp-e02-escalation-matrix",
+            "moduleId": "pmp-e02",
+            "trackId": "pm",
+            "title": "Escalation matrix",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "pmp-e03",
+        "trackId": "pm",
+        "name": "Templates: Release & close templates",
+        "description": "The five documents that take a project from launch to a clean finish: the white-label onboarding checklist, the go-live checklist, the hypercare log, the handover and KT checklist, and the closure report. For each one: when it is used, who fills, approves and receives it, a field-by-field walkthrough, and a practice task where you complete it from a real-looking scenario.",
+        "available": true,
+        "topics": [
+          {
+            "id": "pmp-e03-whitelabel-onboarding",
+            "moduleId": "pmp-e03",
+            "trackId": "pm",
+            "title": "White-label onboarding checklist",
+            "level": "intermediate",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-e03-golive-checklist",
+            "moduleId": "pmp-e03",
+            "trackId": "pm",
+            "title": "Go-live checklist",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-e03-hypercare-log",
+            "moduleId": "pmp-e03",
+            "trackId": "pm",
+            "title": "Hypercare log",
+            "level": "advanced",
+            "estMinutes": 45,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-e03-handover-kt",
+            "moduleId": "pmp-e03",
+            "trackId": "pm",
+            "title": "Handover and knowledge-transfer checklist",
+            "level": "advanced",
+            "estMinutes": 40,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          },
+          {
+            "id": "pmp-e03-closure-report",
+            "moduleId": "pmp-e03",
+            "trackId": "pm",
+            "title": "Project closure report",
+            "level": "advanced",
+            "estMinutes": 50,
+            "isMilestone": true,
+            "challengeType": "quiz",
+            "challengeSize": 8
+          }
+        ]
+      },
+      {
         "id": "pma-refresh",
         "trackId": "pm",
         "name": "Improving your existing PM skills",
