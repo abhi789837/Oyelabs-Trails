@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-b11",
   trackId: "pm",
-  name: "Core product upgrades",
+  name: "White-label lifecycle: Core product upgrades",
   description:
     "Keeping every white-label client on a supported version of the core: reading a release in SemVer terms, planning upgrades in rings, telling clients what changes, and pricing the customisation debt that makes forked or heavily customised instances expensive to upgrade.",
   topics: [

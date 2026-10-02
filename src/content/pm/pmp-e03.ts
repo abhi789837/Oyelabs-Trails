@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-e03",
   trackId: "pm",
-  name: "Release & close templates",
+  name: "Templates: Release & close templates",
   description:
     "The five documents that take a project from launch to a clean finish: the white-label onboarding checklist, the go-live checklist, the hypercare log, the handover and KT checklist, and the closure report. For each one: when it is used, who fills, approves and receives it, a field-by-field walkthrough, and a practice task where you complete it from a real-looking scenario.",
   topics: [

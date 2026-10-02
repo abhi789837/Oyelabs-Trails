@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-e01",
   trackId: "pm",
-  name: "Scope & sign-off templates",
+  name: "Templates: Scope & sign-off templates",
   description:
     "The four documents that fix what Oyelabs will build and what the client has accepted: the kickoff agenda, the requirement sign-off, the UAT sign-off and the change request form. Each topic walks the template field by field and ends with you filling it in from a real-looking scenario.",
   topics: [

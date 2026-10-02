@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-e02",
   trackId: "pm",
-  name: "Running-the-project templates",
+  name: "Templates: Running-the-project templates",
   description:
     "The four documents that keep an agency project honest while it runs: minutes of meeting, the weekly RAG status report, the RAID log and the escalation matrix. For each one: when it is used, who fills, approves and receives it, a field-by-field walkthrough, and a practice task where you complete it from a real-looking scenario.",
   topics: [

@@ -24,7 +24,7 @@ const STANDARD_RUBRIC = [
 export default {
   id: "pmp-a09",
   trackId: "pm",
-  name: "Scope control: CR, enhancement, bug",
+  name: "Custom lifecycle: Scope control: CR, enhancement, bug",
   description:
     "The module that protects every fixed-bid project's margin and every client relationship: classifying each request as a bug, enhancement, change request, new feature or clarification, writing and pricing the CR, and replanning honestly once a change is approved.",
   topics: [

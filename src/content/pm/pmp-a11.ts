@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-a11",
   trackId: "pm",
-  name: "Release & go-live",
+  name: "Custom lifecycle: Release & go-live",
   description:
     "Taking a custom build to production without drama: running a go/no-go decision against agreed criteria, planning a cutover with a rehearsed rollback, and getting mobile apps through App Store and Play Store review on the client's own accounts.",
   topics: [

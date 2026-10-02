@@ -24,7 +24,7 @@ const STANDARD_RUBRIC = [
 export default {
   id: "pmp-a10",
   trackId: "pm",
-  name: "QA, UAT & sign-off",
+  name: "Custom lifecycle: QA, UAT & sign-off",
   description:
     "How a custom build moves from internal QA to client UAT and ends in a clean, written UAT sign-off. You learn who owns each kind of testing, how to triage UAT feedback into bugs, change requests and clarifications, and how to close UAT without letting it turn into a second requirements phase.",
   topics: [

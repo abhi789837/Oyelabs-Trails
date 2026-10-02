@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-b08",
   trackId: "pm",
-  name: "Store listing preparation",
+  name: "White-label lifecycle: Store listing preparation",
   description:
     "Getting each white-label client's App Store and Google Play listing ready: the assets and text limits, the identifiers you can never change, the privacy policy and data declarations, and the review notes that keep a reviewer from rejecting a working app.",
   topics: [

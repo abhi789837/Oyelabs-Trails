@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-a12",
   trackId: "pm",
-  name: "Hypercare & warranty",
+  name: "Custom lifecycle: Hypercare & warranty",
   description:
     "The weeks right after launch: running hypercare with a log, clear severities and an exit, and handling warranty claims fairly by telling real defects apart from support work, enhancements and change requests.",
   topics: [

@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-a08",
   trackId: "pm",
-  name: "Sprint execution",
+  name: "Custom lifecycle: Sprint execution",
   description:
     "How an Oyelabs custom project is actually built, sprint after sprint: the cadence of planning, standups, demos and retros, the daily EOD update the client reads, and turning demo feedback into the right kind of work without giving scope away.",
   topics: [

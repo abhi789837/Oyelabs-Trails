@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-b10",
   trackId: "pm",
-  name: "Go-live, licence & support plan",
+  name: "White-label lifecycle: Go-live, licence & support plan",
   description:
     "Launching a white-label client for real: the go-live checklist, how phased release and staged rollout actually work for a first release versus an update, starting the licence or subscription, and handing over a support plan the client can use.",
   topics: [

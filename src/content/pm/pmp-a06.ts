@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-a06",
   trackId: "pm",
-  name: "UI/UX & design approval",
+  name: "Custom lifecycle: UI/UX & design approval",
   description:
     "How a custom project moves from signed requirements to approved designs that developers can build from: wireframes, mockups and prototypes, review rounds, written approval and hand-off. The advanced topic is about running review rounds so design does not become an unpaid, open-ended loop.",
   topics: [

@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-b07",
   trackId: "pm",
-  name: "Rebranded builds, QA & UAT",
+  name: "White-label lifecycle: Rebranded builds, QA & UAT",
   description:
     "Turning a configured white-label instance into rebranded builds the client can test: build variants, what a rebrand QA pass must catch, test distribution through TestFlight and Play testing tracks, and a UAT sign-off that separates real defects from disguised customisation.",
   topics: [

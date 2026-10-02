@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-b09",
   trackId: "pm",
-  name: "Submission, rejection & resubmission",
+  name: "White-label lifecycle: Submission, rejection & resubmission",
   description:
     "Getting each rebranded app through App Store and Google Play review: the submission flow from the client's own accounts, realistic review times, and how to read, answer and fix a rejection, including the template and spam guidelines that hit white-label apps hardest.",
   topics: [

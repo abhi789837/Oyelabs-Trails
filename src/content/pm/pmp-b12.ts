@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-b12",
   trackId: "pm",
-  name: "Running many white-label clients",
+  name: "White-label lifecycle: Running many white-label clients",
   description:
     "Running a white-label portfolio rather than one launch at a time: the client register, per-client configuration, shared code signing, automated store metadata, matrix builds and a release calendar, so the tenth client is easier than the first.",
   topics: [

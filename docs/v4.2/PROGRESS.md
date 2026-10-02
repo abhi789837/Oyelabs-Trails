@@ -19,12 +19,12 @@ Resume from the first unticked item. Plan: `docs/v4.2/PLAN.md`. Decisions: `docs
 - [x] 2.6 Checkpoint + commit `feat(v4.2-p2)`
 
 ## Phase 3: Courses A–E
-- [ ] 3.1 Course A (custom lifecycle) — a00–a12 written; a13, a14, a15 in progress
+- [x] 3.1 Course A (custom lifecycle), 16 modules
 - [x] 3.2 Course B (white-label)
-- [ ] 3.3 Course C (terminology) + flashcards — c01, c02, c05–c07 written; c03, c04, c08 in progress
+- [x] 3.3 Course C (terminology) + flashcards, 8 modules incl. the 20-request drill
 - [x] 3.4 Course D (meetings)
 - [x] 3.5 Course E (templates) + DOCX/XLSX template library
-- [ ] 3.6 Registry, catalog skills, checkpoint + commit `feat(v4.2-p3)`
+- [x] 3.6 Registry, catalog skills, checkpoint + commit `feat(v4.2-p3)`
 
 ## Phase 4: Simulations
 - [x] 4.1 AI client role-play (personas, scenarios, 8 turns, Haiku, rubric, cost cap)

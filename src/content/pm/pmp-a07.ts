@@ -3,7 +3,7 @@ import type { Module } from "@/types/curriculum";
 export default {
   id: "pmp-a07",
   trackId: "pm",
-  name: "Architecture & Sprint 0",
+  name: "Custom lifecycle: Architecture & Sprint 0",
   description:
     "The foundations a custom project needs before feature sprints start: repositories, environments, CI/CD, a refined backlog, a definition of ready and done, and architecture decisions written down so they survive the people who made them.",
   topics: [
