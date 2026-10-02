@@ -1,0 +1,2185 @@
+[
+  {
+    "id": "eng-nestjs-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Our `CreateProductDto` has no class-validator decorators yet, so the service validates by hand. Complete `validateCreateProductDto(body)` and return error messages in this order (empty array when valid):\n- `'name must be a non-empty string'`\n- `'price must be a positive number'`\n- `'tags must be an array of strings'` — only when `tags` is present\n\n`body` may be `null`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "validateCreateProductDto",
+      "starterCode": "function validateCreateProductDto(body: any): string[] {\n  const errors: string[] = [];\n  if (!body.name) errors.push('name must be a non-empty string');\n  if (body.price < 0) errors.push('price must be a positive number');\n  return errors;\n}",
+      "referenceSolution": "function validateCreateProductDto(body: any): string[] {\n  const b = body ?? {};\n  const errors: string[] = [];\n  if (typeof b.name !== 'string' || b.name.trim() === '') errors.push('name must be a non-empty string');\n  if (typeof b.price !== 'number' || !(b.price > 0)) errors.push('price must be a positive number');\n  if (b.tags !== undefined && !(Array.isArray(b.tags) && b.tags.every((t: unknown) => typeof t === 'string'))) errors.push('tags must be an array of strings');\n  return errors;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Mug",
+              "price": 9.5
+            }
+          ],
+          "expected": []
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": [
+            "name must be a non-empty string",
+            "price must be a positive number"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "  ",
+              "price": 0
+            }
+          ],
+          "expected": [
+            "name must be a non-empty string",
+            "price must be a positive number"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "Mug",
+              "price": "9"
+            }
+          ],
+          "expected": [
+            "price must be a positive number"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "Mug",
+              "price": 3,
+              "tags": [
+                "a",
+                2
+              ]
+            }
+          ],
+          "expected": [
+            "tags must be an array of strings"
+          ]
+        },
+        {
+          "args": [
+            {
+              "name": "Mug",
+              "price": 3,
+              "tags": []
+            }
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`parseIdPipe` should behave like Nest's `ParseIntPipe` for route ids: return the number for a string of digits, otherwise throw `BadRequestException('Validation failed (numeric string is expected)')`. Right now `'12abc'` gets through as `12`. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function parseIdPipe(value: string): number {\n  const n = parseInt(value, 10);\n  if (Number.isNaN(n)) throw new BadRequestException('Validation failed (numeric string is expected)');\n  return n;\n}\n// Test driver (leave as is).\nfunction run(value: string) {\n  try {\n    return { value: parseIdPipe(value) };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "referenceSolution": "function parseIdPipe(value: string): number {\n  if (typeof value !== 'string' || !/^\\d+$/.test(value)) throw new BadRequestException('Validation failed (numeric string is expected)');\n  return Number(value);\n}\n// Test driver (leave as is).\nfunction run(value: string) {\n  try {\n    return { value: parseIdPipe(value) };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "sampleTests": [
+        {
+          "args": [
+            "42"
+          ],
+          "expected": {
+            "value": 42
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "12abc"
+          ],
+          "expected": {
+            "status": 400,
+            "message": "Validation failed (numeric string is expected)"
+          }
+        },
+        {
+          "args": [
+            "abc"
+          ],
+          "expected": {
+            "status": 400,
+            "message": "Validation failed (numeric string is expected)"
+          }
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": {
+            "status": 400,
+            "message": "Validation failed (numeric string is expected)"
+          }
+        },
+        {
+          "args": [
+            "0"
+          ],
+          "expected": {
+            "value": 0
+          }
+        },
+        {
+          "args": [
+            "7"
+          ],
+          "expected": {
+            "value": 7
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`UsersService.findOne(id)` returns `undefined` for an unknown user, so the controller answers `200` with an empty body. Make it throw `NotFoundException('User ' + id + ' not found')` instead.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "const users = [{ id: 1, name: 'Ada' }, { id: 2, name: 'Linus' }];\n\nclass UsersService {\n  findOne(id: number) {\n    return users.find((u) => u.id === id);\n  }\n}\n// Test driver (leave as is).\nfunction run(id: number) {\n  try {\n    return { value: new UsersService().findOne(id) };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "referenceSolution": "const users = [{ id: 1, name: 'Ada' }, { id: 2, name: 'Linus' }];\n\nclass UsersService {\n  findOne(id: number) {\n    const user = users.find((u) => u.id === id);\n    if (!user) throw new NotFoundException('User ' + id + ' not found');\n    return user;\n  }\n}\n// Test driver (leave as is).\nfunction run(id: number) {\n  try {\n    return { value: new UsersService().findOne(id) };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "sampleTests": [
+        {
+          "args": [
+            1
+          ],
+          "expected": {
+            "value": {
+              "id": 1,
+              "name": "Ada"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            2
+          ],
+          "expected": {
+            "value": {
+              "id": 2,
+              "name": "Linus"
+            }
+          }
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": {
+            "status": 404,
+            "message": "User 3 not found"
+          }
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": {
+            "status": 404,
+            "message": "User 0 not found"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`GET /products?page=&limit=` arrives with string query values (or none). Complete `listQuery(query)`: return `{ page, limit }` as numbers, defaulting to page `1` and limit `20`, with `limit` capped at `100` and both at least `1`. Non-numeric values fall back to the default.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "listQuery",
+      "starterCode": "function listQuery(query: { page?: string; limit?: string }) {\n  const page = Number(query.page) || 1;\n  const limit = Number(query.limit) || 20;\n  return { page, limit };\n}",
+      "referenceSolution": "function listQuery(query: { page?: string; limit?: string }) {\n  const num = (v: string | undefined, d: number) => {\n    const n = Number.parseInt(v ?? '', 10);\n    return Number.isNaN(n) ? d : n;\n  };\n  const page = Math.max(1, num(query.page, 1));\n  const limit = Math.min(100, Math.max(1, num(query.limit, 20)));\n  return { page, limit };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "page": 1,
+            "limit": 20
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "page": "3",
+              "limit": "50"
+            }
+          ],
+          "expected": {
+            "page": 3,
+            "limit": 50
+          }
+        },
+        {
+          "args": [
+            {
+              "limit": "500"
+            }
+          ],
+          "expected": {
+            "page": 1,
+            "limit": 100
+          }
+        },
+        {
+          "args": [
+            {
+              "page": "-2",
+              "limit": "0"
+            }
+          ],
+          "expected": {
+            "page": 1,
+            "limit": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "page": "abc"
+            }
+          ],
+          "expected": {
+            "page": 1,
+            "limit": 20
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This controller compiles, but two lines will not do what the comments say. Mark them.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This controller compiles, but two lines will not do what the comments say. Mark them.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Controller('products')",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "export class ProductsController {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  constructor(private readonly products: ProductsService) {}",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  @Get(':id')  // GET /products/42",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  findOne(@Param('id', ParseIntPipe) id: number) { return this.products.findOne(id); }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  @Get()  // POST /products creates a product",
+          "issue": "A create endpoint needs `@Post()`; `@Get()` registers GET /products."
+        },
+        {
+          "id": "l7",
+          "text": "  create(dto: CreateProductDto) { return this.products.create(dto); }",
+          "issue": "Without `@Body()` the parameter is never filled from the request body, so `dto` is undefined."
+        },
+        {
+          "id": "l8",
+          "text": "  @Delete(':id')",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  remove(@Param('id', ParseIntPipe) id: number) { return this.products.remove(id); }",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-nestjs-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are adding an `OrdersService` to a fresh NestJS app. Pick the right move at each step.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are adding an `OrdersService` to a fresh NestJS app. Pick the right move at each step.",
+      "steps": [
+        {
+          "id": "decorate",
+          "question": "`OrdersService` must be injectable into `OrdersController`. What does the class need?",
+          "options": [
+            "`@Injectable()` on the class",
+            "`@Controller()` on the class",
+            "`export default` and nothing else",
+            "`@Module()` on the class"
+          ],
+          "correctIndex": 0,
+          "explanation": "`@Injectable()` marks a class as a provider the DI container can create and inject."
+        },
+        {
+          "id": "register",
+          "question": "Where do you register it so Nest can create it?",
+          "options": [
+            "In the `providers` array of `OrdersModule`",
+            "In the `controllers` array of `OrdersModule`",
+            "In `main.ts` with `app.use(OrdersService)`",
+            "Nowhere; Nest scans every file"
+          ],
+          "correctIndex": 0,
+          "explanation": "Providers are listed in a module's `providers`. Nest does not scan the file system."
+        },
+        {
+          "id": "inject",
+          "question": "How should `OrdersController` get an instance?",
+          "options": [
+            "`constructor(private readonly orders: OrdersService) {}`",
+            "`private orders = new OrdersService();`",
+            "`static orders = OrdersService;`",
+            "`import orders from './orders.service'` inside the handler"
+          ],
+          "correctIndex": 0,
+          "explanation": "Constructor injection lets Nest supply the shared instance and lets tests swap it for a mock."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "With no `@HttpCode()` decorator, what status does a successful `@Post()` handler in NestJS respond with?",
+    "mcq": {
+      "options": [
+        "201",
+        "200",
+        "204",
+        "202"
+      ],
+      "correctIndex": 0,
+      "explanation": "Nest answers 201 for POST and 200 for every other method by default. Use `@HttpCode(200)` (or 204) to change it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A handler is `findOne(@Param('id') id: number)` with no pipe. A request comes in for `/users/7`. What is `typeof id` at runtime?",
+    "mcq": {
+      "options": [
+        "`\"string\"`",
+        "`\"number\"`",
+        "`\"undefined\"`",
+        "`\"object\"`"
+      ],
+      "correctIndex": 0,
+      "explanation": "TypeScript types are erased; route params are always strings. Use `ParseIntPipe` or `ValidationPipe({ transform: true })` to get a number.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is a NestJS **module** (`@Module({...})`) for?",
+    "mcq": {
+      "options": [
+        "Grouping related controllers and providers and declaring what it imports and exports",
+        "Defining the database tables for a feature",
+        "Running code once per request before the controller",
+        "Bundling the app for production"
+      ],
+      "correctIndex": 0,
+      "explanation": "A module is the unit of organisation for the DI container: its controllers, its providers, the modules it imports and the providers it exports to others.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete the `RolesGuard` decision. `requiredRoles` comes from `@Roles(...)` metadata (or `undefined` when the route has none); `user` is `request.user` (or `undefined` when not logged in).\n- No required roles: allow.\n- Otherwise allow only a user that has **at least one** of the required roles.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "canActivate",
+      "starterCode": "function canActivate(requiredRoles: string[] | undefined, user: { roles: string[] } | undefined): boolean {\n  return requiredRoles!.every((role) => user!.roles.includes(role));\n}",
+      "referenceSolution": "function canActivate(requiredRoles: string[] | undefined, user: { roles: string[] } | undefined): boolean {\n  if (!requiredRoles || requiredRoles.length === 0) return true;\n  if (!user || !Array.isArray(user.roles)) return false;\n  return requiredRoles.some((role) => user.roles.includes(role));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "admin"
+            ],
+            {
+              "roles": [
+                "admin"
+              ]
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null,
+            null
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              "admin",
+              "editor"
+            ],
+            {
+              "roles": [
+                "editor"
+              ]
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              "admin"
+            ],
+            {
+              "roles": [
+                "viewer"
+              ]
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              "admin"
+            ],
+            null
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [],
+            {
+              "roles": []
+            }
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Simulate `ValidationPipe({ whitelist: true, forbidNonWhitelisted })`. `allowed` lists the DTO's decorated properties.\n- `forbidNonWhitelisted` false: return a copy of `body` with only allowed keys.\n- `forbidNonWhitelisted` true and there are extra keys: throw `BadRequestException` with the message `'property X should not exist'` for the **first** extra key (in body order).",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function whitelist(body: Record<string, unknown>, allowed: string[], forbidNonWhitelisted: boolean) {\n  const out: Record<string, unknown> = {};\n  for (const key of Object.keys(body)) {\n    if (allowed.includes(key)) out[key] = body[key];\n  }\n  return out;\n}\n// Test driver (leave as is).\nfunction run(body: any, allowed: string[], forbid: boolean) {\n  try {\n    return { value: whitelist(body, allowed, forbid) };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "referenceSolution": "function whitelist(body: Record<string, unknown>, allowed: string[], forbidNonWhitelisted: boolean) {\n  const out: Record<string, unknown> = {};\n  for (const key of Object.keys(body)) {\n    if (allowed.includes(key)) out[key] = body[key];\n    else if (forbidNonWhitelisted) throw new BadRequestException('property ' + key + ' should not exist');\n  }\n  return out;\n}\n// Test driver (leave as is).\nfunction run(body: any, allowed: string[], forbid: boolean) {\n  try {\n    return { value: whitelist(body, allowed, forbid) };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "isAdmin": true
+            },
+            [
+              "name"
+            ],
+            false
+          ],
+          "expected": {
+            "value": {
+              "name": "Ada"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "isAdmin": true
+            },
+            [
+              "name"
+            ],
+            true
+          ],
+          "expected": {
+            "status": 400,
+            "message": "property isAdmin should not exist"
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "email": "a@b.co"
+            },
+            [
+              "name",
+              "email"
+            ],
+            true
+          ],
+          "expected": {
+            "value": {
+              "name": "Ada",
+              "email": "a@b.co"
+            }
+          }
+        },
+        {
+          "args": [
+            {},
+            [
+              "name"
+            ],
+            true
+          ],
+          "expected": {
+            "value": {}
+          }
+        },
+        {
+          "args": [
+            {
+              "role": "x",
+              "plan": "y",
+              "name": "z"
+            },
+            [
+              "name"
+            ],
+            true
+          ],
+          "expected": {
+            "status": 400,
+            "message": "property role should not exist"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A global `TransformInterceptor` wraps every handler result as `{ data, meta }`. `meta` is `{ count }` when `data` is an array, and `{}` otherwise. A handler that returns `undefined` should give `data: null`. Fix `transformResponse`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "transformResponse",
+      "starterCode": "function transformResponse(result: unknown) {\n  return { data: result, meta: { count: (result as any[]).length } };\n}",
+      "referenceSolution": "function transformResponse(result: unknown) {\n  const data = result === undefined ? null : result;\n  return { data, meta: Array.isArray(data) ? { count: data.length } : {} };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": {
+            "data": [
+              1,
+              2,
+              3
+            ],
+            "meta": {
+              "count": 3
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1
+            }
+          ],
+          "expected": {
+            "data": {
+              "id": 1
+            },
+            "meta": {}
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "data": [],
+            "meta": {
+              "count": 0
+            }
+          }
+        },
+        {
+          "args": [
+            null
+          ],
+          "expected": {
+            "data": null,
+            "meta": {}
+          }
+        },
+        {
+          "args": [
+            "ok"
+          ],
+          "expected": {
+            "data": "ok",
+            "meta": {}
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Our global exception filter turns anything thrown into a response body `{ statusCode, message }`. An error with a numeric `status` (an `HttpException`) keeps its status and message. Anything else must become `500` with the message `'Internal server error'` — never leak the raw message (it can contain SQL or stack details).",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "toHttpError",
+      "starterCode": "function toHttpError(err: any) {\n  return { statusCode: err.status || 500, message: err.message };\n}",
+      "referenceSolution": "function toHttpError(err: any) {\n  if (err && typeof err.status === 'number') return { statusCode: err.status, message: err.message };\n  return { statusCode: 500, message: 'Internal server error' };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "status": 404,
+              "message": "User 3 not found"
+            }
+          ],
+          "expected": {
+            "statusCode": 404,
+            "message": "User 3 not found"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "message": "duplicate key value violates unique constraint \"users_email_key\""
+            }
+          ],
+          "expected": {
+            "statusCode": 500,
+            "message": "Internal server error"
+          }
+        },
+        {
+          "args": [
+            {
+              "status": 400,
+              "message": "email must be an email"
+            }
+          ],
+          "expected": {
+            "statusCode": 400,
+            "message": "email must be an email"
+          }
+        },
+        {
+          "args": [
+            null
+          ],
+          "expected": {
+            "statusCode": 500,
+            "message": "Internal server error"
+          }
+        },
+        {
+          "args": [
+            {
+              "status": "403",
+              "message": "x"
+            }
+          ],
+          "expected": {
+            "statusCode": 500,
+            "message": "Internal server error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`OrdersController` fails at startup with \"Nest can't resolve dependencies of the OrdersService (?). Please make sure that the argument UsersService... is available in the OrdersModule context.\" Mark the lines that cause it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "`OrdersController` fails at startup with \"Nest can't resolve dependencies of the OrdersService (?). Please make sure that the argument UsersService... is available in the OrdersModule context.\" Mark the lines that cause it.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "// users.module.ts",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "@Module({",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  providers: [UsersService],",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  exports: [],",
+          "issue": "`UsersService` is not exported, so modules that import `UsersModule` cannot inject it."
+        },
+        {
+          "id": "l5",
+          "text": "})",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "export class UsersModule {}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "// orders.module.ts",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "@Module({",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  imports: [],",
+          "issue": "`OrdersModule` must import `UsersModule` to see its exported providers."
+        },
+        {
+          "id": "l10",
+          "text": "  controllers: [OrdersController],",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "  providers: [OrdersService],",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "})",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-nestjs-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps a NestJS request goes through, from first to last, for a request that succeeds.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the steps a NestJS request goes through, from first to last, for a request that succeeds.",
+      "items": [
+        {
+          "id": "mw",
+          "label": "Middleware"
+        },
+        {
+          "id": "guard",
+          "label": "Guards"
+        },
+        {
+          "id": "icpt-before",
+          "label": "Interceptors (before the handler)"
+        },
+        {
+          "id": "pipe",
+          "label": "Pipes (validation / transformation of arguments)"
+        },
+        {
+          "id": "handler",
+          "label": "The controller method"
+        },
+        {
+          "id": "icpt-after",
+          "label": "Interceptors (after the handler, mapping the result)"
+        }
+      ],
+      "correctOrder": [
+        "mw",
+        "guard",
+        "icpt-before",
+        "pipe",
+        "handler",
+        "icpt-after"
+      ],
+      "explanation": "Middleware → guards → interceptors (pre) → pipes → handler → interceptors (post). Exception filters only run when something throws."
+    }
+  },
+  {
+    "id": "eng-nestjs-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A guard's `canActivate` returns `false`. What does the client get by default?",
+    "mcq": {
+      "options": [
+        "403 Forbidden",
+        "401 Unauthorized",
+        "404 Not Found",
+        "200 with an empty body"
+      ],
+      "correctIndex": 0,
+      "explanation": "Returning `false` makes Nest throw a `ForbiddenException`. To answer 401, throw `UnauthorizedException` yourself from the guard.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "By default, how many instances of an `@Injectable()` provider does Nest create?",
+    "mcq": {
+      "options": [
+        "One, shared across the whole app (singleton)",
+        "One per request",
+        "One per injection site",
+        "One per module that imports it"
+      ],
+      "correctIndex": 0,
+      "explanation": "The default scope is singleton. `Scope.REQUEST` and `Scope.TRANSIENT` exist but cost performance and should be chosen deliberately.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You call `app.useGlobalPipes(new ValidationPipe())` and `CreateUserDto` has `@IsEmail() email: string`. A request sends `{ \"email\": \"nope\" }`. What happens?",
+    "mcq": {
+      "options": [
+        "Nest answers 400 with the validation messages and the handler never runs",
+        "The handler runs with `dto.email === \"nope\"`",
+        "Nest answers 422 Unprocessable Entity",
+        "Nest answers 500 because validation threw"
+      ],
+      "correctIndex": 0,
+      "explanation": "`ValidationPipe` throws a `BadRequestException` (400) listing the class-validator messages before the handler is called.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`ConfigModule`'s `validate` hook gets raw `process.env` strings. Complete `loadConfig(env)`:\n- `PORT`: optional, defaults to `3000`, must be an integer 1–65535 → else error `'PORT is invalid'`\n- `DATABASE_URL`: required → `'DATABASE_URL is required'`\n- `NODE_ENV`: one of `development`, `test`, `production`, defaults to `development` → else `'NODE_ENV is invalid'`\n\nReturn `{ ok: true, config: { port, databaseUrl, nodeEnv } }` or `{ ok: false, errors }` (errors in the order above).",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "loadConfig",
+      "starterCode": "function loadConfig(env: Record<string, string | undefined>) {\n  const errors: string[] = [];\n  const port = Number(env.PORT) || 3000;\n  if (!env.DATABASE_URL) errors.push('DATABASE_URL is required');\n  const nodeEnv = env.NODE_ENV || 'development';\n  if (errors.length) return { ok: false, errors };\n  return { ok: true, config: { port, databaseUrl: env.DATABASE_URL, nodeEnv } };\n}",
+      "referenceSolution": "function loadConfig(env: Record<string, string | undefined>) {\n  const errors: string[] = [];\n  let port = 3000;\n  if (env.PORT !== undefined) {\n    port = Number(env.PORT);\n    if (!/^\\d+$/.test(env.PORT) || port < 1 || port > 65535) errors.push('PORT is invalid');\n  }\n  if (!env.DATABASE_URL) errors.push('DATABASE_URL is required');\n  const nodeEnv = env.NODE_ENV ?? 'development';\n  if (!['development', 'test', 'production'].includes(nodeEnv)) errors.push('NODE_ENV is invalid');\n  if (errors.length) return { ok: false, errors };\n  return { ok: true, config: { port, databaseUrl: env.DATABASE_URL, nodeEnv } };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "DATABASE_URL": "postgres://db"
+            }
+          ],
+          "expected": {
+            "ok": true,
+            "config": {
+              "port": 3000,
+              "databaseUrl": "postgres://db",
+              "nodeEnv": "development"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "PORT": "8080",
+              "DATABASE_URL": "pg://x",
+              "NODE_ENV": "production"
+            }
+          ],
+          "expected": {
+            "ok": true,
+            "config": {
+              "port": 8080,
+              "databaseUrl": "pg://x",
+              "nodeEnv": "production"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "PORT": "eighty",
+              "DATABASE_URL": "pg://x"
+            }
+          ],
+          "expected": {
+            "ok": false,
+            "errors": [
+              "PORT is invalid"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "PORT": "70000",
+              "NODE_ENV": "prod"
+            }
+          ],
+          "expected": {
+            "ok": false,
+            "errors": [
+              "PORT is invalid",
+              "DATABASE_URL is required",
+              "NODE_ENV is invalid"
+            ]
+          }
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "ok": false,
+            "errors": [
+              "DATABASE_URL is required"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`JwtAuthGuard` reads `request.headers.authorization` (Node lowercases header names). It must:\n- throw `UnauthorizedException('Missing token')` when the header is missing, is not the `Bearer` scheme, or has an empty token;\n- throw `UnauthorizedException('Invalid token')` when `verify(token)` returns `null`;\n- otherwise set `request.user` and return `true`.\n\nFix `authenticate`. The driver returns the user that ended up on the request.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function authenticate(request: any, verify: (t: string) => any): boolean {\n  const token = request.headers.authorization.split(' ')[1];\n  request.user = verify(token);\n  return true;\n}\n\n// Test driver (leave as is).\nconst tokens: Record<string, any> = { 'tok-ada': { id: 1, name: 'Ada' } };\nfunction run(authorization?: string) {\n  const request: any = { headers: authorization === undefined ? {} : { authorization } };\n  try {\n    authenticate(request, (t) => tokens[t] ?? null);\n    return { user: request.user };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "referenceSolution": "function authenticate(request: any, verify: (t: string) => any): boolean {\n  const header: string | undefined = request.headers.authorization;\n  const [scheme, token] = (header ?? '').split(' ');\n  if (scheme !== 'Bearer' || !token) throw new UnauthorizedException('Missing token');\n  const user = verify(token);\n  if (!user) throw new UnauthorizedException('Invalid token');\n  request.user = user;\n  return true;\n}\n\n// Test driver (leave as is).\nconst tokens: Record<string, any> = { 'tok-ada': { id: 1, name: 'Ada' } };\nfunction run(authorization?: string) {\n  const request: any = { headers: authorization === undefined ? {} : { authorization } };\n  try {\n    authenticate(request, (t) => tokens[t] ?? null);\n    return { user: request.user };\n  } catch (e: any) {\n    return { status: e.status ?? 500, message: e.message };\n  }\n}\n// Nest's HTTP exceptions, reduced to plain classes (leave as is).\nclass HttpException extends Error {\n  status: number;\n  constructor(message: string, status: number) { super(message); this.status = status; }\n}\nclass BadRequestException extends HttpException { constructor(m = 'Bad Request') { super(m, 400); } }\nclass UnauthorizedException extends HttpException { constructor(m = 'Unauthorized') { super(m, 401); } }\nclass ForbiddenException extends HttpException { constructor(m = 'Forbidden resource') { super(m, 403); } }\nclass NotFoundException extends HttpException { constructor(m = 'Not Found') { super(m, 404); } }\nclass ConflictException extends HttpException { constructor(m = 'Conflict') { super(m, 409); } }",
+      "sampleTests": [
+        {
+          "args": [
+            "Bearer tok-ada"
+          ],
+          "expected": {
+            "user": {
+              "id": 1,
+              "name": "Ada"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Bearer tok-bob"
+          ],
+          "expected": {
+            "status": 401,
+            "message": "Invalid token"
+          }
+        },
+        {
+          "args": [],
+          "expected": {
+            "status": 401,
+            "message": "Missing token"
+          }
+        },
+        {
+          "args": [
+            "Basic tok-ada"
+          ],
+          "expected": {
+            "status": 401,
+            "message": "Missing token"
+          }
+        },
+        {
+          "args": [
+            "Bearer "
+          ],
+          "expected": {
+            "status": 401,
+            "message": "Missing token"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`ProductsService.paginate(items, page, limit)` returns `{ data, total, page, lastPage }`. Pages are 1-based; `lastPage` is at least `1` even when there are no items. A page past the end returns an empty `data`. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "paginate",
+      "starterCode": "function paginate<T>(items: T[], page: number, limit: number) {\n  const data = items.slice(page * limit, page * limit + limit);\n  return { data, total: items.length, page, lastPage: Math.floor(items.length / limit) };\n}",
+      "referenceSolution": "function paginate<T>(items: T[], page: number, limit: number) {\n  const start = (page - 1) * limit;\n  const data = items.slice(start, start + limit);\n  return { data, total: items.length, page, lastPage: Math.max(1, Math.ceil(items.length / limit)) };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            1,
+            2
+          ],
+          "expected": {
+            "data": [
+              1,
+              2
+            ],
+            "total": 5,
+            "page": 1,
+            "lastPage": 3
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            3,
+            2
+          ],
+          "expected": {
+            "data": [
+              5
+            ],
+            "total": 5,
+            "page": 3,
+            "lastPage": 3
+          }
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": {
+            "data": [],
+            "total": 0,
+            "page": 1,
+            "lastPage": 1
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "data": [
+              3,
+              4
+            ],
+            "total": 4,
+            "page": 2,
+            "lastPage": 2
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            5,
+            2
+          ],
+          "expected": {
+            "data": [],
+            "total": 2,
+            "page": 5,
+            "lastPage": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A global auth guard skips routes marked `@Public()`. Nest reads the metadata like `reflector.getAllAndOverride('isPublic', [handler, class])`: the **handler's** value wins when it is defined, otherwise the class's. Each value is `true`, `false`, or `null`/`undefined` when not set. Fix `guardAllows`: allow when the route resolves to public, or when there is a user.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "guardAllows",
+      "starterCode": "function guardAllows(handlerPublic: boolean | null | undefined, classPublic: boolean | null | undefined, hasUser: boolean): boolean {\n  if (classPublic) return true;\n  return hasUser;\n}",
+      "referenceSolution": "function guardAllows(handlerPublic: boolean | null | undefined, classPublic: boolean | null | undefined, hasUser: boolean): boolean {\n  const isPublic = handlerPublic ?? classPublic;\n  if (isPublic) return true;\n  return hasUser;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            null,
+            true,
+            false
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            true,
+            null,
+            false
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            false,
+            true,
+            false
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            null,
+            null,
+            false
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            null,
+            null,
+            true
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Review this NestJS service. Mark the lines that work against Nest's DI or make the service hard to test and run safely.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this NestJS service. Mark the lines that work against Nest's DI or make the service hard to test and run safely.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Injectable()",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "export class InvoicesService {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  private readonly repo = new InvoicesRepository(new PrismaClient());",
+          "issue": "Creates its own dependencies (and a new DB client) instead of injecting them, so tests cannot swap them and connections multiply."
+        },
+        {
+          "id": "l4",
+          "text": "  constructor(private readonly mailer: MailerService) {}",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  async send(id: number) {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    const invoice = await this.repo.findById(id);",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    if (!invoice) throw new NotFoundException(`Invoice ${id} not found`);",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    const key = process.env.STRIPE_KEY;",
+          "issue": "Reads env directly instead of an injected `ConfigService`, bypassing config validation and test overrides."
+        },
+        {
+          "id": "l9",
+          "text": "    await this.mailer.send(invoice.email, invoice.pdf);",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "    return { sent: true };",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-nestjs-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Your NestJS API needs to know the current tenant (from the `X-Tenant-Id` header) deep inside `ReportsService`, which is a singleton used by 40 endpoints.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your NestJS API needs to know the current tenant (from the `X-Tenant-Id` header) deep inside `ReportsService`, which is a singleton used by 40 endpoints.",
+      "steps": [
+        {
+          "id": "how",
+          "question": "What is the cheapest correct way to get the tenant into the service?",
+          "options": [
+            "Pass `tenantId` as an argument from the controller (read with a custom `@Tenant()` param decorator)",
+            "Make `ReportsService` `Scope.REQUEST` and inject `REQUEST`",
+            "Store the tenant in a module-level variable set by middleware",
+            "Read the header from a global `request` object"
+          ],
+          "correctIndex": 0,
+          "explanation": "An explicit argument keeps the service a singleton. Request scope works but re-creates the service (and everything that depends on it) on every request."
+        },
+        {
+          "id": "shared",
+          "question": "A teammate suggests a module-level `let currentTenant` set in middleware. Why is that wrong?",
+          "options": [
+            "Concurrent requests overwrite each other, so one request can read another tenant's id",
+            "It is slower than a header lookup",
+            "Middleware cannot set variables",
+            "TypeScript will not compile it"
+          ],
+          "correctIndex": 0,
+          "explanation": "Node handles many requests at once on one thread; shared mutable state leaks between them across `await` points."
+        },
+        {
+          "id": "als",
+          "question": "Later you need the tenant in a logger used everywhere without threading an argument. What fits?",
+          "options": [
+            "`AsyncLocalStorage` (e.g. nestjs-cls) set per request in middleware",
+            "A global variable reset after each response",
+            "Making every provider request-scoped",
+            "Reading it from `process.env`"
+          ],
+          "correctIndex": 0,
+          "explanation": "AsyncLocalStorage keeps a per-request context across async calls without making providers request-scoped."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`ReportsService` is `@Injectable({ scope: Scope.REQUEST })`. `ReportsController` injects it and is otherwise default-scoped. What happens to the controller?",
+    "mcq": {
+      "options": [
+        "It also becomes request-scoped: a new controller instance is created per request",
+        "It stays a singleton and gets the first request's service forever",
+        "Nest throws at startup because scopes do not match",
+        "It stays a singleton and Nest proxies the service per request"
+      ],
+      "correctIndex": 0,
+      "explanation": "Request scope bubbles up the injection chain: anything that depends on a request-scoped provider becomes request-scoped too, which is why it should be used sparingly.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`UsersService` injects `AuthService` and `AuthService` injects `UsersService`. Startup fails with a circular dependency error. What does `forwardRef(() => AuthService)` do?",
+    "mcq": {
+      "options": [
+        "Lets Nest resolve a reference to a class that is not defined yet, so both sides can be wired",
+        "Makes the dependency optional so it can be `undefined`",
+        "Turns both services into request-scoped providers",
+        "Removes the need to list the provider in a module"
+      ],
+      "correctIndex": 0,
+      "explanation": "`forwardRef` defers resolving the token so the cycle can be wired (on both sides). It is a patch; extracting the shared logic into a third service is usually better.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "With `new ValidationPipe({ transform: true })`, a handler declares `@Query() q: ListDto` where `ListDto` has `@Type(() => Number) @IsInt() page: number`. A request has `?page=2`. What is `q`?",
+    "mcq": {
+      "options": [
+        "An instance of `ListDto` with `page === 2` (a number)",
+        "A plain object with `page === \"2\"`",
+        "An instance of `ListDto` with `page === \"2\"`",
+        "A 400 error, because `\"2\"` is not an integer"
+      ],
+      "correctIndex": 0,
+      "explanation": "`transform: true` turns the payload into a DTO instance with class-transformer, and `@Type(() => Number)` converts the string before `@IsInt()` runs.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A tiny DI container. `providers` maps a token to the tokens it depends on. `creationOrder(providers, root)` returns the order instances are created when resolving `root` (dependencies first, in listed order, each created once). If there is a cycle, throw `Error('Circular dependency: A -> B -> A')` naming the path. An unknown token throws `Error('Unknown provider: X')`. The driver returns the order or the error message.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function creationOrder(providers: Record<string, string[]>, root: string): string[] {\n  const created: string[] = [];\n  const visit = (token: string) => {\n    if (created.includes(token)) return;\n    for (const dep of providers[token]) visit(dep);\n    created.push(token);\n  };\n  visit(root);\n  return created;\n}\n\n// Test driver (leave as is).\nfunction run(providers: Record<string, string[]>, root: string) {\n  try { return creationOrder(providers, root); } catch (e: any) { return e.message; }\n}",
+      "referenceSolution": "function creationOrder(providers: Record<string, string[]>, root: string): string[] {\n  const created: string[] = [];\n  const visit = (token: string, path: string[]) => {\n    if (path.includes(token)) throw new Error('Circular dependency: ' + [...path, token].join(' -> '));\n    if (created.includes(token)) return;\n    const deps = providers[token];\n    if (!deps) throw new Error('Unknown provider: ' + token);\n    for (const dep of deps) visit(dep, [...path, token]);\n    created.push(token);\n  };\n  visit(root, []);\n  return created;\n}\n\n// Test driver (leave as is).\nfunction run(providers: Record<string, string[]>, root: string) {\n  try { return creationOrder(providers, root); } catch (e: any) { return e.message; }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "Controller": [
+                "Service"
+              ],
+              "Service": [
+                "Repo"
+              ],
+              "Repo": []
+            },
+            "Controller"
+          ],
+          "expected": [
+            "Repo",
+            "Service",
+            "Controller"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "A": [
+                "B",
+                "C"
+              ],
+              "B": [
+                "C"
+              ],
+              "C": []
+            },
+            "A"
+          ],
+          "expected": [
+            "C",
+            "B",
+            "A"
+          ]
+        },
+        {
+          "args": [
+            {
+              "A": [
+                "B"
+              ],
+              "B": [
+                "A"
+              ]
+            },
+            "A"
+          ],
+          "expected": "Circular dependency: A -> B -> A"
+        },
+        {
+          "args": [
+            {
+              "A": [
+                "B"
+              ],
+              "B": [
+                "C"
+              ],
+              "C": [
+                "B"
+              ]
+            },
+            "A"
+          ],
+          "expected": "Circular dependency: A -> B -> C -> B"
+        },
+        {
+          "args": [
+            {
+              "A": [
+                "Missing"
+              ]
+            },
+            "A"
+          ],
+          "expected": "Unknown provider: Missing"
+        },
+        {
+          "args": [
+            {
+              "Solo": []
+            },
+            "Solo"
+          ],
+          "expected": [
+            "Solo"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A `ThrottlerGuard`-style limiter: each client IP may make at most `limit` requests per fixed window of `ttlMs` (windows start at 0: `[0, ttl)`, `[ttl, 2*ttl)`, …). `requests` is a list of `{ ip, t }` in time order. Return one boolean per request: allowed or not (blocked requests do not count). Fix `throttle`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "throttle",
+      "starterCode": "function throttle(requests: { ip: string; t: number }[], limit: number, ttlMs: number): boolean[] {\n  let count = 0;\n  return requests.map(() => {\n    count += 1;\n    return count <= limit;\n  });\n}",
+      "referenceSolution": "function throttle(requests: { ip: string; t: number }[], limit: number, ttlMs: number): boolean[] {\n  const counts = new Map<string, number>();\n  return requests.map(({ ip, t }) => {\n    const key = ip + ':' + Math.floor(t / ttlMs);\n    const used = counts.get(key) ?? 0;\n    if (used >= limit) return false;\n    counts.set(key, used + 1);\n    return true;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "ip": "a",
+                "t": 0
+              },
+              {
+                "ip": "a",
+                "t": 10
+              },
+              {
+                "ip": "a",
+                "t": 20
+              }
+            ],
+            2,
+            1000
+          ],
+          "expected": [
+            true,
+            true,
+            false
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "ip": "a",
+                "t": 0
+              },
+              {
+                "ip": "b",
+                "t": 1
+              },
+              {
+                "ip": "a",
+                "t": 2
+              },
+              {
+                "ip": "b",
+                "t": 3
+              }
+            ],
+            2,
+            1000
+          ],
+          "expected": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "ip": "a",
+                "t": 0
+              },
+              {
+                "ip": "a",
+                "t": 999
+              },
+              {
+                "ip": "a",
+                "t": 1000
+              },
+              {
+                "ip": "a",
+                "t": 1500
+              }
+            ],
+            1,
+            1000
+          ],
+          "expected": [
+            true,
+            false,
+            true,
+            false
+          ]
+        },
+        {
+          "args": [
+            [],
+            5,
+            1000
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "ip": "a",
+                "t": 5
+              }
+            ],
+            0,
+            1000
+          ],
+          "expected": [
+            false
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A custom `CacheInterceptor` builds the cache key for a request. Rules:\n- Only `GET` requests are cached; return `null` for anything else.\n- The key is the path plus the query string with parameters **sorted by name** (so `?b=2&a=1` and `?a=1&b=2` share an entry); no `?` when there is no query.\n- When `perUser` is true, prefix `user:<id>:`; a per-user route with no user is not cached (`null`).",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "cacheKey",
+      "starterCode": "function cacheKey(req: { method: string; path: string; query: Record<string, string>; userId?: number }, perUser: boolean): string | null {\n  const qs = Object.entries(req.query).map(([k, v]) => k + '=' + v).join('&');\n  return req.path + '?' + qs;\n}",
+      "referenceSolution": "function cacheKey(req: { method: string; path: string; query: Record<string, string>; userId?: number }, perUser: boolean): string | null {\n  if (req.method !== 'GET') return null;\n  const qs = Object.keys(req.query).sort().map((k) => k + '=' + req.query[k]).join('&');\n  const base = qs ? req.path + '?' + qs : req.path;\n  if (!perUser) return base;\n  if (req.userId === undefined) return null;\n  return 'user:' + req.userId + ':' + base;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "method": "GET",
+              "path": "/products",
+              "query": {
+                "b": "2",
+                "a": "1"
+              }
+            },
+            false
+          ],
+          "expected": "/products?a=1&b=2"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "method": "POST",
+              "path": "/products",
+              "query": {}
+            },
+            false
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "method": "GET",
+              "path": "/me/orders",
+              "query": {},
+              "userId": 7
+            },
+            true
+          ],
+          "expected": "user:7:/me/orders"
+        },
+        {
+          "args": [
+            {
+              "method": "GET",
+              "path": "/me/orders",
+              "query": {}
+            },
+            true
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "method": "GET",
+              "path": "/health",
+              "query": {}
+            },
+            false
+          ],
+          "expected": "/health"
+        },
+        {
+          "args": [
+            {
+              "method": "GET",
+              "path": "/s",
+              "query": {
+                "q": "x",
+                "page": "2"
+              },
+              "userId": 1
+            },
+            true
+          ],
+          "expected": "user:1:/s?page=2&q=x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An exception filter maps Prisma errors to HTTP. Fix `mapPrismaError(err)`:\n- `P2002` (unique constraint): `409`, message `'<field> already exists'` using the first entry of `err.meta.target`\n- `P2025` (record not found): `404`, `'Record not found'`\n- `P2003` (foreign key): `400`, `'Related record does not exist'`\n- anything else: `500`, `'Internal server error'`",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "mapPrismaError",
+      "starterCode": "function mapPrismaError(err: { code?: string; meta?: { target?: string[] } }) {\n  switch (err.code) {\n    case 'P2002': return { status: 400, message: 'Duplicate' };\n    case 'P2025': return { status: 404, message: 'Record not found' };\n    default: return { status: 500, message: 'Internal server error' };\n  }\n}",
+      "referenceSolution": "function mapPrismaError(err: { code?: string; meta?: { target?: string[] } }) {\n  switch (err.code) {\n    case 'P2002': return { status: 409, message: (err.meta?.target?.[0] ?? 'value') + ' already exists' };\n    case 'P2025': return { status: 404, message: 'Record not found' };\n    case 'P2003': return { status: 400, message: 'Related record does not exist' };\n    default: return { status: 500, message: 'Internal server error' };\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "code": "P2002",
+              "meta": {
+                "target": [
+                  "email"
+                ]
+              }
+            }
+          ],
+          "expected": {
+            "status": 409,
+            "message": "email already exists"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "code": "P2025"
+            }
+          ],
+          "expected": {
+            "status": 404,
+            "message": "Record not found"
+          }
+        },
+        {
+          "args": [
+            {
+              "code": "P2003"
+            }
+          ],
+          "expected": {
+            "status": 400,
+            "message": "Related record does not exist"
+          }
+        },
+        {
+          "args": [
+            {
+              "code": "P2002",
+              "meta": {
+                "target": [
+                  "slug",
+                  "tenantId"
+                ]
+              }
+            }
+          ],
+          "expected": {
+            "status": 409,
+            "message": "slug already exists"
+          }
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "status": 500,
+            "message": "Internal server error"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Review this production `main.ts`. Mark the lines that are security or reliability problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this production `main.ts`. Mark the lines that are security or reliability problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const app = await NestFactory.create(AppModule);",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "app.enableCors({ origin: true, credentials: true });",
+          "issue": "Reflects any Origin while allowing credentials: every site can make authenticated requests on the user's behalf."
+        },
+        {
+          "id": "l3",
+          "text": "app.use(helmet());",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "app.useGlobalPipes(new ValidationPipe({ transform: true }));",
+          "issue": "Without `whitelist: true` (and ideally `forbidNonWhitelisted`), extra fields such as `role` pass straight into the DTO and on to the ORM."
+        },
+        {
+          "id": "l5",
+          "text": "app.setGlobalPrefix('api');",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "app.enableShutdownHooks();",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "SwaggerModule.setup('docs', app, SwaggerModule.createDocument(app, config));",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "await app.listen(process.env.PORT ?? 3000);",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-nestjs-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`POST /videos` uploads a file and then transcodes it, which takes 2–5 minutes. Today the handler awaits the transcode and requests time out.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`POST /videos` uploads a file and then transcodes it, which takes 2–5 minutes. Today the handler awaits the transcode and requests time out.",
+      "steps": [
+        {
+          "id": "shape",
+          "question": "How should the endpoint behave?",
+          "options": [
+            "Store the upload, enqueue a transcode job (e.g. BullMQ via `@nestjs/bullmq`) and answer `202 Accepted` with a job/video id",
+            "Raise the HTTP timeout to 10 minutes",
+            "Start the transcode with a floating promise (no await) and answer 201",
+            "Run the transcode in an interceptor"
+          ],
+          "correctIndex": 0,
+          "explanation": "Long work belongs in a durable queue with a worker; the API acknowledges quickly and exposes status."
+        },
+        {
+          "id": "retry",
+          "question": "The worker crashes halfway through a job. What must be true for retries to be safe?",
+          "options": [
+            "The job is idempotent (keyed by video id, overwriting the same output)",
+            "The job runs inside a database transaction",
+            "The worker is request-scoped",
+            "The queue uses FIFO ordering"
+          ],
+          "correctIndex": 0,
+          "explanation": "Queues deliver at least once; a retried job must not create duplicate outputs or charge twice."
+        },
+        {
+          "id": "status",
+          "question": "How does the client learn when it is done?",
+          "options": [
+            "Poll `GET /videos/:id` for a status field, or receive a webhook / websocket event",
+            "Keep the original POST open",
+            "Re-upload until it answers 200",
+            "Read the job queue directly"
+          ],
+          "correctIndex": 0,
+          "explanation": "Expose status as a resource (or push an event); never hold the original request open."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nestjs-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You register a guard globally with `{ provide: APP_GUARD, useClass: JwtAuthGuard }` inside `AuthModule` instead of `app.useGlobalGuards(new JwtAuthGuard())` in `main.ts`. What is the practical difference?",
+    "mcq": {
+      "options": [
+        "The `APP_GUARD` version is created by the DI container, so the guard can inject dependencies like `Reflector` or `JwtService`",
+        "The `APP_GUARD` version only applies to routes inside `AuthModule`",
+        "`useGlobalGuards` runs before middleware; `APP_GUARD` runs after the handler",
+        "There is no difference"
+      ],
+      "correctIndex": 0,
+      "explanation": "Guards passed to `useGlobalGuards` are instantiated by you, outside the container, so they cannot have injected dependencies. `APP_GUARD` is still global even though it is declared in one module.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Kubernetes sends `SIGTERM` to your NestJS pod during a deploy. You want in-flight work finished and DB connections closed via `onApplicationShutdown`. What else is required?",
+    "mcq": {
+      "options": [
+        "Call `app.enableShutdownHooks()` so Nest listens for the signal and runs the lifecycle hooks",
+        "Nothing; Nest always runs shutdown hooks",
+        "Mark the providers `Scope.TRANSIENT`",
+        "Wrap `app.listen` in `try/finally`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shutdown hooks are off by default (they add signal listeners). Without `enableShutdownHooks()` the process exits without calling `onModuleDestroy` / `onApplicationShutdown`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nestjs-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nestjs",
+    "trackId": null,
+    "stackId": "stack-nestjs",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A NestJS API with 300 routes makes one service `Scope.REQUEST` to hold the current user. p99 latency rises under load. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "Every provider and controller depending on it is now rebuilt for each request, adding allocation and GC pressure",
+        "Request-scoped providers serialise requests one at a time",
+        "Request scope disables Node's event loop",
+        "Nest re-reads all modules from disk per request"
+      ],
+      "correctIndex": 0,
+      "explanation": "Request scope bubbles up the dependency chain and instantiates that whole subtree per request. Pass context explicitly or use AsyncLocalStorage instead.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

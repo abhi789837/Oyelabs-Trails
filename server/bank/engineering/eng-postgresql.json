@@ -1,0 +1,1801 @@
+[
+  {
+    "id": "eng-postgresql-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Users are soft-deleted by setting `deleted_at`. Return the `id` and `email` of every user who is **not** deleted, ordered by `id`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT id, email\nFROM users\nWHERE deleted_at = NULL\nORDER BY id;",
+      "referenceSolution": "SELECT id, email\nFROM users\nWHERE deleted_at IS NULL\nORDER BY id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE users(id INT PRIMARY KEY, email TEXT, deleted_at TEXT);INSERT INTO users VALUES (1,'a@x.io',NULL),(2,'b@x.io','2024-01-02'),(3,'c@x.io',NULL);",
+          "expected": [
+            {
+              "id": 1,
+              "email": "a@x.io"
+            },
+            {
+              "id": 3,
+              "email": "c@x.io"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE users(id INT PRIMARY KEY, email TEXT, deleted_at TEXT);INSERT INTO users VALUES (5,'e@x.io',NULL);",
+          "expected": [
+            {
+              "id": 5,
+              "email": "e@x.io"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE users(id INT PRIMARY KEY, email TEXT, deleted_at TEXT);INSERT INTO users VALUES (1,'a@x.io','2024-01-01'),(2,'b@x.io','2024-01-02');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE users(id INT PRIMARY KEY, email TEXT, deleted_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE users(id INT PRIMARY KEY, email TEXT, deleted_at TEXT);INSERT INTO users VALUES (9,'z@x.io',NULL),(4,'d@x.io',NULL),(7,'g@x.io','2024-03-03');",
+          "expected": [
+            {
+              "id": 4,
+              "email": "d@x.io"
+            },
+            {
+              "id": 9,
+              "email": "z@x.io"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return how many orders are in each `status` as `status` and `total`, ordered by `status`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT status, COUNT(*) AS total\nFROM orders\nORDER BY status;",
+      "referenceSolution": "SELECT status, COUNT(*) AS total\nFROM orders\nGROUP BY status\nORDER BY status;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT);INSERT INTO orders VALUES (1,'paid'),(2,'paid'),(3,'pending');",
+          "expected": [
+            {
+              "status": "paid",
+              "total": 2
+            },
+            {
+              "status": "pending",
+              "total": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT);INSERT INTO orders VALUES (1,'shipped');",
+          "expected": [
+            {
+              "status": "shipped",
+              "total": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT);INSERT INTO orders VALUES (1,'refunded'),(2,'paid'),(3,'refunded'),(4,'paid'),(5,'paid');",
+          "expected": [
+            {
+              "status": "paid",
+              "total": 3
+            },
+            {
+              "status": "refunded",
+              "total": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Return each product's `name` and the price the customer pays as `final_price`: the `sale_price` when there is one, otherwise `price`. Order by `name`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT name, sale_price AS final_price\nFROM products\nORDER BY name;",
+      "referenceSolution": "SELECT name, COALESCE(sale_price, price) AS final_price\nFROM products\nORDER BY name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE products(id INT PRIMARY KEY, name TEXT, price NUMERIC, sale_price NUMERIC);INSERT INTO products VALUES (1,'Mug',12,9),(2,'Cap',20,NULL);",
+          "expected": [
+            {
+              "name": "Cap",
+              "final_price": 20
+            },
+            {
+              "name": "Mug",
+              "final_price": 9
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE products(id INT PRIMARY KEY, name TEXT, price NUMERIC, sale_price NUMERIC);INSERT INTO products VALUES (1,'Pen',3,NULL);",
+          "expected": [
+            {
+              "name": "Pen",
+              "final_price": 3
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INT PRIMARY KEY, name TEXT, price NUMERIC, sale_price NUMERIC);INSERT INTO products VALUES (1,'Bag',40,35),(2,'Hat',15,12);",
+          "expected": [
+            {
+              "name": "Bag",
+              "final_price": 35
+            },
+            {
+              "name": "Hat",
+              "final_price": 12
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE products(id INT PRIMARY KEY, name TEXT, price NUMERIC, sale_price NUMERIC);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE products(id INT PRIMARY KEY, name TEXT, price NUMERIC, sale_price NUMERIC);INSERT INTO products VALUES (1,'Free sticker',0,NULL),(2,'Book',10,0);",
+          "expected": [
+            {
+              "name": "Book",
+              "final_price": 0
+            },
+            {
+              "name": "Free sticker",
+              "final_price": 0
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The homepage shows the **3 newest** posts. Return their `id` and `title`, newest first.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT id, title\nFROM posts\nORDER BY created_at\nLIMIT 3;",
+      "referenceSolution": "SELECT id, title\nFROM posts\nORDER BY created_at DESC\nLIMIT 3;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE posts(id INT PRIMARY KEY, title TEXT, created_at TEXT);INSERT INTO posts VALUES (1,'One','2024-01-01'),(2,'Two','2024-01-02'),(3,'Three','2024-01-03'),(4,'Four','2024-01-04');",
+          "expected": [
+            {
+              "id": 4,
+              "title": "Four"
+            },
+            {
+              "id": 3,
+              "title": "Three"
+            },
+            {
+              "id": 2,
+              "title": "Two"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE posts(id INT PRIMARY KEY, title TEXT, created_at TEXT);INSERT INTO posts VALUES (1,'A','2024-05-01'),(2,'B','2024-03-01'),(3,'C','2024-06-01'),(4,'D','2024-01-01'),(5,'E','2024-04-01');",
+          "expected": [
+            {
+              "id": 3,
+              "title": "C"
+            },
+            {
+              "id": 1,
+              "title": "A"
+            },
+            {
+              "id": 5,
+              "title": "E"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE posts(id INT PRIMARY KEY, title TEXT, created_at TEXT);INSERT INTO posts VALUES (1,'Old','2023-01-01'),(2,'New','2024-01-01');",
+          "expected": [
+            {
+              "id": 2,
+              "title": "New"
+            },
+            {
+              "id": 1,
+              "title": "Old"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE posts(id INT PRIMARY KEY, title TEXT, created_at TEXT);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are writing the first migration for an `invoices` table in PostgreSQL. Pick the column type for each field.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are writing the first migration for an `invoices` table in PostgreSQL. Pick the column type for each field.",
+      "steps": [
+        {
+          "id": "amount",
+          "question": "The invoice total, e.g. `1299.99` in euros.",
+          "options": [
+            "`numeric(12,2)`",
+            "`real`",
+            "`double precision`",
+            "`text`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Floating-point types cannot represent most decimal amounts exactly; `numeric` (or integer cents) is exact."
+        },
+        {
+          "id": "issued",
+          "question": "When the invoice was issued; users are in several time zones.",
+          "options": [
+            "`timestamptz`",
+            "`timestamp` (without time zone)",
+            "`date`",
+            "`varchar(30)`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`timestamptz` stores an absolute instant (in UTC) and converts on output, so it is right for events."
+        },
+        {
+          "id": "id",
+          "question": "The primary key, generated by the database.",
+          "options": [
+            "`bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY`",
+            "`int` set by the app as `MAX(id) + 1`",
+            "`text` with the invoice number",
+            "`real PRIMARY KEY`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Identity columns are the standard way to auto-generate keys; `MAX(id)+1` races under concurrency."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Review this PostgreSQL migration for a `customers` table. Mark the lines that will cause problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this PostgreSQL migration for a `customers` table. Mark the lines that will cause problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "CREATE TABLE customers (",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  name text NOT NULL,",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  email text,",
+          "issue": "Nothing stops two customers having the same email; it should be `NOT NULL UNIQUE` if it identifies them."
+        },
+        {
+          "id": "l4",
+          "text": "  balance float NOT NULL DEFAULT 0,",
+          "issue": "Money in a floating-point column drifts with rounding errors; use `numeric(12,2)` or integer cents."
+        },
+        {
+          "id": "l5",
+          "text": "  created_at timestamptz NOT NULL DEFAULT now(),",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  country_code char(2)",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": ");",
+          "issue": "The table has no primary key, so rows cannot be referenced or updated reliably."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-postgresql-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does this query return? (PostgreSQL and SQLite agree; you can run it.)",
+    "mcq": {
+      "options": [
+        "`same` is NULL and `is_null` is true",
+        "`same` is true and `is_null` is true",
+        "`same` is false and `is_null` is true",
+        "An error: NULL cannot be compared"
+      ],
+      "correctIndex": 0,
+      "explanation": "Any comparison with NULL using `=` yields NULL (unknown), which a `WHERE` treats as not true. Use `IS NULL` / `IS NOT NULL`.",
+      "snippet": "SELECT NULL = NULL AS same, NULL IS NULL AS is_null;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-postgresql-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You declare `id bigint PRIMARY KEY` on a new PostgreSQL table. What does PostgreSQL create for you?",
+    "mcq": {
+      "options": [
+        "A unique B-tree index on `id`, plus a NOT NULL constraint",
+        "Nothing beyond a note in the catalog",
+        "A sequence that fills `id` automatically",
+        "A hash index on `id`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A primary key is enforced by a unique B-tree index and implies NOT NULL. It does not generate values: that needs an identity column or a sequence.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A table `tags` has 5 rows; 2 of them have `color` NULL. What does `SELECT COUNT(*), COUNT(color) FROM tags;` return?",
+    "mcq": {
+      "options": [
+        "5 and 3",
+        "5 and 5",
+        "3 and 3",
+        "5 and 2"
+      ],
+      "correctIndex": 0,
+      "explanation": "`COUNT(*)` counts rows; `COUNT(column)` counts only non-NULL values of that column.",
+      "snippet": "CREATE TABLE tags(name TEXT, color TEXT);\nINSERT INTO tags VALUES ('a','red'),('b',NULL),('c','blue'),('d',NULL),('e','red');\nSELECT COUNT(*) AS all_rows, COUNT(color) AS with_color FROM tags;",
+      "snippetLanguage": "sql"
+    }
+  },
+  {
+    "id": "eng-postgresql-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Marketing wants the customers who have **never** placed an order. Return their `name`, ordered by `name`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL\nORDER BY c.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE customers(id INT PRIMARY KEY, name TEXT); CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT);INSERT INTO customers VALUES (1,'Ann'),(2,'Bo'),(3,'Cy'); INSERT INTO orders VALUES (10,1),(11,1),(12,3);",
+          "expected": [
+            {
+              "name": "Bo"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE customers(id INT PRIMARY KEY, name TEXT); CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT);INSERT INTO customers VALUES (1,'Zoe'),(2,'Ali');",
+          "expected": [
+            {
+              "name": "Ali"
+            },
+            {
+              "name": "Zoe"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE customers(id INT PRIMARY KEY, name TEXT); CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT);INSERT INTO customers VALUES (1,'Ann'); INSERT INTO orders VALUES (1,1);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INT PRIMARY KEY, name TEXT); CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE customers(id INT PRIMARY KEY, name TEXT); CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT);INSERT INTO customers VALUES (1,'Dee'),(2,'Eve'),(3,'Fay'),(4,'Gus'); INSERT INTO orders VALUES (1,2),(2,4);",
+          "expected": [
+            {
+              "name": "Dee"
+            },
+            {
+              "name": "Fay"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Return each customer whose orders add up to **more than 100**, as `customer_id` and `spent`, ordered by `customer_id`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT customer_id, SUM(total) AS spent\nFROM orders\nWHERE total > 100\nGROUP BY customer_id\nORDER BY customer_id;",
+      "referenceSolution": "SELECT customer_id, SUM(total) AS spent\nFROM orders\nGROUP BY customer_id\nHAVING SUM(total) > 100\nORDER BY customer_id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, total NUMERIC);INSERT INTO orders VALUES (1,1,60),(2,1,50),(3,2,30);",
+          "expected": [
+            {
+              "customer_id": 1,
+              "spent": 110
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, total NUMERIC);INSERT INTO orders VALUES (1,1,150),(2,2,20),(3,2,90);",
+          "expected": [
+            {
+              "customer_id": 1,
+              "spent": 150
+            },
+            {
+              "customer_id": 2,
+              "spent": 110
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, total NUMERIC);INSERT INTO orders VALUES (1,3,100);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, total NUMERIC);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, total NUMERIC);INSERT INTO orders VALUES (1,5,40),(2,5,40),(3,5,40),(4,6,101);",
+          "expected": [
+            {
+              "customer_id": 5,
+              "spent": 120
+            },
+            {
+              "customer_id": 6,
+              "spent": 101
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A delivery of **5 units of `A1`** arrives. Write one `INSERT ... ON CONFLICT` that adds 5 to the existing quantity, or creates the row with 5 if `A1` is new. Then return every row as `sku`, `qty`, ordered by `sku`. (The same syntax works in PostgreSQL.)",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "INSERT INTO inventory (sku, qty) VALUES ('A1', 5)\nON CONFLICT (sku) DO UPDATE SET qty = excluded.qty;\n\nSELECT sku, qty FROM inventory ORDER BY sku;",
+      "referenceSolution": "INSERT INTO inventory (sku, qty) VALUES ('A1', 5)\nON CONFLICT (sku) DO UPDATE SET qty = inventory.qty + excluded.qty;\n\nSELECT sku, qty FROM inventory ORDER BY sku;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INT NOT NULL);INSERT INTO inventory VALUES ('A1', 10),('B2', 3);",
+          "expected": [
+            {
+              "sku": "A1",
+              "qty": 15
+            },
+            {
+              "sku": "B2",
+              "qty": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INT NOT NULL);",
+          "expected": [
+            {
+              "sku": "A1",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INT NOT NULL);INSERT INTO inventory VALUES ('A1', 0);",
+          "expected": [
+            {
+              "sku": "A1",
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INT NOT NULL);INSERT INTO inventory VALUES ('A1', 2);",
+          "expected": [
+            {
+              "sku": "A1",
+              "qty": 7
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE inventory(sku TEXT PRIMARY KEY, qty INT NOT NULL);INSERT INTO inventory VALUES ('C3', 8);",
+          "expected": [
+            {
+              "sku": "A1",
+              "qty": 5
+            },
+            {
+              "sku": "C3",
+              "qty": 8
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Users can log in many times a day. Return the number of **different** users who logged in each day, as `day` and `users`, ordered by `day`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT day, COUNT(user_id) AS users\nFROM logins\nGROUP BY day\nORDER BY day;",
+      "referenceSolution": "SELECT day, COUNT(DISTINCT user_id) AS users\nFROM logins\nGROUP BY day\nORDER BY day;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE logins(user_id INT, day TEXT);INSERT INTO logins VALUES (1,'2024-01-01'),(1,'2024-01-01'),(2,'2024-01-01'),(1,'2024-01-02');",
+          "expected": [
+            {
+              "day": "2024-01-01",
+              "users": 2
+            },
+            {
+              "day": "2024-01-02",
+              "users": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE logins(user_id INT, day TEXT);INSERT INTO logins VALUES (7,'2024-02-01'),(7,'2024-02-01'),(7,'2024-02-01');",
+          "expected": [
+            {
+              "day": "2024-02-01",
+              "users": 1
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE logins(user_id INT, day TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE logins(user_id INT, day TEXT);INSERT INTO logins VALUES (1,'2024-03-02'),(2,'2024-03-01'),(3,'2024-03-01'),(2,'2024-03-02'),(2,'2024-03-02');",
+          "expected": [
+            {
+              "day": "2024-03-01",
+              "users": 2
+            },
+            {
+              "day": "2024-03-02",
+              "users": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A `users` table in PostgreSQL has 2 million rows. Choose the index for each query the app runs often.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A `users` table in PostgreSQL has 2 million rows. Choose the index for each query the app runs often.",
+      "steps": [
+        {
+          "id": "eq",
+          "question": "`SELECT * FROM users WHERE email = $1` — emails are stored exactly as typed.",
+          "options": [
+            "`CREATE UNIQUE INDEX ON users (email)`",
+            "`CREATE INDEX ON users USING gin (email)`",
+            "No index; the primary key covers it",
+            "`CREATE INDEX ON users (lower(email))`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A plain B-tree on the column serves equality lookups, and UNIQUE also enforces the rule."
+        },
+        {
+          "id": "lower",
+          "question": "The login query changes to `WHERE lower(email) = lower($1)`.",
+          "options": [
+            "An expression index: `CREATE INDEX ON users (lower(email))`",
+            "The existing index on `email` is still used",
+            "A hash index on `email`",
+            "Add `ORDER BY email`"
+          ],
+          "correctIndex": 0,
+          "explanation": "An index on `email` cannot serve a condition on `lower(email)`; index the expression itself."
+        },
+        {
+          "id": "multi",
+          "question": "`WHERE org_id = $1 ORDER BY created_at DESC LIMIT 20`.",
+          "options": [
+            "A composite index on `(org_id, created_at)`",
+            "Two separate indexes on `org_id` and `created_at`",
+            "An index on `created_at` only",
+            "An index on `(created_at, org_id)`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Equality column first, then the sort column: Postgres can read the 20 newest rows of one org straight from the index."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "This query on a large `events` table (B-tree indexes on `created_at` and `user_id`) is slow. Mark the lines that stop an index being used or make Postgres do far more work than needed.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This query on a large `events` table (B-tree indexes on `created_at` and `user_id`) is slow. Mark the lines that stop an index being used or make Postgres do far more work than needed.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "SELECT id, user_id, kind",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "FROM events",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "WHERE created_at::date = '2024-05-01'",
+          "issue": "Casting the column means the index on `created_at` cannot be used; use a range `created_at >= ... AND created_at < ...`."
+        },
+        {
+          "id": "l4",
+          "text": "  AND user_id = 42",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  AND kind <> 'heartbeat'",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "ORDER BY created_at DESC",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "LIMIT 50 OFFSET 200000;",
+          "issue": "A large OFFSET still reads and throws away 200,000 rows; use keyset pagination on `(created_at, id)`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-postgresql-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which is the recommended way to declare an auto-incrementing key in modern PostgreSQL (10+)?",
+    "mcq": {
+      "options": [
+        "`id bigint GENERATED ALWAYS AS IDENTITY`",
+        "`id serial`",
+        "`id int DEFAULT random()`",
+        "`id int AUTO_INCREMENT`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Identity columns are SQL-standard and keep the sequence tied to the column; `serial` still works but is the older shorthand, and `AUTO_INCREMENT` is MySQL.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An API pages through products with `SELECT * FROM products LIMIT 20 OFFSET 40` (no `ORDER BY`). What is wrong?",
+    "mcq": {
+      "options": [
+        "Row order is not guaranteed, so pages can repeat or skip products",
+        "OFFSET is not allowed without a WHERE clause",
+        "LIMIT must come after OFFSET",
+        "Nothing; PostgreSQL returns rows in insertion order"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without `ORDER BY` the database may return rows in any order, and the order can change between queries (after updates, VACUUM, or a different plan). Always order by a unique key when paginating.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`order_items.order_id` references `orders(id) ON DELETE CASCADE`. What happens when you delete an order?",
+    "mcq": {
+      "options": [
+        "Its order_items rows are deleted too",
+        "The delete fails while any order_items reference it",
+        "Its order_items get `order_id` set to NULL",
+        "The order_items stay and point at a missing order"
+      ],
+      "correctIndex": 0,
+      "explanation": "`CASCADE` deletes the referencing rows. `RESTRICT`/`NO ACTION` would make the delete fail, and `SET NULL` would null the column.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Return each customer's **most recent** order as `customer_id`, `order_id`, ordered by `customer_id`. Use `ROW_NUMBER()`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "WITH ranked AS (\n  SELECT customer_id, id AS order_id,\n         ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_at) AS rn\n  FROM orders\n)\nSELECT customer_id, order_id FROM ranked WHERE rn = 1 ORDER BY customer_id;",
+      "referenceSolution": "WITH ranked AS (\n  SELECT customer_id, id AS order_id,\n         ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_at DESC) AS rn\n  FROM orders\n)\nSELECT customer_id, order_id FROM ranked WHERE rn = 1 ORDER BY customer_id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, created_at TEXT);INSERT INTO orders VALUES (1,1,'2024-01-01'),(2,1,'2024-02-01'),(3,2,'2024-01-15');",
+          "expected": [
+            {
+              "customer_id": 1,
+              "order_id": 2
+            },
+            {
+              "customer_id": 2,
+              "order_id": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, created_at TEXT);INSERT INTO orders VALUES (5,9,'2024-03-01');",
+          "expected": [
+            {
+              "customer_id": 9,
+              "order_id": 5
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, customer_id INT, created_at TEXT);INSERT INTO orders VALUES (1,1,'2024-05-01'),(2,1,'2024-01-01'),(3,1,'2024-03-01'),(4,2,'2023-12-01'),(5,2,'2024-06-01');",
+          "expected": [
+            {
+              "customer_id": 1,
+              "order_id": 1
+            },
+            {
+              "customer_id": 2,
+              "order_id": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Return each `day`, its `amount`, and the running total so far as `running`, ordered by `day`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT day, amount,\n       SUM(amount) OVER (PARTITION BY day) AS running\nFROM sales\nORDER BY day;",
+      "referenceSolution": "SELECT day, amount,\n       SUM(amount) OVER (ORDER BY day) AS running\nFROM sales\nORDER BY day;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE sales(day TEXT PRIMARY KEY, amount INT);INSERT INTO sales VALUES ('2024-01-01',10),('2024-01-02',5),('2024-01-03',20);",
+          "expected": [
+            {
+              "day": "2024-01-01",
+              "amount": 10,
+              "running": 10
+            },
+            {
+              "day": "2024-01-02",
+              "amount": 5,
+              "running": 15
+            },
+            {
+              "day": "2024-01-03",
+              "amount": 20,
+              "running": 35
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE sales(day TEXT PRIMARY KEY, amount INT);INSERT INTO sales VALUES ('2024-02-01',7);",
+          "expected": [
+            {
+              "day": "2024-02-01",
+              "amount": 7,
+              "running": 7
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE sales(day TEXT PRIMARY KEY, amount INT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE sales(day TEXT PRIMARY KEY, amount INT);INSERT INTO sales VALUES ('2024-03-03',1),('2024-03-01',4),('2024-03-02',0);",
+          "expected": [
+            {
+              "day": "2024-03-01",
+              "amount": 4,
+              "running": 4
+            },
+            {
+              "day": "2024-03-02",
+              "amount": 0,
+              "running": 4
+            },
+            {
+              "day": "2024-03-03",
+              "amount": 1,
+              "running": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Return the employees who earn more than the average of **their own department**, as `name` and `dept`, ordered by `name`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "WITH dept_avg AS (\n  SELECT dept, AVG(salary) AS avg_salary FROM employees GROUP BY dept\n)\nSELECT e.name, e.dept\nFROM employees e\nWHERE e.salary > (SELECT AVG(salary) FROM employees)\nORDER BY e.name;",
+      "referenceSolution": "WITH dept_avg AS (\n  SELECT dept, AVG(salary) AS avg_salary FROM employees GROUP BY dept\n)\nSELECT e.name, e.dept\nFROM employees e\nJOIN dept_avg d ON d.dept = e.dept\nWHERE e.salary > d.avg_salary\nORDER BY e.name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);INSERT INTO employees VALUES (1,'Ann','eng',100),(2,'Bo','eng',80),(3,'Cy','ops',50),(4,'Di','ops',40);",
+          "expected": [
+            {
+              "name": "Ann",
+              "dept": "eng"
+            },
+            {
+              "name": "Cy",
+              "dept": "ops"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);INSERT INTO employees VALUES (1,'Solo','eng',90);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);INSERT INTO employees VALUES (1,'A','x',10),(2,'B','x',20),(3,'C','y',200),(4,'D','y',300),(5,'E','y',250);",
+          "expected": [
+            {
+              "name": "B",
+              "dept": "x"
+            },
+            {
+              "name": "D",
+              "dept": "y"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);INSERT INTO employees VALUES (1,'P','x',50),(2,'Q','x',50);",
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "For each month (`substr(created_at, 1, 7)` as `month`), return how many orders were `paid` as `paid` and `refunded` as `refunded`, ordered by `month`. (The `FILTER` clause works the same way in PostgreSQL.)",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT substr(created_at, 1, 7) AS month,\n       COUNT(status = 'paid') AS paid,\n       COUNT(status = 'refunded') AS refunded\nFROM orders\nGROUP BY month\nORDER BY month;",
+      "referenceSolution": "SELECT substr(created_at, 1, 7) AS month,\n       COUNT(*) FILTER (WHERE status = 'paid') AS paid,\n       COUNT(*) FILTER (WHERE status = 'refunded') AS refunded\nFROM orders\nGROUP BY month\nORDER BY month;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT, created_at TEXT);INSERT INTO orders VALUES (1,'paid','2024-01-03'),(2,'refunded','2024-01-09'),(3,'paid','2024-02-01');",
+          "expected": [
+            {
+              "month": "2024-01",
+              "paid": 1,
+              "refunded": 1
+            },
+            {
+              "month": "2024-02",
+              "paid": 1,
+              "refunded": 0
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT, created_at TEXT);INSERT INTO orders VALUES (1,'pending','2024-03-01');",
+          "expected": [
+            {
+              "month": "2024-03",
+              "paid": 0,
+              "refunded": 0
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT, created_at TEXT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE orders(id INT PRIMARY KEY, status TEXT, created_at TEXT);INSERT INTO orders VALUES (1,'paid','2024-04-01'),(2,'paid','2024-04-02'),(3,'refunded','2024-04-03'),(4,'pending','2024-04-04');",
+          "expected": [
+            {
+              "month": "2024-04",
+              "paid": 2,
+              "refunded": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This migration runs against a busy production `orders` table (40M rows) in PostgreSQL 15. Mark the statements that will block normal reads/writes for a long time.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This migration runs against a busy production `orders` table (40M rows) in PostgreSQL 15. Mark the statements that will block normal reads/writes for a long time.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "BEGIN;",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "ALTER TABLE orders ADD COLUMN source text DEFAULT 'web';",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "CREATE INDEX orders_customer_idx ON orders (customer_id);",
+          "issue": "A plain CREATE INDEX blocks all writes to the table until the build finishes; use `CREATE INDEX CONCURRENTLY` (outside a transaction)."
+        },
+        {
+          "id": "l4",
+          "text": "ALTER TABLE orders ALTER COLUMN total TYPE numeric(14,2);",
+          "issue": "Changing the column type rewrites the whole table under an ACCESS EXCLUSIVE lock, blocking reads and writes."
+        },
+        {
+          "id": "l5",
+          "text": "ALTER TABLE orders ADD COLUMN notes text;",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "COMMENT ON COLUMN orders.notes IS 'free text from support';",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "COMMIT;",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-postgresql-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`EXPLAIN ANALYZE SELECT * FROM tickets WHERE assignee_id = 7 AND status = 'open';` prints:\n\n```\nSeq Scan on tickets  (cost=0.00..48210.00 rows=12 width=96) (actual time=0.03..412.55 rows=9840 loops=1)\n  Filter: ((assignee_id = 7) AND (status = 'open'))\n  Rows Removed by Filter: 1990160\nPlanning Time: 0.1 ms\nExecution Time: 413.2 ms\n```",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`EXPLAIN ANALYZE SELECT * FROM tickets WHERE assignee_id = 7 AND status = 'open';` prints:\n\n```\nSeq Scan on tickets  (cost=0.00..48210.00 rows=12 width=96) (actual time=0.03..412.55 rows=9840 loops=1)\n  Filter: ((assignee_id = 7) AND (status = 'open'))\n  Rows Removed by Filter: 1990160\nPlanning Time: 0.1 ms\nExecution Time: 413.2 ms\n```",
+      "steps": [
+        {
+          "id": "read",
+          "question": "What is Postgres doing?",
+          "options": [
+            "Reading all ~2M rows and discarding all but 9,840",
+            "Using an index and returning 12 rows",
+            "Waiting on a lock for 412 ms",
+            "Sorting the table by assignee"
+          ],
+          "correctIndex": 0,
+          "explanation": "A Seq Scan reads every row; \"Rows Removed by Filter\" shows almost all were thrown away."
+        },
+        {
+          "id": "est",
+          "question": "The planner estimated 12 rows but got 9,840. What does that suggest?",
+          "options": [
+            "Table statistics are stale; run `ANALYZE tickets`",
+            "The query has a syntax error",
+            "The table is too small to index",
+            "The disk is slow"
+          ],
+          "correctIndex": 0,
+          "explanation": "Large estimate/actual gaps usually mean stale or insufficient statistics, which leads to bad plans."
+        },
+        {
+          "id": "fix",
+          "question": "Which change most directly speeds this query up?",
+          "options": [
+            "`CREATE INDEX ON tickets (assignee_id, status)`",
+            "`VACUUM FULL tickets`",
+            "Add `LIMIT 100000`",
+            "Increase `work_mem`"
+          ],
+          "correctIndex": 0,
+          "explanation": "An index matching both equality filters lets Postgres jump straight to the matching rows."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`profile` is a `jsonb` column holding `{\"name\": \"Ada\", \"age\": 36}`. What is the difference between `profile->'name'` and `profile->>'name'`?",
+    "mcq": {
+      "options": [
+        "`->` returns `jsonb` (`\"Ada\"` with quotes); `->>` returns `text` (`Ada`)",
+        "`->` returns text; `->>` returns jsonb",
+        "They are identical; `->>` is just the newer spelling",
+        "`->>` reaches nested keys, `->` only top-level ones"
+      ],
+      "correctIndex": 0,
+      "explanation": "`->` keeps the value as jsonb, which you need for further navigation; `->>` extracts it as text, which you need for comparisons with text values or casts like `(profile->>'age')::int`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Queries filter a `jsonb` column with containment: `WHERE attrs @> '{\"color\": \"red\"}'`. Which index can serve this?",
+    "mcq": {
+      "options": [
+        "A GIN index: `CREATE INDEX ON items USING gin (attrs)`",
+        "A B-tree index on `attrs`",
+        "A hash index on `attrs`",
+        "No index can help jsonb queries"
+      ],
+      "correctIndex": 0,
+      "explanation": "GIN indexes the keys and values inside the document and supports `@>`, `?` and related operators. A B-tree on the whole jsonb value only helps equality on the entire document.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "PostgreSQL's default isolation level is READ COMMITTED. Inside one transaction you run the same `SELECT balance ... WHERE id = 1` twice, and another session commits an update in between. What do you see?",
+    "mcq": {
+      "options": [
+        "The second SELECT sees the new committed balance",
+        "Both SELECTs see the old balance",
+        "The second SELECT blocks until your transaction ends",
+        "The second SELECT sees uncommitted changes too"
+      ],
+      "correctIndex": 0,
+      "explanation": "In READ COMMITTED each statement takes a fresh snapshot, so a non-repeatable read is possible. REPEATABLE READ would keep the first snapshot for the whole transaction. Postgres never shows uncommitted data.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Return the days on which revenue **dropped** compared with the previous day, as `day`, `amount` and `previous`, ordered by `day`. Use `LAG`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "WITH r AS (\n  SELECT day, amount, LEAD(amount) OVER (ORDER BY day) AS previous FROM revenue\n)\nSELECT day, amount, previous FROM r WHERE amount < previous ORDER BY day;",
+      "referenceSolution": "WITH r AS (\n  SELECT day, amount, LAG(amount) OVER (ORDER BY day) AS previous FROM revenue\n)\nSELECT day, amount, previous FROM r WHERE amount < previous ORDER BY day;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE revenue(day TEXT PRIMARY KEY, amount INT);INSERT INTO revenue VALUES ('2024-01-01',100),('2024-01-02',80),('2024-01-03',120);",
+          "expected": [
+            {
+              "day": "2024-01-02",
+              "amount": 80,
+              "previous": 100
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE revenue(day TEXT PRIMARY KEY, amount INT);INSERT INTO revenue VALUES ('2024-01-01',50);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE revenue(day TEXT PRIMARY KEY, amount INT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE revenue(day TEXT PRIMARY KEY, amount INT);INSERT INTO revenue VALUES ('2024-02-01',10),('2024-02-02',20),('2024-02-03',15),('2024-02-04',15),('2024-02-05',5);",
+          "expected": [
+            {
+              "day": "2024-02-03",
+              "amount": 15,
+              "previous": 20
+            },
+            {
+              "day": "2024-02-05",
+              "amount": 5,
+              "previous": 15
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE revenue(day TEXT PRIMARY KEY, amount INT);INSERT INTO revenue VALUES ('2024-03-01',30),('2024-03-02',20),('2024-03-03',10);",
+          "expected": [
+            {
+              "day": "2024-03-02",
+              "amount": 20,
+              "previous": 30
+            },
+            {
+              "day": "2024-03-03",
+              "amount": 10,
+              "previous": 20
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Return the people with the **top 2 distinct salaries** in each department (ties both count), as `dept`, `name`, `salary`, ordered by `dept`, then `salary` descending, then `name`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "WITH r AS (\n  SELECT dept, name, salary,\n         ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC) AS rk\n  FROM employees\n)\nSELECT dept, name, salary FROM r WHERE rk <= 2\nORDER BY dept, salary DESC, name;",
+      "referenceSolution": "WITH r AS (\n  SELECT dept, name, salary,\n         DENSE_RANK() OVER (PARTITION BY dept ORDER BY salary DESC) AS rk\n  FROM employees\n)\nSELECT dept, name, salary FROM r WHERE rk <= 2\nORDER BY dept, salary DESC, name;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);INSERT INTO employees VALUES (1,'Ann','eng',100),(2,'Bo','eng',90),(3,'Cy','eng',80);",
+          "expected": [
+            {
+              "dept": "eng",
+              "name": "Ann",
+              "salary": 100
+            },
+            {
+              "dept": "eng",
+              "name": "Bo",
+              "salary": 90
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);INSERT INTO employees VALUES (1,'A','ops',70),(2,'B','ops',70),(3,'C','ops',60),(4,'D','ops',50);",
+          "expected": [
+            {
+              "dept": "ops",
+              "name": "A",
+              "salary": 70
+            },
+            {
+              "dept": "ops",
+              "name": "B",
+              "salary": 70
+            },
+            {
+              "dept": "ops",
+              "name": "C",
+              "salary": 60
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE employees(id INT PRIMARY KEY, name TEXT, dept TEXT, salary INT);INSERT INTO employees VALUES (1,'Solo','hr',40),(2,'X','eng',5),(3,'Y','eng',5),(4,'Z','eng',5);",
+          "expected": [
+            {
+              "dept": "eng",
+              "name": "X",
+              "salary": 5
+            },
+            {
+              "dept": "eng",
+              "name": "Y",
+              "salary": 5
+            },
+            {
+              "dept": "eng",
+              "name": "Z",
+              "salary": 5
+            },
+            {
+              "dept": "hr",
+              "name": "Solo",
+              "salary": 40
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Return every category **below** category `1` (children, grandchildren, ...) as `id`, `name` and `depth` (children of 1 have depth 1), ordered by `depth`, then `id`. Use a recursive CTE.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "WITH RECURSIVE tree AS (\n  SELECT id, name, parent_id, 1 AS depth FROM categories WHERE parent_id = 1\n  UNION ALL\n  SELECT c.id, c.name, c.parent_id, t.depth + 1\n  FROM categories c JOIN tree t ON c.id = t.parent_id\n)\nSELECT id, name, depth FROM tree ORDER BY depth, id;",
+      "referenceSolution": "WITH RECURSIVE tree AS (\n  SELECT id, name, parent_id, 1 AS depth FROM categories WHERE parent_id = 1\n  UNION ALL\n  SELECT c.id, c.name, c.parent_id, t.depth + 1\n  FROM categories c JOIN tree t ON c.parent_id = t.id\n)\nSELECT id, name, depth FROM tree ORDER BY depth, id;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE categories(id INT PRIMARY KEY, parent_id INT, name TEXT);INSERT INTO categories VALUES (1,NULL,'All'),(2,1,'Books'),(3,2,'Fiction'),(4,NULL,'Other');",
+          "expected": [
+            {
+              "id": 2,
+              "name": "Books",
+              "depth": 1
+            },
+            {
+              "id": 3,
+              "name": "Fiction",
+              "depth": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE categories(id INT PRIMARY KEY, parent_id INT, name TEXT);INSERT INTO categories VALUES (1,NULL,'All');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE categories(id INT PRIMARY KEY, parent_id INT, name TEXT);INSERT INTO categories VALUES (1,NULL,'All'),(2,1,'A'),(3,1,'B'),(4,2,'A1'),(5,4,'A1x'),(6,9,'Orphan');",
+          "expected": [
+            {
+              "id": 2,
+              "name": "A",
+              "depth": 1
+            },
+            {
+              "id": 3,
+              "name": "B",
+              "depth": 1
+            },
+            {
+              "id": 4,
+              "name": "A1",
+              "depth": 2
+            },
+            {
+              "id": 5,
+              "name": "A1x",
+              "depth": 3
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE categories(id INT PRIMARY KEY, parent_id INT, name TEXT);INSERT INTO categories VALUES (1,NULL,'All'),(7,1,'Toys'),(8,7,'Lego'),(9,7,'Dolls');",
+          "expected": [
+            {
+              "id": 7,
+              "name": "Toys",
+              "depth": 1
+            },
+            {
+              "id": 8,
+              "name": "Lego",
+              "depth": 2
+            },
+            {
+              "id": 9,
+              "name": "Dolls",
+              "depth": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Keyset pagination: the last row of the previous page had `created_at = '2024-01-02'` and `id = 5`. Return the **next 3** events in `(created_at, id)` order as `id` and `created_at`. Several events can share a `created_at`. (Row-value comparison works the same in PostgreSQL.)",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT id, created_at\nFROM events\nWHERE created_at > '2024-01-02'\nORDER BY created_at, id\nLIMIT 3;",
+      "referenceSolution": "SELECT id, created_at\nFROM events\nWHERE (created_at, id) > ('2024-01-02', 5)\nORDER BY created_at, id\nLIMIT 3;",
+      "sampleTests": [
+        {
+          "setup": "CREATE TABLE events(id INT PRIMARY KEY, created_at TEXT, kind TEXT);INSERT INTO events VALUES (4,'2024-01-02','a'),(5,'2024-01-02','b'),(6,'2024-01-02','c'),(7,'2024-01-03','d');",
+          "expected": [
+            {
+              "id": 6,
+              "created_at": "2024-01-02"
+            },
+            {
+              "id": 7,
+              "created_at": "2024-01-03"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "setup": "CREATE TABLE events(id INT PRIMARY KEY, created_at TEXT, kind TEXT);INSERT INTO events VALUES (5,'2024-01-02','x');",
+          "expected": []
+        },
+        {
+          "setup": "CREATE TABLE events(id INT PRIMARY KEY, created_at TEXT, kind TEXT);INSERT INTO events VALUES (1,'2024-01-01','a'),(5,'2024-01-02','b'),(9,'2024-01-02','c'),(12,'2024-01-02','d'),(2,'2024-01-05','e');",
+          "expected": [
+            {
+              "id": 9,
+              "created_at": "2024-01-02"
+            },
+            {
+              "id": 12,
+              "created_at": "2024-01-02"
+            },
+            {
+              "id": 2,
+              "created_at": "2024-01-05"
+            }
+          ]
+        },
+        {
+          "setup": "CREATE TABLE events(id INT PRIMARY KEY, created_at TEXT, kind TEXT);INSERT INTO events VALUES (3,'2024-01-02','a'),(8,'2024-01-04','b'),(10,'2024-01-06','c'),(11,'2024-01-07','d');",
+          "expected": [
+            {
+              "id": 8,
+              "created_at": "2024-01-04"
+            },
+            {
+              "id": 10,
+              "created_at": "2024-01-06"
+            },
+            {
+              "id": 11,
+              "created_at": "2024-01-07"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Checkout runs, in a READ COMMITTED transaction:\n\n```sql\nSELECT stock FROM products WHERE id = 7;   -- app checks stock > 0\nUPDATE products SET stock = 4 WHERE id = 7; -- app wrote (stock - 1)\n```\n\nUnder load, stock ends up higher than the number of items actually left.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Checkout runs, in a READ COMMITTED transaction:\n\n```sql\nSELECT stock FROM products WHERE id = 7;   -- app checks stock > 0\nUPDATE products SET stock = 4 WHERE id = 7; -- app wrote (stock - 1)\n```\n\nUnder load, stock ends up higher than the number of items actually left.",
+      "steps": [
+        {
+          "id": "why",
+          "question": "Why does stock drift?",
+          "options": [
+            "Two transactions read the same value and both write `value - 1` (a lost update)",
+            "READ COMMITTED shows uncommitted data",
+            "The UPDATE is not atomic in Postgres",
+            "Autovacuum resets the column"
+          ],
+          "correctIndex": 0,
+          "explanation": "Both transactions read 5 and both write 4; one decrement is lost."
+        },
+        {
+          "id": "fix",
+          "question": "What is the simplest correct fix?",
+          "options": [
+            "`UPDATE products SET stock = stock - 1 WHERE id = 7 AND stock > 0 RETURNING stock` and check a row came back",
+            "Wrap the two statements in `BEGIN ... COMMIT`",
+            "Add an index on `stock`",
+            "Retry the SELECT twice"
+          ],
+          "correctIndex": 0,
+          "explanation": "Doing the arithmetic in one atomic UPDATE with a guard means the row lock serialises decrements and stock can never go below zero."
+        },
+        {
+          "id": "serial",
+          "question": "Another team switches this flow to SERIALIZABLE instead. What must the app then do?",
+          "options": [
+            "Retry the transaction when it fails with a serialization error (SQLSTATE 40001)",
+            "Nothing; SERIALIZABLE never fails",
+            "Add `FOR UPDATE` to every SELECT in the codebase",
+            "Disable autovacuum on the table"
+          ],
+          "correctIndex": 0,
+          "explanation": "SERIALIZABLE prevents the anomaly by aborting one of the conflicting transactions; the app is expected to retry."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-postgresql-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You need a new required column `region text NOT NULL` on a 100M-row table without a long outage. Put the steps in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "You need a new required column `region text NOT NULL` on a 100M-row table without a long outage. Put the steps in order.",
+      "items": [
+        {
+          "id": "add",
+          "label": "Add the column as nullable: `ALTER TABLE accounts ADD COLUMN region text;`"
+        },
+        {
+          "id": "write",
+          "label": "Deploy app code that writes `region` on every insert and update"
+        },
+        {
+          "id": "backfill",
+          "label": "Backfill existing rows in small batches"
+        },
+        {
+          "id": "check",
+          "label": "Add `CHECK (region IS NOT NULL) NOT VALID`, then `VALIDATE CONSTRAINT` (no long exclusive lock)"
+        },
+        {
+          "id": "notnull",
+          "label": "Run `ALTER COLUMN region SET NOT NULL` (Postgres 12+ uses the validated check to skip the scan), then drop the check"
+        }
+      ],
+      "correctOrder": [
+        "add",
+        "write",
+        "backfill",
+        "check",
+        "notnull"
+      ],
+      "explanation": "Expand first, make new writes correct, backfill the old rows, then enforce the rule cheaply: a validated CHECK lets SET NOT NULL skip the full-table scan."
+    }
+  },
+  {
+    "id": "eng-postgresql-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A table that is updated constantly keeps growing on disk although the row count is stable. What is the most likely cause in PostgreSQL?",
+    "mcq": {
+      "options": [
+        "Dead row versions from MVCC are not being vacuumed fast enough (autovacuum is behind or blocked by a long-running transaction)",
+        "PostgreSQL never reuses space after an UPDATE",
+        "Indexes store a full copy of every row",
+        "The WAL is stored inside the table file"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each UPDATE writes a new row version; VACUUM marks the old ones reusable. If autovacuum lags, or a long-open transaction keeps old snapshots alive, dead tuples pile up and the table bloats.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You create `CREATE INDEX jobs_pending_idx ON jobs (run_at) WHERE status = 'pending';`. Which query can use it?",
+    "mcq": {
+      "options": [
+        "`SELECT * FROM jobs WHERE status = 'pending' AND run_at < now() ORDER BY run_at LIMIT 10`",
+        "`SELECT * FROM jobs WHERE status = 'failed' ORDER BY run_at`",
+        "`SELECT * FROM jobs WHERE run_at < now()`",
+        "`SELECT count(*) FROM jobs`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A partial index only contains rows matching its predicate, so the planner can use it only when the query's WHERE implies `status = 'pending'`. It stays small because finished jobs are not in it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-postgresql-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-postgresql",
+    "trackId": null,
+    "stackId": "stack-postgres",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your app connects through PgBouncer in **transaction** pooling mode. Which code is now unsafe?",
+    "mcq": {
+      "options": [
+        "`SET search_path` or a session advisory lock taken in one transaction and relied on in the next",
+        "A single `INSERT ... RETURNING id`",
+        "A transaction with several UPDATEs between BEGIN and COMMIT",
+        "A plain `SELECT` with a WHERE clause"
+      ],
+      "correctIndex": 0,
+      "explanation": "In transaction mode a client gets a server connection only for the length of a transaction, so session state (SET, session advisory locks, LISTEN, and on older setups prepared statements) can land on a different connection next time.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

@@ -1,0 +1,2452 @@
+[
+  {
+    "id": "eng-redis-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The team's key convention is `shop:<entity>:<id>` with the entity in lower case, plus `:<field>` when a field is given (e.g. `shop:user:42:cart`). Complete `buildKey(entity, id, field)`; `field` may be `null`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "buildKey",
+      "starterCode": "function buildKey(entity, id, field) {\n  return 'shop:' + entity.toLowerCase() + ':' + id;\n}",
+      "referenceSolution": "function buildKey(entity, id, field) {\n  const key = 'shop:' + entity.toLowerCase() + ':' + id;\n  return field ? key + ':' + field : key;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "User",
+            42,
+            null
+          ],
+          "expected": "shop:user:42"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "user",
+            42,
+            "cart"
+          ],
+          "expected": "shop:user:42:cart"
+        },
+        {
+          "args": [
+            "ORDER",
+            "a1b2",
+            null
+          ],
+          "expected": "shop:order:a1b2"
+        },
+        {
+          "args": [
+            "Product",
+            0,
+            "stock"
+          ],
+          "expected": "shop:product:0:stock"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `getProduct(id, now)` as **cache-aside**: return the cached value for `product:<id>` if present; otherwise load it with `loadFromDb(id)`, store it with a 60-second TTL, and return it. The driver reports what each call returned and how many times the database was hit.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function getProduct(id, now) {\n  const key = 'product:' + id;\n  const cached = cache.get(key, now);\n  if (cached !== null) return cached;\n  return loadFromDb(id);\n}\n\n// Test driver (leave as is): calls = [[id, now], ...]\nlet cache, dbHits;\nfunction loadFromDb(id) { dbHits += 1; return 'P' + id; }\nfunction run(calls) {\n  cache = makeStore();\n  dbHits = 0;\n  const values = calls.map(([id, now]) => getProduct(id, now));\n  return { values, dbHits };\n}\n// Fake Redis store (leave as is): key -> { value, expiresAt } (expiresAt null = no TTL).\nfunction makeStore() {\n  const data = new Map();\n  return {\n    get(key, now) {\n      const e = data.get(key);\n      if (!e) return null;\n      if (e.expiresAt !== null && now >= e.expiresAt) { data.delete(key); return null; }\n      return e.value;\n    },\n    set(key, value, now, ttl) { data.set(key, { value, expiresAt: ttl ? now + ttl : null }); },\n    del(key) { data.delete(key); },\n  };\n}",
+      "referenceSolution": "function getProduct(id, now) {\n  const key = 'product:' + id;\n  const cached = cache.get(key, now);\n  if (cached !== null) return cached;\n  const value = loadFromDb(id);\n  cache.set(key, value, now, 60);\n  return value;\n}\n\n// Test driver (leave as is): calls = [[id, now], ...]\nlet cache, dbHits;\nfunction loadFromDb(id) { dbHits += 1; return 'P' + id; }\nfunction run(calls) {\n  cache = makeStore();\n  dbHits = 0;\n  const values = calls.map(([id, now]) => getProduct(id, now));\n  return { values, dbHits };\n}\n// Fake Redis store (leave as is): key -> { value, expiresAt } (expiresAt null = no TTL).\nfunction makeStore() {\n  const data = new Map();\n  return {\n    get(key, now) {\n      const e = data.get(key);\n      if (!e) return null;\n      if (e.expiresAt !== null && now >= e.expiresAt) { data.delete(key); return null; }\n      return e.value;\n    },\n    set(key, value, now, ttl) { data.set(key, { value, expiresAt: ttl ? now + ttl : null }); },\n    del(key) { data.delete(key); },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "P1"
+            ],
+            "dbHits": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                10
+              ],
+              [
+                1,
+                20
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "P1",
+              "P1",
+              "P1"
+            ],
+            "dbHits": 1
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "P1",
+              "P2",
+              "P1"
+            ],
+            "dbHits": 2
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                61
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "P1",
+              "P1"
+            ],
+            "dbHits": 2
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "values": [],
+            "dbHits": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `ttl(entry, now)` to mimic the Redis `TTL` command: return `-2` when the key does not exist (`entry` is `null`), `-1` when it exists with no expiry (`expiresAt` is `null`), otherwise the whole seconds remaining (`expiresAt - now`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "ttl",
+      "starterCode": "function ttl(entry, now) {\n  if (entry === null) return -2;\n  return entry.expiresAt - now;\n}",
+      "referenceSolution": "function ttl(entry, now) {\n  if (entry === null) return -2;\n  if (entry.expiresAt === null) return -1;\n  return entry.expiresAt - now;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "expiresAt": 130
+            },
+            100
+          ],
+          "expected": 30
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null,
+            100
+          ],
+          "expected": -2
+        },
+        {
+          "args": [
+            {
+              "expiresAt": null
+            },
+            100
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            {
+              "expiresAt": 101
+            },
+            100
+          ],
+          "expected": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A low-level client returns `HGETALL` as a flat array `[field1, value1, field2, value2, ...]`. Complete `hgetallToObject(reply)` so it returns `{ field1: value1, ... }`. An empty reply (missing key) gives `{}`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "hgetallToObject",
+      "starterCode": "function hgetallToObject(reply) {\n  const out = {};\n  for (let i = 0; i < reply.length; i++) out[reply[i]] = reply[i + 1];\n  return out;\n}",
+      "referenceSolution": "function hgetallToObject(reply) {\n  const out = {};\n  for (let i = 0; i < reply.length; i += 2) out[reply[i]] = reply[i + 1];\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "name",
+              "Ada",
+              "plan",
+              "pro"
+            ]
+          ],
+          "expected": {
+            "name": "Ada",
+            "plan": "pro"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              "visits",
+              "3"
+            ]
+          ],
+          "expected": {
+            "visits": "3"
+          }
+        },
+        {
+          "args": [
+            [
+              "a",
+              "1",
+              "b",
+              "2",
+              "c",
+              "3"
+            ]
+          ],
+          "expected": {
+            "a": "1",
+            "b": "2",
+            "c": "3"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `incr(store, key)` to behave like Redis `INCR`: values are stored as strings; a missing key counts as `0`; return the new number and store it back as a string. The driver runs several calls and returns the results.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function incr(store, key) {\n  const next = parseInt(store[key], 10) + 1;\n  store[key] = String(next);\n  return next;\n}\n\n// Test driver (leave as is).\nfunction run(initial, keys) {\n  const store = { ...initial };\n  const results = keys.map((k) => incr(store, k));\n  return { results, store };\n}",
+      "referenceSolution": "function incr(store, key) {\n  const next = parseInt(store[key] ?? '0', 10) + 1;\n  store[key] = String(next);\n  return next;\n}\n\n// Test driver (leave as is).\nfunction run(initial, keys) {\n  const store = { ...initial };\n  const results = keys.map((k) => incr(store, k));\n  return { results, store };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "views": "9"
+            },
+            [
+              "views"
+            ]
+          ],
+          "expected": {
+            "results": [
+              10
+            ],
+            "store": {
+              "views": "10"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            [
+              "views",
+              "views"
+            ]
+          ],
+          "expected": {
+            "results": [
+              1,
+              2
+            ],
+            "store": {
+              "views": "2"
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "a": "5"
+            },
+            [
+              "a",
+              "b",
+              "a"
+            ]
+          ],
+          "expected": {
+            "results": [
+              6,
+              1,
+              7
+            ],
+            "store": {
+              "a": "7",
+              "b": "1"
+            }
+          }
+        },
+        {
+          "args": [
+            {},
+            []
+          ],
+          "expected": {
+            "results": [],
+            "store": {}
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Your Node API is adding Redis. For each piece of data, decide how to treat it.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your Node API is adding Redis. For each piece of data, decide how to treat it.",
+      "steps": [
+        {
+          "id": "catalog",
+          "question": "Product details: read thousands of times a minute, edited a few times a day.",
+          "options": [
+            "Cache in Redis with a TTL and delete the key when the product is edited",
+            "Never cache it",
+            "Store it only in Redis and drop the database table"
+          ],
+          "correctIndex": 0,
+          "explanation": "Read-heavy, rarely-changing data is the ideal cache-aside candidate."
+        },
+        {
+          "id": "session",
+          "question": "Login sessions that should expire after 30 minutes of inactivity.",
+          "options": [
+            "Store each session under its own key with a TTL that is reset on activity",
+            "Keep sessions in a Node `Map` in each server process",
+            "Write them to a log file"
+          ],
+          "correctIndex": 0,
+          "explanation": "A shared store with TTLs works across instances; an in-process Map is lost on restart and not shared behind a load balancer."
+        },
+        {
+          "id": "balance",
+          "question": "A wallet balance used to approve payments.",
+          "options": [
+            "Read it from the database (the source of truth) when approving a payment",
+            "Serve it from a cache with a 10-minute TTL",
+            "Store it only in the browser"
+          ],
+          "correctIndex": 0,
+          "explanation": "Stale money data causes real losses. Cache it for display at most, never for the decision."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `SET session:abc '{...}' EX 1800` do?",
+    "mcq": {
+      "options": [
+        "Stores the value and makes the key expire automatically after 1800 seconds",
+        "Stores the value for 1800 milliseconds",
+        "Stores the value only if the key already exists",
+        "Stores the value and keeps it until 1800 other keys are written"
+      ],
+      "correctIndex": 0,
+      "explanation": "`EX` sets the expiry in seconds (`PX` is milliseconds). `XX` would be \"only if it exists\".",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which Redis data type fits a game leaderboard that must return the top 10 players by score?",
+    "mcq": {
+      "options": [
+        "Sorted set (`ZADD`, `ZREVRANGE ... WITHSCORES`)",
+        "List (`LPUSH`, `LRANGE`)",
+        "String with a JSON array",
+        "Set (`SADD`, `SMEMBERS`)"
+      ],
+      "correctIndex": 0,
+      "explanation": "A sorted set keeps members ordered by score, so updates and top-N reads are O(log N) instead of re-sorting a JSON blob.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why is Redis a common choice for a cache in front of a SQL database?",
+    "mcq": {
+      "options": [
+        "It keeps data in memory, so simple reads take well under a millisecond",
+        "It guarantees data is never lost",
+        "It can run SQL joins faster than the database",
+        "It automatically stays in sync with the database"
+      ],
+      "correctIndex": 0,
+      "explanation": "Speed comes from memory. Redis does not sync itself with your database; your code must set and invalidate keys.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This cache-aside helper keeps `{ value, expiresAt }` in a `Map`, with a 30-second TTL. Users report stale profiles that never refresh. Fix `getUser` so an entry is only used while `now < expiresAt`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function getUser(id, now) {\n  const key = 'user:' + id;\n  const entry = cache.get(key);\n  if (entry) return entry.value;\n  const value = loadFromDb(id);\n  cache.set(key, { value, expiresAt: now + 30 });\n  return value;\n}\n\n// Test driver (leave as is): calls = [[id, now], ...]\nlet cache, dbHits;\nfunction loadFromDb(id) { dbHits += 1; return 'U' + id; }\nfunction run(calls) {\n  cache = new Map();\n  dbHits = 0;\n  const values = calls.map(([id, now]) => getUser(id, now));\n  return { values, dbHits };\n}",
+      "referenceSolution": "function getUser(id, now) {\n  const key = 'user:' + id;\n  const entry = cache.get(key);\n  if (entry && now < entry.expiresAt) return entry.value;\n  const value = loadFromDb(id);\n  cache.set(key, { value, expiresAt: now + 30 });\n  return value;\n}\n\n// Test driver (leave as is): calls = [[id, now], ...]\nlet cache, dbHits;\nfunction loadFromDb(id) { dbHits += 1; return 'U' + id; }\nfunction run(calls) {\n  cache = new Map();\n  dbHits = 0;\n  const values = calls.map(([id, now]) => getUser(id, now));\n  return { values, dbHits };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                5
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "U1",
+              "U1"
+            ],
+            "dbHits": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                30
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "U1",
+              "U1"
+            ],
+            "dbHits": 2
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                29
+              ],
+              [
+                1,
+                45
+              ],
+              [
+                1,
+                50
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "U1",
+              "U1",
+              "U1",
+              "U1"
+            ],
+            "dbHits": 2
+          }
+        },
+        {
+          "args": [
+            [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                100
+              ]
+            ]
+          ],
+          "expected": {
+            "values": [
+              "U1",
+              "U2",
+              "U1"
+            ],
+            "dbHits": 3
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "values": [],
+            "dbHits": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Complete `allow(userId, now)`, a **fixed-window** rate limiter built the Redis way: `INCR` a key named `rl:<userId>:<window>` where `window = Math.floor(now / 60)`, and allow the request while the count is at most `LIMIT` (3). `counters` stands in for Redis.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function allow(userId, now) {\n  const key = 'rl:' + userId;\n  counters[key] = (counters[key] || 0) + 1;\n  return counters[key] <= LIMIT;\n}\n\n// Test driver (leave as is): requests = [[userId, now], ...]\nconst LIMIT = 3;\nlet counters;\nfunction run(requests) {\n  counters = {};\n  return requests.map(([u, t]) => allow(u, t));\n}",
+      "referenceSolution": "function allow(userId, now) {\n  const key = 'rl:' + userId + ':' + Math.floor(now / 60);\n  counters[key] = (counters[key] || 0) + 1;\n  return counters[key] <= LIMIT;\n}\n\n// Test driver (leave as is): requests = [[userId, now], ...]\nconst LIMIT = 3;\nlet counters;\nfunction run(requests) {\n  counters = {};\n  return requests.map(([u, t]) => allow(u, t));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                0
+              ],
+              [
+                "a",
+                1
+              ],
+              [
+                "a",
+                2
+              ],
+              [
+                "a",
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            true,
+            false
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "a",
+                0
+              ],
+              [
+                "a",
+                1
+              ],
+              [
+                "a",
+                2
+              ],
+              [
+                "a",
+                3
+              ],
+              [
+                "a",
+                60
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            true,
+            false,
+            true
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                0
+              ],
+              [
+                "b",
+                0
+              ],
+              [
+                "a",
+                0
+              ],
+              [
+                "b",
+                0
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                59
+              ],
+              [
+                "a",
+                59
+              ],
+              [
+                "a",
+                59
+              ],
+              [
+                "a",
+                120
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `topN(scores, n)` like `ZREVRANGE leaderboard 0 n-1 WITHSCORES`: `scores` maps member to score; return `[member, score]` pairs, highest score first. For equal scores, order members alphabetically.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "topN",
+      "starterCode": "function topN(scores, n) {\n  return Object.entries(scores)\n    .sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0]))\n    .slice(0, n);\n}",
+      "referenceSolution": "function topN(scores, n) {\n  return Object.entries(scores)\n    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))\n    .slice(0, n);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "ada": 50,
+              "bo": 80,
+              "cy": 20
+            },
+            2
+          ],
+          "expected": [
+            [
+              "bo",
+              80
+            ],
+            [
+              "ada",
+              50
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "ada": 50,
+              "bo": 50,
+              "cy": 90
+            },
+            3
+          ],
+          "expected": [
+            [
+              "cy",
+              90
+            ],
+            [
+              "ada",
+              50
+            ],
+            [
+              "bo",
+              50
+            ]
+          ]
+        },
+        {
+          "args": [
+            {},
+            5
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "x": 1
+            },
+            10
+          ],
+          "expected": [
+            [
+              "x",
+              1
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Sessions should expire after 30 minutes (1800 s) of **inactivity**: every request that finds a live session must push its expiry out again (like calling `EXPIRE` on each hit). Fix `touch(sid, now)`; it returns `true` when the session is still alive.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function touch(sid, now) {\n  const expiresAt = sessions.get(sid);\n  if (expiresAt === undefined || now >= expiresAt) { sessions.delete(sid); return false; }\n  return true;\n}\n\n// Test driver (leave as is): login(sid, now) creates a session; hits = [[sid, now], ...]\nconst IDLE = 1800;\nlet sessions;\nfunction login(sid, now) { sessions.set(sid, now + IDLE); }\nfunction run(loginAt, hits) {\n  sessions = new Map();\n  login('s1', loginAt);\n  return hits.map(([sid, t]) => touch(sid, t));\n}",
+      "referenceSolution": "function touch(sid, now) {\n  const expiresAt = sessions.get(sid);\n  if (expiresAt === undefined || now >= expiresAt) { sessions.delete(sid); return false; }\n  sessions.set(sid, now + IDLE);\n  return true;\n}\n\n// Test driver (leave as is): login(sid, now) creates a session; hits = [[sid, now], ...]\nconst IDLE = 1800;\nlet sessions;\nfunction login(sid, now) { sessions.set(sid, now + IDLE); }\nfunction run(loginAt, hits) {\n  sessions = new Map();\n  login('s1', loginAt);\n  return hits.map(([sid, t]) => touch(sid, t));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            0,
+            [
+              [
+                "s1",
+                100
+              ]
+            ]
+          ],
+          "expected": [
+            true
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0,
+            [
+              [
+                "s1",
+                1000
+              ],
+              [
+                "s1",
+                2500
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true
+          ]
+        },
+        {
+          "args": [
+            0,
+            [
+              [
+                "s1",
+                1800
+              ]
+            ]
+          ],
+          "expected": [
+            false
+          ]
+        },
+        {
+          "args": [
+            0,
+            [
+              [
+                "s1",
+                1000
+              ],
+              [
+                "s1",
+                2700
+              ],
+              [
+                "s1",
+                4600
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "args": [
+            0,
+            [
+              [
+                "nope",
+                10
+              ]
+            ]
+          ],
+          "expected": [
+            false
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "To invalidate a user's cached data the app scans keys with a glob such as `user:42:*`. Complete `matchKeys(keys, pattern)` supporting `*` (any characters, including none) and return the matching keys in their original order. Other characters match literally.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matchKeys",
+      "starterCode": "function matchKeys(keys, pattern) {\n  return keys.filter((k) => k.startsWith(pattern));\n}",
+      "referenceSolution": "function matchKeys(keys, pattern) {\n  const parts = pattern.split('*');\n  return keys.filter((k) => {\n    if (parts.length === 1) return k === pattern;\n    if (!k.startsWith(parts[0])) return false;\n    let pos = parts[0].length;\n    for (let i = 1; i < parts.length - 1; i++) {\n      const at = k.indexOf(parts[i], pos);\n      if (at < 0) return false;\n      pos = at + parts[i].length;\n    }\n    const last = parts[parts.length - 1];\n    return k.length - last.length >= pos && k.endsWith(last);\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "user:42:cart",
+              "user:42:profile",
+              "user:7:cart"
+            ],
+            "user:42:*"
+          ],
+          "expected": [
+            "user:42:cart",
+            "user:42:profile"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "user:42:cart",
+              "user:420:cart"
+            ],
+            "user:42:*"
+          ],
+          "expected": [
+            "user:42:cart"
+          ]
+        },
+        {
+          "args": [
+            [
+              "user:1:cart",
+              "user:2:cart",
+              "user:2:wish"
+            ],
+            "user:*:cart"
+          ],
+          "expected": [
+            "user:1:cart",
+            "user:2:cart"
+          ]
+        },
+        {
+          "args": [
+            [],
+            "user:*"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a.b",
+              "axb"
+            ],
+            "a.b"
+          ],
+          "expected": [
+            "a.b"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This Node module wraps Redis for the product API. Mark the two lines that will cause trouble in production.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This Node module wraps Redis for the product API. Mark the two lines that will cause trouble in production.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const redis = createClient({ url: process.env.REDIS_URL });",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "async function getProduct(id) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  const hit = await redis.get(`product:${id}`);",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  if (hit) return JSON.parse(hit);",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  const product = await db.products.findById(id);",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  await redis.set(`product:${id}`, JSON.stringify(product));",
+          "issue": "No TTL: if an invalidation is ever missed the stale value lives forever, and memory only grows."
+        },
+        {
+          "id": "l7",
+          "text": "  return product;",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "async function clearProductCache() {",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "  const keys = await redis.keys('product:*');",
+          "issue": "`KEYS` is O(N) and blocks the single-threaded server while it walks every key; use `SCAN` in batches."
+        },
+        {
+          "id": "l11",
+          "text": "  if (keys.length) await redis.del(keys);",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-redis-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A product is updated in the database. With cache-aside, what should the write path usually do with `product:42`?",
+    "mcq": {
+      "options": [
+        "Delete the key so the next read reloads fresh data",
+        "Leave it; the TTL will fix it eventually",
+        "Flush the entire Redis database",
+        "Set the key to `null`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Deleting on write is the simple, standard invalidation. Waiting for the TTL serves stale data; `FLUSHDB` throws away every other user's cache.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `INCR page:views` return when `page:views` holds the string `\"hello\"`?",
+    "mcq": {
+      "options": [
+        "An error: the value is not an integer",
+        "1",
+        "\"hello1\"",
+        "0"
+      ],
+      "correctIndex": 0,
+      "explanation": "`INCR` only works on strings that parse as 64-bit integers; otherwise Redis replies `ERR value is not an integer or out of range`. A missing key starts at 0.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why is a fixed-window limiter like `INCR rl:user:<minute>` + `EXPIRE` popular despite its known weakness?",
+    "mcq": {
+      "options": [
+        "It is one cheap atomic counter per user per window; the weakness is that a burst at a window boundary can allow up to twice the limit",
+        "It is perfectly accurate at all times",
+        "It needs no memory at all",
+        "It works without any expiry"
+      ],
+      "correctIndex": 0,
+      "explanation": "INCR is atomic, so concurrent requests count correctly. Sliding-window or token-bucket variants smooth the boundary burst at the cost of more work.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This LRU cache (the policy behind Redis `allkeys-lru`) evicts the least recently **used** key when full. Reads count as use, but the current code only tracks writes. Fix `get`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "class LRU {\n  constructor(cap) { this.cap = cap; this.map = new Map(); }\n  get(k) {\n    return this.map.has(k) ? this.map.get(k) : null;\n  }\n  set(k, v) {\n    this.map.delete(k);\n    this.map.set(k, v);\n    if (this.map.size > this.cap) this.map.delete(this.map.keys().next().value);\n  }\n}\n\n// Test driver (leave as is): ops = [['set', k, v] | ['get', k]]; returns every get result.\nfunction run(cap, ops) {\n  const lru = new LRU(cap);\n  const out = [];\n  for (const [op, k, v] of ops) op === 'set' ? lru.set(k, v) : out.push(lru.get(k));\n  return out;\n}",
+      "referenceSolution": "class LRU {\n  constructor(cap) { this.cap = cap; this.map = new Map(); }\n  get(k) {\n    if (!this.map.has(k)) return null;\n    const v = this.map.get(k);\n    this.map.delete(k);\n    this.map.set(k, v);\n    return v;\n  }\n  set(k, v) {\n    this.map.delete(k);\n    this.map.set(k, v);\n    if (this.map.size > this.cap) this.map.delete(this.map.keys().next().value);\n  }\n}\n\n// Test driver (leave as is): ops = [['set', k, v] | ['get', k]]; returns every get result.\nfunction run(cap, ops) {\n  const lru = new LRU(cap);\n  const out = [];\n  for (const [op, k, v] of ops) op === 'set' ? lru.set(k, v) : out.push(lru.get(k));\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2,
+            [
+              [
+                "set",
+                "a",
+                1
+              ],
+              [
+                "set",
+                "b",
+                2
+              ],
+              [
+                "get",
+                "a"
+              ]
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            2,
+            [
+              [
+                "set",
+                "a",
+                1
+              ],
+              [
+                "set",
+                "b",
+                2
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "set",
+                "c",
+                3
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "get",
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            1,
+            1,
+            null
+          ]
+        },
+        {
+          "args": [
+            1,
+            [
+              [
+                "set",
+                "a",
+                1
+              ],
+              [
+                "set",
+                "b",
+                2
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "get",
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            null,
+            2
+          ]
+        },
+        {
+          "args": [
+            2,
+            [
+              [
+                "get",
+                "x"
+              ]
+            ]
+          ],
+          "expected": [
+            null
+          ]
+        },
+        {
+          "args": [
+            2,
+            [
+              [
+                "set",
+                "a",
+                1
+              ],
+              [
+                "set",
+                "b",
+                2
+              ],
+              [
+                "set",
+                "a",
+                9
+              ],
+              [
+                "set",
+                "c",
+                3
+              ],
+              [
+                "get",
+                "a"
+              ],
+              [
+                "get",
+                "b"
+              ]
+            ]
+          ],
+          "expected": [
+            9,
+            null
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The cache stores `{ value, freshUntil, staleUntil }` for **stale-while-revalidate**. Complete `decide(entry, now)`: return `'fresh'` before `freshUntil`; `'stale'` (serve it, refresh in the background) from `freshUntil` until before `staleUntil`; and `'miss'` when there is no entry or it is past `staleUntil`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "decide",
+      "starterCode": "function decide(entry, now) {\n  if (!entry) return 'miss';\n  if (now < entry.freshUntil) return 'fresh';\n  return 'miss';\n}",
+      "referenceSolution": "function decide(entry, now) {\n  if (!entry) return 'miss';\n  if (now < entry.freshUntil) return 'fresh';\n  if (now < entry.staleUntil) return 'stale';\n  return 'miss';\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "value": 1,
+              "freshUntil": 60,
+              "staleUntil": 300
+            },
+            10
+          ],
+          "expected": "fresh"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "value": 1,
+              "freshUntil": 60,
+              "staleUntil": 300
+            },
+            60
+          ],
+          "expected": "stale"
+        },
+        {
+          "args": [
+            {
+              "value": 1,
+              "freshUntil": 60,
+              "staleUntil": 300
+            },
+            299
+          ],
+          "expected": "stale"
+        },
+        {
+          "args": [
+            {
+              "value": 1,
+              "freshUntil": 60,
+              "staleUntil": 300
+            },
+            300
+          ],
+          "expected": "miss"
+        },
+        {
+          "args": [
+            null,
+            0
+          ],
+          "expected": "miss"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Cached pages are tagged (like keeping a Redis set `tag:<name>` of keys). `invalidateTag(tag)` must delete **every** key carrying that tag and then clear the tag's set. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function invalidateTag(tag) {\n  const keys = [...(tags.get(tag) || [])];\n  if (keys.length) cache.delete(keys[0]);\n  tags.delete(tag);\n}\n\n// Test driver (leave as is).\nlet cache, tags;\nfunction put(key, value, tagList) {\n  cache.set(key, value);\n  for (const t of tagList) {\n    if (!tags.has(t)) tags.set(t, new Set());\n    tags.get(t).add(key);\n  }\n}\nfunction run(entries, tagToInvalidate) {\n  cache = new Map();\n  tags = new Map();\n  for (const [k, v, t] of entries) put(k, v, t);\n  invalidateTag(tagToInvalidate);\n  return [...cache.keys()].sort();\n}",
+      "referenceSolution": "function invalidateTag(tag) {\n  for (const key of tags.get(tag) || []) cache.delete(key);\n  tags.delete(tag);\n}\n\n// Test driver (leave as is).\nlet cache, tags;\nfunction put(key, value, tagList) {\n  cache.set(key, value);\n  for (const t of tagList) {\n    if (!tags.has(t)) tags.set(t, new Set());\n    tags.get(t).add(key);\n  }\n}\nfunction run(entries, tagToInvalidate) {\n  cache = new Map();\n  tags = new Map();\n  for (const [k, v, t] of entries) put(k, v, t);\n  invalidateTag(tagToInvalidate);\n  return [...cache.keys()].sort();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "page:1",
+                "x",
+                [
+                  "product:9"
+                ]
+              ],
+              [
+                "page:2",
+                "y",
+                []
+              ]
+            ],
+            "product:9"
+          ],
+          "expected": [
+            "page:2"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "page:1",
+                "x",
+                [
+                  "product:9"
+                ]
+              ],
+              [
+                "page:2",
+                "y",
+                [
+                  "product:9"
+                ]
+              ],
+              [
+                "page:3",
+                "z",
+                [
+                  "product:1"
+                ]
+              ]
+            ],
+            "product:9"
+          ],
+          "expected": [
+            "page:3"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "page:1",
+                "x",
+                [
+                  "a"
+                ]
+              ]
+            ],
+            "missing"
+          ],
+          "expected": [
+            "page:1"
+          ]
+        },
+        {
+          "args": [
+            [],
+            "a"
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A **sliding-window log** limiter keeps each request time in a sorted set (`ZADD`), removes entries older than the window (`ZREMRANGEBYSCORE`), and allows the request when fewer than `limit` remain (`ZCARD`). Fix `allow(log, now)` so old entries are removed: an entry at time `t` is outside the window when `t <= now - WINDOW`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function allow(log, now) {\n  if (log.length >= LIMIT) return false;\n  log.push(now);\n  return true;\n}\n\n// Test driver (leave as is).\nconst WINDOW = 10;\nconst LIMIT = 2;\nfunction run(times) {\n  let log = [];\n  return times.map((t) => allow(log, t));\n}",
+      "referenceSolution": "function allow(log, now) {\n  while (log.length && log[0] <= now - WINDOW) log.shift();\n  if (log.length >= LIMIT) return false;\n  log.push(now);\n  return true;\n}\n\n// Test driver (leave as is).\nconst WINDOW = 10;\nconst LIMIT = 2;\nfunction run(times) {\n  let log = [];\n  return times.map((t) => allow(log, t));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              0,
+              1,
+              2
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              0,
+              1,
+              2,
+              10,
+              11
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false,
+            true,
+            true
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              5,
+              9,
+              15
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false,
+            true
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A simple Redis lock is `SET lock:job <token> NX PX <ttl>`. Releasing must only delete the lock when it still holds **your** token (otherwise you free someone else's lock after yours expired). Fix `release`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function acquire(token, now, ttl) {\n  if (lock && now < lock.expiresAt) return false;\n  lock = { token, expiresAt: now + ttl };\n  return true;\n}\n\nfunction release(token) {\n  if (!lock) return false;\n  lock = null;\n  return true;\n}\n\n// Test driver (leave as is): ops = [['acquire', token, now, ttl] | ['release', token]]\nlet lock;\nfunction run(ops) {\n  lock = null;\n  return ops.map(([op, token, now, ttl]) => (op === 'acquire' ? acquire(token, now, ttl) : release(token)));\n}",
+      "referenceSolution": "function acquire(token, now, ttl) {\n  if (lock && now < lock.expiresAt) return false;\n  lock = { token, expiresAt: now + ttl };\n  return true;\n}\n\nfunction release(token) {\n  if (!lock || lock.token !== token) return false;\n  lock = null;\n  return true;\n}\n\n// Test driver (leave as is): ops = [['acquire', token, now, ttl] | ['release', token]]\nlet lock;\nfunction run(ops) {\n  lock = null;\n  return ops.map(([op, token, now, ttl]) => (op === 'acquire' ? acquire(token, now, ttl) : release(token)));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "acquire",
+                "a",
+                0,
+                100
+              ],
+              [
+                "release",
+                "a"
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "acquire",
+                "a",
+                0,
+                100
+              ],
+              [
+                "acquire",
+                "b",
+                50,
+                100
+              ],
+              [
+                "release",
+                "b"
+              ],
+              [
+                "acquire",
+                "b",
+                60,
+                100
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "acquire",
+                "a",
+                0,
+                10
+              ],
+              [
+                "acquire",
+                "b",
+                20,
+                100
+              ],
+              [
+                "release",
+                "a"
+              ],
+              [
+                "acquire",
+                "c",
+                30,
+                100
+              ]
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "release",
+                "x"
+              ]
+            ]
+          ],
+          "expected": [
+            false
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "At 09:00 every day the homepage feed key (`feed:home`, TTL 300 s) expires during peak traffic, 4,000 requests miss at once, all query Postgres, and the database CPU hits 100%.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "At 09:00 every day the homepage feed key (`feed:home`, TTL 300 s) expires during peak traffic, 4,000 requests miss at once, all query Postgres, and the database CPU hits 100%.",
+      "steps": [
+        {
+          "id": "name",
+          "question": "What is this called?",
+          "options": [
+            "A cache stampede (thundering herd)",
+            "Cache penetration",
+            "A hot shard",
+            "Write amplification"
+          ],
+          "correctIndex": 0,
+          "explanation": "Many concurrent misses on one hot key all rebuilding it at once is a stampede."
+        },
+        {
+          "id": "fix",
+          "question": "Which change stops the 4,000 parallel rebuilds most directly?",
+          "options": [
+            "Let one request rebuild under a short lock (`SET feed:home:lock NX PX 5000`) while others serve the stale value or wait briefly",
+            "Raise the TTL to 24 hours",
+            "Add a second Redis replica",
+            "Retry failed DB queries three times"
+          ],
+          "correctIndex": 0,
+          "explanation": "Single-flight rebuilding (or stale-while-revalidate) turns N rebuilds into one. A longer TTL only moves the cliff; retries add load."
+        },
+        {
+          "id": "mass",
+          "question": "Separately, 50,000 product keys were warmed at deploy time with the same 3600 s TTL and all expire together. What helps?",
+          "options": [
+            "Add random jitter to each TTL (e.g. 3600 ± 10%)",
+            "Warm them again at the same time each hour",
+            "Use `FLUSHALL` before every deploy",
+            "Disable expiry for product keys"
+          ],
+          "correctIndex": 0,
+          "explanation": "Jitter spreads expiries over time so they do not all miss in the same second."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Two app servers run this to count likes: `const n = Number(await redis.get(k)); await redis.set(k, n + 1);`. Under load the count is lower than expected. What is the fix?",
+    "mcq": {
+      "options": [
+        "Use `INCR k`, which increments atomically on the server",
+        "Wrap the two calls in `try/catch`",
+        "Use `GET` with a shorter timeout",
+        "Add a TTL to the key"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each command is atomic, but get-then-set in the app is a race: two servers read the same value and both write n + 1. `INCR` does it in one atomic step.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Redis runs out of memory with `maxmemory-policy volatile-lru` and most keys were written without a TTL. What happens to new writes?",
+    "mcq": {
+      "options": [
+        "They fail with an OOM error, because only keys with a TTL are eligible for eviction",
+        "Redis evicts the least recently used keys regardless of TTL",
+        "Redis writes the overflow to disk and keeps going",
+        "Redis silently drops the new writes"
+      ],
+      "correctIndex": 0,
+      "explanation": "`volatile-*` policies only evict keys that have an expiry. If none are left, Redis behaves like `noeviction`. A pure cache usually wants `allkeys-lru` or `allkeys-lfu`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A page needs 200 cached product keys. Why use `MGET` (or a pipeline) instead of 200 awaited `GET` calls?",
+    "mcq": {
+      "options": [
+        "One round-trip instead of 200; network latency, not Redis, dominates the time",
+        "MGET uses less memory on the server",
+        "GET cannot read JSON values",
+        "MGET is the only way to read keys with a TTL"
+      ],
+      "correctIndex": 0,
+      "explanation": "At ~0.5 ms per round-trip, 200 sequential calls cost ~100 ms; one MGET or a pipeline costs about one round-trip.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A **token bucket** limiter stores `{ tokens, last }` per client. On each request it refills `RATE` tokens per second since `last`, **never above `CAPACITY`**, then spends one token if it has one. Fix `allow`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function allow(state, now) {\n  state.tokens = state.tokens + (now - state.last) * RATE;\n  state.last = now;\n  if (state.tokens < 1) return false;\n  state.tokens -= 1;\n  return true;\n}\n\n// Test driver (leave as is): starts full at time 0; times are seconds.\nconst CAPACITY = 2;\nconst RATE = 1;\nfunction run(times) {\n  const state = { tokens: CAPACITY, last: 0 };\n  return times.map((t) => allow(state, t));\n}",
+      "referenceSolution": "function allow(state, now) {\n  state.tokens = Math.min(CAPACITY, state.tokens + (now - state.last) * RATE);\n  state.last = now;\n  if (state.tokens < 1) return false;\n  state.tokens -= 1;\n  return true;\n}\n\n// Test driver (leave as is): starts full at time 0; times are seconds.\nconst CAPACITY = 2;\nconst RATE = 1;\nfunction run(times) {\n  const state = { tokens: CAPACITY, last: 0 };\n  return times.map((t) => allow(state, t));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              100,
+              100,
+              100
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              1,
+              1,
+              3
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            true,
+            false,
+            true
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              0,
+              0,
+              0.5,
+              1
+            ]
+          ],
+          "expected": [
+            true,
+            true,
+            false,
+            true
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Complete `pickVictim(keys, policy)` for an eviction simulation. Each key is `{ name, lastUsed, hasTtl }`. Policies: `'allkeys-lru'` evicts the key with the smallest `lastUsed`; `'volatile-lru'` does the same but only among keys with `hasTtl`; `'noeviction'` evicts nothing. Return the key name, or `null` when nothing can be evicted.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pickVictim",
+      "starterCode": "function pickVictim(keys, policy) {\n  if (!keys.length) return null;\n  return [...keys].sort((a, b) => a.lastUsed - b.lastUsed)[0].name;\n}",
+      "referenceSolution": "function pickVictim(keys, policy) {\n  if (policy === 'noeviction') return null;\n  const pool = policy === 'volatile-lru' ? keys.filter((k) => k.hasTtl) : keys;\n  if (!pool.length) return null;\n  return [...pool].sort((a, b) => a.lastUsed - b.lastUsed)[0].name;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "lastUsed": 5,
+                "hasTtl": false
+              },
+              {
+                "name": "b",
+                "lastUsed": 9,
+                "hasTtl": true
+              }
+            ],
+            "allkeys-lru"
+          ],
+          "expected": "a"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "lastUsed": 5,
+                "hasTtl": false
+              },
+              {
+                "name": "b",
+                "lastUsed": 9,
+                "hasTtl": true
+              }
+            ],
+            "volatile-lru"
+          ],
+          "expected": "b"
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "lastUsed": 5,
+                "hasTtl": false
+              }
+            ],
+            "volatile-lru"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "lastUsed": 5,
+                "hasTtl": true
+              }
+            ],
+            "noeviction"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [],
+            "allkeys-lru"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "To avoid stampedes, **probabilistic early expiration** (XFetch) recomputes a value slightly before it expires: recompute when `now - delta * beta * Math.log(rand) >= expiry`, where `delta` is how long the recompute takes and `rand` is in (0, 1]. `rand` is injected so tests are deterministic. Fix `shouldRecompute`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "shouldRecompute",
+      "starterCode": "function shouldRecompute(now, expiry, delta, beta, rand) {\n  return now >= expiry;\n}",
+      "referenceSolution": "function shouldRecompute(now, expiry, delta, beta, rand) {\n  return now - delta * beta * Math.log(rand) >= expiry;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            100,
+            100,
+            2,
+            1,
+            0.5
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            90,
+            100,
+            2,
+            1,
+            0.5
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            99,
+            100,
+            2,
+            1,
+            0.5
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            50,
+            100,
+            2,
+            1,
+            1
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            98,
+            100,
+            10,
+            1,
+            0.5
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Instead of deleting thousands of keys, the team invalidates a whole namespace by bumping a version counter (`INCR ver:catalog`) and putting the version in every key: `catalog:v<version>:<id>`. Old keys simply age out via TTL. Fix `keyFor` so a bump really invalidates.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function keyFor(id) {\n  return 'catalog:' + id;\n}\n\n// Test driver (leave as is): ops = [['get', id] | ['bump']]; returns 'hit' or 'miss' per get.\nlet cache, version;\nfunction get(id) {\n  const k = keyFor(id);\n  if (cache.has(k)) return 'hit';\n  cache.set(k, 'value');\n  return 'miss';\n}\nfunction run(ops) {\n  cache = new Map();\n  version = 1;\n  const out = [];\n  for (const [op, id] of ops) {\n    if (op === 'bump') version += 1;\n    else out.push(get(id));\n  }\n  return out;\n}",
+      "referenceSolution": "function keyFor(id) {\n  return 'catalog:v' + version + ':' + id;\n}\n\n// Test driver (leave as is): ops = [['get', id] | ['bump']]; returns 'hit' or 'miss' per get.\nlet cache, version;\nfunction get(id) {\n  const k = keyFor(id);\n  if (cache.has(k)) return 'hit';\n  cache.set(k, 'value');\n  return 'miss';\n}\nfunction run(ops) {\n  cache = new Map();\n  version = 1;\n  const out = [];\n  for (const [op, id] of ops) {\n    if (op === 'bump') version += 1;\n    else out.push(get(id));\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "get",
+                1
+              ],
+              [
+                "get",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            "miss",
+            "hit"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "get",
+                1
+              ],
+              [
+                "bump"
+              ],
+              [
+                "get",
+                1
+              ],
+              [
+                "get",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            "miss",
+            "miss",
+            "hit"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "get",
+                1
+              ],
+              [
+                "get",
+                2
+              ],
+              [
+                "bump"
+              ],
+              [
+                "get",
+                2
+              ],
+              [
+                "get",
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            "miss",
+            "miss",
+            "miss",
+            "miss"
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "bump"
+              ],
+              [
+                "bump"
+              ]
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Complete `mgetBatches(keys, size)`: split the keys a page needs into `MGET` batches of at most `size` keys, **dropping duplicates** (keep the first occurrence order) so no key is fetched twice.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mgetBatches",
+      "starterCode": "function mgetBatches(keys, size) {\n  const out = [];\n  for (let i = 0; i < keys.length; i += size) out.push(keys.slice(i, i + size));\n  return out;\n}",
+      "referenceSolution": "function mgetBatches(keys, size) {\n  const unique = [...new Set(keys)];\n  const out = [];\n  for (let i = 0; i < unique.length; i += size) out.push(unique.slice(i, i + size));\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            2
+          ],
+          "expected": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "a",
+              "c",
+              "b"
+            ],
+            2
+          ],
+          "expected": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c"
+            ]
+          ]
+        },
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "x",
+              "x",
+              "x"
+            ],
+            5
+          ],
+          "expected": [
+            [
+              "x"
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "One Redis instance (maxmemory 8 GB, `maxmemory-policy noeviction`) holds both page caches and user sessions. During a traffic spike memory fills up.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "One Redis instance (maxmemory 8 GB, `maxmemory-policy noeviction`) holds both page caches and user sessions. During a traffic spike memory fills up.",
+      "steps": [
+        {
+          "id": "symptom",
+          "question": "What do users see first?",
+          "options": [
+            "Writes fail with OOM errors, so logins and cache fills start failing",
+            "Redis quietly evicts old sessions",
+            "Redis spills to disk and slows down a little",
+            "Nothing; reads and writes continue"
+          ],
+          "correctIndex": 0,
+          "explanation": "`noeviction` rejects writes once maxmemory is reached; reads still work."
+        },
+        {
+          "id": "policy",
+          "question": "What is the better long-term layout?",
+          "options": [
+            "Separate instances: caches with `allkeys-lru`, sessions with `noeviction` plus persistence and alerts on memory",
+            "One instance with `allkeys-lru` for everything",
+            "One instance with `noeviction` and a bigger box",
+            "Store sessions in the cache with no TTL"
+          ],
+          "correctIndex": 0,
+          "explanation": "Caches should be evictable; sessions should not be silently evicted (users get logged out). Different data, different policies."
+        },
+        {
+          "id": "persist",
+          "question": "For the session instance, which persistence setting fits?",
+          "options": [
+            "AOF with `appendfsync everysec` (lose at most about a second on crash)",
+            "No persistence at all",
+            "`appendfsync always` on every instance including caches",
+            "RDB snapshot once a day only"
+          ],
+          "correctIndex": 0,
+          "explanation": "everysec is the usual balance of durability and throughput; a daily snapshot loses a day of sessions."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-redis-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In Redis Cluster, `MGET user:1:name user:1:email` fails with `CROSSSLOT`. How do you keep a user's keys usable together?",
+    "mcq": {
+      "options": [
+        "Use a hash tag, e.g. `user:{1}:name` and `user:{1}:email`, so both hash to the same slot",
+        "Use `SELECT 1` to put them in the same database",
+        "Turn off cluster mode for MGET",
+        "Prefix every key with the node name"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only the part inside `{}` is hashed, so keys sharing a tag land in the same slot and multi-key commands work. Databases other than 0 do not exist in cluster mode.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Inside `MULTI ... EXEC`, the second of three commands fails at run time (e.g. `INCR` on a non-number). What happens?",
+    "mcq": {
+      "options": [
+        "The other two commands still run; Redis transactions do not roll back",
+        "All three are rolled back",
+        "EXEC returns an error and nothing runs",
+        "Redis retries the failed command"
+      ],
+      "correctIndex": 0,
+      "explanation": "MULTI/EXEC guarantees the commands run in order without interleaving, not all-or-nothing. Only queueing errors (e.g. a syntax error) abort the whole EXEC.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-redis-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-redis",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A job takes 45 s but holds a Redis lock with a 30 s TTL. What can go wrong, and what is the usual fix?",
+    "mcq": {
+      "options": [
+        "The lock expires mid-job and a second worker starts; extend the lock while working (a watchdog) and guard writes with a fencing token",
+        "Nothing; Redis extends TTLs automatically while a client is connected",
+        "The job is killed by Redis after 30 s",
+        "The second worker will be blocked until the first releases"
+      ],
+      "correctIndex": 0,
+      "explanation": "Redis does not know the job is still running. Renew the TTL periodically, and have the protected resource reject stale tokens so a paused worker cannot overwrite newer work.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

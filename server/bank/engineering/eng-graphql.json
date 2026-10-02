@@ -1,0 +1,2347 @@
+[
+  {
+    "id": "eng-graphql-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The `User` type has a computed field `fullName: String!`. Its resolver gets the parent object `{ firstName, lastName, middleName? }`. Return the names joined by single spaces, skipping a missing or empty `middleName`. Fix `fullName`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "fullName",
+      "starterCode": "function fullName(parent: { firstName: string; lastName: string; middleName?: string | null }): string {\n  return parent.firstName + ' ' + parent.middleName + ' ' + parent.lastName;\n}",
+      "referenceSolution": "function fullName(parent: { firstName: string; lastName: string; middleName?: string | null }): string {\n  return [parent.firstName, parent.middleName, parent.lastName].filter((p) => p).join(' ');\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "firstName": "Ada",
+              "middleName": "King",
+              "lastName": "Lovelace"
+            }
+          ],
+          "expected": "Ada King Lovelace"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "firstName": "Ada",
+              "lastName": "Lovelace"
+            }
+          ],
+          "expected": "Ada Lovelace"
+        },
+        {
+          "args": [
+            {
+              "firstName": "Linus",
+              "middleName": "",
+              "lastName": "Torvalds"
+            }
+          ],
+          "expected": "Linus Torvalds"
+        },
+        {
+          "args": [
+            {
+              "firstName": "Grace",
+              "middleName": null,
+              "lastName": "Hopper"
+            }
+          ],
+          "expected": "Grace Hopper"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Resolver for `posts(first: Int = 10, published: Boolean): [Post!]!`. `args` only contains the arguments the client sent. Return at most `first` posts (default 10); when `published` is given, keep only posts whose `published` matches. Fix `posts`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "posts",
+      "starterCode": "const ALL = Array.from({ length: 15 }, (_, i) => ({ id: i + 1, published: i % 2 === 0 }));\n\nfunction posts(args: { first?: number; published?: boolean }) {\n  return ALL.filter((p) => p.published === args.published).slice(0, args.first).map((p) => p.id);\n}",
+      "referenceSolution": "const ALL = Array.from({ length: 15 }, (_, i) => ({ id: i + 1, published: i % 2 === 0 }));\n\nfunction posts(args: { first?: number; published?: boolean }) {\n  const first = args.first ?? 10;\n  const list = args.published === undefined ? ALL : ALL.filter((p) => p.published === args.published);\n  return list.slice(0, first).map((p) => p.id);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "first": 3,
+              "published": true
+            }
+          ],
+          "expected": [
+            1,
+            3,
+            5
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ]
+        },
+        {
+          "args": [
+            {
+              "published": false
+            }
+          ],
+          "expected": [
+            2,
+            4,
+            6,
+            8,
+            10,
+            12,
+            14
+          ]
+        },
+        {
+          "args": [
+            {
+              "first": 2
+            }
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            {
+              "first": 0
+            }
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Build the JSON body of a GraphQL response from `result = { data?, errors }`. Per the spec, the `errors` key must be **absent** when there are no errors. `data` is included whenever execution started (it may be `null`); when the request failed before execution (e.g. a syntax error) `result` has no `data` key and the body must not have one either. Fix `toResponse`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "toResponse",
+      "starterCode": "function toResponse(result: { data?: unknown; errors: { message: string }[] }) {\n  return { data: result.data, errors: result.errors };\n}",
+      "referenceSolution": "function toResponse(result: { data?: unknown; errors: { message: string }[] }) {\n  const body: Record<string, unknown> = {};\n  if ('data' in result) body.data = result.data;\n  if (result.errors.length > 0) body.errors = result.errors;\n  return body;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "data": {
+                "me": {
+                  "id": "1"
+                }
+              },
+              "errors": []
+            }
+          ],
+          "expected": {
+            "data": {
+              "me": {
+                "id": "1"
+              }
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "data": {
+                "me": null
+              },
+              "errors": [
+                {
+                  "message": "Not authenticated"
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "data": {
+              "me": null
+            },
+            "errors": [
+              {
+                "message": "Not authenticated"
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "errors": [
+                {
+                  "message": "Syntax Error: Expected Name"
+                }
+              ]
+            }
+          ],
+          "expected": {
+            "errors": [
+              {
+                "message": "Syntax Error: Expected Name"
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "data": null,
+              "errors": []
+            }
+          ],
+          "expected": {
+            "data": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The schema says `Post.author: User` (nullable). The resolver looks the author up in `users`. When the author has been deleted it must return `null`, not `undefined` or a crash. It should also return only the public fields `id` and `name`. Fix `author`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "author",
+      "starterCode": "const users = [{ id: 1, name: 'Ada', passwordHash: 'x1' }, { id: 2, name: 'Linus', passwordHash: 'x2' }];\n\nfunction author(post: { authorId: number }) {\n  return users.find((u) => u.id === post.authorId);\n}",
+      "referenceSolution": "const users = [{ id: 1, name: 'Ada', passwordHash: 'x1' }, { id: 2, name: 'Linus', passwordHash: 'x2' }];\n\nfunction author(post: { authorId: number }) {\n  const user = users.find((u) => u.id === post.authorId);\n  return user ? { id: user.id, name: user.name } : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "authorId": 1
+            }
+          ],
+          "expected": {
+            "id": 1,
+            "name": "Ada"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "authorId": 2
+            }
+          ],
+          "expected": {
+            "id": 2,
+            "name": "Linus"
+          }
+        },
+        {
+          "args": [
+            {
+              "authorId": 99
+            }
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "authorId": 0
+            }
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mark the lines in this schema that are mistakes for a public API.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this schema that are mistakes for a public API.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "type User {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  id: ID!",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  name: String!",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  passwordHash: String!",
+          "issue": "Never expose password hashes (or any secret) as a field; anyone can query it."
+        },
+        {
+          "id": "l5",
+          "text": "  posts: [Post!]!",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "type Query {",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  user(id: ID): User",
+          "issue": "The id argument should be required (`ID!`); a lookup without an id makes no sense."
+        },
+        {
+          "id": "l9",
+          "text": "  posts(first: Int = 10): [Post!]!",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-graphql-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are adding operations to a shop's GraphQL schema. Pick the right root type for each.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are adding operations to a shop's GraphQL schema. Pick the right root type for each.",
+      "steps": [
+        {
+          "id": "list",
+          "question": "Fetch a list of products with their prices.",
+          "options": [
+            "`Query`",
+            "`Mutation`",
+            "`Subscription`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Reads go on `Query`."
+        },
+        {
+          "id": "cart",
+          "question": "Add a product to the current user's cart.",
+          "options": [
+            "`Mutation`",
+            "`Query`",
+            "`Subscription`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Anything that changes data is a `Mutation`."
+        },
+        {
+          "id": "stock",
+          "question": "Push a message to the browser whenever a product's stock changes.",
+          "options": [
+            "`Subscription`",
+            "`Query` polled every second",
+            "`Mutation`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Server-pushed events are `Subscription`s (usually over WebSocket)."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In the schema `name: String!`, what does the `!` mean?",
+    "mcq": {
+      "options": [
+        "The field can never be `null`",
+        "The field is required in every query",
+        "The field is unique",
+        "The field is read-only"
+      ],
+      "correctIndex": 0,
+      "explanation": "`!` makes a type non-null. Clients still choose which fields to request.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A client sends `{ user(id: \"1\") { name } }`. The `User` type also has `email` and `posts`. What does the response contain for the user?",
+    "mcq": {
+      "options": [
+        "Only `name`",
+        "`name`, `email` and `posts`",
+        "Every scalar field but not `posts`",
+        "Only `id`"
+      ],
+      "correctIndex": 0,
+      "explanation": "GraphQL returns exactly the fields that were selected — no more, no less.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A GraphQL server over HTTP runs a query; one field's resolver throws \"Not authorised\" while the rest succeed. What does a typical server (Apollo, GraphQL Yoga) send?",
+    "mcq": {
+      "options": [
+        "HTTP 200 with `data` (that field `null`) and an `errors` array",
+        "HTTP 403 with no body",
+        "HTTP 500 with only an `errors` array",
+        "HTTP 200 with `data` and no errors"
+      ],
+      "correctIndex": 0,
+      "explanation": "Field errors produce partial data plus `errors`; the HTTP status stays 200 because the request itself was valid and executed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A selection set is given as a nested object: a leaf field is `true`, a field with sub-selections is an object. `{ user: { posts: { title: true } } }` has depth 3; `{ id: true }` has depth 1; `{}` has depth 0. Fix `queryDepth` — it should be the **deepest** branch, not the total.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "queryDepth",
+      "starterCode": "function queryDepth(selection: Record<string, any>): number {\n  let depth = 0;\n  for (const value of Object.values(selection)) {\n    depth += value === true ? 1 : 1 + queryDepth(value);\n  }\n  return depth;\n}",
+      "referenceSolution": "function queryDepth(selection: Record<string, any>): number {\n  let depth = 0;\n  for (const value of Object.values(selection)) {\n    depth = Math.max(depth, value === true ? 1 : 1 + queryDepth(value));\n  }\n  return depth;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "user": {
+                "posts": {
+                  "title": true
+                }
+              }
+            }
+          ],
+          "expected": 3
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": true,
+              "name": true
+            }
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            {
+              "me": {
+                "id": true,
+                "friends": {
+                  "name": true,
+                  "friends": {
+                    "name": true
+                  }
+                }
+              },
+              "version": true
+            }
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": true
+              },
+              "c": {
+                "d": true
+              }
+            }
+          ],
+          "expected": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Relay-style pagination. `connection(items, first, after)` returns `{ edges: [{ cursor, node }], pageInfo: { hasNextPage, endCursor } }`, where a cursor is `String(node.id)` and items are already sorted. `after` is the cursor to start after (or `null` for the start). `endCursor` is `null` when there are no edges. Fix `hasNextPage` and `endCursor`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "connection",
+      "starterCode": "function connection(items: { id: number }[], first: number, after: string | null) {\n  const start = after === null ? 0 : items.findIndex((n) => String(n.id) === after) + 1;\n  const slice = items.slice(start, start + first);\n  const edges = slice.map((node) => ({ cursor: String(node.id), node }));\n  return { edges, pageInfo: { hasNextPage: slice.length === first, endCursor: edges[edges.length - 1].cursor } };\n}",
+      "referenceSolution": "function connection(items: { id: number }[], first: number, after: string | null) {\n  const start = after === null ? 0 : items.findIndex((n) => String(n.id) === after) + 1;\n  const slice = items.slice(start, start + first);\n  const edges = slice.map((node) => ({ cursor: String(node.id), node }));\n  return {\n    edges,\n    pageInfo: { hasNextPage: start + first < items.length, endCursor: edges.length ? edges[edges.length - 1].cursor : null },\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              },
+              {
+                "id": 3
+              }
+            ],
+            2,
+            null
+          ],
+          "expected": {
+            "edges": [
+              {
+                "cursor": "1",
+                "node": {
+                  "id": 1
+                }
+              },
+              {
+                "cursor": "2",
+                "node": {
+                  "id": 2
+                }
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": true,
+              "endCursor": "2"
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              },
+              {
+                "id": 3
+              }
+            ],
+            2,
+            "2"
+          ],
+          "expected": {
+            "edges": [
+              {
+                "cursor": "3",
+                "node": {
+                  "id": 3
+                }
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "3"
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 2
+              }
+            ],
+            2,
+            null
+          ],
+          "expected": {
+            "edges": [
+              {
+                "cursor": "1",
+                "node": {
+                  "id": 1
+                }
+              },
+              {
+                "cursor": "2",
+                "node": {
+                  "id": 2
+                }
+              }
+            ],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": "2"
+            }
+          }
+        },
+        {
+          "args": [
+            [],
+            5,
+            null
+          ],
+          "expected": {
+            "edges": [],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": null
+            }
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 4
+              },
+              {
+                "id": 9
+              }
+            ],
+            1,
+            "9"
+          ],
+          "expected": {
+            "edges": [],
+            "pageInfo": {
+              "hasNextPage": false,
+              "endCursor": null
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The `createUser(input)` mutation returns a payload `{ user, userErrors }` instead of throwing for bad input. Collect every problem as `{ field, message }`, in this order:\n- `email`: `'Email is invalid'` when it has no `@`\n- `email`: `'Email is taken'` when it is already in `existingEmails` (compare case-insensitively)\n- `name`: `'Name is required'` when blank\n\nWhen there are errors, `user` is `null`; otherwise `user` is `{ email, name }` with the email lowercased and `userErrors` is `[]`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "createUser",
+      "starterCode": "function createUser(input: { email: string; name: string }, existingEmails: string[]) {\n  const userErrors: { field: string; message: string }[] = [];\n  if (!input.email.includes('@')) userErrors.push({ field: 'email', message: 'Email is invalid' });\n  if (existingEmails.includes(input.email)) userErrors.push({ field: 'email', message: 'Email is taken' });\n  if (!input.name) userErrors.push({ field: 'name', message: 'Name is required' });\n  return { user: { email: input.email, name: input.name }, userErrors };\n}",
+      "referenceSolution": "function createUser(input: { email: string; name: string }, existingEmails: string[]) {\n  const userErrors: { field: string; message: string }[] = [];\n  const email = input.email.toLowerCase();\n  if (!email.includes('@')) userErrors.push({ field: 'email', message: 'Email is invalid' });\n  if (existingEmails.some((e) => e.toLowerCase() === email)) userErrors.push({ field: 'email', message: 'Email is taken' });\n  if (!input.name.trim()) userErrors.push({ field: 'name', message: 'Name is required' });\n  if (userErrors.length) return { user: null, userErrors };\n  return { user: { email, name: input.name }, userErrors };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "email": "ada@x.io",
+              "name": "Ada"
+            },
+            []
+          ],
+          "expected": {
+            "user": {
+              "email": "ada@x.io",
+              "name": "Ada"
+            },
+            "userErrors": []
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "email": "Ada@X.io",
+              "name": "Ada"
+            },
+            [
+              "ada@x.io"
+            ]
+          ],
+          "expected": {
+            "user": null,
+            "userErrors": [
+              {
+                "field": "email",
+                "message": "Email is taken"
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "email": "nope",
+              "name": "  "
+            },
+            []
+          ],
+          "expected": {
+            "user": null,
+            "userErrors": [
+              {
+                "field": "email",
+                "message": "Email is invalid"
+              },
+              {
+                "field": "name",
+                "message": "Name is required"
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "email": "BO@X.IO",
+              "name": "Bo"
+            },
+            [
+              "ada@x.io"
+            ]
+          ],
+          "expected": {
+            "user": {
+              "email": "bo@x.io",
+              "name": "Bo"
+            },
+            "userErrors": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Field-level authorisation: the `User.email` resolver gets the parent user and `context.viewer` (or `null` when logged out). Return the email only when the viewer is that user or has `role: 'admin'`; otherwise return `null` (the field is nullable).",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "email",
+      "starterCode": "function email(parent: { id: number; email: string }, context: { viewer: { id: number; role: string } | null }) {\n  if (context.viewer) return parent.email;\n  return null;\n}",
+      "referenceSolution": "function email(parent: { id: number; email: string }, context: { viewer: { id: number; role: string } | null }) {\n  const v = context.viewer;\n  if (v && (v.id === parent.id || v.role === 'admin')) return parent.email;\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "email": "ada@x.io"
+            },
+            {
+              "viewer": {
+                "id": 1,
+                "role": "user"
+              }
+            }
+          ],
+          "expected": "ada@x.io"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "email": "ada@x.io"
+            },
+            {
+              "viewer": {
+                "id": 2,
+                "role": "user"
+              }
+            }
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "id": 1,
+              "email": "ada@x.io"
+            },
+            {
+              "viewer": {
+                "id": 9,
+                "role": "admin"
+              }
+            }
+          ],
+          "expected": "ada@x.io"
+        },
+        {
+          "args": [
+            {
+              "id": 1,
+              "email": "ada@x.io"
+            },
+            {
+              "viewer": null
+            }
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The `posts` query below makes 101 database queries for 100 posts. Mark the line that causes it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "The `posts` query below makes 101 database queries for 100 posts. Mark the line that causes it.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const resolvers = {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  Query: {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    posts: (_, { first }, { db }) => db.post.findMany({ take: first }),",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  },",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  Post: {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    author: (post, _, { db }) => db.user.findUnique({ where: { id: post.authorId } }),",
+          "issue": "Runs one user query per post (N+1). Batch the lookups with a per-request DataLoader."
+        },
+        {
+          "id": "l7",
+          "text": "    title: (post) => post.title,",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  },",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "};",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-graphql-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You own the schema for a mobile app that cannot force users to update. A field is being reworked.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You own the schema for a mobile app that cannot force users to update. A field is being reworked.",
+      "steps": [
+        {
+          "id": "rename",
+          "question": "You want to rename `User.fullname` to `User.displayName`. What do you ship first?",
+          "options": [
+            "Add `displayName` and mark `fullname` with `@deprecated(reason: \"Use displayName\")`",
+            "Rename the field in one release",
+            "Version the endpoint as `/graphql/v2`",
+            "Make `fullname` return null"
+          ],
+          "correctIndex": 0,
+          "explanation": "GraphQL evolves additively: add the new field, deprecate the old one, remove it only when no clients use it."
+        },
+        {
+          "id": "when",
+          "question": "When can `fullname` be removed?",
+          "options": [
+            "When field-usage metrics show no client still requests it",
+            "Right after the next app release",
+            "After one week",
+            "Never; deprecated fields must stay forever"
+          ],
+          "correctIndex": 0,
+          "explanation": "Track field usage (Apollo Studio, logs) and remove once real traffic is gone."
+        },
+        {
+          "id": "nullable",
+          "question": "You add a new field `User.avatarUrl` that some users do not have. Which type?",
+          "options": [
+            "`String` (nullable)",
+            "`String!`",
+            "`[String!]!`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A value that can be missing must be nullable; a `null` in a non-null field turns the parent `null` too."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the \"N+1 problem\" in a GraphQL server?",
+    "mcq": {
+      "options": [
+        "A list resolver returns N items and a child field resolver then makes one query per item",
+        "A query asks for N+1 fields when it needs N",
+        "The server runs one extra query to fetch the schema",
+        "Pagination returns one item too many"
+      ],
+      "correctIndex": 0,
+      "explanation": "Resolvers run per object, so a naive child resolver issues one query per parent. DataLoader batches those into one query per level.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is a fragment (`fragment UserCard on User { id name avatarUrl }`) used for?",
+    "mcq": {
+      "options": [
+        "Reusing a set of fields across queries and components",
+        "Splitting a large response into multiple HTTP chunks",
+        "Defining a new type in the schema",
+        "Caching part of a response on the server"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fragments are client-side reusable selections. They do not change the schema or how the server sends data.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why do clients send values through `variables` (`query ($id: ID!) { user(id: $id) { name } }`) instead of building the query string with the value inlined?",
+    "mcq": {
+      "options": [
+        "The query text stays constant (cacheable, persistable) and values are validated against declared types, avoiding injection-by-string-building",
+        "Inlined values are not allowed by the spec",
+        "Variables make the response smaller",
+        "Variables skip resolver execution"
+      ],
+      "correctIndex": 0,
+      "explanation": "Inline literals are legal, but variables keep one static document per operation — required for persisted queries — and are type-checked by the server.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A DataLoader batch function receives `ids` (possibly with duplicates) and must return an array of **the same length in the same order**, with `null` for ids that do not exist. `rows` is what the one `WHERE id IN (...)` query returned, in any order. Fix `batchUsers`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "batchUsers",
+      "starterCode": "function batchUsers(ids: number[], rows: { id: number; name: string }[]) {\n  return rows.filter((r) => ids.includes(r.id));\n}",
+      "referenceSolution": "function batchUsers(ids: number[], rows: { id: number; name: string }[]) {\n  const byId = new Map(rows.map((r) => [r.id, r]));\n  return ids.map((id) => byId.get(id) ?? null);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              2,
+              1
+            ],
+            [
+              {
+                "id": 1,
+                "name": "Ada"
+              },
+              {
+                "id": 2,
+                "name": "Bo"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "name": "Bo"
+            },
+            {
+              "id": 1,
+              "name": "Ada"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              3
+            ],
+            [
+              {
+                "id": 1,
+                "name": "Ada"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "Ada"
+            },
+            null
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              1
+            ],
+            [
+              {
+                "id": 1,
+                "name": "Ada"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "Ada"
+            },
+            {
+              "id": 1,
+              "name": "Ada"
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              5
+            ],
+            []
+          ],
+          "expected": [
+            null
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A minimal loader: `load(id)` queues an id, and `dispatch()` calls `batchFn` **once** with the unique queued ids (first-seen order), then clears the queue. Today `load` calls `batchFn` immediately for every id. Fix `createLoader`. The driver loads ids, dispatches, and returns the list of batches `batchFn` received.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function createLoader(batchFn: (ids: number[]) => void) {\n  let queue: number[] = [];\n  return {\n    load(id: number) {\n      batchFn([id]);\n    },\n    dispatch() {},\n  };\n}\n\n// Test driver (leave as is).\nfunction run(rounds: number[][]) {\n  const batches: number[][] = [];\n  const loader = createLoader((ids) => batches.push(ids));\n  for (const round of rounds) {\n    round.forEach((id) => loader.load(id));\n    loader.dispatch();\n  }\n  return batches;\n}",
+      "referenceSolution": "function createLoader(batchFn: (ids: number[]) => void) {\n  let queue: number[] = [];\n  return {\n    load(id: number) {\n      if (!queue.includes(id)) queue.push(id);\n    },\n    dispatch() {\n      if (queue.length === 0) return;\n      const ids = queue;\n      queue = [];\n      batchFn(ids);\n    },\n  };\n}\n\n// Test driver (leave as is).\nfunction run(rounds: number[][]) {\n  const batches: number[][] = [];\n  const loader = createLoader((ids) => batches.push(ids));\n  for (const round of rounds) {\n    round.forEach((id) => loader.load(id));\n    loader.dispatch();\n  }\n  return batches;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                2,
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              2,
+              3
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                3,
+                1,
+                3,
+                1
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              3,
+              1
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [],
+              [
+                4
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              4
+            ]
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A cost limiter. Each field costs 1. A field with `__args.first` is a list: its sub-selection cost is multiplied by `first` (the field itself still costs 1). `__args` is not a field. Example: `{ users: { __args: { first: 10 }, name: true } }` costs `1 + 10 * 1 = 11`. Fix `queryCost`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "queryCost",
+      "starterCode": "function queryCost(selection: Record<string, any>): number {\n  let cost = 0;\n  for (const [key, value] of Object.entries(selection)) {\n    if (value === true) cost += 1;\n    else cost += 1 + queryCost(value);\n  }\n  return cost;\n}",
+      "referenceSolution": "function queryCost(selection: Record<string, any>): number {\n  let cost = 0;\n  for (const [key, value] of Object.entries(selection)) {\n    if (key === '__args') continue;\n    if (value === true) { cost += 1; continue; }\n    const multiplier = value.__args?.first ?? 1;\n    cost += 1 + multiplier * queryCost(value);\n  }\n  return cost;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "users": {
+                "__args": {
+                  "first": 10
+                },
+                "name": true
+              }
+            }
+          ],
+          "expected": 11
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "me": {
+                "id": true,
+                "name": true
+              }
+            }
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            {
+              "users": {
+                "__args": {
+                  "first": 10
+                },
+                "posts": {
+                  "__args": {
+                    "first": 5
+                  },
+                  "title": true
+                }
+              }
+            }
+          ],
+          "expected": 61
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            {
+              "users": {
+                "__args": {
+                  "first": 0
+                },
+                "name": true
+              },
+              "version": true
+            }
+          ],
+          "expected": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Null propagation. Each field of an object is `{ name, nonNull, value }` or `{ name, nonNull, error }`. A failed field adds `{ message: error, path: [name] }` to `errors`. A failed **nullable** field becomes `null`; a failed **non-null** field makes the whole object `null`. Return `{ data, errors }`. Fix `executeFields`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "executeFields",
+      "starterCode": "function executeFields(fields: { name: string; nonNull: boolean; value?: unknown; error?: string }[]) {\n  const data: Record<string, unknown> = {};\n  const errors: { message: string; path: string[] }[] = [];\n  for (const f of fields) {\n    if (f.error) {\n      errors.push({ message: f.error, path: [f.name] });\n      data[f.name] = null;\n    } else data[f.name] = f.value;\n  }\n  return { data, errors };\n}",
+      "referenceSolution": "function executeFields(fields: { name: string; nonNull: boolean; value?: unknown; error?: string }[]) {\n  const data: Record<string, unknown> = {};\n  const errors: { message: string; path: string[] }[] = [];\n  let nullParent = false;\n  for (const f of fields) {\n    if (f.error) {\n      errors.push({ message: f.error, path: [f.name] });\n      if (f.nonNull) nullParent = true;\n      data[f.name] = null;\n    } else data[f.name] = f.value;\n  }\n  return { data: nullParent ? null : data, errors };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "id",
+                "nonNull": true,
+                "value": "1"
+              },
+              {
+                "name": "bio",
+                "nonNull": false,
+                "error": "timeout"
+              }
+            ]
+          ],
+          "expected": {
+            "data": {
+              "id": "1",
+              "bio": null
+            },
+            "errors": [
+              {
+                "message": "timeout",
+                "path": [
+                  "bio"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "id",
+                "nonNull": true,
+                "error": "db down"
+              },
+              {
+                "name": "bio",
+                "nonNull": false,
+                "value": "hi"
+              }
+            ]
+          ],
+          "expected": {
+            "data": null,
+            "errors": [
+              {
+                "message": "db down",
+                "path": [
+                  "id"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "id",
+                "nonNull": true,
+                "value": "2"
+              }
+            ]
+          ],
+          "expected": {
+            "data": {
+              "id": "2"
+            },
+            "errors": []
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "data": {},
+            "errors": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "nonNull": false,
+                "error": "x"
+              },
+              {
+                "name": "b",
+                "nonNull": true,
+                "error": "y"
+              }
+            ]
+          ],
+          "expected": {
+            "data": null,
+            "errors": [
+              {
+                "message": "x",
+                "path": [
+                  "a"
+                ]
+              },
+              {
+                "message": "y",
+                "path": [
+                  "b"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Review this production Apollo Server setup for a public API. Mark the lines that are security or abuse risks.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Review this production Apollo Server setup for a public API. Mark the lines that are security or abuse risks.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "const server = new ApolloServer({",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  schema,",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  introspection: true,",
+          "issue": "Leaves the full schema discoverable to anyone on a public production API; disable it or restrict it to internal callers."
+        },
+        {
+          "id": "l4",
+          "text": "  includeStacktraceInErrorResponses: true,",
+          "issue": "Sends stack traces (file paths, library versions, sometimes SQL) to clients."
+        },
+        {
+          "id": "l5",
+          "text": "  validationRules: [],",
+          "issue": "No depth or cost limit, so a single deeply nested query can exhaust the server."
+        },
+        {
+          "id": "l6",
+          "text": "  plugins: [ApolloServerPluginLandingPageDisabled()],",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  formatError: (formatted) => formatted,",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "});",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "await startStandaloneServer(server, { context: async ({ req }) => ({ viewer: await auth(req) }) });",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-graphql-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A `feed` query resolves 50 posts, each with `author` and `comments { author }`. You add DataLoader.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A `feed` query resolves 50 posts, each with `author` and `comments { author }`. You add DataLoader.",
+      "steps": [
+        {
+          "id": "scope",
+          "question": "Where should loaders be created?",
+          "options": [
+            "Once per request, in the context factory",
+            "Once at server start, shared by all requests",
+            "Inside each resolver call",
+            "Once per user, kept across requests"
+          ],
+          "correctIndex": 0,
+          "explanation": "DataLoader caches results; a shared loader would leak one user's data to another and serve stale rows."
+        },
+        {
+          "id": "auth",
+          "question": "Users may only see authors that are not blocked for them. Where does that check go?",
+          "options": [
+            "In the resolver/business layer after loading, using the viewer from context",
+            "In the batch function, keyed only by id",
+            "Nowhere; DataLoader handles it",
+            "In the client"
+          ],
+          "correctIndex": 0,
+          "explanation": "Keep the loader a pure id → row batcher; apply per-viewer rules where the viewer is known."
+        },
+        {
+          "id": "queries",
+          "question": "With loaders for users and comments, roughly how many DB queries does the feed now take?",
+          "options": [
+            "A small constant (posts, comments, users — about 3–4)",
+            "About 100",
+            "Exactly 1",
+            "About 50"
+          ],
+          "correctIndex": 0,
+          "explanation": "Each level batches into one query, so the count depends on depth, not on the number of items."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A request contains a mutation with two top-level fields: `{ chargeCard(...) { id } sendReceipt(...) { id } }`. How does the executor run them?",
+    "mcq": {
+      "options": [
+        "Serially, in the order written — `sendReceipt` starts after `chargeCard` finishes",
+        "In parallel, like query fields",
+        "In alphabetical order",
+        "In an undefined order chosen by the server"
+      ],
+      "correctIndex": 0,
+      "explanation": "The spec requires top-level mutation fields to execute serially. Top-level query fields may run in parallel.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why is HTTP caching (CDN, browser) hard for typical GraphQL traffic, and what helps?",
+    "mcq": {
+      "options": [
+        "Requests are POSTs to one URL with a body; persisted queries sent as GET with a hash make them cacheable",
+        "GraphQL responses are binary and cannot be cached",
+        "The spec forbids caching headers",
+        "Every response contains a timestamp"
+      ],
+      "correctIndex": 0,
+      "explanation": "CDNs key on method + URL. Automatic persisted queries over GET turn an operation into a stable URL that can carry `Cache-Control`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You use a per-request DataLoader for `User`. In the same request, a mutation updates user 7's name and then the response selects `user(id: 7) { name }` again via the loader. What can go wrong?",
+    "mcq": {
+      "options": [
+        "The loader returns the cached, pre-update user; call `loader.clear(7)` (or `prime`) after the write",
+        "Nothing; DataLoader re-queries on every `load`",
+        "The loader throws because the row changed",
+        "The update is rolled back"
+      ],
+      "correctIndex": 0,
+      "explanation": "DataLoader memoises per key for the life of the loader. After a write in the same request, clear or prime the key.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Extend depth counting to named fragments. In a selection, a key `\"...Name\"` (value `true`) spreads the fragment `fragments[Name]` **at the same level** — a spread adds no depth of its own. A leaf field is `true`, nested fields are objects. Return the maximum depth. Assume no fragment cycles. Fix `depthWithFragments`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "depthWithFragments",
+      "starterCode": "function depthWithFragments(selection: Record<string, any>, fragments: Record<string, Record<string, any>>): number {\n  let depth = 0;\n  for (const [key, value] of Object.entries(selection)) {\n    const d = value === true ? 1 : 1 + depthWithFragments(value, fragments);\n    depth = Math.max(depth, d);\n  }\n  return depth;\n}",
+      "referenceSolution": "function depthWithFragments(selection: Record<string, any>, fragments: Record<string, Record<string, any>>): number {\n  let depth = 0;\n  for (const [key, value] of Object.entries(selection)) {\n    let d: number;\n    if (key.startsWith('...')) d = depthWithFragments(fragments[key.slice(3)] ?? {}, fragments);\n    else d = value === true ? 1 : 1 + depthWithFragments(value, fragments);\n    depth = Math.max(depth, d);\n  }\n  return depth;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "user": {
+                "...UserParts": true
+              }
+            },
+            {
+              "UserParts": {
+                "posts": {
+                  "title": true
+                }
+              }
+            }
+          ],
+          "expected": 3
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "...Root": true
+            },
+            {
+              "Root": {
+                "me": {
+                  "id": true
+                }
+              }
+            }
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            {
+              "user": {
+                "id": true,
+                "...Empty": true
+              }
+            },
+            {
+              "Empty": {}
+            }
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "...F": true
+              }
+            },
+            {
+              "F": {
+                "b": {
+                  "...G": true
+                }
+              },
+              "G": {
+                "c": {
+                  "d": true
+                }
+              }
+            }
+          ],
+          "expected": 4
+        },
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Add a per-request cache to the loader: an id that was already loaded in an earlier round must not be sent to `batchFn` again. Ids are still de-duplicated within a round, and a round where everything is cached triggers no batch. The driver returns the batches `batchFn` received.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "function createLoader(batchFn: (ids: number[]) => void) {\n  let queue: number[] = [];\n  return {\n    load(id: number) {\n      if (!queue.includes(id)) queue.push(id);\n    },\n    dispatch() {\n      if (queue.length === 0) return;\n      const ids = queue;\n      queue = [];\n      batchFn(ids);\n    },\n  };\n}\n\n// Test driver (leave as is).\nfunction run(rounds: number[][]) {\n  const batches: number[][] = [];\n  const loader = createLoader((ids) => batches.push(ids));\n  for (const round of rounds) {\n    round.forEach((id) => loader.load(id));\n    loader.dispatch();\n  }\n  return batches;\n}",
+      "referenceSolution": "function createLoader(batchFn: (ids: number[]) => void) {\n  let queue: number[] = [];\n  const seen = new Set<number>();\n  return {\n    load(id: number) {\n      if (seen.has(id)) return;\n      seen.add(id);\n      queue.push(id);\n    },\n    dispatch() {\n      if (queue.length === 0) return;\n      const ids = queue;\n      queue = [];\n      batchFn(ids);\n    },\n  };\n}\n\n// Test driver (leave as is).\nfunction run(rounds: number[][]) {\n  const batches: number[][] = [];\n  const loader = createLoader((ids) => batches.push(ids));\n  for (const round of rounds) {\n    round.forEach((id) => loader.load(id));\n    loader.dispatch();\n  }\n  return batches;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                3
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ],
+            [
+              3
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                1,
+                1,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              1,
+              2
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                5
+              ],
+              [
+                6
+              ],
+              [
+                5,
+                6,
+                7
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              5
+            ],
+            [
+              6
+            ],
+            [
+              7
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              []
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Keyset pagination for a feed sorted by `createdAt` **descending**, then `id` descending (several posts can share a timestamp). The cursor is `\"<createdAt>|<id>\"` of the last item seen. `pageAfter(items, first, after)` returns the ids of the next `first` items strictly after the cursor (`after` may be `null`). `items` is already sorted. Today posts that share the cursor's timestamp are skipped. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "pageAfter",
+      "starterCode": "function pageAfter(items: { id: number; createdAt: number }[], first: number, after: string | null): number[] {\n  let rest = items;\n  if (after) {\n    const [ts] = after.split('|').map(Number);\n    rest = items.filter((p) => p.createdAt < ts);\n  }\n  return rest.slice(0, first).map((p) => p.id);\n}",
+      "referenceSolution": "function pageAfter(items: { id: number; createdAt: number }[], first: number, after: string | null): number[] {\n  let rest = items;\n  if (after) {\n    const [ts, id] = after.split('|').map(Number);\n    rest = items.filter((p) => p.createdAt < ts || (p.createdAt === ts && p.id < id));\n  }\n  return rest.slice(0, first).map((p) => p.id);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "createdAt": 300
+              },
+              {
+                "id": 8,
+                "createdAt": 200
+              },
+              {
+                "id": 5,
+                "createdAt": 200
+              },
+              {
+                "id": 2,
+                "createdAt": 100
+              }
+            ],
+            2,
+            "300|9"
+          ],
+          "expected": [
+            8,
+            5
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "createdAt": 300
+              },
+              {
+                "id": 8,
+                "createdAt": 200
+              },
+              {
+                "id": 5,
+                "createdAt": 200
+              },
+              {
+                "id": 2,
+                "createdAt": 100
+              }
+            ],
+            2,
+            "200|8"
+          ],
+          "expected": [
+            5,
+            2
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 9,
+                "createdAt": 300
+              },
+              {
+                "id": 8,
+                "createdAt": 200
+              }
+            ],
+            5,
+            null
+          ],
+          "expected": [
+            9,
+            8
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "createdAt": 100
+              },
+              {
+                "id": 2,
+                "createdAt": 100
+              },
+              {
+                "id": 1,
+                "createdAt": 100
+              }
+            ],
+            1,
+            "100|3"
+          ],
+          "expected": [
+            2
+          ]
+        },
+        {
+          "args": [
+            [],
+            3,
+            "100|1"
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`orderUpdated(orderId: ID!)` subscription. For each event `{ orderId, ownerId, status }`, deliver it to every subscription `{ id, orderId, viewerId, isAdmin }` that asked for that order **and** whose viewer owns the order or is an admin. Return `{ [subscriptionId]: [statuses...] }` with an entry (possibly empty) for every subscription. Fix `deliver` — today it ignores who is watching.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "deliver",
+      "starterCode": "function deliver(events: { orderId: string; ownerId: number; status: string }[], subs: { id: string; orderId: string; viewerId: number; isAdmin: boolean }[]) {\n  const out: Record<string, string[]> = {};\n  for (const s of subs) out[s.id] = events.filter((e) => e.orderId === s.orderId).map((e) => e.status);\n  return out;\n}",
+      "referenceSolution": "function deliver(events: { orderId: string; ownerId: number; status: string }[], subs: { id: string; orderId: string; viewerId: number; isAdmin: boolean }[]) {\n  const out: Record<string, string[]> = {};\n  for (const s of subs) {\n    out[s.id] = events\n      .filter((e) => e.orderId === s.orderId && (s.isAdmin || e.ownerId === s.viewerId))\n      .map((e) => e.status);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "orderId": "o1",
+                "ownerId": 1,
+                "status": "PAID"
+              }
+            ],
+            [
+              {
+                "id": "s1",
+                "orderId": "o1",
+                "viewerId": 1,
+                "isAdmin": false
+              }
+            ]
+          ],
+          "expected": {
+            "s1": [
+              "PAID"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "orderId": "o1",
+                "ownerId": 1,
+                "status": "PAID"
+              }
+            ],
+            [
+              {
+                "id": "s2",
+                "orderId": "o1",
+                "viewerId": 2,
+                "isAdmin": false
+              }
+            ]
+          ],
+          "expected": {
+            "s2": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "orderId": "o1",
+                "ownerId": 1,
+                "status": "PAID"
+              },
+              {
+                "orderId": "o1",
+                "ownerId": 1,
+                "status": "SHIPPED"
+              },
+              {
+                "orderId": "o2",
+                "ownerId": 2,
+                "status": "PAID"
+              }
+            ],
+            [
+              {
+                "id": "a",
+                "orderId": "o1",
+                "viewerId": 9,
+                "isAdmin": true
+              },
+              {
+                "id": "b",
+                "orderId": "o2",
+                "viewerId": 2,
+                "isAdmin": false
+              }
+            ]
+          ],
+          "expected": {
+            "a": [
+              "PAID",
+              "SHIPPED"
+            ],
+            "b": [
+              "PAID"
+            ]
+          }
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "id": "x",
+                "orderId": "o1",
+                "viewerId": 1,
+                "isAdmin": false
+              }
+            ]
+          ],
+          "expected": {
+            "x": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "orderId": "o1",
+                "ownerId": 1,
+                "status": "PAID"
+              }
+            ],
+            []
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order what a GraphQL server does with an incoming operation, from first to last.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order what a GraphQL server does with an incoming operation, from first to last.",
+      "items": [
+        {
+          "id": "parse",
+          "label": "Parse the query text into a document (syntax errors stop here)"
+        },
+        {
+          "id": "validate",
+          "label": "Validate the document against the schema (unknown fields, wrong argument types)"
+        },
+        {
+          "id": "limits",
+          "label": "Check depth / cost limits on the validated document"
+        },
+        {
+          "id": "execute",
+          "label": "Execute resolvers field by field"
+        },
+        {
+          "id": "format",
+          "label": "Format errors and serialise `{ data, errors }`"
+        }
+      ],
+      "correctOrder": [
+        "parse",
+        "validate",
+        "limits",
+        "execute",
+        "format"
+      ],
+      "explanation": "Parse → validate → (custom limits, which need a valid document) → execute → format the response."
+    }
+  },
+  {
+    "id": "eng-graphql-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Your public GraphQL API is being scraped: clients send huge nested queries and bursts of thousands of requests.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your public GraphQL API is being scraped: clients send huge nested queries and bursts of thousands of requests.",
+      "steps": [
+        {
+          "id": "limit",
+          "question": "Requests-per-minute limits are not enough. Why?",
+          "options": [
+            "One request can cost 1 or 100,000 field resolutions; limit on query cost instead",
+            "GraphQL has no request concept",
+            "Rate limits only work for REST",
+            "Clients can change their IP"
+          ],
+          "correctIndex": 0,
+          "explanation": "A single deep query can be as expensive as thousands of simple ones. Budget by computed cost per client."
+        },
+        {
+          "id": "first-party",
+          "question": "Your own web and mobile apps use a fixed set of operations. What locks the API down for them?",
+          "options": [
+            "Persisted-query allow-listing: only registered operation hashes are executed",
+            "Disabling introspection only",
+            "Renaming fields every release",
+            "Requiring POST"
+          ],
+          "correctIndex": 0,
+          "explanation": "An allow-list rejects arbitrary queries entirely; disabling introspection alone is just obscurity."
+        },
+        {
+          "id": "lists",
+          "question": "Which schema rule caps damage from lists?",
+          "options": [
+            "Require a bounded `first`/`limit` argument (with a maximum) on every list field",
+            "Make every list non-null",
+            "Return lists as JSON strings",
+            "Forbid nested lists in the spec"
+          ],
+          "correctIndex": 0,
+          "explanation": "Unbounded lists make cost unknowable; a required maximum page size makes cost analysis possible."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-graphql-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A schema has `type Query { order(id: ID!): Order! }` and `type Order { total: Money! }`. The `total` resolver throws for one order. What does the client receive?",
+    "mcq": {
+      "options": [
+        "`data: null` — the error propagates through the non-null `total` and non-null `order` to the root",
+        "`data: { order: { total: null } }`",
+        "`data: { order: null }`",
+        "An HTTP 500"
+      ],
+      "correctIndex": 0,
+      "explanation": "A null in a non-null position bubbles to the nearest nullable parent. Both `total` and `order` are non-null, so the whole `data` becomes null. Prefer nullable fields where failure is possible.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In a federated graph (Apollo Federation), the `Reviews` subgraph adds `reviews` to the `Product` type owned by the `Products` subgraph. What lets the router fetch a product's reviews?",
+    "mcq": {
+      "options": [
+        "An entity key (`@key(fields: \"id\")`) on `Product` and a reference resolver in `Reviews` that resolves `Product` by that key",
+        "Both subgraphs sharing the same database",
+        "The client sending two separate queries",
+        "Copying the whole `Product` type into `Reviews`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Entities are joined across subgraphs by their key fields; the router sends representations `{ __typename, id }` to the subgraph's `__resolveReference`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-graphql-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-graphql",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You must remove a non-null argument default and add a new **required** argument to an existing field used by old mobile clients. What is the safe approach?",
+    "mcq": {
+      "options": [
+        "Add the new argument as optional (with a default), or add a new field, and deprecate the old shape",
+        "Add it as required; old clients will fail validation but must update",
+        "Add it as required and ignore it on the server",
+        "Version the whole schema as v2"
+      ],
+      "correctIndex": 0,
+      "explanation": "Adding a required argument is a breaking change: existing operations fail validation. Additive, optional changes plus deprecation keep old clients working.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

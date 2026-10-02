@@ -1,0 +1,2618 @@
+[
+  {
+    "id": "eng-mongodb-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `matches(doc, filter)` for a plain equality filter like `{ status: 'open', city: 'Pune' }`: return `true` when **every** key in the filter equals the document's value. An empty filter `{}` matches every document.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matches",
+      "starterCode": "function matches(doc, filter) {\n  const key = Object.keys(filter)[0];\n  return doc[key] === filter[key];\n}",
+      "referenceSolution": "function matches(doc, filter) {\n  return Object.keys(filter).every((key) => doc[key] === filter[key]);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "status": "open",
+              "city": "Pune"
+            },
+            {
+              "status": "open"
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "status": "open",
+              "city": "Pune"
+            },
+            {
+              "status": "open",
+              "city": "Delhi"
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "status": "open",
+              "city": "Pune"
+            },
+            {
+              "status": "open",
+              "city": "Pune"
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "status": "open"
+            },
+            {}
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "status": "open"
+            },
+            {
+              "status": "closed"
+            }
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `project(docs, fields)` to behave like an inclusion `$project`: each output document has only the listed fields that exist on it, **plus `_id`**, which MongoDB keeps unless you exclude it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "project",
+      "starterCode": "function project(docs, fields) {\n  return docs.map((doc) => {\n    const out = {};\n    for (const f of fields) if (f in doc) out[f] = doc[f];\n    return out;\n  });\n}",
+      "referenceSolution": "function project(docs, fields) {\n  return docs.map((doc) => {\n    const out = { _id: doc._id };\n    for (const f of fields) if (f in doc) out[f] = doc[f];\n    return out;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 1,
+                "name": "Ada",
+                "email": "a@x.io",
+                "pw": "h"
+              }
+            ],
+            [
+              "name"
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 1,
+              "name": "Ada"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 1,
+                "name": "Ada",
+                "email": "a@x.io"
+              },
+              {
+                "_id": 2,
+                "name": "Bo"
+              }
+            ],
+            [
+              "name",
+              "email"
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 1,
+              "name": "Ada",
+              "email": "a@x.io"
+            },
+            {
+              "_id": 2,
+              "name": "Bo"
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              "name"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "_id": 7,
+                "a": 1
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "_id": 7
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `applyInc(doc, inc)` to behave like `{ $inc: inc }`: add each amount to the field and return a **new** document. Like MongoDB, a missing field is created starting from 0.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "applyInc",
+      "starterCode": "function applyInc(doc, inc) {\n  const out = { ...doc };\n  for (const [field, by] of Object.entries(inc)) out[field] = out[field] + by;\n  return out;\n}",
+      "referenceSolution": "function applyInc(doc, inc) {\n  const out = { ...doc };\n  for (const [field, by] of Object.entries(inc)) out[field] = (out[field] ?? 0) + by;\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "_id": 1,
+              "views": 10
+            },
+            {
+              "views": 1
+            }
+          ],
+          "expected": {
+            "_id": 1,
+            "views": 11
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "_id": 1
+            },
+            {
+              "views": 1
+            }
+          ],
+          "expected": {
+            "_id": 1,
+            "views": 1
+          }
+        },
+        {
+          "args": [
+            {
+              "_id": 1,
+              "stock": 5,
+              "sold": 2
+            },
+            {
+              "stock": -1,
+              "sold": 1
+            }
+          ],
+          "expected": {
+            "_id": 1,
+            "stock": 4,
+            "sold": 3
+          }
+        },
+        {
+          "args": [
+            {
+              "_id": 1,
+              "views": 3
+            },
+            {}
+          ],
+          "expected": {
+            "_id": 1,
+            "views": 3
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `sortBy(docs, field, dir)` like `$sort: { [field]: dir }`, where `dir` is `1` (ascending) or `-1` (descending). Values are numbers. Do not mutate the input.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "sortBy",
+      "starterCode": "function sortBy(docs, field, dir) {\n  return [...docs].sort((a, b) => a[field] - b[field]);\n}",
+      "referenceSolution": "function sortBy(docs, field, dir) {\n  return [...docs].sort((a, b) => (a[field] - b[field]) * dir);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "p": 3
+              },
+              {
+                "p": 1
+              },
+              {
+                "p": 2
+              }
+            ],
+            "p",
+            1
+          ],
+          "expected": [
+            {
+              "p": 1
+            },
+            {
+              "p": 2
+            },
+            {
+              "p": 3
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "p": 3
+              },
+              {
+                "p": 1
+              },
+              {
+                "p": 2
+              }
+            ],
+            "p",
+            -1
+          ],
+          "expected": [
+            {
+              "p": 3
+            },
+            {
+              "p": 2
+            },
+            {
+              "p": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "p",
+            -1
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "p": 5,
+                "n": "a"
+              },
+              {
+                "p": 9,
+                "n": "b"
+              }
+            ],
+            "p",
+            -1
+          ],
+          "expected": [
+            {
+              "p": 9,
+              "n": "b"
+            },
+            {
+              "p": 5,
+              "n": "a"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The API takes a 1-based `page` and a `pageSize`. Complete `pageArgs(page, pageSize)` so it returns the `{ skip, limit }` to pass to `.skip().limit()`. Treat a page below 1 as page 1.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pageArgs",
+      "starterCode": "function pageArgs(page, pageSize) {\n  return { skip: page * pageSize, limit: pageSize };\n}",
+      "referenceSolution": "function pageArgs(page, pageSize) {\n  const p = Math.max(1, page);\n  return { skip: (p - 1) * pageSize, limit: pageSize };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1,
+            20
+          ],
+          "expected": {
+            "skip": 0,
+            "limit": 20
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            3,
+            20
+          ],
+          "expected": {
+            "skip": 40,
+            "limit": 20
+          }
+        },
+        {
+          "args": [
+            0,
+            10
+          ],
+          "expected": {
+            "skip": 0,
+            "limit": 10
+          }
+        },
+        {
+          "args": [
+            -5,
+            10
+          ],
+          "expected": {
+            "skip": 0,
+            "limit": 10
+          }
+        },
+        {
+          "args": [
+            2,
+            5
+          ],
+          "expected": {
+            "skip": 5,
+            "limit": 5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are modelling a blog in MongoDB with `users`, `posts` and `comments`. Pick embedding or referencing for each relationship.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are modelling a blog in MongoDB with `users`, `posts` and `comments`. Pick embedding or referencing for each relationship.",
+      "steps": [
+        {
+          "id": "address",
+          "question": "Each user has one shipping address that is always shown with the user and rarely changes.",
+          "options": [
+            "Embed the address in the user document",
+            "Put addresses in their own collection and store `addressId`",
+            "Store the address in a separate database"
+          ],
+          "correctIndex": 0,
+          "explanation": "One-to-one data read together belongs in the same document."
+        },
+        {
+          "id": "comments",
+          "question": "Popular posts get tens of thousands of comments, which are paged 20 at a time.",
+          "options": [
+            "Embed all comments in an array on the post",
+            "Store comments in their own collection with a `postId` field",
+            "Store comments as one long string on the post"
+          ],
+          "correctIndex": 1,
+          "explanation": "Unbounded arrays grow toward the 16 MB document limit and make every post read heavy. Reference and page."
+        },
+        {
+          "id": "tags",
+          "question": "Each post has 3–5 tag names that are shown on the post card.",
+          "options": [
+            "Embed the tag names as an array on the post",
+            "Create a `post_tags` join collection",
+            "Store tags only on the user"
+          ],
+          "correctIndex": 0,
+          "explanation": "A small, bounded list read with the post is a textbook embed."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You insert `{ name: 'Ada' }` into a collection without an `_id`. What happens?",
+    "mcq": {
+      "options": [
+        "MongoDB adds a unique `_id` (an ObjectId by default)",
+        "The insert fails because `_id` is required",
+        "The document is stored without any `_id`",
+        "MongoDB uses `name` as the `_id`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Every document has an `_id`; the driver or server generates an ObjectId when you leave it out, and the `_id` index guarantees uniqueness.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which documents does `db.users.find({ age: { $gt: 30 } })` return?",
+    "mcq": {
+      "options": [
+        "Users whose `age` is greater than 30",
+        "Users whose `age` is 30 or more",
+        "Users whose `age` is less than 30",
+        "Only the first user older than 30"
+      ],
+      "correctIndex": 0,
+      "explanation": "`$gt` is strictly greater than; `$gte` would include 30. `find` returns a cursor over every match, `findOne` returns one.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `db.orders.updateOne({ _id: id }, { $set: { status: 'paid' } })` do to the rest of the order's fields?",
+    "mcq": {
+      "options": [
+        "Leaves them as they are and only changes `status`",
+        "Removes them, leaving only `_id` and `status`",
+        "Fails because the other fields were not provided",
+        "Creates a new order with `status: paid`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`$set` changes just the listed fields. Replacing the whole document is what `replaceOne` does.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `matches(doc, filter)` for filters whose values are operator objects using `$gt`, `$gte`, `$lt`, `$lte`, `$ne` and `$in`, e.g. `{ price: { $gte: 10, $lt: 50 }, status: { $in: ['open', 'paid'] } }`. Every condition must hold.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matches",
+      "starterCode": "function matches(doc, filter) {\n  return Object.entries(filter).every(([field, ops]) =>\n    Object.entries(ops).every(([op, value]) => {\n      const v = doc[field];\n      if (op === '$gt') return v > value;\n      if (op === '$gte') return v > value;\n      if (op === '$lt') return v < value;\n      if (op === '$lte') return v <= value;\n      if (op === '$ne') return v !== value;\n      return false;\n    }));\n}",
+      "referenceSolution": "function matches(doc, filter) {\n  return Object.entries(filter).every(([field, ops]) =>\n    Object.entries(ops).every(([op, value]) => {\n      const v = doc[field];\n      if (op === '$gt') return v > value;\n      if (op === '$gte') return v >= value;\n      if (op === '$lt') return v < value;\n      if (op === '$lte') return v <= value;\n      if (op === '$ne') return v !== value;\n      if (op === '$in') return value.includes(v);\n      return false;\n    }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "price": 20
+            },
+            {
+              "price": {
+                "$gt": 10,
+                "$lt": 50
+              }
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "price": 10
+            },
+            {
+              "price": {
+                "$gte": 10
+              }
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "status": "paid"
+            },
+            {
+              "status": {
+                "$in": [
+                  "open",
+                  "paid"
+                ]
+              }
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "status": "void"
+            },
+            {
+              "status": {
+                "$in": [
+                  "open",
+                  "paid"
+                ]
+              }
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "price": 50
+            },
+            {
+              "price": {
+                "$lt": 50
+              }
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "price": 5
+            },
+            {}
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `groupSum(docs, key, field)`, the equivalent of `{ $group: { _id: '$' + key, total: { $sum: '$' + field } } }` followed by `{ $sort: { _id: 1 } }`. Like `$sum`, a missing or non-numeric field counts as 0.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "groupSum",
+      "starterCode": "function groupSum(docs, key, field) {\n  const totals = {};\n  for (const d of docs) totals[d[key]] = (totals[d[key]] || 0) + d[field];\n  return Object.keys(totals).sort().map((id) => ({ _id: id, total: totals[id] }));\n}",
+      "referenceSolution": "function groupSum(docs, key, field) {\n  const totals = {};\n  for (const d of docs) {\n    const n = typeof d[field] === 'number' ? d[field] : 0;\n    totals[d[key]] = (totals[d[key]] || 0) + n;\n  }\n  return Object.keys(totals).sort().map((id) => ({ _id: id, total: totals[id] }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "c": "a",
+                "amt": 5
+              },
+              {
+                "c": "b",
+                "amt": 2
+              },
+              {
+                "c": "a",
+                "amt": 1
+              }
+            ],
+            "c",
+            "amt"
+          ],
+          "expected": [
+            {
+              "_id": "a",
+              "total": 6
+            },
+            {
+              "_id": "b",
+              "total": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "c": "a",
+                "amt": 5
+              },
+              {
+                "c": "a"
+              }
+            ],
+            "c",
+            "amt"
+          ],
+          "expected": [
+            {
+              "_id": "a",
+              "total": 5
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "c",
+            "amt"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "c": "x",
+                "amt": "n/a"
+              },
+              {
+                "c": "x",
+                "amt": 3
+              },
+              {
+                "c": "w",
+                "amt": 1
+              }
+            ],
+            "c",
+            "amt"
+          ],
+          "expected": [
+            {
+              "_id": "w",
+              "total": 1
+            },
+            {
+              "_id": "x",
+              "total": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `unwind(docs, field)` like `{ $unwind: '$' + field }`: one output document per array element, with the field set to that element. Documents where the field is missing or an empty array produce no output.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "unwind",
+      "starterCode": "function unwind(docs, field) {\n  const out = [];\n  for (const d of docs) for (const v of d[field]) out.push({ ...d, [field]: v });\n  return out;\n}",
+      "referenceSolution": "function unwind(docs, field) {\n  const out = [];\n  for (const d of docs) {\n    if (!Array.isArray(d[field])) continue;\n    for (const v of d[field]) out.push({ ...d, [field]: v });\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 1,
+                "tags": [
+                  "a",
+                  "b"
+                ]
+              }
+            ],
+            "tags"
+          ],
+          "expected": [
+            {
+              "_id": 1,
+              "tags": "a"
+            },
+            {
+              "_id": 1,
+              "tags": "b"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 1,
+                "tags": []
+              },
+              {
+                "_id": 2
+              },
+              {
+                "_id": 3,
+                "tags": [
+                  "x"
+                ]
+              }
+            ],
+            "tags"
+          ],
+          "expected": [
+            {
+              "_id": 3,
+              "tags": "x"
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "tags"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "_id": 1,
+                "items": [
+                  1,
+                  2,
+                  3
+                ]
+              }
+            ],
+            "items"
+          ],
+          "expected": [
+            {
+              "_id": 1,
+              "items": 1
+            },
+            {
+              "_id": 1,
+              "items": 2
+            },
+            {
+              "_id": 1,
+              "items": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `applyUpdate(doc, update)` for updates using `$set`, `$inc` and `$push` (e.g. `{ $inc: { qty: 1 }, $push: { log: 'added' } }`). Return a new document. `$push` appends to the array, creating it when the field is missing.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "applyUpdate",
+      "starterCode": "function applyUpdate(doc, update) {\n  const out = { ...doc };\n  for (const [k, v] of Object.entries(update.$set || {})) out[k] = v;\n  for (const [k, v] of Object.entries(update.$inc || {})) out[k] = (out[k] ?? 0) + v;\n  for (const [k, v] of Object.entries(update.$push || {})) out[k] = [v];\n  return out;\n}",
+      "referenceSolution": "function applyUpdate(doc, update) {\n  const out = { ...doc };\n  for (const [k, v] of Object.entries(update.$set || {})) out[k] = v;\n  for (const [k, v] of Object.entries(update.$inc || {})) out[k] = (out[k] ?? 0) + v;\n  for (const [k, v] of Object.entries(update.$push || {})) out[k] = [...(out[k] || []), v];\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "qty": 1,
+              "log": [
+                "new"
+              ]
+            },
+            {
+              "$inc": {
+                "qty": 1
+              },
+              "$push": {
+                "log": "added"
+              }
+            }
+          ],
+          "expected": {
+            "qty": 2,
+            "log": [
+              "new",
+              "added"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "qty": 1
+            },
+            {
+              "$push": {
+                "log": "x"
+              }
+            }
+          ],
+          "expected": {
+            "qty": 1,
+            "log": [
+              "x"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "status": "a",
+              "log": [
+                "1",
+                "2"
+              ]
+            },
+            {
+              "$set": {
+                "status": "b"
+              },
+              "$push": {
+                "log": "3"
+              }
+            }
+          ],
+          "expected": {
+            "status": "b",
+            "log": [
+              "1",
+              "2",
+              "3"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {}
+          ],
+          "expected": {
+            "a": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Complete `distinct(docs, field)` like `db.coll.distinct(field)`: the unique values, sorted ascending. Like MongoDB, when the field holds an array, each element counts as a value. Missing fields are skipped.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "distinct",
+      "starterCode": "function distinct(docs, field) {\n  const seen = new Set();\n  for (const d of docs) if (field in d) seen.add(d[field]);\n  return [...seen].sort();\n}",
+      "referenceSolution": "function distinct(docs, field) {\n  const seen = new Set();\n  for (const d of docs) {\n    if (!(field in d)) continue;\n    const v = d[field];\n    for (const x of Array.isArray(v) ? v : [v]) seen.add(x);\n  }\n  return [...seen].sort();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "c": "b"
+              },
+              {
+                "c": "a"
+              },
+              {
+                "c": "b"
+              }
+            ],
+            "c"
+          ],
+          "expected": [
+            "a",
+            "b"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "tags": [
+                  "x",
+                  "y"
+                ]
+              },
+              {
+                "tags": [
+                  "y",
+                  "z"
+                ]
+              }
+            ],
+            "tags"
+          ],
+          "expected": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "args": [
+            [],
+            "tags"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "tags": [
+                  "b"
+                ]
+              },
+              {
+                "other": 1
+              },
+              {
+                "tags": "a"
+              }
+            ],
+            "tags"
+          ],
+          "expected": [
+            "a",
+            "b"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This Express + Mongoose handler works in testing but has two real problems in production. Mark them.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This Express + Mongoose handler works in testing but has two real problems in production. Mark them.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "router.post('/login', async (req, res) => {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const user = await User.findOne({ email: req.body.email, password: req.body.password });",
+          "issue": "Body values go straight into the filter: sending `{ \"$ne\": null }` logs in as anyone (NoSQL injection). Passwords should also be hashed and compared, not queried."
+        },
+        {
+          "id": "l3",
+          "text": "  if (!user) return res.status(401).json({ error: 'Invalid login' });",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  const orders = await Order.find({ userId: user._id }).sort({ createdAt: -1 }).limit(20);",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  for (const o of orders) o.product = await Product.findById(o.productId);",
+          "issue": "One query per order (N+1). Load the products with one `$in` query or `populate`."
+        },
+        {
+          "id": "l6",
+          "text": "  res.json({ user: { id: user._id, name: user.name }, orders });",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "});",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-mongodb-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A product has `tags: ['sale', 'kids']`. Does `db.products.find({ tags: 'sale' })` match it?",
+    "mcq": {
+      "options": [
+        "Yes: an equality filter on an array field matches when any element equals the value",
+        "No: you must write `{ tags: ['sale'] }`",
+        "No: arrays can only be queried with `$elemMatch`",
+        "Only if `tags` has a multikey index"
+      ],
+      "correctIndex": 0,
+      "explanation": "Equality on an array field matches any element. `{ tags: ['sale'] }` would require the whole array to be exactly `['sale']`. Indexes change speed, not results.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In a Mongoose schema, what does `email: { type: String, unique: true }` do?",
+    "mcq": {
+      "options": [
+        "Asks Mongoose to build a unique index on `email`; it is not a validator",
+        "Makes Mongoose check every save against the collection before inserting",
+        "Rejects emails that are not lowercase",
+        "Has no effect unless `required: true` is also set"
+      ],
+      "correctIndex": 0,
+      "explanation": "`unique` is an index option. Duplicates are rejected by the database (E11000) once the index exists; if the collection already has duplicates the index build fails.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why do many teams add `.lean()` to read-only Mongoose queries such as API list endpoints?",
+    "mcq": {
+      "options": [
+        "It returns plain JavaScript objects instead of full Mongoose documents, which is faster and uses less memory",
+        "It fetches fewer fields from the database",
+        "It makes the query use an index",
+        "It skips the network round-trip by reading from cache"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hydrating documents adds getters, change tracking and methods. `.lean()` skips that; it does not change which fields or which index the query uses.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Complete `lookup(orders, users)`, the equivalent of `{ $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } }`. Like `$lookup`, `user` is always an **array** of matches (empty when nothing matches).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "lookup",
+      "starterCode": "function lookup(orders, users) {\n  return orders.map((o) => ({ ...o, user: users.find((u) => u._id === o.userId) }));\n}",
+      "referenceSolution": "function lookup(orders, users) {\n  return orders.map((o) => ({ ...o, user: users.filter((u) => u._id === o.userId) }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 10,
+                "userId": 1
+              }
+            ],
+            [
+              {
+                "_id": 1,
+                "name": "Ada"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 10,
+              "userId": 1,
+              "user": [
+                {
+                  "_id": 1,
+                  "name": "Ada"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 10,
+                "userId": 9
+              }
+            ],
+            [
+              {
+                "_id": 1,
+                "name": "Ada"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 10,
+              "userId": 9,
+              "user": []
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "_id": 1
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "_id": 10,
+                "userId": 1
+              },
+              {
+                "_id": 11,
+                "userId": 2
+              }
+            ],
+            [
+              {
+                "_id": 2,
+                "name": "Bo"
+              },
+              {
+                "_id": 1,
+                "name": "Ada"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 10,
+              "userId": 1,
+              "user": [
+                {
+                  "_id": 1,
+                  "name": "Ada"
+                }
+              ]
+            },
+            {
+              "_id": 11,
+              "userId": 2,
+              "user": [
+                {
+                  "_id": 2,
+                  "name": "Bo"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Complete `groupAvg(docs, key, field)`, like `$group` with `count: { $sum: 1 }` and `avg: { $avg: '$' + field }`, sorted by `_id`. Round `avg` to 2 decimals.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "groupAvg",
+      "starterCode": "function groupAvg(docs, key, field) {\n  const groups = {};\n  for (const d of docs) {\n    const g = (groups[d[key]] ||= { sum: 0, count: 0 });\n    g.sum += d[field];\n    g.count += 1;\n  }\n  return Object.keys(groups).sort().map((id) => ({\n    _id: id,\n    count: groups[id].count,\n    avg: Math.round((groups[id].sum / docs.length) * 100) / 100,\n  }));\n}",
+      "referenceSolution": "function groupAvg(docs, key, field) {\n  const groups = {};\n  for (const d of docs) {\n    const g = (groups[d[key]] ||= { sum: 0, count: 0 });\n    g.sum += d[field];\n    g.count += 1;\n  }\n  return Object.keys(groups).sort().map((id) => ({\n    _id: id,\n    count: groups[id].count,\n    avg: Math.round((groups[id].sum / groups[id].count) * 100) / 100,\n  }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "c": "a",
+                "r": 4
+              }
+            ],
+            "c",
+            "r"
+          ],
+          "expected": [
+            {
+              "_id": "a",
+              "count": 1,
+              "avg": 4
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "c": "a",
+                "r": 4
+              },
+              {
+                "c": "a",
+                "r": 5
+              },
+              {
+                "c": "b",
+                "r": 3
+              }
+            ],
+            "c",
+            "r"
+          ],
+          "expected": [
+            {
+              "_id": "a",
+              "count": 2,
+              "avg": 4.5
+            },
+            {
+              "_id": "b",
+              "count": 1,
+              "avg": 3
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "c",
+            "r"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "c": "x",
+                "r": 1
+              },
+              {
+                "c": "x",
+                "r": 2
+              },
+              {
+                "c": "x",
+                "r": 2
+              },
+              {
+                "c": "y",
+                "r": 5
+              }
+            ],
+            "c",
+            "r"
+          ],
+          "expected": [
+            {
+              "_id": "x",
+              "count": 3,
+              "avg": 1.67
+            },
+            {
+              "_id": "y",
+              "count": 1,
+              "avg": 5
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Complete `keysetPage(docs, after, limit)`, keyset pagination over docs with numeric `_id` (the equivalent of `find({ _id: { $gt: after } }).sort({ _id: 1 }).limit(limit)`). `after` is `null` for the first page. Return `{ ids, next }` where `next` is the last id returned, or `null` when there are no more documents after this page.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "keysetPage",
+      "starterCode": "function keysetPage(docs, after, limit) {\n  const rows = docs\n    .filter((d) => after === null || d._id > after)\n    .sort((a, b) => a._id - b._id)\n    .slice(0, limit);\n  const ids = rows.map((d) => d._id);\n  return { ids, next: ids[ids.length - 1] };\n}",
+      "referenceSolution": "function keysetPage(docs, after, limit) {\n  const rest = docs\n    .filter((d) => after === null || d._id > after)\n    .sort((a, b) => a._id - b._id);\n  const ids = rest.slice(0, limit).map((d) => d._id);\n  return { ids, next: rest.length > limit ? ids[ids.length - 1] : null };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 3
+              },
+              {
+                "_id": 1
+              },
+              {
+                "_id": 2
+              }
+            ],
+            null,
+            2
+          ],
+          "expected": {
+            "ids": [
+              1,
+              2
+            ],
+            "next": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 3
+              },
+              {
+                "_id": 1
+              },
+              {
+                "_id": 2
+              }
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "ids": [
+              3
+            ],
+            "next": null
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "_id": 1
+              },
+              {
+                "_id": 2
+              }
+            ],
+            null,
+            2
+          ],
+          "expected": {
+            "ids": [
+              1,
+              2
+            ],
+            "next": null
+          }
+        },
+        {
+          "args": [
+            [],
+            null,
+            5
+          ],
+          "expected": {
+            "ids": [],
+            "next": null
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "_id": 5
+              },
+              {
+                "_id": 9
+              },
+              {
+                "_id": 7
+              },
+              {
+                "_id": 8
+              }
+            ],
+            5,
+            2
+          ],
+          "expected": {
+            "ids": [
+              7,
+              8
+            ],
+            "next": 8
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Complete `runPipeline(docs, stages)` for a pipeline of `$match` (equality only), `$sort` (one numeric field), `$skip` and `$limit` stages, applied in the order given.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runPipeline",
+      "starterCode": "function runPipeline(docs, stages) {\n  let out = [...docs];\n  for (const stage of stages) {\n    if (stage.$match) out = out.filter((d) => Object.entries(stage.$match).every(([k, v]) => d[k] === v));\n    if (stage.$sort) {\n      const [field, dir] = Object.entries(stage.$sort)[0];\n      out = [...out].sort((a, b) => (a[field] - b[field]) * dir);\n    }\n    if (stage.$limit !== undefined) out = out.slice(0, stage.$limit);\n  }\n  return out;\n}",
+      "referenceSolution": "function runPipeline(docs, stages) {\n  let out = [...docs];\n  for (const stage of stages) {\n    if (stage.$match) out = out.filter((d) => Object.entries(stage.$match).every(([k, v]) => d[k] === v));\n    if (stage.$sort) {\n      const [field, dir] = Object.entries(stage.$sort)[0];\n      out = [...out].sort((a, b) => (a[field] - b[field]) * dir);\n    }\n    if (stage.$skip !== undefined) out = out.slice(stage.$skip);\n    if (stage.$limit !== undefined) out = out.slice(0, stage.$limit);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "s": "a",
+                "n": 2
+              },
+              {
+                "s": "b",
+                "n": 1
+              },
+              {
+                "s": "a",
+                "n": 1
+              }
+            ],
+            [
+              {
+                "$match": {
+                  "s": "a"
+                }
+              },
+              {
+                "$sort": {
+                  "n": 1
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "s": "a",
+              "n": 1
+            },
+            {
+              "s": "a",
+              "n": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "n": 1
+              },
+              {
+                "n": 2
+              },
+              {
+                "n": 3
+              },
+              {
+                "n": 4
+              }
+            ],
+            [
+              {
+                "$sort": {
+                  "n": -1
+                }
+              },
+              {
+                "$skip": 1
+              },
+              {
+                "$limit": 2
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "n": 3
+            },
+            {
+              "n": 2
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "n": 1
+              },
+              {
+                "n": 2
+              }
+            ],
+            [
+              {
+                "$skip": 5
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "n": 1
+              },
+              {
+                "n": 2
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "n": 1
+            },
+            {
+              "n": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Complete `bucketCounts(docs, field, boundaries)` like `$bucket` with `default: 'other'`. `boundaries` are ascending; a value `v` belongs to the bucket whose `_id` is the lower bound `b[i]` when `b[i] <= v < b[i+1]`. Values outside go to `'other'`. Return `[{ _id, count }]` for non-empty buckets in boundary order, with `'other'` last.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "bucketCounts",
+      "starterCode": "function bucketCounts(docs, field, boundaries) {\n  const counts = new Map();\n  for (const d of docs) {\n    let id = 'other';\n    for (let i = 0; i < boundaries.length - 1; i++) {\n      if (d[field] >= boundaries[i] && d[field] <= boundaries[i + 1]) { id = boundaries[i]; break; }\n    }\n    counts.set(id, (counts.get(id) || 0) + 1);\n  }\n  const order = [...boundaries.slice(0, -1), 'other'];\n  return order.filter((id) => counts.has(id)).map((id) => ({ _id: id, count: counts.get(id) }));\n}",
+      "referenceSolution": "function bucketCounts(docs, field, boundaries) {\n  const counts = new Map();\n  for (const d of docs) {\n    let id = 'other';\n    for (let i = 0; i < boundaries.length - 1; i++) {\n      if (d[field] >= boundaries[i] && d[field] < boundaries[i + 1]) { id = boundaries[i]; break; }\n    }\n    counts.set(id, (counts.get(id) || 0) + 1);\n  }\n  const order = [...boundaries.slice(0, -1), 'other'];\n  return order.filter((id) => counts.has(id)).map((id) => ({ _id: id, count: counts.get(id) }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "p": 5
+              },
+              {
+                "p": 50
+              },
+              {
+                "p": 150
+              }
+            ],
+            "p",
+            [
+              0,
+              100,
+              500
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 0,
+              "count": 2
+            },
+            {
+              "_id": 100,
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "p": 100
+              },
+              {
+                "p": 99
+              }
+            ],
+            "p",
+            [
+              0,
+              100,
+              500
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 0,
+              "count": 1
+            },
+            {
+              "_id": 100,
+              "count": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "p": 500
+              },
+              {
+                "p": -1
+              }
+            ],
+            "p",
+            [
+              0,
+              100,
+              500
+            ]
+          ],
+          "expected": [
+            {
+              "_id": "other",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "p",
+            [
+              0,
+              100
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The orders page runs `db.orders.find({ customerId: c, status: 'open' }).sort({ createdAt: -1 }).limit(20)` and has become slow. The collection has 30M documents.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The orders page runs `db.orders.find({ customerId: c, status: 'open' }).sort({ createdAt: -1 }).limit(20)` and has become slow. The collection has 30M documents.",
+      "steps": [
+        {
+          "id": "explain",
+          "question": "`explain('executionStats')` shows `COLLSCAN`, `totalDocsExamined: 30000000`, `nReturned: 20`. What does that tell you?",
+          "options": [
+            "No index supports the query, so every document is read to return 20",
+            "The query is fine; 20 results is small",
+            "The server needs more RAM",
+            "The `limit` is being ignored"
+          ],
+          "correctIndex": 0,
+          "explanation": "A COLLSCAN with docs examined far above docs returned is the classic sign of a missing index."
+        },
+        {
+          "id": "index",
+          "question": "Which index serves this query best?",
+          "options": [
+            "`{ customerId: 1, status: 1, createdAt: -1 }`",
+            "`{ createdAt: -1, customerId: 1, status: 1 }`",
+            "Three single-field indexes on `customerId`, `status` and `createdAt`",
+            "`{ status: 1 }`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Equality fields first, then the sort field (the ESR rule), so the index both filters and returns rows already sorted."
+        },
+        {
+          "id": "verify",
+          "question": "After building it, what should `explain` show?",
+          "options": [
+            "`IXSCAN` on the new index, docs examined close to 20, and no `SORT` stage",
+            "`COLLSCAN` with fewer documents examined",
+            "An in-memory `SORT` stage using the new index",
+            "A `$lookup` stage"
+          ],
+          "correctIndex": 0,
+          "explanation": "An index that covers the equality and the sort avoids the blocking in-memory sort and reads only what it returns."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A `$lookup` from `orders` into `products` on `productId` is slow for big result sets. What is the first thing to check?",
+    "mcq": {
+      "options": [
+        "That `products` has an index on the `foreignField` the lookup joins on",
+        "That `orders` has an index on `_id`",
+        "Whether the pipeline uses `$project` at the end",
+        "Whether the products collection is capped"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each input document probes the foreign collection; without an index on `foreignField` every probe is a collection scan. (Joining on `products._id` is already indexed.)",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In an aggregation over 10M documents, why should `$match` usually come before `$group` and `$project`?",
+    "mcq": {
+      "options": [
+        "An early `$match` can use an index and reduces the documents every later stage has to process",
+        "MongoDB rejects pipelines where `$match` is not first",
+        "`$group` cannot read fields unless `$match` ran before",
+        "It changes the result of the `$group`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Filtering first is both index-friendly and cheaper. The optimizer moves some stages itself, but writing it this way is clearer and reliable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Two requests run at the same time on a counter document with `views: 10`. Each does `findOne`, adds 1 in Node, then `updateOne({ _id }, { $set: { views: newValue } })`. What can the final value be?",
+    "mcq": {
+      "options": [
+        "11, because both read 10 and both write 11 (a lost update); `$inc` avoids this",
+        "Always 12, because each update is atomic",
+        "Always 11, because the second update fails",
+        "The update throws a write conflict error"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each write is atomic, but the read-modify-write in application code is not. `{ $inc: { views: 1 } }` does the increment atomically on the server.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A compound index can only be used for an equality filter on a **leading prefix** of its keys. Complete `usablePrefix(indexKeys, eqFields)`: return how many index keys, counted from the first, are covered by the equality fields. It stops at the first key not in `eqFields`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "usablePrefix",
+      "starterCode": "function usablePrefix(indexKeys, eqFields) {\n  return indexKeys.filter((k) => eqFields.includes(k)).length;\n}",
+      "referenceSolution": "function usablePrefix(indexKeys, eqFields) {\n  let n = 0;\n  for (const k of indexKeys) {\n    if (!eqFields.includes(k)) break;\n    n += 1;\n  }\n  return n;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "customerId",
+              "status",
+              "createdAt"
+            ],
+            [
+              "customerId",
+              "status"
+            ]
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "customerId",
+              "status",
+              "createdAt"
+            ],
+            [
+              "status"
+            ]
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              "customerId",
+              "status",
+              "createdAt"
+            ],
+            [
+              "customerId",
+              "createdAt"
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b"
+            ],
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "a"
+            ]
+          ],
+          "expected": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Complete `upsertAll(docs, ops)`. Each op is `{ _id, set, upsert }` (like `updateOne({ _id }, { $set: set }, { upsert })`). Apply them in order and return the docs sorted by `_id`. When no document matches and `upsert` is true, insert `{ _id, ...set }`; when it is false, do nothing.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "upsertAll",
+      "starterCode": "function upsertAll(docs, ops) {\n  const byId = new Map(docs.map((d) => [d._id, { ...d }]));\n  for (const op of ops) {\n    const doc = byId.get(op._id);\n    if (doc) Object.assign(doc, op.set);\n  }\n  return [...byId.values()].sort((a, b) => a._id - b._id);\n}",
+      "referenceSolution": "function upsertAll(docs, ops) {\n  const byId = new Map(docs.map((d) => [d._id, { ...d }]));\n  for (const op of ops) {\n    const doc = byId.get(op._id);\n    if (doc) Object.assign(doc, op.set);\n    else if (op.upsert) byId.set(op._id, { _id: op._id, ...op.set });\n  }\n  return [...byId.values()].sort((a, b) => a._id - b._id);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 1,
+                "qty": 1
+              }
+            ],
+            [
+              {
+                "_id": 1,
+                "set": {
+                  "qty": 2
+                },
+                "upsert": true
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 1,
+              "qty": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "_id": 1,
+                "qty": 1
+              }
+            ],
+            [
+              {
+                "_id": 2,
+                "set": {
+                  "qty": 5
+                },
+                "upsert": true
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 1,
+              "qty": 1
+            },
+            {
+              "_id": 2,
+              "qty": 5
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "_id": 3,
+                "set": {
+                  "a": 1
+                },
+                "upsert": false
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "_id": 2,
+                "set": {
+                  "a": 1
+                },
+                "upsert": true
+              },
+              {
+                "_id": 2,
+                "set": {
+                  "b": 2
+                },
+                "upsert": true
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "_id": 2,
+              "a": 1,
+              "b": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Complete `topPerGroup(docs, key, field, n)`, like `$sort: { [field]: -1 }` then `$group` with `$push` and a `$slice` of `n`: for each group return `{ _id, top }` where `top` holds the `n` highest `field` values, highest first. Groups sorted by `_id`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "topPerGroup",
+      "starterCode": "function topPerGroup(docs, key, field, n) {\n  const groups = {};\n  const sorted = [...docs].sort((a, b) => a[field] - b[field]);\n  for (const d of sorted) (groups[d[key]] ||= []).push(d[field]);\n  return Object.keys(groups).sort().map((id) => ({ _id: id, top: groups[id].slice(0, n) }));\n}",
+      "referenceSolution": "function topPerGroup(docs, key, field, n) {\n  const groups = {};\n  const sorted = [...docs].sort((a, b) => b[field] - a[field]);\n  for (const d of sorted) (groups[d[key]] ||= []).push(d[field]);\n  return Object.keys(groups).sort().map((id) => ({ _id: id, top: groups[id].slice(0, n) }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "g": "a",
+                "s": 1
+              },
+              {
+                "g": "a",
+                "s": 9
+              },
+              {
+                "g": "a",
+                "s": 5
+              }
+            ],
+            "g",
+            "s",
+            2
+          ],
+          "expected": [
+            {
+              "_id": "a",
+              "top": [
+                9,
+                5
+              ]
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "g": "b",
+                "s": 3
+              },
+              {
+                "g": "a",
+                "s": 2
+              },
+              {
+                "g": "b",
+                "s": 7
+              },
+              {
+                "g": "b",
+                "s": 1
+              }
+            ],
+            "g",
+            "s",
+            2
+          ],
+          "expected": [
+            {
+              "_id": "a",
+              "top": [
+                2
+              ]
+            },
+            {
+              "_id": "b",
+              "top": [
+                7,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "g",
+            "s",
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "g": "a",
+                "s": 4
+              },
+              {
+                "g": "a",
+                "s": 8
+              }
+            ],
+            "g",
+            "s",
+            5
+          ],
+          "expected": [
+            {
+              "_id": "a",
+              "top": [
+                8,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The `users` collection uses the schema-versioning pattern. Version 1 (or documents with no `schemaVersion`) store `name: 'First Last'`; version 2 stores `firstName`, `lastName` and `schemaVersion: 2`. Complete `migrateUser(doc)` so it upgrades v1 documents on read (drop `name`; everything after the first space is the last name, `''` when there is none) and returns v2 documents unchanged.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "migrateUser",
+      "starterCode": "function migrateUser(doc) {\n  if (doc.schemaVersion === 2) return doc;\n  const [firstName, lastName] = doc.name.split(' ');\n  const { name, ...rest } = doc;\n  return { ...rest, firstName, lastName, schemaVersion: 2 };\n}",
+      "referenceSolution": "function migrateUser(doc) {\n  if (doc.schemaVersion === 2) return doc;\n  const name = (doc.name || '').trim();\n  const at = name.indexOf(' ');\n  const firstName = at < 0 ? name : name.slice(0, at);\n  const lastName = at < 0 ? '' : name.slice(at + 1);\n  const { name: _old, ...rest } = doc;\n  return { ...rest, firstName, lastName, schemaVersion: 2 };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "_id": 1,
+              "name": "Ada Lovelace"
+            }
+          ],
+          "expected": {
+            "_id": 1,
+            "firstName": "Ada",
+            "lastName": "Lovelace",
+            "schemaVersion": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "_id": 2,
+              "name": "Plato",
+              "schemaVersion": 1
+            }
+          ],
+          "expected": {
+            "_id": 2,
+            "firstName": "Plato",
+            "lastName": "",
+            "schemaVersion": 2
+          }
+        },
+        {
+          "args": [
+            {
+              "_id": 3,
+              "name": "Gabriel Garcia Marquez"
+            }
+          ],
+          "expected": {
+            "_id": 3,
+            "firstName": "Gabriel",
+            "lastName": "Garcia Marquez",
+            "schemaVersion": 2
+          }
+        },
+        {
+          "args": [
+            {
+              "_id": 4,
+              "firstName": "Bo",
+              "lastName": "Li",
+              "schemaVersion": 2
+            }
+          ],
+          "expected": {
+            "_id": 4,
+            "firstName": "Bo",
+            "lastName": "Li",
+            "schemaVersion": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "IoT readings use the **bucket pattern**: one document per sensor per hour instead of one per reading. Complete `toBuckets(readings)` where each reading is `{ sensor, ts, value }` (`ts` in seconds). Return `{ sensor, hour, count, sum }` documents with `hour = Math.floor(ts / 3600)`, sorted by `sensor` then `hour`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toBuckets",
+      "starterCode": "function toBuckets(readings) {\n  const buckets = new Map();\n  for (const r of readings) {\n    const hour = Math.floor(r.ts / 3600);\n    const key = r.sensor;\n    const b = buckets.get(key) || { sensor: r.sensor, hour, count: 0, sum: 0 };\n    b.count += 1;\n    b.sum += r.value;\n    buckets.set(key, b);\n  }\n  return [...buckets.values()].sort((a, b) => a.sensor.localeCompare(b.sensor) || a.hour - b.hour);\n}",
+      "referenceSolution": "function toBuckets(readings) {\n  const buckets = new Map();\n  for (const r of readings) {\n    const hour = Math.floor(r.ts / 3600);\n    const key = r.sensor + '|' + hour;\n    const b = buckets.get(key) || { sensor: r.sensor, hour, count: 0, sum: 0 };\n    b.count += 1;\n    b.sum += r.value;\n    buckets.set(key, b);\n  }\n  return [...buckets.values()].sort((a, b) => a.sensor.localeCompare(b.sensor) || a.hour - b.hour);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "sensor": "s1",
+                "ts": 10,
+                "value": 2
+              },
+              {
+                "sensor": "s1",
+                "ts": 20,
+                "value": 3
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "sensor": "s1",
+              "hour": 0,
+              "count": 2,
+              "sum": 5
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "sensor": "s1",
+                "ts": 3599,
+                "value": 1
+              },
+              {
+                "sensor": "s1",
+                "ts": 3600,
+                "value": 4
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "sensor": "s1",
+              "hour": 0,
+              "count": 1,
+              "sum": 1
+            },
+            {
+              "sensor": "s1",
+              "hour": 1,
+              "count": 1,
+              "sum": 4
+            }
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "sensor": "b",
+                "ts": 7200,
+                "value": 1
+              },
+              {
+                "sensor": "a",
+                "ts": 0,
+                "value": 2
+              },
+              {
+                "sensor": "b",
+                "ts": 100,
+                "value": 3
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "sensor": "a",
+              "hour": 0,
+              "count": 1,
+              "sum": 2
+            },
+            {
+              "sensor": "b",
+              "hour": 0,
+              "count": 1,
+              "sum": 3
+            },
+            {
+              "sensor": "b",
+              "hour": 2,
+              "count": 1,
+              "sum": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Your `events` collection (2 TB, 50k inserts/sec) is moving to a sharded cluster. Most reads are \"events for one tenant in a time range\".",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your `events` collection (2 TB, 50k inserts/sec) is moving to a sharded cluster. Most reads are \"events for one tenant in a time range\".",
+      "steps": [
+        {
+          "id": "key",
+          "question": "Which shard key fits best?",
+          "options": [
+            "`{ tenantId: 1, createdAt: 1 }`",
+            "`{ _id: 1 }` with ObjectIds",
+            "`{ createdAt: 1 }`",
+            "`{ type: 1 }` (12 event types)"
+          ],
+          "correctIndex": 0,
+          "explanation": "It targets reads to the shards holding that tenant and spreads writes across tenants. A monotonic key sends every insert to one hot shard; a 12-value key cannot be split."
+        },
+        {
+          "id": "hot",
+          "question": "One tenant produces 40% of all events and its chunk range is overwhelming one shard. What helps most?",
+          "options": [
+            "Add a hashed or more granular component for that load, e.g. `{ tenantId: 1, bucket: 1, createdAt: 1 }` with a computed bucket",
+            "Add more RAM to that shard",
+            "Turn off the balancer",
+            "Add an index on `createdAt`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A jumbo tenant needs a key with more cardinality inside the tenant so its data can split across shards."
+        },
+        {
+          "id": "query",
+          "question": "A dashboard query filters only on `type` without `tenantId`. What happens in the sharded cluster?",
+          "options": [
+            "It becomes a scatter-gather query sent to every shard",
+            "It fails because the shard key is missing",
+            "It reads only from the primary shard",
+            "It uses the shard key index automatically"
+          ],
+          "correctIndex": 0,
+          "explanation": "Queries without the shard key prefix cannot be routed and are broadcast to all shards; fine for rare reports, costly for hot paths."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-mongodb-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A transfer must debit one account document and credit another, and both must happen or neither. What is the right MongoDB approach today?",
+    "mcq": {
+      "options": [
+        "A multi-document transaction in a session (replica set or sharded cluster required)",
+        "Two `updateOne` calls; each is atomic, so together they are too",
+        "An unordered `bulkWrite`, which is all-or-nothing",
+        "Use `writeConcern: { w: 0 }` for speed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Single-document writes are atomic, but two of them are not. Since 4.0 MongoDB supports multi-document ACID transactions; a bulkWrite can partially succeed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A post document embeds every like as `{ userId, at }` in a `likes` array. Viral posts now fail to update. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "The document is approaching the 16 MB BSON limit because the array is unbounded",
+        "Arrays cannot be indexed",
+        "MongoDB caps arrays at 1,000 elements",
+        "The `_id` index is full"
+      ],
+      "correctIndex": 0,
+      "explanation": "Unbounded arrays grow toward the 16 MB document limit and make every write rewrite a large document. Keep a `likeCount` on the post and store likes in their own collection (or the outlier pattern).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-mongodb-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-mongodb",
+    "trackId": null,
+    "stackId": "stack-mongodb",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Reads use `readPreference: 'secondaryPreferred'` to offload the primary. Right after a user updates their profile, the profile page sometimes shows the old value. Why?",
+    "mcq": {
+      "options": [
+        "Replication to secondaries is asynchronous, so a secondary can lag behind the primary",
+        "The write was rolled back",
+        "Secondaries cache documents for 60 seconds",
+        "The update used `$set` instead of `replaceOne`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Secondary reads are eventually consistent. Read your own writes from the primary, or use causally consistent sessions with majority read/write concern.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

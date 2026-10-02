@@ -1,0 +1,1411 @@
+[
+  {
+    "id": "eng-spring-boot-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A helper in a Spring `@RestController` picks the status for each CRUD call. Each input line is `METHOD yes|no` (whether the resource exists). Rules:\n- `GET` / `PUT`: 200 if it exists, else 404\n- `POST` creates: 201\n- `DELETE`: 204 if it existed, else 404\n- anything else: 405\n\nFix `status`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Picks the HTTP status a CRUD controller should return.\n    static int status(String method, boolean exists) {\n        switch (method) {\n            case \"GET\": return exists ? 200 : 404;\n            case \"POST\": return 200;\n            case \"PUT\": return exists ? 200 : 404;\n            case \"DELETE\": return exists ? 200 : 404;\n            default: return 405;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(status(p[0], p[1].equals(\"yes\")));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Picks the HTTP status a CRUD controller should return.\n    static int status(String method, boolean exists) {\n        switch (method) {\n            case \"GET\": return exists ? 200 : 404;\n            case \"POST\": return 201;\n            case \"PUT\": return exists ? 200 : 404;\n            case \"DELETE\": return exists ? 204 : 404;\n            default: return 405;\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(status(p[0], p[1].equals(\"yes\")));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "GET yes\nGET no",
+          "expected": "200\n404"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "POST no",
+          "expected": "201"
+        },
+        {
+          "stdin": "DELETE yes\nDELETE no",
+          "expected": "204\n404"
+        },
+        {
+          "stdin": "PATCH yes",
+          "expected": "405"
+        },
+        {
+          "stdin": "PUT no\nPOST yes",
+          "expected": "404\n201"
+        },
+        {
+          "stdin": "",
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`UserService.validate` checks a sign-up request before saving. Each input line is `name|email`. Return `ok`, or the errors joined by `; ` in this order:\n- `name is required` when the name is empty **or only spaces**\n- `email is invalid` when the email has no `@`\n\nFix `validate`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Validation for POST /users. Returns \"ok\" or the errors joined by \"; \".\n    static String validate(String name, String email) {\n        List<String> errors = new ArrayList<>();\n        if (name.isEmpty()) errors.add(\"name is required\");\n        if (email.isEmpty()) errors.add(\"email is invalid\");\n        return errors.isEmpty() ? \"ok\" : String.join(\"; \", errors);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\"\\\\|\", -1);\n            System.out.println(validate(p[0], p[1]));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Validation for POST /users. Returns \"ok\" or the errors joined by \"; \".\n    static String validate(String name, String email) {\n        List<String> errors = new ArrayList<>();\n        if (name.trim().isEmpty()) errors.add(\"name is required\");\n        if (!email.contains(\"@\")) errors.add(\"email is invalid\");\n        return errors.isEmpty() ? \"ok\" : String.join(\"; \", errors);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\"\\\\|\", -1);\n            System.out.println(validate(p[0], p[1]));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "Ada|ada@x.io",
+          "expected": "ok"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "   |ada@x.io",
+          "expected": "name is required"
+        },
+        {
+          "stdin": "Ada|ada.x.io",
+          "expected": "email is invalid"
+        },
+        {
+          "stdin": "|",
+          "expected": "name is required; email is invalid"
+        },
+        {
+          "stdin": "Linus|linus@x.io\n|a@b.c",
+          "expected": "ok\nname is required"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Each input line is `page size total` (page is zero-based, as in `PageRequest.of(page, size)`). Print the row offset and the total number of pages. 45 rows at 20 per page is 3 pages. Fix `totalPages`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Same maths as Spring Data's PageRequest / Page.getTotalPages().\n    static int offset(int page, int size) {\n        return page * size;\n    }\n\n    static int totalPages(int size, int total) {\n        return total / size;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            int page = Integer.parseInt(p[0]), size = Integer.parseInt(p[1]), total = Integer.parseInt(p[2]);\n            System.out.println(\"offset=\" + offset(page, size) + \" pages=\" + totalPages(size, total));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Same maths as Spring Data's PageRequest / Page.getTotalPages().\n    static int offset(int page, int size) {\n        return page * size;\n    }\n\n    static int totalPages(int size, int total) {\n        return (total + size - 1) / size;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            int page = Integer.parseInt(p[0]), size = Integer.parseInt(p[1]), total = Integer.parseInt(p[2]);\n            System.out.println(\"offset=\" + offset(page, size) + \" pages=\" + totalPages(size, total));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "0 20 45",
+          "expected": "offset=0 pages=3"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "2 10 100",
+          "expected": "offset=20 pages=10"
+        },
+        {
+          "stdin": "1 10 0",
+          "expected": "offset=10 pages=0"
+        },
+        {
+          "stdin": "0 25 1",
+          "expected": "offset=0 pages=1"
+        },
+        {
+          "stdin": "3 7 22",
+          "expected": "offset=21 pages=4"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The API returns a `UserDto`, never the JPA entity. Fix `toDto` so that:\n- `name` is first and last name joined by one space, or just the first name when the last name is empty\n- `email` is lower-cased\n- the password hash is never copied\n\nInput lines are `id,first,last,email,passwordHash`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class UserEntity {\n        long id; String firstName, lastName, email, passwordHash;\n        UserEntity(long id, String f, String l, String e, String h) { this.id = id; firstName = f; lastName = l; email = e; passwordHash = h; }\n    }\n\n    static class UserDto {\n        long id; String name, email;\n        UserDto(long id, String name, String email) { this.id = id; this.name = name; this.email = email; }\n        public String toString() { return \"id=\" + id + \" name=\" + name + \" email=\" + email; }\n    }\n\n    static UserDto toDto(UserEntity e) {\n        String name = e.firstName + \" \" + e.lastName;\n        return new UserDto(e.id, name, e.email);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\", -1);\n            UserEntity e = new UserEntity(Long.parseLong(p[0]), p[1], p[2], p[3], p[4]);\n            System.out.println(toDto(e));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class UserEntity {\n        long id; String firstName, lastName, email, passwordHash;\n        UserEntity(long id, String f, String l, String e, String h) { this.id = id; firstName = f; lastName = l; email = e; passwordHash = h; }\n    }\n\n    static class UserDto {\n        long id; String name, email;\n        UserDto(long id, String name, String email) { this.id = id; this.name = name; this.email = email; }\n        public String toString() { return \"id=\" + id + \" name=\" + name + \" email=\" + email; }\n    }\n\n    static UserDto toDto(UserEntity e) {\n        String name = e.lastName.isEmpty() ? e.firstName : e.firstName + \" \" + e.lastName;\n        return new UserDto(e.id, name, e.email.toLowerCase());\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\", -1);\n            UserEntity e = new UserEntity(Long.parseLong(p[0]), p[1], p[2], p[3], p[4]);\n            System.out.println(toDto(e));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1,Ada,Lovelace,ada@x.io,h1",
+          "expected": "id=1 name=Ada Lovelace email=ada@x.io"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "2,Linus,,linus@x.io,h2",
+          "expected": "id=2 name=Linus email=linus@x.io"
+        },
+        {
+          "stdin": "3,Grace,Hopper,GRACE@Navy.MIL,h3",
+          "expected": "id=3 name=Grace Hopper email=grace@navy.mil"
+        },
+        {
+          "stdin": "4,Alan,Turing,alan@x.io,h4",
+          "expected": "id=4 name=Alan Turing email=alan@x.io"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A list endpoint reads `?size=`. Each input line is the raw value, or `-` when it was not sent. Rules:\n- missing or not a number: 20\n- below 1: 1\n- above 100: 100 (a client must not be able to ask for a million rows)\n\nFix `effectiveSize`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // The ?size= query parameter of a list endpoint; null when the client did not send it.\n    static int effectiveSize(String raw) {\n        if (raw == null) return 20;\n        return Math.max(1, Integer.parseInt(raw));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            System.out.println(effectiveSize(line.equals(\"-\") ? null : line));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // The ?size= query parameter of a list endpoint; null when the client did not send it.\n    static int effectiveSize(String raw) {\n        if (raw == null) return 20;\n        int n;\n        try {\n            n = Integer.parseInt(raw);\n        } catch (NumberFormatException e) {\n            return 20;\n        }\n        return Math.min(100, Math.max(1, n));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            System.out.println(effectiveSize(line.equals(\"-\") ? null : line));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "-\n50",
+          "expected": "20\n50"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "500",
+          "expected": "100"
+        },
+        {
+          "stdin": "0",
+          "expected": "1"
+        },
+        {
+          "stdin": "abc",
+          "expected": "20"
+        },
+        {
+          "stdin": "100\n1",
+          "expected": "100\n1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are writing an `OrderController` in Spring Boot. Pick the right annotation for each need.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are writing an `OrderController` in Spring Boot. Pick the right annotation for each need.",
+      "steps": [
+        {
+          "id": "class",
+          "question": "Every handler in the class returns an object that should be written to the response as JSON.",
+          "options": [
+            "`@Controller`",
+            "`@RestController`",
+            "`@Service`",
+            "`@Component`"
+          ],
+          "correctIndex": 1,
+          "explanation": "`@RestController` is `@Controller` plus `@ResponseBody`, so return values become the response body."
+        },
+        {
+          "id": "path",
+          "question": "`GET /orders/42` must read the `42`.",
+          "options": [
+            "`@RequestParam Long id`",
+            "`@PathVariable Long id`",
+            "`@RequestBody Long id`",
+            "`@RequestHeader Long id`"
+          ],
+          "correctIndex": 1,
+          "explanation": "Values in the URL path are path variables; `@RequestParam` reads `?id=42`."
+        },
+        {
+          "id": "body",
+          "question": "`POST /orders` sends JSON that must be turned into a `CreateOrderRequest` and checked against its `@NotBlank` / `@Min` constraints.",
+          "options": [
+            "`@RequestBody CreateOrderRequest req`",
+            "`@Valid @RequestBody CreateOrderRequest req`",
+            "`@ModelAttribute CreateOrderRequest req`",
+            "`@RequestParam CreateOrderRequest req`"
+          ],
+          "correctIndex": 1,
+          "explanation": "Without `@Valid` the constraint annotations on the DTO are never checked."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `@RestController` add compared with `@Controller`?",
+    "mcq": {
+      "options": [
+        "Every handler method behaves as if annotated with `@ResponseBody`, so return values are written to the response body",
+        "It registers the class as a JPA repository",
+        "It makes every method transactional",
+        "It enables CORS for all endpoints"
+      ],
+      "correctIndex": 0,
+      "explanation": "`@RestController` = `@Controller` + `@ResponseBody`. A plain `@Controller` returning a String would treat it as a view name.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The app must listen on port 8081 instead of 8080. What goes in `application.properties`?",
+    "mcq": {
+      "options": [
+        "`server.port=8081`",
+        "`spring.port=8081`",
+        "`tomcat.port=8081`",
+        "`app.server.port=8081`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`server.port` configures the embedded server. It can also be set with the `SERVER_PORT` environment variable.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The main class is in `com.acme.app` and is annotated `@SpringBootApplication`. A `@Service` in `com.acme.billing` is never created and injection fails. Why?",
+    "mcq": {
+      "options": [
+        "Component scanning starts at the main class's package and only covers its sub-packages",
+        "`@Service` beans must be listed in `application.properties`",
+        "Services need `@Bean` as well as `@Service`",
+        "Spring only scans classes whose names end in `Service`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Move the main class up to `com.acme` (or the service under `com.acme.app`), or widen `scanBasePackages`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Input lines are `email,active`. `activeEmails` should return the emails of active users, **sorted**, **without duplicates**, comma separated, or `none` when there are none. Fix the stream pipeline.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class User {\n        String email; boolean active;\n        User(String email, boolean active) { this.email = email; this.active = active; }\n    }\n\n    // For a mailing job: active users' emails, sorted, no duplicates, comma separated; \"none\" if there are none.\n    static String activeEmails(List<User> users) {\n        return users.stream()\n                .filter(u -> u.active)\n                .map(u -> u.email)\n                .collect(Collectors.joining(\",\"));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        List<User> users = new ArrayList<>();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\");\n            users.add(new User(p[0], Boolean.parseBoolean(p[1])));\n        }\n        System.out.println(activeEmails(users));\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class User {\n        String email; boolean active;\n        User(String email, boolean active) { this.email = email; this.active = active; }\n    }\n\n    // For a mailing job: active users' emails, sorted, no duplicates, comma separated; \"none\" if there are none.\n    static String activeEmails(List<User> users) {\n        String out = users.stream()\n                .filter(u -> u.active)\n                .map(u -> u.email)\n                .distinct()\n                .sorted()\n                .collect(Collectors.joining(\",\"));\n        return out.isEmpty() ? \"none\" : out;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        List<User> users = new ArrayList<>();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\");\n            users.add(new User(p[0], Boolean.parseBoolean(p[1])));\n        }\n        System.out.println(activeEmails(users));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "b@x.io,true\na@x.io,true\nc@x.io,false",
+          "expected": "a@x.io,b@x.io"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "a@x.io,true\na@x.io,true",
+          "expected": "a@x.io"
+        },
+        {
+          "stdin": "c@x.io,false",
+          "expected": "none"
+        },
+        {
+          "stdin": "",
+          "expected": "none"
+        },
+        {
+          "stdin": "z@x.io,true\nm@x.io,true\nm@x.io,false",
+          "expected": "m@x.io,z@x.io"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`findById` returns an `Optional`, like a Spring Data repository. `findName` calls `.get()`, so a missing user crashes with `NoSuchElementException` (a 500). Make it throw `NotFoundException(\"User <id> not found\")` instead, which the caller turns into a 404. Input lines are ids.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class NotFoundException extends RuntimeException {\n        NotFoundException(String message) { super(message); }\n    }\n\n    static final Map<Long, String> DB = Map.of(1L, \"Ada\", 2L, \"Linus\");\n\n    // Stand-in for a Spring Data repository.\n    static Optional<String> findById(long id) {\n        return Optional.ofNullable(DB.get(id));\n    }\n\n    static String findName(long id) {\n        return findById(id).get();\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            long id = Long.parseLong(line);\n            try {\n                System.out.println(findName(id));\n            } catch (NotFoundException e) {\n                System.out.println(\"404 \" + e.getMessage());\n            }\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class NotFoundException extends RuntimeException {\n        NotFoundException(String message) { super(message); }\n    }\n\n    static final Map<Long, String> DB = Map.of(1L, \"Ada\", 2L, \"Linus\");\n\n    // Stand-in for a Spring Data repository.\n    static Optional<String> findById(long id) {\n        return Optional.ofNullable(DB.get(id));\n    }\n\n    static String findName(long id) {\n        return findById(id).orElseThrow(() -> new NotFoundException(\"User \" + id + \" not found\"));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            long id = Long.parseLong(line);\n            try {\n                System.out.println(findName(id));\n            } catch (NotFoundException e) {\n                System.out.println(\"404 \" + e.getMessage());\n            }\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "1\n2",
+          "expected": "Ada\nLinus"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "3",
+          "expected": "404 User 3 not found"
+        },
+        {
+          "stdin": "1\n9\n2",
+          "expected": "Ada\n404 User 9 not found\nLinus"
+        },
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "2",
+          "expected": "Linus"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`validate` mirrors the Bean Validation constraints on an order line (`@Min(1) @Max(99)` on `quantity`). Each input line is `sku quantity`. Fix the quantity check so it matches the annotations.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Mirrors the constraints on OrderLineRequest:\n    //   @Pattern(regexp = \"[A-Z]{3}-\\\\d{3}\") String sku;   @Min(1) @Max(99) int quantity;\n    static String validate(String sku, int quantity) {\n        List<String> errors = new ArrayList<>();\n        if (!sku.matches(\"[A-Z]{3}-\\\\d{3}\")) errors.add(\"sku must look like ABC-123\");\n        if (quantity < 0 || quantity > 100) errors.add(\"quantity must be between 1 and 99\");\n        return errors.isEmpty() ? \"valid\" : String.join(\"; \", errors);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(validate(p[0], Integer.parseInt(p[1])));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Mirrors the constraints on OrderLineRequest:\n    //   @Pattern(regexp = \"[A-Z]{3}-\\\\d{3}\") String sku;   @Min(1) @Max(99) int quantity;\n    static String validate(String sku, int quantity) {\n        List<String> errors = new ArrayList<>();\n        if (!sku.matches(\"[A-Z]{3}-\\\\d{3}\")) errors.add(\"sku must look like ABC-123\");\n        if (quantity < 1 || quantity > 99) errors.add(\"quantity must be between 1 and 99\");\n        return errors.isEmpty() ? \"valid\" : String.join(\"; \", errors);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(validate(p[0], Integer.parseInt(p[1])));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "ABC-123 2",
+          "expected": "valid"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "ABC-123 0",
+          "expected": "quantity must be between 1 and 99"
+        },
+        {
+          "stdin": "abc-123 5",
+          "expected": "sku must look like ABC-123"
+        },
+        {
+          "stdin": "ABC-12 100",
+          "expected": "sku must look like ABC-123; quantity must be between 1 and 99"
+        },
+        {
+          "stdin": "XYZ-999 99\nXYZ-999 1",
+          "expected": "valid\nvalid"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A list endpoint takes `?sort=property,direction`. Each input line is the raw value. Return `property DIRECTION`:\n- the direction is `DESC` for `desc` in any case, otherwise `ASC` (also when missing)\n- only `name`, `price` and `createdAt` may be sorted on; anything else falls back to `id ASC` (never let a client sort by an arbitrary column)\n\nFix `parseSort`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static final Set<String> ALLOWED = Set.of(\"name\", \"price\", \"createdAt\");\n\n    // Turns ?sort=name,desc into \"name DESC\".\n    static String parseSort(String raw) {\n        String[] p = raw.split(\",\");\n        String direction = p.length > 1 ? p[1] : \"ASC\";\n        return p[0] + \" \" + direction;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            System.out.println(parseSort(line));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static final Set<String> ALLOWED = Set.of(\"name\", \"price\", \"createdAt\");\n\n    // Turns ?sort=name,desc into \"name DESC\".\n    static String parseSort(String raw) {\n        String[] p = raw.split(\",\");\n        if (!ALLOWED.contains(p[0])) return \"id ASC\";\n        String direction = p.length > 1 && p[1].equalsIgnoreCase(\"desc\") ? \"DESC\" : \"ASC\";\n        return p[0] + \" \" + direction;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            System.out.println(parseSort(line));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "name,desc",
+          "expected": "name DESC"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "price",
+          "expected": "price ASC"
+        },
+        {
+          "stdin": "password,asc",
+          "expected": "id ASC"
+        },
+        {
+          "stdin": "createdAt,DESC",
+          "expected": "createdAt DESC"
+        },
+        {
+          "stdin": "name,ASC\nprice,Desc",
+          "expected": "name ASC\nprice DESC"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A price import builds a map of sku to price. When the file has the same sku twice, the **later** row wins. Right now a duplicate sku makes the whole import fail with `IllegalStateException: Duplicate key`. Fix `priceBySku`. Input lines are `sku,price`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class PriceRow {\n        String sku; int price;\n        PriceRow(String sku, int price) { this.sku = sku; this.price = price; }\n    }\n\n    // Rows come from a price import in file order; a later row for the same sku replaces an earlier one.\n    static Map<String, Integer> priceBySku(List<PriceRow> rows) {\n        return rows.stream().collect(Collectors.toMap(r -> r.sku, r -> r.price));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        List<PriceRow> rows = new ArrayList<>();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\");\n            rows.add(new PriceRow(p[0], Integer.parseInt(p[1])));\n        }\n        new TreeMap<>(priceBySku(rows)).forEach((k, v) -> System.out.println(k + \"=\" + v));\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class PriceRow {\n        String sku; int price;\n        PriceRow(String sku, int price) { this.sku = sku; this.price = price; }\n    }\n\n    // Rows come from a price import in file order; a later row for the same sku replaces an earlier one.\n    static Map<String, Integer> priceBySku(List<PriceRow> rows) {\n        return rows.stream().collect(Collectors.toMap(r -> r.sku, r -> r.price, (first, later) -> later));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        List<PriceRow> rows = new ArrayList<>();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\");\n            rows.add(new PriceRow(p[0], Integer.parseInt(p[1])));\n        }\n        new TreeMap<>(priceBySku(rows)).forEach((k, v) -> System.out.println(k + \"=\" + v));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "A-1,100\nB-2,250",
+          "expected": "A-1=100\nB-2=250"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "A-1,100\nA-1,90",
+          "expected": "A-1=90"
+        },
+        {
+          "stdin": "C-3,5\nA-1,1\nC-3,7\nC-3,8",
+          "expected": "A-1=1\nC-3=8"
+        },
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "Z-9,0",
+          "expected": "Z-9=0"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Mark the lines in this controller that are bugs or security problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this controller that are bugs or security problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@RestController",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "@RequestMapping(\"/api/users\")",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "public class UserController {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  private final UserRepository repo;",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  public UserController(UserRepository repo) { this.repo = repo; }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  @PostMapping",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  public User create(@RequestBody CreateUserRequest req) {",
+          "issue": "No `@Valid`, so the `@NotBlank`/`@Email` constraints on the request DTO never run."
+        },
+        {
+          "id": "l8",
+          "text": "    User u = new User(req.getName(), req.getEmail(), req.getPassword());",
+          "issue": "The raw password is stored; it must be hashed with a `PasswordEncoder` first."
+        },
+        {
+          "id": "l9",
+          "text": "    return repo.save(u);",
+          "issue": "Returns the JPA entity, password field included; map to a response DTO."
+        },
+        {
+          "id": "l10",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-spring-boot-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Why do Spring teams prefer constructor injection over `@Autowired` on fields?",
+    "mcq": {
+      "options": [
+        "Dependencies can be `final`, are required at construction, and the class can be unit-tested with a plain `new`",
+        "Field injection does not work for `@Service` classes",
+        "Constructor injection makes beans prototype-scoped",
+        "Constructor injection is faster at runtime because it skips proxies"
+      ],
+      "correctIndex": 0,
+      "explanation": "With a single constructor Spring needs no `@Autowired` at all. Field injection hides dependencies and needs reflection or a Spring context in tests.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The app has `application.properties` and `application-dev.properties`, both setting `spring.datasource.url`. It is started with `spring.profiles.active=dev`. Which URL is used?",
+    "mcq": {
+      "options": [
+        "The one in `application-dev.properties`; profile-specific files override the default file",
+        "The one in `application.properties`; the default file always wins",
+        "Startup fails because the property is defined twice",
+        "Whichever file was modified most recently"
+      ],
+      "correctIndex": 0,
+      "explanation": "Profile-specific properties are loaded on top of the defaults, so they override matching keys and inherit the rest.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A bean has `@Value(\"${app.timeout:30}\") int timeout;` and `app.timeout` is not set anywhere. What happens?",
+    "mcq": {
+      "options": [
+        "`timeout` is 30",
+        "`timeout` is 0",
+        "Startup fails with \"Could not resolve placeholder\"",
+        "`timeout` is null"
+      ],
+      "correctIndex": 0,
+      "explanation": "The text after `:` is the default. Without a default, a missing property fails startup.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`transfer` moves money between two accounts. A target account may not go above 1000. When the target limit is hit, the source account has already been debited, so money disappears (in production `@Transactional` would roll back the database, but these in-memory objects stay changed). Make `transfer` check every rule before it changes anything. Each line is `balanceA balanceB amount`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static final long LIMIT = 1000;\n\n    static class Account {\n        long balance;\n        Account(long balance) { this.balance = balance; }\n    }\n\n    // Must be all-or-nothing: on any rule failure, neither account changes.\n    static void transfer(Account from, Account to, long amount) {\n        if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n        if (amount > from.balance) throw new IllegalArgumentException(\"insufficient funds\");\n        from.balance -= amount;\n        if (to.balance + amount > LIMIT) throw new IllegalArgumentException(\"limit exceeded\");\n        to.balance += amount;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            Account a = new Account(Long.parseLong(p[0]));\n            Account b = new Account(Long.parseLong(p[1]));\n            String result;\n            try {\n                transfer(a, b, Long.parseLong(p[2]));\n                result = \"ok\";\n            } catch (IllegalArgumentException e) {\n                result = \"rejected\";\n            }\n            System.out.println(result + \" \" + a.balance + \" \" + b.balance);\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static final long LIMIT = 1000;\n\n    static class Account {\n        long balance;\n        Account(long balance) { this.balance = balance; }\n    }\n\n    // Must be all-or-nothing: on any rule failure, neither account changes.\n    static void transfer(Account from, Account to, long amount) {\n        if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n        if (amount > from.balance) throw new IllegalArgumentException(\"insufficient funds\");\n        if (to.balance + amount > LIMIT) throw new IllegalArgumentException(\"limit exceeded\");\n        from.balance -= amount;\n        to.balance += amount;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            Account a = new Account(Long.parseLong(p[0]));\n            Account b = new Account(Long.parseLong(p[1]));\n            String result;\n            try {\n                transfer(a, b, Long.parseLong(p[2]));\n                result = \"ok\";\n            } catch (IllegalArgumentException e) {\n                result = \"rejected\";\n            }\n            System.out.println(result + \" \" + a.balance + \" \" + b.balance);\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "100 0 30",
+          "expected": "ok 70 30"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "100 990 30",
+          "expected": "rejected 100 990"
+        },
+        {
+          "stdin": "100 0 0",
+          "expected": "rejected 100 0"
+        },
+        {
+          "stdin": "50 0 60",
+          "expected": "rejected 50 0"
+        },
+        {
+          "stdin": "1000 0 1000\n10 995 5",
+          "expected": "ok 0 1000\nok 5 1000"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A revenue report should show the **total amount** of `PAID` orders per customer, sorted by customer name. The current pipeline counts orders and includes refunded ones. Fix `revenueByCustomer`. Input lines are `customer,amount,status`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class Order {\n        String customer; long amount; String status;\n        Order(String c, long a, String s) { customer = c; amount = a; status = s; }\n    }\n\n    // Revenue report: total amount of PAID orders per customer, sorted by customer.\n    static Map<String, Long> revenueByCustomer(List<Order> orders) {\n        return orders.stream()\n                .collect(Collectors.groupingBy(o -> o.customer, TreeMap::new, Collectors.counting()));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        List<Order> orders = new ArrayList<>();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\");\n            orders.add(new Order(p[0], Long.parseLong(p[1]), p[2]));\n        }\n        revenueByCustomer(orders).forEach((k, v) -> System.out.println(k + \"=\" + v));\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class Order {\n        String customer; long amount; String status;\n        Order(String c, long a, String s) { customer = c; amount = a; status = s; }\n    }\n\n    // Revenue report: total amount of PAID orders per customer, sorted by customer.\n    static Map<String, Long> revenueByCustomer(List<Order> orders) {\n        return orders.stream()\n                .filter(o -> o.status.equals(\"PAID\"))\n                .collect(Collectors.groupingBy(o -> o.customer, TreeMap::new, Collectors.summingLong(o -> o.amount)));\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        List<Order> orders = new ArrayList<>();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\",\");\n            orders.add(new Order(p[0], Long.parseLong(p[1]), p[2]));\n        }\n        revenueByCustomer(orders).forEach((k, v) -> System.out.println(k + \"=\" + v));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "acme,100,PAID\nacme,50,PAID\nbeta,20,PAID",
+          "expected": "acme=150\nbeta=20"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "acme,100,PAID\nacme,40,REFUNDED",
+          "expected": "acme=100"
+        },
+        {
+          "stdin": "zed,5,REFUNDED",
+          "expected": ""
+        },
+        {
+          "stdin": "",
+          "expected": ""
+        },
+        {
+          "stdin": "b,1,PAID\na,2,PAID\nb,3,PAID",
+          "expected": "a=2\nb=4"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`slice` returns one page of the ids `1..n` and whether there is a next page, like a Spring Data `Slice`. Each line is `n page size` (page is zero-based). The last page wrongly reports `hasNext=true`. Fix it.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Like a Spring Data Slice over ids 1..n: the ids on this page and whether a next page exists.\n    static String slice(int n, int page, int size) {\n        int start = page * size;\n        int end = Math.min(start + size, n);\n        String ids = IntStream.rangeClosed(start + 1, end).mapToObj(String::valueOf).collect(Collectors.joining(\",\"));\n        boolean hasNext = end <= n;\n        return (ids.isEmpty() ? \"-\" : ids) + \" hasNext=\" + hasNext;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(slice(Integer.parseInt(p[0]), Integer.parseInt(p[1]), Integer.parseInt(p[2])));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Like a Spring Data Slice over ids 1..n: the ids on this page and whether a next page exists.\n    static String slice(int n, int page, int size) {\n        int start = page * size;\n        int end = Math.min(start + size, n);\n        String ids = IntStream.rangeClosed(start + 1, end).mapToObj(String::valueOf).collect(Collectors.joining(\",\"));\n        boolean hasNext = end < n;\n        return (ids.isEmpty() ? \"-\" : ids) + \" hasNext=\" + hasNext;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(slice(Integer.parseInt(p[0]), Integer.parseInt(p[1]), Integer.parseInt(p[2])));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "10 0 3",
+          "expected": "1,2,3 hasNext=true"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "9 2 3",
+          "expected": "7,8,9 hasNext=false"
+        },
+        {
+          "stdin": "10 3 3",
+          "expected": "10 hasNext=false"
+        },
+        {
+          "stdin": "5 4 3",
+          "expected": "- hasNext=false"
+        },
+        {
+          "stdin": "0 0 10",
+          "expected": "- hasNext=false"
+        },
+        {
+          "stdin": "7 1 3",
+          "expected": "4,5,6 hasNext=true"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`POST /payments` takes an `Idempotency-Key`. Each input line is `key amount`. Rules:\n- new key: create the payment and print `created #<n>` (n counts up from 1)\n- same key, same amount (a client retry): print `replay #<n>` and create nothing\n- same key, **different** amount: print `conflict` (the API answers 422) and create nothing\n\nFix `handle`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class Payment {\n        int number; long amount;\n        Payment(int number, long amount) { this.number = number; this.amount = amount; }\n    }\n\n    static final Map<String, Payment> BY_KEY = new HashMap<>();\n    static int nextNumber = 1;\n\n    // POST /payments with an Idempotency-Key header.\n    static String handle(String key, long amount) {\n        Payment existing = BY_KEY.get(key);\n        if (existing != null) return \"replay #\" + existing.number;\n        Payment p = new Payment(nextNumber++, amount);\n        BY_KEY.put(key, p);\n        return \"created #\" + p.number;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(handle(p[0], Long.parseLong(p[1])));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    static class Payment {\n        int number; long amount;\n        Payment(int number, long amount) { this.number = number; this.amount = amount; }\n    }\n\n    static final Map<String, Payment> BY_KEY = new HashMap<>();\n    static int nextNumber = 1;\n\n    // POST /payments with an Idempotency-Key header.\n    static String handle(String key, long amount) {\n        Payment existing = BY_KEY.get(key);\n        if (existing != null) return existing.amount == amount ? \"replay #\" + existing.number : \"conflict\";\n        Payment p = new Payment(nextNumber++, amount);\n        BY_KEY.put(key, p);\n        return \"created #\" + p.number;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(handle(p[0], Long.parseLong(p[1])));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "k1 100\nk1 100",
+          "expected": "created #1\nreplay #1"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "k1 100\nk1 250",
+          "expected": "created #1\nconflict"
+        },
+        {
+          "stdin": "a 5\nb 5\na 5",
+          "expected": "created #1\ncreated #2\nreplay #1"
+        },
+        {
+          "stdin": "x 1\nx 2\ny 2",
+          "expected": "created #1\nconflict\ncreated #2"
+        },
+        {
+          "stdin": "",
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A client call uses `@Retryable` with exponential backoff. Each line is `maxAttempts delay multiplier maxDelay`. Print the wait before each retry (there are `maxAttempts - 1` of them), comma separated, or `none`. No wait may exceed `maxDelay`. Fix `delays`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // The waits between attempts for @Retryable(maxAttempts, backoff = @Backoff(delay, multiplier, maxDelay)).\n    static String delays(int maxAttempts, long delay, double multiplier, long maxDelay) {\n        List<String> out = new ArrayList<>();\n        long current = delay;\n        for (int i = 1; i < maxAttempts; i++) {\n            out.add(String.valueOf(current));\n            current = (long) (current * multiplier);\n        }\n        return out.isEmpty() ? \"none\" : String.join(\",\", out);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(delays(Integer.parseInt(p[0]), Long.parseLong(p[1]), Double.parseDouble(p[2]), Long.parseLong(p[3])));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // The waits between attempts for @Retryable(maxAttempts, backoff = @Backoff(delay, multiplier, maxDelay)).\n    static String delays(int maxAttempts, long delay, double multiplier, long maxDelay) {\n        List<String> out = new ArrayList<>();\n        long current = delay;\n        for (int i = 1; i < maxAttempts; i++) {\n            out.add(String.valueOf(Math.min(current, maxDelay)));\n            current = (long) (current * multiplier);\n        }\n        return out.isEmpty() ? \"none\" : String.join(\",\", out);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(delays(Integer.parseInt(p[0]), Long.parseLong(p[1]), Double.parseDouble(p[2]), Long.parseLong(p[3])));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "4 100 2 10000",
+          "expected": "100,200,400"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "5 1000 3 5000",
+          "expected": "1000,3000,5000,5000"
+        },
+        {
+          "stdin": "1 100 2 1000",
+          "expected": "none"
+        },
+        {
+          "stdin": "3 500 1 9000",
+          "expected": "500,500"
+        },
+        {
+          "stdin": "3 800 2 500",
+          "expected": "500,500"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This service was meant to save each order in a transaction and to roll back a failed cancellation. Mark the lines where the transactions do not work as intended.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This service was meant to save each order in a transaction and to roll back a failed cancellation. Mark the lines where the transactions do not work as intended.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@Service",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "public class OrderService {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  private final OrderRepository orders;",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  private final RefundClient refunds;",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  public void importAll(List<Order> batch) {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    for (Order o : batch) this.saveOne(o);",
+          "issue": "Self-invocation: calling through `this` bypasses the Spring proxy, so no transaction is started."
+        },
+        {
+          "id": "l7",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  @Transactional",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  private void saveOne(Order o) {",
+          "issue": "`@Transactional` on a private method is ignored by the proxy."
+        },
+        {
+          "id": "l10",
+          "text": "    orders.save(o);",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "  @Transactional",
+          "issue": null
+        },
+        {
+          "id": "l13",
+          "text": "  public void cancel(long id) {",
+          "issue": null
+        },
+        {
+          "id": "l14",
+          "text": "    try { orders.markCancelled(id); refunds.issue(id); }",
+          "issue": null
+        },
+        {
+          "id": "l15",
+          "text": "    catch (Exception e) { log.warn(\"cancel failed\", e); }",
+          "issue": "Swallowing the exception means the transaction commits the cancellation even though the refund failed."
+        },
+        {
+          "id": "l16",
+          "text": "  }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-spring-boot-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A `@Transactional` service method throws `PaymentDeclinedException extends Exception` (a checked exception) after inserting a row. With default settings, what happens to the insert?",
+    "mcq": {
+      "options": [
+        "It is committed: by default Spring only rolls back on unchecked exceptions and errors",
+        "It is rolled back: any exception rolls back",
+        "The method cannot compile because transactional methods cannot throw checked exceptions",
+        "Spring retries the method once"
+      ],
+      "correctIndex": 0,
+      "explanation": "Use `@Transactional(rollbackFor = PaymentDeclinedException.class)` or make the exception extend `RuntimeException`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A `@Service` (default scope) stores the current request's user in a field `private User currentUser;` set at the start of each call. What is the problem?",
+    "mcq": {
+      "options": [
+        "The bean is a singleton shared by all request threads, so concurrent requests overwrite each other's user",
+        "Spring creates a new service per request, so the field is always null",
+        "Fields on services are not allowed and startup fails",
+        "Nothing; each thread gets its own copy of the field"
+      ],
+      "correctIndex": 0,
+      "explanation": "Singleton beans must be stateless. Pass the user as a parameter or read it from the `SecurityContext`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "With `spring.jpa.open-in-view=false`, a controller reads `order.getItems().size()` on an entity returned from a `@Transactional` service method, where `items` is a lazy `@OneToMany`. What happens?",
+    "mcq": {
+      "options": [
+        "`LazyInitializationException`, because the persistence context closed when the service method returned",
+        "It works; Hibernate opens a new session automatically",
+        "It returns 0 because lazy collections start empty",
+        "It triggers a compile error"
+      ],
+      "correctIndex": 0,
+      "explanation": "Load what the view needs inside the service (a fetch join, `@EntityGraph`, or a DTO projection) instead of relying on open-in-view.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An entity uses `@Version` for optimistic locking. Each input line is an edit: `expectedVersion newName` (the version the client read). A matching version applies the edit and bumps the version; a stale one is a 409. Right now two clients that both read version 0 can both save. Fix `update`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class OptimisticLockException extends RuntimeException {}\n\n    static class Product {\n        long version = 0;\n        String name = \"init\";\n    }\n\n    // What JPA does for an entity with @Version: UPDATE ... WHERE version = :expected, then version + 1.\n    static void update(Product product, long expectedVersion, String newName) {\n        if (product.version != expectedVersion) throw new OptimisticLockException();\n        product.name = newName;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        Product product = new Product();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            try {\n                update(product, Long.parseLong(p[0]), p[1]);\n                System.out.println(\"200 v\" + product.version + \" \" + product.name);\n            } catch (OptimisticLockException e) {\n                System.out.println(\"409\");\n            }\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static class OptimisticLockException extends RuntimeException {}\n\n    static class Product {\n        long version = 0;\n        String name = \"init\";\n    }\n\n    // What JPA does for an entity with @Version: UPDATE ... WHERE version = :expected, then version + 1.\n    static void update(Product product, long expectedVersion, String newName) {\n        if (product.version != expectedVersion) throw new OptimisticLockException();\n        product.name = newName;\n        product.version++;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        Product product = new Product();\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            try {\n                update(product, Long.parseLong(p[0]), p[1]);\n                System.out.println(\"200 v\" + product.version + \" \" + product.name);\n            } catch (OptimisticLockException e) {\n                System.out.println(\"409\");\n            }\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "0 lamp",
+          "expected": "200 v1 lamp"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "0 a\n0 b",
+          "expected": "200 v1 a\n409"
+        },
+        {
+          "stdin": "0 a\n1 b",
+          "expected": "200 v1 a\n200 v2 b"
+        },
+        {
+          "stdin": "3 x",
+          "expected": "409"
+        },
+        {
+          "stdin": "",
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A servlet filter limits each client to `limit` requests per fixed window of `windowSeconds` (windows start at multiples of the window length: 0–59, 60–119, …). The first input line is `limit windowSeconds`, then each line is `client epochSeconds`; print 200 or 429. Today a client that hits the limit is blocked forever. Fix `allow`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int limit;\n    static long windowSeconds;\n    static final Map<String, Integer> COUNTS = new HashMap<>();\n\n    // A fixed-window rate limit in a OncePerRequestFilter: at most limit requests per client per window.\n    static boolean allow(String client, long epochSeconds) {\n        int count = COUNTS.merge(client, 1, Integer::sum);\n        return count <= limit;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String first = in.readLine();\n        if (first == null || first.trim().isEmpty()) return;\n        String[] cfg = first.trim().split(\" \");\n        limit = Integer.parseInt(cfg[0]);\n        windowSeconds = Long.parseLong(cfg[1]);\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(allow(p[0], Long.parseLong(p[1])) ? 200 : 429);\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    static int limit;\n    static long windowSeconds;\n    static final Map<String, Integer> COUNTS = new HashMap<>();\n\n    // A fixed-window rate limit in a OncePerRequestFilter: at most limit requests per client per window.\n    static boolean allow(String client, long epochSeconds) {\n        String key = client + \":\" + (epochSeconds / windowSeconds);\n        int count = COUNTS.merge(key, 1, Integer::sum);\n        return count <= limit;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String first = in.readLine();\n        if (first == null || first.trim().isEmpty()) return;\n        String[] cfg = first.trim().split(\" \");\n        limit = Integer.parseInt(cfg[0]);\n        windowSeconds = Long.parseLong(cfg[1]);\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            System.out.println(allow(p[0], Long.parseLong(p[1])) ? 200 : 429);\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "2 60\nann 0\nann 10\nann 20",
+          "expected": "200\n200\n429"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "1 60\nann 59\nann 60",
+          "expected": "200\n200"
+        },
+        {
+          "stdin": "2 60\nann 1\nbob 2\nann 3\nann 4\nbob 5",
+          "expected": "200\n200\n200\n429\n200"
+        },
+        {
+          "stdin": "1 10\nx 5\nx 9\nx 10\nx 25",
+          "expected": "200\n429\n200\n200"
+        },
+        {
+          "stdin": "",
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A feed endpoint uses keyset pagination (`WHERE id > :cursor ORDER BY id LIMIT :limit`). Line 1 is the ids in ascending order, line 2 is `cursor limit` (`-` for the first page). Print the page and the next cursor. Two bugs:\n- the item at the cursor is repeated at the top of the next page\n- `next` is set when the page is exactly full even if nothing follows; it should be `-` when there are no more ids\n\nFix `page`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Keyset pagination over ascending ids: the next limit ids after the cursor (null = from the start).\n    // Output: the ids comma separated (or \"-\") then the next cursor for the next page, or \"-\" if there are no more ids.\n    static String page(List<Long> ids, Long cursor, int limit) {\n        List<Long> rows = new ArrayList<>();\n        for (Long id : ids) {\n            if (rows.size() == limit) break;\n            if (cursor == null || id >= cursor) rows.add(id);\n        }\n        String next = rows.size() == limit ? String.valueOf(rows.get(rows.size() - 1)) : \"-\";\n        String list = rows.isEmpty() ? \"-\" : String.join(\",\", toStrings(rows));\n        return list + \" next=\" + next;\n    }\n\n    static List<String> toStrings(List<Long> xs) {\n        List<String> out = new ArrayList<>();\n        for (Long x : xs) out.add(String.valueOf(x));\n        return out;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String idsLine = in.readLine();\n        String req = in.readLine();\n        List<Long> ids = new ArrayList<>();\n        if (idsLine != null && !idsLine.trim().isEmpty())\n            for (String s : idsLine.trim().split(\" \")) ids.add(Long.parseLong(s));\n        String[] p = req.trim().split(\" \");\n        Long cursor = p[0].equals(\"-\") ? null : Long.parseLong(p[0]);\n        System.out.println(page(ids, cursor, Integer.parseInt(p[1])));\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // Keyset pagination over ascending ids: the next limit ids after the cursor (null = from the start).\n    // Output: the ids comma separated (or \"-\") then the next cursor for the next page, or \"-\" if there are no more ids.\n    static String page(List<Long> ids, Long cursor, int limit) {\n        List<Long> after = new ArrayList<>();\n        for (Long id : ids) if (cursor == null || id > cursor) after.add(id);\n        List<Long> rows = after.subList(0, Math.min(limit, after.size()));\n        String next = after.size() > limit ? String.valueOf(rows.get(rows.size() - 1)) : \"-\";\n        String list = rows.isEmpty() ? \"-\" : String.join(\",\", toStrings(rows));\n        return list + \" next=\" + next;\n    }\n\n    static List<String> toStrings(List<Long> xs) {\n        List<String> out = new ArrayList<>();\n        for (Long x : xs) out.add(String.valueOf(x));\n        return out;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String idsLine = in.readLine();\n        String req = in.readLine();\n        List<Long> ids = new ArrayList<>();\n        if (idsLine != null && !idsLine.trim().isEmpty())\n            for (String s : idsLine.trim().split(\" \")) ids.add(Long.parseLong(s));\n        String[] p = req.trim().split(\" \");\n        Long cursor = p[0].equals(\"-\") ? null : Long.parseLong(p[0]);\n        System.out.println(page(ids, cursor, Integer.parseInt(p[1])));\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "10 20 30 40 50\n- 2",
+          "expected": "10,20 next=20"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "10 20 30 40 50\n20 2",
+          "expected": "30,40 next=40"
+        },
+        {
+          "stdin": "10 20 30 40\n20 2",
+          "expected": "30,40 next=-"
+        },
+        {
+          "stdin": "10 20\n20 5",
+          "expected": "- next=-"
+        },
+        {
+          "stdin": "\n- 3",
+          "expected": "- next=-"
+        },
+        {
+          "stdin": "5 6 7\n- 3",
+          "expected": "5,6,7 next=-"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "`decide` mirrors a Spring Security config where **the first matching rule wins**: `/api/admin/**` needs `ADMIN`, the rest of `/api/**` needs any logged-in user, everything else is public. Each input line is `path roles` (`-` = anonymous, else comma-separated roles); print 200, 401 or 403. Any logged-in user can currently reach admin endpoints. Fix `decide`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // The authorizeHttpRequests rules: the first matching rule wins. roles == null means anonymous.\n    // Returns 200 (allowed), 401 (not logged in) or 403 (logged in, missing role).\n    static int decide(String path, Set<String> roles) {\n        if (path.startsWith(\"/api/\")) {\n            return roles == null ? 401 : 200;\n        }\n        if (path.startsWith(\"/api/admin/\")) {\n            if (roles == null) return 401;\n            return roles.contains(\"ADMIN\") ? 200 : 403;\n        }\n        return 200;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            Set<String> roles = p[1].equals(\"-\") ? null : new HashSet<>(Arrays.asList(p[1].split(\",\")));\n            System.out.println(decide(p[0], roles));\n        }\n    }\n}",
+      "referenceSolution": "import java.io.*;\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    // The authorizeHttpRequests rules: the first matching rule wins. roles == null means anonymous.\n    // Returns 200 (allowed), 401 (not logged in) or 403 (logged in, missing role).\n    static int decide(String path, Set<String> roles) {\n        if (path.startsWith(\"/api/admin/\")) {\n            if (roles == null) return 401;\n            return roles.contains(\"ADMIN\") ? 200 : 403;\n        }\n        if (path.startsWith(\"/api/\")) {\n            return roles == null ? 401 : 200;\n        }\n        return 200;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while ((line = in.readLine()) != null) {\n            line = line.trim();\n            if (line.isEmpty()) continue;\n            String[] p = line.split(\" \");\n            Set<String> roles = p[1].equals(\"-\") ? null : new HashSet<>(Arrays.asList(p[1].split(\",\")));\n            System.out.println(decide(p[0], roles));\n        }\n    }\n}",
+      "sampleTests": [
+        {
+          "stdin": "/api/orders USER\n/health -",
+          "expected": "200\n200"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "stdin": "/api/admin/users USER",
+          "expected": "403"
+        },
+        {
+          "stdin": "/api/admin/users -",
+          "expected": "401"
+        },
+        {
+          "stdin": "/api/admin/users USER,ADMIN",
+          "expected": "200"
+        },
+        {
+          "stdin": "/api/orders -\n/docs ADMIN",
+          "expected": "401\n200"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`OrderService.placeOrder` is `@Transactional`. It calls `AuditService.record(...)` (a separate bean) to write an audit row. Requirement: the audit row must be kept even when the order fails and rolls back.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`OrderService.placeOrder` is `@Transactional`. It calls `AuditService.record(...)` (a separate bean) to write an audit row. Requirement: the audit row must be kept even when the order fails and rolls back.",
+      "steps": [
+        {
+          "id": "propagation",
+          "question": "Which propagation should `AuditService.record` use?",
+          "options": [
+            "`REQUIRED` (the default)",
+            "`REQUIRES_NEW`",
+            "`SUPPORTS`",
+            "`MANDATORY`"
+          ],
+          "correctIndex": 1,
+          "explanation": "`REQUIRES_NEW` suspends the outer transaction and commits the audit row in its own; with `REQUIRED` it joins the outer one and rolls back with it."
+        },
+        {
+          "id": "checked",
+          "question": "`placeOrder` throws `PaymentDeclinedException`, which extends `Exception`. The order rows are still committed. What is the fix?",
+          "options": [
+            "Add `@Transactional(rollbackFor = PaymentDeclinedException.class)` or make the exception unchecked",
+            "Add `@Transactional(readOnly = true)`",
+            "Catch the exception inside `placeOrder` and log it",
+            "Switch the isolation level to `SERIALIZABLE`"
+          ],
+          "correctIndex": 0,
+          "explanation": "By default Spring rolls back only on `RuntimeException` and `Error`."
+        },
+        {
+          "id": "self",
+          "question": "A teammate moves `record` into `OrderService` itself, keeps `@Transactional(propagation = REQUIRES_NEW)`, and calls `this.record(...)`. What happens?",
+          "options": [
+            "It still runs in a new transaction",
+            "It runs inside the outer transaction, so the audit row rolls back with the order",
+            "Startup fails because a class cannot have two transactional methods",
+            "The audit row is written without any transaction and the order is not affected"
+          ],
+          "correctIndex": 1,
+          "explanation": "Calls through `this` bypass the transactional proxy, so the annotation is ignored and the call simply joins the current transaction."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-spring-boot-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Put these steps of handling `POST /api/orders` in a Spring Boot MVC app in the order they happen.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these steps of handling `POST /api/orders` in a Spring Boot MVC app in the order they happen.",
+      "items": [
+        {
+          "id": "filter",
+          "label": "Servlet filters run, including the Spring Security filter chain"
+        },
+        {
+          "id": "dispatcher",
+          "label": "`DispatcherServlet` finds the handler method for the path"
+        },
+        {
+          "id": "interceptor",
+          "label": "`HandlerInterceptor.preHandle` runs"
+        },
+        {
+          "id": "binding",
+          "label": "The JSON body is converted to the DTO and `@Valid` constraints are checked"
+        },
+        {
+          "id": "controller",
+          "label": "The controller method runs and calls the service"
+        },
+        {
+          "id": "write",
+          "label": "The return value is serialised to JSON by an `HttpMessageConverter`"
+        }
+      ],
+      "correctOrder": [
+        "filter",
+        "dispatcher",
+        "interceptor",
+        "binding",
+        "controller",
+        "write"
+      ],
+      "explanation": "Filters wrap the whole servlet; the DispatcherServlet then runs interceptors, resolves arguments (where validation failures become a 400 before your method runs), invokes the handler and writes the body."
+    }
+  },
+  {
+    "id": "eng-spring-boot-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A `@Transactional` method loads an order, then calls a slow external payment API (2–5 s), then saves. Under load the app starts failing with \"Connection is not available, request timed out\" from HikariCP. Why?",
+    "mcq": {
+      "options": [
+        "Each request holds a pooled database connection for the whole transaction, including the slow HTTP call, so the pool runs out",
+        "HikariCP closes connections that are idle for more than one second",
+        "External HTTP calls are not allowed inside transactions and Spring blocks them",
+        "The payment API is opening its own database connections"
+      ],
+      "correctIndex": 0,
+      "explanation": "Keep transactions short: call the external API outside the transaction and only wrap the database work.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does `@Transactional(readOnly = true)` on a service method actually do with Spring Data JPA and Hibernate?",
+    "mcq": {
+      "options": [
+        "It is a hint: Hibernate skips dirty checking and flushing, and the driver may route to a read replica, but it does not by itself forbid writes in all databases",
+        "It makes the database reject every INSERT/UPDATE with an exception in all setups",
+        "It disables the transaction entirely",
+        "It caches the method's result"
+      ],
+      "correctIndex": 0,
+      "explanation": "It is an optimisation hint. Entity changes are not flushed, which makes it faster for reads, but you should not rely on it as a permission check.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-spring-boot-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-spring-boot",
+    "trackId": null,
+    "stackId": "stack-spring",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A `@Service` has `@Async public void sendEmail(...)`, and another method of the same class calls `sendEmail(...)` directly. `@EnableAsync` is configured. How does `sendEmail` run?",
+    "mcq": {
+      "options": [
+        "Synchronously on the calling thread, because the call does not go through the proxy",
+        "Asynchronously on the task executor",
+        "It throws `IllegalStateException`",
+        "It is never executed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Like `@Transactional`, `@Async` is applied by a proxy, so self-invocation bypasses it. Move the method to another bean.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

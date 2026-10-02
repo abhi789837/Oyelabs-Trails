@@ -1,0 +1,2431 @@
+[
+  {
+    "id": "eng-django-models-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "This mirrors `Post.objects.filter(status=\"published\").values_list(\"title\", flat=True)` over plain dicts. Fix `published_titles` so it returns only titles of posts whose `status` is exactly `\"published\"`, in their original order.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "published_titles",
+      "starterCode": "def published_titles(posts):\n    return [p[\"title\"] for p in posts if p[\"status\"] != \"draft\"]",
+      "referenceSolution": "def published_titles(posts):\n    return [p[\"title\"] for p in posts if p[\"status\"] == \"published\"]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "title": "A",
+                "status": "published"
+              },
+              {
+                "title": "B",
+                "status": "draft"
+              }
+            ]
+          ],
+          "expected": [
+            "A"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "title": "A",
+                "status": "archived"
+              },
+              {
+                "title": "B",
+                "status": "published"
+              }
+            ]
+          ],
+          "expected": [
+            "B"
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "title": "X",
+                "status": "published"
+              },
+              {
+                "title": "Y",
+                "status": "published"
+              }
+            ]
+          ],
+          "expected": [
+            "X",
+            "Y"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `order_by(rows, field)` like Django's `.order_by()`: `\"name\"` sorts ascending, `\"-name\"` sorts descending. Return the sorted list (do not modify the input).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "order_by",
+      "starterCode": "def order_by(rows, field):\n    return sorted(rows, key=lambda r: r[field.lstrip(\"-\")])",
+      "referenceSolution": "def order_by(rows, field):\n    desc = field.startswith(\"-\")\n    key = field.lstrip(\"-\")\n    return sorted(rows, key=lambda r: r[key], reverse=desc)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "n": 2
+              },
+              {
+                "n": 1
+              }
+            ],
+            "n"
+          ],
+          "expected": [
+            {
+              "n": 1
+            },
+            {
+              "n": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "n": 2
+              },
+              {
+                "n": 3
+              },
+              {
+                "n": 1
+              }
+            ],
+            "-n"
+          ],
+          "expected": [
+            {
+              "n": 3
+            },
+            {
+              "n": 2
+            },
+            {
+              "n": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "-n"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "bo"
+              },
+              {
+                "name": "al"
+              }
+            ],
+            "name"
+          ],
+          "expected": [
+            {
+              "name": "al"
+            },
+            {
+              "name": "bo"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "bo"
+              },
+              {
+                "name": "al"
+              }
+            ],
+            "-name"
+          ],
+          "expected": [
+            {
+              "name": "bo"
+            },
+            {
+              "name": "al"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "This mirrors `Book.objects.filter(pk=pk).first()`: return the row with `id == pk`, or `None` when there is none. The current code crashes when nothing matches. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "first_or_none",
+      "starterCode": "def first_or_none(rows, pk):\n    return [r for r in rows if r[\"id\"] == pk][0]",
+      "referenceSolution": "def first_or_none(rows, pk):\n    for r in rows:\n        if r[\"id\"] == pk:\n            return r\n    return None",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "t": "a"
+              },
+              {
+                "id": 2,
+                "t": "b"
+              }
+            ],
+            2
+          ],
+          "expected": {
+            "id": 2,
+            "t": "b"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "t": "a"
+              }
+            ],
+            5
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [],
+            1
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "t": "a"
+              },
+              {
+                "id": 1,
+                "t": "dup"
+              }
+            ],
+            1
+          ],
+          "expected": {
+            "id": 1,
+            "t": "a"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A model's `__str__` is what the admin shows. Fix `user_str(user)`: return `\"First Last\"` when both names are set, just the one that is set when only one is, and the `email` when both are blank.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "user_str",
+      "starterCode": "def user_str(user):\n    return f\"{user['first_name']} {user['last_name']}\"",
+      "referenceSolution": "def user_str(user):\n    full = \" \".join(p for p in [user[\"first_name\"].strip(), user[\"last_name\"].strip()] if p)\n    return full or user[\"email\"]",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "first_name": "Ada",
+              "last_name": "Lovelace",
+              "email": "ada@x.io"
+            }
+          ],
+          "expected": "Ada Lovelace"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "first_name": "",
+              "last_name": "",
+              "email": "bo@x.io"
+            }
+          ],
+          "expected": "bo@x.io"
+        },
+        {
+          "args": [
+            {
+              "first_name": "Cy",
+              "last_name": "",
+              "email": "cy@x.io"
+            }
+          ],
+          "expected": "Cy"
+        },
+        {
+          "args": [
+            {
+              "first_name": "",
+              "last_name": "Doe",
+              "email": "d@x.io"
+            }
+          ],
+          "expected": "Doe"
+        },
+        {
+          "args": [
+            {
+              "first_name": "Ed",
+              "last_name": "Wu",
+              "email": "e@x.io"
+            }
+          ],
+          "expected": "Ed Wu"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `make_slug(title)` for a `SlugField`, like Django's `slugify`: lowercase, drop characters that are not letters, digits, spaces or hyphens, then turn runs of spaces/hyphens into a single `-` and trim `-` from both ends.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "make_slug",
+      "starterCode": "def make_slug(title):\n    return title.lower().replace(\" \", \"-\")",
+      "referenceSolution": "import re\n\ndef make_slug(title):\n    s = re.sub(r\"[^\\w\\s-]\", \"\", title.lower())\n    s = re.sub(r\"[-\\s]+\", \"-\", s)\n    return s.strip(\"-_\")",
+      "sampleTests": [
+        {
+          "args": [
+            "Hello World"
+          ],
+          "expected": "hello-world"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Hello, World!"
+          ],
+          "expected": "hello-world"
+        },
+        {
+          "args": [
+            "  Django   Tips  "
+          ],
+          "expected": "django-tips"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "Top 10 - ORM tricks"
+          ],
+          "expected": "top-10-orm-tricks"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are writing the `Product` model for a shop. Pick the best field for each column.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are writing the `Product` model for a shop. Pick the best field for each column.",
+      "steps": [
+        {
+          "id": "price",
+          "question": "`price`, in euros with cents.",
+          "options": [
+            "`FloatField()`",
+            "`DecimalField(max_digits=10, decimal_places=2)`",
+            "`IntegerField()` holding euros",
+            "`CharField(max_length=10)`"
+          ],
+          "correctIndex": 1,
+          "explanation": "Floats cannot represent most cents exactly; DecimalField maps to a NUMERIC column and a Python Decimal."
+        },
+        {
+          "id": "desc",
+          "question": "`description`, free text of any length.",
+          "options": [
+            "`CharField(max_length=255)`",
+            "`TextField(blank=True)`",
+            "`SlugField()`",
+            "`JSONField()`"
+          ],
+          "correctIndex": 1,
+          "explanation": "TextField has no length limit; blank=True lets forms leave it empty."
+        },
+        {
+          "id": "cat",
+          "question": "`category`, a link to a `Category` row. Deleting a category that still has products should be refused.",
+          "options": [
+            "`ForeignKey(Category, on_delete=models.CASCADE)`",
+            "`ForeignKey(Category, on_delete=models.PROTECT)`",
+            "`IntegerField()` holding the category id",
+            "`ManyToManyField(Category)`"
+          ],
+          "correctIndex": 1,
+          "explanation": "PROTECT raises ProtectedError instead of deleting the products with the category (CASCADE)."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You added a field to a model. What is the difference between `makemigrations` and `migrate`?",
+    "mcq": {
+      "options": [
+        "`makemigrations` writes a migration file describing the change; `migrate` applies pending migrations to the database",
+        "`makemigrations` changes the database; `migrate` copies it to production",
+        "They are aliases",
+        "`migrate` writes the file and `makemigrations` runs it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Migration files are code you commit. `migrate` runs the unapplied ones against the database and records them in `django_migrations`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `Book.objects.get(isbn=\"123\")` do when no book has that ISBN?",
+    "mcq": {
+      "options": [
+        "Raises `Book.DoesNotExist`",
+        "Returns `None`",
+        "Returns an empty queryset",
+        "Creates the book"
+      ],
+      "correctIndex": 0,
+      "explanation": "`get()` expects exactly one row: none raises `DoesNotExist`, more than one raises `MultipleObjectsReturned`. Use `.filter(...).first()` when \"none\" is normal.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `created_at = models.DateTimeField(auto_now_add=True)` do?",
+    "mcq": {
+      "options": [
+        "Sets the field to the current time when the row is first created, and never changes it after",
+        "Updates the field to the current time on every save",
+        "Adds a database index on the column",
+        "Makes the field required in forms"
+      ],
+      "correctIndex": 0,
+      "explanation": "`auto_now_add` is set once on insert; `auto_now` is set on every `save()`. Both make the field non-editable in forms.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Complete `get_page(rows, page, per_page)` like Django's `Paginator.get_page`: return `{\"items\": [...], \"page\": n, \"num_pages\": n, \"has_next\": bool}`. A page below 1 becomes 1, a page past the end becomes the last page, and an empty list still has 1 (empty) page.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "get_page",
+      "starterCode": "def get_page(rows, page, per_page):\n    num_pages = len(rows) // per_page\n    start = (page - 1) * per_page\n    return {\"items\": rows[start:start + per_page], \"page\": page,\n            \"num_pages\": num_pages, \"has_next\": page < num_pages}",
+      "referenceSolution": "def get_page(rows, page, per_page):\n    num_pages = max(1, -(-len(rows) // per_page))\n    page = min(max(page, 1), num_pages)\n    start = (page - 1) * per_page\n    return {\"items\": rows[start:start + per_page], \"page\": page,\n            \"num_pages\": num_pages, \"has_next\": page < num_pages}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            1,
+            2
+          ],
+          "expected": {
+            "items": [
+              1,
+              2
+            ],
+            "page": 1,
+            "num_pages": 2,
+            "has_next": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            3,
+            2
+          ],
+          "expected": {
+            "items": [
+              5
+            ],
+            "page": 3,
+            "num_pages": 3,
+            "has_next": false
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            9,
+            2
+          ],
+          "expected": {
+            "items": [
+              3
+            ],
+            "page": 2,
+            "num_pages": 2,
+            "has_next": false
+          }
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": {
+            "items": [],
+            "page": 1,
+            "num_pages": 1,
+            "has_next": false
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            0,
+            1
+          ],
+          "expected": {
+            "items": [
+              1
+            ],
+            "page": 1,
+            "num_pages": 2,
+            "has_next": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Complete `apply_filters(rows, filters)` for a small subset of Django lookups. Keys look like `\"price__gte\"`, `\"name__icontains\"` or plain `\"category\"` (exact). Support `exact` (no suffix), `gte`, `lte` and `icontains`. Every filter must match (AND).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "apply_filters",
+      "starterCode": "def apply_filters(rows, filters):\n    return [r for r in rows if all(r.get(k) == v for k, v in filters.items())]",
+      "referenceSolution": "def apply_filters(rows, filters):\n    def ok(r, key, v):\n        field, _, op = key.partition(\"__\")\n        x = r.get(field)\n        if op == \"\":\n            return x == v\n        if op == \"gte\":\n            return x is not None and x >= v\n        if op == \"lte\":\n            return x is not None and x <= v\n        if op == \"icontains\":\n            return x is not None and v.lower() in x.lower()\n        raise ValueError(op)\n    return [r for r in rows if all(ok(r, k, v) for k, v in filters.items())]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Pen",
+                "price": 2,
+                "category": "office"
+              },
+              {
+                "name": "Desk",
+                "price": 90,
+                "category": "office"
+              }
+            ],
+            {
+              "price__gte": 10
+            }
+          ],
+          "expected": [
+            {
+              "name": "Desk",
+              "price": 90,
+              "category": "office"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Pen",
+                "price": 2,
+                "category": "office"
+              },
+              {
+                "name": "Pencil",
+                "price": 1,
+                "category": "school"
+              }
+            ],
+            {
+              "name__icontains": "PEN",
+              "category": "office"
+            }
+          ],
+          "expected": [
+            {
+              "name": "Pen",
+              "price": 2,
+              "category": "office"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "price": 5
+              },
+              {
+                "name": "B",
+                "price": 15
+              }
+            ],
+            {
+              "price__gte": 5,
+              "price__lte": 10
+            }
+          ],
+          "expected": [
+            {
+              "name": "A",
+              "price": 5
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "price": 5
+              }
+            ],
+            {}
+          ],
+          "expected": [
+            {
+              "name": "A",
+              "price": 5
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            {
+              "price__lte": 3
+            }
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This mirrors `qs.values(field).annotate(count=Count(\"id\")).order_by(field)`. Fix `count_by(rows, field)` so it returns a list of `{field: value, \"count\": n}` dicts **ordered by the value**.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "count_by",
+      "starterCode": "def count_by(rows, field):\n    counts = {}\n    for r in rows:\n        counts[r[field]] = counts.get(r[field], 0) + 1\n    return [{field: k, \"count\": n} for k, n in counts.items()]",
+      "referenceSolution": "def count_by(rows, field):\n    counts = {}\n    for r in rows:\n        counts[r[field]] = counts.get(r[field], 0) + 1\n    return [{field: k, \"count\": counts[k]} for k in sorted(counts)]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "status": "open"
+              },
+              {
+                "status": "closed"
+              },
+              {
+                "status": "open"
+              }
+            ],
+            "status"
+          ],
+          "expected": [
+            {
+              "status": "closed",
+              "count": 1
+            },
+            {
+              "status": "open",
+              "count": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "s": "b"
+              },
+              {
+                "s": "a"
+              },
+              {
+                "s": "c"
+              },
+              {
+                "s": "a"
+              }
+            ],
+            "s"
+          ],
+          "expected": [
+            {
+              "s": "a",
+              "count": 2
+            },
+            {
+              "s": "b",
+              "count": 1
+            },
+            {
+              "s": "c",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "s"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "y": 2024
+              },
+              {
+                "y": 2023
+              }
+            ],
+            "y"
+          ],
+          "expected": [
+            {
+              "y": 2023,
+              "count": 1
+            },
+            {
+              "y": 2024,
+              "count": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A `ModelForm.clean_email` must reject an email that already exists. Emails are stored lowercased. Fix `clean_email(value, existing)`: strip and lowercase `value`; return `{\"error\": \"Email already registered\"}` if it is in `existing`, `{\"error\": \"Email is required\"}` if it is blank, otherwise `{\"value\": cleaned}`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "clean_email",
+      "starterCode": "def clean_email(value, existing):\n    if value in existing:\n        return {\"error\": \"Email already registered\"}\n    return {\"value\": value}",
+      "referenceSolution": "def clean_email(value, existing):\n    cleaned = (value or \"\").strip().lower()\n    if not cleaned:\n        return {\"error\": \"Email is required\"}\n    if cleaned in existing:\n        return {\"error\": \"Email already registered\"}\n    return {\"value\": cleaned}",
+      "sampleTests": [
+        {
+          "args": [
+            "new@x.io",
+            [
+              "ada@x.io"
+            ]
+          ],
+          "expected": {
+            "value": "new@x.io"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            " Ada@X.io ",
+            [
+              "ada@x.io"
+            ]
+          ],
+          "expected": {
+            "error": "Email already registered"
+          }
+        },
+        {
+          "args": [
+            "   ",
+            []
+          ],
+          "expected": {
+            "error": "Email is required"
+          }
+        },
+        {
+          "args": [
+            "Bo@X.io",
+            [
+              "ada@x.io"
+            ]
+          ],
+          "expected": {
+            "value": "bo@x.io"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the lines in this model that will cause a bug or will not run.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines in this model that will cause a bug or will not run.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "class Order(models.Model):",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    customer = models.ForeignKey(Customer)",
+          "issue": "ForeignKey requires `on_delete` (e.g. `models.PROTECT`); this raises a TypeError at import."
+        },
+        {
+          "id": "l3",
+          "text": "    number = models.CharField(max_length=20, unique=True)",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    total = models.FloatField()",
+          "issue": "Money in a FloatField picks up rounding errors; use DecimalField."
+        },
+        {
+          "id": "l5",
+          "text": "    created_at = models.DateTimeField(auto_now_add=True)",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    notes = models.TextField(blank=True)",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    def __str__(self):",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "        return self.number",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-django-models-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The `orders` table already has 2 million rows in production. You need to change the `Order` model.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The `orders` table already has 2 million rows in production. You need to change the `Order` model.",
+      "steps": [
+        {
+          "id": "notnull",
+          "question": "You add `channel = models.CharField(max_length=20)` (not null). What do you do so `makemigrations`/`migrate` works?",
+          "options": [
+            "Give it a `default=\"web\"` (or answer the prompt with a one-off default)",
+            "Delete the existing rows first",
+            "Nothing; Django fills it with NULL",
+            "Make it a TextField"
+          ],
+          "correctIndex": 0,
+          "explanation": "Existing rows need a value for a NOT NULL column, so the migration needs a default."
+        },
+        {
+          "id": "rename",
+          "question": "You rename `ref` to `reference`. `makemigrations` asks \"Did you rename order.ref to order.reference?\"",
+          "options": [
+            "Answer yes so it generates a RenameField and keeps the data",
+            "Answer no; it will drop and add the column, which is equivalent",
+            "Edit the database by hand instead",
+            "Delete the migration history"
+          ],
+          "correctIndex": 0,
+          "explanation": "Answering no produces RemoveField + AddField, which loses the data."
+        },
+        {
+          "id": "backfill",
+          "question": "Old orders need `channel` computed from an existing `source_url` column.",
+          "options": [
+            "Write a data migration with `RunPython` that updates rows in batches",
+            "Do it in the model's `save()` method",
+            "Ask users to re-save their orders",
+            "Put the logic in a template filter"
+          ],
+          "correctIndex": 0,
+          "explanation": "Data changes that must happen once, in order with schema changes, belong in a RunPython migration."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A list view shows each `Book` with its `author.name` (a ForeignKey). Which queryset avoids one extra query per book?",
+    "mcq": {
+      "options": [
+        "`Book.objects.select_related(\"author\")`",
+        "`Book.objects.prefetch_related(\"author__books\")`",
+        "`Book.objects.all().only(\"author\")`",
+        "`Book.objects.values(\"author\")`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`select_related` follows a ForeignKey with a SQL JOIN in the same query. `prefetch_related` is for many-to-many and reverse relations, using a second query.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "When does this code hit the database?\n\n```python\nqs = Order.objects.filter(paid=True)\nqs = qs.exclude(total=0)\nfor o in qs:\n    print(o.id)\n```",
+    "mcq": {
+      "options": [
+        "Once, when the `for` loop starts iterating",
+        "Twice, once per filter call",
+        "Three times",
+        "Never; querysets are cached in memory"
+      ],
+      "correctIndex": 0,
+      "explanation": "Querysets are lazy: `filter` and `exclude` only build the SQL. It runs when the queryset is evaluated, here by iterating.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Two requests run `p = Product.objects.get(pk=1); p.stock -= 1; p.save()` at the same time, and stock drops by 1 instead of 2. What is the simplest fix?",
+    "mcq": {
+      "options": [
+        "`Product.objects.filter(pk=1).update(stock=F(\"stock\") - 1)`",
+        "Call `p.refresh_from_db()` before `save()`",
+        "Use `p.save(force_update=True)`",
+        "Wrap only `p.save()` in `try/except`"
+      ],
+      "correctIndex": 0,
+      "explanation": "An `F()` expression makes the database do the decrement in one UPDATE, so concurrent requests cannot overwrite each other's read value.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This is what `Author.objects.prefetch_related(\"books\")` does: one query for authors, one for books, then join in Python. Fix `attach_books(authors, books)` so each author gets `\"books\"`: the list of **all** their book titles, in book order (`[]` if none).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "attach_books",
+      "starterCode": "def attach_books(authors, books):\n    by_author = {}\n    for bk in books:\n        by_author[bk[\"author_id\"]] = [bk[\"title\"]]\n    return [{**a, \"books\": by_author.get(a[\"id\"], [])} for a in authors]",
+      "referenceSolution": "def attach_books(authors, books):\n    by_author = {}\n    for bk in books:\n        by_author.setdefault(bk[\"author_id\"], []).append(bk[\"title\"])\n    return [{**a, \"books\": by_author.get(a[\"id\"], [])} for a in authors]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "Le Guin"
+              }
+            ],
+            [
+              {
+                "author_id": 1,
+                "title": "Earthsea"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "Le Guin",
+              "books": [
+                "Earthsea"
+              ]
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "A"
+              },
+              {
+                "id": 2,
+                "name": "B"
+              }
+            ],
+            [
+              {
+                "author_id": 2,
+                "title": "x"
+              },
+              {
+                "author_id": 2,
+                "title": "y"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "A",
+              "books": []
+            },
+            {
+              "id": 2,
+              "name": "B",
+              "books": [
+                "x",
+                "y"
+              ]
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "author_id": 1,
+                "title": "x"
+              }
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "name": "C"
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "id": 3,
+              "name": "C",
+              "books": []
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Someone translated `Ticket.objects.filter((Q(status=\"open\") | Q(priority__gte=3)) & ~Q(assignee=None))` into Python and got the grouping wrong. Fix `triage_ids` so it returns the ids of tickets that are (open **or** priority ≥ 3) **and** have an assignee.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "triage_ids",
+      "starterCode": "def triage_ids(tickets):\n    return [t[\"id\"] for t in tickets\n            if t[\"status\"] == \"open\" or t[\"priority\"] >= 3 and t[\"assignee\"] is not None]",
+      "referenceSolution": "def triage_ids(tickets):\n    return [t[\"id\"] for t in tickets\n            if (t[\"status\"] == \"open\" or t[\"priority\"] >= 3) and t[\"assignee\"] is not None]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "open",
+                "priority": 1,
+                "assignee": "ann"
+              },
+              {
+                "id": 2,
+                "status": "done",
+                "priority": 1,
+                "assignee": "bo"
+              }
+            ]
+          ],
+          "expected": [
+            1
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "open",
+                "priority": 1,
+                "assignee": null
+              },
+              {
+                "id": 2,
+                "status": "done",
+                "priority": 5,
+                "assignee": "bo"
+              }
+            ]
+          ],
+          "expected": [
+            2
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 7,
+                "status": "open",
+                "priority": 4,
+                "assignee": null
+              }
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Complete `get_or_create(rows, lookup, defaults)` like Django's: if a row matches every key in `lookup`, return `[row, False]`. Otherwise create a row from `lookup` **plus** `defaults` with `id` = max existing id + 1 (1 if empty), append it to `rows`, and return `[row, True]`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "get_or_create",
+      "starterCode": "def get_or_create(rows, lookup, defaults):\n    for r in rows:\n        if all(r.get(k) == v for k, v in lookup.items()):\n            return [r, False]\n    new = {\"id\": len(rows) + 1, **defaults}\n    rows.append(new)\n    return [new, True]",
+      "referenceSolution": "def get_or_create(rows, lookup, defaults):\n    for r in rows:\n        if all(r.get(k) == v for k, v in lookup.items()):\n            return [r, False]\n    new_id = max((r[\"id\"] for r in rows), default=0) + 1\n    new = {\"id\": new_id, **lookup, **defaults}\n    rows.append(new)\n    return [new, True]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "email": "a@x.io",
+                "plan": "free"
+              }
+            ],
+            {
+              "email": "a@x.io"
+            },
+            {
+              "plan": "pro"
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "email": "a@x.io",
+              "plan": "free"
+            },
+            false
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "email": "a@x.io",
+                "plan": "free"
+              }
+            ],
+            {
+              "email": "b@x.io"
+            },
+            {
+              "plan": "pro"
+            }
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "email": "b@x.io",
+              "plan": "pro"
+            },
+            true
+          ]
+        },
+        {
+          "args": [
+            [],
+            {
+              "email": "c@x.io"
+            },
+            {}
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "email": "c@x.io"
+            },
+            true
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 5,
+                "email": "a@x.io"
+              }
+            ],
+            {
+              "email": "z@x.io"
+            },
+            {
+              "plan": "free"
+            }
+          ],
+          "expected": [
+            {
+              "id": 6,
+              "email": "z@x.io",
+              "plan": "free"
+            },
+            true
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This mirrors `Order.objects.annotate(total=Coalesce(Sum(F(\"items__price\") * F(\"items__qty\")), 0)).order_by(\"id\")`. Fix `order_totals(orders, items)` so every order appears (orders without items get `0`) as `{\"id\": ..., \"total\": ...}`, ordered by id.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "order_totals",
+      "starterCode": "def order_totals(orders, items):\n    totals = {}\n    for it in items:\n        totals[it[\"order_id\"]] = totals.get(it[\"order_id\"], 0) + it[\"price\"] * it[\"qty\"]\n    return [{\"id\": oid, \"total\": t} for oid, t in totals.items()]",
+      "referenceSolution": "def order_totals(orders, items):\n    totals = {}\n    for it in items:\n        totals[it[\"order_id\"]] = totals.get(it[\"order_id\"], 0) + it[\"price\"] * it[\"qty\"]\n    return [{\"id\": o[\"id\"], \"total\": totals.get(o[\"id\"], 0)} for o in sorted(orders, key=lambda o: o[\"id\"])]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              }
+            ],
+            [
+              {
+                "order_id": 1,
+                "price": 5,
+                "qty": 2
+              },
+              {
+                "order_id": 1,
+                "price": 1,
+                "qty": 3
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "total": 13
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 2
+              },
+              {
+                "id": 1
+              }
+            ],
+            [
+              {
+                "order_id": 1,
+                "price": 4,
+                "qty": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "total": 4
+            },
+            {
+              "id": 2,
+              "total": 0
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1
+              },
+              {
+                "id": 3
+              }
+            ],
+            [
+              {
+                "order_id": 3,
+                "price": 10,
+                "qty": 2
+              },
+              {
+                "order_id": 1,
+                "price": 1,
+                "qty": 1
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "total": 1
+            },
+            {
+              "id": 3,
+              "total": 20
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Before calling `obj.save(update_fields=...)` you want to write only the columns that changed. Fix `update_fields_for(old, new)`: return the **sorted** list of keys in `new` whose value differs from `old`, never including `\"id\"` or `\"updated_at\"`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "update_fields_for",
+      "starterCode": "def update_fields_for(old, new):\n    return [k for k in new if new[k] != old.get(k)]",
+      "referenceSolution": "def update_fields_for(old, new):\n    return sorted(k for k in new if k not in (\"id\", \"updated_at\") and new[k] != old.get(k))",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "name": "a",
+              "price": 2
+            },
+            {
+              "id": 1,
+              "name": "b",
+              "price": 2
+            }
+          ],
+          "expected": [
+            "name"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "title": "x",
+              "body": "y",
+              "updated_at": "t1"
+            },
+            {
+              "id": 1,
+              "title": "z",
+              "body": "w",
+              "updated_at": "t2"
+            }
+          ],
+          "expected": [
+            "body",
+            "title"
+          ]
+        },
+        {
+          "args": [
+            {
+              "id": 1,
+              "a": 1
+            },
+            {
+              "id": 1,
+              "a": 1
+            }
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "id": 1
+            },
+            {
+              "id": 1,
+              "stock": 5
+            }
+          ],
+          "expected": [
+            "stock"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This view renders 50 orders and the page runs 101 queries. Mark the lines that cause the extra queries.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This view renders 50 orders and the page runs 101 queries. Mark the lines that cause the extra queries.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "def order_list(request):",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    orders = Order.objects.filter(shop=request.shop).order_by(\"-created_at\")[:50]",
+          "issue": "No `select_related(\"customer\")` / `prefetch_related(\"lines\")`, so each order loads its customer and lines separately."
+        },
+        {
+          "id": "l3",
+          "text": "    rows = []",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    for order in orders:",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        rows.append({\"id\": order.id, \"number\": order.number,",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "                     \"customer\": order.customer.name,",
+          "issue": "Follows a ForeignKey per order: one query each unless the queryset uses select_related."
+        },
+        {
+          "id": "l7",
+          "text": "                     \"lines\": order.lines.count()})",
+          "issue": "One COUNT query per order; annotate `Count(\"lines\")` on the queryset instead."
+        },
+        {
+          "id": "l8",
+          "text": "    return render(request, \"orders/list.html\", {\"rows\": rows})",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-django-models-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You run `Article.objects.filter(stale=True).update(stale=False)`. The model has a custom `save()` and a `post_save` signal handler. What happens?",
+    "mcq": {
+      "options": [
+        "One UPDATE runs; neither `save()` nor `post_save` is called",
+        "Each article's `save()` runs, which fires `post_save`",
+        "Only `post_save` fires",
+        "It raises because the model overrides `save()`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`QuerySet.update()` is a single SQL UPDATE. It skips model `save()` methods and save signals; loop and call `save()` if you need them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A view creates an `Order` inside `transaction.atomic()` and queues a Celery task to email the receipt. Sometimes the task cannot find the order. What is the fix?",
+    "mcq": {
+      "options": [
+        "Queue the task with `transaction.on_commit(lambda: send_receipt.delay(order.id))`",
+        "Add `time.sleep(1)` at the start of the task",
+        "Call `order.save()` twice",
+        "Move the task call before `atomic()`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The worker may run before the transaction commits, so the row is not visible yet. `on_commit` defers the call until after a successful commit (and skips it on rollback).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You only need to know how many rows match. Which is the better choice and why?",
+    "mcq": {
+      "options": [
+        "`qs.count()`, because it runs `SELECT COUNT(*)` instead of loading every row",
+        "`len(qs)`, because it is always cached",
+        "Either; they run the same SQL",
+        "`qs.exists()`, because it returns the count faster"
+      ],
+      "correctIndex": 0,
+      "explanation": "`len(qs)` evaluates the queryset and builds every model instance. `count()` asks the database. (`len` is fine only if you are going to iterate the rows anyway.)",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Keyset pagination: rows are ordered by `(created, id)`. Fix `keyset_page(rows, after, limit)`: `after` is `None` or the `[created, id]` of the last row of the previous page. Return `{\"ids\": [...], \"next\": [created, id] of the last returned row, or None when this is the final page}`. Rows with the same `created` must not be skipped.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "keyset_page",
+      "starterCode": "def keyset_page(rows, after, limit):\n    ordered = sorted(rows, key=lambda r: (r[\"created\"], r[\"id\"]))\n    if after is not None:\n        ordered = [r for r in ordered if r[\"created\"] > after[0]]\n    page = ordered[:limit]\n    more = len(ordered) > limit\n    nxt = [page[-1][\"created\"], page[-1][\"id\"]] if more else None\n    return {\"ids\": [r[\"id\"] for r in page], \"next\": nxt}",
+      "referenceSolution": "def keyset_page(rows, after, limit):\n    ordered = sorted(rows, key=lambda r: (r[\"created\"], r[\"id\"]))\n    if after is not None:\n        ordered = [r for r in ordered if (r[\"created\"], r[\"id\"]) > (after[0], after[1])]\n    page = ordered[:limit]\n    more = len(ordered) > limit\n    nxt = [page[-1][\"created\"], page[-1][\"id\"]] if more else None\n    return {\"ids\": [r[\"id\"] for r in page], \"next\": nxt}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "created": 10
+              },
+              {
+                "id": 2,
+                "created": 20
+              },
+              {
+                "id": 3,
+                "created": 30
+              }
+            ],
+            null,
+            2
+          ],
+          "expected": {
+            "ids": [
+              1,
+              2
+            ],
+            "next": [
+              20,
+              2
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "created": 10
+              },
+              {
+                "id": 2,
+                "created": 10
+              },
+              {
+                "id": 3,
+                "created": 10
+              }
+            ],
+            [
+              10,
+              1
+            ],
+            1
+          ],
+          "expected": {
+            "ids": [
+              2
+            ],
+            "next": [
+              10,
+              2
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "created": 10
+              },
+              {
+                "id": 2,
+                "created": 20
+              },
+              {
+                "id": 3,
+                "created": 30
+              }
+            ],
+            [
+              20,
+              2
+            ],
+            2
+          ],
+          "expected": {
+            "ids": [
+              3
+            ],
+            "next": null
+          }
+        },
+        {
+          "args": [
+            [],
+            null,
+            5
+          ],
+          "expected": {
+            "ids": [],
+            "next": null
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 4,
+                "created": 5
+              },
+              {
+                "id": 2,
+                "created": 5
+              },
+              {
+                "id": 9,
+                "created": 7
+              }
+            ],
+            [
+              5,
+              2
+            ],
+            5
+          ],
+          "expected": {
+            "ids": [
+              4,
+              9
+            ],
+            "next": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Like Django's migration planner, `migration_order(deps)` takes `{name: [names it depends on]}` and must return an order where every migration comes after its dependencies; when several are ready, take the alphabetically **smallest** first. The code is right except for one line. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "migration_order",
+      "starterCode": "def migration_order(deps):\n    indeg = {m: len(d) for m, d in deps.items()}\n    users = {m: [] for m in deps}\n    for m, ds in deps.items():\n        for d in ds:\n            users[d].append(m)\n    ready = sorted(m for m, n in indeg.items() if n == 0)\n    out = []\n    while ready:\n        m = ready.pop()\n        out.append(m)\n        for u in users[m]:\n            indeg[u] -= 1\n            if indeg[u] == 0:\n                ready.append(u)\n        ready.sort()\n    return out",
+      "referenceSolution": "def migration_order(deps):\n    indeg = {m: len(d) for m, d in deps.items()}\n    users = {m: [] for m in deps}\n    for m, ds in deps.items():\n        for d in ds:\n            users[d].append(m)\n    ready = sorted(m for m, n in indeg.items() if n == 0)\n    out = []\n    while ready:\n        m = ready.pop(0)\n        out.append(m)\n        for u in users[m]:\n            indeg[u] -= 1\n            if indeg[u] == 0:\n                ready.append(u)\n        ready.sort()\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "0001": [],
+              "0002": [
+                "0001"
+              ]
+            }
+          ],
+          "expected": [
+            "0001",
+            "0002"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "a1": [],
+              "b1": [],
+              "a2": [
+                "a1",
+                "b1"
+              ]
+            }
+          ],
+          "expected": [
+            "a1",
+            "b1",
+            "a2"
+          ]
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "x": [],
+              "y": [],
+              "z": [
+                "y"
+              ]
+            }
+          ],
+          "expected": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "args": [
+            {
+              "c": [
+                "a"
+              ],
+              "a": [],
+              "b": [
+                "a"
+              ]
+            }
+          ],
+          "expected": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Optimistic locking, as `Doc.objects.filter(pk=pk, version=v).update(..., version=F(\"version\") + 1)` does it. Fix `versioned_update(row, expected_version, changes)`: when `row[\"version\"]` equals `expected_version`, return `[1, updated_row]` with `changes` applied and `version` incremented; otherwise return `[0, row]` unchanged. Do not mutate `row`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "versioned_update",
+      "starterCode": "def versioned_update(row, expected_version, changes):\n    updated = {**row, **changes, \"version\": row[\"version\"] + 1}\n    return [1, updated]",
+      "referenceSolution": "def versioned_update(row, expected_version, changes):\n    if row[\"version\"] != expected_version:\n        return [0, row]\n    updated = {**row, **changes, \"version\": row[\"version\"] + 1}\n    return [1, updated]",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "title": "a",
+              "version": 3
+            },
+            3,
+            {
+              "title": "b"
+            }
+          ],
+          "expected": [
+            1,
+            {
+              "id": 1,
+              "title": "b",
+              "version": 4
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "title": "a",
+              "version": 4
+            },
+            3,
+            {
+              "title": "b"
+            }
+          ],
+          "expected": [
+            0,
+            {
+              "id": 1,
+              "title": "a",
+              "version": 4
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "id": 2,
+              "title": "x",
+              "version": 0
+            },
+            0,
+            {}
+          ],
+          "expected": [
+            1,
+            {
+              "id": 2,
+              "title": "x",
+              "version": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            {
+              "id": 2,
+              "title": "x",
+              "version": 7
+            },
+            8,
+            {
+              "title": "y"
+            }
+          ],
+          "expected": [
+            0,
+            {
+              "id": 2,
+              "title": "x",
+              "version": 7
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Before `bulk_create`, rows that would violate `UniqueConstraint(fields=fields)` must be dropped. Fix `dedupe_for_bulk(rows, fields)` so it keeps the **first** row for each combination of `fields` values and preserves the original order.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "dedupe_for_bulk",
+      "starterCode": "def dedupe_for_bulk(rows, fields):\n    seen = {}\n    for r in rows:\n        seen[tuple(r[f] for f in fields)] = r\n    return list(seen.values())",
+      "referenceSolution": "def dedupe_for_bulk(rows, fields):\n    seen = set()\n    out = []\n    for r in rows:\n        key = tuple(r[f] for f in fields)\n        if key not in seen:\n            seen.add(key)\n            out.append(r)\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "shop": 1,
+                "n": 1
+              },
+              {
+                "sku": "b",
+                "shop": 1,
+                "n": 2
+              }
+            ],
+            [
+              "sku",
+              "shop"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "a",
+              "shop": 1,
+              "n": 1
+            },
+            {
+              "sku": "b",
+              "shop": 1,
+              "n": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "shop": 1,
+                "n": 1
+              },
+              {
+                "sku": "a",
+                "shop": 1,
+                "n": 2
+              }
+            ],
+            [
+              "sku",
+              "shop"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "a",
+              "shop": 1,
+              "n": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "shop": 1,
+                "n": 1
+              },
+              {
+                "sku": "a",
+                "shop": 2,
+                "n": 2
+              },
+              {
+                "sku": "a",
+                "shop": 1,
+                "n": 3
+              }
+            ],
+            [
+              "sku",
+              "shop"
+            ]
+          ],
+          "expected": [
+            {
+              "sku": "a",
+              "shop": 1,
+              "n": 1
+            },
+            {
+              "sku": "a",
+              "shop": 2,
+              "n": 2
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              "sku"
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "This transfer function sometimes loses money under concurrent requests. Mark the lines that make it unsafe.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This transfer function sometimes loses money under concurrent requests. Mark the lines that make it unsafe.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "def transfer(src_id, dst_id, amount):",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    src = Account.objects.get(pk=src_id)",
+          "issue": "Read outside the transaction and without `select_for_update()`, so two transfers can both see the old balance."
+        },
+        {
+          "id": "l3",
+          "text": "    if src.balance < amount:",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "        raise InsufficientFunds()",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    with transaction.atomic():",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "        dst = Account.objects.select_for_update().get(pk=dst_id)",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "        src.balance = src.balance - amount",
+          "issue": "Computed from a stale Python value; use the locked row or `F(\"balance\") - amount`."
+        },
+        {
+          "id": "l8",
+          "text": "        dst.balance = dst.balance + amount",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "        src.save(update_fields=[\"balance\"])",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "        dst.save(update_fields=[\"balance\"])",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-django-models-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You must add an index on `events(user_id, created_at)` in PostgreSQL. The table has 300 million rows and takes writes all day.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You must add an index on `events(user_id, created_at)` in PostgreSQL. The table has 300 million rows and takes writes all day.",
+      "steps": [
+        {
+          "id": "op",
+          "question": "Which migration operation do you use?",
+          "options": [
+            "`AddIndexConcurrently` from `django.contrib.postgres.operations`",
+            "`AddIndex` (plain CREATE INDEX)",
+            "`RunSQL(\"REINDEX TABLE events\")`",
+            "`AlterField` with `db_index=True` on `user_id`"
+          ],
+          "correctIndex": 0,
+          "explanation": "A plain CREATE INDEX blocks writes for the whole build. CONCURRENTLY builds without blocking writes."
+        },
+        {
+          "id": "atomic",
+          "question": "The migration fails with \"CREATE INDEX CONCURRENTLY cannot run inside a transaction block\". What do you change?",
+          "options": [
+            "Set `atomic = False` on the Migration class",
+            "Wrap it in `transaction.atomic()`",
+            "Run `migrate --fake`",
+            "Split the index into two single-column indexes"
+          ],
+          "correctIndex": 0,
+          "explanation": "Django wraps each migration in a transaction on Postgres; `atomic = False` turns that off for this one."
+        },
+        {
+          "id": "fail",
+          "question": "The concurrent build is interrupted halfway. What state is the database in?",
+          "options": [
+            "An INVALID index may exist; drop it and run the build again",
+            "The index is half-built but usable",
+            "The table is locked until restart",
+            "Nothing was created, guaranteed"
+          ],
+          "correctIndex": 0,
+          "explanation": "A failed CONCURRENTLY build leaves an invalid index that is maintained on writes but not used; drop it and retry."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-django-models-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What happens if you call `Account.objects.select_for_update().get(pk=1)` with autocommit on and no surrounding `transaction.atomic()`?",
+    "mcq": {
+      "options": [
+        "Django raises `TransactionManagementError`",
+        "The row is locked until the request ends",
+        "The lock is silently ignored",
+        "It locks the whole table"
+      ],
+      "correctIndex": 0,
+      "explanation": "A row lock only lasts as long as a transaction. Evaluating a `select_for_update` queryset in autocommit mode raises `TransactionManagementError`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A management command loops over 5 million rows with `for row in BigTable.objects.all():` and runs out of memory. What is the best first fix?",
+    "mcq": {
+      "options": [
+        "Iterate with `.iterator(chunk_size=2000)` so rows stream and are not cached on the queryset",
+        "Add `.order_by(\"id\")`",
+        "Use `list(BigTable.objects.all())`",
+        "Call `gc.collect()` inside the loop"
+      ],
+      "correctIndex": 0,
+      "explanation": "Normal iteration fills the queryset's result cache with every instance. `.iterator()` streams rows in chunks without caching them.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-django-models-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-django-models",
+    "trackId": null,
+    "stackId": "stack-django",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You want each `Customer` annotated with the `total` of their most recent order in a single query. Which expression fits?",
+    "mcq": {
+      "options": [
+        "`Subquery(Order.objects.filter(customer=OuterRef(\"pk\")).order_by(\"-created_at\").values(\"total\")[:1])`",
+        "`Max(\"orders__total\")`",
+        "`F(\"orders__total\")`",
+        "`Sum(\"orders__total\")`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`Subquery` with `OuterRef` runs a correlated subquery per customer. `Max` gives the largest total, not the latest one.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

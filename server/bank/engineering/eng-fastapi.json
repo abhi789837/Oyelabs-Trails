@@ -1,0 +1,2230 @@
+[
+  {
+    "id": "eng-fastapi-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This is what `skip: int = Query(0, ge=0), limit: int = Query(10, ge=1, le=100)` does for you. Fix `parse_paging(params)` (raw query-string values as strings): missing values use the defaults; return `{\"skip\": int, \"limit\": int}`, or `{\"status\": 422}` when a value is not an integer or out of range.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_paging",
+      "starterCode": "def parse_paging(params):\n    try:\n        skip = int(params.get(\"skip\", 0))\n        limit = int(params.get(\"limit\", 10))\n    except ValueError:\n        return {\"status\": 422}\n    if skip < 0:\n        return {\"status\": 422}\n    return {\"skip\": skip, \"limit\": limit}",
+      "referenceSolution": "def parse_paging(params):\n    try:\n        skip = int(params.get(\"skip\", 0))\n        limit = int(params.get(\"limit\", 10))\n    except ValueError:\n        return {\"status\": 422}\n    if skip < 0 or limit < 1 or limit > 100:\n        return {\"status\": 422}\n    return {\"skip\": skip, \"limit\": limit}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "skip": "20",
+              "limit": "5"
+            }
+          ],
+          "expected": {
+            "skip": 20,
+            "limit": 5
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "skip": 0,
+            "limit": 10
+          }
+        },
+        {
+          "args": [
+            {
+              "limit": "500"
+            }
+          ],
+          "expected": {
+            "status": 422
+          }
+        },
+        {
+          "args": [
+            {
+              "limit": "0"
+            }
+          ],
+          "expected": {
+            "status": 422
+          }
+        },
+        {
+          "args": [
+            {
+              "skip": "abc"
+            }
+          ],
+          "expected": {
+            "status": 422
+          }
+        },
+        {
+          "args": [
+            {
+              "limit": "100"
+            }
+          ],
+          "expected": {
+            "skip": 0,
+            "limit": 100
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The route declares `response_model=UserOut` where `UserOut` has `id`, `email` and `full_name: str | None = None`. Fix `to_user_out(user)` to return exactly those three fields (`full_name` is `None` when missing) so nothing internal like `hashed_password` or `is_admin` leaks.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "to_user_out",
+      "starterCode": "def to_user_out(user):\n    out = dict(user)\n    out.pop(\"hashed_password\", None)\n    return out",
+      "referenceSolution": "def to_user_out(user):\n    return {\"id\": user[\"id\"], \"email\": user[\"email\"], \"full_name\": user.get(\"full_name\")}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "email": "a@x.io",
+              "full_name": "Ann",
+              "hashed_password": "h"
+            }
+          ],
+          "expected": {
+            "id": 1,
+            "email": "a@x.io",
+            "full_name": "Ann"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 2,
+              "email": "b@x.io",
+              "hashed_password": "h",
+              "is_admin": true
+            }
+          ],
+          "expected": {
+            "id": 2,
+            "email": "b@x.io",
+            "full_name": null
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 3,
+              "email": "c@x.io",
+              "full_name": null
+            }
+          ],
+          "expected": {
+            "id": 3,
+            "email": "c@x.io",
+            "full_name": null
+          }
+        },
+        {
+          "args": [
+            {
+              "id": 4,
+              "email": "d@x.io",
+              "full_name": "Dee",
+              "api_key": "k"
+            }
+          ],
+          "expected": {
+            "id": 4,
+            "email": "d@x.io",
+            "full_name": "Dee"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `status_for(action, found)` so a small CRUD router picks the right status code:\n- `\"create\"` → `201`\n- `\"read\"` / `\"update\"` → `200`, or `404` when `found` is false\n- `\"delete\"` → `204`, or `404` when `found` is false",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "status_for",
+      "starterCode": "def status_for(action, found):\n    if not found:\n        return 404\n    if action == \"delete\":\n        return 204\n    return 200",
+      "referenceSolution": "def status_for(action, found):\n    if action == \"create\":\n        return 201\n    if not found:\n        return 404\n    if action == \"delete\":\n        return 204\n    return 200",
+      "sampleTests": [
+        {
+          "args": [
+            "read",
+            true
+          ],
+          "expected": 200
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "create",
+            false
+          ],
+          "expected": 201
+        },
+        {
+          "args": [
+            "create",
+            true
+          ],
+          "expected": 201
+        },
+        {
+          "args": [
+            "delete",
+            true
+          ],
+          "expected": 204
+        },
+        {
+          "args": [
+            "update",
+            false
+          ],
+          "expected": 404
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Mimic this Pydantic model by hand:\n\n```python\nclass ItemIn(BaseModel):\n    name: str          # required, not blank\n    price: float       # required, > 0\n    tags: list[str] = []\n```\n\nFix `validate_item(data)`: return `{\"errors\": [field, ...]}` (in the order `name`, `price`) if anything is invalid, otherwise the cleaned item with `tags` defaulted.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "validate_item",
+      "starterCode": "def validate_item(data):\n    errors = []\n    if not str(data.get(\"name\", \"\")).strip():\n        errors.append(\"name\")\n    if not isinstance(data.get(\"price\"), (int, float)) or data[\"price\"] <= 0:\n        errors.append(\"price\")\n    if errors:\n        return {\"errors\": errors}\n    return data",
+      "referenceSolution": "def validate_item(data):\n    errors = []\n    if not str(data.get(\"name\", \"\")).strip():\n        errors.append(\"name\")\n    if not isinstance(data.get(\"price\"), (int, float)) or data[\"price\"] <= 0:\n        errors.append(\"price\")\n    if errors:\n        return {\"errors\": errors}\n    return {\"name\": data[\"name\"], \"price\": data[\"price\"], \"tags\": data.get(\"tags\", [])}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Pen",
+              "price": 2.5,
+              "tags": [
+                "office"
+              ]
+            }
+          ],
+          "expected": {
+            "name": "Pen",
+            "price": 2.5,
+            "tags": [
+              "office"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "Pen",
+              "price": 2
+            }
+          ],
+          "expected": {
+            "name": "Pen",
+            "price": 2,
+            "tags": []
+          }
+        },
+        {
+          "args": [
+            {
+              "name": " ",
+              "price": 0
+            }
+          ],
+          "expected": {
+            "errors": [
+              "name",
+              "price"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "price": 3
+            }
+          ],
+          "expected": {
+            "errors": [
+              "name"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Cup",
+              "price": -1
+            }
+          ],
+          "expected": {
+            "errors": [
+              "price"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "For `@app.get(\"/items/{item_id}\")` with `item_id: int`, FastAPI answers `422` when the path segment is not an integer. Fix `parse_item_id(raw)` to return the int, or `\"422\"` for anything that is not a whole number (like `\"4.2\"` or `\"abc\"`).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "parse_item_id",
+      "starterCode": "def parse_item_id(raw):\n    try:\n        return int(float(raw))\n    except ValueError:\n        return \"422\"",
+      "referenceSolution": "def parse_item_id(raw):\n    try:\n        return int(raw)\n    except ValueError:\n        return \"422\"",
+      "sampleTests": [
+        {
+          "args": [
+            "42"
+          ],
+          "expected": 42
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "4.2"
+          ],
+          "expected": "422"
+        },
+        {
+          "args": [
+            "abc"
+          ],
+          "expected": "422"
+        },
+        {
+          "args": [
+            "-7"
+          ],
+          "expected": -7
+        },
+        {
+          "args": [
+            "0"
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are writing `GET /items/{item_id}` and `POST /items` in FastAPI.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You are writing `GET /items/{item_id}` and `POST /items` in FastAPI.",
+      "steps": [
+        {
+          "id": "missing",
+          "question": "The item id does not exist. What should the handler do?",
+          "options": [
+            "`raise HTTPException(status_code=404, detail=\"Item not found\")`",
+            "`return None`",
+            "`return {\"error\": \"not found\"}` with status 200",
+            "`raise ValueError(\"not found\")`"
+          ],
+          "correctIndex": 0,
+          "explanation": "HTTPException sets the status and a `{\"detail\": ...}` body. Returning None gives a 200 with `null`; a ValueError gives a 500."
+        },
+        {
+          "id": "badbody",
+          "question": "A client POSTs `{\"name\": \"Pen\"}` but `ItemIn` requires `price`. What happens?",
+          "options": [
+            "FastAPI returns 422 with details before your function runs",
+            "Your function runs with `price=None`",
+            "A 500 error",
+            "A 400 with an empty body"
+          ],
+          "correctIndex": 0,
+          "explanation": "The body is validated against the Pydantic model first; failures become a 422 listing each problem."
+        },
+        {
+          "id": "created",
+          "question": "How do you make `POST /items` answer 201 instead of 200?",
+          "options": [
+            "`@app.post(\"/items\", status_code=201)`",
+            "Return `(item, 201)` like Flask",
+            "Set `item.status = 201`",
+            "It is always 201 for POST"
+          ],
+          "correctIndex": 0,
+          "explanation": "The decorator's `status_code` sets the default success status."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Given `@app.get(\"/users/{user_id}\")` and `def read_user(user_id: int, verbose: bool = False)`, where does FastAPI read `verbose` from?",
+    "mcq": {
+      "options": [
+        "The query string, e.g. `?verbose=true`",
+        "The path",
+        "The JSON body",
+        "A header named `verbose`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Parameters named in the path template come from the path; other simple-typed parameters are query parameters. Pydantic models are read from the body.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Where can you try your FastAPI endpoints in the browser with no extra setup?",
+    "mcq": {
+      "options": [
+        "`/docs` (Swagger UI) and `/redoc`",
+        "`/admin`",
+        "`/api`",
+        "Only with Postman"
+      ],
+      "correctIndex": 0,
+      "explanation": "FastAPI builds an OpenAPI schema at `/openapi.json` and serves interactive docs at `/docs` and `/redoc`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `q: str | None = None` in a route signature mean?",
+    "mcq": {
+      "options": [
+        "`q` is an optional query parameter that is `None` when not sent",
+        "`q` is required but may be the string \"None\"",
+        "`q` must be sent in the body",
+        "The route returns `None` when `q` is missing"
+      ],
+      "correctIndex": 0,
+      "explanation": "A default value makes the parameter optional; the type allows `None` for the missing case.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A `get_current_user` dependency reads `Authorization: Bearer <token>`. Fix `current_user(headers, tokens)` (`tokens` maps token → username): return `{\"user\": name}`, or `{\"status\": 401}` when the header is missing, the scheme is not `Bearer`, or the token is unknown.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "current_user",
+      "starterCode": "def current_user(headers, tokens):\n    auth = headers.get(\"authorization\")\n    if not auth:\n        return {\"status\": 401}\n    token = auth.split(\" \")[1]\n    if token not in tokens:\n        return {\"status\": 401}\n    return {\"user\": tokens[token]}",
+      "referenceSolution": "def current_user(headers, tokens):\n    auth = headers.get(\"authorization\")\n    if not auth:\n        return {\"status\": 401}\n    scheme, _, token = auth.partition(\" \")\n    if scheme.lower() != \"bearer\" or token not in tokens:\n        return {\"status\": 401}\n    return {\"user\": tokens[token]}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "authorization": "Bearer t1"
+            },
+            {
+              "t1": "ann"
+            }
+          ],
+          "expected": {
+            "user": "ann"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            {
+              "t1": "ann"
+            }
+          ],
+          "expected": {
+            "status": 401
+          }
+        },
+        {
+          "args": [
+            {
+              "authorization": "Basic t1"
+            },
+            {
+              "t1": "ann"
+            }
+          ],
+          "expected": {
+            "status": 401
+          }
+        },
+        {
+          "args": [
+            {
+              "authorization": "Bearer nope"
+            },
+            {
+              "t1": "ann"
+            }
+          ],
+          "expected": {
+            "status": 401
+          }
+        },
+        {
+          "args": [
+            {
+              "authorization": "Bearer"
+            },
+            {
+              "t1": "ann"
+            }
+          ],
+          "expected": {
+            "status": 401
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`require_role(\"editor\")` returns a dependency. Fix `check_role(user, role)`: no user → `401`; the user has `role` in `user[\"roles\"]` **or** has `\"admin\"` → `200`; otherwise `403`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "check_role",
+      "starterCode": "def check_role(user, role):\n    if user is None or role not in user[\"roles\"]:\n        return 403\n    return 200",
+      "referenceSolution": "def check_role(user, role):\n    if user is None:\n        return 401\n    if role in user[\"roles\"] or \"admin\" in user[\"roles\"]:\n        return 200\n    return 403",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "a",
+              "roles": [
+                "editor"
+              ]
+            },
+            "editor"
+          ],
+          "expected": 200
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null,
+            "editor"
+          ],
+          "expected": 401
+        },
+        {
+          "args": [
+            {
+              "name": "b",
+              "roles": [
+                "admin"
+              ]
+            },
+            "editor"
+          ],
+          "expected": 200
+        },
+        {
+          "args": [
+            {
+              "name": "c",
+              "roles": [
+                "viewer"
+              ]
+            },
+            "editor"
+          ],
+          "expected": 403
+        },
+        {
+          "args": [
+            {
+              "name": "d",
+              "roles": []
+            },
+            "editor"
+          ],
+          "expected": 403
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "For `PATCH /items/{id}` you apply `update.model_dump(exclude_unset=True)`: only keys the client sent change, and a key sent as `null` **does** set the field to `None`. The current code makes it impossible to clear a field. Fix `apply_patch(stored, sent)`; do not mutate `stored`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "apply_patch",
+      "starterCode": "def apply_patch(stored, sent):\n    out = dict(stored)\n    for k, v in sent.items():\n        if v is not None:\n            out[k] = v\n    return out",
+      "referenceSolution": "def apply_patch(stored, sent):\n    out = dict(stored)\n    for k, v in sent.items():\n        out[k] = v\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Pen",
+              "price": 2,
+              "note": "x"
+            },
+            {
+              "price": 3
+            }
+          ],
+          "expected": {
+            "name": "Pen",
+            "price": 3,
+            "note": "x"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "Pen",
+              "price": 2,
+              "note": "x"
+            },
+            {
+              "note": null
+            }
+          ],
+          "expected": {
+            "name": "Pen",
+            "price": 2,
+            "note": null
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "Pen"
+            },
+            {}
+          ],
+          "expected": {
+            "name": "Pen"
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": 2
+            },
+            {
+              "a": null,
+              "b": 5
+            }
+          ],
+          "expected": {
+            "a": null,
+            "b": 5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The route is `GET /items?q=&min_price=&tag=a&tag=b` with `tag: list[str] = Query([])`. Fix `search_items(items, q, min_price, tags)`: `q` (may be `None`) matches the name case-insensitively, `min_price` (may be `None`) is inclusive, and an item must have **all** requested tags. Return matching names.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "search_items",
+      "starterCode": "def search_items(items, q, min_price, tags):\n    out = []\n    for it in items:\n        if q and q.lower() not in it[\"name\"].lower():\n            continue\n        if min_price is not None and it[\"price\"] < min_price:\n            continue\n        if tags and not any(t in it[\"tags\"] for t in tags):\n            continue\n        out.append(it[\"name\"])\n    return out",
+      "referenceSolution": "def search_items(items, q, min_price, tags):\n    out = []\n    for it in items:\n        if q and q.lower() not in it[\"name\"].lower():\n            continue\n        if min_price is not None and it[\"price\"] < min_price:\n            continue\n        if not all(t in it[\"tags\"] for t in tags):\n            continue\n        out.append(it[\"name\"])\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Red Pen",
+                "price": 2,
+                "tags": [
+                  "office"
+                ]
+              },
+              {
+                "name": "Mug",
+                "price": 8,
+                "tags": [
+                  "kitchen"
+                ]
+              }
+            ],
+            "pen",
+            null,
+            []
+          ],
+          "expected": [
+            "Red Pen"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "price": 1,
+                "tags": [
+                  "x",
+                  "y"
+                ]
+              },
+              {
+                "name": "B",
+                "price": 1,
+                "tags": [
+                  "x"
+                ]
+              }
+            ],
+            null,
+            null,
+            [
+              "x",
+              "y"
+            ]
+          ],
+          "expected": [
+            "A"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "price": 5,
+                "tags": []
+              },
+              {
+                "name": "B",
+                "price": 4,
+                "tags": []
+              }
+            ],
+            null,
+            5,
+            []
+          ],
+          "expected": [
+            "A"
+          ]
+        },
+        {
+          "args": [
+            [],
+            "a",
+            0,
+            [
+              "x"
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This app slows to a crawl under load: while one request waits, every other request waits too. Mark the lines that block the event loop.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This app slows to a crawl under load: while one request waits, every other request waits too. Mark the lines that block the event loop.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@app.get(\"/weather/{city}\")",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "async def weather(city: str):",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    cached = cache.get(city)",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    if cached:",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        return cached",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    resp = requests.get(f\"https://api.example.com/w/{city}\", timeout=5)",
+          "issue": "`requests` is synchronous; inside `async def` it blocks the event loop. Use `httpx.AsyncClient` and `await`."
+        },
+        {
+          "id": "l7",
+          "text": "    time.sleep(0.5)  # be nice to the API",
+          "issue": "`time.sleep` blocks the event loop; use `await asyncio.sleep(0.5)`."
+        },
+        {
+          "id": "l8",
+          "text": "    data = resp.json()",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "    cache.set(city, data)",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "    return data",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-fastapi-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "After `POST /signup` creates a user, you also want to send a welcome email (about 2 seconds via SMTP).",
+    "task": {
+      "kind": "scenario",
+      "prompt": "After `POST /signup` creates a user, you also want to send a welcome email (about 2 seconds via SMTP).",
+      "steps": [
+        {
+          "id": "where",
+          "question": "The response should not wait for the email. What is the simplest option in FastAPI?",
+          "options": [
+            "Add a `background_tasks: BackgroundTasks` parameter and `background_tasks.add_task(send_welcome, user.email)`",
+            "Call `send_welcome` before returning",
+            "Start a new `threading.Thread` without tracking it",
+            "Send the email from the frontend"
+          ],
+          "correctIndex": 0,
+          "explanation": "BackgroundTasks run after the response is sent, in the same process."
+        },
+        {
+          "id": "durable",
+          "question": "Later the product wants emails retried for a day if SMTP is down, even across deploys. What now?",
+          "options": [
+            "Move the work to a real queue (Celery, RQ, arq) with retries",
+            "Keep BackgroundTasks and add a `while True` retry loop",
+            "Increase the server timeout",
+            "Store emails in a Python list"
+          ],
+          "correctIndex": 0,
+          "explanation": "BackgroundTasks die with the process and have no retry; durable work needs a broker-backed queue."
+        },
+        {
+          "id": "fail",
+          "question": "With BackgroundTasks, what does the client see if `send_welcome` raises?",
+          "options": [
+            "Nothing; they already got their 201. You only see it in logs",
+            "A 500 instead of 201",
+            "A 202 Accepted",
+            "The signup is rolled back"
+          ],
+          "correctIndex": 0,
+          "explanation": "The response has already been sent; handle and log failures inside the task."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A route returns a user dict containing `hashed_password`, and declares `response_model=UserOut` where `UserOut` has only `id` and `email`. What does the client receive?",
+    "mcq": {
+      "options": [
+        "Only `id` and `email`; extra keys are filtered out",
+        "All keys including `hashed_password`",
+        "A 500 error because of the extra key",
+        "A 422 error"
+      ],
+      "correctIndex": 0,
+      "explanation": "The return value is validated and serialized through `response_model`, which drops fields it does not declare. That is why `response_model` is a security tool, not just documentation.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Both a route and one of its dependencies declare `db: Session = Depends(get_db)`. How many times does `get_db` run for one request?",
+    "mcq": {
+      "options": [
+        "Once; the result is cached for the request by default",
+        "Twice",
+        "Once per process, then reused forever",
+        "It depends on the order of parameters"
+      ],
+      "correctIndex": 0,
+      "explanation": "FastAPI caches a dependency's value within a single request, so both get the same session. Use `Depends(get_db, use_cache=False)` to opt out.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You declare a route with plain `def` (not `async def`) and it calls a blocking database driver. What does FastAPI do?",
+    "mcq": {
+      "options": [
+        "Runs it in a threadpool so it does not block the event loop",
+        "Blocks the event loop for every request",
+        "Refuses to start",
+        "Converts it to a coroutine automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sync path functions are run in a worker threadpool. Blocking calls are only a problem inside `async def`, where they run on the event loop itself.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The route awaits one upstream call per id, one after another. Change `fetch_all(ids)` to run the `fetch` calls **concurrently** with `asyncio.gather` while keeping results in the order of `ids`. The test driver `run` reports the results and whether calls overlapped.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "import asyncio\n\nasync def fetch_all(ids):\n    results = []\n    for i in ids:\n        results.append(await fetch(i))\n    return results\n\n# Test driver (leave as is).\nstate = {\"in_flight\": 0, \"max\": 0}\n\nasync def fetch(i):\n    state[\"in_flight\"] += 1\n    state[\"max\"] = max(state[\"max\"], state[\"in_flight\"])\n    await asyncio.sleep(0)\n    state[\"in_flight\"] -= 1\n    return i * 10\n\ndef run(ids):\n    state[\"in_flight\"] = 0\n    state[\"max\"] = 0\n    results = asyncio.run(fetch_all(ids))\n    return {\"results\": results, \"overlapped\": state[\"max\"] > 1}",
+      "referenceSolution": "import asyncio\n\nasync def fetch_all(ids):\n    return list(await asyncio.gather(*(fetch(i) for i in ids)))\n\n# Test driver (leave as is).\nstate = {\"in_flight\": 0, \"max\": 0}\n\nasync def fetch(i):\n    state[\"in_flight\"] += 1\n    state[\"max\"] = max(state[\"max\"], state[\"in_flight\"])\n    await asyncio.sleep(0)\n    state[\"in_flight\"] -= 1\n    return i * 10\n\ndef run(ids):\n    state[\"in_flight\"] = 0\n    state[\"max\"] = 0\n    results = asyncio.run(fetch_all(ids))\n    return {\"results\": results, \"overlapped\": state[\"max\"] > 1}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1
+            ]
+          ],
+          "expected": {
+            "results": [
+              10
+            ],
+            "overlapped": false
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": {
+            "results": [
+              10,
+              20,
+              30
+            ],
+            "overlapped": true
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "results": [],
+            "overlapped": false
+          }
+        },
+        {
+          "args": [
+            [
+              5,
+              4
+            ]
+          ],
+          "expected": {
+            "results": [
+              50,
+              40
+            ],
+            "overlapped": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Like a `pydantic-settings` class, fix `load_settings(env)`:\n- `DATABASE_URL` is required → else `{\"error\": \"DATABASE_URL\"}`\n- `DEBUG` is a bool: `\"1\"`, `\"true\"`, `\"yes\"` (any case) are true; anything else or missing is false\n- `PORT` is an int, default `8000`\n\nReturn `{\"database_url\", \"debug\", \"port\"}`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "load_settings",
+      "starterCode": "def load_settings(env):\n    if \"DATABASE_URL\" not in env:\n        return {\"error\": \"DATABASE_URL\"}\n    return {\"database_url\": env[\"DATABASE_URL\"],\n            \"debug\": bool(env.get(\"DEBUG\", \"\")),\n            \"port\": int(env.get(\"PORT\", 8000))}",
+      "referenceSolution": "def load_settings(env):\n    if not env.get(\"DATABASE_URL\"):\n        return {\"error\": \"DATABASE_URL\"}\n    return {\"database_url\": env[\"DATABASE_URL\"],\n            \"debug\": env.get(\"DEBUG\", \"\").lower() in (\"1\", \"true\", \"yes\"),\n            \"port\": int(env.get(\"PORT\", 8000))}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "DATABASE_URL": "postgres://db",
+              "DEBUG": "true"
+            }
+          ],
+          "expected": {
+            "database_url": "postgres://db",
+            "debug": true,
+            "port": 8000
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "DATABASE_URL": "postgres://db",
+              "DEBUG": "false",
+              "PORT": "9000"
+            }
+          ],
+          "expected": {
+            "database_url": "postgres://db",
+            "debug": false,
+            "port": 9000
+          }
+        },
+        {
+          "args": [
+            {
+              "DEBUG": "1"
+            }
+          ],
+          "expected": {
+            "error": "DATABASE_URL"
+          }
+        },
+        {
+          "args": [
+            {
+              "DATABASE_URL": "x",
+              "DEBUG": "YES"
+            }
+          ],
+          "expected": {
+            "database_url": "x",
+            "debug": true,
+            "port": 8000
+          }
+        },
+        {
+          "args": [
+            {
+              "DATABASE_URL": "x",
+              "DEBUG": "0"
+            }
+          ],
+          "expected": {
+            "database_url": "x",
+            "debug": false,
+            "port": 8000
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The frontend wants FastAPI's 422 `detail` list grouped by field. Each error has `loc` like `[\"body\", \"address\", \"city\"]` and `msg`. Fix `errors_by_field(detail)`: drop the first `loc` element (`body`/`query`/`path`), join the rest with `.`, and map each field to its list of messages.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "errors_by_field",
+      "starterCode": "def errors_by_field(detail):\n    out = {}\n    for e in detail:\n        field = e[\"loc\"][-1]\n        out.setdefault(field, []).append(e[\"msg\"])\n    return out",
+      "referenceSolution": "def errors_by_field(detail):\n    out = {}\n    for e in detail:\n        field = \".\".join(str(p) for p in e[\"loc\"][1:])\n        out.setdefault(field, []).append(e[\"msg\"])\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "loc": [
+                  "body",
+                  "email"
+                ],
+                "msg": "invalid email"
+              }
+            ]
+          ],
+          "expected": {
+            "email": [
+              "invalid email"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "loc": [
+                  "body",
+                  "address",
+                  "city"
+                ],
+                "msg": "required"
+              },
+              {
+                "loc": [
+                  "body",
+                  "city"
+                ],
+                "msg": "too short"
+              }
+            ]
+          ],
+          "expected": {
+            "address.city": [
+              "required"
+            ],
+            "city": [
+              "too short"
+            ]
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "loc": [
+                  "query",
+                  "limit"
+                ],
+                "msg": "too big"
+              },
+              {
+                "loc": [
+                  "query",
+                  "limit"
+                ],
+                "msg": "not int"
+              }
+            ]
+          ],
+          "expected": {
+            "limit": [
+              "too big",
+              "not int"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "loc": [
+                  "body",
+                  "items",
+                  0,
+                  "qty"
+                ],
+                "msg": "must be > 0"
+              }
+            ]
+          ],
+          "expected": {
+            "items.0.qty": [
+              "must be > 0"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Fix `page_links(total, page, size, base)` to build pagination links for a list response: return `{\"total\", \"next\", \"prev\"}` where links look like `\"{base}?page=N&size=S\"`, `next` is `None` on the last page and `prev` is `None` on page 1. Zero items means a single page.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "page_links",
+      "starterCode": "def page_links(total, page, size, base):\n    link = lambda n: f\"{base}?page={n}&size={size}\"\n    return {\"total\": total,\n            \"next\": link(page + 1),\n            \"prev\": link(page - 1) if page > 1 else None}",
+      "referenceSolution": "def page_links(total, page, size, base):\n    pages = max(1, -(-total // size))\n    link = lambda n: f\"{base}?page={n}&size={size}\"\n    return {\"total\": total,\n            \"next\": link(page + 1) if page < pages else None,\n            \"prev\": link(page - 1) if page > 1 else None}",
+      "sampleTests": [
+        {
+          "args": [
+            25,
+            1,
+            10,
+            "/items"
+          ],
+          "expected": {
+            "total": 25,
+            "next": "/items?page=2&size=10",
+            "prev": null
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            25,
+            3,
+            10,
+            "/items"
+          ],
+          "expected": {
+            "total": 25,
+            "next": null,
+            "prev": "/items?page=2&size=10"
+          }
+        },
+        {
+          "args": [
+            0,
+            1,
+            10,
+            "/items"
+          ],
+          "expected": {
+            "total": 0,
+            "next": null,
+            "prev": null
+          }
+        },
+        {
+          "args": [
+            20,
+            2,
+            10,
+            "/x"
+          ],
+          "expected": {
+            "total": 20,
+            "next": null,
+            "prev": "/x?page=1&size=10"
+          }
+        },
+        {
+          "args": [
+            21,
+            2,
+            10,
+            "/x"
+          ],
+          "expected": {
+            "total": 21,
+            "next": "/x?page=3&size=10",
+            "prev": "/x?page=1&size=10"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A rate-limit dependency allows `limit` requests per `window` seconds per client. `hits` are previous request times. A hit counts if it is **strictly newer** than `now - window`. Fix `allow_request(hits, now, limit, window)` to return `[allowed, remaining]`, where `remaining` is what is left **after** this request (0 when refused).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "allow_request",
+      "starterCode": "def allow_request(hits, now, limit, window):\n    recent = [t for t in hits if t >= now - window]\n    if len(recent) >= limit:\n        return [False, 0]\n    return [True, limit - len(recent)]",
+      "referenceSolution": "def allow_request(hits, now, limit, window):\n    recent = [t for t in hits if t > now - window]\n    if len(recent) >= limit:\n        return [False, 0]\n    return [True, limit - len(recent) - 1]",
+      "sampleTests": [
+        {
+          "args": [
+            [],
+            100,
+            3,
+            60
+          ],
+          "expected": [
+            true,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              50,
+              60,
+              70
+            ],
+            100,
+            3,
+            60
+          ],
+          "expected": [
+            false,
+            0
+          ]
+        },
+        {
+          "args": [
+            [
+              40,
+              60,
+              70
+            ],
+            100,
+            3,
+            60
+          ],
+          "expected": [
+            true,
+            0
+          ]
+        },
+        {
+          "args": [
+            [
+              10,
+              20
+            ],
+            100,
+            2,
+            60
+          ],
+          "expected": [
+            true,
+            1
+          ]
+        },
+        {
+          "args": [
+            [
+              99
+            ],
+            100,
+            1,
+            60
+          ],
+          "expected": [
+            false,
+            0
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Under load this service runs out of database connections. Mark the lines that cause it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Under load this service runs out of database connections. Mark the lines that cause it.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "def get_db():",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "    engine = create_engine(settings.database_url)",
+          "issue": "A new engine (and its own connection pool) per request; create one engine at startup and reuse it."
+        },
+        {
+          "id": "l3",
+          "text": "    db = Session(engine)",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    return db",
+          "issue": "The session is never closed. Use `yield db` with `finally: db.close()` so FastAPI cleans up after the response."
+        },
+        {
+          "id": "l5",
+          "text": "@app.get(\"/orders/{order_id}\")",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "def read_order(order_id: int, db: Session = Depends(get_db)):",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    order = db.get(Order, order_id)",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    if order is None:",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "        raise HTTPException(404, \"Order not found\")",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "    return order",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-fastapi-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "With this dependency, when does `db.close()` run?\n\n```python\ndef get_db():\n    db = SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n```",
+    "mcq": {
+      "options": [
+        "After the path function finishes, as FastAPI tears down the dependency (also when it raised)",
+        "Immediately after `yield`, before the route runs",
+        "Only when the process shuts down",
+        "Never, because generators are not supported as dependencies"
+      ],
+      "correctIndex": 0,
+      "explanation": "FastAPI runs the code up to `yield`, injects the value, and runs the rest (the `finally`) when the request is done, even if the route raised.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An `async def` route calls `time.sleep(2)`. Ten requests arrive at once on a single Uvicorn worker. Roughly how long until the last one finishes?",
+    "mcq": {
+      "options": [
+        "About 20 seconds; each sleep blocks the event loop",
+        "About 2 seconds; they run concurrently",
+        "About 2 seconds, because FastAPI moves async routes to threads",
+        "They all time out immediately"
+      ],
+      "correctIndex": 0,
+      "explanation": "`time.sleep` blocks the single event-loop thread, so requests run one after another. `await asyncio.sleep(2)` or a plain `def` route would let them overlap.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Which statement about `BackgroundTasks` is true?",
+    "mcq": {
+      "options": [
+        "They run after the response is sent, in the same process, and are lost if it crashes",
+        "They run in a separate worker process with retries",
+        "They run before the response is sent",
+        "They are persisted to a queue automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "BackgroundTasks are a lightweight in-process mechanism. Use a broker-backed queue for durable or heavy work.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Idempotency keys for `POST /payments`. Fix `handle(store, key, payload)`: the first request with a key creates a payment (`201`, body `{\"id\": n}` with n = number of payments created so far) and stores the result with the payload. A retry with the **same** key and payload returns the stored status and body. The same key with a **different** payload returns `[422, {\"detail\": \"Idempotency key reused\"}]`. The driver runs a list of `[key, payload]` requests.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "run_requests",
+      "starterCode": "def handle(store, key, payload):\n    if key in store:\n        return store[key][\"response\"]\n    store[\"_count\"] = store.get(\"_count\", 0) + 1\n    response = [201, {\"id\": store[\"_count\"]}]\n    store[key] = {\"payload\": payload, \"response\": response}\n    return response\n\n# Test driver (leave as is).\ndef run_requests(requests):\n    store = {}\n    return [handle(store, k, p) for k, p in requests]",
+      "referenceSolution": "def handle(store, key, payload):\n    if key in store:\n        if store[key][\"payload\"] != payload:\n            return [422, {\"detail\": \"Idempotency key reused\"}]\n        return store[key][\"response\"]\n    store[\"_count\"] = store.get(\"_count\", 0) + 1\n    response = [201, {\"id\": store[\"_count\"]}]\n    store[key] = {\"payload\": payload, \"response\": response}\n    return response\n\n# Test driver (leave as is).\ndef run_requests(requests):\n    store = {}\n    return [handle(store, k, p) for k, p in requests]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                "k1",
+                {
+                  "amount": 5
+                }
+              ],
+              [
+                "k1",
+                {
+                  "amount": 5
+                }
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              201,
+              {
+                "id": 1
+              }
+            ],
+            [
+              201,
+              {
+                "id": 1
+              }
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              [
+                "k1",
+                {
+                  "amount": 5
+                }
+              ],
+              [
+                "k1",
+                {
+                  "amount": 9
+                }
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              201,
+              {
+                "id": 1
+              }
+            ],
+            [
+              422,
+              {
+                "detail": "Idempotency key reused"
+              }
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                {
+                  "amount": 1
+                }
+              ],
+              [
+                "b",
+                {
+                  "amount": 1
+                }
+              ],
+              [
+                "a",
+                {
+                  "amount": 1
+                }
+              ]
+            ]
+          ],
+          "expected": [
+            [
+              201,
+              {
+                "id": 1
+              }
+            ],
+            [
+              201,
+              {
+                "id": 2
+              }
+            ],
+            [
+              201,
+              {
+                "id": 1
+              }
+            ]
+          ]
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "To protect an upstream API, at most `limit` calls may be in flight at once. `call_all` creates a semaphore, but the limit does not hold. Fix `call_all(ids, limit)` so all calls share **one** semaphore. The driver returns the results and the highest number of calls seen in flight.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "run",
+      "starterCode": "import asyncio\n\nasync def call_all(ids, limit):\n    async def one(i):\n        sem = asyncio.Semaphore(limit)\n        async with sem:\n            return await upstream(i)\n    return list(await asyncio.gather(*(one(i) for i in ids)))\n\n# Test driver (leave as is).\nstate = {\"in_flight\": 0, \"max\": 0}\n\nasync def upstream(i):\n    state[\"in_flight\"] += 1\n    state[\"max\"] = max(state[\"max\"], state[\"in_flight\"])\n    await asyncio.sleep(0)\n    await asyncio.sleep(0)\n    state[\"in_flight\"] -= 1\n    return i + 1\n\ndef run(ids, limit):\n    state[\"in_flight\"] = 0\n    state[\"max\"] = 0\n    results = asyncio.run(call_all(ids, limit))\n    return {\"results\": results, \"max_in_flight\": state[\"max\"]}",
+      "referenceSolution": "import asyncio\n\nasync def call_all(ids, limit):\n    sem = asyncio.Semaphore(limit)\n    async def one(i):\n        async with sem:\n            return await upstream(i)\n    return list(await asyncio.gather(*(one(i) for i in ids)))\n\n# Test driver (leave as is).\nstate = {\"in_flight\": 0, \"max\": 0}\n\nasync def upstream(i):\n    state[\"in_flight\"] += 1\n    state[\"max\"] = max(state[\"max\"], state[\"in_flight\"])\n    await asyncio.sleep(0)\n    await asyncio.sleep(0)\n    state[\"in_flight\"] -= 1\n    return i + 1\n\ndef run(ids, limit):\n    state[\"in_flight\"] = 0\n    state[\"max\"] = 0\n    results = asyncio.run(call_all(ids, limit))\n    return {\"results\": results, \"max_in_flight\": state[\"max\"]}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            5
+          ],
+          "expected": {
+            "results": [
+              2,
+              3
+            ],
+            "max_in_flight": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2
+          ],
+          "expected": {
+            "results": [
+              2,
+              3,
+              4,
+              5,
+              6
+            ],
+            "max_in_flight": 2
+          }
+        },
+        {
+          "args": [
+            [
+              10,
+              20,
+              30
+            ],
+            1
+          ],
+          "expected": {
+            "results": [
+              11,
+              21,
+              31
+            ],
+            "max_in_flight": 1
+          }
+        },
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": {
+            "results": [],
+            "max_in_flight": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "FastAPI resolves sub-dependencies depth-first and, within one request, runs each dependency **once**. Fix `resolve_order(graph, target)` (`graph` maps a dependency to the list it depends on, in declaration order) to return the order in which dependencies run, ending with `target`, with no repeats.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "resolve_order",
+      "starterCode": "def resolve_order(graph, target):\n    order = []\n    def visit(name):\n        for dep in graph.get(name, []):\n            visit(dep)\n        order.append(name)\n    visit(target)\n    return order",
+      "referenceSolution": "def resolve_order(graph, target):\n    order = []\n    def visit(name):\n        if name in order:\n            return\n        for dep in graph.get(name, []):\n            visit(dep)\n        order.append(name)\n    visit(target)\n    return order",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "route": [
+                "user"
+              ],
+              "user": [
+                "token"
+              ]
+            },
+            "route"
+          ],
+          "expected": [
+            "token",
+            "user",
+            "route"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "route": [
+                "user",
+                "db"
+              ],
+              "user": [
+                "db",
+                "token"
+              ]
+            },
+            "route"
+          ],
+          "expected": [
+            "db",
+            "token",
+            "user",
+            "route"
+          ]
+        },
+        {
+          "args": [
+            {},
+            "route"
+          ],
+          "expected": [
+            "route"
+          ]
+        },
+        {
+          "args": [
+            {
+              "r": [
+                "a",
+                "b"
+              ],
+              "a": [
+                "s"
+              ],
+              "b": [
+                "s"
+              ]
+            },
+            "r"
+          ],
+          "expected": [
+            "s",
+            "a",
+            "b",
+            "r"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "After verifying a JWT signature, the auth dependency checks claims. Fix `check_claims(claims, now, audience)` to return the first problem as a string, or `\"ok\"`:\n- `\"expired\"` when `exp <= now`\n- `\"not yet valid\"` when `nbf` is present and `nbf > now`\n- `\"wrong audience\"` when `aud` (a string **or** a list of strings) does not include `audience`",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "check_claims",
+      "starterCode": "def check_claims(claims, now, audience):\n    if claims[\"exp\"] < now:\n        return \"expired\"\n    if claims.get(\"nbf\", 0) > now:\n        return \"not yet valid\"\n    if claims.get(\"aud\") != audience:\n        return \"wrong audience\"\n    return \"ok\"",
+      "referenceSolution": "def check_claims(claims, now, audience):\n    if claims[\"exp\"] <= now:\n        return \"expired\"\n    if claims.get(\"nbf\", 0) > now:\n        return \"not yet valid\"\n    aud = claims.get(\"aud\")\n    auds = aud if isinstance(aud, list) else [aud]\n    if audience not in auds:\n        return \"wrong audience\"\n    return \"ok\"",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "exp": 200,
+              "aud": "api"
+            },
+            100,
+            "api"
+          ],
+          "expected": "ok"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "exp": 100,
+              "aud": "api"
+            },
+            100,
+            "api"
+          ],
+          "expected": "expired"
+        },
+        {
+          "args": [
+            {
+              "exp": 200,
+              "aud": [
+                "web",
+                "api"
+              ]
+            },
+            100,
+            "api"
+          ],
+          "expected": "ok"
+        },
+        {
+          "args": [
+            {
+              "exp": 200,
+              "nbf": 150,
+              "aud": "api"
+            },
+            100,
+            "api"
+          ],
+          "expected": "not yet valid"
+        },
+        {
+          "args": [
+            {
+              "exp": 200,
+              "aud": [
+                "web"
+              ]
+            },
+            100,
+            "api"
+          ],
+          "expected": "wrong audience"
+        },
+        {
+          "args": [
+            {
+              "exp": 200
+            },
+            100,
+            "api"
+          ],
+          "expected": "wrong audience"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "This proxy endpoint leaks sockets and sometimes hangs workers for minutes. Mark the problem lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "This proxy endpoint leaks sockets and sometimes hangs workers for minutes. Mark the problem lines.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "@app.get(\"/proxy/{path:path}\")",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "async def proxy(path: str, user=Depends(current_user)):",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    client = httpx.AsyncClient(timeout=None)",
+          "issue": "A new client per request (never closed) leaks connections, and `timeout=None` lets a slow upstream hang the request forever. Create one client in `lifespan` with a finite timeout."
+        },
+        {
+          "id": "l4",
+          "text": "    resp = await client.get(f\"{UPSTREAM}/{path}\", headers={\"x-user\": user.id})",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    if resp.status_code >= 500:",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "        raise HTTPException(502, \"Upstream error\")",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    data = json.loads(resp.text)",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "    audit_log.write(json.dumps(data))  # sync file write",
+          "issue": "A blocking file write inside `async def` stalls the event loop; move it to a thread (`run_in_threadpool`) or a BackgroundTask."
+        },
+        {
+          "id": "l9",
+          "text": "    return data",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-fastapi-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You run FastAPI with Uvicorn behind a load balancer. One endpoint resizes images (about 300 ms of pure CPU each).",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You run FastAPI with Uvicorn behind a load balancer. One endpoint resizes images (about 300 ms of pure CPU each).",
+      "steps": [
+        {
+          "id": "cpu",
+          "question": "The resize is written as `async def` and p95 latency for all endpoints jumped. Best fix?",
+          "options": [
+            "Run the resize in a process pool (`loop.run_in_executor(process_pool, ...)`) or hand it to a worker queue",
+            "Change it to `await asyncio.sleep(0)` between steps",
+            "Add more `async` keywords inside the function",
+            "Increase the HTTP keep-alive timeout"
+          ],
+          "correctIndex": 0,
+          "explanation": "CPU work holds the event loop (and the GIL); a process pool or separate worker keeps the API responsive."
+        },
+        {
+          "id": "workers",
+          "question": "The host has 4 cores. How do you use them for the API itself?",
+          "options": [
+            "Run several worker processes (e.g. `uvicorn --workers 4` or Gunicorn with Uvicorn workers)",
+            "Run one worker with more threads",
+            "Increase `limit_concurrency` only",
+            "Nothing; asyncio uses all cores"
+          ],
+          "correctIndex": 0,
+          "explanation": "One Python process runs on one core for Python code; scale with processes."
+        },
+        {
+          "id": "pool",
+          "question": "Each worker has a DB pool of `pool_size=10, max_overflow=10`. Postgres allows 100 connections. With 4 workers on 3 replicas, what is the risk?",
+          "options": [
+            "Up to 240 connections can be requested, more than Postgres allows",
+            "No risk; pools are shared across processes",
+            "Only 10 connections in total are used",
+            "Each replica shares one pool of 20"
+          ],
+          "correctIndex": 0,
+          "explanation": "Pools are per process: 3 × 4 × 20 = 240. Size pools from the database limit down, or add a pooler like PgBouncer."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-fastapi-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You must call a third-party SDK that only has blocking methods from an `async def` route. What is the right approach?",
+    "mcq": {
+      "options": [
+        "`await run_in_threadpool(sdk.fetch, arg)` (or `asyncio.to_thread`) so it runs off the event loop",
+        "Call it directly; FastAPI detects blocking calls",
+        "Wrap the call in `async with`",
+        "Call it inside `asyncio.gather` with no other tasks"
+      ],
+      "correctIndex": 0,
+      "explanation": "A blocking call inside `async def` stalls every request on that worker. Offloading it to a thread keeps the event loop free. Alternatively, make the whole route a plain `def`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Where should you create a shared `httpx.AsyncClient` or DB engine that lives for the whole app and is closed on shutdown?",
+    "mcq": {
+      "options": [
+        "In a `lifespan` context manager passed to `FastAPI(lifespan=...)`, storing it on `app.state`",
+        "Inside each route function",
+        "In a dependency without `yield`, called per request",
+        "At import time in every module that needs it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Code before `yield` in `lifespan` runs at startup and code after it runs at shutdown, which is the place to open and close long-lived resources.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-fastapi-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-fastapi",
+    "trackId": null,
+    "stackId": "stack-fastapi",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In Pydantic v2, a model has `qty: int`. A client sends `\"qty\": \"3\"`. What happens by default, and how do you reject it?",
+    "mcq": {
+      "options": [
+        "It is coerced to `3`; use strict mode (`Field(strict=True)` or `model_config = ConfigDict(strict=True)`) to reject strings",
+        "It is rejected with 422 by default",
+        "It stays the string `\"3\"`",
+        "It becomes `None`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pydantic's default \"lax\" mode converts numeric strings to ints. Strict mode accepts only real ints.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]
