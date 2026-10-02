@@ -37,11 +37,14 @@ docker compose build
 docker compose up -d
 
 echo "== 4. code runner"
-for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8787/api/health >/dev/null && break; sleep 2; done
+# Health is checked from inside the container, so this works whether or not the app publishes a
+# host port (a server where Caddy reaches it over a shared Docker network publishes none).
+health() { docker compose exec -T oyelearn curl -fsS http://127.0.0.1:8787/api/health; }
+for i in $(seq 1 60); do health >/dev/null 2>&1 && break; sleep 2; done
 runtimes=$(docker compose exec -T oyelearn node -e "fetch('http://piston:2000/api/v2/runtimes').then(r=>r.json()).then(j=>console.log(j.length))" || echo 0)
 if [ "${runtimes:-0}" -lt 7 ]; then ./scripts/deploy/piston-install.sh; fi
 
 echo "== 5. smoke"
-curl -fsS http://127.0.0.1:8787/api/health && echo
+health && echo
 docker compose logs --tail=40 oyelearn
 echo "Done. Backup: backups/pre-v4-$stamp.db. Next: rebuild learner paths from Admin (POST /api/admin/paths/rebuild-all)."
