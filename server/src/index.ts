@@ -13,6 +13,7 @@ import { evaluateHandler } from "./assessment/evaluateJob";
 import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
 import { bankFillHandler } from "./bank/fillJob";
+import { bankRevalidateHandler } from "./handbook/revalidate";
 import { personaliseHandler } from "./assessment/personalise/job";
 import { batchPollHandler } from "./ai/batches";
 import { ensurePistonPackages } from "./sandbox/pistonSetup";
@@ -78,6 +79,7 @@ async function main(): Promise<void> {
       "links.check": checkLinksHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "week.refine": refineWeekHandler({ db, content, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "bank.fill": bankFillHandler({ db, ai, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "bank.revalidate": bankRevalidateHandler({ db, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "assessment.personalise": personaliseHandler({ db, ai, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "ai.batch.poll": batchPollHandler({ db, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },

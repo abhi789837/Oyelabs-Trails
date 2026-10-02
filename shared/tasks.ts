@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { CLASSIFICATIONS, OUTCOMES } from "./decision";
 import { evaluateSheet, functionsIn, parseRef } from "./sheet";
 
 /**
@@ -14,7 +15,7 @@ import { evaluateSheet, functionsIn, parseRef } from "./sheet";
  * assessment; course practice is formative and shows them after a check.
  */
 
-export const TASK_KINDS = ["write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim"] as const;
+export const TASK_KINDS = ["write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay"] as const;
 export const taskKindSchema = z.enum(TASK_KINDS);
 export type TaskKind = z.infer<typeof taskKindSchema>;
 
@@ -27,6 +28,9 @@ export const TASK_KIND_LABELS: Record<TaskKind, string> = {
   excel: "Spreadsheet",
   allocate: "Allocate people",
   sim: "Screen check",
+  categorize: "Categorise",
+  form: "Fill the form",
+  roleplay: "Client conversation",
 };
 
 const text = (max: number) => z.string().trim().min(1).max(max);
@@ -180,7 +184,119 @@ export const simTaskSchema = z.object({
     .default([]),
 });
 
-export const taskSchema = z.discriminatedUnion("kind", [writeTaskSchema, rankTaskSchema, calculateTaskSchema, scenarioTaskSchema, spotTaskSchema, excelTaskSchema, allocateTaskSchema, simTaskSchema]);
+// ---------------------------------------------------------------------------
+// v4.2 simulations: categorise, fill a form, role-play a client conversation
+// ---------------------------------------------------------------------------
+
+export const CATEGORIZE_MODES = ["classify-request", "gap-analysis", "generic"] as const;
+export type CategorizeMode = (typeof CATEGORIZE_MODES)[number];
+
+/** The four buckets of a white-label gap analysis, in the order they are offered. */
+export const GAP_CATEGORIES = [
+  { id: "ootb", label: "Out of the box" },
+  { id: "configuration", label: "Configuration" },
+  { id: "customisation", label: "Customisation" },
+  { id: "new-feature", label: "New feature" },
+] as const;
+
+/** Category labels for a classify-request task, from the decision tool's outcomes. */
+export const CLASSIFY_CATEGORIES = CLASSIFICATIONS.map((id) => ({ id, label: OUTCOMES[id].label }));
+
+/**
+ * v4.2: put each item in a category. Classify-the-request uses the decision tool's
+ * classifications as categories (a subset is fine); gap analysis uses `GAP_CATEGORIES`. Graded by code.
+ */
+export const categorizeTaskSchema = z.object({
+  kind: z.literal("categorize"),
+  prompt: text(1500),
+  mode: z.enum(CATEGORIZE_MODES).default("generic"),
+  categories: z.array(z.object({ id: text(40), label: text(80) })).min(2).max(7),
+  items: z.array(z.object({ id: text(40), text: text(400), explanation: z.string().max(600).default("") })).min(2).max(20),
+  /** item id → category id. */
+  answer: z.record(z.string(), z.string()),
+});
+
+export const FORM_VARIANTS = ["cr", "mom", "status", "template"] as const;
+export type FormVariant = (typeof FORM_VARIANTS)[number];
+export const FORM_INPUTS = ["text", "textarea", "number", "select", "date"] as const;
+
+export const formFieldSchema = z.object({
+  id: text(40),
+  label: text(120),
+  input: z.enum(FORM_INPUTS),
+  options: z.array(text(80)).min(2).max(10).optional(),
+  placeholder: z.string().max(160).optional(),
+  required: z.boolean().default(true),
+});
+export type FormField = z.infer<typeof formFieldSchema>;
+
+/** A rubric dimension scored by a model; `points` is its weight (against a form's code checks). */
+export const pointsRubricSchema = z.object({
+  label: text(120),
+  points: z.number().int().min(1).max(5),
+  /** What a full-marks answer does. For the grader and review mode, never shown during an assessment. */
+  description: z.string().max(400).optional(),
+});
+export type PointsRubric = z.infer<typeof pointsRubricSchema>;
+
+/**
+ * v4.2: complete a document (a change request, minutes, a status report, a handbook template) from
+ * the context: a client email, a transcript, a board export. Exact parts (a RAG status, a number, a
+ * classification) are `checks`, graded by code; the rest is the rubric, graded by a model.
+ */
+export const formTaskSchema = z.object({
+  kind: z.literal("form"),
+  variant: z.enum(FORM_VARIANTS),
+  prompt: text(1500),
+  /** What the learner works from. Markdown, including pipe tables for a board export. */
+  context: z.string().max(1500).default(""),
+  /** A handbook template id; the learner can download the blank template. */
+  templateId: z
+    .string()
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+    .max(60)
+    .nullable()
+    .default(null),
+  fields: z.array(formFieldSchema).min(1).max(12),
+  checks: z
+    .array(z.object({ fieldId: text(40), expected: z.union([z.number(), z.string().trim().min(1).max(120)]), tolerance: z.number().min(0).optional() }))
+    .max(12)
+    .default([]),
+  rubric: z.array(pointsRubricSchema).min(1).max(6),
+  sampleAnswer: z.record(z.string(), z.string().max(2000)),
+});
+
+/**
+ * v4.2: a short conversation with an AI client. The engine, the personas and each scenario's hidden
+ * concern live in `shared/roleplay.ts`; the task only points at them. Graded by a model.
+ */
+export const roleplayTaskSchema = z.object({
+  kind: z.literal("roleplay"),
+  /** Optional framing above the conversation; `brief` says what to achieve. */
+  prompt: z.string().max(1500).default(""),
+  scenarioId: text(60),
+  personaId: text(60),
+  maxTurns: z.number().int().min(2).max(8),
+  /** What the learner must achieve in the conversation. */
+  brief: text(800),
+  rubric: z.array(pointsRubricSchema).min(1).max(6),
+  /** Ask for the follow-up email after the conversation. */
+  followUp: z.boolean().default(false),
+});
+
+export const taskSchema = z.discriminatedUnion("kind", [
+  writeTaskSchema,
+  rankTaskSchema,
+  calculateTaskSchema,
+  scenarioTaskSchema,
+  spotTaskSchema,
+  excelTaskSchema,
+  allocateTaskSchema,
+  simTaskSchema,
+  categorizeTaskSchema,
+  formTaskSchema,
+  roleplayTaskSchema,
+]);
 export type Task = z.infer<typeof taskSchema>;
 export type WriteTask = z.infer<typeof writeTaskSchema>;
 export type RankTask = z.infer<typeof rankTaskSchema>;
@@ -190,6 +306,9 @@ export type SpotTask = z.infer<typeof spotTaskSchema>;
 export type ExcelTask = z.infer<typeof excelTaskSchema>;
 export type AllocateTask = z.infer<typeof allocateTaskSchema>;
 export type SimTask = z.infer<typeof simTaskSchema>;
+export type CategorizeTask = z.infer<typeof categorizeTaskSchema>;
+export type FormTask = z.infer<typeof formTaskSchema>;
+export type RoleplayTask = z.infer<typeof roleplayTaskSchema>;
 
 // ---------------------------------------------------------------------------
 // What the learner sees in an assessment (answers removed)
@@ -203,7 +322,10 @@ export type LearnerTask =
   | (Omit<SpotTask, "segments"> & { segments: { id: string; text: string }[] })
   | (Omit<ExcelTask, "checks" | "solution" | "explanation"> & { checks: { cell: string }[] })
   | Omit<AllocateTask, "explanation">
-  | (Omit<SimTask, "rows" | "questions"> & { rows: { id: string; cells: string[] }[]; questions: { id: string; question: string; options: string[] }[] });
+  | (Omit<SimTask, "rows" | "questions"> & { rows: { id: string; cells: string[] }[]; questions: { id: string; question: string; options: string[] }[] })
+  | (Omit<CategorizeTask, "items" | "answer"> & { items: { id: string; text: string }[] })
+  | (Omit<FormTask, "checks" | "sampleAnswer" | "rubric"> & { checks: { fieldId: string }[]; rubric: { label: string; points: number }[] })
+  | (Omit<RoleplayTask, "rubric"> & { rubric: { label: string; points: number }[] });
 
 /** Deterministic shuffle so a rank task never starts in its answer order. */
 function rotate<T>(items: readonly T[], seed: number): T[] {
@@ -238,6 +360,32 @@ export function toLearnerTask(task: Task, seed = 1): LearnerTask {
         rows: task.rows.map((r) => ({ id: r.id, cells: r.cells })),
         questions: task.questions.map((q) => ({ id: q.id, question: q.question, options: q.options })),
       };
+    case "categorize":
+      return { kind: "categorize", prompt: task.prompt, mode: task.mode, categories: task.categories, items: task.items.map((i) => ({ id: i.id, text: i.text })) };
+    case "form":
+      return {
+        kind: "form",
+        variant: task.variant,
+        prompt: task.prompt,
+        context: task.context,
+        templateId: task.templateId,
+        fields: task.fields,
+        // Which fields are checked exactly is not a secret; what they should say is.
+        checks: task.checks.map((c) => ({ fieldId: c.fieldId })),
+        rubric: task.rubric.map((r) => ({ label: r.label, points: r.points })),
+      };
+    case "roleplay":
+      // The scenario's hidden concern is in shared/roleplay.ts, never in the task.
+      return {
+        kind: "roleplay",
+        prompt: task.prompt,
+        scenarioId: task.scenarioId,
+        personaId: task.personaId,
+        maxTurns: task.maxTurns,
+        brief: task.brief,
+        followUp: task.followUp,
+        rubric: task.rubric.map((r) => ({ label: r.label, points: r.points })),
+      };
   }
 }
 
@@ -254,15 +402,31 @@ export const taskResponseSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("excel"), cells: z.record(z.string().max(4), z.string().max(300)) }),
   z.object({ kind: z.literal("allocate"), hours: z.record(z.string().max(45), z.number().min(0).max(200)) }),
   z.object({ kind: z.literal("sim"), flagged: z.array(z.string().max(20)).max(12), answers: z.record(z.string().max(20), z.number().int().min(0).max(10)) }),
+  z.object({ kind: z.literal("categorize"), picks: z.record(z.string().max(40), z.string().max(40)) }),
+  z.object({ kind: z.literal("form"), values: z.record(z.string().max(40), z.string().max(4000)) }),
+  z.object({
+    kind: z.literal("roleplay"),
+    sessionId: z.string().max(80),
+    transcript: z.array(z.object({ role: z.enum(["pm", "client"]), text: z.string().max(2000) })).max(20),
+    followUpEmail: z.string().max(4000).optional(),
+  }),
 ]);
 export type TaskResponse = z.infer<typeof taskResponseSchema>;
 
 export interface TaskGrade {
-  /** 0..1. Null for a `write` task, whose score comes from the rubric grader. */
+  /** 0..1. Null for `write`, `form` and `roleplay`, whose score (or part of it) comes from a model. */
   score: number | null;
   /** Per-part detail for the result screen. */
   detail: string[];
+  /**
+   * A `form`'s code-checked part: its score and its share of the final score, which the rubric
+   * grader combines with `combineFormScore`. Absent when the form has no checks.
+   */
+  checks?: { score: number; weight: number };
 }
+
+/** Kinds whose final score needs a model (a rubric or a conversation). */
+export const AI_GRADED_KINDS: readonly TaskKind[] = ["write", "form", "roleplay"];
 
 export function wordCount(value: string): number {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
@@ -279,10 +443,15 @@ export function wordCount(value: string): number {
  *   which is the point: "find the issues" is not "highlight the document".
  */
 export function gradeTask(task: Task, response: TaskResponse | null): TaskGrade {
-  if (!response || response.kind !== task.kind) return { score: task.kind === "write" ? null : 0, detail: ["No answer"] };
+  if (!response || response.kind !== task.kind) return { score: AI_GRADED_KINDS.includes(task.kind) && task.kind !== "form" ? null : 0, detail: ["No answer"] };
   switch (task.kind) {
     case "write":
+    case "roleplay":
       return { score: null, detail: [] };
+    case "categorize":
+      return gradeCategorize(task, (response as Extract<TaskResponse, { kind: "categorize" }>).picks);
+    case "form":
+      return gradeFormChecks(task, (response as Extract<TaskResponse, { kind: "form" }>).values);
     case "rank": {
       const order = (response as Extract<TaskResponse, { kind: "rank" }>).order;
       let points = 0;
@@ -402,6 +571,12 @@ export function checkTask(task: Task): string[] {
     task.questions.forEach((q) => {
       if (q.correctIndex >= q.options.length) problems.push(`sim: question ${q.id} correctIndex out of range`);
     });
+  }
+  if (task.kind === "categorize") problems.push(...checkCategorize(task));
+  if (task.kind === "form") problems.push(...checkForm(task));
+  if (task.kind === "roleplay") {
+    const labels = task.rubric.map((r) => r.label.toLowerCase());
+    if (new Set(labels).size !== labels.length) problems.push("roleplay: duplicate rubric labels");
   }
   if (task.kind === "calculate") {
     for (const field of task.fields) {
@@ -536,4 +711,121 @@ export function gradeAllocate(task: AllocateTask, hours: Record<string, number>)
     detail.push(`${project.name}: ${sum}/${project.need} h${sum < project.need ? " — under-staffed" : sum > project.need * (1 + task.slack) ? " — over-staffed" : ""}`);
   }
   return { score: round(ok / total), detail };
+}
+
+// ---------------------------------------------------------------------------
+// v4.2 graders
+// ---------------------------------------------------------------------------
+
+/** Each item in its category; the score is the share right. */
+export function gradeCategorize(task: CategorizeTask, picks: Record<string, string>): TaskGrade {
+  const label = new Map(task.categories.map((c) => [c.id, c.label]));
+  let right = 0;
+  const detail = task.items.map((item) => {
+    const expected = task.answer[item.id];
+    const picked = picks[item.id];
+    const ok = picked !== undefined && picked === expected;
+    if (ok) right += 1;
+    const short = item.text.length > 60 ? `${item.text.slice(0, 57)}…` : item.text;
+    return `${short}: ${ok ? "correct" : `${label.get(expected) ?? expected}${picked ? ` (you chose ${label.get(picked) ?? picked})` : " (no pick)"}`}`;
+  });
+  return { score: round(right / task.items.length), detail };
+}
+
+/** Lower-case, single-spaced, without trailing punctuation: "Amber." matches "amber". */
+function normaliseAnswer(value: string): string {
+  return value.trim().replace(/\s+/g, " ").replace(/[.!]+$/, "").toLowerCase();
+}
+
+/** Whether one form value meets one exact check. Numbers accept "12,000", "$12k" does not. */
+export function formCheckPasses(check: FormTask["checks"][number], value: string | undefined): boolean {
+  if (value === undefined || value.trim() === "") return false;
+  if (typeof check.expected === "number") {
+    const n = cellNumber(value);
+    return n !== null && Math.abs(n - check.expected) <= (check.tolerance ?? 0) + 1e-9;
+  }
+  return normaliseAnswer(value) === normaliseAnswer(check.expected);
+}
+
+/** The checks' share of a form's final score: one point per check against the rubric's points. */
+export function formCheckWeight(task: Pick<FormTask, "checks" | "rubric">): number {
+  const points = task.rubric.reduce((s, r) => s + r.points, 0);
+  return task.checks.length ? task.checks.length / (task.checks.length + points) : 0;
+}
+
+/**
+ * The code-checked part of a form. The overall score stays null: the rubric part needs a model.
+ * `checks` carries the part's score and weight for `combineFormScore`.
+ */
+export function gradeFormChecks(task: FormTask, values: Record<string, string>): TaskGrade {
+  const label = new Map(task.fields.map((f) => [f.id, f.label]));
+  let right = 0;
+  const detail = task.checks.map((check) => {
+    const ok = formCheckPasses(check, values[check.fieldId]);
+    if (ok) right += 1;
+    return `${label.get(check.fieldId) ?? check.fieldId}: ${ok ? "correct" : `expected ${check.expected}`}`;
+  });
+  return {
+    score: null,
+    detail,
+    ...(task.checks.length ? { checks: { score: round(right / task.checks.length), weight: round(formCheckWeight(task)) } } : {}),
+  };
+}
+
+/** The final form score: checks weighted by their share, the rubric by the rest. */
+export function combineFormScore(task: Pick<FormTask, "checks" | "rubric">, checkScore: number | null, rubricScore: number): number {
+  const w = formCheckWeight(task);
+  return round(w * (checkScore ?? 0) + (1 - w) * rubricScore);
+}
+
+function checkCategorize(task: CategorizeTask): string[] {
+  const problems: string[] = [];
+  const categoryIds = task.categories.map((c) => c.id);
+  const itemIds = task.items.map((i) => i.id);
+  if (new Set(categoryIds).size !== categoryIds.length) problems.push("categorize: duplicate category ids");
+  if (new Set(itemIds).size !== itemIds.length) problems.push("categorize: duplicate item ids");
+  for (const id of itemIds) {
+    const answer = task.answer[id];
+    if (answer === undefined) problems.push(`categorize: no answer for ${id}`);
+    else if (!categoryIds.includes(answer)) problems.push(`categorize: ${id} answers an unknown category ${answer}`);
+  }
+  for (const key of Object.keys(task.answer)) if (!itemIds.includes(key)) problems.push(`categorize: answer for unknown item ${key}`);
+  if (task.mode === "classify-request") {
+    const known = new Set<string>(CLASSIFICATIONS);
+    for (const id of categoryIds) if (!known.has(id)) problems.push(`categorize: ${id} is not a decision-tool classification`);
+  }
+  if (task.mode === "gap-analysis") {
+    const known = new Set<string>(GAP_CATEGORIES.map((c) => c.id));
+    for (const id of categoryIds) if (!known.has(id)) problems.push(`categorize: ${id} is not a gap-analysis category`);
+  }
+  if (task.items.length >= 3 && new Set(Object.values(task.answer)).size < 2) problems.push("categorize: every item is in the same category");
+  return problems;
+}
+
+function checkForm(task: FormTask): string[] {
+  const problems: string[] = [];
+  const fields = new Map(task.fields.map((f) => [f.id, f]));
+  if (fields.size !== task.fields.length) problems.push("form: duplicate field ids");
+  for (const field of task.fields) {
+    if (field.input === "select" && !field.options?.length) problems.push(`form: select ${field.id} has no options`);
+    if (field.input !== "select" && field.options?.length) problems.push(`form: ${field.id} has options but is not a select`);
+    if (field.required && !(task.sampleAnswer[field.id] ?? "").trim()) problems.push(`form: no sample answer for ${field.id}`);
+  }
+  const checked = new Set<string>();
+  for (const check of task.checks) {
+    const field = fields.get(check.fieldId);
+    if (!field) {
+      problems.push(`form: check on unknown field ${check.fieldId}`);
+      continue;
+    }
+    if (checked.has(check.fieldId)) problems.push(`form: two checks on ${check.fieldId}`);
+    checked.add(check.fieldId);
+    if (field.input === "textarea") problems.push(`form: ${check.fieldId} is free text, so it cannot be checked exactly`);
+    if (field.input === "number" && typeof check.expected !== "number") problems.push(`form: ${check.fieldId} is a number but expects text`);
+    if (field.input === "select" && !field.options?.some((o) => normaliseAnswer(o) === normaliseAnswer(String(check.expected)))) problems.push(`form: ${check.fieldId} expects an answer that is not an option`);
+  }
+  for (const key of Object.keys(task.sampleAnswer)) if (!fields.has(key)) problems.push(`form: sample answer for unknown field ${key}`);
+  const sample = gradeFormChecks(task, task.sampleAnswer);
+  if (sample.checks && sample.checks.score !== 1) problems.push(`form: the sample answer fails its own checks (${sample.detail.filter((d) => !d.endsWith("correct")).join("; ").slice(0, 160)})`);
+  return problems;
 }

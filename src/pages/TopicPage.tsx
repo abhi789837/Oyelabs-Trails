@@ -6,6 +6,8 @@ import { ChallengeRunner } from "@/components/challenge/ChallengeRunner";
 import { PRACTICE_CHECKS, PracticeTask } from "@/components/tasks/PracticeTask";
 import { RichText } from "@/components/content/RichText";
 import { SopBlocks } from "@/features/curriculum/SopBlocks";
+import { HandbookCards } from "@/features/handbook/HandbookCards";
+import { TopicInteractive } from "@/features/handbook/TopicInteractive";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { ReferenceList } from "@/components/trail/ReferenceList";
 import { TopicStatusBadge } from "@/components/trail/TopicStatusBadge";
@@ -191,6 +193,19 @@ function TopicBody({ topic }: { topic: ServedTopic }) {
         </h2>
         <RichText text={topic.summary} size="base" className="max-w-prose text-[1.0625rem] leading-[1.75]" />
       </section>
+
+      {topic.sections?.map((section, i) => (
+        <section key={i} aria-labelledby={`section-${i}`} className="mt-10 max-w-3xl">
+          <h2 id={`section-${i}`} className="text-lg font-semibold">
+            {section.heading}
+          </h2>
+          <RichText text={section.body} size="base" className="mt-2 max-w-prose leading-[1.7]" />
+        </section>
+      ))}
+
+      {topic.handbook && <HandbookCards refs={topic.handbook} />}
+
+      {topic.interactive && <TopicInteractive interactive={topic.interactive} />}
 
       <section aria-labelledby="references-heading" className="mt-10 max-w-3xl">
         <h2 id="references-heading" className="text-sm font-semibold">

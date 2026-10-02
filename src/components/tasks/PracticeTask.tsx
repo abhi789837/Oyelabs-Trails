@@ -26,7 +26,9 @@ export function PracticeTask({ task }: { task: Task }) {
   const [round, setRound] = useState(0);
 
   const perfect = feedback?.score === 1;
-  const revealed = checks >= PRACTICE_CHECKS || perfect || (task.kind === "write" && checks > 0);
+  // Write and form tasks need a model for (part of) their score, so one check shows the sample answer.
+  const selfCompare = task.kind === "write" || task.kind === "form";
+  const revealed = checks >= PRACTICE_CHECKS || perfect || (selfCompare && checks > 0);
   const left = PRACTICE_CHECKS - checks;
 
   const check = () => {
@@ -42,6 +44,16 @@ export function PracticeTask({ task }: { task: Task }) {
     setFeedback(null);
     setRound((n) => n + 1);
   };
+
+  // A client conversation scores itself on the server when it finishes; there is nothing to Check.
+  if (task.kind === "roleplay") {
+    return (
+      <div className="space-y-6">
+        <Badge variant="outline">{TASK_KIND_LABELS[task.kind]}</Badge>
+        <TaskView task={task} value={value} onChange={setValue} idPrefix={idPrefix} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -67,12 +79,14 @@ export function PracticeTask({ task }: { task: Task }) {
           <p className="flex items-center gap-2 font-medium">
             {perfect && <CircleCheck className="h-4 w-4 text-summit-strong" aria-hidden="true" />}
             {feedback.score === null
-              ? "Compare your answer with the sample and the criteria below."
+              ? feedback.lines.length
+                ? "The exact parts are checked below; compare the rest with the sample answers and the criteria."
+                : "Compare your answer with the sample and the criteria below."
               : perfect
                 ? "All correct."
                 : `${Math.round(feedback.score * 100)}% right${revealed ? "" : " so far"}.`}
           </p>
-          {feedback.score !== null && (revealed ? feedback.lines : feedback.hint).length > 0 && (
+          {(revealed ? feedback.lines : feedback.hint).length > 0 && (feedback.score !== null || revealed) && (
             <ul className="mt-2 space-y-1 text-muted-foreground">
               {(revealed ? feedback.lines : feedback.hint).map((line, i) => (
                 <li key={i}>{line}</li>
@@ -90,7 +104,7 @@ export function PracticeTask({ task }: { task: Task }) {
             </Button>
             <span className="font-mono text-xs text-muted-foreground">
               {left} {left === 1 ? "check" : "checks"} left
-              {task.kind === "write" ? "" : ", then the answer is shown"}
+              {selfCompare ? "" : ", then the answer is shown"}
             </span>
           </>
         ) : (
@@ -153,6 +167,11 @@ function hintFor(task: Task, value: TaskResponse | null): string[] {
         lines.push(`${right} of ${task.questions.length} questions right`);
       }
       return lines;
+    }
+    case "categorize": {
+      const picks = (value as Extract<TaskResponse, { kind: "categorize" }>).picks;
+      const right = task.items.filter((i) => picks[i.id] === task.answer[i.id]).length;
+      return [`${right} of ${task.items.length} in the right category`];
     }
     default:
       return [];

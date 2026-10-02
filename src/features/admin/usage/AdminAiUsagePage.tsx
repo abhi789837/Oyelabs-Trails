@@ -16,6 +16,7 @@ import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { InfoTip } from "../catalog/InfoTip";
 import { budgetTone, fillDays, formatUsd, taskLabel } from "./helpers";
+import { RoleplayUsageSection } from "./RoleplayUsageSection";
 import { TimingChart } from "./TimingChart";
 
 const PERIODS = [
@@ -97,6 +98,8 @@ export default function AdminAiUsagePage() {
           <DailyChart days={report.days} count={Number(period)} />
 
           <TimingChart days={Number(period)} />
+
+          <RoleplayUsageSection canEdit={me.role === "superadmin"} />
 
           <Section title="By task" id="usage-task">
             {report.byTask.length === 0 ? (

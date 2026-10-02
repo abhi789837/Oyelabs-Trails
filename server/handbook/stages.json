@@ -1,0 +1,1930 @@
+[
+  {
+    "id": "custom-bd-handover",
+    "projectType": "custom",
+    "order": 1,
+    "name": "BD handover to delivery",
+    "purpose": "Transfer everything sold from BD to the delivery team: the signed SOW, proposal, estimates, assumptions, client context and promises made in sales calls, so delivery starts from what was actually agreed.",
+    "entryCriteria": [
+      "Contract or SOW signed, or a signed letter of intent",
+      "Advance payment received or invoiced, per the contract",
+      "PM assigned to the project"
+    ],
+    "exitCriteria": [
+      "Handover meeting held and recorded in a MoM",
+      "PM has read the SOW, proposal and estimate and listed open questions",
+      "Risky assumptions logged in the RAID log",
+      "Client contacts and SPOC known"
+    ],
+    "raci": [
+      {
+        "activity": "Prepare handover pack (SOW, proposal, estimate, call notes)",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "Tech lead",
+        "informed": "PM"
+      },
+      {
+        "activity": "Review SOW and list gaps or risky assumptions",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, BD/Account manager",
+        "informed": ""
+      },
+      {
+        "activity": "Confirm commercial model, milestones and payment terms",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": ""
+      },
+      {
+        "activity": "Introduce PM to client",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": "Client sponsor, Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Introduction email from BD naming the PM",
+      "Optional short intro call before the formal kickoff"
+    ],
+    "artifacts": [
+      "sow",
+      "proposal",
+      "estimate",
+      "assumption",
+      "raid-log-template",
+      "mom"
+    ],
+    "typicalDuration": "Typically 1–3 working days after signature",
+    "pitfalls": [
+      "Verbal promises made in sales calls that are not in the SOW",
+      "PM starting without reading the SOW",
+      "Assumptions that the client never actually agreed to"
+    ],
+    "moduleId": "pmp-a01",
+    "sources": [
+      {
+        "label": "Atlassian: Project kickoff meeting",
+        "url": "https://www.atlassian.com/work-management/project-management/project-kickoff",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-estimation",
+    "projectType": "custom",
+    "order": 2,
+    "name": "Estimation & commercial model",
+    "purpose": "Produce or validate the effort estimate and confirm the commercial model (fixed bid, T&M, retainer or dedicated team), milestones and billing, so the plan and the price rest on the same assumptions.",
+    "entryCriteria": [
+      "Requirements or proposal scope available",
+      "Commercial model proposed by BD"
+    ],
+    "exitCriteria": [
+      "Estimate reviewed by the tech lead with assumptions and exclusions",
+      "Milestones and milestone billing mapped to deliverables",
+      "Contingency approach agreed internally"
+    ],
+    "raci": [
+      {
+        "activity": "Break scope into features and estimate effort",
+        "responsible": "Tech lead",
+        "accountable": "Tech lead",
+        "consulted": "Developers, Designer, QA",
+        "informed": "PM"
+      },
+      {
+        "activity": "Review estimate, assumptions and exclusions",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, BD/Account manager",
+        "informed": ""
+      },
+      {
+        "activity": "Choose commercial model and price",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM, Tech lead",
+        "informed": ""
+      },
+      {
+        "activity": "Agree milestones and payment schedule",
+        "responsible": "BD/Account manager",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": "Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Estimate or proposal walkthrough",
+      "Clarification questions on scope"
+    ],
+    "artifacts": [
+      "estimate",
+      "quote",
+      "fixed-bid",
+      "time-and-materials",
+      "milestone-billing",
+      "assumption"
+    ],
+    "typicalDuration": "Typically 2–10 working days, depending on the size and clarity of scope",
+    "pitfalls": [
+      "Estimating from a one-line brief",
+      "No written exclusions",
+      "Milestones that bill before anything verifiable is delivered",
+      "Ignoring QA, PM and store-review time"
+    ],
+    "moduleId": "pmp-a02",
+    "sources": [
+      {
+        "label": "Atlassian: Story points and estimation",
+        "url": "https://www.atlassian.com/agile/project-management/estimation",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-internal-kickoff",
+    "projectType": "custom",
+    "order": 3,
+    "name": "Internal kickoff",
+    "purpose": "Align the delivery team on goals, scope, team roles, plan, risks, environments and ways of working before meeting the client.",
+    "entryCriteria": [
+      "BD handover complete",
+      "Team allocated",
+      "SOW and estimate available to the team"
+    ],
+    "exitCriteria": [
+      "Team understands scope and out-of-scope items",
+      "Draft plan, RACI and RAID log ready",
+      "Environments and tools requested",
+      "Client kickoff agenda drafted"
+    ],
+    "raci": [
+      {
+        "activity": "Run internal kickoff",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Developers, QA, Designer"
+      },
+      {
+        "activity": "Draft project plan and milestones",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": ""
+      },
+      {
+        "activity": "Request repositories, environments and tool access",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "Developers",
+        "informed": ""
+      },
+      {
+        "activity": "Identify initial risks and dependencies",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, QA, Designer",
+        "informed": ""
+      }
+    ],
+    "clientTouchpoints": [],
+    "artifacts": [
+      "kickoff-agenda",
+      "raid-log-template",
+      "raci",
+      "environment"
+    ],
+    "typicalDuration": "Typically 1–2 working days",
+    "pitfalls": [
+      "Skipping it because the team is 'already busy'",
+      "Team not told what is out of scope",
+      "Risks discovered only after the client kickoff"
+    ],
+    "moduleId": "pmp-a03",
+    "sources": [
+      {
+        "label": "Atlassian Team Playbook: Project kickoff",
+        "url": "https://www.atlassian.com/team-playbook/plays/project-kickoff",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-client-kickoff",
+    "projectType": "custom",
+    "order": 4,
+    "name": "Client kickoff",
+    "purpose": "Start the engagement with the client: introduce teams, confirm goals, scope, plan, communication cadence, SPOCs, escalation path and the client's dependencies.",
+    "entryCriteria": [
+      "Internal kickoff complete",
+      "Kickoff agenda shared with the client in advance"
+    ],
+    "exitCriteria": [
+      "MoM sent with confirmed SPOCs, cadence and next steps",
+      "Escalation matrix shared",
+      "Client dependencies listed with dates",
+      "Discovery or workshop sessions scheduled"
+    ],
+    "raci": [
+      {
+        "activity": "Run kickoff meeting",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, BD/Account manager",
+        "informed": "Developers, QA, Designer"
+      },
+      {
+        "activity": "Confirm goals, scope and success criteria",
+        "responsible": "PM",
+        "accountable": "Client sponsor",
+        "consulted": "Client SPOC, Tech lead",
+        "informed": ""
+      },
+      {
+        "activity": "Name SPOCs and agree communication cadence",
+        "responsible": "PM",
+        "accountable": "Client sponsor",
+        "consulted": "Client SPOC",
+        "informed": ""
+      },
+      {
+        "activity": "Share escalation matrix and RACI",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "BD/Account manager",
+        "informed": "Client sponsor, Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Kickoff meeting",
+      "Kickoff MoM",
+      "First status report date agreed"
+    ],
+    "artifacts": [
+      "kickoff-agenda",
+      "mom",
+      "escalation-matrix-template",
+      "spoc",
+      "raci",
+      "client-dependency"
+    ],
+    "typicalDuration": "Typically a 60–90 minute meeting within the first week",
+    "pitfalls": [
+      "No client decision-maker present",
+      "Not stating client dependencies and their dates",
+      "Leaving cadence and SPOC vague"
+    ],
+    "moduleId": "pmp-a04",
+    "sources": [
+      {
+        "label": "Atlassian: Project kickoff meeting",
+        "url": "https://www.atlassian.com/work-management/project-management/project-kickoff",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian Confluence: Project kickoff template",
+        "url": "https://www.atlassian.com/software/confluence/templates/project-kickoff",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-discovery",
+    "projectType": "custom",
+    "order": 5,
+    "name": "Discovery & requirements",
+    "purpose": "Turn the agreed scope into detailed, testable requirements (BRD or PRD, user stories with acceptance criteria) and get them frozen and signed off before build.",
+    "entryCriteria": [
+      "Client kickoff done",
+      "Client stakeholders available for workshops"
+    ],
+    "exitCriteria": [
+      "User stories with acceptance criteria written",
+      "Open questions closed or logged as assumptions",
+      "Requirement sign-off received in writing",
+      "Requirement freeze date recorded"
+    ],
+    "raci": [
+      {
+        "activity": "Run discovery workshops",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, Designer",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Write BRD/PRD and user stories",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, QA",
+        "informed": ""
+      },
+      {
+        "activity": "Review and clarify requirements",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": ""
+      },
+      {
+        "activity": "Sign off requirements",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": "Tech lead, Developers, QA"
+      }
+    ],
+    "clientTouchpoints": [
+      "Discovery workshops",
+      "Requirement review sessions",
+      "Written requirement sign-off"
+    ],
+    "artifacts": [
+      "brd",
+      "prd",
+      "user-story",
+      "acceptance-criteria",
+      "requirement-signoff",
+      "requirement-freeze",
+      "sign-off"
+    ],
+    "typicalDuration": "Typically 1–4 weeks, depending on project size",
+    "pitfalls": [
+      "Writing stories without acceptance criteria",
+      "Accepting 'we'll decide later' on core flows",
+      "No written sign-off, only verbal agreement",
+      "New requirements added after freeze without a CR"
+    ],
+    "moduleId": "pmp-a05",
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: How the discovery phase works",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "GOV.UK Service Manual: Writing user stories",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-design",
+    "projectType": "custom",
+    "order": 6,
+    "name": "UI/UX & design approval",
+    "purpose": "Design wireframes, mockups and prototypes for the agreed flows and get the client's design approval within the agreed revision rounds.",
+    "entryCriteria": [
+      "Requirements signed off or stable for the screens being designed",
+      "Brand assets received"
+    ],
+    "exitCriteria": [
+      "Designs approved in writing",
+      "Revision rounds used and recorded",
+      "Design hand-off to developers complete"
+    ],
+    "raci": [
+      {
+        "activity": "Create wireframes and mockups",
+        "responsible": "Designer",
+        "accountable": "Designer",
+        "consulted": "PM, Tech lead",
+        "informed": ""
+      },
+      {
+        "activity": "Present designs and collect feedback",
+        "responsible": "Designer",
+        "accountable": "PM",
+        "consulted": "Client SPOC",
+        "informed": ""
+      },
+      {
+        "activity": "Approve designs",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM, Designer",
+        "informed": "Developers"
+      },
+      {
+        "activity": "Hand off designs to development",
+        "responsible": "Designer",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": ""
+      }
+    ],
+    "clientTouchpoints": [
+      "Design review calls",
+      "Written design approval"
+    ],
+    "artifacts": [
+      "wireframe",
+      "mockup",
+      "prototype",
+      "design-approval"
+    ],
+    "typicalDuration": "Typically 1–4 weeks, often overlapping with discovery",
+    "pitfalls": [
+      "Unlimited revision rounds",
+      "Approval from someone other than the SPOC",
+      "Design changes after approval treated as free"
+    ],
+    "moduleId": "pmp-a06",
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: Making prototypes",
+        "url": "https://www.gov.uk/service-manual/design/making-prototypes",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-sprint-0",
+    "projectType": "custom",
+    "order": 7,
+    "name": "Architecture & Sprint 0",
+    "purpose": "Set up the foundations before feature sprints: architecture decisions, repositories, environments, CI/CD, coding standards, backlog and definition of ready and done.",
+    "entryCriteria": [
+      "Requirements and designs stable enough to plan",
+      "Team allocated"
+    ],
+    "exitCriteria": [
+      "Architecture documented and reviewed",
+      "Dev and staging environments working",
+      "Backlog refined for the first sprints",
+      "Definition of ready and done agreed"
+    ],
+    "raci": [
+      {
+        "activity": "Make and document architecture decisions",
+        "responsible": "Tech lead",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": "PM"
+      },
+      {
+        "activity": "Set up repositories, environments and CI/CD",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": "PM"
+      },
+      {
+        "activity": "Refine backlog and plan first sprint",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, QA",
+        "informed": ""
+      },
+      {
+        "activity": "Agree definition of ready and done",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "QA, Developers",
+        "informed": ""
+      }
+    ],
+    "clientTouchpoints": [
+      "Optional architecture walkthrough with the client's technical team"
+    ],
+    "artifacts": [
+      "sprint-0",
+      "definition-of-ready",
+      "definition-of-done",
+      "dev-environment",
+      "staging-environment",
+      "backlog"
+    ],
+    "typicalDuration": "Typically 1–2 weeks",
+    "pitfalls": [
+      "Skipping Sprint 0 and fixing environments mid-project",
+      "Undocumented architecture decisions",
+      "No staging environment for client review"
+    ],
+    "moduleId": "pmp-a07",
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: How the alpha phase works",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-alpha-phase-works",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-sprints",
+    "projectType": "custom",
+    "order": 8,
+    "name": "Sprint execution",
+    "purpose": "Build the product in short iterations: plan each sprint, develop and test, demo to the client, take feedback, and report progress transparently.",
+    "entryCriteria": [
+      "Sprint 0 complete",
+      "Backlog items meet the definition of ready"
+    ],
+    "exitCriteria": [
+      "All planned scope built and tested to the definition of done",
+      "Sprint demos held and feedback triaged",
+      "Status reports sent each week"
+    ],
+    "raci": [
+      {
+        "activity": "Plan sprint",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, Developers, QA",
+        "informed": ""
+      },
+      {
+        "activity": "Develop and unit-test features",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": ""
+      },
+      {
+        "activity": "Test sprint scope",
+        "responsible": "QA",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": "PM"
+      },
+      {
+        "activity": "Demo to client and collect feedback",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client SPOC, Client sponsor"
+      },
+      {
+        "activity": "Send status report and EOD updates",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client SPOC, Client sponsor"
+      }
+    ],
+    "clientTouchpoints": [
+      "Sprint demos",
+      "Weekly status reports",
+      "EOD updates if agreed"
+    ],
+    "artifacts": [
+      "sprint",
+      "status-report-rag",
+      "eod-update",
+      "mom",
+      "raid-log-template",
+      "build"
+    ],
+    "typicalDuration": "Typically 2-week sprints, repeated until the scope is built",
+    "pitfalls": [
+      "Treating demo feedback as free changes",
+      "Hiding slippage behind a green RAG",
+      "QA left until the end"
+    ],
+    "moduleId": "pmp-a08",
+    "sources": [
+      {
+        "label": "Atlassian: Sprint planning",
+        "url": "https://www.atlassian.com/agile/scrum/sprint-planning",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: Sprint reviews",
+        "url": "https://www.atlassian.com/agile/scrum/sprint-reviews",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-scope-control",
+    "projectType": "custom",
+    "order": 9,
+    "name": "Scope control: CR, enhancement, bug",
+    "purpose": "Classify every new client request as a bug, enhancement, change request, new feature or clarification, and handle it with the right process and billing before work starts.",
+    "entryCriteria": [
+      "A new request arrives from the client",
+      "Scope baseline and acceptance criteria exist"
+    ],
+    "exitCriteria": [
+      "Request classified and recorded",
+      "CRs estimated, priced and approved in writing before work",
+      "Plan and status report updated"
+    ],
+    "raci": [
+      {
+        "activity": "Classify the request",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, QA",
+        "informed": ""
+      },
+      {
+        "activity": "Estimate impact on time and cost",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "Developers",
+        "informed": ""
+      },
+      {
+        "activity": "Write and send the CR",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "BD/Account manager",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Approve the CR",
+        "responsible": "Client sponsor",
+        "accountable": "Client sponsor",
+        "consulted": "Client SPOC",
+        "informed": "PM, Tech lead"
+      },
+      {
+        "activity": "Replan and communicate",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client SPOC, Developers"
+      }
+    ],
+    "clientTouchpoints": [
+      "CR walkthrough call",
+      "Written CR approval"
+    ],
+    "artifacts": [
+      "cr-form",
+      "change-request",
+      "enhancement",
+      "bug",
+      "new-feature",
+      "clarification",
+      "scope-baseline"
+    ],
+    "typicalDuration": "Typically ongoing through delivery; each CR typically takes 1–5 working days to estimate and approve",
+    "pitfalls": [
+      "Starting CR work before written approval",
+      "Calling a change 'small' and absorbing it",
+      "Classifying a missed requirement as a CR, or a CR as a bug"
+    ],
+    "moduleId": "pmp-a09",
+    "sources": [
+      {
+        "label": "Atlassian: Scope creep",
+        "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Change request",
+        "url": "https://www.lawinsider.com/dictionary/change-request",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-qa-uat",
+    "projectType": "custom",
+    "order": 10,
+    "name": "QA, UAT & sign-off",
+    "purpose": "Verify the product internally (QA, regression, smoke tests), then let the client validate it against the acceptance criteria in UAT and give written UAT sign-off.",
+    "entryCriteria": [
+      "Build feature-complete on the UAT environment",
+      "Internal QA passed with no open blockers",
+      "Test cases and UAT scenarios ready"
+    ],
+    "exitCriteria": [
+      "UAT feedback triaged into bugs, CRs and clarifications",
+      "Agreed bugs fixed and retested",
+      "Written UAT sign-off received",
+      "Known issues documented"
+    ],
+    "raci": [
+      {
+        "activity": "Run internal QA and regression",
+        "responsible": "QA",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": "PM"
+      },
+      {
+        "activity": "Prepare UAT scenarios and environment",
+        "responsible": "QA",
+        "accountable": "PM",
+        "consulted": "Client SPOC",
+        "informed": ""
+      },
+      {
+        "activity": "Perform UAT",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM, QA",
+        "informed": ""
+      },
+      {
+        "activity": "Triage UAT feedback",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, QA",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Sign off UAT",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": "Tech lead, BD/Account manager"
+      }
+    ],
+    "clientTouchpoints": [
+      "UAT walkthrough",
+      "UAT feedback review",
+      "Written UAT sign-off"
+    ],
+    "artifacts": [
+      "qa",
+      "uat",
+      "regression-test",
+      "smoke-test",
+      "uat-signoff",
+      "known-issues",
+      "uat-environment"
+    ],
+    "typicalDuration": "Typically 1–3 weeks",
+    "pitfalls": [
+      "UAT feedback containing new features accepted as bugs",
+      "Open-ended UAT with no end date",
+      "Go-live without written sign-off"
+    ],
+    "moduleId": "pmp-a10",
+    "sources": [
+      {
+        "label": "Law Insider: Acceptance testing",
+        "url": "https://www.lawinsider.com/dictionary/acceptance-testing",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "GOV.UK Service Manual: How the beta phase works",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-beta-phase-works",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-release",
+    "projectType": "custom",
+    "order": 11,
+    "name": "Release & go-live",
+    "purpose": "Deploy to production and make the product available to users in a controlled way: go/no-go decision, cutover, store submission for apps, smoke test and rollback plan.",
+    "entryCriteria": [
+      "UAT signed off",
+      "Production environment and client-owned accounts ready",
+      "Go-live checklist prepared"
+    ],
+    "exitCriteria": [
+      "Go/no-go decision recorded",
+      "Production deployed and smoke-tested",
+      "Apps approved and published where relevant",
+      "Go-live announcement sent"
+    ],
+    "raci": [
+      {
+        "activity": "Prepare go-live checklist and rollback plan",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "QA, Developers",
+        "informed": ""
+      },
+      {
+        "activity": "Go/no-go decision",
+        "responsible": "PM",
+        "accountable": "Client sponsor",
+        "consulted": "Tech lead, QA",
+        "informed": "BD/Account manager"
+      },
+      {
+        "activity": "Deploy and run cutover",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": "PM"
+      },
+      {
+        "activity": "Submit apps to the stores",
+        "responsible": "Developers",
+        "accountable": "PM",
+        "consulted": "Client SPOC",
+        "informed": ""
+      },
+      {
+        "activity": "Smoke test and confirm go-live",
+        "responsible": "QA",
+        "accountable": "PM",
+        "consulted": "Client SPOC",
+        "informed": "Client sponsor"
+      }
+    ],
+    "clientTouchpoints": [
+      "Go/no-go meeting",
+      "Go-live communication",
+      "Store account access"
+    ],
+    "artifacts": [
+      "golive-checklist",
+      "go-no-go",
+      "cutover",
+      "rollback",
+      "deployment",
+      "go-live",
+      "production-environment"
+    ],
+    "typicalDuration": "Typically 1–5 working days, plus store review time for mobile apps",
+    "pitfalls": [
+      "Releasing on a Friday evening or before a holiday",
+      "No tested rollback plan",
+      "Store accounts not ready in the client's name"
+    ],
+    "moduleId": "pmp-a11",
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: Deploying software regularly",
+        "url": "https://www.gov.uk/service-manual/technology/deploying-software-regularly",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Go-live",
+        "url": "https://www.lawinsider.com/dictionary/go-live",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-hypercare",
+    "projectType": "custom",
+    "order": 12,
+    "name": "Hypercare & warranty",
+    "purpose": "Watch the live product closely right after go-live, fix launch issues fast, and handle warranty claims for defects against the agreed scope.",
+    "entryCriteria": [
+      "Product live in production",
+      "Hypercare period and contacts agreed"
+    ],
+    "exitCriteria": [
+      "Hypercare period ended",
+      "Launch issues resolved or moved to support",
+      "Hypercare log reviewed with the client"
+    ],
+    "raci": [
+      {
+        "activity": "Monitor production and triage issues",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": "PM"
+      },
+      {
+        "activity": "Log and classify reported issues",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "QA",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Fix warranty bugs",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": "PM"
+      },
+      {
+        "activity": "Review hypercare log with client",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client SPOC, Client sponsor"
+      }
+    ],
+    "clientTouchpoints": [
+      "Daily or frequent check-ins in the first days",
+      "Hypercare log review"
+    ],
+    "artifacts": [
+      "hypercare-log",
+      "hypercare",
+      "warranty",
+      "hotfix",
+      "severity",
+      "priority"
+    ],
+    "typicalDuration": "Typically 1–4 weeks of hypercare; warranty typically 30–90 days after go-live",
+    "pitfalls": [
+      "Treating new requests as warranty bugs",
+      "No clear end of hypercare",
+      "Hotfixes deployed without approval or testing"
+    ],
+    "moduleId": "pmp-a12",
+    "sources": [
+      {
+        "label": "Law Insider: Hypercare",
+        "url": "https://www.lawinsider.com/dictionary/hypercare",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Warranty period",
+        "url": "https://www.lawinsider.com/dictionary/warranty-period",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-handover",
+    "projectType": "custom",
+    "order": 13,
+    "name": "Handover & KT",
+    "purpose": "Hand over source code, credentials, documentation and knowledge so the client or its next team can own and operate the product.",
+    "entryCriteria": [
+      "Final payment received or as per the contract",
+      "Hypercare complete or near completion"
+    ],
+    "exitCriteria": [
+      "Source code and assets handed over as per the contract",
+      "Credentials transferred and agency access reviewed",
+      "KT sessions held and recorded",
+      "Handover checklist signed"
+    ],
+    "raci": [
+      {
+        "activity": "Prepare handover and KT checklist",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": ""
+      },
+      {
+        "activity": "Hand over code, documentation and credentials",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "Developers",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Run KT sessions",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "Developers",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Confirm handover acceptance",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": "BD/Account manager"
+      }
+    ],
+    "clientTouchpoints": [
+      "KT sessions",
+      "Handover sign-off"
+    ],
+    "artifacts": [
+      "handover-kt-checklist",
+      "source-code-handover",
+      "knowledge-transfer",
+      "handover",
+      "ip-ownership"
+    ],
+    "typicalDuration": "Typically 1–2 weeks",
+    "pitfalls": [
+      "Handing over code before payment terms are met",
+      "Credentials kept in personal accounts",
+      "No recorded KT"
+    ],
+    "moduleId": "pmp-a13",
+    "sources": [
+      {
+        "label": "Law Insider: Knowledge transfer",
+        "url": "https://www.lawinsider.com/dictionary/knowledge-transfer",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-support",
+    "projectType": "custom",
+    "order": 14,
+    "name": "Support, AMC & retainers",
+    "purpose": "Run the product after warranty under an agreed support model (AMC, retainer, T&M support), with SLAs for response and resolution.",
+    "entryCriteria": [
+      "Warranty ended or support contract signed",
+      "SLA and support channel agreed"
+    ],
+    "exitCriteria": [
+      "Tickets handled within SLA",
+      "Monthly or quarterly support reports sent",
+      "Renewal discussed before expiry"
+    ],
+    "raci": [
+      {
+        "activity": "Receive and triage tickets",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "QA",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Fix and deploy support items",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": "PM"
+      },
+      {
+        "activity": "Report SLA performance",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client sponsor"
+      },
+      {
+        "activity": "Propose renewal or upgrade",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": "Client sponsor"
+      }
+    ],
+    "clientTouchpoints": [
+      "Support tickets",
+      "Periodic support reports",
+      "QBR for larger accounts"
+    ],
+    "artifacts": [
+      "amc",
+      "support",
+      "maintenance",
+      "sla",
+      "retainer",
+      "renewal",
+      "status-report-rag"
+    ],
+    "typicalDuration": "Typically ongoing, on monthly or yearly terms",
+    "pitfalls": [
+      "Doing support work with no active plan",
+      "No record of hours used under a retainer",
+      "Letting the plan expire without a renewal conversation"
+    ],
+    "moduleId": "pmp-a14",
+    "sources": [
+      {
+        "label": "Atlassian: What is an SLA?",
+        "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "GOV.UK Service Manual: How the live phase works",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-live-phase-works",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "custom-closure",
+    "projectType": "custom",
+    "order": 15,
+    "name": "Closure",
+    "purpose": "Formally close the project: confirm all deliverables and payments, run a retrospective, write the closure report, archive the project and identify follow-on opportunities.",
+    "entryCriteria": [
+      "Handover complete",
+      "All milestones invoiced"
+    ],
+    "exitCriteria": [
+      "Closure report shared",
+      "Retrospective held and lessons recorded",
+      "Project archived and access removed",
+      "Case study or referral asked for where appropriate"
+    ],
+    "raci": [
+      {
+        "activity": "Run retrospective",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, Developers, QA, Designer",
+        "informed": ""
+      },
+      {
+        "activity": "Write closure report",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead, BD/Account manager",
+        "informed": "Client sponsor"
+      },
+      {
+        "activity": "Confirm final payments",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": ""
+      },
+      {
+        "activity": "Ask for feedback, testimonial or next phase",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": "Client sponsor"
+      }
+    ],
+    "clientTouchpoints": [
+      "Closure meeting",
+      "Feedback request"
+    ],
+    "artifacts": [
+      "closure-report",
+      "retrospective",
+      "closure",
+      "phase-2"
+    ],
+    "typicalDuration": "Typically 1–2 weeks",
+    "pitfalls": [
+      "Projects that never formally close",
+      "Lessons learned not shared with other PMs",
+      "Forgetting to remove access"
+    ],
+    "moduleId": "pmp-a15",
+    "sources": [
+      {
+        "label": "Law Insider: Project closure",
+        "url": "https://www.lawinsider.com/dictionary/project-closure",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian Team Playbook: Retrospective",
+        "url": "https://www.atlassian.com/team-playbook/plays/retrospective",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-demo-call",
+    "projectType": "whitelabel",
+    "order": 1,
+    "name": "Demo & requirement call",
+    "purpose": "Show the client the white-label product as it is, and capture what it needs: brand, markets, languages, payment and messaging providers, and any gaps from the standard product.",
+    "entryCriteria": [
+      "Qualified lead or signed interest",
+      "Demo environment working"
+    ],
+    "exitCriteria": [
+      "Demo given and recorded in a MoM",
+      "Requirement capture sheet filled",
+      "Gaps listed for analysis"
+    ],
+    "raci": [
+      {
+        "activity": "Run product demo",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": "Client sponsor"
+      },
+      {
+        "activity": "Capture requirements and gaps",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "BD/Account manager, Tech lead",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Send MoM and next steps",
+        "responsible": "PM",
+        "accountable": "BD/Account manager",
+        "consulted": "",
+        "informed": "Client sponsor, Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Demo call",
+      "Requirement capture call"
+    ],
+    "artifacts": [
+      "mom",
+      "white-label",
+      "core-product",
+      "configuration"
+    ],
+    "typicalDuration": "Typically 1–2 calls within a week",
+    "pitfalls": [
+      "Promising features the core does not have",
+      "Not asking about payment gateways and countries early",
+      "Demo on a broken or outdated environment"
+    ],
+    "moduleId": "pmp-b02",
+    "sources": [
+      {
+        "label": "Investopedia: White label product",
+        "url": "https://www.investopedia.com/terms/w/white-label-product.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-gap-analysis",
+    "projectType": "whitelabel",
+    "order": 2,
+    "name": "Gap analysis",
+    "purpose": "Classify each client need as out of the box, configuration or customisation, and estimate and price the customisations before setup starts.",
+    "entryCriteria": [
+      "Requirement capture complete"
+    ],
+    "exitCriteria": [
+      "Every requirement classified",
+      "Customisations estimated and quoted",
+      "Client approves scope and price"
+    ],
+    "raci": [
+      {
+        "activity": "Classify requirements (OOTB, config, custom)",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": ""
+      },
+      {
+        "activity": "Estimate customisations",
+        "responsible": "Tech lead",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": "PM"
+      },
+      {
+        "activity": "Price customisations and setup",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": ""
+      },
+      {
+        "activity": "Approve gap-analysis scope",
+        "responsible": "Client sponsor",
+        "accountable": "Client sponsor",
+        "consulted": "Client SPOC",
+        "informed": "PM"
+      }
+    ],
+    "clientTouchpoints": [
+      "Gap-analysis walkthrough call",
+      "Written approval of scope and quote"
+    ],
+    "artifacts": [
+      "configuration",
+      "customisation",
+      "custom-module",
+      "estimate",
+      "setup-fee",
+      "change-request"
+    ],
+    "typicalDuration": "Typically 2–7 working days",
+    "pitfalls": [
+      "Accepting customisations inside core files",
+      "Calling customisations 'configuration' to close the sale",
+      "No written approval of gaps"
+    ],
+    "moduleId": "pmp-b03",
+    "sources": [
+      {
+        "label": "Microsoft Learn: Tenancy models for a multitenant solution",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-brand-kit",
+    "projectType": "whitelabel",
+    "order": 3,
+    "name": "Collecting the brand kit",
+    "purpose": "Collect all brand assets and content needed for rebranding in the right formats and sizes.",
+    "entryCriteria": [
+      "Scope and price approved",
+      "Brand-kit checklist sent to the client"
+    ],
+    "exitCriteria": [
+      "All brand assets received and checked",
+      "App names and listing texts confirmed"
+    ],
+    "raci": [
+      {
+        "activity": "Send brand-kit checklist",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Designer",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Provide brand assets",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "Designer",
+        "informed": ""
+      },
+      {
+        "activity": "Check asset quality and formats",
+        "responsible": "Designer",
+        "accountable": "PM",
+        "consulted": "",
+        "informed": "Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Brand-kit request",
+      "Asset review feedback"
+    ],
+    "artifacts": [
+      "brand-kit",
+      "rebranding",
+      "theming",
+      "whitelabel-onboarding"
+    ],
+    "typicalDuration": "Typically 3–10 working days, depending on the client",
+    "pitfalls": [
+      "Low-resolution logos",
+      "Missing dark-mode or icon variants",
+      "Assets arriving after builds start"
+    ],
+    "moduleId": "pmp-b04",
+    "sources": [
+      {
+        "label": "Law Insider: Brand guidelines",
+        "url": "https://www.lawinsider.com/dictionary/brand-guidelines",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-accounts",
+    "projectType": "whitelabel",
+    "order": 4,
+    "name": "Client-owned accounts",
+    "purpose": "Make sure the client opens and owns every account the product needs (Apple, Google Play, hosting, domain, payment, messaging) and grants Oyelabs the right access.",
+    "entryCriteria": [
+      "Onboarding checklist sent",
+      "Client legal entity details known"
+    ],
+    "exitCriteria": [
+      "All accounts active in the client's name",
+      "Oyelabs invited with agreed roles",
+      "Keys shared through a secure channel"
+    ],
+    "raci": [
+      {
+        "activity": "Send account checklist and guides",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Open accounts and complete verification",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": ""
+      },
+      {
+        "activity": "Invite Oyelabs with required roles",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "Tech lead",
+        "informed": ""
+      },
+      {
+        "activity": "Verify access and record in instance register",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "Developers",
+        "informed": ""
+      }
+    ],
+    "clientTouchpoints": [
+      "Account setup call",
+      "Verification follow-ups"
+    ],
+    "artifacts": [
+      "client-owned-accounts",
+      "apple-developer-account",
+      "google-play-console",
+      "hosting-account",
+      "domain-ownership",
+      "payment-gateway-account",
+      "messaging-provider-accounts",
+      "api-keys",
+      "whitelabel-onboarding"
+    ],
+    "typicalDuration": "Typically 1–3 weeks, mainly waiting for store and payment verification",
+    "pitfalls": [
+      "Starting Apple organisation enrolment late",
+      "Accounts opened in a freelancer's or agency's name",
+      "Keys shared over chat or email"
+    ],
+    "moduleId": "pmp-b05",
+    "sources": [
+      {
+        "label": "Apple Developer Program: Enrol (individuals and organisations)",
+        "url": "https://developer.apple.com/programs/enroll/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Add developer account users and manage permissions",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9844686",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-configuration",
+    "projectType": "whitelabel",
+    "order": 5,
+    "name": "Configuration & custom modules",
+    "purpose": "Set up the client instance: apply theme and branding, configure business settings, switch on features and build approved custom modules as separate modules.",
+    "entryCriteria": [
+      "Brand kit received",
+      "Gap analysis approved",
+      "Hosting account ready"
+    ],
+    "exitCriteria": [
+      "Instance configured and branded",
+      "Approved custom modules built and tested",
+      "Configuration recorded"
+    ],
+    "raci": [
+      {
+        "activity": "Set up instance and apply branding",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "Designer",
+        "informed": "PM"
+      },
+      {
+        "activity": "Configure business settings and toggles",
+        "responsible": "Developers",
+        "accountable": "PM",
+        "consulted": "Client SPOC",
+        "informed": ""
+      },
+      {
+        "activity": "Build approved custom modules",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": "PM"
+      },
+      {
+        "activity": "Approve configuration values",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": ""
+      }
+    ],
+    "clientTouchpoints": [
+      "Configuration values confirmation",
+      "Progress updates"
+    ],
+    "artifacts": [
+      "configuration-panel",
+      "feature-toggle",
+      "custom-module",
+      "theming",
+      "client-instance",
+      "status-report-rag"
+    ],
+    "typicalDuration": "Typically 1–3 weeks, longer with custom modules",
+    "pitfalls": [
+      "Customisation creeping in as 'small tweaks'",
+      "Undocumented configuration values",
+      "Custom code written into core files"
+    ],
+    "moduleId": "pmp-b06",
+    "sources": [
+      {
+        "label": "Martin Fowler: Feature Toggles (aka Feature Flags)",
+        "url": "https://martinfowler.com/articles/feature-toggles.html",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "The Twelve-Factor App: Config",
+        "url": "https://12factor.net/config",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-builds-qa",
+    "projectType": "whitelabel",
+    "order": 6,
+    "name": "Rebranded builds, QA & UAT",
+    "purpose": "Produce the rebranded app builds and panels, test them for branding and configuration correctness and regression, and get the client's UAT sign-off.",
+    "entryCriteria": [
+      "Instance configured",
+      "Bundle ID and package name set"
+    ],
+    "exitCriteria": [
+      "Rebranded builds pass QA",
+      "Client UAT done",
+      "UAT sign-off received"
+    ],
+    "raci": [
+      {
+        "activity": "Generate rebranded builds",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "",
+        "informed": "PM"
+      },
+      {
+        "activity": "Test branding, configuration and regression",
+        "responsible": "QA",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": "PM"
+      },
+      {
+        "activity": "Distribute test builds (TestFlight, internal testing)",
+        "responsible": "Developers",
+        "accountable": "PM",
+        "consulted": "",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Perform UAT and sign off",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM, QA",
+        "informed": ""
+      }
+    ],
+    "clientTouchpoints": [
+      "Test builds",
+      "UAT feedback",
+      "UAT sign-off"
+    ],
+    "artifacts": [
+      "build",
+      "qa",
+      "uat",
+      "uat-signoff",
+      "bundle-id",
+      "package-name",
+      "regression-test"
+    ],
+    "typicalDuration": "Typically 1–2 weeks",
+    "pitfalls": [
+      "Demo product name or logo left in a screen or email",
+      "Wrong bundle ID or package name",
+      "UAT feedback that is really customisation"
+    ],
+    "moduleId": "pmp-b07",
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: How the beta phase works",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-beta-phase-works",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-store-listing",
+    "projectType": "whitelabel",
+    "order": 7,
+    "name": "Store listing preparation",
+    "purpose": "Prepare store listings and compliance details: app names, descriptions, screenshots, privacy policy URL, privacy declarations, age ratings and review notes.",
+    "entryCriteria": [
+      "Store accounts active",
+      "Final rebranded builds available"
+    ],
+    "exitCriteria": [
+      "All listing assets uploaded",
+      "Privacy policy live on the client's domain",
+      "Privacy and data declarations completed",
+      "Review notes and demo credentials ready"
+    ],
+    "raci": [
+      {
+        "activity": "Produce screenshots and graphics",
+        "responsible": "Designer",
+        "accountable": "PM",
+        "consulted": "",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Write listing text",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": ""
+      },
+      {
+        "activity": "Publish privacy policy",
+        "responsible": "Client SPOC",
+        "accountable": "Client sponsor",
+        "consulted": "PM",
+        "informed": ""
+      },
+      {
+        "activity": "Complete store forms and declarations",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Listing review",
+      "Privacy policy request"
+    ],
+    "artifacts": [
+      "store-listing-assets",
+      "privacy-policy-url",
+      "apple-developer-account",
+      "google-play-console"
+    ],
+    "typicalDuration": "Typically 3–7 working days",
+    "pitfalls": [
+      "Placeholder or copied descriptions",
+      "Privacy policy that does not match data collected",
+      "No demo credentials for the reviewer"
+    ],
+    "moduleId": "pmp-b08",
+    "sources": [
+      {
+        "label": "App Store Connect Help: Screenshot specifications",
+        "url": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Add preview assets to showcase your app",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9866151",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-submission",
+    "projectType": "whitelabel",
+    "order": 8,
+    "name": "Submission, rejection & resubmission",
+    "purpose": "Submit the apps for store review, track the review, respond to rejections and resubmit until approved.",
+    "entryCriteria": [
+      "Store listings complete",
+      "UAT signed off"
+    ],
+    "exitCriteria": [
+      "Apps approved by Apple and Google",
+      "Rejections logged with cause and fix"
+    ],
+    "raci": [
+      {
+        "activity": "Submit apps for review",
+        "responsible": "Developers",
+        "accountable": "PM",
+        "consulted": "",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Analyse rejections",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Tech lead",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Fix and resubmit",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "PM",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Communicate review status",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "",
+        "informed": "Client sponsor, Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Submission status updates",
+      "Rejection explanation and plan"
+    ],
+    "artifacts": [
+      "app-review-rejection",
+      "resubmission",
+      "apple-developer-account",
+      "google-play-console"
+    ],
+    "typicalDuration": "Typically 2–7 days, longer if rejected",
+    "pitfalls": [
+      "Submitting from an agency account (Guideline 4.2.6 risk)",
+      "Arguing with the reviewer instead of fixing",
+      "Not telling the client a launch date depends on review"
+    ],
+    "moduleId": "pmp-b09",
+    "sources": [
+      {
+        "label": "Apple: App Review Guidelines (incl. 4.2.6 and 5.1.1)",
+        "url": "https://developer.apple.com/app-store/review/guidelines/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "App Store Connect Help: Overview of submitting for review",
+        "url": "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/overview-of-submitting-for-review",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-golive",
+    "projectType": "whitelabel",
+    "order": 9,
+    "name": "Go-live, licence & support plan",
+    "purpose": "Launch the client instance and apps, start the licence or subscription, and put the support plan and escalation path in place.",
+    "entryCriteria": [
+      "Apps approved",
+      "Production instance ready",
+      "Setup fee paid as per the contract"
+    ],
+    "exitCriteria": [
+      "Instance live and smoke-tested",
+      "Subscription or licence active",
+      "Support plan, SLA and escalation matrix shared",
+      "Admin training done"
+    ],
+    "raci": [
+      {
+        "activity": "Run go-live checklist",
+        "responsible": "Tech lead",
+        "accountable": "PM",
+        "consulted": "QA",
+        "informed": ""
+      },
+      {
+        "activity": "Release apps and switch on production",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "",
+        "informed": "PM"
+      },
+      {
+        "activity": "Activate subscription and support plan",
+        "responsible": "BD/Account manager",
+        "accountable": "BD/Account manager",
+        "consulted": "PM",
+        "informed": "Client sponsor"
+      },
+      {
+        "activity": "Train client admins",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "Developers",
+        "informed": "Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Go-live call",
+      "Admin training",
+      "Support plan handover"
+    ],
+    "artifacts": [
+      "golive-checklist",
+      "go-live",
+      "subscription-plan",
+      "sla",
+      "escalation-matrix-template",
+      "support"
+    ],
+    "typicalDuration": "Typically 1–3 working days",
+    "pitfalls": [
+      "Going live before payment terms are met",
+      "Client admins never trained",
+      "No agreed support channel"
+    ],
+    "moduleId": "pmp-b10",
+    "sources": [
+      {
+        "label": "Law Insider: Go-live",
+        "url": "https://www.lawinsider.com/dictionary/go-live",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: What is an SLA?",
+        "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "wl-core-upgrades",
+    "projectType": "whitelabel",
+    "order": 10,
+    "name": "Core product upgrades",
+    "purpose": "Keep each client instance on a supported core version: plan, test and roll out core upgrades, and manage custom modules and merge conflicts.",
+    "entryCriteria": [
+      "New core version released",
+      "Instance register shows which clients need it"
+    ],
+    "exitCriteria": [
+      "Instance upgraded and regression-tested",
+      "Client informed of changes",
+      "Instance register updated"
+    ],
+    "raci": [
+      {
+        "activity": "Assess upgrade impact on custom modules",
+        "responsible": "Tech lead",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": "PM"
+      },
+      {
+        "activity": "Plan and communicate upgrade",
+        "responsible": "PM",
+        "accountable": "PM",
+        "consulted": "BD/Account manager",
+        "informed": "Client SPOC"
+      },
+      {
+        "activity": "Upgrade and resolve conflicts",
+        "responsible": "Developers",
+        "accountable": "Tech lead",
+        "consulted": "QA",
+        "informed": ""
+      },
+      {
+        "activity": "Regression-test and release",
+        "responsible": "QA",
+        "accountable": "Tech lead",
+        "consulted": "Developers",
+        "informed": "PM, Client SPOC"
+      }
+    ],
+    "clientTouchpoints": [
+      "Upgrade notice and release notes",
+      "Quote for customisation impact if any"
+    ],
+    "artifacts": [
+      "core-upgrade",
+      "version-sync",
+      "product-version",
+      "customisation-merge-conflicts",
+      "custom-module",
+      "regression-test"
+    ],
+    "typicalDuration": "Typically hours to days per instance; longer for heavily customised or forked instances",
+    "pitfalls": [
+      "Instances left many versions behind",
+      "Customisation impact discovered mid-upgrade",
+      "Store SDK deadlines missed"
+    ],
+    "moduleId": "pmp-b11",
+    "sources": [
+      {
+        "label": "GitHub Docs: Syncing a fork",
+        "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Semantic Versioning 2.0.0",
+        "url": "https://semver.org/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm"
+  }
+]

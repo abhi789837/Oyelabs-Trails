@@ -17,6 +17,7 @@ import type { Db } from "../../db";
 import * as schema from "../../db/schema";
 import { now } from "../../lib/ids";
 import { getSetup } from "../../setup/repo";
+import { allowsRoleplay, compactEntry, isProcessSkill, loadHandbookIndex, mergePicks, pickEntries } from "./grounding";
 
 /**
  * Step 1 of a personalised assessment: read the admin's intent.
@@ -38,9 +39,15 @@ Return JSON:
   clients", "Laravel", "Keka timesheets", "delayed release").
 - slots: 25 proposed questions, 18 handsOn and 7 mcq. Use only skill ids given. Put more slots on
   what the description stresses, within the priorities. subtype: for handsOn "code" (engineering)
-  or a task kind (write, rank, calculate, scenario, spot, excel, allocate, sim); for mcq "mcq-code"
+  or a task kind (write, rank, calculate, scenario, spot, excel, allocate, sim, categorize, form, roleplay;
+  categorize and form suit PM skills: classifying requests, gap analysis, CRs, minutes, status); for mcq "mcq-code"
   or "mcq-text". difficulty 1-5 fitting the level. hint: one short scenario line in the person's
   own context (max 20 words).
+Process skills (ids in "processSkillIds") are about how Oyelabs runs projects: "handbook" lists the
+company handbook entries for them. For their hands-on slots prefer categorize (classify a client
+request as bug / enhancement / change request / new feature, or a white-label gap analysis), form
+(a CR, minutes, a status report or a handbook template) and, for pm-proc-meetings and
+pm-client-management only, roleplay (a 2-3 reply client conversation). Name the handbook idea in the hint.
 Never use a skipped skill. Keep every question small: about 60-80 seconds hands-on, 30-50 MCQ.`;
 
 export interface ProfileInput {
@@ -93,6 +100,18 @@ export function subtypeDefaults(catalog: Catalog, format: "coding" | "tasks") {
 }
 
 /**
+ * v4.2: the handbook entries for the prioritised process skills (about 12 in all), so the plan can
+ * propose categorize, form and role-play slots for them. Not part of the cache key: the profile is.
+ */
+export function handbookContext(db: Db, catalog: Catalog, skillIds: readonly string[]): { processSkillIds?: string[]; handbook?: Record<string, unknown>[] } {
+  const skills = skillIds.map((id) => catalog.skills.find((s) => s.id === id)).filter((s): s is Catalog["skills"][number] => isProcessSkill(s));
+  if (skills.length === 0) return {};
+  const index = loadHandbookIndex(db);
+  const refs = mergePicks(skills.map((skill) => pickEntries(index, { skill })));
+  return { processSkillIds: skills.map((s) => s.id), handbook: refs.map((ref) => compactEntry(index.get(ref)!)) };
+}
+
+/**
  * Understandings by input hash, so the Setup screen's preview and the job that follows "Save &
  * assign" make one model call between them. Small and process-local on purpose.
  */
@@ -130,7 +149,7 @@ export async function understandSetup(
         purpose: "assessment_plan",
         task: "understand",
         system: UNDERSTAND_SYSTEM,
-        user: JSON.stringify(profile),
+        user: JSON.stringify({ ...profile, ...handbookContext(deps.db, catalog, setup.priorities.map((p) => p.skillId)) }),
         schema: understandingResponseSchema,
         schemaName: "assessment_plan",
         meta: { subjectUserId: options.userId, assessmentId: options.assessmentId },
@@ -160,6 +179,7 @@ export async function understandSetup(
     difficultyOrder: difficultyOrder(setup.level, setup.experienceBand),
     defaultHandsOn: defaults.handsOn,
     defaultMcq: defaults.mcq,
+    allowSubtype: (skillId, subtype) => subtype !== "roleplay" || allowsRoleplay(skillId),
   });
   const understanding: Understanding = { intent, themes, slots, split: splitOf(slots), source, createdAt: now() };
   remember(key, understanding);

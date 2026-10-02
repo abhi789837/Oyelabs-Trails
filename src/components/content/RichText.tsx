@@ -1,11 +1,14 @@
 import { Fragment, type ReactNode } from "react";
 
+import { TermLink } from "@/features/handbook/TermLink";
+import { splitTermLinks } from "@/features/handbook/termLinks";
 import { cn } from "@/lib/utils";
 
 /*
  * The curriculum's deliberately small Markdown subset:
  *   paragraphs (blank-line separated), "- " bullet lists, "1. " numbered lists,
  *   `inline code`, **bold**, *emphasis*, and fenced ```lang code blocks (highlighted for JS/TS/JSX).
+ * v4.2: `[[term:id]]` and `[[term:id|label]]` render as handbook term links (not inside code).
  */
 
 type Block =
@@ -71,13 +74,33 @@ export function InlineText({ text }: { text: string }) {
           );
         }
         if (part.length > 4 && part.startsWith("**") && part.endsWith("**")) {
-          return <strong key={i}>{part.slice(2, -2)}</strong>;
+          return (
+            <strong key={i}>
+              <TermText text={part.slice(2, -2)} />
+            </strong>
+          );
         }
         if (part.length > 2 && part.startsWith("*") && part.endsWith("*")) {
-          return <em key={i}>{part.slice(1, -1)}</em>;
+          return (
+            <em key={i}>
+              <TermText text={part.slice(1, -1)} />
+            </em>
+          );
         }
-        return <Fragment key={i}>{part}</Fragment>;
+        return <TermText key={i} text={part} />;
       })}
+    </>
+  );
+}
+
+/** Plain text with any handbook term links turned into `TermLink`s. */
+export function TermText({ text }: { text: string }) {
+  if (!text.includes("[[term:")) return <>{text}</>;
+  return (
+    <>
+      {splitTermLinks(text).map((segment, i) =>
+        segment.kind === "term" ? <TermLink key={i} id={segment.id} label={segment.label} /> : <Fragment key={i}>{segment.text}</Fragment>,
+      )}
     </>
   );
 }

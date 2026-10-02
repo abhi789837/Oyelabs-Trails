@@ -101,8 +101,8 @@ describe("catalog seed", () => {
         for (const m of s.contentModules) expect(REGISTRY_MODULE_IDS.has(m), `${s.id} -> ${m}`).toBe(true);
       } else {
         // AI-for-your-role skills point at the department's dedicated AI camp.
-        // v4.1 agency PM skills have their own camps (`pma-*`); the rest follow the level ladder.
-        if (s.contentModules.some((m) => m.startsWith("pma-")) || s.id === "pm-foundations-theory") continue;
+        // v4.1 agency PM skills (`pma-*`) and the v4.2 process academy (`pmp-*`) have their own camps.
+        if (s.contentModules.some((m) => m.startsWith("pma-") || m.startsWith("pmp-")) || s.id === "pm-foundations-theory") continue;
         expect(s.contentModules, s.id).toEqual([s.isAiSkill ? `${s.departmentId}-ai` : pmBd(s.departmentId, s.levelMin)]);
       }
     }
@@ -113,6 +113,22 @@ describe("catalog seed", () => {
       const own = SEED_SKILLS.filter((s) => s.departmentId === d.id);
       expect(own.length, d.id).toBeGreaterThanOrEqual(MIN_SKILLS[d.id]!);
       expect(own.some((s) => s.isAiSkill), d.id).toBe(true);
+    }
+  });
+
+  it("offers BD the white-label and terminology process courses, optional and on the PM-trail camps (v4.2)", () => {
+    const camps = (letter: string, n: number) => Array.from({ length: n }, (_, i) => `pmp-${letter}${String(i + 1).padStart(2, "0")}`);
+    const wl = SEED_SKILLS.find((s) => s.id === "bd-proc-whitelabel")!;
+    const terms = SEED_SKILLS.find((s) => s.id === "bd-proc-terms")!;
+    expect(wl).toMatchObject({ departmentId: "bd", name: "White-label projects (for BD)", area: "Delivery language for BD" });
+    expect(terms).toMatchObject({ departmentId: "bd", name: "Project terminology (for BD)", area: "Delivery language for BD" });
+    expect(wl.contentModules).toEqual(camps("b", 12));
+    expect(terms.contentModules).toEqual(camps("c", 8));
+    for (const s of [wl, terms]) {
+      expect(s.defaultSlider, s.id).toBeUndefined();
+      expect(s.tags, s.id).toContain("process");
+      expect(s.trackIds.sort(), s.id).toEqual(SEED_TRACKS.filter((t) => t.departmentId === "bd").map((t) => t.id).sort());
+      for (const m of s.contentModules) expect(REGISTRY_MODULE_IDS.has(m), `${s.id} -> ${m}`).toBe(true);
     }
   });
 

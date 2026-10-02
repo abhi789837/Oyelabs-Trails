@@ -7,8 +7,9 @@ import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3"
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import { ensureCatalogSeed } from "../catalog/repo";
-import { applyDepartmentDefaults, migrateLegacyPriorities } from "../setup/repo";
+import { applyDepartmentDefaults, applyV42PmDefaults, migrateLegacyPriorities } from "../setup/repo";
 import { ensureBankSeed } from "../bank/repo";
+import { ensureHandbookSeed } from "../handbook/repo";
 import type { Env } from "../env";
 import * as schema from "./schema";
 
@@ -69,10 +70,15 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
     ensureCatalogSeed(db);
     // Once per database: v3 targets and must-have lists become slider rows.
     migrateLegacyPriorities(db);
+    // v4.2 handbook: before the bank, so seed items can cite the entries' current versions.
+    // Invalid entries are logged and skipped; boot never fails on a seed.
+    ensureHandbookSeed(db);
     // v4 question bank: validated seed items, inserted when absent.
     ensureBankSeed(db);
     // v4.1: department default sliders for learners nobody has set priorities for (once).
     applyDepartmentDefaults(db);
+    // v4.2: process academy defaults for PM skills and untouched PM learners (once).
+    applyV42PmDefaults(db);
   }
   return { db, sqlite };
 }

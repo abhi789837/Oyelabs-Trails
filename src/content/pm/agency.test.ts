@@ -11,14 +11,16 @@ const modules = Object.values(files).map((m) => m.default);
 const pm = registry.find((t) => t.id === "pm")!;
 
 describe("agency PM courses", () => {
-  test("all 13 are on the PM trail, ahead of the generic theory", () => {
+  test("all 13 are on the PM trail, after the v4.2 process academy and ahead of the generic theory", () => {
     const ids = pm.modules.map((m) => m.id);
     const agency = ids.filter((id) => id.startsWith("pma-"));
+    const academy = ids.filter((id) => id.startsWith("pmp-"));
     expect(agency).toHaveLength(13);
     expect(modules).toHaveLength(13);
     const firstTheory = ids.indexOf("pm-beginner");
     expect(Math.max(...agency.map((id) => ids.indexOf(id)))).toBeLessThan(firstTheory);
-    expect(ids[0]).toBe("pma-refresh");
+    expect(Math.max(...academy.map((id) => ids.indexOf(id)))).toBeLessThan(ids.indexOf("pma-refresh"));
+    expect(ids[0]).toBe("pmp-a00");
   });
 
   test("every link and video carries its verification time", () => {

@@ -40,7 +40,16 @@ export const SIZE_LIMITS = {
   writeWords: 80,
   excelCells: 10,
   rankItems: 6,
+  /** v4.2 simulations, sized for one 80 s slot. */
+  categorizeItems: 6,
+  formFields: 3,
+  formContextWords: 80,
+  roleplayTurns: 3,
 } as const;
+
+/** v4.2: seconds per form field to fill, and per typed role-play reply. */
+export const FORM_FIELD_SEC = 20;
+export const ROLEPLAY_TURN_SEC = 25;
 
 export function words(text: string): number {
   return text.replace(/```[\s\S]*?```/g, " ").trim() ? text.replace(/```[\s\S]*?```/g, " ").trim().split(/\s+/).length : 0;
@@ -85,6 +94,12 @@ export interface ItemShape {
   /** Other reading: segments, steps, scenario text, table cells. */
   extraWords: number;
   decisions: number;
+  /** v4.2: form fields to fill (~20 s each). */
+  formFields: number;
+  /** v4.2: role-play replies to type (~25 s each). */
+  turns: number;
+  /** v4.2: items to categorise (~8 s each, counted as decisions). */
+  categorizeItems: number;
 }
 
 export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq" | "task">): ItemShape {
@@ -101,6 +116,9 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
     rankItems: 0,
     extraWords: 0,
     decisions: 0,
+    formFields: 0,
+    turns: 0,
+    categorizeItems: 0,
   };
   if (item.coding) {
     shape.starterLines = lines(item.coding.starterCode);
@@ -150,6 +168,24 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
         shape.decisions = questions.length || 1;
         break;
       }
+      case "categorize": {
+        const items = (t.items as { text: string }[] | undefined) ?? [];
+        const categories = (t.categories as { label: string }[] | undefined) ?? [];
+        shape.categorizeItems = items.length;
+        shape.decisions = items.length;
+        shape.extraWords = items.reduce((s, i) => s + words(i.text), 0) + categories.reduce((s, c) => s + words(c.label), 0);
+        break;
+      }
+      case "form": {
+        const fields = (t.fields as { label: string }[] | undefined) ?? [];
+        shape.formFields = fields.length;
+        shape.extraWords = words(String(t.context ?? "")) + fields.reduce((s, f) => s + words(f.label), 0);
+        break;
+      }
+      case "roleplay":
+        shape.turns = Number(t.maxTurns ?? 0);
+        shape.extraWords = words(String(t.brief ?? ""));
+        break;
     }
   }
   return shape;
@@ -159,7 +195,8 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
 export function estimateSeconds(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq" | "task">, c: TimingConstants = DEFAULT_TIMING): number {
   const s = shapeOf(item);
   const reading = ((s.promptWords + s.extraWords) / c.readWpm) * 60 + (s.readCodeLines + s.starterLines + s.snippetLines) * c.codeLineSec;
-  const work = s.changedLines * c.writeLineSec + s.cells * c.cellSec + (s.writeWords / c.writeWpm) * 60 + s.decisions * 8 + s.rankItems * 3;
+  const work =
+    s.changedLines * c.writeLineSec + s.cells * c.cellSec + (s.writeWords / c.writeWpm) * 60 + s.decisions * 8 + s.rankItems * 3 + s.formFields * FORM_FIELD_SEC + s.turns * ROLEPLAY_TURN_SEC;
   return Math.round(reading + work + c.thinkSec);
 }
 
@@ -179,6 +216,14 @@ export function sizeProblems(item: Pick<BankItem, "type" | "prompt" | "coding" |
   if (s.writeWords > SIZE_LIMITS.writeWords) out.push(`asks for ${s.writeWords} words (max ${SIZE_LIMITS.writeWords})`);
   if (s.cells > SIZE_LIMITS.excelCells && (item.task as { kind?: string } | null)?.kind === "excel") out.push(`touches ${s.cells} cells (max ${SIZE_LIMITS.excelCells})`);
   if (s.rankItems > SIZE_LIMITS.rankItems) out.push(`ranks ${s.rankItems} items (max ${SIZE_LIMITS.rankItems})`);
+  const kind = (item.task as { kind?: string } | null)?.kind;
+  if (kind === "categorize" && s.categorizeItems > SIZE_LIMITS.categorizeItems) out.push(`categorises ${s.categorizeItems} items (max ${SIZE_LIMITS.categorizeItems})`);
+  if (kind === "form") {
+    if (s.formFields > SIZE_LIMITS.formFields) out.push(`has ${s.formFields} fields (max ${SIZE_LIMITS.formFields})`);
+    const contextWords = words(String((item.task as { context?: string }).context ?? ""));
+    if (contextWords > SIZE_LIMITS.formContextWords) out.push(`context is ${contextWords} words (max ${SIZE_LIMITS.formContextWords})`);
+  }
+  if (kind === "roleplay" && s.turns > SIZE_LIMITS.roleplayTurns) out.push(`allows ${s.turns} turns (max ${SIZE_LIMITS.roleplayTurns})`);
   return out;
 }
 

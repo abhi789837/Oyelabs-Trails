@@ -5,6 +5,8 @@ import type { LearnerTarget } from "../../../shared/targets";
 import {
   assertSpine,
   buildSpine,
+  campsFor,
+  levelsFrom,
   fitPrerequisites,
   matchesTarget,
   PREREQ_TIME_SHARE,
@@ -317,5 +319,33 @@ describe("with no targets at all", () => {
     const path = buildSpine(input({ gaps: [gap("Closures"), gap("REST")] }));
     expect(path.targets).toHaveLength(0);
     expect(path.alsoSuggested).toHaveLength(2);
+  });
+});
+
+describe("Advanced unlock: where a course starts, in camps and topics (v4.2)", () => {
+  const camp = (id: string, levels: string[]) => ({ id, topics: levels.map((level, i) => ({ id: `${id}-t${i}`, level })) });
+  const academy = [camp("pmp-a00", ["beginner", "intermediate"]), camp("pmp-a01", ["intermediate", "advanced", "expert"]), camp("pmp-a02", ["intermediate", "advanced"])];
+
+  test("level 4 or more starts at Advanced", () => {
+    expect(startLevelFor(4)).toBe("advanced");
+    expect(startLevelFor(5)).toBe("advanced");
+    expect(startLevelFor(3)).toBe("intermediate");
+    expect(levelsFrom("advanced")).toEqual(["advanced", "expert"]);
+  });
+
+  test("an Advanced start keeps the advanced and expert topics of every process camp and skips beginner camps", () => {
+    expect(campsFor(academy, "advanced")).toEqual({ moduleIds: ["pmp-a01", "pmp-a02"], topicIds: ["pmp-a01-t1", "pmp-a01-t2", "pmp-a02-t1"] });
+  });
+
+  test("an Intermediate start drops only the beginner topics; a Beginner start takes everything", () => {
+    expect(campsFor(academy, "intermediate").topicIds).toEqual(["pmp-a00-t1", "pmp-a01-t0", "pmp-a01-t1", "pmp-a01-t2", "pmp-a02-t0", "pmp-a02-t1"]);
+    expect(campsFor(academy, "beginner").moduleIds).toEqual(["pmp-a00", "pmp-a01", "pmp-a02"]);
+  });
+
+  test("camps that are levels themselves attach the first two whole; nothing at the start level attaches everything", () => {
+    const ladder = [camp("pm-beginner", ["beginner"]), camp("pm-intermediate", ["intermediate"]), camp("pm-advanced", ["advanced"])];
+    expect(campsFor(ladder, "advanced").moduleIds).toEqual(["pm-beginner", "pm-intermediate"]);
+    const onlyBasics = [camp("pmp-c08", ["beginner"])];
+    expect(campsFor(onlyBasics, "advanced")).toEqual({ moduleIds: ["pmp-c08"], topicIds: ["pmp-c08-t0"] });
   });
 });

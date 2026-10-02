@@ -1,3 +1,4 @@
+import { MessagesSquare, Split } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Contours } from "@/components/trail/Contours";
@@ -6,6 +7,7 @@ import { StatusDot } from "@/components/trail/StatusDot";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { allTopics, findTopic, modulePath, topicPath, trackMinutes, trackTopics, useTracks, type TrackMeta } from "@/content";
+import { useDepartment } from "@/features/auth/AuthProvider";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
@@ -19,6 +21,7 @@ export default function DashboardPage() {
   useDocumentTitle();
   const progress = useProgressStore((s) => s.progress);
   const tracks = useTracks();
+  const department = useDepartment();
 
   const topics = allTopics();
   const completed = topics.filter((t) => progress[t.id]?.status === "completed").length;
@@ -50,6 +53,9 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      {(department.id === "pm" || department.id === "bd") && <ClassifyCard />}
+      {department.id === "pm" && <RoleplayCard />}
+
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
         {tracks.map((track) => (
           <TrackSection key={track.id} track={track} progress={progress} />
@@ -64,6 +70,46 @@ export default function DashboardPage() {
           </p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+/** v4.2: PMs classify client requests daily, and BD scopes them, so the tool sits on both dashboards. */
+function ClassifyCard() {
+  return (
+    <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-8">
+      <Link
+        to="/tools/classify"
+        className="flex items-start gap-4 rounded-lg border bg-card px-5 py-4 transition-colors hover:border-foreground/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+      >
+        <Split className="mt-0.5 size-6 shrink-0 text-primary" aria-hidden="true" />
+        <span>
+          <span className="block font-display font-semibold">Bug, enhancement, change request or new feature?</span>
+          <span className="mt-0.5 block text-sm text-muted-foreground">
+            Classify a client request in a few questions, with the billing rule, next step and template.
+          </span>
+        </span>
+      </Link>
+    </div>
+  );
+}
+
+/** v4.2: the client role-play, beside the decision tool. */
+function RoleplayCard() {
+  return (
+    <div className="mx-auto max-w-6xl px-4 pt-3 sm:px-8">
+      <Link
+        to="/practice/roleplay"
+        className="flex items-start gap-4 rounded-lg border bg-card px-5 py-4 transition-colors hover:border-foreground/30 hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-trailmark"
+      >
+        <MessagesSquare className="mt-0.5 size-6 shrink-0 text-ridge-strong" aria-hidden="true" />
+        <span>
+          <span className="block font-display font-semibold">Practise a client conversation</span>
+          <span className="mt-0.5 block text-sm text-muted-foreground">
+            Scope creep, a delay, a CR price push-back: talk it through with an AI client, then get feedback on your replies.
+          </span>
+        </span>
+      </Link>
     </div>
   );
 }

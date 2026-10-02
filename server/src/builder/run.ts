@@ -32,13 +32,13 @@ import {
   startPath,
 } from "./repo";
 import { planParts } from "./parts";
-import { assertV4Order, gapsFromV4, orderV4Parts, type PlannedItem } from "./v4Parts";
+import { assertV4Order, gapsFromV4, isTheorySkill, orderV4Parts, type PlannedItem } from "./v4Parts";
 import type { V4Result } from "../../../shared/assessmentV4";
 import { getCatalog } from "../catalog/repo";
 import type { ContentStore } from "../content/store";
 import { latestPublishedPlan, publishPlan } from "../plans/repo";
 import { getSetup } from "../setup/repo";
-import { assertSpine, buildSpine, type PriorityPath } from "./priorityPath";
+import { assertSpine, buildSpine, campsFor, type PriorityPath } from "./priorityPath";
 import { normaliseSkill, scoreGaps } from "./scoring";
 import { getFocus } from "../targets/repo";
 import { LEARNER_TRACK_LABELS } from "../../../shared/targets";
@@ -316,6 +316,9 @@ export async function runBuilder(
     aiSkills[0] ??
     null;
   const basicsNames = new Set((v4Result?.skills ?? []).filter((s) => s.group === "basics").map((s) => s.skillName.toLowerCase()));
+  const refreshSkill = department
+    ? (catalog.skills.find((s) => s.status === "active" && s.departmentId === department.id && s.tags.includes("refresh") && !setup.skip.some((k) => k.skillId === s.id)) ?? null)
+    : null;
   const v4Items = department
     ? orderV4Parts({
         spine,
@@ -327,12 +330,18 @@ export async function runBuilder(
         stackIds: setup.stackIds,
         ownTrackGaps: scored.filter((g) => !g.skipped && basicsNames.has(g.skill.toLowerCase())),
         defaultAiSkill,
-        refreshSkill: catalog.skills.find((s) => s.status === "active" && s.departmentId === department.id && s.tags.includes("refresh") && !setup.skip.some((k) => k.skillId === s.id)) ?? null,
+        refreshSkill,
         assessmentFoundGaps: detected.length > 0,
+        departmentId: department.id,
       })
     : null;
   if (v4Items) {
-    const problems = assertV4Order(v4Items, setup.priorities);
+    const problems = assertV4Order(v4Items, setup.priorities, {
+      departmentId: department?.id,
+      refreshSkillId: refreshSkill?.id ?? null,
+      theorySkillIds: catalog.skills.filter((s) => isTheorySkill(s)).map((s) => s.id),
+      aiSkillIds: aiSkills.map((s) => s.id),
+    });
     if (problems.length > 0) auditStep(db, { pathId, step: "parts", detail: { problems } });
   }
 
@@ -381,7 +390,9 @@ export async function runBuilder(
     const skill = part.skillId ? skillsById.get(part.skillId) : undefined;
     const modules = skill && deps.content ? availableModules(deps.content, skill.contentModules) : [];
     if (modules.length > 0) {
-      for (const moduleId of modules.slice(0, 2)) {
+      // v4.2: where the course starts decides its camps and topics (the Advanced unlock).
+      const selection = campsFor(modules.map((id) => moduleMeta(deps.content!, id)!), part.startLevel);
+      for (const moduleId of selection.moduleIds) {
         addPathItem(db, {
           pathId,
           courseId: null,
@@ -397,7 +408,7 @@ export async function runBuilder(
           startLevel: part.startLevel,
         });
       }
-      ensureInPlan(db, deps.content!, input.userId, modules.slice(0, 2));
+      ensureInPlan(db, deps.content!, input.userId, selection.topicIds);
       outcome.unlocked += 1;
       continue;
     }
@@ -679,11 +690,19 @@ function savedCourseFor(db: Db, skill: string): string | null {
   return row?.courseId ?? null;
 }
 
-/** Makes sure an attached module's topics are in the learner's library, publishing a new plan version only if needed. */
-function ensureInPlan(db: Db, content: ContentStore, userId: string, moduleIds: readonly string[]): void {
+/** One module's manifest entry (its topics carry their levels). */
+function moduleMeta(content: ContentStore, moduleId: string) {
+  for (const track of content.manifest) {
+    const found = track.modules.find((m) => m.id === moduleId);
+    if (found) return found;
+  }
+  return undefined;
+}
+
+/** Makes sure the attached topics are in the learner's library, publishing a new plan version only if needed. */
+function ensureInPlan(db: Db, content: ContentStore, userId: string, wanted: readonly string[]): void {
   const plan = latestPublishedPlan(db, userId);
   const current = new Set(plan?.topicIds ?? []);
-  const wanted = moduleIds.flatMap((id) => content.manifest.flatMap((t) => t.modules.filter((m) => m.id === id).flatMap((m) => m.topics.map((topic) => topic.id))));
   const missing = wanted.filter((id) => !current.has(id));
   if (missing.length === 0) return;
   publishPlan(db, content, {

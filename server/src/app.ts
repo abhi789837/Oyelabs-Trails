@@ -35,6 +35,8 @@ import { registerAssessmentV4Routes } from "./routes/assessmentV4";
 import { registerAuthRoutes } from "./routes/auth";
 import { registerContentRoutes } from "./routes/content";
 import { registerSopRoutes } from "./routes/sop";
+import { registerAdminRoleplayRoutes, registerRoleplayRoutes } from "./routes/roleplay";
+import { registerAdminHandbookRoutes, registerHandbookRoutes } from "./routes/handbook";
 import { registerHealthRoutes } from "./routes/health";
 import { registerMeRoutes } from "./routes/me";
 import { registerTopicRoutes } from "./routes/topics";
@@ -180,6 +182,8 @@ export async function buildApp({
   await registerMeRoutes(app);
   await registerContentRoutes(app);
   await registerSopRoutes(app);
+  await registerRoleplayRoutes(app);
+  await registerHandbookRoutes(app);
   await registerTopicRoutes(app);
   await registerAssessmentRoutes(app);
   await registerAssessmentV4Routes(app);
@@ -198,6 +202,8 @@ export async function buildApp({
   await app.register(registerAdminAssessmentV4Routes);
   await app.register(registerAdminBankRoutes);
   await app.register(registerAdminAiRoutingRoutes);
+  await app.register(registerAdminRoleplayRoutes);
+  await app.register(registerAdminHandbookRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

@@ -98,6 +98,9 @@ export function toServedTopic(topic: AuthoredTopic, includeKeys: boolean): Serve
     ...(topic.codeChallenge ? { codeChallenge: toServedChallenge(topic.codeChallenge, includeKeys) } : {}),
     ...(topic.practice ? { practice: topic.practice } : {}),
     ...(topic.sop?.length ? { sopCount: topic.sop.length } : {}),
+    ...(topic.interactive ? { interactive: topic.interactive } : {}),
+    ...(topic.sections?.length ? { sections: topic.sections } : {}),
+    ...(topic.handbook ? { handbook: topic.handbook } : {}),
   };
 }
 

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { TermCategory } from "./handbook";
 import type { Task } from "./tasks";
 
 import { topicLevelSchema, trackIdSchema, type TopicLevelValue, type TrackIdValue } from "./enums";
@@ -142,7 +143,30 @@ export interface ServedTopic {
   practice?: Task;
   /** v4.1: how many Oyelabs SOP blocks the topic has; their text comes from /api/content/topics/:id/sop. */
   sopCount?: number;
+  /** v4.2: a handbook tool rendered after the summary. */
+  interactive?: TopicInteractive;
+  /** v4.2: structured guide sections after the summary (an agenda, a script, a worked example). */
+  sections?: TopicSection[];
+  /** v4.2: live handbook entries shown on the topic, by id (never copied into the content). */
+  handbook?: TopicHandbookRefs;
 }
+
+export interface TopicSection {
+  heading: string;
+  /** The content Markdown subset, with [[term:id]] links. */
+  body: string;
+}
+
+export interface TopicHandbookRefs {
+  stages?: string[];
+  rules?: string[];
+  templates?: string[];
+}
+
+/** v4.2: a handbook-driven tool embedded in a topic (the decision tool or a flashcard deck). */
+export type TopicInteractive =
+  | { kind: "decision-tool"; request?: string }
+  | { kind: "flashcards"; category?: TermCategory };
 
 export interface ServedModule {
   id: string;

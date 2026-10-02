@@ -430,7 +430,7 @@ function Response({ item, response }: { item: V4AdminItem; response: ItemRespons
         </div>
         {expected.length > 0 && (
           <div>
-            <Label>{item.task.kind === "write" ? "Rubric" : "Expected"}</Label>
+            <Label>{item.task.kind === "write" || item.task.kind === "roleplay" ? "Rubric" : item.task.kind === "form" ? "Exact checks and rubric" : "Expected"}</Label>
             <div className="text-summit-strong">
               <Lines lines={expected} />
             </div>

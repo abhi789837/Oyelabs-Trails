@@ -1,0 +1,612 @@
+[
+  {
+    "id": "billing-bug-in-delivery",
+    "name": "Billing: bug found during delivery",
+    "category": "commercial",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a bug found before go-live (in QA, sprint demos or UAT) is fixed at no extra cost, because meeting the agreed specification is part of the delivery. [Oyelabs SOP – admin to confirm] Confirm that delivery-phase bugs are never billed, and how a reported 'bug' that is really a change to the specification is reclassified.",
+    "terms": [
+      "bug",
+      "acceptance-criteria",
+      "uat",
+      "change-request"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Acceptance testing",
+        "url": "https://www.lawinsider.com/dictionary/acceptance-testing",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "billing-bug-warranty",
+    "name": "Billing: bug under warranty",
+    "category": "commercial",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a defect against the accepted scope reported after go-live and inside the warranty window is fixed free of charge, within the agreed response and resolution times. [Oyelabs SOP – admin to confirm] Confirm the warranty length, whether it starts at go-live or UAT sign-off, what it excludes (e.g. third-party changes, client edits, new OS versions) and the response and resolution times.",
+    "terms": [
+      "warranty",
+      "bug",
+      "sla",
+      "hypercare"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Warranty period",
+        "url": "https://www.lawinsider.com/dictionary/warranty-period",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Investopedia: Warranty",
+        "url": "https://www.investopedia.com/terms/w/warranty.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "billing-bug-after-warranty",
+    "name": "Billing: bug after warranty",
+    "category": "commercial",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a bug reported after the warranty ends is covered by an active support or AMC plan; without one, it is quoted and billed as support work. [Oyelabs SOP – admin to confirm] Confirm how out-of-warranty bugs are billed without a plan (hourly rate or quote), any minimum charge, and whether critical issues are fixed before the quote is approved.",
+    "terms": [
+      "support",
+      "amc",
+      "bug",
+      "warranty"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian: What is an SLA?",
+        "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "billing-enhancement",
+    "name": "Billing: enhancement",
+    "category": "commercial",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, an enhancement (improving something that already works as agreed) is estimated and billed, or traded against something else in the backlog; small ones may be bundled. [Oyelabs SOP – admin to confirm] Confirm whether there is a size below which enhancements are absorbed or bundled, and who may approve trading backlog items.",
+    "terms": [
+      "enhancement",
+      "change-request",
+      "backlog"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian: Scope creep",
+        "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "billing-change-request",
+    "name": "Billing: change request",
+    "category": "commercial",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a change request is billable: it is estimated, priced and approved in writing before work starts, and may move dates. [Oyelabs SOP – admin to confirm] Confirm the CR pricing basis (rate card or fixed quote), who approves on both sides, and whether a CR that moves a milestone changes the payment schedule.",
+    "terms": [
+      "change-request",
+      "rate-card",
+      "milestone",
+      "scope-baseline"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Change request",
+        "url": "https://www.lawinsider.com/dictionary/change-request",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: IT change management",
+        "url": "https://www.atlassian.com/itsm/change-management",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "billing-new-feature",
+    "name": "Billing: new feature",
+    "category": "commercial",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a new feature is estimated as new work: a CR within the current SOW, or a new phase or SOW for larger features. [Oyelabs SOP – admin to confirm] Confirm the size or value above which a new feature needs a new SOW or phase rather than a CR.",
+    "terms": [
+      "new-feature",
+      "change-request",
+      "sow",
+      "phase-2"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Change request",
+        "url": "https://www.lawinsider.com/dictionary/change-request",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "billing-clarification",
+    "name": "Billing: clarification",
+    "category": "commercial",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a clarification (a question or misunderstanding about agreed behaviour, with no change) costs nothing: the PM explains how it works and where it was agreed. [Oyelabs SOP – admin to confirm] Confirm whether repeated training or how-to requests after handover become billable support.",
+    "terms": [
+      "clarification",
+      "knowledge-transfer",
+      "support"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Acceptance testing",
+        "url": "https://www.lawinsider.com/dictionary/acceptance-testing",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "cr-when-needed",
+    "name": "A CR is needed when…",
+    "category": "scope",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a change request is needed whenever a request changes the signed scope baseline, acceptance criteria, approved designs, timeline or cost: new or changed behaviour, new screens or integrations, new platforms, or changes after requirement freeze. Bugs against agreed scope and clarifications do not need a CR. [Oyelabs SOP – admin to confirm] Confirm any size threshold below which changes are absorbed, and whether design changes after approval always need a CR.",
+    "terms": [
+      "change-request",
+      "scope-baseline",
+      "requirement-freeze",
+      "bug",
+      "clarification",
+      "enhancement"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Change request",
+        "url": "https://www.lawinsider.com/dictionary/change-request",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: Scope creep",
+        "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "cr-approval",
+    "name": "Who approves a CR",
+    "category": "scope",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, the PM prepares the CR with the tech lead's estimate, the BD or account manager confirms the price, and the client sponsor (or a named approver) approves it in writing before work starts. A verbal yes or chat message from someone other than the named approver is not approval. [Oyelabs SOP – admin to confirm] Confirm the internal approver for pricing, the acceptable forms of client approval (signed form, email, tool) and who on the client side may approve.",
+    "terms": [
+      "change-request",
+      "spoc",
+      "raci",
+      "sign-off"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian: IT change management",
+        "url": "https://www.atlassian.com/itsm/change-management",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "requirement-freeze-after-signoff",
+    "name": "Requirement freeze after sign-off",
+    "category": "scope",
+    "projectTypes": [
+      "custom"
+    ],
+    "statement": "Typically, once requirements are signed off, they are frozen: further changes go through the CR process, and build estimates and dates rest on the frozen version. [Oyelabs SOP – admin to confirm] Confirm whether a freeze applies per phase or per sprint, and whether a short grace period for corrections is allowed after sign-off.",
+    "terms": [
+      "requirement-freeze",
+      "sign-off",
+      "change-request",
+      "scope-baseline"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian: Scope creep",
+        "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "design-revision-rounds",
+    "name": "Design revision rounds",
+    "category": "delivery",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, each design stage includes a fixed number of revision rounds; feedback is consolidated by the client SPOC per round, and further rounds or changes after design approval are handled as CRs. [Oyelabs SOP – admin to confirm] Confirm the number of included revision rounds per stage and how a 'round' is defined.",
+    "terms": [
+      "design-approval",
+      "mockup",
+      "change-request",
+      "spoc"
+    ],
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: Making prototypes",
+        "url": "https://www.gov.uk/service-manual/design/making-prototypes",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "warranty-coverage",
+    "name": "Warranty covers…",
+    "category": "quality",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, warranty covers defects where the delivered product does not meet the accepted scope or acceptance criteria, reported within the warranty window. It typically excludes new features, enhancements, changes by the client or third parties, third-party service outages, new OS or browser versions and hosting issues. [Oyelabs SOP – admin to confirm] Confirm the warranty window, its start point and the exclusions list.",
+    "terms": [
+      "warranty",
+      "bug",
+      "support",
+      "maintenance",
+      "acceptance-criteria"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Warranty period",
+        "url": "https://www.lawinsider.com/dictionary/warranty-period",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Investopedia: Warranty",
+        "url": "https://www.investopedia.com/terms/w/warranty.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "uat-signoff-before-golive",
+    "name": "UAT sign-off before go-live",
+    "category": "quality",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, nothing goes to production until the client has given written UAT sign-off, with any open known issues listed and accepted. [Oyelabs SOP – admin to confirm] Confirm whether deemed acceptance applies if the client does not respond within a set period, and who may sign off.",
+    "terms": [
+      "uat",
+      "sign-off",
+      "known-issues",
+      "go-live",
+      "go-no-go"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Acceptance testing",
+        "url": "https://www.lawinsider.com/dictionary/acceptance-testing",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "hotfix-approval",
+    "name": "Hotfix approval",
+    "category": "quality",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, a hotfix to production is allowed only for a high-severity issue, is approved by the tech lead and PM (and the client where the contract requires), is tested on staging where possible, and is followed by a note to the client and an RCA for critical incidents. [Oyelabs SOP – admin to confirm] Confirm who may approve a production hotfix, out-of-hours rules, and when an RCA is mandatory.",
+    "terms": [
+      "hotfix",
+      "severity",
+      "rca",
+      "production-environment",
+      "patch"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Hot fix",
+        "url": "https://www.lawinsider.com/dictionary/hot-fix",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: Incident postmortem",
+        "url": "https://www.atlassian.com/incident-management/postmortem",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "escalation-levels",
+    "name": "Escalation levels",
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, escalation runs through defined levels (PM and client SPOC, then delivery head and client sponsor, then leadership on both sides), each with a time window before moving up, and every escalation is recorded with its outcome. [Oyelabs SOP – admin to confirm] Confirm the Oyelabs levels and names, the time window at each level, and when a red RAG must be escalated.",
+    "terms": [
+      "escalation",
+      "escalation-matrix",
+      "rag-status",
+      "spoc",
+      "steering-committee"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Escalation procedure",
+        "url": "https://www.lawinsider.com/dictionary/escalation-procedure",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: Escalation policies",
+        "url": "https://www.atlassian.com/incident-management/on-call/escalation-policies",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "weekly-status-report",
+    "name": "Weekly status report",
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, every active project sends a written status report at a fixed weekly cadence, with RAG status, progress, next steps, risks, issues and decisions needed, even when there is no news. [Oyelabs SOP – admin to confirm] Confirm the cadence, format, reviewers and recipients.",
+    "terms": [
+      "status-report",
+      "rag-status",
+      "raid-log"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian Confluence: Project status report template",
+        "url": "https://www.atlassian.com/software/confluence/templates/project-status",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "mom-after-every-client-meeting",
+    "name": "MoM after every client meeting",
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, the PM sends minutes after every client meeting where a decision, scope point or action was discussed, recording decisions and action owners. [Oyelabs SOP – admin to confirm] Confirm the deadline for sending a MoM and whether silence within a set period counts as agreement.",
+    "terms": [
+      "mom",
+      "spoc",
+      "sign-off"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Minutes of meeting",
+        "url": "https://www.lawinsider.com/dictionary/minutes-of-meeting",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian Confluence: Meeting minutes template",
+        "url": "https://www.atlassian.com/software/confluence/templates/meeting-notes",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "client-owned-store-accounts",
+    "name": "Client-owned store accounts before submission",
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, apps are submitted only from the client's own Apple Developer (organisation) and Google Play Console accounts, with Oyelabs added as a user. Apple's Guideline 4.2.6 rejects apps created from a commercialised template unless they are submitted by the provider of the app's content, so publishing from an agency account risks rejection and later transfer work. [Oyelabs SOP – admin to confirm] Confirm any allowed exception, the roles Oyelabs needs and the deadline for accounts before submission.",
+    "terms": [
+      "client-owned-accounts",
+      "apple-developer-account",
+      "google-play-console",
+      "app-review-rejection"
+    ],
+    "sources": [
+      {
+        "label": "Apple: App Review Guidelines (incl. 4.2.6 and 5.1.1)",
+        "url": "https://developer.apple.com/app-store/review/guidelines/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Add developer account users and manage permissions",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9844686",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "core-upgrade-custom-impact",
+    "name": "Core-upgrade impact on custom modules",
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "statement": "Typically, a core upgrade of an uncustomised instance is covered by the licence or support plan, while effort to adapt custom modules, resolve merge conflicts or upgrade forks is assessed before the upgrade and quoted as a CR or support work. [Oyelabs SOP – admin to confirm] Confirm what the licence or plan includes for upgrades and how customisation impact is billed.",
+    "terms": [
+      "core-upgrade",
+      "custom-module",
+      "customisation-merge-conflicts",
+      "client-fork",
+      "change-request"
+    ],
+    "sources": [
+      {
+        "label": "GitHub Docs: Syncing a fork",
+        "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "GitHub Docs: About merge conflicts",
+        "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "configuration-vs-customisation",
+    "name": "Configuration vs customisation in white-label",
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "statement": "Typically, anything changeable through the configuration panel, theme or feature toggles is configuration and is included in setup; anything that needs code is customisation and is estimated, quoted and approved before setup, ideally as a separate custom module. [Oyelabs SOP – admin to confirm] Confirm the list of included configuration items per product and whether small code changes are ever included in setup.",
+    "terms": [
+      "configuration",
+      "customisation",
+      "configuration-panel",
+      "custom-module",
+      "setup-fee"
+    ],
+    "sources": [
+      {
+        "label": "The Twelve-Factor App: Config",
+        "url": "https://12factor.net/config",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Tenancy models for a multitenant solution",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "store-rejection-fixes",
+    "name": "Billing of store rejection fixes",
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, fixes for rejections caused by the build or the agency's work are free, while rejections caused by client content, missing accounts, business model or legal pages are billable or the client's responsibility. [Oyelabs SOP – admin to confirm] Confirm how rejection fixes are billed and who decides the cause.",
+    "terms": [
+      "app-review-rejection",
+      "resubmission",
+      "privacy-policy-url",
+      "store-listing-assets"
+    ],
+    "sources": [
+      {
+        "label": "Apple: App Review Guidelines (incl. 4.2.6 and 5.1.1)",
+        "url": "https://developer.apple.com/app-store/review/guidelines/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Check your app's policy status",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9842754",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "secure-credential-sharing",
+    "name": "Secure credential sharing",
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "statement": "Typically, credentials and API keys are shared only through an approved secure channel, never by email or chat; production keys are restricted to those who need them, and keys are rotated at handover or when people leave. [Oyelabs SOP – admin to confirm] Confirm the approved tool and who holds production credentials.",
+    "terms": [
+      "api-keys",
+      "client-owned-accounts",
+      "handover"
+    ],
+    "sources": [
+      {
+        "label": "Google Cloud: Manage API keys",
+        "url": "https://cloud.google.com/docs/authentication/api-keys",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Stripe Docs: API keys",
+        "url": "https://docs.stripe.com/keys",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  }
+]

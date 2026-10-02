@@ -1,3 +1,4 @@
+import { classify, type DecisionAnswers } from "../../../../shared/decision";
 import { planAssessmentMix } from "../../../../shared/setup";
 
 /**
@@ -57,8 +58,11 @@ export function descriptionThemes(description: string, stacks: readonly string[]
 const CODE_LIKE = /php|laravel|eloquent|javascript|typescript|react|node|express|next|vue|angular|python|django|fastapi|java|kotlin|dart|flutter|sql/i;
 
 /** Hands-on kinds a plan proposes for a skill, by what the skill is about. Empty = let the rules pick. */
-function handsOnKinds(skillName: string, format: "coding" | "tasks"): string[] {
+function handsOnKinds(skillName: string, format: "coding" | "tasks", skillId = ""): string[] {
   if (format === "coding") return CODE_LIKE.test(skillName) ? ["code"] : [];
+  // v4.2 process skills: classify requests, fill the CR form, and (meetings) a short client role-play.
+  if (skillId === "pm-proc-meetings") return ["roleplay", "categorize", "form"];
+  if (/-proc-/.test(skillId)) return /template/i.test(skillName) ? ["form", "categorize"] : ["categorize", "form"];
   if (/excel|spreadsheet/i.test(skillName)) return ["excel"];
   if (/email|writing/i.test(skillName)) return ["write"];
   if (/meeting|presenting/i.test(skillName)) return ["sim", "write", "scenario"];
@@ -105,7 +109,7 @@ export function fixturePlan(userJson: string) {
   );
   const stressed = (name: string) => name.toLowerCase().split(/[^a-z]+/).some((w) => w.length >= 5 && said.has(w));
   for (const line of mix.lines) {
-    const kinds = handsOnKinds(line.skillName, format);
+    const kinds = handsOnKinds(line.skillName, format, line.skillId);
     const extra = stressed(line.skillName) && line.handsOn > 0 ? 1 : 0;
     const theme = themes[slots.length % Math.max(1, themes.length)] ?? "";
     const hint = clip(theme ? `${theme}: ${line.skillName}` : line.skillName);
@@ -126,7 +130,19 @@ export function fixturePlan(userJson: string) {
 
 interface ItemsRequest {
   context?: { department?: string; track?: string | null; stack?: string[]; themes?: string[]; about?: string };
-  slots?: { slot: number; skill: string; type: "coding" | "task" | "mcq"; subtype: string; language?: string }[];
+  handbook?: { ref: string }[];
+  slots?: {
+    slot: number;
+    skill: string;
+    type: "coding" | "task" | "mcq";
+    subtype: string;
+    language?: string;
+    /** v4.2 grounding: a process slot, its suggested handbook refs, and a role-play scenario. */
+    grounded?: boolean;
+    refs?: string[];
+    scenarioId?: string;
+    personaId?: string;
+  }[];
 }
 
 interface Ctx {
@@ -137,7 +153,7 @@ interface Ctx {
   engineering: boolean;
 }
 
-const base = (slot: number, prompt: string, ctx: Ctx) => ({ slot, prompt, coding: null, mcq: null, task: null, answerIsOutput: false, tags: ctx.tags });
+const base = (slot: number, prompt: string, ctx: Ctx) => ({ slot, prompt, coding: null, mcq: null, task: null, answerIsOutput: false, tags: ctx.tags, handbookRefs: [] as string[], facts: null as Record<string, DecisionAnswers> | null });
 
 const lead = (c: Ctx) => `You work with ${c.other}${c.engineering ? ` on ${c.stack}` : ""}, and your lead wants you stronger on ${c.theme}. Assume a normal week at a busy software agency. Read the situation and pick the best answer.`;
 
@@ -435,6 +451,88 @@ function scenarioItem(slot: number, ctx: Ctx) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// v4.2: handbook-grounded process items (categorize with facts, the CR form, a mini role-play)
+// ---------------------------------------------------------------------------
+
+/** Client requests with their decision-tool facts; the key is always recomputed with `classify`. */
+const REQUESTS: { id: string; text: string; facts: DecisionAnswers }[] = [
+  { id: "r1", text: "Live app crashes at login, which the signed scope covers", facts: { worksAsSpecified: "no", inScope: "yes", warranty: "yes" } },
+  { id: "r2", text: "Change the agreed two-step checkout into one step", facts: { worksAsSpecified: "yes", changeKind: "change" } },
+  { id: "r3", text: "Make the working search return results faster", facts: { worksAsSpecified: "yes", changeKind: "improve" } },
+  { id: "r4", text: "Add a loyalty-points module nobody specified", facts: { worksAsSpecified: "yes", changeKind: "neither", brandNew: "yes" } },
+  { id: "r5", text: "Asks why the report shows the previous day, as agreed", facts: { worksAsSpecified: "yes", changeKind: "neither", brandNew: "no" } },
+];
+
+const CLASSIFY_LABELS: Record<string, string> = {
+  "bug-warranty": "Bug under warranty",
+  "change-request": "Change request",
+  enhancement: "Enhancement",
+  "new-feature": "New feature",
+  clarification: "Clarification",
+};
+
+function categorizeItem(slot: number, ctx: Ctx) {
+  const answer: Record<string, string> = {};
+  const facts: Record<string, DecisionAnswers> = {};
+  for (const r of REQUESTS) {
+    answer[r.id] = classify(r.facts)!.classification;
+    facts[r.id] = r.facts;
+  }
+  const used = [...new Set(Object.values(answer))];
+  return {
+    ...base(slot, `Requests from your ${ctx.theme} client this week. Classify each one as the handbook defines it.`, ctx),
+    task: {
+      kind: "categorize",
+      prompt: "Put each request in its category.",
+      mode: "classify-request",
+      categories: used.map((id) => ({ id, label: CLASSIFY_LABELS[id] ?? id })),
+      items: REQUESTS.map((r) => ({ id: r.id, text: r.text, explanation: "" })),
+      answer,
+    },
+    facts,
+  };
+}
+
+function formItem(slot: number, ctx: Ctx) {
+  return {
+    ...base(slot, `Your ${ctx.theme} client emailed a request. Start the change request form from it.`, ctx),
+    task: {
+      kind: "form",
+      variant: "cr",
+      prompt: "Fill in the two fields.",
+      context: "From the client: We signed off the order screens last month. Please add a CSV export of all orders to the admin panel before launch. It should be quick, right?",
+      templateId: null,
+      fields: [
+        { id: "type", label: "Request type", input: "select", options: ["Bug", "Enhancement", "Change request", "New feature"], required: true },
+        { id: "impact", label: "Impact on time and cost", input: "textarea", required: true },
+      ],
+      checks: [{ fieldId: "type", expected: "Change request" }],
+      rubric: [{ label: "States the impact on time and cost", points: 2, description: "Gives an estimate and says what it does to the date and the price." }],
+      sampleAnswer: { type: "Change request", impact: "About 2 days of work at the rate card; launch moves 2 days unless we defer the export." },
+    },
+  };
+}
+
+function roleplayItem(slot: number, ctx: Ctx, scenarioId: string, personaId: string) {
+  return {
+    ...base(slot, `A short call with your ${ctx.theme} client. Handle it the way the handbook describes.`, ctx),
+    task: {
+      kind: "roleplay",
+      prompt: "Reply as the PM.",
+      scenarioId,
+      personaId,
+      maxTurns: 2,
+      brief: "Acknowledge the client, name the process step that applies, and agree a clear next step.",
+      rubric: [
+        { label: "Uses the right process term", points: 2, description: "Names the request correctly, as the handbook defines it." },
+        { label: "Agrees a next step", points: 2, description: "Ends with who does what, by when." },
+      ],
+      followUp: false,
+    },
+  };
+}
+
 /**
  * Items for the slots asked, in the person's context.
  *
@@ -471,6 +569,11 @@ export function fixtureGeneratedItems(userJson: string, keys: Map<string, number
     else if (slot.subtype === "excel") item = excelItem(slot.slot, local);
     else if (slot.subtype === "sim") item = simItem(slot.slot, slot.skill, local);
     else if (slot.subtype === "scenario") item = scenarioItem(slot.slot, local);
+    else if (slot.subtype === "categorize") item = categorizeItem(slot.slot, local);
+    else if (slot.subtype === "form") item = formItem(slot.slot, local);
+    else if (slot.subtype === "roleplay" && slot.scenarioId && slot.personaId) item = roleplayItem(slot.slot, local, slot.scenarioId, slot.personaId);
+    // Grounded slots cite the handbook entries the request suggested (they are in its handbook list).
+    if (item && slot.refs?.length) (item as { handbookRefs: string[] }).handbookRefs = slot.refs.slice(0, 3);
     if (item) items.push(item);
   }
   return items;

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { BookMarked, BookOpen, Compass, Map as MapIcon } from "lucide-react";
+import { BookMarked, BookOpen, BookOpenText, Compass, Map as MapIcon, MessagesSquare } from "lucide-react";
 import { LayoutGroup, motion } from "motion/react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
@@ -43,6 +43,8 @@ function currentKey(pathname: string, tracks: TrackMeta[]): string {
   if (pathname.startsWith("/courses")) return "courses";
   if (pathname.startsWith("/library")) return "library";
   if (pathname.startsWith("/plan")) return "plan";
+  if (pathname.startsWith("/glossary")) return "glossary";
+  if (pathname.startsWith("/practice/roleplay")) return "roleplay";
   return pathname === "/" ? "dashboard" : "";
 }
 
@@ -77,6 +79,16 @@ export function TrackNav({ collapsed = false, onNavigate, group = "trail-nav" }:
 
         <NavItemLink to="/library" label="Library" collapsed={collapsed} current={current === "library"} onNavigate={onNavigate}>
           <BookMarked className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        </NavItemLink>
+
+        {/* v4.2: the handbook's terms, for every department. */}
+        <NavItemLink to="/glossary" label="Glossary" collapsed={collapsed} current={current === "glossary"} onNavigate={onNavigate}>
+          <BookOpenText className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        </NavItemLink>
+
+        {/* v4.2: practise the terms out loud, with an AI client. */}
+        <NavItemLink to="/practice/roleplay" label="Client role-play" collapsed={collapsed} current={current === "roleplay"} onNavigate={onNavigate}>
+          <MessagesSquare className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
         </NavItemLink>
 
         {!collapsed && <p className="mb-1 mt-5 px-3 text-xs font-medium text-muted-foreground">Trails</p>}

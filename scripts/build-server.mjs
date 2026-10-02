@@ -26,6 +26,9 @@ const external = [
   "pino",
   "pino-pretty",
   "thread-stream",
+  // v4.2 handbook templates: large CJS packages, resolved from node_modules at runtime.
+  "docx",
+  "exceljs",
 ];
 
 await rm(outDir, { recursive: true, force: true });

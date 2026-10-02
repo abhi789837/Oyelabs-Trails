@@ -1,0 +1,2322 @@
+[
+  {
+    "aka": [
+      "MSA",
+      "Master Service Agreement",
+      "framework agreement"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "sow",
+      "nda",
+      "payment-terms",
+      "ip-ownership",
+      "termination",
+      "warranty"
+    ],
+    "confusedWith": [
+      "sow"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "msa",
+    "name": "Master Services Agreement",
+    "category": "commercial",
+    "definition": "The umbrella contract between an agency and a client that sets the legal terms for all future work: liability, confidentiality, IP, payment terms, warranties, dispute resolution and termination. Individual projects are then ordered through shorter SOWs that sit under it, so the legal terms are not renegotiated each time.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs signs an MSA with every client or only with repeat clients, which template we use, who may sign it, and whether the MSA or the SOW wins if they conflict.",
+    "example": "A UK property-tech client signs an MSA once. Its first SOW covers a Laravel tenant portal; six months later a second SOW for a React Native app is signed in two days because the legal terms are already agreed.",
+    "clientSentence": "The MSA is our standing agreement on the legal basics, so each new piece of work only needs a short SOW describing what we will build.",
+    "impact": "No direct billing of its own, but it fixes the payment terms, late-payment and liability rules that every SOW inherits. Negotiating one typically takes 1–4 weeks, so start early.",
+    "sources": [
+      {
+        "label": "Law Insider: Master Services Agreement definition",
+        "url": "https://www.lawinsider.com/dictionary/master-services-agreement",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Master service agreement",
+        "url": "https://en.wikipedia.org/wiki/Master_service_agreement",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "SOW",
+      "scope of work",
+      "work order"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "msa",
+      "scope-baseline",
+      "in-scope",
+      "out-of-scope",
+      "assumption",
+      "milestone-billing",
+      "change-request",
+      "sign-off"
+    ],
+    "confusedWith": [
+      "msa",
+      "proposal"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "sow",
+    "name": "Statement of Work",
+    "category": "commercial",
+    "definition": "A project-specific contract document that defines what will be delivered: scope, deliverables, assumptions, exclusions, milestones, timeline, acceptance criteria, price and payment schedule. It usually sits under an MSA and is the baseline against which change requests are judged.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our SOW template, the sections it must always contain (for example assumptions and out-of-scope list), who reviews it before it goes to the client, and whether white-label deals use a SOW or a separate order form.",
+    "example": "For a React web app for an Australian fitness studio, the SOW lists 14 screens, Stripe payments, two admin roles and an explicit out-of-scope list that excludes a mobile app and data migration.",
+    "clientSentence": "The SOW is the agreed description of exactly what we will build, by when and for how much; anything outside it is handled as a change.",
+    "impact": "Defines the price and payment schedule. A vague SOW is the most common root cause of unpaid extra work, because nothing can be priced as a change if the baseline is unclear.",
+    "sources": [
+      {
+        "label": "Law Insider: Statement of Work definition",
+        "url": "https://www.lawinsider.com/dictionary/statement-of-work",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Statement of work",
+        "url": "https://en.wikipedia.org/wiki/Statement_of_work",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "NDA",
+      "confidentiality agreement",
+      "CDA"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "msa",
+      "proposal",
+      "ip-ownership"
+    ],
+    "confusedWith": [
+      "msa"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "nda",
+    "name": "Non-Disclosure Agreement",
+    "category": "commercial",
+    "definition": "A contract in which one or both parties agree to keep shared information confidential and use it only for an agreed purpose. A mutual NDA protects both sides; a one-way NDA protects only the disclosing party. It is often signed before a client shares its idea, data or existing code.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether we sign the client's NDA or send our own, whether mutual NDAs are the default, who may sign, how long the confidentiality lasts, and where signed NDAs are stored.",
+    "example": "Before a Canadian start-up shares its pitch deck and an existing Laravel codebase for a rebuild estimate, both sides sign a mutual NDA.",
+    "clientSentence": "An NDA is a promise in writing that we keep your idea and data confidential, and we are happy to sign one before you share details.",
+    "impact": "No billing impact. Typically signed in a few days; a slow NDA delays discovery and estimation, so it should be raised in the first call.",
+    "sources": [
+      {
+        "label": "Law Insider: Non-Disclosure Agreement definition",
+        "url": "https://www.lawinsider.com/dictionary/non-disclosure-agreement",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Investopedia: Non-disclosure agreement (NDA)",
+        "url": "https://www.investopedia.com/terms/n/nda.asp",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "commercial proposal",
+      "pitch"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "estimate",
+      "quote",
+      "sow",
+      "rate-card"
+    ],
+    "confusedWith": [
+      "sow",
+      "quote",
+      "estimate"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "proposal",
+    "name": "Proposal",
+    "category": "commercial",
+    "definition": "A pre-sales document that explains the agency's understanding of the client's problem, the proposed solution and approach, team, timeline, high-level scope and indicative price. It persuades and frames the deal; it usually becomes binding only once a SOW or contract is signed.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our proposal template, who writes and approves it (business development or PM), how long its prices stay valid, and whether it is ever signed directly in place of a SOW.",
+    "example": "After a discovery call with a UAE logistics firm, business development sends a proposal comparing a white-label delivery app with a custom React Native build, each with a timeline and price range.",
+    "clientSentence": "The proposal is our recommended approach and an indicative price; once you are happy with it, we turn it into a formal agreement.",
+    "impact": "Prices in a proposal are typically indicative and time-limited, often valid for 30–90 days. Anything promised here that is not carried into the SOW causes disputes later.",
+    "sources": [
+      {
+        "label": "Law Insider: Proposal definition",
+        "url": "https://www.lawinsider.com/dictionary/proposal",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Proposal (business)",
+        "url": "https://en.wikipedia.org/wiki/Proposal_(business)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "effort estimate",
+      "ballpark",
+      "ROM"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "quote",
+      "proposal",
+      "fixed-bid",
+      "time-and-materials",
+      "assumption",
+      "change-request"
+    ],
+    "confusedWith": [
+      "quote"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "estimate",
+    "name": "Estimate",
+    "category": "commercial",
+    "definition": "An informed forecast of the effort, time or cost a piece of work will take, based on what is known now. It carries uncertainty, is often given as a range, and can change as requirements become clearer. It is not a commitment to a fixed price.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How we estimate (hours, story points or t-shirt sizes), who must review an estimate before it reaches the client, the contingency we add, and the wording we use to make clear it is not a quote.",
+    "example": "A client asks how long a loyalty-points feature would take on their Laravel shop. The PM gives an estimate of 60–90 hours, noting that the payment-gateway behaviour is still unknown.",
+    "clientSentence": "This is our best estimate of the effort based on what we know today; once the details are confirmed we can give you a fixed quote.",
+    "impact": "Drives the quote and the plan. Early estimates are typically wide (often ±25–50%) and narrow after discovery. Treating an estimate as a promise is a common source of overruns.",
+    "sources": [
+      {
+        "label": "Law Insider: Estimate definition",
+        "url": "https://www.lawinsider.com/dictionary/estimate",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software development effort estimation",
+        "url": "https://en.wikipedia.org/wiki/Software_development_effort_estimation",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "quotation",
+      "price quote"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "estimate",
+      "proposal",
+      "purchase-order",
+      "fixed-bid",
+      "rate-card"
+    ],
+    "confusedWith": [
+      "estimate",
+      "proposal"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "quote",
+    "name": "Quote",
+    "category": "commercial",
+    "definition": "A firm price offered for a defined piece of work, valid for a stated period. Once the client accepts it, the agency is normally bound to deliver that scope at that price. It depends on the scope and assumptions written into it.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who may issue a quote, how long our quotes stay valid, whether a quote must list assumptions and exclusions, and how an accepted quote is recorded (PO, signed SOW or email).",
+    "example": "After estimating a CSV export feature at 20–28 hours, the PM issues a quote for a fixed amount, valid for 30 days, with the assumption that the export uses existing report filters.",
+    "clientSentence": "This quote is a fixed price for exactly the work described, and it stays valid until the date shown.",
+    "impact": "A quote fixes the price, so the agency carries the risk of overrun unless the scope changes. Validity is typically 15–90 days.",
+    "sources": [
+      {
+        "label": "Law Insider: Quotation definition",
+        "url": "https://www.lawinsider.com/dictionary/quotation",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Request for quotation",
+        "url": "https://en.wikipedia.org/wiki/Sales_quote",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "PO"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "quote",
+      "invoice",
+      "payment-terms",
+      "change-request"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "purchase-order",
+    "name": "Purchase Order",
+    "category": "commercial",
+    "definition": "A document a buyer issues to authorise a purchase, stating what is bought, the quantity, the agreed price and a reference number. Many larger clients cannot pay an invoice unless it quotes a valid PO number.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether we start work before a PO arrives, who chases it, and how the PO number is recorded in our invoicing system.",
+    "example": "A German enterprise client approves a change request but its finance team only pays invoices that quote a PO. The PM waits for the PO number before scheduling the work.",
+    "clientSentence": "Could your team raise a purchase order for this work so that our invoice can be matched and paid without delay?",
+    "impact": "Missing or wrong PO numbers are a common reason invoices are rejected and payment slips by weeks. Work started without a PO is at risk of not being paid.",
+    "sources": [
+      {
+        "label": "Law Insider: Purchase Order definition",
+        "url": "https://www.lawinsider.com/dictionary/purchase-order",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Purchase order",
+        "url": "https://en.wikipedia.org/wiki/Purchase_order",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "rate sheet",
+      "price list"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "time-and-materials",
+      "change-request",
+      "dedicated-resource-model",
+      "msa",
+      "quote"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "rate-card",
+    "name": "Rate Card",
+    "category": "commercial",
+    "definition": "A table of agreed prices per role or per unit of service, for example an hourly or daily rate for a developer, designer, QA engineer or PM. It is used to price time-and-materials work, change requests and support beyond a plan.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our current rate card per role and seniority, whether it differs by region or currency, how often it is reviewed, and whether it may be shared with clients.",
+    "example": "A Laravel project's MSA attaches a rate card. When the client asks for out-of-scope reporting work, the CR is priced as estimated hours multiplied by the agreed developer and QA rates.",
+    "clientSentence": "Our rate card lists the agreed price per role, so any extra work is priced transparently.",
+    "impact": "Sets the price of every T&M hour and CR. Rates are typically reviewed yearly; using an outdated card underprices work.",
+    "sources": [
+      {
+        "label": "Law Insider: Rate Card definition",
+        "url": "https://www.lawinsider.com/dictionary/rate-card",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Rate card",
+        "url": "https://en.wikipedia.org/wiki/Rate_card",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "fixed price",
+      "fixed-price contract",
+      "FP"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "time-and-materials",
+      "sow",
+      "milestone-billing",
+      "change-request",
+      "scope-baseline",
+      "estimate"
+    ],
+    "confusedWith": [
+      "time-and-materials",
+      "quote"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "fixed-bid",
+    "name": "Fixed Bid",
+    "category": "commercial",
+    "definition": "A pricing model where the agency commits to deliver a defined scope for a set price, regardless of the actual effort. It suits well-defined scope; the agency carries the overrun risk, so any change in scope must go through change requests.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When we offer fixed bid versus T&M, the contingency we build in, and the rule for how change requests are priced on a fixed-bid project.",
+    "example": "A white-label grocery app for a client in Saudi Arabia is sold fixed bid: rebranding, configuration and store submission for one agreed price.",
+    "clientSentence": "With a fixed bid you pay one agreed price for the agreed scope; anything new is quoted separately before we start it.",
+    "impact": "Price is fixed, so overruns reduce the agency's margin. Requires a tight SOW and disciplined change control; typically paid by milestone.",
+    "sources": [
+      {
+        "label": "Law Insider: Fixed Price definition",
+        "url": "https://www.lawinsider.com/dictionary/fixed-price",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Fixed-price contract",
+        "url": "https://en.wikipedia.org/wiki/Fixed-price_contract",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "T&M",
+      "TnM",
+      "hourly billing"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "fixed-bid",
+      "rate-card",
+      "retainer",
+      "dedicated-resource-model",
+      "invoice"
+    ],
+    "confusedWith": [
+      "fixed-bid",
+      "retainer"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "time-and-materials",
+    "name": "Time and Materials",
+    "category": "commercial",
+    "definition": "A pricing model where the client pays for the actual time spent, at agreed rates, plus any materials or third-party costs. It suits evolving scope; the client carries the cost risk and usually gets more flexibility to change priorities.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When we offer T&M, how time is tracked and reported to the client, the billing cycle, and whether we use a budget cap or not-to-exceed amount.",
+    "example": "A US start-up's React product has a changing roadmap, so it is billed T&M: each month the client receives an invoice with hours per role and the tickets worked on.",
+    "clientSentence": "With time and materials you pay for the hours we actually spend, which gives you flexibility to change priorities as you learn.",
+    "impact": "Billing follows timesheets, typically monthly. Changes are cheaper to absorb, but clients often ask for a cap, so budget burn must be reported regularly.",
+    "sources": [
+      {
+        "label": "Law Insider: Time and Materials definition",
+        "url": "https://www.lawinsider.com/dictionary/time-and-materials",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Time and materials",
+        "url": "https://en.wikipedia.org/wiki/Time_and_materials",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "retainer agreement",
+      "monthly retainer"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "time-and-materials",
+      "amc",
+      "support",
+      "maintenance",
+      "dedicated-resource-model",
+      "rate-card"
+    ],
+    "confusedWith": [
+      "amc",
+      "time-and-materials",
+      "dedicated-resource-model"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "retainer",
+    "name": "Retainer",
+    "category": "commercial",
+    "definition": "An arrangement where the client pays a recurring fee, usually monthly, to reserve a set amount of the agency's capacity or a set service. It may cover a fixed number of hours; unused hours may or may not roll over.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether we offer retainers, what hours or services they include, whether unused hours roll over or expire, and how overage beyond the retainer is billed.",
+    "example": "After launch, a UK e-commerce client takes a monthly retainer of a fixed block of hours for small improvements and content changes on its Laravel site.",
+    "clientSentence": "A retainer reserves a set amount of our team's time each month, so your requests are picked up quickly without a new quote each time.",
+    "impact": "Predictable recurring revenue. Typically billed in advance each month; work beyond the included hours is usually billed at rate-card rates.",
+    "sources": [
+      {
+        "label": "Law Insider: Retainer definition",
+        "url": "https://www.lawinsider.com/dictionary/retainer",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Retainer agreement",
+        "url": "https://en.wikipedia.org/wiki/Retainer_agreement",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "dedicated team",
+      "DRM",
+      "staff augmentation",
+      "hire a developer"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "time-and-materials",
+      "retainer",
+      "rate-card",
+      "invoice"
+    ],
+    "confusedWith": [
+      "time-and-materials",
+      "retainer"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "dedicated-resource-model",
+    "name": "Dedicated Resource Model",
+    "category": "commercial",
+    "definition": "An engagement model where the client pays a monthly fee for named people who work only, or mostly, on the client's work. The client usually directs their day-to-day priorities; the agency provides the people, their management and their replacement if someone leaves.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our monthly pricing per role, the minimum term and notice period, who manages the resource's daily work, how leave and replacement are handled, and whether the resource uses our or the client's tools.",
+    "example": "A Dutch SaaS company takes two dedicated Laravel developers and one QA engineer for six months; its own product owner sets their sprint priorities.",
+    "clientSentence": "With a dedicated team you get named people working on your product every day, and you decide what they work on.",
+    "impact": "Typically billed monthly per person regardless of the work mix. Scope changes do not need CRs, but utilisation, leave and notice periods matter for billing.",
+    "sources": [
+      {
+        "label": "Law Insider: Dedicated Resources definition",
+        "url": "https://www.lawinsider.com/dictionary/dedicated-resources",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Staff augmentation",
+        "url": "https://en.wikipedia.org/wiki/Staff_augmentation",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "project milestone"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "milestone-billing",
+      "sign-off",
+      "sow",
+      "invoice"
+    ],
+    "confusedWith": [
+      "milestone-billing"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "milestone",
+    "name": "Milestone",
+    "category": "commercial",
+    "definition": "A significant, checkable point in a project, such as design approval, beta release, UAT sign-off or go-live. A milestone has no duration; it marks that a set of deliverables is complete. In contracts, milestones are often tied to payments.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard milestones for custom and white-label projects, the evidence that a milestone is reached (for example written sign-off), and who confirms it.",
+    "example": "A React Native booking app has four milestones: design approval, alpha build, UAT sign-off and store go-live.",
+    "clientSentence": "A milestone is a checkpoint where we show you a finished part of the work and agree it is done before moving on.",
+    "impact": "Often triggers an invoice. A milestone without clear exit criteria invites disputes about whether it has been reached and whether payment is due.",
+    "sources": [
+      {
+        "label": "Law Insider: Milestone definition",
+        "url": "https://www.lawinsider.com/dictionary/milestone",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Milestone (project management)",
+        "url": "https://en.wikipedia.org/wiki/Milestone_(project_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "milestone payment",
+      "stage payment",
+      "payment milestone"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "milestone",
+      "advance-payment",
+      "invoice",
+      "sign-off",
+      "fixed-bid",
+      "payment-terms"
+    ],
+    "confusedWith": [
+      "milestone"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "milestone-billing",
+    "name": "Milestone Billing",
+    "category": "commercial",
+    "definition": "A payment schedule where portions of the total price are invoiced when agreed milestones are reached, rather than monthly or all at the end. It is common on fixed-bid projects and links cash flow to visible progress.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard payment split across milestones, whether an advance is always the first instalment, and whether a milestone can be invoiced if the client delays sign-off.",
+    "example": "A fixed-bid Laravel marketplace is billed in four parts: an advance at signing, then on design approval, UAT sign-off and go-live.",
+    "clientSentence": "You pay in stages as each agreed milestone is delivered, so payments follow visible progress.",
+    "impact": "Delayed milestones delay cash. Contracts typically say a milestone is deemed accepted if the client does not respond within a set number of days; check the SOW.",
+    "sources": [
+      {
+        "label": "Law Insider: Milestone Payment definition",
+        "url": "https://www.lawinsider.com/dictionary/milestone-payment",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Payment schedule",
+        "url": "https://en.wikipedia.org/wiki/Payment_schedule",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "advance",
+      "upfront payment",
+      "deposit",
+      "mobilisation fee"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "milestone-billing",
+      "invoice",
+      "payment-terms",
+      "sow"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "advance-payment",
+    "name": "Advance Payment",
+    "category": "commercial",
+    "definition": "Part of the price paid before work starts. It secures the client's commitment, funds the start of the project and reduces the agency's risk of non-payment. It is usually deducted from the total, not charged on top.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard advance as a share of the contract, whether work may start before it arrives, and whether it is refundable if the project is cancelled.",
+    "example": "For a white-label taxi app for a client in Nigeria, the team does not book store accounts or start configuration until the advance payment has cleared.",
+    "clientSentence": "The advance payment confirms the project and lets us reserve the team; it counts towards the total price.",
+    "impact": "Typically a share of the total paid on signing. Starting without it shifts all the payment risk to the agency.",
+    "sources": [
+      {
+        "label": "Law Insider: Advance Payment definition",
+        "url": "https://www.lawinsider.com/dictionary/advance-payment",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Investopedia: Advance payment",
+        "url": "https://www.investopedia.com/terms/a/advance-payment.asp",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "bill",
+      "tax invoice"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "purchase-order",
+      "payment-terms",
+      "credit-note",
+      "late-payment",
+      "milestone-billing"
+    ],
+    "confusedWith": [
+      "quote",
+      "credit-note"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "invoice",
+    "name": "Invoice",
+    "category": "commercial",
+    "definition": "A formal request for payment listing what was supplied, the amount due, taxes, the payment terms, due date and bank details. It is also an accounting and tax record, so it must be accurate and reference any PO or contract number.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who raises invoices (PM or finance), what the PM must provide (milestone evidence, timesheets), the invoice format and currency, and when invoices are sent.",
+    "example": "At UAT sign-off the PM sends finance the signed acceptance email and the PO number, and finance issues the milestone invoice the same day.",
+    "clientSentence": "We will send an invoice for this milestone with the PO number and due date, so your finance team can process it easily.",
+    "impact": "No invoice, no payment. Errors such as a wrong PO or amount typically delay payment by a full payment cycle.",
+    "sources": [
+      {
+        "label": "Law Insider: Invoice definition",
+        "url": "https://www.lawinsider.com/dictionary/invoice",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "GOV.UK: Invoicing and taking payment from customers",
+        "url": "https://www.gov.uk/invoicing-and-taking-payment-from-customers",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "credit memo",
+      "CN"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "invoice",
+      "payment-terms"
+    ],
+    "confusedWith": [
+      "invoice"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "credit-note",
+    "name": "Credit Note",
+    "category": "commercial",
+    "definition": "A document issued by the seller that reduces or cancels an amount previously invoiced, for example after an overcharge, a discount agreed afterwards or a cancelled service. It is the correct way to correct an invoice instead of editing or deleting it.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who may approve a credit note, the reasons we accept for issuing one, and how it is communicated to the client.",
+    "example": "A client was invoiced for 40 support hours but only 32 were used under their plan. Finance issues a credit note for the difference rather than changing the original invoice.",
+    "clientSentence": "We will issue a credit note to correct the invoice, which reduces the amount you owe.",
+    "impact": "Reduces revenue already billed. Frequent credit notes typically signal estimation, timesheet or invoicing problems.",
+    "sources": [
+      {
+        "label": "Law Insider: Credit Note definition",
+        "url": "https://www.lawinsider.com/dictionary/credit-note",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Credit note",
+        "url": "https://en.wikipedia.org/wiki/Credit_note",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "net terms",
+      "Net 30",
+      "credit terms"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "invoice",
+      "late-payment",
+      "advance-payment",
+      "msa",
+      "milestone-billing"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "payment-terms",
+    "name": "Payment Terms",
+    "category": "commercial",
+    "definition": "The contractual conditions for paying invoices: how many days the client has to pay (for example Net 15 or Net 30), the currency and method, any early-payment discount and the consequences of paying late.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard payment terms, whether they differ by client region or project type, and which exceptions need approval.",
+    "example": "A SOW states Net 15 from the invoice date. The client's procurement team asks for Net 60; the PM escalates because that would change the project's cash flow.",
+    "clientSentence": "Our payment terms set out when each invoice is due, so both sides can plan cash flow.",
+    "impact": "Typical terms range from due on receipt to Net 30–60. Longer terms delay cash and raise the cost of carrying the project.",
+    "sources": [
+      {
+        "label": "Law Insider: Payment Terms definition",
+        "url": "https://www.lawinsider.com/dictionary/payment-terms",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Net D (payment terms)",
+        "url": "https://en.wikipedia.org/wiki/Payment_terms",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "overdue invoice",
+      "payment default",
+      "late fee"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "payment-terms",
+      "invoice",
+      "termination"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "late-payment",
+    "name": "Late Payment",
+    "category": "commercial",
+    "definition": "An invoice not paid by its due date. Contracts often allow interest or a late fee, and may allow the supplier to suspend work after notice. Some countries also give statutory rights to interest on late commercial payments.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our escalation steps for overdue invoices, when work or access may be paused, whether we charge interest, and who decides to pause a project.",
+    "example": "A milestone invoice is 20 days overdue on a React project. The PM follows the reminder steps, then account management and the client sponsor agree a payment date before the next release.",
+    "clientSentence": "This invoice is now overdue; could you confirm a payment date so we can keep the next release on schedule?",
+    "impact": "Typically handled with reminders, then interest or suspension of work as the contract allows. Continuing to deliver while unpaid increases exposure.",
+    "sources": [
+      {
+        "label": "Law Insider: Late Payment definition",
+        "url": "https://www.lawinsider.com/dictionary/late-payment",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "GOV.UK: Late commercial payments: charging interest and debt recovery",
+        "url": "https://www.gov.uk/late-commercial-payments-interest-debt-recovery",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "intellectual property",
+      "IPR",
+      "IP assignment"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "licence",
+      "source-code-handover",
+      "third-party-licences",
+      "msa",
+      "escrow"
+    ],
+    "confusedWith": [
+      "licence"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "ip-ownership",
+    "name": "IP Ownership",
+    "category": "commercial",
+    "definition": "Who legally owns the intellectual property created during a project, such as source code, designs and documentation. In custom work the client often receives ownership on full payment; agencies usually keep their pre-existing tools, libraries and product code and grant a licence to use them.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When IP transfers to the client on custom projects (for example on full payment), which Oyelabs code and white-label products we always retain, and what licence the client receives to retained code.",
+    "example": "On a custom Laravel CRM the client owns the bespoke code after the final payment, while the agency keeps its reusable authentication module and licenses it to the client.",
+    "clientSentence": "Once the project is paid in full, you own the code we wrote specifically for you, and you get a licence to any reusable components of ours.",
+    "impact": "No direct cost, but it decides what can be handed over, reused or resold. Unclear IP terms typically block handover or delay final payment.",
+    "sources": [
+      {
+        "label": "Law Insider: Intellectual Property Rights definition",
+        "url": "https://www.lawinsider.com/dictionary/intellectual-property-rights",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "GOV.UK: Intellectual property and your work",
+        "url": "https://www.gov.uk/intellectual-property-an-overview",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "license",
+      "software licence",
+      "usage rights"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "ip-ownership",
+      "third-party-licences",
+      "renewal",
+      "termination"
+    ],
+    "confusedWith": [
+      "ip-ownership"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "licence",
+    "name": "Licence",
+    "category": "commercial",
+    "definition": "Permission to use something, such as software, without owning it, on stated conditions: who may use it, for what, where, for how long and for what fee. White-label products are typically licensed, not sold.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The licence a white-label client receives (per app, per brand, per region), whether it is perpetual or subscription-based, what happens to it if the client stops paying, and the licence granted for retained code in custom projects.",
+    "example": "A client in Kenya licenses the agency's white-label food-delivery product for one brand and one country; launching a second brand would need a new licence.",
+    "clientSentence": "The licence gives you the right to use and run the product under your brand on the agreed terms, while the underlying product stays ours.",
+    "impact": "Licence fees are typically one-off, annual or monthly. Using software beyond the licence scope is a breach, so scope changes may need a licence change.",
+    "sources": [
+      {
+        "label": "Law Insider: License definition",
+        "url": "https://www.lawinsider.com/dictionary/license",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software license",
+        "url": "https://en.wikipedia.org/wiki/Software_license",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "code handover",
+      "repo transfer",
+      "code delivery"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "ip-ownership",
+      "escrow",
+      "licence",
+      "invoice"
+    ],
+    "confusedWith": [
+      "escrow"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "source-code-handover",
+    "name": "Source Code Handover",
+    "category": "commercial",
+    "definition": "The formal transfer of the source code, repositories, build scripts, credentials and documentation to the client, usually at the end of a project or on final payment. A good handover lets another team build, deploy and maintain the system.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When code is handed over (on final payment, per milestone or never for white-label), what the handover package must include, and whether white-label clients ever receive source code.",
+    "example": "After the final invoice on a custom React Native app is paid, the team transfers the GitHub repository, environment variables, store credentials and a deployment guide to the client's CTO.",
+    "clientSentence": "At handover we give you the full code, access and documentation so your team or any partner can run and maintain the app.",
+    "impact": "Typically tied to final payment. An incomplete handover often turns into unbilled support hours later.",
+    "sources": [
+      {
+        "label": "Law Insider: Source Code definition",
+        "url": "https://www.lawinsider.com/dictionary/source-code",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "GOV.UK: Making source code open and reusable",
+        "url": "https://www.gov.uk/service-manual/technology/making-source-code-open-and-reusable",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "escrow",
+      "software escrow",
+      "code escrow"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "source-code-handover",
+      "licence",
+      "ip-ownership"
+    ],
+    "confusedWith": [
+      "source-code-handover"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "escrow",
+    "name": "Source Code Escrow",
+    "category": "commercial",
+    "definition": "An arrangement where the supplier deposits source code with an independent third party, which releases it to the client only on agreed events such as the supplier going out of business or failing to support the software. It protects clients who license, but do not own, critical software.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether we ever agree to escrow, which provider we use, who pays the escrow fees, and the release events we accept.",
+    "example": "A bank in the Gulf licenses a white-label wallet product and insists on code escrow, so it can keep the system running if the vendor stops supporting it.",
+    "clientSentence": "With escrow, a neutral third party holds a copy of the code and gives it to you only if we can no longer support the product.",
+    "impact": "Escrow fees are typically annual and paid by the requesting party. Deposits must be refreshed after major releases.",
+    "sources": [
+      {
+        "label": "Law Insider: Source Code Escrow Agreement definition",
+        "url": "https://www.lawinsider.com/dictionary/source-code-escrow-agreement",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Source code escrow",
+        "url": "https://en.wikipedia.org/wiki/Source_code_escrow",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "third-party licenses",
+      "OSS licences",
+      "open-source licences",
+      "vendor licences"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "licence",
+      "ip-ownership",
+      "source-code-handover",
+      "renewal"
+    ],
+    "confusedWith": [
+      "licence"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "third-party-licences",
+    "name": "Third-Party Licences",
+    "category": "commercial",
+    "definition": "Licences for software, services, fonts, images or components made by others and used in the project, such as open-source libraries, paid plugins, map or SMS APIs. The client must comply with them, and paid ones carry their own costs and renewals.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who buys and owns paid third-party licences (client or Oyelabs), how we list them at handover, and which open-source licences we avoid in client work.",
+    "example": "A Laravel admin uses a paid charting library and a commercial PDF tool. Both licences are bought in the client's name and listed in the handover document.",
+    "clientSentence": "Some features rely on third-party services or components with their own licences and fees, which we will list for you.",
+    "impact": "Typically billed to the client at cost or paid directly by them. Missed renewals can break features in production.",
+    "sources": [
+      {
+        "label": "Law Insider: Third Party Licenses definition",
+        "url": "https://www.lawinsider.com/dictionary/third-party-licenses",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Open-source license",
+        "url": "https://en.wikipedia.org/wiki/Open-source_license",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "contract termination",
+      "termination clause",
+      "exit clause"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "msa",
+      "late-payment",
+      "source-code-handover",
+      "ip-ownership",
+      "renewal"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "termination",
+    "name": "Termination",
+    "category": "commercial",
+    "definition": "Ending a contract before it would otherwise end. Contracts usually allow termination for cause (a serious breach, such as non-payment) and sometimes for convenience (no reason needed) with notice. The clause sets the notice period, what is paid for work done and what is handed over.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard notice period, how work in progress is billed on termination, what is handed over, and who may serve or accept a termination notice.",
+    "example": "A client cancels a half-built React project. Under the termination clause it pays for work completed up to the notice date and receives the code for the paid milestones.",
+    "clientSentence": "The termination clause explains how either side can end the agreement, the notice needed, and how completed work is paid for and handed over.",
+    "impact": "Typically all work up to the effective date is billable, sometimes with a cancellation fee. Notice periods are commonly 15–90 days.",
+    "sources": [
+      {
+        "label": "Law Insider: Termination for Convenience definition",
+        "url": "https://www.lawinsider.com/dictionary/termination-for-convenience",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Cornell LII Wex: Termination",
+        "url": "https://www.law.cornell.edu/wex/termination",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "AMC",
+      "maintenance contract",
+      "annual support contract"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "warranty",
+      "support",
+      "maintenance",
+      "sla",
+      "renewal",
+      "retainer",
+      "bug"
+    ],
+    "confusedWith": [
+      "warranty",
+      "support",
+      "maintenance",
+      "retainer"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "amc",
+    "name": "Annual Maintenance Contract",
+    "category": "commercial",
+    "definition": "A yearly paid contract, usually starting after the warranty ends, under which the agency keeps the live software running: fixing bugs, applying security and OS updates, keeping it compatible and providing support within agreed response times. It usually includes a capped number of hours or tickets; new features are excluded.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] What our AMC includes and excludes (bugs, updates, hours cap, new features), how it is priced (for example a share of the build cost or a fixed fee), its SLA, and whether it is offered for white-label clients.",
+    "example": "After a 60-day warranty on a React Native delivery app ends, the client signs an AMC covering bug fixes, iOS and Android OS updates and a monthly hours cap; a new rewards feature is still quoted separately.",
+    "clientSentence": "The AMC is a yearly plan that keeps your live app healthy and supported after the warranty ends; new features are quoted separately.",
+    "impact": "Typically priced yearly as a fixed fee or a percentage of the build cost, billed annually or quarterly. Bugs after warranty are covered by it; without one, fixes are billed as support work.",
+    "sources": [
+      {
+        "label": "Law Insider: Annual Maintenance Contract definition",
+        "url": "https://www.lawinsider.com/dictionary/annual-maintenance-contract",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software maintenance",
+        "url": "https://en.wikipedia.org/wiki/Software_maintenance",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "SLA",
+      "service levels"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "support",
+      "amc",
+      "warranty",
+      "maintenance"
+    ],
+    "confusedWith": [
+      "warranty"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "sla",
+    "name": "Service Level Agreement",
+    "category": "commercial",
+    "definition": "The measurable service commitments a provider makes, such as uptime, response time and resolution time per severity, support hours and how performance is reported. It often includes remedies, such as service credits, if targets are missed.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard response and resolution targets per severity, support hours and time zone, whether SLAs differ by plan (warranty, AMC, support), and whether we offer service credits.",
+    "example": "Under a support plan for a UK client, a critical outage needs a response within an agreed number of hours in business time, while a minor cosmetic issue is handled in the next release.",
+    "clientSentence": "The SLA sets out how quickly we respond to and fix issues, depending on how serious they are.",
+    "impact": "Typical targets range from minutes or hours for critical issues to days for low ones. Tighter SLAs or 24/7 cover cost more; missed SLAs may cost service credits.",
+    "sources": [
+      {
+        "label": "Law Insider: Service Level Agreement definition",
+        "url": "https://www.lawinsider.com/dictionary/service-level-agreement",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Atlassian: What is an SLA?",
+        "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "warranty period",
+      "defect liability period",
+      "bug-fix warranty"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "amc",
+      "support",
+      "maintenance",
+      "bug",
+      "sla",
+      "sign-off"
+    ],
+    "confusedWith": [
+      "support",
+      "maintenance",
+      "amc",
+      "sla"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "warranty",
+    "name": "Warranty",
+    "category": "commercial",
+    "definition": "A limited period after delivery, usually starting at go-live or acceptance, during which the agency fixes defects in the delivered work free of charge. It covers only behaviour that does not match the agreed specification; it does not cover new features, enhancements, changes, misuse or third-party failures.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our warranty window in days, whether it starts at go-live or at UAT sign-off, what it covers and excludes, the response times during it, and whether white-label projects have the same warranty.",
+    "example": "Three weeks after go-live of a Laravel booking site, checkout fails for one card type that the SOW listed. The bug is fixed free under warranty. In the same week, the client's request for a new filter is logged as an enhancement.",
+    "clientSentence": "During the warranty we fix, at no cost, anything that does not work as agreed; new ideas and changes are quoted separately.",
+    "impact": "Typically 30–90 days after go-live. Warranty fixes are not billable, so their cost should be budgeted in the original price. After it ends, bugs move to an AMC or billable support.",
+    "sources": [
+      {
+        "label": "Law Insider: Warranty Period definition",
+        "url": "https://www.lawinsider.com/dictionary/warranty-period",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Cornell LII Wex: Warranty",
+        "url": "https://www.law.cornell.edu/wex/warranty",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "technical support",
+      "post-launch support",
+      "helpdesk"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "warranty",
+      "amc",
+      "maintenance",
+      "sla",
+      "bug",
+      "clarification"
+    ],
+    "confusedWith": [
+      "maintenance",
+      "warranty",
+      "amc"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "support",
+    "name": "Support",
+    "category": "commercial",
+    "definition": "Help provided to users and clients of a live system: answering questions, investigating reported problems, workarounds and fixing issues. It is reactive and request-driven, and usually runs on tickets, with response times set by an SLA. Support may be part of an AMC, a retainer, or billed per hour.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our support plans and hours, the channel clients use to raise tickets, what is included versus billable, and how a bug found after the warranty is charged when there is no AMC.",
+    "example": "Four months after launch, and with no AMC, a client reports that password reset emails stopped. The PM confirms the cause and quotes it as billable support work at rate-card rates.",
+    "clientSentence": "Support is how we help you with questions and issues on your live app, under your plan or billed per request.",
+    "impact": "Typically covered by an AMC or support plan, otherwise billed hourly. Bugs after the warranty fall here.",
+    "sources": [
+      {
+        "label": "Law Insider: Support Services definition",
+        "url": "https://www.lawinsider.com/dictionary/support-services",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Technical support",
+        "url": "https://en.wikipedia.org/wiki/Technical_support",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "software maintenance",
+      "upkeep",
+      "preventive maintenance"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "amc",
+      "support",
+      "warranty",
+      "retainer",
+      "third-party-licences"
+    ],
+    "confusedWith": [
+      "support",
+      "amc",
+      "warranty",
+      "enhancement"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "maintenance",
+    "name": "Maintenance",
+    "category": "commercial",
+    "definition": "Ongoing work to keep software healthy over time: corrective fixes, adaptive updates (new OS, browser, framework or API versions), preventive work such as security patches and dependency upgrades, and small perfective improvements. It is often planned rather than ticket-driven.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] What maintenance we include in plans (for example framework, PHP or OS upgrades, store policy updates), whether it is only sold through an AMC, and how larger upgrades are priced.",
+    "example": "Each year a React Native app needs updates for the new iOS and Android SDK requirements; this adaptive maintenance is scheduled even if the client reports no bugs.",
+    "clientSentence": "Maintenance is the regular upkeep that keeps your app secure and working as phones, browsers and services change.",
+    "impact": "Typically planned work under an AMC or retainer. Skipping it builds up risk: stores can reject updates, and later upgrades get larger and more expensive.",
+    "sources": [
+      {
+        "label": "Law Insider: Maintenance Services definition",
+        "url": "https://www.lawinsider.com/dictionary/maintenance-services",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software maintenance",
+        "url": "https://en.wikipedia.org/wiki/Software_maintenance",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "contract renewal",
+      "auto-renewal",
+      "renewal term"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "amc",
+      "licence",
+      "retainer",
+      "termination",
+      "third-party-licences"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "renewal",
+    "name": "Renewal",
+    "category": "commercial",
+    "definition": "Extending a time-bound agreement, such as an AMC, licence, retainer or hosting plan, for another term. Some contracts renew automatically unless notice is given; others need active agreement. Renewal is the usual moment to revise prices and scope.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which of our agreements auto-renew, the notice periods, who owns renewal reminders, and whether prices are reviewed at renewal.",
+    "example": "Sixty days before a white-label client's annual licence and AMC expire, the account manager sends a renewal notice with the updated price and a summary of the year's support.",
+    "clientSentence": "Your plan is due for renewal soon; here is what it covers next year and the updated price.",
+    "impact": "Typically annual. Missed renewals can stop support or a licence; renewal price increases are commonly agreed at this point.",
+    "sources": [
+      {
+        "label": "Law Insider: Renewal Term definition",
+        "url": "https://www.lawinsider.com/dictionary/renewal-term",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Law Insider: Renewal definition",
+        "url": "https://www.lawinsider.com/dictionary/renewal",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "baseline scope",
+      "approved scope",
+      "signed scope"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "sow",
+      "in-scope",
+      "out-of-scope",
+      "requirement-freeze",
+      "change-request",
+      "sign-off"
+    ],
+    "confusedWith": [
+      "requirement-freeze"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "scope-baseline",
+    "name": "Scope Baseline",
+    "category": "scope",
+    "definition": "The approved version of the scope: the scope statement or SOW, the list of deliverables and the agreed requirements, as signed off. It is the reference against which every later request is judged as in scope, a change or a bug. It only changes through formal change control.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which documents form the baseline on our projects (SOW, signed BRD, approved designs, user stories), where they are stored, and when the baseline is locked.",
+    "example": "For a Laravel HR portal, the baseline is the SOW plus the signed requirements document and the approved Figma designs. When the client asks for a payroll export, the PM checks it against these and finds it is not there.",
+    "clientSentence": "The scope baseline is the signed list of what we agreed to build; we compare every new request against it.",
+    "impact": "Without a baseline nothing can be priced as a change, so extra work ends up free. Re-baselining happens only after an approved CR.",
+    "sources": [
+      {
+        "label": "Wikipedia: Baseline (configuration management)",
+        "url": "https://en.wikipedia.org/wiki/Baseline_(configuration_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Scope (project management)",
+        "url": "https://en.wikipedia.org/wiki/Scope_(project_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "included",
+      "within scope"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "out-of-scope",
+      "scope-baseline",
+      "sow",
+      "assumption"
+    ],
+    "confusedWith": [
+      "out-of-scope"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "in-scope",
+    "name": "In Scope",
+    "category": "scope",
+    "definition": "Work, features or deliverables that the agreed scope explicitly covers and that are included in the price and timeline. If something is in scope, the client should not pay extra for it.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How we record in-scope items (SOW feature list, user stories, acceptance criteria) and how a PM settles a disagreement on whether something is in scope.",
+    "example": "The SOW for a React Native food app lists push notifications for order status, so the client's request to notify on 'out for delivery' is in scope and planned with no CR.",
+    "clientSentence": "That is in scope, so it is already included in the agreed price and plan.",
+    "impact": "No extra charge or time. Disputes are typically settled by the wording of the SOW, so write in-scope items specifically.",
+    "sources": [
+      {
+        "label": "Law Insider: In Scope definition",
+        "url": "https://www.lawinsider.com/dictionary/in-scope",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Scope (project management)",
+        "url": "https://en.wikipedia.org/wiki/Scope_(project_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "excluded",
+      "exclusions",
+      "OOS"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "in-scope",
+      "change-request",
+      "new-feature",
+      "scope-creep",
+      "sow",
+      "phase-2"
+    ],
+    "confusedWith": [
+      "in-scope"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "out-of-scope",
+    "name": "Out of Scope",
+    "category": "scope",
+    "definition": "Work that the agreed scope does not cover, either because it was explicitly excluded or because it was never specified. It is not done unless agreed through a change request, a new SOW or a later phase.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard exclusions list for SOWs (for example data migration, content entry, third-party fees, store fees), and how a PM should respond in writing to an out-of-scope request.",
+    "example": "A client asks the team to load 3,000 products into their new Laravel shop. The SOW excludes content entry, so the PM replies that it is out of scope and offers a quote.",
+    "clientSentence": "That is outside the agreed scope, but we are happy to quote it as a change or plan it for a later phase.",
+    "impact": "Billable if accepted: typically priced as a CR or new phase. Doing it quietly for free is gold-plating or scope creep.",
+    "sources": [
+      {
+        "label": "Law Insider: Out of Scope Work definition",
+        "url": "https://www.lawinsider.com/dictionary/out-of-scope-work",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Law Insider: In Scope definition",
+        "url": "https://www.lawinsider.com/dictionary/in-scope",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "project assumption"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "dependency",
+      "client-dependency",
+      "constraint",
+      "estimate",
+      "sow",
+      "change-request"
+    ],
+    "confusedWith": [
+      "dependency",
+      "constraint"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "assumption",
+    "name": "Assumption",
+    "category": "scope",
+    "definition": "Something believed to be true for planning and pricing that has not been confirmed, for example that the client provides content by a date or that an API supports a feature. Written assumptions protect the estimate: if one proves false, the impact can be handled as a change.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The standard assumptions in our SOWs and estimates, and the rule for what happens when an assumption is proven wrong.",
+    "example": "An estimate for a white-label ride-hailing app assumes the client's payment gateway is already supported. It is not, so the extra integration is raised as a change request.",
+    "clientSentence": "Our price is based on a few assumptions that we list clearly; if one turns out not to be true, we will discuss the impact with you.",
+    "impact": "A broken assumption is typically a valid reason for a CR. Unwritten assumptions cannot be used to justify extra cost later.",
+    "sources": [
+      {
+        "label": "Law Insider: Assumptions definition",
+        "url": "https://www.lawinsider.com/dictionary/assumptions",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Scope (project management)",
+        "url": "https://en.wikipedia.org/wiki/Scope_(project_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "project dependency",
+      "external dependency"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "client-dependency",
+      "assumption",
+      "constraint"
+    ],
+    "confusedWith": [
+      "assumption",
+      "client-dependency"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "dependency",
+    "name": "Dependency",
+    "category": "scope",
+    "definition": "A task, input or party that a piece of work relies on: one task cannot start or finish until another does, or the team needs something external, such as an API, a third-party approval or a design. Dependencies drive the schedule and are a common source of delay.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How we record dependencies (for example in the RAID log), who tracks them, and when a missed dependency is escalated.",
+    "example": "The checkout screen of a Laravel shop cannot be tested until the payment provider approves the merchant account, so that approval is tracked as a dependency.",
+    "clientSentence": "This step depends on something else being ready first, so we are tracking it closely to protect the timeline.",
+    "impact": "A late dependency typically moves dates. If the dependency was the client's, the delay and any idle cost may be raised as a change.",
+    "sources": [
+      {
+        "label": "Law Insider: Dependencies definition",
+        "url": "https://www.lawinsider.com/dictionary/dependencies",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Dependency (project management)",
+        "url": "https://en.wikipedia.org/wiki/Dependency_(project_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "customer dependency",
+      "client input",
+      "client deliverable"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "dependency",
+      "assumption",
+      "change-request",
+      "sign-off"
+    ],
+    "confusedWith": [
+      "dependency"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "client-dependency",
+    "name": "Client Dependency",
+    "category": "scope",
+    "definition": "Something the client must provide or do for the project to proceed: content, brand assets, API credentials, store accounts, test data, timely feedback or approvals. If it is late, the delay is the client's responsibility under most contracts.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our standard client dependencies per project type, the due dates we set for them, and what happens to the timeline and cost when they are late (for example a pause or a CR).",
+    "example": "A white-label pharmacy app cannot be submitted because the client has not created its Apple Developer account. The PM logs it as a client dependency and notes the new go-live date in writing.",
+    "clientSentence": "We need these items from your side by the dates shown to keep the launch on track.",
+    "impact": "Late client inputs typically move the timeline; contracts often allow extra cost for idle time or re-planning. Record delays in writing as they happen.",
+    "sources": [
+      {
+        "label": "Law Insider: Client Dependencies definition",
+        "url": "https://www.lawinsider.com/dictionary/client-dependencies",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Law Insider: Customer Dependencies definition",
+        "url": "https://www.lawinsider.com/dictionary/customer-dependencies",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "project constraint",
+      "limitation"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "assumption",
+      "dependency",
+      "mvp",
+      "scope-baseline"
+    ],
+    "confusedWith": [
+      "assumption"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "constraint",
+    "name": "Constraint",
+    "category": "scope",
+    "definition": "A fixed limit the project must work within, such as budget, deadline, technology, regulation, team size or a platform rule. Unlike an assumption, a constraint is known to be true; the plan must fit around it.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How we capture constraints at kick-off and which ones must be written into the SOW.",
+    "example": "A UK health app must store data only in UK data centres and launch before a trade show. Both are constraints that shape the hosting choice and the MVP scope.",
+    "clientSentence": "These are fixed limits we have to plan around, such as your launch date and budget.",
+    "impact": "Constraints typically force trade-offs between scope, time and cost. A new constraint after signing, such as an earlier deadline, is usually a change.",
+    "sources": [
+      {
+        "label": "Law Insider: Constraints definition",
+        "url": "https://www.lawinsider.com/dictionary/constraints",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Project management triangle",
+        "url": "https://en.wikipedia.org/wiki/Project_management_triangle",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "feature creep",
+      "requirement creep"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "change-request",
+      "gold-plating",
+      "scope-baseline",
+      "out-of-scope",
+      "requirement-freeze"
+    ],
+    "confusedWith": [
+      "gold-plating",
+      "change-request"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "scope-creep",
+    "name": "Scope Creep",
+    "category": "scope",
+    "definition": "The gradual, uncontrolled growth of a project's scope through small additions that are accepted without adjusting time, cost or resources. Each request looks minor, but together they erode margin and timelines. The cure is change control, not refusing every request.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The threshold above which any request must go through a CR, and whether small changes can be absorbed or logged without charge.",
+    "example": "On a fixed-bid React dashboard, the client adds 'just one more chart' in several meetings. After six weeks the team has built nine unplanned charts, and the release slips.",
+    "clientSentence": "To protect your launch date, let us log new requests and agree their priority and cost before we add them.",
+    "impact": "Unbilled effort and delays; on fixed bid it comes straight out of margin. Typically prevented by logging every request and raising CRs.",
+    "sources": [
+      {
+        "label": "Law Insider: Scope Creep definition",
+        "url": "https://www.lawinsider.com/dictionary/scope-creep",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Atlassian: Scope creep in project management",
+        "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "over-delivery",
+      "goldplating"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "scope-creep",
+      "enhancement",
+      "nice-to-have",
+      "in-scope"
+    ],
+    "confusedWith": [
+      "scope-creep",
+      "enhancement"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "gold-plating",
+    "name": "Gold Plating",
+    "category": "scope",
+    "definition": "Adding features, polish or extras that the client did not ask for and that are not in scope, usually by the delivery team trying to impress. It adds cost, risk and testing effort without agreed value, and sets expectations that are hard to maintain.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How we prevent gold plating (for example definition of done, PR review against tickets) and how a team suggests an improvement properly.",
+    "example": "A developer adds animated transitions and a dark mode to a Laravel admin panel that nobody requested. QA has to test both, and the sprint goal is missed.",
+    "clientSentence": "We stick to what we agreed, and if we see a worthwhile improvement we will suggest it to you first rather than adding it unasked.",
+    "impact": "Unbilled effort and extra QA; it can also introduce bugs. Typically handled by raising the idea as a suggested enhancement.",
+    "sources": [
+      {
+        "label": "Wikipedia: Gold plating (project management)",
+        "url": "https://en.wikipedia.org/wiki/Gold_plating_(project_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Scope (project management)",
+        "url": "https://en.wikipedia.org/wiki/Scope_(project_management)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "CR",
+      "change order",
+      "variation"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "enhancement",
+      "new-feature",
+      "bug",
+      "scope-baseline",
+      "scope-creep",
+      "out-of-scope",
+      "sign-off",
+      "estimate"
+    ],
+    "confusedWith": [
+      "enhancement",
+      "new-feature",
+      "bug",
+      "clarification"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "change-request",
+    "name": "Change Request",
+    "category": "scope",
+    "definition": "A formal request to change something already agreed: the signed scope, an accepted behaviour, a design, the timeline or the budget. It is documented, assessed for its impact on time, cost and risk, and approved in writing before work starts. If approved, it updates the scope baseline.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Our CR process and form, who estimates and approves CRs on each side, whether a minimum charge applies, how CRs are priced on fixed bid versus T&M, and whether small CRs may be bundled.",
+    "example": "The client of a Laravel booking platform, after approving a 24-hour cancellation rule, now wants a 48-hour rule with a partial refund. The behaviour was agreed and accepted, so the PM raises a CR with the effort, cost and new date.",
+    "clientSentence": "Because this changes what we agreed, I will send a short change request with the cost and timing impact for your approval before we start.",
+    "impact": "Typically billable: estimated, priced and approved in writing before work starts, and it may move dates. Starting before approval risks unpaid work.",
+    "sources": [
+      {
+        "label": "Law Insider: Change Request definition",
+        "url": "https://www.lawinsider.com/dictionary/change-request",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Change request",
+        "url": "https://en.wikipedia.org/wiki/Change_request",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "improvement",
+      "feature improvement"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "change-request",
+      "new-feature",
+      "bug",
+      "backlog",
+      "nice-to-have",
+      "gold-plating"
+    ],
+    "confusedWith": [
+      "change-request",
+      "bug",
+      "new-feature",
+      "gold-plating"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "enhancement",
+    "name": "Enhancement",
+    "category": "scope",
+    "definition": "An improvement to something that already works as specified, such as faster loading, an extra filter, better wording or a nicer layout. It is not a bug, because nothing is broken, and it does not reverse an agreed decision. It is usually logged in the backlog and prioritised against other work.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether enhancements always need a CR or can be bundled or absorbed below a size, how they are prioritised in the backlog, and how they are billed on fixed bid, T&M and AMC.",
+    "example": "On a working React order-history page, the client asks to add a date-range filter and CSV export. The page meets its acceptance criteria, so this is an enhancement, logged and estimated for a later sprint.",
+    "clientSentence": "This would improve something that already works as agreed, so we will log it as an enhancement and share the effort before scheduling it.",
+    "impact": "Typically estimated and billed, or traded against something else in the backlog; small ones may be bundled. Not covered by warranty.",
+    "sources": [
+      {
+        "label": "Law Insider: Enhancements definition",
+        "url": "https://www.lawinsider.com/dictionary/enhancements",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software feature",
+        "url": "https://en.wikipedia.org/wiki/Software_feature",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "new functionality",
+      "new module"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "change-request",
+      "enhancement",
+      "out-of-scope",
+      "phase-2",
+      "backlog",
+      "mvp"
+    ],
+    "confusedWith": [
+      "enhancement",
+      "change-request",
+      "customisation"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "new-feature",
+    "name": "New Feature",
+    "category": "scope",
+    "definition": "Functionality that does not exist in the system and was never part of the agreed scope, such as adding chat, a loyalty programme or a new user role. It needs its own requirements, design, estimate and testing, and is priced as new work.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The size above which a new feature becomes a new phase or SOW instead of a CR, and how new-feature requests are captured and estimated.",
+    "example": "Two months into building a white-label salon booking app, the client asks for in-app video consultations. Nothing like it exists or was specified, so it is captured as a new feature and proposed for phase 2.",
+    "clientSentence": "That is a brand-new feature, so we will capture the details and come back with an estimate as a change or as the next phase.",
+    "impact": "Typically estimated as new work: a CR within the current SOW, or a new phase or SOW for larger features. Not covered by warranty or a typical AMC.",
+    "sources": [
+      {
+        "label": "Law Insider: New Features definition",
+        "url": "https://www.lawinsider.com/dictionary/new-features",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software feature",
+        "url": "https://en.wikipedia.org/wiki/Software_feature",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "defect",
+      "fault",
+      "issue"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "regression",
+      "warranty",
+      "support",
+      "amc",
+      "change-request",
+      "enhancement",
+      "clarification"
+    ],
+    "confusedWith": [
+      "enhancement",
+      "change-request",
+      "clarification",
+      "regression"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "bug",
+    "name": "Bug",
+    "category": "scope",
+    "definition": "Behaviour that does not match the agreed specification or acceptance criteria: something that was in scope does not work as specified. If it was never specified, it is not a bug, however inconvenient. Bugs are fixed without changing the agreed scope.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who decides whether a report is a bug, how bugs are logged (steps, severity, priority, evidence), and how bugs are charged in delivery, under warranty and after warranty.",
+    "example": "In UAT of a Laravel invoicing tool, tax is calculated on the discounted price instead of the gross price that the signed requirements specify. It is logged as a bug and fixed in the current sprint.",
+    "clientSentence": "This does not work the way we agreed, so it is a bug and we will fix it as part of the agreed work.",
+    "impact": "Typically fixed at no extra cost during delivery and under warranty. After warranty, it is covered by an AMC or billed as support.",
+    "sources": [
+      {
+        "label": "Law Insider: Defect definition",
+        "url": "https://www.lawinsider.com/dictionary/defect",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software bug",
+        "url": "https://en.wikipedia.org/wiki/Software_bug",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "regression bug",
+      "regression defect"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "bug",
+      "change-request"
+    ],
+    "confusedWith": [
+      "bug"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "regression",
+    "name": "Regression",
+    "category": "scope",
+    "definition": "A bug where something that used to work stops working after a change, such as a new feature, a fix, an upgrade or a configuration change. It is a type of bug, and regression testing exists to catch it before release.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How regressions are prioritised and whether a regression caused by a client-requested change is billed differently.",
+    "example": "After a CR adds coupon codes to a React checkout, gift cards stop applying. Gift cards worked in the previous release, so it is logged as a regression and fixed before go-live.",
+    "clientSentence": "This worked before our latest update and broke as a side effect, so we are treating it as a priority bug.",
+    "impact": "Treated as a bug, typically fixed at no charge when caused by the agency's change. Frequent regressions point to weak automated or regression testing.",
+    "sources": [
+      {
+        "label": "Law Insider: Regression definition",
+        "url": "https://www.lawinsider.com/dictionary/regression",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Software regression",
+        "url": "https://en.wikipedia.org/wiki/Software_regression",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "query",
+      "how-to question",
+      "misunderstanding"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "bug",
+      "change-request",
+      "support",
+      "sign-off"
+    ],
+    "confusedWith": [
+      "bug",
+      "change-request"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "clarification",
+    "name": "Clarification",
+    "category": "scope",
+    "definition": "A question or misunderstanding about how the agreed system works, where the behaviour is correct and nothing needs to change. It is answered by explaining the agreed behaviour and where it was agreed. If the client then wants it to work differently, that becomes a change request or an enhancement.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How clarifications are answered and recorded (for example an FAQ or KT notes), and the point at which repeated clarifications become billable support.",
+    "example": "A client reports that orders 'disappear' from a Laravel admin. They are archived after 30 days exactly as the signed requirements state, so the PM explains this and shows where the archive is.",
+    "clientSentence": "This is working as agreed; let me show you how it works and where we agreed it.",
+    "impact": "Typically no charge. If clarifications keep coming, add them to the documentation or training to save support time.",
+    "sources": [
+      {
+        "label": "Law Insider: Clarification definition",
+        "url": "https://www.lawinsider.com/dictionary/clarification",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Requirements analysis",
+        "url": "https://en.wikipedia.org/wiki/Requirements_analysis",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "config",
+      "settings",
+      "set-up"
+    ],
+    "projectTypes": [
+      "whitelabel",
+      "custom"
+    ],
+    "related": [
+      "customisation",
+      "new-feature",
+      "enhancement"
+    ],
+    "confusedWith": [
+      "customisation"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "configuration",
+    "name": "Configuration",
+    "category": "scope",
+    "definition": "Changing how a product behaves using options it already supports, such as settings, admin panels, feature toggles, themes and content, without writing new code. It is faster, cheaper and safer than customisation, and survives product upgrades.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which white-label settings count as configuration and are included in the setup fee, and who performs configuration (Oyelabs or the client).",
+    "example": "For a white-label taxi app in Ghana, setting the currency, fare formula, service areas, logo and colours through the admin panel is configuration and is included in the setup.",
+    "clientSentence": "This can be set up with the product's existing settings, so no new development is needed.",
+    "impact": "Typically included in the setup fee or done in hours. No impact on upgrades.",
+    "sources": [
+      {
+        "label": "Law Insider: Configuration definition",
+        "url": "https://www.lawinsider.com/dictionary/configuration",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Extend Dynamics 365 apps (customisation trade-offs)",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/extend-your-solution",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "customization",
+      "custom development",
+      "code change"
+    ],
+    "projectTypes": [
+      "whitelabel",
+      "custom"
+    ],
+    "related": [
+      "configuration",
+      "new-feature",
+      "enhancement",
+      "change-request"
+    ],
+    "confusedWith": [
+      "configuration",
+      "new-feature"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "customisation",
+    "name": "Customisation",
+    "category": "scope",
+    "definition": "Changing a product's behaviour by writing new or modified code because its existing settings cannot do what the client needs. On a white-label product, customisation creates a client-specific variant that must be maintained, tested and merged with every core upgrade.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When white-label customisation is allowed, how it is priced, whether it is built as a separate module or in a client fork, and who pays to carry it through core upgrades.",
+    "example": "A white-label grocery client wants a substitution approval step that the product does not support. Building it needs code, so it is quoted as customisation and logged as a module to keep compatible with upgrades.",
+    "clientSentence": "This needs new development on top of the product, so we will quote it separately and note that it adds a little upkeep at each upgrade.",
+    "impact": "Typically billable development plus extra upgrade and maintenance effort later. Heavy customisation makes white-label upgrades slower and more costly.",
+    "sources": [
+      {
+        "label": "Law Insider: Customization definition",
+        "url": "https://www.lawinsider.com/dictionary/customization",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Extend Dynamics 365 apps (customisation trade-offs)",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/extend-your-solution",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "MVP"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "phase-2",
+      "nice-to-have",
+      "backlog",
+      "constraint",
+      "new-feature"
+    ],
+    "confusedWith": [
+      "phase-2"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "mvp",
+    "name": "Minimum Viable Product",
+    "category": "scope",
+    "definition": "The smallest version of a product that delivers enough value to real users to test whether the idea works and to learn from their behaviour. It is scoped by what must be true to launch and learn, not by cutting quality.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How we scope an MVP with clients, the quality bar it must still meet, and how features moved out of the MVP are recorded for phase 2.",
+    "example": "A start-up wants a marketplace with chat, reviews, wallets and subscriptions. The MVP launches with listings, booking and card payment; reviews and wallets go to phase 2.",
+    "clientSentence": "The MVP is the smallest version that lets real users try your idea, so you can launch sooner and learn what to build next.",
+    "impact": "A smaller first scope means lower cost and earlier launch. Typically leads to a phase 2 or a backlog of features to be quoted later.",
+    "sources": [
+      {
+        "label": "Law Insider: Minimum Viable Product definition",
+        "url": "https://www.lawinsider.com/dictionary/minimum-viable-product",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Atlassian: What is a Minimum Viable Product?",
+        "url": "https://www.atlassian.com/agile/product-management/minimum-viable-product",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "next phase",
+      "phase two",
+      "later release"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "mvp",
+      "backlog",
+      "new-feature",
+      "nice-to-have",
+      "out-of-scope",
+      "sow"
+    ],
+    "confusedWith": [
+      "mvp",
+      "backlog"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "phase-2",
+    "name": "Phase 2",
+    "category": "scope",
+    "definition": "A later, separately scoped stage of a project that holds work deliberately left out of the first release, such as deferred features or nice-to-haves. It usually gets its own estimate, plan and contract (a new SOW or a CR), rather than being an implied promise.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether phase 2 is always a new SOW, how deferred items are recorded and how long phase 1 prices remain valid for them.",
+    "example": "Push campaigns and a referral scheme are moved out of a React Native app's first launch and recorded as phase 2, with a separate estimate shared after go-live.",
+    "clientSentence": "We will put this into phase 2 so your launch stays on time, and we will scope and price it separately.",
+    "impact": "Billed separately as new work. Saying 'phase 2' without writing it down typically creates a free-work expectation.",
+    "sources": [
+      {
+        "label": "Law Insider: Phase 2 definition",
+        "url": "https://www.lawinsider.com/dictionary/phase-2",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Iterative and incremental development",
+        "url": "https://en.wikipedia.org/wiki/Iterative_and_incremental_development",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "product backlog",
+      "wishlist"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "enhancement",
+      "new-feature",
+      "nice-to-have",
+      "phase-2",
+      "mvp"
+    ],
+    "confusedWith": [
+      "phase-2",
+      "in-scope"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "backlog",
+    "name": "Backlog",
+    "category": "scope",
+    "definition": "An ordered list of everything that might be done on a product: features, enhancements, bugs and technical work. Items near the top are refined and ready; lower items are rough. Being in the backlog does not mean an item is in scope, priced or committed.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which tool holds the backlog, who orders it on each project type, and how we label in-scope versus unpriced items so the client does not assume everything listed is included.",
+    "example": "A client sees 40 items in a Jira backlog for their Laravel portal and assumes all are included. The PM labels items as in scope, CR pending or phase 2.",
+    "clientSentence": "The backlog is our shared list of ideas and work; we agree which items are in scope and which need a quote.",
+    "impact": "No billing of its own; prioritisation decides what gets built within the budget. Unlabelled backlogs typically cause scope disputes.",
+    "sources": [
+      {
+        "label": "Law Insider: Backlog definition",
+        "url": "https://www.lawinsider.com/dictionary/backlog",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Scrum Guide (2020)",
+        "url": "https://scrumguides.org/scrum-guide.html",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "could have",
+      "optional feature",
+      "NTH"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "mvp",
+      "phase-2",
+      "backlog",
+      "gold-plating",
+      "enhancement"
+    ],
+    "confusedWith": [
+      "enhancement",
+      "gold-plating"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "nice-to-have",
+    "name": "Nice-to-Have",
+    "category": "scope",
+    "definition": "A requirement that would add value but is not essential for launch or for the core goal. In MoSCoW prioritisation it is a 'could have'. Nice-to-haves are the first items cut or deferred when time or budget is tight.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether nice-to-haves are listed in SOWs at all, and whether they are priced as optional items or left for later.",
+    "example": "In a white-label clinic app, multi-language support is marked nice-to-have; it is deferred so the clinic can launch before its peak season.",
+    "clientSentence": "This is a nice-to-have, so we suggest adding it after launch unless it is essential for your first users.",
+    "impact": "Not committed unless priced in. Often deferred to phase 2 and then billed as new work.",
+    "sources": [
+      {
+        "label": "Wikipedia: MoSCoW method",
+        "url": "https://en.wikipedia.org/wiki/MoSCoW_method",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Atlassian: Prioritisation frameworks",
+        "url": "https://www.atlassian.com/agile/product-management/prioritization-framework",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "scope freeze",
+      "requirements lock",
+      "feature freeze"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "scope-baseline",
+      "sign-off",
+      "change-request",
+      "scope-creep"
+    ],
+    "confusedWith": [
+      "scope-baseline",
+      "sign-off"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "requirement-freeze",
+    "name": "Requirement Freeze",
+    "category": "scope",
+    "definition": "An agreed point after which the requirements for a release or phase are locked. Any change after it must go through formal change control, so development and testing can proceed against a stable target. A feature freeze is the related point before release when no new features are added.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When the freeze happens on our projects (for example at requirements or design sign-off), how it is communicated, and the CR route after it.",
+    "example": "After the client signs the requirements and Figma screens for a React Native booking app, the PM declares a requirement freeze; a later request for a new onboarding flow becomes a CR.",
+    "clientSentence": "From today the requirements are frozen so we can build and test against a stable plan; any changes will go through a quick change request.",
+    "impact": "Protects the timeline and price. Changes after the freeze are typically billable CRs and may move dates.",
+    "sources": [
+      {
+        "label": "Wikipedia: Freeze (software engineering)",
+        "url": "https://en.wikipedia.org/wiki/Freeze_(software_engineering)",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Wikipedia: Requirements management",
+        "url": "https://en.wikipedia.org/wiki/Requirements_management",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  },
+  {
+    "aka": [
+      "approval",
+      "acceptance",
+      "client sign-off"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "scope-baseline",
+      "requirement-freeze",
+      "milestone",
+      "milestone-billing",
+      "warranty"
+    ],
+    "confusedWith": [
+      "requirement-freeze"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "sign-off",
+    "name": "Sign-off",
+    "category": "scope",
+    "definition": "Formal written approval from the client that a deliverable, such as requirements, design, a milestone or UAT, is accepted. It closes that stage, fixes the baseline and often triggers payment. Contracts may treat silence after a set period as deemed acceptance.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which stages need sign-off on each project type, the accepted forms (email, signed form, tool approval), who on the client side may sign, and whether we use deemed acceptance.",
+    "example": "After UAT on a Laravel e-learning platform, the client's product owner signs the UAT form listing two known minor issues. The go-live milestone invoice is then raised.",
+    "clientSentence": "Could you please confirm your approval in writing so we can close this stage and move to the next one?",
+    "impact": "Typically triggers milestone billing and locks scope. Missing sign-offs delay payment and leave scope open to dispute.",
+    "sources": [
+      {
+        "label": "Law Insider: Sign-off definition",
+        "url": "https://www.lawinsider.com/dictionary/sign-off",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      },
+      {
+        "label": "Law Insider: Acceptance definition",
+        "url": "https://www.lawinsider.com/dictionary/acceptance",
+        "verifiedAt": "2026-10-02T11:54:00Z"
+      }
+    ]
+  }
+]

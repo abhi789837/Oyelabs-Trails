@@ -1,0 +1,799 @@
+[
+  {
+    "id": "pm-proc-terms-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A web project is still in delivery, not live yet. Classify each client request.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each request.",
+      "mode": "classify-request",
+      "categories": [
+        {
+          "id": "bug",
+          "label": "Bug (found during delivery)"
+        },
+        {
+          "id": "enhancement",
+          "label": "Enhancement"
+        },
+        {
+          "id": "change-request",
+          "label": "Change request"
+        },
+        {
+          "id": "new-feature",
+          "label": "New feature"
+        },
+        {
+          "id": "clarification",
+          "label": "Clarification (no change)"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "In UAT, tax uses the discounted price; the signed requirements say gross.",
+          "explanation": "In scope, not working as specified, not live: a bug fixed as part of delivery."
+        },
+        {
+          "id": "b",
+          "text": "Orders vanish from the admin after 30 days, exactly as the requirements say.",
+          "explanation": "Works as agreed and nothing needs to change: a clarification."
+        },
+        {
+          "id": "c",
+          "text": "We approved a 24-hour cancellation rule; now we want 48 hours.",
+          "explanation": "Changes behaviour that was agreed: a change request."
+        },
+        {
+          "id": "d",
+          "text": "Add in-app video calls; nothing like it was ever specified.",
+          "explanation": "Brand-new functionality: a new feature, estimated as new work."
+        }
+      ],
+      "answer": {
+        "a": "bug",
+        "b": "clarification",
+        "c": "change-request",
+        "d": "new-feature"
+      }
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:bug",
+      "term:clarification",
+      "term:change-request",
+      "term:new-feature",
+      "rule:billing-bug-in-delivery",
+      "stage:custom-scope-control"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The app went live recently and is inside its warranty window. Classify each client request.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each request.",
+      "mode": "classify-request",
+      "categories": [
+        {
+          "id": "bug-warranty",
+          "label": "Bug under warranty"
+        },
+        {
+          "id": "bug-support",
+          "label": "Bug after the warranty (support)"
+        },
+        {
+          "id": "enhancement",
+          "label": "Enhancement"
+        },
+        {
+          "id": "change-request",
+          "label": "Change request"
+        },
+        {
+          "id": "clarification",
+          "label": "Clarification (no change)"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Checkout fails for one card type that the SOW lists.",
+          "explanation": "In scope, broken, live inside the warranty: a warranty bug, typically fixed free."
+        },
+        {
+          "id": "b",
+          "text": "Add a date filter to order history, which meets its criteria.",
+          "explanation": "Improves something that already works as agreed: an enhancement."
+        },
+        {
+          "id": "c",
+          "text": "Make the agreed phone-number field at sign-up optional.",
+          "explanation": "Changes agreed behaviour: a change request."
+        },
+        {
+          "id": "d",
+          "text": "Gift cards stopped applying after last week's release; they worked before.",
+          "explanation": "A regression is a bug; in scope and inside the warranty."
+        }
+      ],
+      "answer": {
+        "a": "bug-warranty",
+        "b": "enhancement",
+        "c": "change-request",
+        "d": "bug-warranty"
+      }
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:warranty",
+      "term:enhancement",
+      "term:change-request",
+      "term:regression",
+      "rule:billing-bug-warranty",
+      "rule:warranty-coverage"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Requests from different projects. Classify each one from its facts.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each request.",
+      "mode": "classify-request",
+      "categories": [
+        {
+          "id": "bug",
+          "label": "Bug (found during delivery)"
+        },
+        {
+          "id": "bug-warranty",
+          "label": "Bug under warranty"
+        },
+        {
+          "id": "bug-support",
+          "label": "Bug after the warranty (support)"
+        },
+        {
+          "id": "enhancement",
+          "label": "Enhancement"
+        },
+        {
+          "id": "clarification",
+          "label": "Clarification (no change)"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Live, warranty over: the in-scope password reset email stopped.",
+          "explanation": "A bug after the warranty: covered by a support or AMC plan, otherwise quoted as support."
+        },
+        {
+          "id": "b",
+          "text": "In delivery: the agreed lockout after 5 failed logins never triggers.",
+          "explanation": "In scope, not working, not live: a delivery bug."
+        },
+        {
+          "id": "c",
+          "text": "Live: why does the report show yesterday's data? It refreshes nightly, as agreed.",
+          "explanation": "Works as agreed: a clarification, typically no charge."
+        },
+        {
+          "id": "d",
+          "text": "Make the working search results load faster.",
+          "explanation": "Improves something that already works: an enhancement."
+        }
+      ],
+      "answer": {
+        "a": "bug-support",
+        "b": "bug",
+        "c": "clarification",
+        "d": "enhancement"
+      }
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:support",
+      "term:bug",
+      "term:clarification",
+      "term:enhancement",
+      "rule:billing-bug-after-warranty",
+      "rule:billing-clarification"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Live app, inside warranty. The client calls every item a bug. Classify each.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each request.",
+      "mode": "classify-request",
+      "categories": [
+        {
+          "id": "bug-warranty",
+          "label": "Bug under warranty"
+        },
+        {
+          "id": "enhancement",
+          "label": "Enhancement"
+        },
+        {
+          "id": "change-request",
+          "label": "Change request"
+        },
+        {
+          "id": "new-feature",
+          "label": "New feature"
+        },
+        {
+          "id": "clarification",
+          "label": "Clarification (no change)"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "No dark mode. It was never specified.",
+          "explanation": "Never specified, so not a bug; brand-new functionality is a new feature."
+        },
+        {
+          "id": "b",
+          "text": "Refunds go to the wallet, as signed off. We want them to the card.",
+          "explanation": "Works as agreed but changes agreed behaviour: a change request."
+        },
+        {
+          "id": "c",
+          "text": "Invoice totals are wrong; the acceptance criteria define the formula.",
+          "explanation": "In scope and not working, inside the warranty: a warranty bug."
+        },
+        {
+          "id": "d",
+          "text": "The user list works, but needs a bulk-delete button.",
+          "explanation": "Improves something that works: an enhancement."
+        },
+        {
+          "id": "e",
+          "text": "Users are logged out after 30 idle minutes, as specified. Why?",
+          "explanation": "Correct agreed behaviour: a clarification."
+        }
+      ],
+      "answer": {
+        "a": "new-feature",
+        "b": "change-request",
+        "c": "bug-warranty",
+        "d": "enhancement",
+        "e": "clarification"
+      }
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:bug",
+      "term:new-feature",
+      "term:change-request",
+      "term:enhancement",
+      "term:clarification",
+      "rule:warranty-coverage",
+      "rule:cr-when-needed"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Fixed bid. Requirements and designs are signed off and frozen; the build is in progress. Classify each request.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each request.",
+      "mode": "classify-request",
+      "categories": [
+        {
+          "id": "bug",
+          "label": "Bug (found during delivery)"
+        },
+        {
+          "id": "enhancement",
+          "label": "Enhancement"
+        },
+        {
+          "id": "change-request",
+          "label": "Change request"
+        },
+        {
+          "id": "new-feature",
+          "label": "New feature"
+        },
+        {
+          "id": "clarification",
+          "label": "Clarification (no change)"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Add an 'auditor' user role that was never specified.",
+          "explanation": "Brand-new functionality: a new feature."
+        },
+        {
+          "id": "b",
+          "text": "Cut the signed-off three-step checkout to one step.",
+          "explanation": "Changes agreed behaviour after freeze: a change request."
+        },
+        {
+          "id": "c",
+          "text": "The CSV export misses a column the story's criteria list.",
+          "explanation": "In scope and not working, before go-live: a delivery bug."
+        },
+        {
+          "id": "d",
+          "text": "Swap the approved brand blue for a darker blue.",
+          "explanation": "Changes an approved design: a change request."
+        }
+      ],
+      "answer": {
+        "a": "new-feature",
+        "b": "change-request",
+        "c": "bug",
+        "d": "change-request"
+      }
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "rule:requirement-freeze-after-signoff",
+      "rule:design-revision-rounds",
+      "term:change-request",
+      "term:new-feature",
+      "term:bug",
+      "rule:cr-when-needed"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "This internal update uses some terms wrongly. Mark each line that uses the wrong term.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines with a wrong term.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Release 1.4 was deployed to staging on Tuesday for QA.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "So the app went live on Tuesday, when we deployed it to staging.",
+          "issue": "A deployment to staging is not go-live: go-live is when real users start relying on it."
+        },
+        {
+          "id": "s3",
+          "text": "The client's request for a date filter is logged as an enhancement.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "The 48-hour cancellation rule replaces the agreed 24-hour rule, so we'll fix it as a warranty bug.",
+          "issue": "Changing agreed behaviour is a change request, not a bug."
+        },
+        {
+          "id": "s5",
+          "text": "The payment sandbox outage is blocking testing, so it is logged as an issue.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "The About-page typo is critical severity because the client wants it first.",
+          "issue": "Wanting it first is priority; a typo is low severity."
+        },
+        {
+          "id": "s7",
+          "text": "Our estimate of 60–90 hours is a quote, so the client pays exactly that.",
+          "issue": "An estimate is a forecast range, not a firm quote."
+        },
+        {
+          "id": "s8",
+          "text": "Next week's status report shows the schedule amber until the keys arrive.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:go-live",
+      "term:deployment",
+      "term:change-request",
+      "term:severity",
+      "term:priority",
+      "term:estimate",
+      "term:quote"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Live app, inside warranty. Search works as specified but is slow on large lists; no speed target was ever agreed. The client: \"It's a bug, fix it free.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you check first?",
+          "options": [
+            "The signed scope and acceptance criteria",
+            "How long the developer thinks a fix takes",
+            "Whether the client sounds upset"
+          ],
+          "correctIndex": 0,
+          "explanation": "A bug is behaviour that does not match the agreed specification, so the evidence is the signed criteria."
+        },
+        {
+          "id": "s2",
+          "question": "The criteria have no speed target. What is it?",
+          "options": [
+            "A warranty bug",
+            "An enhancement",
+            "A clarification"
+          ],
+          "correctIndex": 1,
+          "explanation": "It improves something that already works as agreed: an enhancement."
+        },
+        {
+          "id": "s3",
+          "question": "Typically, how is it handled?",
+          "options": [
+            "Fixed free under warranty",
+            "Estimated and billed, or traded in the backlog",
+            "Refused outright"
+          ],
+          "correctIndex": 1,
+          "explanation": "Enhancements are typically estimated and billed or traded against other backlog items; warranty excludes them."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:bug",
+      "term:enhancement",
+      "term:acceptance-criteria",
+      "rule:warranty-coverage",
+      "rule:billing-enhancement"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "You estimated a loyalty feature at 60–90 hours, noting the payment gateway's behaviour as an assumption. The client replies: \"Great, so it's 60 hours.\" Later the gateway proves unsupported.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "How do you reply to \"so it's 60 hours\"?",
+          "options": [
+            "Confirm 60 hours to keep the client happy",
+            "Explain it's an estimate range; a firm quote follows once the gateway is known",
+            "Say the final number will be 90 hours"
+          ],
+          "correctIndex": 1,
+          "explanation": "An estimate is a forecast with uncertainty, not a commitment; a quote is the firm price for defined scope."
+        },
+        {
+          "id": "s2",
+          "question": "The gateway assumption proved false. What now?",
+          "options": [
+            "Absorb the extra integration work",
+            "Raise a change request for the extra integration",
+            "Log it as a bug"
+          ],
+          "correctIndex": 1,
+          "explanation": "A written assumption that proves false is a valid reason for a change request."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:estimate",
+      "term:quote",
+      "term:assumption",
+      "term:change-request",
+      "rule:billing-change-request"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "The client approved a 24-hour cancellation rule. Now they want 48 hours with a partial refund. What is this request?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "A change request",
+        "An enhancement",
+        "A bug",
+        "A clarification"
+      ],
+      "correctIndex": 0,
+      "explanation": "It changes behaviour that was agreed and accepted, so it is a change request: estimated, priced and approved in writing before work starts. An enhancement improves something without reversing an agreed decision."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:change-request",
+      "term:enhancement",
+      "rule:cr-when-needed"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "The warranty has ended and the client has an active AMC. A bug in agreed scope appears. Typically, how is it handled?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Under the AMC, within its terms",
+        "Free under the warranty",
+        "Quoted as a new feature",
+        "Refused: the warranty is over"
+      ],
+      "correctIndex": 0,
+      "explanation": "After the warranty, bugs are typically covered by an active support or AMC plan; without one, they are quoted and billed as support work."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:warranty",
+      "term:amc",
+      "rule:billing-bug-after-warranty"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "A white-label app shows the wrong logo on its splash screen. Store screenshots are taken tomorrow. How do you rate it?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Low severity, high priority",
+        "High severity, high priority",
+        "High severity, low priority",
+        "Low severity, low priority"
+      ],
+      "correctIndex": 0,
+      "explanation": "Severity is the damage (a cosmetic logo issue is low); priority is how soon it must be fixed (tomorrow's screenshots make it high)."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:severity",
+      "term:priority"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-m2-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Submission is a month away. The client has no D-U-N-S number yet, so Apple enrolment may take weeks. What is this for the RAID log?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "A risk: it has not happened yet but could delay launch",
+        "An issue: it is affecting the project now",
+        "A bug in the store build",
+        "A change request from the client"
+      ],
+      "correctIndex": 0,
+      "explanation": "A risk is an uncertain future event; it becomes an issue only once it materialises and affects the project."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:risk",
+      "term:issue",
+      "term:raid-log"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "What changes when you turn an estimate into an accepted quote?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "The price is firm for the defined scope; the agency carries overrun risk",
+        "Nothing: both are forecasts that can change freely",
+        "The client now carries the overrun risk",
+        "The scope becomes open to small additions"
+      ],
+      "correctIndex": 0,
+      "explanation": "A quote is a firm price for a defined scope; once accepted the agency is bound to it and carries overrun risk unless the scope changes. An estimate is a forecast range."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:estimate",
+      "term:quote"
+    ]
+  },
+  {
+    "id": "pm-proc-terms-m3-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-terms",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "Release 2.0 is deployed to production on Tuesday behind a feature toggle. Users get it on Monday. When is go-live?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Monday, when users start relying on it",
+        "Tuesday, when it was deployed",
+        "When the release notes were written",
+        "When the build passed QA"
+      ],
+      "correctIndex": 0,
+      "explanation": "Deployment is the technical install; go-live is the business moment real users start relying on the system."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "terminology"
+    ],
+    "handbookRefs": [
+      "term:release",
+      "term:go-live",
+      "term:deployment"
+    ]
+  }
+]

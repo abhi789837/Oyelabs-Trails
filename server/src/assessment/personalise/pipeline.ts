@@ -2,18 +2,33 @@ import { and, eq, isNotNull, sql } from "drizzle-orm";
 import { z } from "zod";
 
 import { bankItemSchema, codingSpecSchema, mcqSpecSchema, type BankItem } from "../../../../shared/bank";
+import type { Catalog } from "../../../../shared/catalog";
 import { REUSE_RATIO, type Personalisation, type Slot, type Understanding } from "../../../../shared/personalise";
 import { estimateSeconds, sizeProblems, SIZE_LIMITS, SLOT_FLOOR_SEC, TOTAL_MAX_SEC, TOTAL_MIN_SEC, type TimingConstants } from "../../../../shared/timing";
 import { taskSchema } from "../../../../shared/tasks";
 import { AiBudgetPausedError } from "../../ai/router";
 import type { AiService } from "../../ai/service";
-import { activeItems, seenItemIds, toColumns } from "../../bank/repo";
+import { activeItems, citedRefs, seenItemIds, toColumns } from "../../bank/repo";
 import { balanceTiming, timingConstants, type BalancePick } from "../../bank/timing";
 import { validateBankItem } from "../../bank/validate";
 import type { Db } from "../../db";
 import * as schema from "../../db/schema";
 import { newId, now } from "../../lib/ids";
 import { runSnippet, SandboxUnavailableError, type PolyglotDeps } from "../../sandbox/polyglot";
+import {
+  allowsRoleplay,
+  ASSESSMENT_ROLEPLAY_TURNS,
+  compactEntry,
+  decisionAnswersSchema,
+  groundingProblems,
+  isProcessSkill,
+  loadHandbookIndex,
+  mergePicks,
+  pickEntries,
+  roleplayScenarioFor,
+  versionsOf,
+  type HandbookIndex,
+} from "./grounding";
 import { profileFor, understand, type ProfileInput } from "./understand";
 
 /**
@@ -66,6 +81,10 @@ const generatedSchema = z.object({
         /** For an output-prediction MCQ: the correct option is exactly what the snippet prints. */
         answerIsOutput: z.boolean().default(false),
         tags: z.array(z.string().max(40)).max(6).default([]),
+        /** v4.2: handbook entries the item depends on, `kind:id`. Required for process skills. */
+        handbookRefs: z.array(z.string().max(80)).max(8).default([]),
+        /** v4.2: classify-request items only: item id → the request's facts (decision-tool answers). */
+        facts: z.record(z.string().max(40), decisionAnswersSchema).nullable().default(null),
       }),
     )
     .max(20),
@@ -97,12 +116,43 @@ Hard limits (items over them are rejected):
   cell; functions: SUM, AVERAGE, IF, COUNTIF(S), SUMIF(S), XLOOKUP, VLOOKUP, MATCH, NETWORKDAYS),
   allocate (2-6 people with capacity hours, 1-4 projects with need hours, optional blocked pairs;
   must be feasible), sim (a simulated screen: app keka-timesheets|keka-psa|teams|github-pr|outlook,
-  a title, columns, <= 10 rows with "issue" on the problem ones, and up to 3 questions); write may set
-  variant "email" or "explain";
+  a title, columns, <= 10 rows with "issue" on the problem ones, and up to 3 questions), categorize
+  (mode "classify-request" with category ids from bug|bug-warranty|bug-support|enhancement|change-request|
+  new-feature|clarification, or "gap-analysis" with ootb|configuration|customisation|new-feature, or
+  "generic"; 2-7 categories {id,label}; 4-5 items (max ${SIZE_LIMITS.categorizeItems}) {id,text <= 12 words,explanation}; "answer"
+  maps every item id to a category id, using at least 2 categories), form (variant cr|mom|status|template;
+  "context" <= ${SIZE_LIMITS.formContextWords} words: the client email, transcript lines or a markdown pipe table; templateId null;
+  2 fields (max ${SIZE_LIMITS.formFields}, only with a very short context) {id,label,input text|textarea|number|select|date,
+  options for select,required}; each field takes ~20 s, so keep the context near 50 words;
+  "checks" [{fieldId,expected}] only on number/select/text fields with one right answer (e.g. the RAG
+  status or a total); 1-3 rubric {label,points 1-3,description}; "sampleAnswer" for every field that
+  passes every check); write may set variant "email" or "explain";
 - tags: 1-4 short context tags (e.g. "international clients", "Laravel").
+Handbook grounding (slots with "grounded": true, and any item about a process or a term):
+- "handbook" is the company's process handbook: ground truth. Use its definitions, Oyelabs meanings
+  and rule statements, never your own; an entry with status "to-confirm" is the industry standard.
+- set "handbookRefs" to the refs ("kind:id", from "handbook" only, 1-4) the item's answer depends on;
+  the slot's "refs" are the most relevant. A grounded item without valid refs is rejected.
+- categorize "classify-request": also set "facts", mapping every item id to the decision tool's
+  answers {worksAsSpecified yes|no, inScope yes|no, warranty not-live|yes|no, changeKind
+  change|improve|neither, brandNew yes|no} (only the questions that apply). The keyed answer must
+  be what the decision tool gives: works as specified = no and in scope = yes → bug (warranty
+  not-live), bug-warranty (yes) or bug-support (no); otherwise changeKind change → change-request,
+  improve → enhancement, neither → new-feature (brandNew yes) or clarification (no). Code recomputes
+  it and rejects a mismatch. "facts" is null for every other item.
+- roleplay (subtype "roleplay"): task {kind "roleplay", prompt <= 25 words, scenarioId and personaId
+  exactly as the slot gives them, maxTurns ${ASSESSMENT_ROLEPLAY_TURNS.min}-${ASSESSMENT_ROLEPLAY_TURNS.max}, brief <= 30 words (what to achieve), 2-4 rubric
+  {label,points 1-3,description}, followUp false}. Keep it inside the slot's seconds (~25 s a reply).
 Only the field for the slot's type is non-null. Return {"items":[...]} for the slots given.`;
 
-function slotLine(slot: Slot, language: string | null) {
+/** v4.2: what a slot carries for handbook grounding: its suggested refs and role-play scenario. */
+interface SlotGrounding {
+  grounded: boolean;
+  refs: string[];
+  roleplay: { scenarioId: string; personaId: string } | null;
+}
+
+function slotLine(slot: Slot, language: string | null, grounding?: SlotGrounding) {
   return {
     slot: slot.index,
     skill: slot.skillName,
@@ -112,7 +162,58 @@ function slotLine(slot: Slot, language: string | null) {
     seconds: slot.targetSec,
     ...(slot.type === "coding" || slot.subtype === "mcq-code" ? { language: language ?? "javascript" } : {}),
     hint: slot.hint || undefined,
+    ...(grounding?.grounded ? { grounded: true } : {}),
+    ...(grounding?.refs.length ? { refs: grounding.refs } : {}),
+    ...(grounding?.roleplay ? grounding.roleplay : {}),
   };
+}
+
+type SkillLookup = ReadonlyMap<string, Catalog["skills"][number]>;
+
+/** The grounding of one slot: process skills get handbook refs; role-play slots get a scenario. */
+function groundingFor(slot: Slot, skills: SkillLookup, index: HandbookIndex): SlotGrounding {
+  const skill = skills.get(slot.skillId);
+  const grounded = isProcessSkill(skill);
+  const roleplay = slot.subtype === "roleplay" && allowsRoleplay(slot.skillId) ? roleplayScenarioFor(slot.index, slot.hint) : null;
+  const refs = skill && (grounded || roleplay) ? pickEntries(index, { skill, hint: slot.hint, subtype: slot.subtype, scenarioTermIds: roleplay?.termIds }) : [];
+  return { grounded, refs, roleplay: roleplay ? { scenarioId: roleplay.scenarioId, personaId: roleplay.personaId } : null };
+}
+
+/** The user message of one generation call: the context, the slots and (when needed) the handbook. */
+function generationUser(context: unknown, group: readonly Slot[], skills: SkillLookup, index: HandbookIndex) {
+  const groundings = group.map((s) => groundingFor(s, skills, index));
+  const refs = mergePicks(groundings.map((g) => g.refs));
+  return JSON.stringify({
+    context,
+    ...(refs.length ? { handbook: refs.map((ref) => compactEntry(index.get(ref)!)) } : {}),
+    slots: group.map((s, i) => slotLine(s, skills.get(s.skillId)?.language ?? null, { ...groundings[i], refs: groundings[i].refs.filter((r) => refs.includes(r)) })),
+  });
+}
+
+/** The generated item as a bank item, with its handbook refs. */
+function candidateItem(slot: Slot, candidate: Generated, departmentId: string, tags: string[]) {
+  return bankItemSchema.safeParse({
+    id: `gen-${slot.skillId}-${newId().toLowerCase()}`.slice(0, 90),
+    departmentId,
+    skillId: slot.skillId,
+    type: slot.type,
+    difficulty: Math.min(5, Math.max(1, slot.difficulty)),
+    estMinutes: Math.max(0.5, Math.min(6, slot.targetSec / 60)),
+    prompt: candidate.prompt,
+    coding: slot.type === "coding" ? candidate.coding : null,
+    mcq: slot.type === "mcq" ? candidate.mcq : null,
+    task: slot.type === "task" ? candidate.task : null,
+    tags,
+    ...(candidate.handbookRefs.length ? { handbookRefs: [...new Set(candidate.handbookRefs)] } : {}),
+  });
+}
+
+/** Stores a validated generated item in the bank, citing its handbook entries at their current versions. */
+function storeGenerated(db: Db, item: BankItem, versions: Map<string, number>, at: number): void {
+  db.insert(schema.questionBank)
+    .values({ ...toColumns(item), handbookRefs: citedRefs(item.handbookRefs, versions), status: "active", source: "generated", validatedAt: at, createdAt: at, updatedAt: at })
+    .onConflictDoNothing()
+    .run();
 }
 
 function contextOf(profile: ProfileInput, themes: string[]) {
@@ -146,8 +247,12 @@ async function validateCandidate(
   candidate: Generated,
   item: BankItem,
   constants: TimingConstants,
+  grounding?: { index: HandbookIndex; processSkill: boolean },
 ): Promise<string[]> {
   const problems = [...sizeProblems(item)];
+  if (grounding) {
+    problems.push(...groundingProblems({ skillId: slot.skillId, processSkill: grounding.processSkill, refs: item.handbookRefs ?? [], index: grounding.index, task: item.task, facts: candidate.facts }));
+  }
   if (item.mcq && item.mcq.options.length !== 4) problems.push("an MCQ needs exactly 4 options");
   const seconds = estimateSeconds(item, constants);
   if (seconds > slot.targetSec * 1.15) problems.push(`estimated ${seconds}s, slot allows ${slot.targetSec}s`);
@@ -239,6 +344,7 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
   const { profile, setup, catalog } = profileFor(db, userId);
   const level = (db.select({ p: schema.learnerPriorities.personalisation }).from(schema.learnerPriorities).where(eq(schema.learnerPriorities.userId, userId)).get()?.p ?? "balanced") as Personalisation;
   const skillsById = new Map(catalog.skills.map((s) => [s.id, s]));
+  const handbook = loadHandbookIndex(db);
 
   const understanding = await understand(deps, userId, { assessmentId });
   const slots = understanding.slots;
@@ -299,7 +405,7 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
           purpose: "item_generate",
           task: "item_generate",
           system: GENERATE_SYSTEM,
-          user: JSON.stringify({ context: contextOf(profile, understanding.themes), slots: group.map((s) => slotLine(s, skillsById.get(s.skillId)?.language ?? null)) }),
+          user: generationUser(contextOf(profile, understanding.themes), group, skillsById, handbook),
           schema: generatedSchema,
           schemaName: "assessment_items",
           meta: { subjectUserId: userId, assessmentId },
@@ -323,25 +429,14 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
           report.rejected.push({ slot: slot.index, reason: "not returned" });
           continue;
         }
-        const parsed = bankItemSchema.safeParse({
-          id: `gen-${slot.skillId}-${newId().toLowerCase()}`.slice(0, 90),
-          departmentId: setup.departmentId,
-          skillId: slot.skillId,
-          type: slot.type,
-          difficulty: Math.min(5, Math.max(1, slot.difficulty)),
-          estMinutes: Math.max(0.5, Math.min(6, slot.targetSec / 60)),
-          prompt: candidate.prompt,
-          coding: slot.type === "coding" ? candidate.coding : null,
-          mcq: slot.type === "mcq" ? candidate.mcq : null,
-          task: slot.type === "task" ? candidate.task : null,
-          tags: [...new Set([...candidate.tags, ...understanding.themes.slice(0, 2)])].slice(0, 6),
-        });
+        const parsed = candidateItem(slot, candidate, setup.departmentId, [...new Set([...candidate.tags, ...understanding.themes.slice(0, 2)])].slice(0, 6));
         if (!parsed.success) {
           failed.push(slot);
-          report.rejected.push({ slot: slot.index, reason: `shape: ${parsed.error.issues[0]?.message ?? "invalid"}` });
+          const issue = parsed.error.issues[0];
+          report.rejected.push({ slot: slot.index, reason: `shape: ${issue?.path.join(".") === "handbookRefs" || issue?.path[0] === "handbookRefs" ? "handbook refs must be kind:id" : (issue?.message ?? "invalid")}` });
           continue;
         }
-        const problems = await validateCandidate(deps, slot, candidate, parsed.data, constants);
+        const problems = await validateCandidate(deps, slot, candidate, parsed.data, constants, { index: handbook, processSkill: isProcessSkill(skillsById.get(slot.skillId)) });
         if (problems.length) {
           failed.push(slot);
           report.rejected.push({ slot: slot.index, reason: problems.join("; ").slice(0, 200) });
@@ -390,14 +485,10 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
     report.fromBankAfterFailures += 1;
   }
 
-  // Validated new items join the bank for everyone.
+  // Validated new items join the bank for everyone, citing the handbook versions they were checked against.
   const at = now();
-  for (const item of newItems) {
-    db.insert(schema.questionBank)
-      .values({ ...toColumns(item), status: "active", source: "generated", validatedAt: at, createdAt: at, updatedAt: at })
-      .onConflictDoNothing()
-      .run();
-  }
+  const versions = versionsOf(handbook);
+  for (const item of newItems) storeGenerated(db, item, versions, at);
 
   // 6. Balance to 26–32 minutes, swapping only bank picks.
   const ordered = slots
@@ -434,12 +525,13 @@ export async function generateOne(deps: PersonaliseDeps, assessmentId: string, u
   const constants = timingConstants(deps.db);
   const { profile, setup, catalog } = profileFor(deps.db, userId);
   const understanding = await understand(deps, userId, { assessmentId });
-  const language = catalog.skills.find((s) => s.id === slot.skillId)?.language ?? null;
+  const skillsById = new Map(catalog.skills.map((s) => [s.id, s]));
+  const handbook = loadHandbookIndex(deps.db);
   const result = await deps.ai.generateJson({
     purpose: "item_generate",
     task: "item_generate",
     system: GENERATE_SYSTEM,
-    user: JSON.stringify({ context: contextOf(profile, understanding.themes), slots: [slotLine(slot, language)] }),
+    user: generationUser(contextOf(profile, understanding.themes), [slot], skillsById, handbook),
     schema: generatedSchema,
     schemaName: "assessment_items",
     maxOutputTokens: 1500,
@@ -447,28 +539,15 @@ export async function generateOne(deps: PersonaliseDeps, assessmentId: string, u
   });
   const candidate = result.data.items.find((i) => i.slot === slot.index) ?? result.data.items[0];
   if (!candidate) return { item: null, problems: ["nothing returned"] };
-  const parsed = bankItemSchema.safeParse({
-    id: `gen-${slot.skillId}-${newId().toLowerCase()}`.slice(0, 90),
-    departmentId: setup.departmentId,
-    skillId: slot.skillId,
-    type: slot.type,
-    difficulty: slot.difficulty,
-    estMinutes: Math.max(0.5, slot.targetSec / 60),
-    prompt: candidate.prompt,
-    coding: slot.type === "coding" ? candidate.coding : null,
-    mcq: slot.type === "mcq" ? candidate.mcq : null,
-    task: slot.type === "task" ? candidate.task : null,
-    tags: candidate.tags,
-  });
+  const parsed = candidateItem(slot, candidate, setup.departmentId, candidate.tags);
   if (!parsed.success) return { item: null, problems: [parsed.error.issues[0]?.message ?? "invalid"] };
-  const problems = await validateCandidate(deps, { ...slot, index: candidate.slot }, candidate, parsed.data, constants);
+  const problems = await validateCandidate(deps, { ...slot, index: candidate.slot }, candidate, parsed.data, constants, { index: handbook, processSkill: isProcessSkill(skillsById.get(slot.skillId)) });
   if (!problems.length && parsed.data.type === "mcq" && !candidate.answerIsOutput) {
     const disputed = await checkTextMcqs(deps, [{ slot: candidate.slot, item: parsed.data }], { assessmentId, userId }).catch(() => new Map([[candidate.slot, "could not be checked"]]));
     if (disputed.size) problems.push(...disputed.values());
   }
   if (problems.length) return { item: null, problems };
-  const at = now();
-  deps.db.insert(schema.questionBank).values({ ...toColumns(parsed.data), status: "active", source: "generated", validatedAt: at, createdAt: at, updatedAt: at }).onConflictDoNothing().run();
+  storeGenerated(deps.db, parsed.data, versionsOf(handbook), now());
   return { item: parsed.data, problems: [] };
 }
 

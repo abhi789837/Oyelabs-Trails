@@ -3,7 +3,7 @@ import type { Task } from "../../../shared/tasks";
 import path from "node:path";
 
 import type { ModuleMeta, TopicMeta, TrackMeta } from "../../../shared/content";
-import type { AccentTokenValue } from "../../../shared/content";
+import type { AccentTokenValue, TopicHandbookRefs, TopicInteractive, TopicSection } from "../../../shared/content";
 import type { TrackIdValue } from "../../../shared/enums";
 
 /**
@@ -71,6 +71,10 @@ export interface AuthoredTopic {
   practice?: Task;
   /** v4.1: company procedures an admin fills in (routes/sop.ts). */
   sop?: { title: string; prompt: string }[];
+  /** v4.2: a handbook tool shown after the summary (decision tool or flashcards). */
+  interactive?: TopicInteractive;
+  sections?: TopicSection[];
+  handbook?: TopicHandbookRefs;
 }
 
 export interface AuthoredModule {

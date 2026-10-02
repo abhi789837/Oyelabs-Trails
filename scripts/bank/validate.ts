@@ -4,7 +4,7 @@
  *   npx tsx scripts/bank/validate.ts                       # every file
  *   npx tsx scripts/bank/validate.ts server/bank/engineering/eng-react.json [more files]
  *
- * For each item: the schema; task answer integrity (`checkTask`); MCQ answer in range; and for
+ * For each item: the schema; that every `handbookRefs` id exists in `server/handbook`; task answer integrity (`checkTask`); MCQ answer in range; and for
  * coding items, the reference solution must pass **every** sample and hidden test while the starter
  * code must **not** pass every hidden test (a starter that already passes tests nothing). Passing
  * items are written to `<file>.validated.json` with a content hash; boot marks only those `active`.
@@ -19,6 +19,7 @@ import path from "node:path";
 import { bankItemSchema, type BankItem } from "../../shared/bank";
 import { validateBankItem } from "../../server/src/bank/validate";
 import { itemHash } from "../../server/src/bank/repo";
+import { loadHandbookSeed } from "../../server/src/handbook/repo";
 import { PistonClient } from "../../server/src/sandbox/polyglot";
 import { WorkerSandbox } from "../../server/src/sandbox/workerSandbox";
 
@@ -41,8 +42,13 @@ function seedFiles(args: string[]): string[] {
   return out;
 }
 
+/** v4.2: every `handbookRefs` entry (`kind:id`) must exist in the handbook seed. */
+const handbookIds = new Set(loadHandbookSeed(path.join(root, "server/handbook"), () => {}).map((e) => `${e.kind}:${e.id}`));
+
 async function validateItem(item: BankItem): Promise<string[]> {
-  return validateBankItem({ sandbox, piston }, item);
+  const missing = (item.handbookRefs ?? []).filter((ref) => !handbookIds.has(ref));
+  const problems = missing.map((ref) => `cites ${ref}, which is not in server/handbook`);
+  return [...problems, ...(await validateBankItem({ sandbox, piston }, item))];
 }
 
 const files = seedFiles(process.argv.slice(2));

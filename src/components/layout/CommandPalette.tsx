@@ -3,13 +3,17 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { AnimatePresence, motion } from "motion/react";
 import {
   BookMarked,
+  BookOpenText,
   Compass,
+  Layers,
+  MessagesSquare,
   Cpu,
   Radio,
   Route,
   ScrollText,
   Search,
   ShieldCheck,
+  Split,
   UserPlus,
   Users,
   type LucideIcon,
@@ -72,6 +76,10 @@ const ACTION_ICONS: Record<string, LucideIcon> = {
   "action:admin-ai": Cpu,
   "action:admin-audit": ScrollText,
   "action:learner-view": Compass,
+  "action:glossary": BookOpenText,
+  "action:flashcards": Layers,
+  "action:classify": Split,
+  "action:roleplay": MessagesSquare,
 };
 
 /** The id that switches the palette into people mode rather than navigating. */
@@ -89,12 +97,21 @@ function buildActions(role: Role | undefined, context: "learner" | "admin"): Com
     haystack: `${title} ${subtitle}`.toLowerCase(),
   });
 
+  // v4.2: the Process Handbook is for everyone, staff included.
+  const handbook = [
+    entry("action:glossary", "Glossary", "/glossary", "Every process term, and what it means at Oyelabs"),
+    entry("action:flashcards", "Flashcards", "/glossary/practice", "Practise the handbook terms"),
+    entry("action:classify", "Classify a request", "/tools/classify", "Bug, enhancement, change request or new feature?"),
+    entry("action:roleplay", "Client role-play", "/practice/roleplay", "Practise a client conversation with an AI client"),
+  ];
+
   if (!role || !isStaff(role)) {
     return [
       entry("action:dashboard", "Dashboard", "/", "Your trails at a glance"),
       entry("action:plan", "My plan", "/plan", "This week, by priority"),
       entry("action:library", "Library", "/library", "Everything unlocked for you"),
       entry("action:courses", "Courses", "/courses", "How things are done here"),
+      ...handbook,
     ];
   }
 
@@ -113,6 +130,7 @@ function buildActions(role: Role | undefined, context: "learner" | "admin"): Com
     entry("action:admin-audit", "Audit log", "/admin/audit", "Everything anyone changed"),
     entry("action:admin-curriculum", "Curriculum", "/admin/curriculum", "Every topic, filterable"),
     entry("action:admin-courses", "Courses", "/admin/courses", "Write an internal process by hand"),
+    ...handbook,
   ];
 
   return context === "admin"

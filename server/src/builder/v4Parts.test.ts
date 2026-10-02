@@ -112,13 +112,119 @@ describe("PM path order (v4.1)", () => {
     const spine = buildSpine({ targets: targetsFromPriorities(sortPriorities(entries)), gaps: [], skip: [] });
     const items = orderV4Parts({
       spine, priorities: sortPriorities(entries), skills: pmSkills, trackId: "pm-agile", trackName: "Agile Delivery PM", departmentName: "Project Management",
-      stackIds: [], ownTrackGaps: [], defaultAiSkill: pmSkills.get("ai")!, refreshSkill: pmSkills.get("refresh")!, assessmentFoundGaps: true,
+      stackIds: [], ownTrackGaps: [], defaultAiSkill: pmSkills.get("ai")!, refreshSkill: pmSkills.get("refresh")!, assessmentFoundGaps: true, departmentId: "pm",
     });
     const order = items.map((i) => i.targetSkill ?? i.gap.skill);
     expect(order[0]).toBe("Improving your existing PM skills");
     expect(order.slice(1, 4)).toEqual(["Client management", "Client update meetings & presenting", "Email etiquette & professional writing"]);
     expect(order.indexOf("Excel for PMs")).toBeLessThan(order.indexOf("PM foundations and advanced theory"));
     expect(order.at(-1)).toBe("PM foundations and advanced theory");
-    expect(assertV4Order(items, sortPriorities(entries))).toEqual([]);
+    expect(assertV4Order(items, sortPriorities(entries), { departmentId: "pm", refreshSkillId: "refresh", theorySkillIds: ["theory"], aiSkillIds: ["ai"] })).toEqual([]);
+  });
+});
+
+describe("PM path order (v4.2)", () => {
+  const pm = (id: string, name: string, extra: Partial<Skill> = {}) => skill(id, name, { departmentId: "pm", trackIds: ["pm-agile"], ...extra });
+  const pmSkills = new Map<string, Skill>([
+    ["pm-agency-refresh", pm("pm-agency-refresh", "Improving your existing PM skills", { tags: ["refresh"] })],
+    ["pm-proc-custom", pm("pm-proc-custom", "Custom project lifecycle", { tags: ["process"] })],
+    ["pm-proc-whitelabel", pm("pm-proc-whitelabel", "White-label project lifecycle", { tags: ["process"] })],
+    ["pm-proc-terms", pm("pm-proc-terms", "Project terminology mastery", { tags: ["process"] })],
+    ["pm-proc-meetings", pm("pm-proc-meetings", "Handling every client meeting", { tags: ["process"] })],
+    ["pm-proc-templates", pm("pm-proc-templates", "Process templates in practice", { tags: ["process"] })],
+    ["pm-client-management", pm("pm-client-management", "Client management")],
+    ["pm-excel-for-pms", pm("pm-excel-for-pms", "Excel for PMs")],
+    ["pm-keka", pm("pm-keka", "Keka for PMs")],
+    ["pm-client-meetings", pm("pm-client-meetings", "Client update meetings & presenting")],
+    ["pm-foundations-theory", pm("pm-foundations-theory", "PM foundations and advanced theory", { tags: ["theory"] })],
+    ["pm-ai-for-pms", pm("pm-ai-for-pms", "AI for PMs (Copilot & Claude)", { isAiSkill: true })],
+  ]);
+  const entry = (skillId: string, slider: PriorityEntry["slider"], position: number): PriorityEntry => ({ skillId, skillName: pmSkills.get(skillId)!.name, slider, position });
+  const check = { departmentId: "pm", refreshSkillId: "pm-agency-refresh", theorySkillIds: ["pm-foundations-theory"], aiSkillIds: ["pm-ai-for-pms"] };
+
+  function pmOrder(entries: PriorityEntry[], areaLevels: { area: string; level: number }[] = [], foundGaps = true) {
+    const priorities = sortPriorities(entries);
+    const spine = buildSpine({ targets: targetsFromPriorities(priorities), gaps: [], skip: [], areaLevels });
+    const items = orderV4Parts({
+      spine, priorities, skills: pmSkills, trackId: "pm-agile", trackName: "Agile Delivery PM", departmentName: "Project Management", stackIds: [], ownTrackGaps: [],
+      defaultAiSkill: pmSkills.get("pm-ai-for-pms")!, refreshSkill: pmSkills.get("pm-agency-refresh")!, assessmentFoundGaps: foundGaps, departmentId: "pm",
+    });
+    return { items, priorities, names: items.map((i) => [i.partNumber, i.targetSkill ?? i.gap.skill] as const) };
+  }
+
+  // The v4.2 defaults, listed out of order on purpose: the slider decides, not the list.
+  const defaults = [
+    entry("pm-foundations-theory", 2, 0),
+    entry("pm-excel-for-pms", 4, 1),
+    entry("pm-proc-meetings", 5, 2),
+    entry("pm-client-management", 4, 3),
+    entry("pm-proc-templates", 4, 4),
+    entry("pm-proc-terms", 5, 5),
+    entry("pm-keka", 3, 6),
+    entry("pm-proc-whitelabel", 5, 7),
+    entry("pm-client-meetings", 3, 8),
+    entry("pm-proc-custom", 5, 9),
+    entry("pm-ai-for-pms", 3, 10),
+  ];
+
+  test("Part 1: refresh, lifecycle courses, terminology, meetings, then the other Critical and High; Part 2 AI; the rest, theory last", () => {
+    const { items, priorities, names } = pmOrder(defaults);
+    expect(names).toEqual([
+      [1, "Improving your existing PM skills"],
+      [1, "White-label project lifecycle"],
+      [1, "Custom project lifecycle"],
+      [1, "Project terminology mastery"],
+      [1, "Handling every client meeting"],
+      [1, "Excel for PMs"],
+      [1, "Client management"],
+      [1, "Process templates in practice"],
+      [2, "AI for PMs (Copilot & Claude)"],
+      [3, "Keka for PMs"],
+      [4, "Client update meetings & presenting"],
+      [5, "PM foundations and advanced theory"],
+    ]);
+    expect(assertV4Order(items, priorities, check)).toEqual([]);
+  });
+
+  test("a lifecycle course that is only High opens Part 1 when the assessment found it weak, and waits its turn when it did not", () => {
+    const entries = defaults.map((e) => (e.skillId === "pm-proc-whitelabel" ? { ...e, slider: 4 as const } : e));
+    const weak = pmOrder(entries, [{ area: "White-label project lifecycle", level: 2 }]);
+    expect(weak.names.slice(0, 4).map(([, n]) => n)).toEqual(["Improving your existing PM skills", "Custom project lifecycle", "White-label project lifecycle", "Project terminology mastery"]);
+    expect(assertV4Order(weak.items, weak.priorities, check)).toEqual([]);
+
+    const strong = pmOrder(entries, [{ area: "White-label project lifecycle", level: 5 }]);
+    const part1 = strong.names.filter(([part]) => part === 1).map(([, n]) => n);
+    expect(part1.indexOf("White-label project lifecycle")).toBeGreaterThan(part1.indexOf("Handling every client meeting"));
+    expect(assertV4Order(strong.items, strong.priorities, check)).toEqual([]);
+  });
+
+  test("a weak Medium lifecycle course still opens Part 1; with no gaps there is no refresh", () => {
+    const entries = defaults.map((e) => (e.skillId === "pm-proc-custom" ? { ...e, slider: 3 as const } : e));
+    const { items, priorities, names } = pmOrder(entries, [{ area: "Custom project lifecycle", level: 1 }], false);
+    expect(names[0]).toEqual([1, "White-label project lifecycle"]);
+    expect(names[1]).toEqual([1, "Custom project lifecycle"]);
+    expect(assertV4Order(items, priorities, check)).toEqual([]);
+  });
+
+  test("assertV4Order catches a PM path in the wrong order", () => {
+    const { items, priorities } = pmOrder(defaults);
+    const swapped = [...items];
+    const terms = swapped.findIndex((i) => i.skillId === "pm-proc-terms");
+    const custom = swapped.findIndex((i) => i.skillId === "pm-proc-custom");
+    [swapped[terms], swapped[custom]] = [swapped[custom], swapped[terms]];
+    expect(assertV4Order(swapped, priorities, check)).toContain("PM Part 1 is not lifecycle, terminology, meetings, then the other Critical and High priorities");
+
+    const t = items.findIndex((i) => i.skillId === "pm-foundations-theory");
+    const keka = items.findIndex((i) => i.skillId === "pm-keka");
+    const theoryFirst = [...items];
+    theoryFirst[keka] = { ...items[t], partNumber: items[keka].partNumber };
+    theoryFirst[t] = { ...items[keka], partNumber: items[t].partNumber };
+    expect(assertV4Order(theoryFirst, priorities, check)).toContain("The theory course is not last on the PM path");
+
+    const refreshLate = [...items.slice(1, 3), items[0], ...items.slice(3)];
+    expect(assertV4Order(refreshLate, priorities, check)).toContain("The diagnostic refresh does not open the PM path");
+
+    const demoted = items.map((i) => (i.skillId === "pm-proc-meetings" ? { ...i, partNumber: 3 } : i));
+    expect(assertV4Order(demoted, priorities, check).join(" ")).toMatch(/Handling every client meeting belongs in Part 1/);
   });
 });

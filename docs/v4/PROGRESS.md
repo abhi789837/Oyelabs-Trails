@@ -75,15 +75,15 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 ## Phase 9: User management
 - [x] 9.1 Audit existing suspend/archive/delete; fill gaps
 - [x] 9.2 Export before delete, anonymised audit, last-superadmin guard
-- [ ] 9.3 Bulk actions on People; sessions revoked on every action
+- [x] 9.3 Bulk actions on People; sessions revoked on every action
 - [x] 9.4 Checkpoint + commit `feat(v4-p9)`
 
 ## Phase 10: Polish, tests, deploy
 - [x] 10.1 Test suite items (see spec)
 - [x] 10.2 Playwright e2e per department
 - [x] 10.3 UI pass (light/dark, 390/1440, reduced motion)
-- [ ] 10.4 (BLOCKED — no server access; scripts ready, see RESULTS "Needs Abhishek") Deploy (backup, migrate, code-runner container)
-- [ ] 10.5 (BLOCKED with 10.4; one click / one call after deploy) Rebuild existing learners' paths
+- [x] 10.4 Deploy (run by Abhishek on the server) (backup, migrate, code-runner container)
+- [x] 10.5 (done by Abhishek after deploy) Rebuild existing learners' paths
 - [x] 10.6 RESULTS.md + chat summary
 - [x] 10.7 Tag v4.0.0
 

@@ -159,6 +159,90 @@ function runTests(code, challenge, timeoutMs = 6000) {
   });
 }
 
+/**
+ * v4.2: every [[term:id]] in course content must name a handbook term. The ids come from the seed
+ * files (`server/handbook/terms*.json`); while those are still being written the check only warns.
+ */
+const HANDBOOK_DIR = path.join(process.cwd(), "server", "handbook");
+const TERM_LINK_RE = /\[\[term:([a-z0-9-]+)(?:\|([^\]]+))?\]\]/g;
+function loadHandbookTermIds() {
+  if (!fs.existsSync(HANDBOOK_DIR)) return null;
+  const files = fs.readdirSync(HANDBOOK_DIR).filter((f) => /^terms.*\.json$/.test(f));
+  if (!files.length) return null;
+  const ids = new Set();
+  for (const f of files) {
+    let data;
+    try {
+      data = JSON.parse(fs.readFileSync(path.join(HANDBOOK_DIR, f), "utf8"));
+    } catch (e) {
+      warn(`handbook/${f}`, `could not be parsed: ${e.message}`);
+      continue;
+    }
+    const entries = Array.isArray(data) ? data : Array.isArray(data?.terms) ? data.terms : Array.isArray(data?.entries) ? data.entries : [];
+    for (const entry of entries) {
+      const id = entry?.id ?? entry?.data?.id;
+      if (typeof id === "string") ids.add(id);
+    }
+  }
+  return ids;
+}
+const handbookTermIds = loadHandbookTermIds();
+
+/** v4.2: ids of stages, rules and templates, for topic `handbook` references. */
+function loadHandbookIds(file) {
+  const full = path.join(HANDBOOK_DIR, file);
+  if (!fs.existsSync(full)) return null;
+  try {
+    return new Set(JSON.parse(fs.readFileSync(full, "utf8")).map((e) => e.id));
+  } catch {
+    return null;
+  }
+}
+const handbookOther = { stages: loadHandbookIds("stages.json"), rules: loadHandbookIds("rules.json"), templates: loadHandbookIds("templates.json") };
+
+function checkSectionsAndHandbook(where, topic) {
+  if (topic.sections !== undefined) {
+    if (!Array.isArray(topic.sections) || topic.sections.length > 10) err(where, "sections must be an array of at most 10");
+    for (const [i, s] of (topic.sections ?? []).entries()) {
+      if (!s?.heading?.trim() || s.heading.length > 80) err(where, `sections[${i}].heading must be 1–80 chars`);
+      const len = s?.body?.trim().length ?? 0;
+      if (len < 40 || len > 3500) err(where, `sections[${i}].body must be 40–3500 chars (has ${len})`);
+    }
+  }
+  for (const kind of ["stages", "rules", "templates"]) {
+    for (const id of topic.handbook?.[kind] ?? []) {
+      if (handbookOther[kind] && !handbookOther[kind].has(id)) err(where, `handbook.${kind}: unknown id "${id}"`);
+    }
+  }
+}
+if (!handbookTermIds) warn("handbook", "server/handbook/terms*.json not found; [[term:id]] links were not checked");
+
+/** The text fields that may carry term links: summary, quiz prompts and explanations, practice. */
+function termLinkSources(topic) {
+  const out = [["summary", topic.summary ?? ""]];
+  for (const [i, q] of (topic.quiz ?? []).entries()) {
+    out.push([`quiz[${i}].prompt`, q.prompt ?? ""], [`quiz[${i}].explanation`, q.explanation ?? ""]);
+  }
+  if (topic.practice) out.push(["practice", JSON.stringify(topic.practice)]);
+  if (topic.interactive?.kind === "decision-tool" && topic.interactive.request) out.push(["interactive.request", topic.interactive.request]);
+  for (const [i, s] of (topic.sections ?? []).entries()) out.push([`sections[${i}]`, s.body ?? ""]);
+  return out;
+}
+
+function checkTermLinks(where, topic) {
+  for (const [field, text] of termLinkSources(topic)) {
+    for (const m of String(text).matchAll(TERM_LINK_RE)) {
+      if (!handbookTermIds) continue;
+      if (!handbookTermIds.has(m[1])) err(where, `${field} links to unknown handbook term "${m[1]}"`);
+    }
+  }
+  const ia = topic.interactive;
+  if (ia && ia.kind !== "decision-tool" && ia.kind !== "flashcards") err(where, `interactive.kind must be "decision-tool" or "flashcards"`);
+  if (ia?.kind === "flashcards" && ia.category && !["commercial", "scope", "delivery", "quality", "governance", "whitelabel"].includes(ia.category)) {
+    err(where, `interactive.category "${ia.category}" is not a handbook category`);
+  }
+}
+
 const { loaded, missing } = await loadCurriculum({ only });
 const topicIds = new Map();
 let topicCount = 0;
@@ -225,6 +309,9 @@ for (const { track, entry, file, mod } of loaded) {
       if (!parsed.success) err(w, `practice task is invalid: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join(".")} ${i.message}`).join("; ")}`);
       else for (const problem of checkTask(parsed.data)) err(w, `practice: ${problem}`);
     }
+
+    checkTermLinks(w, topic);
+    checkSectionsAndHandbook(w, topic);
   }
 }
 

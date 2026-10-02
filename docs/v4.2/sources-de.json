@@ -1,0 +1,1552 @@
+{
+  "pmp-d01": {
+    "title": "Starting a project",
+    "topics": {
+      "pmp-d01-internal-kickoff": {
+        "title": "Internal kickoff meeting",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Project Kickoff",
+            "url": "https://www.atlassian.com/team-playbook/plays/project-kickoff",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:06Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Roles and Responsibilities",
+            "url": "https://www.atlassian.com/team-playbook/plays/roles-and-responsibilities",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:06Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Pre-mortem",
+            "url": "https://www.atlassian.com/team-playbook/plays/pre-mortem",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:06Z"
+          },
+          {
+            "label": "The Digital Project Manager: How To Run Project Kickoff Meetings",
+            "url": "https://thedigitalprojectmanager.com/project-management/how-to-run-a-great-project-kick-off-meeting/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:06Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Kickoff Meeting [YOUR GUIDE TO STARTING PROJECTS]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=0PQLEyFEgag",
+            "videoId": "0PQLEyFEgag",
+            "verifiedAt": "2026-10-02T12:05:19Z"
+          },
+          {
+            "title": "How to Run a Brilliant Project Kick Off Meeting | The Everyday Project Manager",
+            "channel": "The Everyday Project Manager",
+            "url": "https://www.youtube.com/watch?v=ccgKREwz0jg",
+            "videoId": "ccgKREwz0jg",
+            "verifiedAt": "2026-10-02T12:05:19Z"
+          }
+        ]
+      },
+      "pmp-d01-client-kickoff": {
+        "title": "Client kickoff meeting",
+        "refs": [
+          {
+            "label": "Confluence: Project kickoff template",
+            "url": "https://www.atlassian.com/software/confluence/templates/project-kickoff",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:07Z"
+          },
+          {
+            "label": "Asana: Project Kickoff Meeting 10-step guide",
+            "url": "https://asana.com/resources/project-kickoff-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:08Z"
+          },
+          {
+            "label": "ProjectManager: How to write a project kickoff agenda",
+            "url": "https://www.projectmanager.com/blog/write-project-kickoff-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:07Z"
+          },
+          {
+            "label": "The Digital Project Manager: Project Kickoff Guide",
+            "url": "https://thedigitalprojectmanager.com/project-management/project-kickoff-guide/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:07Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Client Kickoff Meeting Agenda | How To Set the Stage for Success",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=ZnWZQ3G-HkM",
+            "videoId": "ZnWZQ3G-HkM",
+            "verifiedAt": "2026-10-02T12:05:23Z"
+          },
+          {
+            "title": "How to Run New Client Kickoff Calls",
+            "channel": "Will Polliard",
+            "url": "https://www.youtube.com/watch?v=GMOLv_m3XTY",
+            "videoId": "GMOLv_m3XTY",
+            "verifiedAt": "2026-10-02T12:05:28Z"
+          }
+        ]
+      },
+      "pmp-d01-discovery-workshop": {
+        "title": "Discovery and requirements workshops",
+        "refs": [
+          {
+            "label": "GOV.UK Service Manual: How the discovery phase works",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:07Z"
+          },
+          {
+            "label": "NN/g: Discovery phase definition",
+            "url": "https://www.nngroup.com/articles/discovery-phase/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:09Z"
+          },
+          {
+            "label": "NN/g: Stakeholder Interviews 101",
+            "url": "https://www.nngroup.com/articles/stakeholder-interviews/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:09Z"
+          },
+          {
+            "label": "Asana: Requirements Gathering in 6 steps",
+            "url": "https://asana.com/resources/requirements-gathering",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:10Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Requirements Gathering Workshop Technique I Use As A Business Analyst",
+            "channel": "Stefano - The Agile Business Analyst",
+            "url": "https://www.youtube.com/watch?v=Y-ojnxDOQog",
+            "videoId": "Y-ojnxDOQog",
+            "verifiedAt": "2026-10-02T12:05:28Z"
+          },
+          {
+            "title": "Discovery Kick-off Workshops",
+            "channel": "NNgroup",
+            "url": "https://www.youtube.com/watch?v=zcm6eLZXiVU",
+            "videoId": "zcm6eLZXiVU",
+            "verifiedAt": "2026-10-02T12:05:28Z"
+          },
+          {
+            "title": "Requirements Workshop - JAD Session (Example  workshop agenda)",
+            "channel": "The Business Analysis Doctor - IIBA Certification",
+            "url": "https://www.youtube.com/watch?v=s25hs8YazTo",
+            "videoId": "s25hs8YazTo",
+            "verifiedAt": "2026-10-02T12:05:28Z"
+          }
+        ]
+      },
+      "pmp-d01-design-review": {
+        "title": "Design review with the client",
+        "refs": [
+          {
+            "label": "Confluence: Design review template",
+            "url": "https://www.atlassian.com/software/confluence/templates/design-review",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:10Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Sparring (structured peer feedback)",
+            "url": "https://www.atlassian.com/team-playbook/plays/sparring",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:10Z"
+          },
+          {
+            "label": "NN/g: Design Critiques",
+            "url": "https://www.nngroup.com/articles/design-critiques/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:11Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "UX Design Critiques: 3 Tips for Effective Feedback",
+            "channel": "NNgroup",
+            "url": "https://www.youtube.com/watch?v=CBm9gdwshf8",
+            "videoId": "CBm9gdwshf8",
+            "verifiedAt": "2026-10-02T12:05:29Z"
+          },
+          {
+            "title": "How to Present UX Design Ideas",
+            "channel": "NNgroup",
+            "url": "https://www.youtube.com/watch?v=2brmo3wgG48",
+            "videoId": "2brmo3wgG48",
+            "verifiedAt": "2026-10-02T12:05:29Z"
+          },
+          {
+            "title": "Advice for explaining design rationale",
+            "channel": "femke.design",
+            "url": "https://www.youtube.com/watch?v=B1rKtQpgo9k",
+            "videoId": "B1rKtQpgo9k",
+            "verifiedAt": "2026-10-02T12:05:29Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-d02": {
+    "title": "Running delivery",
+    "topics": {
+      "pmp-d02-sprint-planning": {
+        "title": "Sprint planning",
+        "refs": [
+          {
+            "label": "Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:11Z"
+          },
+          {
+            "label": "Atlassian: Sprint Planning",
+            "url": "https://www.atlassian.com/agile/scrum/sprint-planning",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:12Z"
+          },
+          {
+            "label": "Mountain Goat Software: Sprint Planning Meeting",
+            "url": "https://www.mountaingoatsoftware.com/agile/scrum/meetings/sprint-planning-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:12Z"
+          },
+          {
+            "label": "The Digital Project Manager: Sprint Planning Meeting Guide",
+            "url": "https://thedigitalprojectmanager.com/project-management/sprint-planning-meeting/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:12Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Sprint Planning Meetings | 12 Tips To Run Them Like a Scrum Pro",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=FC7WH7OPQqg",
+            "videoId": "FC7WH7OPQqg",
+            "verifiedAt": "2026-10-02T12:05:29Z"
+          },
+          {
+            "title": "06 - Sprint Planning Meeting - Scrum Foundations eLearning Series",
+            "channel": "Scrum Alliance",
+            "url": "https://www.youtube.com/watch?v=H23LUCBFjkw",
+            "videoId": "H23LUCBFjkw",
+            "verifiedAt": "2026-10-02T12:05:29Z"
+          }
+        ]
+      },
+      "pmp-d02-daily-standup": {
+        "title": "The daily stand-up (Daily Scrum)",
+        "refs": [
+          {
+            "label": "Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:11Z"
+          },
+          {
+            "label": "Atlassian: Standups for agile teams",
+            "url": "https://www.atlassian.com/agile/scrum/standups",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:13Z"
+          },
+          {
+            "label": "Mountain Goat Software: Daily Scrum Meeting",
+            "url": "https://www.mountaingoatsoftware.com/agile/scrum/meetings/daily-scrum",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:13Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Daily Scrum Explained: A Better Way to Run It",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=MZdK4SX0mfI",
+            "videoId": "MZdK4SX0mfI",
+            "verifiedAt": "2026-10-02T12:05:29Z"
+          },
+          {
+            "title": "A Real Daily Standup Meeting Example",
+            "channel": "DataMiner by Skyline Communications",
+            "url": "https://www.youtube.com/watch?v=T8GcCl8w-_E",
+            "videoId": "T8GcCl8w-_E",
+            "verifiedAt": "2026-10-02T12:05:29Z"
+          }
+        ]
+      },
+      "pmp-d02-weekly-status": {
+        "title": "Weekly client status meeting",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Stakeholder Communications Plan",
+            "url": "https://www.atlassian.com/team-playbook/plays/stakeholder-communications-plan",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:13Z"
+          },
+          {
+            "label": "Atlassian: Project Status Report tips and templates",
+            "url": "https://www.atlassian.com/agile/project-management/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:14Z"
+          },
+          {
+            "label": "TeamGantt: How to Write a Weekly Project Status Report",
+            "url": "https://www.teamgantt.com/project-status-report-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:15Z"
+          },
+          {
+            "label": "Asana: Meeting Agenda templates and examples",
+            "url": "https://asana.com/resources/meeting-agenda",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:16Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Run Project Status Meetings",
+            "channel": "American Management Association",
+            "url": "https://www.youtube.com/watch?v=iIss0K-W9UQ",
+            "videoId": "iIss0K-W9UQ",
+            "verifiedAt": "2026-10-02T12:05:30Z"
+          },
+          {
+            "title": "How to Lead a Meeting as a Project Manager | Explained in 8 Minutes",
+            "channel": "Max Mao",
+            "url": "https://www.youtube.com/watch?v=XsDSoWKroTk",
+            "videoId": "XsDSoWKroTk",
+            "verifiedAt": "2026-10-02T12:05:30Z"
+          }
+        ]
+      },
+      "pmp-d02-sprint-demo": {
+        "title": "Sprint review and client demo",
+        "refs": [
+          {
+            "label": "Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:11Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Demo Trust",
+            "url": "https://www.atlassian.com/team-playbook/plays/demo-trust",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:14Z"
+          },
+          {
+            "label": "Atlassian: What is a Sprint Review?",
+            "url": "https://www.atlassian.com/agile/scrum/sprint-reviews",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:16Z"
+          },
+          {
+            "label": "Mountain Goat Software: Sprint Review Meeting",
+            "url": "https://www.mountaingoatsoftware.com/agile/scrum/meetings/sprint-review",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:16Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Facilitate the Sprint Review",
+            "channel": "Scrum.org",
+            "url": "https://www.youtube.com/watch?v=Fbp9eLbcf7A",
+            "videoId": "Fbp9eLbcf7A",
+            "verifiedAt": "2026-10-02T12:05:30Z"
+          },
+          {
+            "title": "A Real Sprint Review Meeting Example",
+            "channel": "DataMiner by Skyline Communications",
+            "url": "https://www.youtube.com/watch?v=as9IYFrTiKc",
+            "videoId": "as9IYFrTiKc",
+            "verifiedAt": "2026-10-02T12:05:30Z"
+          },
+          {
+            "title": "Sprint Review: More Than Just a Demo",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=9WzoYrtXR-A",
+            "videoId": "9WzoYrtXR-A",
+            "verifiedAt": "2026-10-02T12:05:30Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-d03": {
+    "title": "Hard conversations",
+    "topics": {
+      "pmp-d03-cr-negotiation": {
+        "title": "Change-request negotiation",
+        "refs": [
+          {
+            "label": "Atlassian: IT Change Management (ITIL framework and best practices)",
+            "url": "https://www.atlassian.com/itsm/change-management",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:17Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Trade-offs",
+            "url": "https://www.atlassian.com/team-playbook/plays/trade-offs",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:17Z"
+          },
+          {
+            "label": "Asana: Change Control Process (5 steps and form fields)",
+            "url": "https://asana.com/resources/change-control-process",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:18Z"
+          },
+          {
+            "label": "TeamGantt: What Is Scope Creep and How to Avoid It",
+            "url": "https://www.teamgantt.com/project-management-guide/taming-scope-creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:18Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Control Change Requests on Projects - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=WWdgFFVkPgA",
+            "videoId": "WWdgFFVkPgA",
+            "verifiedAt": "2026-10-02T12:05:30Z"
+          },
+          {
+            "title": "Project Management Scope Creep [MANAGE IT LIKE A PRO]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=_c-qzFV5yM4",
+            "videoId": "_c-qzFV5yM4",
+            "verifiedAt": "2026-10-02T12:05:31Z"
+          },
+          {
+            "title": "How to Prevent Scope Creep",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=4FwjP2WT4vI",
+            "videoId": "4FwjP2WT4vI",
+            "verifiedAt": "2026-10-02T12:05:31Z"
+          }
+        ]
+      },
+      "pmp-d03-bad-news-delay": {
+        "title": "Delivering bad news and delays",
+        "refs": [
+          {
+            "label": "Atlassian: Incident Communication best practices",
+            "url": "https://www.atlassian.com/incident-management/incident-communication",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:19Z"
+          },
+          {
+            "label": "HBR: Taking the Stress Out of Stressful Conversations",
+            "url": "https://hbr.org/2001/07/taking-the-stress-out-of-stressful-conversations",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:19Z"
+          },
+          {
+            "label": "Hubstaff: How to Communicate Project Delays Effectively",
+            "url": "https://hubstaff.com/blog/communicating-project-delays/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:21Z"
+          },
+          {
+            "label": "American Bar Association: Delivering Bad News to Clients",
+            "url": "https://www.americanbar.org/groups/government_public/resources/practice-pointers/delivering-bad-news-clients/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:21Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Deliver Bad News About a Project",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=WnUD1-k3B-o",
+            "videoId": "WnUD1-k3B-o",
+            "verifiedAt": "2026-10-02T12:05:31Z"
+          },
+          {
+            "title": "Former FBI Negotiator Chris Voss On How To Effectively Deliver Bad News",
+            "channel": "Crisp",
+            "url": "https://www.youtube.com/watch?v=izn0plrtNt4",
+            "videoId": "izn0plrtNt4",
+            "verifiedAt": "2026-10-02T12:05:32Z"
+          }
+        ]
+      },
+      "pmp-d03-unhappy-escalation": {
+        "title": "Handling escalations with unhappy clients",
+        "refs": [
+          {
+            "label": "Atlassian: Escalation Policies for Incidents",
+            "url": "https://www.atlassian.com/incident-management/on-call/escalation-policies",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:21Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: 5 Whys",
+            "url": "https://www.atlassian.com/team-playbook/plays/5-whys",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:21Z"
+          },
+          {
+            "label": "HBR: Taking the Stress Out of Stressful Conversations",
+            "url": "https://hbr.org/2001/07/taking-the-stress-out-of-stressful-conversations",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:19Z"
+          },
+          {
+            "label": "ProjectManager: Escalation Matrix how-to guide",
+            "url": "https://www.projectmanager.com/blog/escalation-matrix",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:22Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "8 Steps To Manage Client Escalations Like a PRO",
+            "channel": "VenuMuvvala",
+            "url": "https://www.youtube.com/watch?v=fTGJMYcLVR0",
+            "videoId": "fTGJMYcLVR0",
+            "verifiedAt": "2026-10-02T12:05:32Z"
+          },
+          {
+            "title": "How to Manage Difficult Stakeholders [6 COMMON CHALLENGES]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=NaGhBpfZLzg",
+            "videoId": "NaGhBpfZLzg",
+            "verifiedAt": "2026-10-02T12:05:32Z"
+          }
+        ]
+      },
+      "pmp-d03-whitelabel-gap-call": {
+        "title": "White-label gap-analysis call",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Fit-to-standard and fit-gap analysis",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/process-focused-solution-fit-to-standard-fit-gap-analysis",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:22Z"
+          },
+          {
+            "label": "Microsoft Learn Training: Perform fit gap analysis",
+            "url": "https://learn.microsoft.com/en-us/training/modules/fit-gap-analysis/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:23Z"
+          },
+          {
+            "label": "Asana: Gap Analysis 4-step process",
+            "url": "https://asana.com/resources/gap-analysis",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:25Z"
+          },
+          {
+            "label": "ProjectManager: How to Conduct a Gap Analysis",
+            "url": "https://www.projectmanager.com/blog/gap-analysis-project-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:24Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a FIT-GAP analysis . How to determine Effort Estimate. E-Mail-careers@sapsol.com",
+            "channel": " SAPSOL Technologies",
+            "url": "https://www.youtube.com/watch?v=Wp3O8Vg-bkk",
+            "videoId": "Wp3O8Vg-bkk",
+            "verifiedAt": "2026-10-02T12:05:32Z"
+          },
+          {
+            "title": "How To Perform A Gap Analysis In 5-Steps",
+            "channel": "Cascade Strategy",
+            "url": "https://www.youtube.com/watch?v=dSS0EyvC1bM",
+            "videoId": "dSS0EyvC1bM",
+            "verifiedAt": "2026-10-02T12:05:32Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-d04": {
+    "title": "Releasing & closing",
+    "topics": {
+      "pmp-d04-uat-walkthrough": {
+        "title": "UAT walkthrough",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Test your solution before deployment (testing strategy, UAT)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/testing-strategy",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:24Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Quality assurance, testing your service regularly",
+            "url": "https://www.gov.uk/service-manual/technology/quality-assurance-testing-your-service-regularly",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:25Z"
+          },
+          {
+            "label": "Atlassian: What is Acceptance Criteria?",
+            "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:26Z"
+          },
+          {
+            "label": "Atlassian: Definition of Done (DoD)",
+            "url": "https://www.atlassian.com/agile/project-management/definition-of-done",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Software Testing Process Guide: What is User Acceptance Testing - UAT?",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=sGwm4p9sGPI",
+            "videoId": "sGwm4p9sGPI",
+            "verifiedAt": "2026-10-02T12:05:32Z"
+          },
+          {
+            "title": "What is UAT (User Acceptance Testing) ? How Does Business Analyst Drive UAT?",
+            "channel": "BA Professional",
+            "url": "https://www.youtube.com/watch?v=PzoD3FtzIbY",
+            "videoId": "PzoD3FtzIbY",
+            "verifiedAt": "2026-10-02T12:05:33Z"
+          }
+        ]
+      },
+      "pmp-d04-go-no-go": {
+        "title": "Go/no-go meeting",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Use the go-live checklist (Dynamics 365 implementation guide)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-go-live-checklist",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:26Z"
+          },
+          {
+            "label": "Fedora Project Wiki: Go No Go Meeting",
+            "url": "https://fedoraproject.org/wiki/Go_No_Go_Meeting",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:27Z"
+          },
+          {
+            "label": "AWS Well-Architected: Operational Readiness Reviews (ORR)",
+            "url": "https://docs.aws.amazon.com/wellarchitected/latest/operational-readiness-reviews/wa-operational-readiness-reviews.html",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:27Z"
+          },
+          {
+            "label": "Google SRE Book: Reliable Product Launches at Scale",
+            "url": "https://sre.google/sre-book/reliable-product-launches/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Go/No-Go Decisions in Business Analysis and Project Management – PMI-PBA Video Certification",
+            "channel": "InterfaceTT",
+            "url": "https://www.youtube.com/watch?v=jZlPDyamGoM",
+            "videoId": "jZlPDyamGoM",
+            "verifiedAt": "2026-10-02T12:05:33Z"
+          },
+          {
+            "title": "Ep 17 | What is a Go/No-Go Meeting? | Essential Project Management Skills",
+            "channel": "LOLA THE MANAGER",
+            "url": "https://www.youtube.com/watch?v=R075RnvTLyQ",
+            "videoId": "R075RnvTLyQ",
+            "verifiedAt": "2026-10-02T12:05:33Z"
+          }
+        ]
+      },
+      "pmp-d04-retrospective": {
+        "title": "Retrospectives",
+        "refs": [
+          {
+            "label": "Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:11Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Retrospective",
+            "url": "https://www.atlassian.com/team-playbook/plays/retrospective",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:27Z"
+          },
+          {
+            "label": "Atlassian: What are agile retrospectives?",
+            "url": "https://www.atlassian.com/agile/scrum/retrospectives",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:29Z"
+          },
+          {
+            "label": "Asana: Sprint Retrospective, how to run an effective retro",
+            "url": "https://asana.com/resources/sprint-retrospective",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:29Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Facilitate the Sprint Retrospective",
+            "channel": "Scrum.org",
+            "url": "https://www.youtube.com/watch?v=TD-XsdD2n3s",
+            "videoId": "TD-XsdD2n3s",
+            "verifiedAt": "2026-10-02T12:05:33Z"
+          },
+          {
+            "title": "Sprint Retrospectives: How Scrum Teams Improve",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=qzIQ-3aAkXI",
+            "videoId": "qzIQ-3aAkXI",
+            "verifiedAt": "2026-10-02T12:05:33Z"
+          }
+        ]
+      },
+      "pmp-d04-closure-handover": {
+        "title": "Project closure and handover meeting",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Plan your support operations (transition and hypercare)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/transition-to-support-operations",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:28Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: How the live phase works",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-live-phase-works",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:28Z"
+          },
+          {
+            "label": "Asana: Project Closure (8 steps and checklist)",
+            "url": "https://asana.com/resources/project-closure",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:31Z"
+          },
+          {
+            "label": "ProjectManager: 7 Steps to Project Closure",
+            "url": "https://www.projectmanager.com/blog/project-closure",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:30Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Closing the Project [5 STEPS TO PROJECT CLOSURE]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=Fl5BVFzigt8",
+            "videoId": "Fl5BVFzigt8",
+            "verifiedAt": "2026-10-02T12:05:34Z"
+          },
+          {
+            "title": "Project Handover Process [OVER TO YOU!]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=OLibddcR3Yg",
+            "videoId": "OLibddcR3Yg",
+            "verifiedAt": "2026-10-02T12:05:34Z"
+          },
+          {
+            "title": "Project101x: Project closure and handover",
+            "channel": "Project101x: Introduction to Project Management",
+            "url": "https://www.youtube.com/watch?v=_mXFK_1DkHE",
+            "videoId": "_mXFK_1DkHE",
+            "verifiedAt": "2026-10-02T12:05:34Z"
+          }
+        ]
+      },
+      "pmp-d04-account-review": {
+        "title": "Quarterly business / account review",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Goals, Signals, and Measures",
+            "url": "https://www.atlassian.com/team-playbook/plays/goals-signals-measures",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:30Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Health Monitor",
+            "url": "https://www.atlassian.com/team-playbook/health-monitor",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:30Z"
+          },
+          {
+            "label": "Gainsight: The Essential Guide to Quarterly Business Reviews",
+            "url": "https://www.gainsight.com/essential-guide/quarterly-business-reviews-qbrs/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:32Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Quarterly Business Review Best Practices: 9 Ways to Transform Your QBR From Boring to Brilliant",
+            "channel": "The KAM Club",
+            "url": "https://www.youtube.com/watch?v=aZiBPXngi0g",
+            "videoId": "aZiBPXngi0g",
+            "verifiedAt": "2026-10-02T12:05:34Z"
+          },
+          {
+            "title": "How to Develop a Quarterly Business Review (QBR)",
+            "channel": "Gainsight",
+            "url": "https://www.youtube.com/watch?v=XSPWC_Pn42w",
+            "videoId": "XSPWC_Pn42w",
+            "verifiedAt": "2026-10-02T12:05:34Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-d05": {
+    "title": "Meeting craft",
+    "topics": {
+      "pmp-d05-craft-demo-screenshare": {
+        "title": "Demoing and screen sharing in Teams",
+        "refs": [
+          {
+            "label": "Microsoft Support: Present content in Microsoft Teams meetings",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/present-content-in-microsoft-teams-meetings",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:32Z"
+          },
+          {
+            "label": "Microsoft Support: Roles in Microsoft Teams meetings",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/roles-in-microsoft-teams-meetings",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:32Z"
+          },
+          {
+            "label": "Microsoft Support: Start, stop, and find meeting recordings in Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/start-stop-and-find-meeting-recordings-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:32Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Demo Trust",
+            "url": "https://www.atlassian.com/team-playbook/plays/demo-trust",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:14Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "PROPERLY Share Your Screen in a Microsoft Teams Meeting (For BEST Experience!)",
+            "channel": "Leila Gharani",
+            "url": "https://www.youtube.com/watch?v=BZ3JUjtywh0",
+            "videoId": "BZ3JUjtywh0",
+            "verifiedAt": "2026-10-02T12:05:35Z"
+          },
+          {
+            "title": "How to Present PowerPoint in Teams Like a Pro",
+            "channel": "Teacher's Tech",
+            "url": "https://www.youtube.com/watch?v=_e83XlmipBs",
+            "videoId": "_e83XlmipBs",
+            "verifiedAt": "2026-10-02T12:05:35Z"
+          },
+          {
+            "title": "Stephen Lead - how to give a kick-ass demo",
+            "channel": "Ignite Sydney",
+            "url": "https://www.youtube.com/watch?v=Cxl_3ANnE0A",
+            "videoId": "Cxl_3ANnE0A",
+            "verifiedAt": "2026-10-02T12:05:35Z"
+          }
+        ]
+      },
+      "pmp-d05-craft-timebox-decisions": {
+        "title": "Timeboxing and getting decisions",
+        "refs": [
+          {
+            "label": "Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:11Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: DACI decision-making framework",
+            "url": "https://www.atlassian.com/team-playbook/plays/daci",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:33Z"
+          },
+          {
+            "label": "Confluence: DACI decision documentation template",
+            "url": "https://www.atlassian.com/software/confluence/templates/decision",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:34Z"
+          },
+          {
+            "label": "HBR: How to Run a Meeting (Antony Jay)",
+            "url": "https://hbr.org/1976/03/how-to-run-a-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:34Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Run an Effective Meeting 5 Tips",
+            "channel": "Alexander Lyon Communication Coach",
+            "url": "https://www.youtube.com/watch?v=iQsw3cdJbbM",
+            "videoId": "iQsw3cdJbbM",
+            "verifiedAt": "2026-10-02T12:05:35Z"
+          },
+          {
+            "title": "How to run the DACI Decision-making Framework play | Atlassian Training",
+            "channel": "Atlassian",
+            "url": "https://www.youtube.com/watch?v=63GcgUha0Vs",
+            "videoId": "63GcgUha0Vs",
+            "verifiedAt": "2026-10-02T12:05:35Z"
+          },
+          {
+            "title": "Run Meetings that Don't Suck (10 Tips)!",
+            "channel": "Jeff Su",
+            "url": "https://www.youtube.com/watch?v=LCiQFwAwJvI",
+            "videoId": "LCiQFwAwJvI",
+            "verifiedAt": "2026-10-02T12:05:36Z"
+          }
+        ]
+      },
+      "pmp-d05-craft-non-native": {
+        "title": "Communicating with non-native English speakers",
+        "refs": [
+          {
+            "label": "Microsoft Style Guide: Global communications, writing tips",
+            "url": "https://learn.microsoft.com/en-us/style-guide/global-communications/writing-tips",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:34Z"
+          },
+          {
+            "label": "Microsoft Support: Use live captions in Microsoft Teams meetings",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/use-live-captions-in-microsoft-teams-meetings",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:34Z"
+          },
+          {
+            "label": "Digital.gov: Plain language guide series",
+            "url": "https://digital.gov/guides/plain-language",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:35Z"
+          },
+          {
+            "label": "HBR: Global Business Speaks English (Tsedal Neeley)",
+            "url": "https://hbr.org/2012/05/global-business-speaks-english",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:35Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "8. Don't Get Lost in Translation: How Non-Native Speakers Can Communicate With Confidence",
+            "channel": "Stanford Graduate School of Business",
+            "url": "https://www.youtube.com/watch?v=iP31KkbKdzI",
+            "videoId": "iP31KkbKdzI",
+            "verifiedAt": "2026-10-02T12:05:36Z"
+          },
+          {
+            "title": "Communication Tips for Non-Native English Speakers",
+            "channel": "Stanford Graduate School of Business",
+            "url": "https://www.youtube.com/watch?v=5LOSNDJgkFs",
+            "videoId": "5LOSNDJgkFs",
+            "verifiedAt": "2026-10-02T12:05:37Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-e01": {
+    "title": "Scope & sign-off templates",
+    "topics": {
+      "pmp-e01-cr-form": {
+        "title": "Change request (CR) form",
+        "refs": [
+          {
+            "label": "Atlassian: IT Change Management (ITIL framework and best practices)",
+            "url": "https://www.atlassian.com/itsm/change-management",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:17Z"
+          },
+          {
+            "label": "Atlassian: Change Advisory Board (CAB) explained",
+            "url": "https://www.atlassian.com/itsm/change-management/change-advisory-board",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:36Z"
+          },
+          {
+            "label": "ProjectManager: Change Request Form (free Word template)",
+            "url": "https://www.projectmanager.com/templates/change-request-form",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:35Z"
+          },
+          {
+            "label": "Asana: Change Control Process (5 steps and form fields)",
+            "url": "https://asana.com/resources/change-control-process",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:18Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Change Management Process & Request Form Template | TeamGantt",
+            "channel": "TeamGantt",
+            "url": "https://www.youtube.com/watch?v=VBNixWI8YzI",
+            "videoId": "VBNixWI8YzI",
+            "verifiedAt": "2026-10-02T12:05:38Z"
+          },
+          {
+            "title": "What is a CHANGE REQUEST? PMBOK Key Concepts in Project Management",
+            "channel": "David McLachlan",
+            "url": "https://www.youtube.com/watch?v=ZdpoQLfiznQ",
+            "videoId": "ZdpoQLfiznQ",
+            "verifiedAt": "2026-10-02T12:05:38Z"
+          }
+        ]
+      },
+      "pmp-e01-requirement-signoff": {
+        "title": "Requirement sign-off",
+        "refs": [
+          {
+            "label": "Confluence: Product Requirements Document (PRD) template",
+            "url": "https://www.atlassian.com/software/confluence/templates/product-requirements",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:37Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Writing user stories",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:37Z"
+          },
+          {
+            "label": "Atlassian: What is Acceptance Criteria?",
+            "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:26Z"
+          },
+          {
+            "label": "Asana: Business Requirements Document template",
+            "url": "https://asana.com/resources/business-requirements-document-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:37Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Gaining Buy-In and Sign-Off in Business Analysis for Requirements",
+            "channel": "Bridging the Gap - Resources for Business Analysts",
+            "url": "https://www.youtube.com/watch?v=l1iap5Dp3fQ",
+            "videoId": "l1iap5Dp3fQ",
+            "verifiedAt": "2026-10-02T12:05:38Z"
+          },
+          {
+            "title": "How to Get Approval and Sign-off for Requirements? Approaches, Techniques and Tools in IT Projects",
+            "channel": "TEXAVI",
+            "url": "https://www.youtube.com/watch?v=hhB8FjauLDg",
+            "videoId": "hhB8FjauLDg",
+            "verifiedAt": "2026-10-02T12:05:38Z"
+          }
+        ]
+      },
+      "pmp-e01-uat-signoff": {
+        "title": "UAT sign-off",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Use the go-live checklist (Dynamics 365 implementation guide)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-go-live-checklist",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:26Z"
+          },
+          {
+            "label": "Microsoft Learn: Test your solution before deployment (testing strategy, UAT)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/testing-strategy",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:24Z"
+          },
+          {
+            "label": "Smartsheet: Free Project Sign-Off Templates",
+            "url": "https://www.smartsheet.com/content/project-sign-off-templates",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:37Z"
+          },
+          {
+            "label": "Atlassian: Definition of Done (DoD)",
+            "url": "https://www.atlassian.com/agile/project-management/definition-of-done",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to get #UserAcceptanceTesting (UAT) Sign-offs easily",
+            "channel": "Business Analyst & Scrum Master In-Demand",
+            "url": "https://www.youtube.com/watch?v=lTRoxp4nGdo",
+            "videoId": "lTRoxp4nGdo",
+            "verifiedAt": "2026-10-02T12:05:39Z"
+          },
+          {
+            "title": "Business Analyst UAT Testing in Real Projects | Responsibilities, Defects & Sign-Off",
+            "channel": "Tejas Bhale - Think2change",
+            "url": "https://www.youtube.com/watch?v=S5fon51yPSc",
+            "videoId": "S5fon51yPSc",
+            "verifiedAt": "2026-10-02T12:05:39Z"
+          }
+        ]
+      },
+      "pmp-e01-kickoff-agenda": {
+        "title": "Kickoff agenda",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Project Kickoff",
+            "url": "https://www.atlassian.com/team-playbook/plays/project-kickoff",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:06Z"
+          },
+          {
+            "label": "Confluence: Project kickoff template",
+            "url": "https://www.atlassian.com/software/confluence/templates/project-kickoff",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:07Z"
+          },
+          {
+            "label": "ProjectManager: How to write a project kickoff agenda",
+            "url": "https://www.projectmanager.com/blog/write-project-kickoff-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:07Z"
+          },
+          {
+            "label": "Asana: Meeting Agenda templates and examples",
+            "url": "https://asana.com/resources/meeting-agenda",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:16Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Project Kickoff Meeting Agenda [WHAT TO INCLUDE]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=44bCXCffRc4",
+            "videoId": "44bCXCffRc4",
+            "verifiedAt": "2026-10-02T12:05:43Z"
+          },
+          {
+            "title": "Project Kickoff Meetings | 5-Minute Guide",
+            "channel": "TeamGantt",
+            "url": "https://www.youtube.com/watch?v=Bu84BEkN2e4",
+            "videoId": "Bu84BEkN2e4",
+            "verifiedAt": "2026-10-02T12:05:43Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-e02": {
+    "title": "Running-the-project templates",
+    "topics": {
+      "pmp-e02-mom": {
+        "title": "Minutes of meeting (MoM)",
+        "refs": [
+          {
+            "label": "Confluence: Meeting minutes template",
+            "url": "https://www.atlassian.com/software/confluence/templates/meeting-notes",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:38Z"
+          },
+          {
+            "label": "Microsoft Support: Take meeting notes in Microsoft Teams",
+            "url": "https://support.microsoft.com/en-us/teams/meetings/take-meeting-notes-in-microsoft-teams",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:39Z"
+          },
+          {
+            "label": "Asana: Meeting Minutes template",
+            "url": "https://asana.com/templates/meeting-minutes",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:39Z"
+          },
+          {
+            "label": "ProjectManager: Meeting Minutes template",
+            "url": "https://www.projectmanager.com/templates/meeting-minutes-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:39Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to write meeting minutes LIKE A PRO [With meeting minutes example!]",
+            "channel": "Emelie Lindström - Productivity & Work Skills",
+            "url": "https://www.youtube.com/watch?v=cST_Q5VpLRw",
+            "videoId": "cST_Q5VpLRw",
+            "verifiedAt": "2026-10-02T12:05:43Z"
+          },
+          {
+            "title": "Minutes of Meeting | How  to write Meeting Minutes | Format | Example | Exercise",
+            "channel": "Nihir Shah",
+            "url": "https://www.youtube.com/watch?v=NHsTLSN6ozo",
+            "videoId": "NHsTLSN6ozo",
+            "verifiedAt": "2026-10-02T12:05:43Z"
+          }
+        ]
+      },
+      "pmp-e02-status-report": {
+        "title": "RAG status report",
+        "refs": [
+          {
+            "label": "Confluence: Project status report template",
+            "url": "https://www.atlassian.com/software/confluence/templates/project-status",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:40Z"
+          },
+          {
+            "label": "ProjectManager: RAG Status in Project Management",
+            "url": "https://www.projectmanager.com/blog/rag-status",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:40Z"
+          },
+          {
+            "label": "Asana: Status Report template for projects",
+            "url": "https://asana.com/templates/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:41Z"
+          },
+          {
+            "label": "ProjectManager: Project Status Reports guide",
+            "url": "https://www.projectmanager.com/guides/status-report",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:40Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a RAG Report? ...or a Traffic Light Report?",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=xadyhn3GjJc",
+            "videoId": "xadyhn3GjJc",
+            "verifiedAt": "2026-10-02T12:05:43Z"
+          },
+          {
+            "title": "How to Use RAG Status in Project Status Reports",
+            "channel": "Stuart Taylor - Project Management",
+            "url": "https://www.youtube.com/watch?v=Z6N5NypIJmg",
+            "videoId": "Z6N5NypIJmg",
+            "verifiedAt": "2026-10-02T12:05:43Z"
+          }
+        ]
+      },
+      "pmp-e02-raid-log": {
+        "title": "RAID log",
+        "refs": [
+          {
+            "label": "Confluence: Risk register template",
+            "url": "https://www.atlassian.com/software/confluence/templates/risk-register",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:42Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Dependency Mapping",
+            "url": "https://www.atlassian.com/team-playbook/plays/dependency-mapping",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:41Z"
+          },
+          {
+            "label": "Asana: RAID Log (risks, assumptions, issues, decisions)",
+            "url": "https://asana.com/resources/raid-log",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:43Z"
+          },
+          {
+            "label": "ProjectManager: What Is a RAID Log and Why Use One?",
+            "url": "https://www.projectmanager.com/blog/raid-log-use-one",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:42Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Use RAID Log in REAL-LIFE Project (+ Template)",
+            "channel": "Tactical Project Manager",
+            "url": "https://www.youtube.com/watch?v=inZI16nIvdo",
+            "videoId": "inZI16nIvdo",
+            "verifiedAt": "2026-10-02T12:05:44Z"
+          },
+          {
+            "title": "RAID Log in Project Management (FREE Risk Register Template Included!)",
+            "channel": "Alvin the PM - Become a Certified Project Manager",
+            "url": "https://www.youtube.com/watch?v=1i_pYJXs-H0",
+            "videoId": "1i_pYJXs-H0",
+            "verifiedAt": "2026-10-02T12:05:44Z"
+          }
+        ]
+      },
+      "pmp-e02-escalation-matrix": {
+        "title": "Escalation matrix",
+        "refs": [
+          {
+            "label": "Atlassian: Escalation Policies for Incidents",
+            "url": "https://www.atlassian.com/incident-management/on-call/escalation-policies",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:21Z"
+          },
+          {
+            "label": "PagerDuty Knowledge Base: Escalation Policy Basics",
+            "url": "https://support.pagerduty.com/main/docs/escalation-policies",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:43Z"
+          },
+          {
+            "label": "ProjectManager: Escalation Matrix how-to guide",
+            "url": "https://www.projectmanager.com/blog/escalation-matrix",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:22Z"
+          },
+          {
+            "label": "Smartsheet: Free Escalation Matrix Templates",
+            "url": "https://www.smartsheet.com/content/escalation-matrix-templates",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:43Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Escalation Matrix!!! The real meaning & purpose of it👍👍👍",
+            "channel": "K Dinesh Kumar",
+            "url": "https://www.youtube.com/watch?v=Q8fjudh7pAo",
+            "videoId": "Q8fjudh7pAo",
+            "verifiedAt": "2026-10-02T12:05:44Z"
+          },
+          {
+            "title": "Escalation Matrix Guide: Incident Management Essentials",
+            "channel": "CodeLucky",
+            "url": "https://www.youtube.com/watch?v=K8C7CeTs93k",
+            "videoId": "K8C7CeTs93k",
+            "verifiedAt": "2026-10-02T12:05:44Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-e03": {
+    "title": "Release & close templates",
+    "topics": {
+      "pmp-e03-golive-checklist": {
+        "title": "Go-live checklist",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Use the go-live checklist (Dynamics 365 implementation guide)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-go-live-checklist",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:26Z"
+          },
+          {
+            "label": "Microsoft Learn: Prepare your production environment to go live",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-to-go-live",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:44Z"
+          },
+          {
+            "label": "Google SRE Book: Reliable Product Launches at Scale (launch checklist)",
+            "url": "https://sre.google/sre-book/reliable-product-launches/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:27Z"
+          },
+          {
+            "label": "Atlassian: Software releases, 3 ingredients for success",
+            "url": "https://www.atlassian.com/agile/software-development/release",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:44Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Best Free Go Live Checklist and Plan for Project, Program, and Change Teams",
+            "channel": "OCM Solution (OCMS)",
+            "url": "https://www.youtube.com/watch?v=NmOh5evT-aU",
+            "videoId": "NmOh5evT-aU",
+            "verifiedAt": "2026-10-02T12:05:44Z"
+          },
+          {
+            "title": "How to Prepare for an ERP  Implementation Go-Live [Digital Transformation Readiness]",
+            "channel": "Digital Transformation with Eric Kimberling",
+            "url": "https://www.youtube.com/watch?v=wP7wq5bjxl8",
+            "videoId": "wP7wq5bjxl8",
+            "verifiedAt": "2026-10-02T12:05:44Z"
+          }
+        ]
+      },
+      "pmp-e03-hypercare-log": {
+        "title": "Hypercare log",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Plan your support operations (transition and hypercare)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/transition-to-support-operations",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:28Z"
+          },
+          {
+            "label": "Atlassian: Understanding incident severity levels",
+            "url": "https://www.atlassian.com/incident-management/kpis/severity-levels",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:45Z"
+          },
+          {
+            "label": "Atlassian: What is an SLA?",
+            "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:45Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is meant by Hypercare period in a Project? #sapimplementation #sapjobs #sapmarket #sapsupport",
+            "channel": "Ganesh SAP SCM",
+            "url": "https://www.youtube.com/watch?v=VxG9BYjcff0",
+            "videoId": "VxG9BYjcff0",
+            "verifiedAt": "2026-10-02T12:05:45Z"
+          },
+          {
+            "title": "Why Post Go-Live Support Is So Important",
+            "channel": "DGTL Ventures",
+            "url": "https://www.youtube.com/watch?v=5w9ruMs93kQ",
+            "videoId": "5w9ruMs93kQ",
+            "verifiedAt": "2026-10-02T12:05:45Z"
+          }
+        ]
+      },
+      "pmp-e03-handover-kt": {
+        "title": "Handover and knowledge-transfer checklist",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Plan your support operations (transition and hypercare)",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/transition-to-support-operations",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:28Z"
+          },
+          {
+            "label": "Atlassian: Knowledge Base guide",
+            "url": "https://www.atlassian.com/itsm/knowledge-management/what-is-a-knowledge-base",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:46Z"
+          },
+          {
+            "label": "ProjectManager: Project Handover Template",
+            "url": "https://www.projectmanager.com/templates/project-handover-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:46Z"
+          },
+          {
+            "label": "Smartsheet: Free Project Handover Templates",
+            "url": "https://www.smartsheet.com/content/project-handover-templates",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:46Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Project Handover Process [OVER TO YOU!]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=OLibddcR3Yg",
+            "videoId": "OLibddcR3Yg",
+            "verifiedAt": "2026-10-02T12:05:34Z"
+          },
+          {
+            "title": "How to Handle Knowledge Transfer (KT) in IT Company | Tips for New Project Members",
+            "channel": "My Corporate Lessons",
+            "url": "https://www.youtube.com/watch?v=e8_k2OWHGKY",
+            "videoId": "e8_k2OWHGKY",
+            "verifiedAt": "2026-10-02T12:05:48Z"
+          }
+        ]
+      },
+      "pmp-e03-whitelabel-onboarding": {
+        "title": "White-label onboarding checklist",
+        "refs": [
+          {
+            "label": "Apple Developer: Enroll as an organization (Apple Developer Program)",
+            "url": "https://developer.apple.com/programs/enroll/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:47Z"
+          },
+          {
+            "label": "Apple: App Review Guidelines (4.2.6 template apps, 4.3 spam)",
+            "url": "https://developer.apple.com/app-store/review/guidelines/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:04:47Z"
+          },
+          {
+            "label": "Play Console Help: Required information to create a developer account",
+            "url": "https://support.google.com/googleplay/android-developer/answer/13628312",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:50Z"
+          },
+          {
+            "label": "App Store Connect Help: Add and edit users",
+            "url": "https://developer.apple.com/help/app-store-connect/manage-your-team/add-and-edit-users",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:49Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Enterprise SaaS Customer Onboarding | Best Practices You Should Follow ",
+            "channel": "Swarnendu De",
+            "url": "https://www.youtube.com/watch?v=3-L-WpSGoh4",
+            "videoId": "3-L-WpSGoh4",
+            "verifiedAt": "2026-10-02T12:05:48Z"
+          },
+          {
+            "title": "How to Onboard a New Client from US | How to Onboard International Clients | Onboarding Process",
+            "channel": "Chetan Agarwal",
+            "url": "https://www.youtube.com/watch?v=WuzzgPa51lw",
+            "videoId": "WuzzgPa51lw",
+            "verifiedAt": "2026-10-02T12:05:48Z"
+          }
+        ]
+      },
+      "pmp-e03-closure-report": {
+        "title": "Project closure report",
+        "refs": [
+          {
+            "label": "Confluence: Lessons learned template",
+            "url": "https://www.atlassian.com/software/confluence/templates/lessons-learned",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:04:48Z"
+          },
+          {
+            "label": "Asana: Project Closure (8 steps and checklist)",
+            "url": "https://asana.com/resources/project-closure",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:31Z"
+          },
+          {
+            "label": "Asana: Lessons Learned in 5 steps",
+            "url": "https://asana.com/resources/lessons-learned",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:49Z"
+          },
+          {
+            "label": "ProjectManager: Lessons Learned in Project Management",
+            "url": "https://www.projectmanager.com/blog/lessons-learned-project-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:50Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Write the Close Out Report | Google Project Management Certificate",
+            "channel": "Grow with Google",
+            "url": "https://www.youtube.com/watch?v=WfHpPsOa5Nw",
+            "videoId": "WfHpPsOa5Nw",
+            "verifiedAt": "2026-10-02T12:05:48Z"
+          },
+          {
+            "title": "Mastering Project Closure Report: What You NEED in Your Final Doc",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=qXEq6ITyTIk",
+            "videoId": "qXEq6ITyTIk",
+            "verifiedAt": "2026-10-02T12:05:48Z"
+          }
+        ]
+      }
+    }
+  }
+}

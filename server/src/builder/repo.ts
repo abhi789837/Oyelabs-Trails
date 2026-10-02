@@ -15,6 +15,7 @@ import type { ContentStore } from "../content/store";
 import { listSkillPriorities, listSkip, replaceSkipByNames, writeLegacyTargets } from "../setup/repo";
 import { sliderToPriority } from "../../../shared/setup";
 import type { BuiltCourse } from "./pipeline";
+import { isLevelBandedCamp, levelsFrom } from "./priorityPath";
 
 /** The statuses a generated course can hold. Mirrors the column's own union. */
 type GeneratedStatus = "draft" | "pending_review" | "published" | "rejected" | "needs_review";
@@ -255,7 +256,9 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
   const views: PathItemView[] = items.map((item) => {
     if (item.moduleId) {
       const found = content?.manifest.flatMap((track) => track.modules.map((m) => ({ track, m }))).find(({ m }) => m.id === item.moduleId);
-      const topicIds = found?.m.topics.map((t) => t.id) ?? [];
+      // v4.2: a level-banded camp counts only the topics from where this course starts.
+      const levels = item.startLevel && found && isLevelBandedCamp(found.m.id) ? new Set<string>(levelsFrom(item.startLevel)) : null;
+      const topicIds = found?.m.topics.filter((t) => !levels || levels.has(t.level)).map((t) => t.id) ?? [];
       return {
         id: item.id,
         courseId: null,

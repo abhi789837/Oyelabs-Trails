@@ -1,0 +1,798 @@
+[
+  {
+    "id": "pm-proc-custom-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "Put these stages of a custom project in the order they happen.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "First stage at the top.",
+      "items": [
+        {
+          "id": "a",
+          "label": "BD handover to delivery"
+        },
+        {
+          "id": "b",
+          "label": "Client kickoff"
+        },
+        {
+          "id": "c",
+          "label": "Discovery and requirement sign-off"
+        },
+        {
+          "id": "d",
+          "label": "Architecture and Sprint 0"
+        },
+        {
+          "id": "e",
+          "label": "QA, UAT and sign-off"
+        },
+        {
+          "id": "f",
+          "label": "Hypercare and warranty"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "explanation": "BD handover, kickoff, discovery, Sprint 0, sprints, QA/UAT, release, then hypercare."
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-bd-handover",
+      "stage:custom-client-kickoff",
+      "stage:custom-discovery",
+      "stage:custom-sprint-0",
+      "stage:custom-qa-uat",
+      "stage:custom-hypercare"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Order these steps at the end of a custom project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "First step at the top.",
+      "items": [
+        {
+          "id": "a",
+          "label": "Written UAT sign-off received"
+        },
+        {
+          "id": "b",
+          "label": "Go/no-go decision recorded"
+        },
+        {
+          "id": "c",
+          "label": "Production deployment and cutover"
+        },
+        {
+          "id": "d",
+          "label": "Smoke test of key flows in production"
+        },
+        {
+          "id": "e",
+          "label": "Hypercare log reviewed with the client"
+        },
+        {
+          "id": "f",
+          "label": "Handover checklist signed"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "explanation": "Nothing goes to production before written UAT sign-off; go/no-go, deploy and smoke test happen at release; hypercare follows; handover comes after."
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-qa-uat",
+      "stage:custom-release",
+      "stage:custom-hypercare",
+      "stage:custom-handover",
+      "rule:uat-signoff-before-golive",
+      "template:golive-checklist"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "Order these artifacts by the lifecycle stage that produces them.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "Earliest at the top.",
+      "items": [
+        {
+          "id": "a",
+          "label": "Requirement sign-off and freeze date"
+        },
+        {
+          "id": "b",
+          "label": "Written design approval"
+        },
+        {
+          "id": "c",
+          "label": "Definition of ready and done"
+        },
+        {
+          "id": "d",
+          "label": "Written UAT sign-off"
+        },
+        {
+          "id": "e",
+          "label": "Hypercare log review"
+        },
+        {
+          "id": "f",
+          "label": "Closure report"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "explanation": "Discovery, design, Sprint 0, QA/UAT, hypercare, closure."
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-discovery",
+      "stage:custom-design",
+      "stage:custom-sprint-0",
+      "stage:custom-qa-uat",
+      "stage:custom-hypercare",
+      "stage:custom-closure"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which stage produces each artifact?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick the stage for each artifact.",
+      "mode": "generic",
+      "categories": [
+        {
+          "id": "discovery",
+          "label": "Discovery & requirements"
+        },
+        {
+          "id": "sprint0",
+          "label": "Architecture & Sprint 0"
+        },
+        {
+          "id": "uat",
+          "label": "QA, UAT & sign-off"
+        },
+        {
+          "id": "release",
+          "label": "Release & go-live"
+        }
+      ],
+      "items": [
+        {
+          "id": "i1",
+          "text": "User stories with acceptance criteria",
+          "explanation": "Written in discovery."
+        },
+        {
+          "id": "i2",
+          "text": "Requirement freeze date recorded",
+          "explanation": "An exit criterion of discovery."
+        },
+        {
+          "id": "i3",
+          "text": "Definition of ready and done agreed",
+          "explanation": "An exit criterion of Sprint 0."
+        },
+        {
+          "id": "i4",
+          "text": "Known issues documented",
+          "explanation": "An exit criterion of QA and UAT."
+        },
+        {
+          "id": "i5",
+          "text": "Go/no-go decision recorded",
+          "explanation": "An exit criterion of release."
+        }
+      ],
+      "answer": {
+        "i1": "discovery",
+        "i2": "discovery",
+        "i3": "sprint0",
+        "i4": "uat",
+        "i5": "release"
+      }
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-discovery",
+      "stage:custom-sprint-0",
+      "stage:custom-qa-uat",
+      "stage:custom-release"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A draft SOW for a fixed-bid booking app. Mark the clauses that create a risk.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the risky clauses.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Scope: customer app, admin panel and card payments, as listed in Annex A.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Also included: any other features the client needs during the project.",
+          "issue": "Open-ended scope: there is no baseline to control changes against."
+        },
+        {
+          "id": "s3",
+          "text": "Out of scope: native tablet apps and ERP integration.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Design: unlimited revision rounds until the client is happy.",
+          "issue": "Design stages typically include a fixed number of revision rounds."
+        },
+        {
+          "id": "s5",
+          "text": "Assumption: the client provides the payment gateway account by week 4.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Changes after requirement sign-off go through the change request process.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Go-live may proceed without written UAT sign-off if the client is busy.",
+          "issue": "Nothing should go to production without written UAT sign-off."
+        },
+        {
+          "id": "s8",
+          "text": "Milestone 2 is invoiced on written design approval.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "term:sow",
+      "term:scope-baseline",
+      "term:scope-creep",
+      "rule:design-revision-rounds",
+      "rule:uat-signoff-before-golive",
+      "rule:requirement-freeze-after-signoff"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The go-live plan for a booking app. Mark the lines that put the release at risk.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the risky lines.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Written UAT sign-off received, with two known issues accepted.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Deployment set for Friday 7 pm, before the public holiday.",
+          "issue": "Releasing on a Friday evening or before a holiday is a known pitfall."
+        },
+        {
+          "id": "s3",
+          "text": "Database backup taken before deployment.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Rollback: if something breaks, we'll work it out on the night.",
+          "issue": "There is no tested rollback plan."
+        },
+        {
+          "id": "s5",
+          "text": "Apps go out from the agency's Apple account; the client's isn't ready.",
+          "issue": "Store accounts must be client-owned."
+        },
+        {
+          "id": "s6",
+          "text": "Smoke test: sign-up, booking, payment and notifications.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Go/no-go decision recorded in the MoM with the client sponsor.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-release",
+      "template:golive-checklist",
+      "rule:client-owned-store-accounts",
+      "term:rollback",
+      "term:go-no-go"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "UAT ran for a week. The client rejects it with 14 items: 3 real defects (one blocks invoicing), 6 cosmetic, 5 new requests outside the acceptance criteria.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Triage the list with the client",
+            "Accept all 14 as bugs",
+            "Reject the list as out of spec"
+          ],
+          "correctIndex": 0,
+          "explanation": "UAT feedback is triaged into bugs, CRs and clarifications before anything is promised."
+        },
+        {
+          "id": "s2",
+          "question": "How do you handle the 5 new requests?",
+          "options": [
+            "Fix them free as UAT bugs",
+            "Raise change requests for approval",
+            "Drop them silently"
+          ],
+          "correctIndex": 1,
+          "explanation": "New requests found in UAT are typically change requests."
+        },
+        {
+          "id": "s3",
+          "question": "What allows sign-off?",
+          "options": [
+            "All 14 items closed",
+            "Agreed defects fixed and retested; known issues listed",
+            "A verbal OK on a call"
+          ],
+          "correctIndex": 1,
+          "explanation": "Exit criteria: agreed bugs fixed and retested, written sign-off, known issues documented."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-qa-uat",
+      "term:uat",
+      "term:known-issues",
+      "term:change-request",
+      "rule:uat-signoff-before-golive",
+      "template:uat-signoff"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Go/no-go meeting, two days before launch. UAT is signed off, but one open payment bug is rated high severity. The client sponsor is keen to launch.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you recommend?",
+          "options": [
+            "No-go: move launch until it is fixed",
+            "Go, and hotfix it later",
+            "Go, listing it as a known issue"
+          ],
+          "correctIndex": 0,
+          "explanation": "A high-severity payment bug is a reason for no-go; a no-go is cheaper than a failed go-live. Known issues are for low-impact defects."
+        },
+        {
+          "id": "s2",
+          "question": "Who is accountable for the go/no-go decision?",
+          "options": [
+            "The client sponsor",
+            "The tech lead",
+            "QA"
+          ],
+          "correctIndex": 0,
+          "explanation": "The PM runs it, consulting the tech lead and QA; the client sponsor is accountable."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "term:go-no-go",
+      "term:known-issues",
+      "term:severity",
+      "stage:custom-release"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Hypercare is ending and the final payment is overdue. The client asks for the source code and credentials today. Some production credentials sit in a developer's personal account.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "The client wants the code today. You…",
+          "options": [
+            "Hand over as the contract says, typically after final payment",
+            "Send the repository now for goodwill",
+            "Refuse until a new contract is signed"
+          ],
+          "correctIndex": 0,
+          "explanation": "Handover starts once the final payment is received or as per the contract; handing over code before payment terms are met is a known pitfall."
+        },
+        {
+          "id": "s2",
+          "question": "And the credentials in the personal account?",
+          "options": [
+            "Email them to the client SPOC",
+            "Move them to the client via a secure channel and rotate keys",
+            "Leave them with the developer"
+          ],
+          "correctIndex": 1,
+          "explanation": "Credentials go only through an approved secure channel and are rotated at handover."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-handover",
+      "rule:secure-credential-sharing",
+      "template:handover-kt-checklist",
+      "term:source-code-handover",
+      "term:payment-terms"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Turn this client email into the start of a change request.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "cr",
+      "prompt": "Fill both fields.",
+      "context": "\"Hi, the 24-hour cancellation rule we approved works fine. We now want 48 hours, with a 50% refund for late cancellations. Can it go in the next release? Priya, Operations\"",
+      "templateId": "cr-form",
+      "fields": [
+        {
+          "id": "classification",
+          "label": "Classification",
+          "input": "select",
+          "options": [
+            "Bug",
+            "Enhancement",
+            "Change request",
+            "New feature",
+            "Clarification"
+          ],
+          "required": true
+        },
+        {
+          "id": "description",
+          "label": "Description and impact to assess",
+          "input": "textarea",
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "classification",
+          "expected": "Change request"
+        }
+      ],
+      "rubric": [
+        {
+          "label": "Describes the change against what was agreed",
+          "points": 2,
+          "description": "States the approved 24-hour rule and the requested 48-hour rule with a 50% late-cancellation refund."
+        },
+        {
+          "label": "Names the impacts to assess before approval",
+          "points": 2,
+          "description": "Effort, timeline and cost to estimate, and written approval before work starts."
+        }
+      ],
+      "sampleAnswer": {
+        "classification": "Change request",
+        "description": "Replace the approved 24-hour cancellation rule with 48 hours and a 50% refund for late cancellations. To assess: effort, impact on the release date and cost; client approval in writing before work starts."
+      }
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "template:cr-form",
+      "term:change-request",
+      "rule:cr-when-needed",
+      "rule:cr-approval"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "Which is an entry criterion for UAT on a custom project?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Internal QA passed with no open blockers",
+        "Written UAT sign-off received",
+        "Go/no-go decision recorded",
+        "Hypercare contacts agreed"
+      ],
+      "correctIndex": 0,
+      "explanation": "UAT starts when the build is feature-complete on the UAT environment and internal QA has passed with no open blockers. Sign-off is its exit."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-qa-uat"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "When is the discovery stage done?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Requirements signed off in writing and the freeze date recorded",
+        "The client agrees verbally in the last workshop",
+        "The designs are approved",
+        "The first sprint is planned"
+      ],
+      "correctIndex": 0,
+      "explanation": "Discovery exits with stories and acceptance criteria written, open questions closed or logged, written requirement sign-off and a recorded freeze date."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-discovery",
+      "rule:requirement-freeze-after-signoff"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "What must be true before the release and go-live stage starts?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "UAT signed off; production and client-owned accounts ready",
+        "Most UAT feedback fixed; sign-off to follow after launch",
+        "Hypercare contacts agreed with the client",
+        "The closure report is drafted"
+      ],
+      "correctIndex": 0,
+      "explanation": "Release entry criteria: UAT signed off, production environment and client-owned accounts ready, go-live checklist prepared."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-release",
+      "rule:uat-signoff-before-golive",
+      "rule:client-owned-store-accounts"
+    ]
+  },
+  {
+    "id": "pm-proc-custom-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-custom",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "When can the closure stage of a custom project start?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Handover is complete and all milestones are invoiced",
+        "On the go-live day",
+        "When hypercare starts",
+        "Once the retrospective is held"
+      ],
+      "correctIndex": 0,
+      "explanation": "Closure starts after handover is complete and all milestones are invoiced; the retrospective is one of its exit criteria."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "custom"
+    ],
+    "handbookRefs": [
+      "stage:custom-closure",
+      "stage:custom-handover"
+    ]
+  }
+]

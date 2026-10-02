@@ -314,7 +314,31 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
     case "excel":
     case "allocate":
     case "sim":
+    case "categorize":
+    case "form":
       return <InteractivePreview task={task} showAnswer={showAnswer} />;
+    case "roleplay":
+      return (
+        <>
+          <Block title="Brief">
+            <p>{task.brief}</p>
+          </Block>
+          <p className="font-mono text-xs text-muted-foreground">
+            Scenario {task.scenarioId}, persona {task.personaId}, up to {task.maxTurns} turns{task.followUp ? ", then a follow-up email" : ""}
+          </p>
+          <Block title="Rubric">
+            <ul className="space-y-1.5">
+              {task.rubric.map((r) => (
+                <li key={r.label} className="rounded-md border px-3 py-2">
+                  <span className="font-medium">{r.label}</span>
+                  <span className="ml-2 font-mono text-xs text-muted-foreground">{r.points} pt</span>
+                  {showAnswer && r.description && <p className="mt-1 text-muted-foreground">{r.description}</p>}
+                </li>
+              ))}
+            </ul>
+          </Block>
+        </>
+      );
   }
 }
 
@@ -323,13 +347,17 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
  * shown: the solution's entries (Excel) or the right flags and answers (screen) filled in, with the
  * review panel under it.
  */
-function InteractivePreview({ task, showAnswer }: { task: Extract<Task, { kind: "excel" | "allocate" | "sim" }>; showAnswer: boolean }) {
+function InteractivePreview({ task, showAnswer }: { task: Extract<Task, { kind: "excel" | "allocate" | "sim" | "categorize" | "form" }>; showAnswer: boolean }) {
   const value =
     showAnswer && task.kind === "excel"
       ? { kind: "excel" as const, cells: task.solution }
       : showAnswer && task.kind === "sim"
         ? { kind: "sim" as const, flagged: task.rows.filter((r) => r.issue).map((r) => r.id), answers: Object.fromEntries(task.questions.map((q) => [q.id, q.correctIndex])) }
-        : null;
+        : showAnswer && task.kind === "categorize"
+          ? { kind: "categorize" as const, picks: task.answer }
+          : showAnswer && task.kind === "form"
+            ? { kind: "form" as const, values: task.sampleAnswer }
+            : null;
   return (
     <Block title="As the learner sees it">
       <TaskView

@@ -1308,6 +1308,8 @@ export const questionBank = sqliteTable(
     medianSeconds: integer("median_seconds"),
     /** v4.1: median time above 1.5x the estimate; shortened before it is served again. */
     flaggedSlow: integer("flagged_slow", { mode: "boolean" }).notNull().default(false),
+    /** v4.2: handbook entries this item cites, with the version it was last checked against. */
+    handbookRefs: text("handbook_refs", { mode: "json" }).$type<{ id: string; kind: string; version: number }[]>().notNull().default([]),
     status: text("status").$type<"draft" | "active" | "retired">().notNull().default("draft"),
     retiredReason: text("retired_reason"),
     source: text("source").$type<"seed" | "generated" | "admin">().notNull().default("seed"),
@@ -1335,4 +1337,84 @@ export const sopEntries = sqliteTable(
     updatedAt: integer("updated_at").notNull(),
   },
   (t) => [primaryKey({ columns: [t.topicId, t.blockIndex] })],
+);
+
+// ---------------------------------------------------------------------------
+// v4.2: the Oyelabs Process Handbook (shared/handbook.ts)
+// ---------------------------------------------------------------------------
+
+/**
+ * One handbook entry (term, stage, rule or template). Seeded from `server/handbook/*.json`; the
+ * seed only rewrites a row nobody has edited (`updated_by` null), so an admin's edit always wins.
+ */
+export const handbookEntries = sqliteTable(
+  "handbook_entries",
+  {
+    kind: text("kind").$type<"term" | "stage" | "rule" | "template">().notNull(),
+    id: text("id").notNull(),
+    data: text("data", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    archived: integer("archived", { mode: "boolean" }).notNull().default(false),
+    version: integer("version").notNull().default(1),
+    /** Hash of the seed entry this row was last written from; null for an admin-created entry. */
+    seedHash: text("seed_hash"),
+    updatedAt: integer("updated_at").notNull(),
+    /** Null = untouched seed. */
+    updatedBy: text("updated_by"),
+    /** Templates: the admin's replacement file under DATA_DIR/handbook/, and its content type. */
+    uploadName: text("upload_name"),
+    uploadType: text("upload_type"),
+  },
+  (t) => [primaryKey({ columns: [t.kind, t.id] })],
+);
+
+/** A learner's Leitner box for one glossary term. */
+export const handbookFlashcards = sqliteTable(
+  "handbook_flashcards",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    termId: text("term_id").notNull(),
+    box: integer("box").notNull().default(1),
+    dueAt: integer("due_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.termId] })],
+);
+
+// ---------------------------------------------------------------------------
+// v4.2: the AI client role-play (shared/roleplay.ts)
+// ---------------------------------------------------------------------------
+
+/**
+ * One role-play conversation. `transcript` is the authoritative record; an assessment response
+ * only points at it. `cost_micros` sums the model calls this session made (replies and scoring).
+ */
+export const roleplaySessions = sqliteTable(
+  "roleplay_sessions",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    scenarioId: text("scenario_id").notNull(),
+    personaId: text("persona_id").notNull(),
+    context: text("context").$type<"practice" | "assessment">().notNull(),
+    assessmentId: text("assessment_id"),
+    itemId: text("item_id"),
+    mode: text("mode").$type<"ai" | "scripted">().notNull(),
+    transcript: text("transcript", { mode: "json" }).$type<{ role: "pm" | "client"; text: string }[]>().notNull(),
+    turns: integer("turns").notNull().default(0),
+    maxTurns: integer("max_turns").notNull(),
+    status: text("status").$type<"active" | "finished" | "scored">().notNull(),
+    followUpEmail: text("follow_up_email"),
+    score: text("score", { mode: "json" }).$type<Record<string, unknown>>(),
+    costMicros: integer("cost_micros").notNull().default(0),
+    createdAt: integer("created_at").notNull(),
+    finishedAt: integer("finished_at"),
+  },
+  (t) => [
+    index("roleplay_sessions_user_idx").on(t.userId, t.createdAt),
+    index("roleplay_sessions_created_idx").on(t.createdAt),
+    uniqueIndex("roleplay_sessions_item_idx").on(t.assessmentId, t.itemId),
+  ],
 );

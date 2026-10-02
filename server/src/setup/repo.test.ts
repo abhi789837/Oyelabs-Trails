@@ -6,7 +6,7 @@ import { getPriorities, setPriorities } from "../builder/repo";
 import { now } from "../lib/ids";
 import { activeLearner, adminSession, createTestApp, type Session, type TestContext } from "../test/harness";
 import { listTargets, setTargets } from "../targets/repo";
-import { applyDepartmentDefaults, getSetup, listSkillPriorities, listSkip, migrateLegacyPriorities, saveSetup } from "./repo";
+import { applyDepartmentDefaults, applyV42PmDefaults, getSetup, listSkillPriorities, listSkip, migrateLegacyPriorities, saveSetup } from "./repo";
 
 /**
  * The slider table is the one source of truth; every v3 reader is a projection of it. The
@@ -148,9 +148,16 @@ describe("v4.1 default PM priorities for existing learners", () => {
 
     expect(applyDepartmentDefaults(ctx.db)).toBeGreaterThanOrEqual(1);
     const sliders = new Map(listSkillPriorities(ctx.db, learner.id).map((p) => [p.skillId, p.slider]));
-    expect(sliders.get("pm-client-management")).toBe(5);
-    expect(sliders.get("pm-client-meetings")).toBe(5);
-    expect(sliders.get("pm-email-etiquette")).toBe(5);
+    // v4.2 defaults: the process academy is Critical; client management High; meetings and email Medium.
+    expect(sliders.get("pm-proc-custom")).toBe(5);
+    expect(sliders.get("pm-proc-whitelabel")).toBe(5);
+    expect(sliders.get("pm-proc-terms")).toBe(5);
+    expect(sliders.get("pm-proc-meetings")).toBe(5);
+    expect(sliders.get("pm-proc-templates")).toBe(4);
+    expect(sliders.get("pm-client-management")).toBe(4);
+    expect(sliders.get("pm-client-meetings")).toBe(3);
+    expect(sliders.get("pm-email-etiquette")).toBe(3);
+    expect(sliders.get("pm-ai-for-pms")).toBe(3);
     expect(sliders.get("pm-excel-for-pms")).toBe(4);
     expect(sliders.get("pm-keka")).toBe(3);
     expect(sliders.get("pm-foundations-theory")).toBe(2);
@@ -167,5 +174,41 @@ describe("v4.1 default PM priorities for existing learners", () => {
     ctx.db.delete(schema.appMeta).where(eq(schema.appMeta.key, "v4.1.department_defaults_applied")).run();
     applyDepartmentDefaults(ctx.db);
     expect(listSkillPriorities(ctx.db, learner.id).map((p) => [p.skillId, p.slider])).toEqual([[own, 3]]);
+  });
+});
+
+describe("v4.2 process academy defaults", () => {
+  const V41: [string, number][] = [
+    ["pm-client-management", 5], ["pm-client-meetings", 5], ["pm-email-etiquette", 5], ["pm-excel-for-pms", 4],
+    ["pm-agency-resourcing", 4], ["pm-tech-terms", 4], ["pm-agency-sdlc", 4], ["pm-ms-teams", 3], ["pm-word-powerpoint", 3],
+    ["pm-keka", 3], ["pm-github-for-pms", 3], ["pm-foundations-theory", 2],
+  ];
+  const rerun = () => {
+    ctx.db.delete(schema.appMeta).where(eq(schema.appMeta.key, "v4.2.pm_process_defaults_applied")).run();
+    return applyV42PmDefaults(ctx.db);
+  };
+  const pmSetup = (priorities: [string, number][]) =>
+    saveSetup(ctx.db, learner.id, { ...base, departmentId: "pm", trackId: null, stackIds: [], priorities: priorities.map(([skillId, slider]) => ({ skillId, slider: slider as 1 | 2 | 3 | 4 | 5 })) }, admin.user.id);
+
+  test("a PM learner still on the untouched v4.1 defaults moves to the process academy defaults", () => {
+    ctx.db.update(schema.learnerProfiles).set({ departmentId: "pm" }).where(eq(schema.learnerProfiles.userId, learner.id)).run();
+    pmSetup(V41);
+    expect(rerun()).toBe(1);
+    const sliders = new Map(listSkillPriorities(ctx.db, learner.id).map((p) => [p.skillId, p.slider]));
+    expect(sliders.get("pm-proc-custom")).toBe(5);
+    expect(sliders.get("pm-client-meetings")).toBe(3);
+    expect(rerun()).toBe(0);
+  });
+
+  test("a PM learner an admin set up by hand is left alone", () => {
+    ctx.db.update(schema.learnerProfiles).set({ departmentId: "pm" }).where(eq(schema.learnerProfiles.userId, learner.id)).run();
+    pmSetup([...V41.slice(0, -1), ["pm-foundations-theory", 4]]);
+    expect(rerun()).toBe(0);
+    expect(listSkillPriorities(ctx.db, learner.id).some((p) => p.skillId === "pm-proc-custom")).toBe(false);
+  });
+
+  test("the academy courses lead the PM catalog", () => {
+    const pm = ctx.db.select().from(schema.skills).where(eq(schema.skills.departmentId, "pm")).all().sort((a, b) => a.position - b.position);
+    expect(pm.slice(0, 5).map((s) => s.id).sort()).toEqual(["pm-proc-custom", "pm-proc-meetings", "pm-proc-templates", "pm-proc-terms", "pm-proc-whitelabel"]);
   });
 });

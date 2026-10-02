@@ -1,0 +1,824 @@
+[
+  {
+    "id": "pm-proc-templates-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fill two fields of this week's status report from the board export.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "status",
+      "prompt": "Fill both fields.",
+      "context": "| Item | Status |\n|---|---|\n| Login | Done |\n| Profile | Done |\n| Payments | Blocked: client gateway keys late |\n\nGo-live moves unless the keys arrive by Friday.",
+      "templateId": "status-report-rag",
+      "fields": [
+        {
+          "id": "rag",
+          "label": "Schedule RAG",
+          "input": "select",
+          "options": [
+            "Red",
+            "Amber",
+            "Green"
+          ],
+          "required": true
+        },
+        {
+          "id": "reason",
+          "label": "Reason (one line)",
+          "input": "text",
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "rag",
+          "expected": "Amber"
+        }
+      ],
+      "rubric": [
+        {
+          "label": "Names the blocker, its owner and the date at risk",
+          "points": 2,
+          "description": "Client gateway keys late; go-live moves unless they arrive by Friday."
+        }
+      ],
+      "sampleAnswer": {
+        "rag": "Amber",
+        "reason": "Payments blocked on the client's gateway keys; go-live moves if they are not in by Friday."
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:status-report-rag",
+      "term:rag-status",
+      "term:client-dependency"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Fill two fields of the status report from the board.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "status",
+      "prompt": "Fill both fields.",
+      "context": "| Story | Status |\n|---|---|\n| S1 | Done |\n| S2 | Done |\n| S3 | Done |\n| S4 | In progress |\n| S5 | Not started |\n\nSprint on plan, no blockers.",
+      "templateId": "status-report-rag",
+      "fields": [
+        {
+          "id": "done",
+          "label": "Stories done",
+          "input": "number",
+          "required": true
+        },
+        {
+          "id": "rag",
+          "label": "Overall RAG",
+          "input": "select",
+          "options": [
+            "Red",
+            "Amber",
+            "Green"
+          ],
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "done",
+          "expected": 3
+        },
+        {
+          "fieldId": "rag",
+          "expected": "Green"
+        }
+      ],
+      "rubric": [
+        {
+          "label": "RAG consistent with the board",
+          "points": 1,
+          "description": "On plan with no blockers is green."
+        }
+      ],
+      "sampleAnswer": {
+        "done": "3",
+        "rag": "Green"
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:status-report-rag",
+      "term:rag-status",
+      "rule:weekly-status-report"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Start the change request form from this email and the team's estimate.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "cr",
+      "prompt": "Fill both fields.",
+      "context": "Client: \"The approved 24-hour cancellation rule works. Please change it to 48 hours.\"\n\nEstimate: development 3 days, QA 1 day, PM 0.5 day.",
+      "templateId": "cr-form",
+      "fields": [
+        {
+          "id": "classification",
+          "label": "Classification",
+          "input": "select",
+          "options": [
+            "Change request",
+            "Enhancement",
+            "New feature"
+          ],
+          "required": true
+        },
+        {
+          "id": "effort",
+          "label": "Total effort (days)",
+          "input": "number",
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "classification",
+          "expected": "Change request"
+        },
+        {
+          "fieldId": "effort",
+          "expected": 4.5
+        }
+      ],
+      "rubric": [
+        {
+          "label": "Classification follows from the email",
+          "points": 1,
+          "description": "It changes agreed, accepted behaviour, so it is a change request."
+        }
+      ],
+      "sampleAnswer": {
+        "classification": "Change request",
+        "effort": "4.5"
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:cr-form",
+      "term:change-request",
+      "rule:cr-when-needed",
+      "rule:billing-change-request"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Log this report in the hypercare log.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "template",
+      "prompt": "Fill both fields.",
+      "context": "HC-014, from the client's operations manager: since last week's go-live, checkout fails for all users. The project is inside its warranty and checkout is in the signed scope.",
+      "templateId": "hypercare-log",
+      "fields": [
+        {
+          "id": "classification",
+          "label": "Classification",
+          "input": "select",
+          "options": [
+            "Bug under warranty",
+            "Bug after the warranty",
+            "Change request",
+            "Clarification"
+          ],
+          "required": true
+        },
+        {
+          "id": "priority",
+          "label": "Priority",
+          "input": "select",
+          "options": [
+            "P1",
+            "P2",
+            "P3",
+            "P4"
+          ],
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "classification",
+          "expected": "Bug under warranty"
+        },
+        {
+          "fieldId": "priority",
+          "expected": "P1"
+        }
+      ],
+      "rubric": [
+        {
+          "label": "Classification and priority match the facts",
+          "points": 1,
+          "description": "In scope, broken, live inside warranty; checkout down for everyone is a major business stop."
+        }
+      ],
+      "sampleAnswer": {
+        "classification": "Bug under warranty",
+        "priority": "P1"
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:hypercare-log",
+      "term:p1-p4",
+      "term:warranty",
+      "rule:billing-bug-warranty"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Fill two fields of the UAT sign-off.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "template",
+      "prompt": "Fill both fields.",
+      "context": "UAT 3–14 July. 112 scenarios tested; 3 failed, all minor. Agreed: fix the 3 in v1.0.1 after go-live. Arabic review deferred to v1.1.",
+      "templateId": "uat-signoff",
+      "fields": [
+        {
+          "id": "passed",
+          "label": "Scenarios passed",
+          "input": "number",
+          "required": true
+        },
+        {
+          "id": "known",
+          "label": "Open known issues accepted",
+          "input": "textarea",
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "passed",
+          "expected": 109
+        }
+      ],
+      "rubric": [
+        {
+          "label": "Lists the accepted known issues with the planned fix",
+          "points": 2,
+          "description": "Three minor issues accepted, fixed in v1.0.1; the Arabic review is a deferred item, not a known issue."
+        }
+      ],
+      "sampleAnswer": {
+        "passed": "109",
+        "known": "3 minor issues found in UAT, accepted for go-live; fix planned in v1.0.1. (Arabic review deferred to v1.1.)"
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:uat-signoff",
+      "term:known-issues",
+      "rule:uat-signoff-before-golive"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Fill two fields of this week's status report.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "status",
+      "prompt": "Fill both fields.",
+      "context": "Milestone 2 (UAT start, due 2 May) was missed. The client sponsor must choose: drop reports from phase 1, or move go-live by 3 weeks. Budget is on track.",
+      "templateId": "status-report-rag",
+      "fields": [
+        {
+          "id": "rag",
+          "label": "Overall RAG",
+          "input": "select",
+          "options": [
+            "Red",
+            "Amber",
+            "Green"
+          ],
+          "required": true
+        },
+        {
+          "id": "decision",
+          "label": "Decision needed from the client",
+          "input": "textarea",
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "rag",
+          "expected": "Red"
+        }
+      ],
+      "rubric": [
+        {
+          "label": "States the decision, the options, who decides and by when",
+          "points": 2,
+          "description": "Sponsor to choose between dropping reports from phase 1 and moving go-live 3 weeks, with a date to decide."
+        }
+      ],
+      "sampleAnswer": {
+        "rag": "Red",
+        "decision": "Sponsor to decide by Wednesday: drop reports from phase 1 to hold the date, or move go-live by 3 weeks."
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:status-report-rag",
+      "term:rag-status",
+      "rule:escalation-levels",
+      "term:milestone"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Fill two fields of the closure report from the CR log.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "template",
+      "prompt": "Fill both fields.",
+      "context": "CR-001 approved. CR-002 rejected. CR-003 approved. CR-004 withdrawn. CR-005 approved. CR-006 approved.\n\nStore accounts arrived in week 9 and delayed the launch.",
+      "templateId": "closure-report",
+      "fields": [
+        {
+          "id": "crs",
+          "label": "Change requests approved",
+          "input": "number",
+          "required": true
+        },
+        {
+          "id": "lesson",
+          "label": "Lesson learned",
+          "input": "text",
+          "required": true
+        }
+      ],
+      "checks": [
+        {
+          "fieldId": "crs",
+          "expected": 4
+        }
+      ],
+      "rubric": [
+        {
+          "label": "The lesson is a practice for next time",
+          "points": 2,
+          "description": "E.g. start store-account setup in week 1, rather than restating what went wrong."
+        }
+      ],
+      "sampleAnswer": {
+        "crs": "4",
+        "lesson": "Start the client's store-account setup in week 1."
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:closure-report",
+      "term:change-request",
+      "term:closure"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Sort these RAID log entries.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick the type for each entry.",
+      "mode": "generic",
+      "categories": [
+        {
+          "id": "risk",
+          "label": "Risk"
+        },
+        {
+          "id": "assumption",
+          "label": "Assumption"
+        },
+        {
+          "id": "issue",
+          "label": "Issue"
+        },
+        {
+          "id": "dependency",
+          "label": "Dependency"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Apple enrolment may take weeks: no D-U-N-S number yet.",
+          "explanation": "Not happened yet: a risk."
+        },
+        {
+          "id": "b",
+          "text": "Client supplies the catalogue CSV in the agreed format by week 8.",
+          "explanation": "Believed true for planning, unconfirmed: an assumption."
+        },
+        {
+          "id": "c",
+          "text": "Payment sandbox down for two days; checkout testing blocked.",
+          "explanation": "Happening now: an issue."
+        },
+        {
+          "id": "d",
+          "text": "Courier API documentation needed from the client by week 6.",
+          "explanation": "An input the work relies on: a dependency."
+        }
+      ],
+      "answer": {
+        "a": "risk",
+        "b": "assumption",
+        "c": "issue",
+        "d": "dependency"
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:raid-log-template",
+      "term:risk",
+      "term:assumption",
+      "term:issue",
+      "term:dependency",
+      "term:raid-log"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Sort these RAID log entries.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick the type for each entry.",
+      "mode": "generic",
+      "categories": [
+        {
+          "id": "risk",
+          "label": "Risk"
+        },
+        {
+          "id": "assumption",
+          "label": "Assumption"
+        },
+        {
+          "id": "issue",
+          "label": "Issue"
+        },
+        {
+          "id": "dependency",
+          "label": "Dependency"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "SMS credentials are a week late; testing is stuck.",
+          "explanation": "Affecting the project now: an issue."
+        },
+        {
+          "id": "b",
+          "text": "Priced on the product already supporting the client's gateway.",
+          "explanation": "Unconfirmed belief behind the price: an assumption."
+        },
+        {
+          "id": "c",
+          "text": "Store review may reject the first submission.",
+          "explanation": "Uncertain future event: a risk."
+        },
+        {
+          "id": "d",
+          "text": "Checkout testing waits for the merchant account approval.",
+          "explanation": "Work that relies on an external approval: a dependency."
+        }
+      ],
+      "answer": {
+        "a": "issue",
+        "b": "assumption",
+        "c": "risk",
+        "d": "dependency"
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:raid-log-template",
+      "term:risk",
+      "term:assumption",
+      "term:issue",
+      "term:dependency"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which template do you use for each job?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a template for each job.",
+      "mode": "generic",
+      "categories": [
+        {
+          "id": "cr",
+          "label": "Change request form"
+        },
+        {
+          "id": "mom",
+          "label": "Minutes of meeting"
+        },
+        {
+          "id": "status",
+          "label": "Status report (RAG)"
+        },
+        {
+          "id": "raid",
+          "label": "RAID log"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Record decisions and action owners after a sprint demo.",
+          "explanation": "Minutes of meeting."
+        },
+        {
+          "id": "b",
+          "text": "Get written approval for a new cancellation rule before work.",
+          "explanation": "Change request form."
+        },
+        {
+          "id": "c",
+          "text": "Tell the sponsor this week's progress and RAG.",
+          "explanation": "Status report."
+        },
+        {
+          "id": "d",
+          "text": "Track a possible Apple enrolment delay with owner and action.",
+          "explanation": "RAID log (a risk)."
+        }
+      ],
+      "answer": {
+        "a": "mom",
+        "b": "cr",
+        "c": "status",
+        "d": "raid"
+      }
+    },
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:cr-form",
+      "template:mom",
+      "template:status-report-rag",
+      "template:raid-log-template"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "Which template captures the client's written approval before change work starts?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Change request form",
+        "Minutes of meeting",
+        "Status report",
+        "Closure report"
+      ],
+      "correctIndex": 0,
+      "explanation": "The CR form describes the change and its impact on scope, time and cost, and captures written approval before work starts."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:cr-form",
+      "rule:cr-approval"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Besides the acceptance statement, what does a UAT sign-off list?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Open known issues the client accepts",
+        "The full sprint backlog",
+        "Developer timesheets",
+        "The rate card"
+      ],
+      "correctIndex": 0,
+      "explanation": "The UAT sign-off records the scenarios tested and results, the open known issues accepted, and any deferred items."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "template:uat-signoff",
+      "term:known-issues"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "A project's RAG stayed green for weeks, then went red in the deadline week. What is this called?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Watermelon status",
+        "Scope creep",
+        "Gold-plating",
+        "Defect leakage"
+      ],
+      "correctIndex": 0,
+      "explanation": "Green outside, red inside: a RAG kept green too long hides slippage until it is expensive to fix."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "term:rag-status"
+    ]
+  },
+  {
+    "id": "pm-proc-templates-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-templates",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "One milestone is at risk from late client keys, recoverable if they arrive by Friday. Scope and budget are fine. Overall RAG?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Amber",
+        "Green",
+        "Red"
+      ],
+      "correctIndex": 0,
+      "explanation": "Amber means at risk but recoverable with action. Red means off track and needing a decision or help from above."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "templates"
+    ],
+    "handbookRefs": [
+      "term:rag-status",
+      "template:status-report-rag"
+    ]
+  }
+]

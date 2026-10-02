@@ -14,6 +14,7 @@ import {
   type Slider,
 } from "../../../shared/setup";
 import { createSkill, getCatalog, getSkillsByIds } from "../catalog/repo";
+import { PM_DEFAULT_SLIDER_CHANGES, PM_NEW_DEFAULTS, PM_PROCESS_SKILLS } from "../catalog/seed/pmProcess";
 import type { Db } from "../db";
 import * as schema from "../db/schema";
 import { badRequest } from "../lib/errors";
@@ -350,4 +351,73 @@ export function applyDepartmentDefaults(db: Db): number {
   }
   db.insert(schema.appMeta).values({ key: DEFAULTS_KEY, value: String(applied), updatedAt: now() }).onConflictDoNothing().run();
   return applied;
+}
+
+const V42_DEFAULTS_KEY = "v4.2.pm_process_defaults_applied";
+
+/**
+ * v4.2, once per database (catalog seeding never updates existing rows):
+ * - the agency skills whose default slider changed get the new default, unless an admin already
+ *   changed it;
+ * - the process academy skills move to the top of the PM catalog;
+ * - PM learners whose sliders are still exactly the v4.1 defaults (nobody touched them) move to the
+ *   v4.2 defaults — processes Critical — and their paths are rebuilt. Anyone an admin set up by
+ *   hand is left exactly as they are.
+ */
+export function applyV42PmDefaults(db: Db): number {
+  if (db.select().from(schema.appMeta).where(eq(schema.appMeta.key, V42_DEFAULTS_KEY)).get()) return 0;
+  const pmSkills = db.select().from(schema.skills).where(eq(schema.skills.departmentId, "pm")).all();
+  const byId = new Map(pmSkills.map((s) => [s.id, s]));
+
+  // What the v4.1 defaults were, before this release changed them.
+  const v41 = new Map<string, number>();
+  for (const s of pmSkills) {
+    if (s.defaultSlider == null || PM_PROCESS_SKILLS.some((p) => p.id === s.id)) continue;
+    v41.set(s.id, s.defaultSlider);
+  }
+  for (const [id, old] of PM_DEFAULT_SLIDER_CHANGES) if (byId.has(id)) v41.set(id, old);
+  for (const [id] of PM_NEW_DEFAULTS) v41.delete(id);
+
+  for (const [id, old, next] of PM_DEFAULT_SLIDER_CHANGES) {
+    if (byId.get(id)?.defaultSlider === old) db.update(schema.skills).set({ defaultSlider: next, updatedAt: now() }).where(eq(schema.skills.id, id)).run();
+  }
+  for (const [id, next] of PM_NEW_DEFAULTS) {
+    if (byId.has(id) && byId.get(id)!.defaultSlider == null) db.update(schema.skills).set({ defaultSlider: next, updatedAt: now() }).where(eq(schema.skills.id, id)).run();
+  }
+  const top = Math.min(...pmSkills.filter((s) => !PM_PROCESS_SKILLS.some((p) => p.id === s.id)).map((s) => s.position), 0);
+  PM_PROCESS_SKILLS.forEach((p, i) => {
+    if (byId.has(p.id)) db.update(schema.skills).set({ position: top - PM_PROCESS_SKILLS.length + i }).where(eq(schema.skills.id, p.id)).run();
+  });
+
+  const v42 = db
+    .select()
+    .from(schema.skills)
+    .where(eq(schema.skills.departmentId, "pm"))
+    .all()
+    .filter((s) => s.defaultSlider != null && s.status === "active");
+  const learners = db
+    .select({ userId: schema.learnerProfiles.userId, departmentId: schema.learnerProfiles.departmentId })
+    .from(schema.learnerProfiles)
+    .innerJoin(schema.users, eq(schema.users.id, schema.learnerProfiles.userId))
+    .where(eq(schema.users.role, "learner"))
+    .all()
+    .filter((l) => l.departmentId === "pm");
+  let moved = 0;
+  for (const learner of learners) {
+    const current = listSkillPriorities(db, learner.userId);
+    const untouched = current.length === v41.size && current.every((p) => v41.get(p.skillId) === p.slider);
+    if (!untouched || current.length === 0) continue;
+    replacePriorities(
+      db,
+      learner.userId,
+      v42.map((s) => ({ skillId: s.id, skillName: s.name, slider: s.defaultSlider as Slider })),
+      listSkip(db, learner.userId),
+    );
+    db.insert(schema.jobs)
+      .values({ id: `v42-${now().toString(36)}-${learner.userId}`.slice(0, 64), type: "path.build", payload: { userId: learner.userId }, status: "queued", attempts: 0, maxAttempts: 3, runAfter: now(), createdAt: now() })
+      .run();
+    moved += 1;
+  }
+  db.insert(schema.appMeta).values({ key: V42_DEFAULTS_KEY, value: String(moved), updatedAt: now() }).onConflictDoNothing().run();
+  return moved;
 }

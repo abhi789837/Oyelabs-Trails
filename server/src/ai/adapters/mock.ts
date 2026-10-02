@@ -3,6 +3,7 @@ import { toProviderJsonSchema } from "../jsonSchema";
 import { AiOutputError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "../types";
 import { fixtureBlueprint, fixtureCritic, fixtureExplainItems, fixtureItems } from "./mockFixtures";
 import { fixtureGeneratedItems, fixtureMcqCheck, fixturePlan } from "./mockPersonalise";
+import { fixtureRoleplayReply, fixtureRoleplayScore } from "./mockRoleplay";
 
 /**
  * A deterministic stand-in for a real provider, for development and tests only.
@@ -99,7 +100,8 @@ export class MockProvider implements AiProvider {
    * Hand-built output for the pipeline's known call shapes; undefined means "synthesise".
    *
    * The names "blueprint", "items", "explain_items", "critic" and the v4.1 personalisation calls
-   * ("assessment_plan", "assessment_items", "mcq_check"; see mockPersonalise.ts) are reserved: any call using one
+   * ("assessment_plan", "assessment_items", "mcq_check"; see mockPersonalise.ts) and the v4.2 role-play
+   * calls ("roleplay_reply", "roleplay_score"; see mockRoleplay.ts) are reserved: any call using one
    * gets the matching fixture, and a mismatch is a loud error rather than a silent fallback, so
    * fixture drift is caught the moment a schema changes. Other callers should use another name.
    */
@@ -130,6 +132,10 @@ export class MockProvider implements AiProvider {
         return { items: fixtureGeneratedItems(request.user, this.mcqKeys, this.askedSlots) };
       case "mcq_check":
         return fixtureMcqCheck(request.user, this.mcqKeys);
+      case "roleplay_reply":
+        return fixtureRoleplayReply(request.user);
+      case "roleplay_score":
+        return fixtureRoleplayScore(request.user);
       default:
         return undefined;
     }

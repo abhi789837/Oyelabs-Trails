@@ -1,0 +1,812 @@
+[
+  {
+    "id": "pm-proc-whitelabel-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A white-label delivery client lists its needs. Classify each one for the gap analysis.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each need.",
+      "mode": "gap-analysis",
+      "categories": [
+        {
+          "id": "ootb",
+          "label": "Out of the box"
+        },
+        {
+          "id": "configuration",
+          "label": "Configuration"
+        },
+        {
+          "id": "customisation",
+          "label": "Customisation"
+        },
+        {
+          "id": "new-feature",
+          "label": "New feature"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Card payment at checkout, as the standard product does it.",
+          "explanation": "The product already does it as is: out of the box."
+        },
+        {
+          "id": "b",
+          "text": "Set the currency, delivery zones and logo in the admin panel.",
+          "explanation": "Existing settings, no code: configuration."
+        },
+        {
+          "id": "c",
+          "text": "A substitution-approval step the product does not support.",
+          "explanation": "Changing the product's behaviour needs code: customisation."
+        },
+        {
+          "id": "d",
+          "text": "In-app video calls; nothing like it exists in the product.",
+          "explanation": "Functionality that does not exist: a new feature."
+        }
+      ],
+      "answer": {
+        "a": "ootb",
+        "b": "configuration",
+        "c": "customisation",
+        "d": "new-feature"
+      }
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "stage:wl-gap-analysis",
+      "term:configuration",
+      "term:customisation",
+      "term:new-feature",
+      "rule:configuration-vs-customisation"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A restaurant client's needs for its white-label app. Classify each for the gap analysis.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each need.",
+      "mode": "gap-analysis",
+      "categories": [
+        {
+          "id": "ootb",
+          "label": "Out of the box"
+        },
+        {
+          "id": "configuration",
+          "label": "Configuration"
+        },
+        {
+          "id": "customisation",
+          "label": "Customisation"
+        },
+        {
+          "id": "new-feature",
+          "label": "New feature"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Switch on the table-reservation add-on behind a feature toggle.",
+          "explanation": "Feature toggles are configuration: no code change."
+        },
+        {
+          "id": "b",
+          "text": "Change the primary colour, font and splash screen.",
+          "explanation": "Theming through the theme file is configuration."
+        },
+        {
+          "id": "c",
+          "text": "Rearrange checkout into a single-page layout.",
+          "explanation": "Layout changes go beyond theming and need code: customisation."
+        },
+        {
+          "id": "d",
+          "text": "Live order tracking on a map, as shown in the demo.",
+          "explanation": "The product does it as is: out of the box."
+        },
+        {
+          "id": "e",
+          "text": "A kitchen staff-rota planner; nothing like it exists.",
+          "explanation": "Brand-new functionality: a new feature."
+        }
+      ],
+      "answer": {
+        "a": "configuration",
+        "b": "configuration",
+        "c": "customisation",
+        "d": "ootb",
+        "e": "new-feature"
+      }
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "term:feature-toggle",
+      "term:theming",
+      "term:customisation",
+      "term:new-feature",
+      "rule:configuration-vs-customisation",
+      "stage:wl-gap-analysis"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A taxi client's gap list. Classify each need.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "categorize",
+      "prompt": "Pick a category for each need.",
+      "mode": "gap-analysis",
+      "categories": [
+        {
+          "id": "ootb",
+          "label": "Out of the box"
+        },
+        {
+          "id": "configuration",
+          "label": "Configuration"
+        },
+        {
+          "id": "customisation",
+          "label": "Customisation"
+        },
+        {
+          "id": "new-feature",
+          "label": "New feature"
+        }
+      ],
+      "items": [
+        {
+          "id": "a",
+          "text": "Arabic and English, both language settings in the panel.",
+          "explanation": "An existing setting: configuration."
+        },
+        {
+          "id": "b",
+          "text": "A night surcharge, using the panel's surcharge field.",
+          "explanation": "An existing setting: configuration."
+        },
+        {
+          "id": "c",
+          "text": "Drivers must approve fare changes; the product can't do this.",
+          "explanation": "Changing an existing flow needs code: customisation."
+        },
+        {
+          "id": "d",
+          "text": "Ride ratings after each trip, as in the standard app.",
+          "explanation": "Out of the box."
+        },
+        {
+          "id": "e",
+          "text": "A corporate billing portal with no equivalent in the product.",
+          "explanation": "A new feature."
+        }
+      ],
+      "answer": {
+        "a": "configuration",
+        "b": "configuration",
+        "c": "customisation",
+        "d": "ootb",
+        "e": "new-feature"
+      }
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "rule:configuration-vs-customisation",
+      "term:configuration-panel",
+      "term:customisation",
+      "term:new-feature",
+      "stage:wl-gap-analysis"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t1-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Order the steps to get a white-label app into the stores.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "First step at the top.",
+      "items": [
+        {
+          "id": "a",
+          "label": "Client opens its store accounts and invites Oyelabs"
+        },
+        {
+          "id": "b",
+          "label": "Rebranded builds pass QA and UAT sign-off"
+        },
+        {
+          "id": "c",
+          "label": "Listing assets, privacy policy URL and review notes ready"
+        },
+        {
+          "id": "d",
+          "label": "Submit the apps for review"
+        },
+        {
+          "id": "e",
+          "label": "Apps approved by Apple and Google"
+        },
+        {
+          "id": "f",
+          "label": "Release the apps and smoke-test production"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "explanation": "Accounts, rebranded builds and UAT, store listing, submission, approval, then go-live."
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "stage:wl-accounts",
+      "stage:wl-builds-qa",
+      "stage:wl-store-listing",
+      "stage:wl-submission",
+      "stage:wl-golive",
+      "rule:client-owned-store-accounts"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Order these stages of a white-label project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "First stage at the top.",
+      "items": [
+        {
+          "id": "a",
+          "label": "Demo and requirement call"
+        },
+        {
+          "id": "b",
+          "label": "Gap analysis approved"
+        },
+        {
+          "id": "c",
+          "label": "Configuration and custom modules"
+        },
+        {
+          "id": "d",
+          "label": "Rebranded builds, QA and UAT"
+        },
+        {
+          "id": "e",
+          "label": "Store submission and review"
+        },
+        {
+          "id": "f",
+          "label": "Go-live with the support plan"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "explanation": "Demo, gap analysis, (brand kit and accounts), configuration, builds and UAT, (listing), submission, go-live."
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "stage:wl-demo-call",
+      "stage:wl-gap-analysis",
+      "stage:wl-configuration",
+      "stage:wl-builds-qa",
+      "stage:wl-submission",
+      "stage:wl-golive"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "White-label fitness app for a reseller's gym client. Builds passed QA. The gym has no Apple Developer account. The reseller: \"Publish under your account, we'll move it later.\"",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you reply?",
+          "options": [
+            "Agree, to hit the date",
+            "Decline: the gym's own account submits; ours risks 4.2.6",
+            "Use the reseller's account instead"
+          ],
+          "correctIndex": 1,
+          "explanation": "Apps are submitted only from the client's own accounts; Guideline 4.2.6 rejects template apps not submitted by the content provider."
+        },
+        {
+          "id": "s2",
+          "question": "What must the gym do?",
+          "options": [
+            "Enrol as an organisation and invite Oyelabs",
+            "Enrol in the owner's personal name",
+            "Send us its Apple ID password"
+          ],
+          "correctIndex": 0,
+          "explanation": "Businesses enrol as an organisation (legal entity, D-U-N-S) and invite the agency with a role."
+        },
+        {
+          "id": "s3",
+          "question": "How do you report it?",
+          "options": [
+            "Client dependency logged; schedule amber",
+            "Keep it green until the date slips",
+            "Red, and stop all work"
+          ],
+          "correctIndex": 0,
+          "explanation": "At risk but recoverable with action is amber; log the client dependency in writing."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "rule:client-owned-store-accounts",
+      "term:apple-developer-account",
+      "term:client-dependency",
+      "term:rag-status",
+      "stage:wl-accounts"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A white-label onboarding checklist. Mark the lines that break account ownership or security.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problem lines.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Logo as SVG or 1024×1024 PNG with transparency – client.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Apple Developer account: use the Oyelabs account for now.",
+          "issue": "Store accounts must be in the client's name."
+        },
+        {
+          "id": "s3",
+          "text": "Google Play Console in the client's name, Oyelabs invited with release permissions.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Hosting and domain registered by our freelancer, in his name.",
+          "issue": "Accounts opened in a freelancer's name are a known pitfall."
+        },
+        {
+          "id": "s5",
+          "text": "Payment gateway live keys: client sends them over WhatsApp.",
+          "issue": "Keys go only through an approved secure channel."
+        },
+        {
+          "id": "s6",
+          "text": "Privacy policy and terms published on the client's domain – client.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "SMS provider with a registered sender ID – client.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "template:whitelabel-onboarding",
+      "term:client-owned-accounts",
+      "rule:secure-credential-sharing",
+      "stage:wl-accounts",
+      "term:domain-ownership",
+      "term:hosting-account"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Two store reviews come back for a white-label app. Typically, who carries each fix?",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Apple: the app crashes on launch on the reviewer's device.",
+          "options": [
+            "Our build problem: typically fixed free",
+            "Billable to the client",
+            "The client's job to fix"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rejections caused by the build or the agency's work are typically fixed free."
+        },
+        {
+          "id": "s2",
+          "question": "Google: the privacy policy URL on the client's domain returns 404.",
+          "options": [
+            "Free: we fix the client's site",
+            "Client's responsibility, or billable",
+            "Resubmit unchanged"
+          ],
+          "correctIndex": 1,
+          "explanation": "Rejections caused by client content or legal pages are typically billable or the client's responsibility."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "rule:store-rejection-fixes",
+      "term:app-review-rejection",
+      "term:resubmission",
+      "term:privacy-policy-url",
+      "stage:wl-submission"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Apple requires a newer SDK, so every white-label instance needs core 4.3. Three instances are uncustomised; one has a forked checkout.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When do you assess the forked instance's effort?",
+          "options": [
+            "Before the upgrade; quote it as a CR or support work",
+            "During the upgrade, as conflicts appear",
+            "After release, if anything broke"
+          ],
+          "correctIndex": 0,
+          "explanation": "Customisation impact is assessed before the upgrade and quoted; discovering it mid-upgrade is a known pitfall."
+        },
+        {
+          "id": "s2",
+          "question": "Typically, what covers the uncustomised upgrades?",
+          "options": [
+            "The licence or support plan",
+            "A CR per instance",
+            "A new SOW"
+          ],
+          "correctIndex": 0,
+          "explanation": "A core upgrade of an uncustomised instance is typically covered by the licence or support plan."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "rule:core-upgrade-custom-impact",
+      "term:core-upgrade",
+      "term:client-fork",
+      "term:customisation-merge-conflicts",
+      "stage:wl-core-upgrades"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-t4-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A sales draft of a gap analysis. Mark the lines that misclassify work or will hurt upgrades.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the problem lines.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Logo, colours and font via the theme file: configuration, in setup.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "New substitution-approval step: configuration, included in setup.",
+          "issue": "It needs code: customisation, estimated and quoted before setup."
+        },
+        {
+          "id": "s3",
+          "text": "Delivery zones and fees set in the admin panel: configuration.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Loyalty points: built by editing the core checkout files.",
+          "issue": "Customisation belongs in a separate custom module, not core files."
+        },
+        {
+          "id": "s5",
+          "text": "Table reservations: existing add-on, switched on by a feature toggle.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "All customisations estimated and approved in writing before setup.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "rule:configuration-vs-customisation",
+      "term:custom-module",
+      "term:customisation",
+      "stage:wl-gap-analysis",
+      "term:core-upgrade"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "In a white-label setup, which of these is configuration?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Setting the currency and service areas in the admin panel",
+        "Adding a checkout step the product doesn't support",
+        "Building a new reporting module",
+        "Editing the core checkout code"
+      ],
+      "correctIndex": 0,
+      "explanation": "Configuration uses options the product already supports (settings, panels, toggles, themes) without new code; anything needing code is customisation."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "term:configuration",
+      "term:customisation",
+      "rule:configuration-vs-customisation"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Apple rejects a white-label app under Guideline 4.2.6. What does this usually mean?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "A template app not submitted by the content provider's own account",
+        "The privacy policy URL is missing",
+        "The app crashed during review",
+        "The screenshots don't match the app"
+      ],
+      "correctIndex": 0,
+      "explanation": "4.2.6 covers apps created from a commercialised template, unless submitted by the provider of the app's content. Submitting from the client's own account avoids it."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "term:app-review-rejection",
+      "rule:client-owned-store-accounts"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Why should the store accounts be in the end client's name?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "The client stays in control; later transfers are slow",
+        "Agencies cannot pay the store fees",
+        "Stores forbid invited team members",
+        "It makes builds compile faster"
+      ],
+      "correctIndex": 0,
+      "explanation": "Client-owned accounts keep the client in control, avoid slow transfers later, and match store rules that expect the brand owner as seller."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "term:client-owned-accounts",
+      "term:apple-developer-account",
+      "rule:client-owned-store-accounts"
+    ]
+  },
+  {
+    "id": "pm-proc-whitelabel-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-whitelabel",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "Why build a client's customisation as a separate custom module instead of editing core files?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "So core upgrades need only a compatibility check",
+        "Because modules are always free to build",
+        "So the client can edit the core itself",
+        "Because stores reject edited core files"
+      ],
+      "correctIndex": 0,
+      "explanation": "A separate module keeps the core upgradable; edits to core files create merge conflicts and costly upgrades."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "lifecycle",
+      "whitelabel"
+    ],
+    "handbookRefs": [
+      "term:custom-module",
+      "term:core-upgrade",
+      "rule:core-upgrade-custom-impact"
+    ]
+  }
+]

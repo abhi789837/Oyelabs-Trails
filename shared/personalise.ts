@@ -27,7 +27,7 @@ export const REUSE_RATIO: Record<Personalisation, number> = { high: 0.2, balance
 export const DESCRIPTION_MAX = 600;
 
 /** What the subtype of a hands-on slot may be. Coding for engineering; task kinds for everyone. */
-export const SLOT_SUBTYPES = ["code", "write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "mcq-code", "mcq-text"] as const;
+export const SLOT_SUBTYPES = ["code", "write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "mcq-code", "mcq-text"] as const;
 export const slotSubtypeSchema = z.enum(SLOT_SUBTYPES);
 export type SlotSubtype = z.infer<typeof slotSubtypeSchema>;
 
@@ -94,6 +94,8 @@ export function enforceBlueprint(input: {
   difficultyOrder: readonly number[];
   defaultHandsOn: (skillId: string) => SlotSubtype;
   defaultMcq: (skillId: string) => SlotSubtype;
+  /** v4.2: whether a skill may use a subtype (role-play only for meeting and client skills). */
+  allowSubtype?: (skillId: string, subtype: SlotSubtype) => boolean;
 }): Slot[] {
   const skip = new Set(input.skip);
   const start = input.difficultyOrder[0] ?? 2;
@@ -114,7 +116,10 @@ export function enforceBlueprint(input: {
       // A coding department's hands-on is code unless the model chose a task kind; a task
       // department never gets a code slot.
       if (input.format === "tasks" && subtype === "code") subtype = input.defaultHandsOn(line.skillId);
-      slots.push({ index: 0, skillId: line.skillId, skillName: name, group: line.group, type: subtype === "code" ? "coding" : "task", subtype, difficulty: clamp(p?.difficulty ?? start), targetSec: 80, hint: p?.hint ?? "" });
+      if (input.allowSubtype && !input.allowSubtype(line.skillId, subtype)) subtype = input.defaultHandsOn(line.skillId);
+      // A short client conversation (2-3 typed replies) gets a longer slot than other hands-on work.
+      const targetSec = subtype === "roleplay" ? ROLEPLAY_SLOT_SEC : 80;
+      slots.push({ index: 0, skillId: line.skillId, skillName: name, group: line.group, type: subtype === "code" ? "coding" : "task", subtype, difficulty: clamp(p?.difficulty ?? start), targetSec, hint: p?.hint ?? "" });
     }
     for (let i = 0; i < line.mcq; i += 1) {
       const p = mcqProposals[i];
@@ -124,6 +129,9 @@ export function enforceBlueprint(input: {
   }
   return slots.map((slot, index) => ({ ...slot, index }));
 }
+
+/** v4.2: a mini role-play's slot (2-3 replies of ~25 s, plus reading the brief). */
+export const ROLEPLAY_SLOT_SEC = 100;
 
 /** At most this many hands-on slots move toward what the description stresses. */
 export const EMPHASIS_SHIFT_MAX = 3;

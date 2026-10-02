@@ -1,0 +1,1115 @@
+{
+  "pmp-b01": {
+    "title": "What white-label means",
+    "topics": {
+      "b01-core-vs-instance": {
+        "title": "Core product vs client instance",
+        "refs": [
+          {
+            "label": "Wikipedia: White-label product",
+            "url": "https://en.wikipedia.org/wiki/White-label_product",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:47:38Z"
+          },
+          {
+            "label": "Microsoft Learn: Tenancy models for a multitenant solution",
+            "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:14Z"
+          },
+          {
+            "label": "AWS SaaS Architecture Fundamentals: Full stack silo and pool",
+            "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-architecture-fundamentals/full-stack-silo-and-pool.html",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:49:11Z"
+          },
+          {
+            "label": "Investopedia: Understanding white label products",
+            "url": "https://www.investopedia.com/terms/w/white-label-product.asp",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:49:40Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is White Label? Products, Software, and More",
+            "channel": "Vendasta",
+            "url": "https://www.youtube.com/watch?v=AYmcCfQgIPg",
+            "videoId": "AYmcCfQgIPg",
+            "verifiedAt": "2026-10-02T12:00:19Z"
+          },
+          {
+            "title": "Multitenancy Explained",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=60ccSmOxpMw",
+            "videoId": "60ccSmOxpMw",
+            "verifiedAt": "2026-10-02T12:00:20Z"
+          },
+          {
+            "title": "Single-Tenant vs Multi-Tenant Architecture: What's the Difference?",
+            "channel": "SudoBuild",
+            "url": "https://www.youtube.com/watch?v=J5IDGkEkbIw",
+            "videoId": "J5IDGkEkbIw",
+            "verifiedAt": "2026-10-02T12:01:11Z"
+          }
+        ]
+      },
+      "b01-what-can-change": {
+        "title": "What a client can and cannot change",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Deployment and configuration of multitenant solutions",
+            "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/approaches/deployment-configuration",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:57:54Z"
+          },
+          {
+            "label": "Martin Fowler: Feature Toggles (aka Feature Flags)",
+            "url": "https://martinfowler.com/articles/feature-toggles.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:47:43Z"
+          },
+          {
+            "label": "Microsoft Learn: Feature management in Azure App Configuration",
+            "url": "https://learn.microsoft.com/en-us/azure/azure-app-configuration/concept-feature-management",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:49:23Z"
+          },
+          {
+            "label": "Wikipedia: Private label",
+            "url": "https://en.wikipedia.org/wiki/Private_label",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:47:39Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "White-label 101: What is white-label?",
+            "channel": "Vendasta",
+            "url": "https://www.youtube.com/watch?v=LAziHCAuntE",
+            "videoId": "LAziHCAuntE",
+            "verifiedAt": "2026-10-02T12:00:21Z"
+          },
+          {
+            "title": "What are Feature Flags?",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=AJa2B-twtG4",
+            "videoId": "AJa2B-twtG4",
+            "verifiedAt": "2026-10-02T12:00:22Z"
+          },
+          {
+            "title": "All You Need to Know About White Label Apps in 2025 | White Label App Development - Code Brew Labs",
+            "channel": "Code Brew Labs",
+            "url": "https://www.youtube.com/watch?v=sEYzfm7m5Ns",
+            "videoId": "sEYzfm7m5Ns",
+            "verifiedAt": "2026-10-02T12:00:23Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b02": {
+    "title": "Demo & requirement call",
+    "topics": {
+      "b02-demo-call": {
+        "title": "Running the product demo call",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Discover customer needs as a solution architect",
+            "url": "https://learn.microsoft.com/en-us/training/modules/discover-customer-needs/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:52:42Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: How the discovery phase works",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:52:59Z"
+          },
+          {
+            "label": "Gong: 8 things to consider before your next discovery call",
+            "url": "https://www.gong.io/blog/discovery-call/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:06Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How To Give Product Demos That Sell Using These 5 Tips",
+            "channel": "Dan Martell",
+            "url": "https://www.youtube.com/watch?v=_Mm_q0X-R1c",
+            "videoId": "_Mm_q0X-R1c",
+            "verifiedAt": "2026-10-02T12:00:23Z"
+          },
+          {
+            "title": "How to Present a MIND-BLOWING Software Demo That Closes Sales",
+            "channel": "Sales Feed",
+            "url": "https://www.youtube.com/watch?v=EZbIx94dMeU",
+            "videoId": "EZbIx94dMeU",
+            "verifiedAt": "2026-10-02T12:00:24Z"
+          },
+          {
+            "title": "How To Run A Discovery Call - Strategy Session",
+            "channel": "Patrick Dang",
+            "url": "https://www.youtube.com/watch?v=_DbSgU5naDQ",
+            "videoId": "_DbSgU5naDQ",
+            "verifiedAt": "2026-10-02T12:00:25Z"
+          }
+        ]
+      },
+      "b02-requirement-capture": {
+        "title": "Capturing white-label requirements",
+        "refs": [
+          {
+            "label": "Asana: Requirements gathering, 6 steps",
+            "url": "https://asana.com/resources/requirements-gathering",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:51Z"
+          },
+          {
+            "label": "Atlassian: What is a product requirements document (PRD)?",
+            "url": "https://www.atlassian.com/agile/product-management/requirements",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:47:55Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Writing user stories",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:49:33Z"
+          },
+          {
+            "label": "Atlassian: User stories with examples and a template",
+            "url": "https://www.atlassian.com/agile/project-management/user-stories",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:59Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Requirement Gathering Techniques For A Business Analyst",
+            "channel": "Stefano - The Agile Business Analyst",
+            "url": "https://www.youtube.com/watch?v=8EBWxW5Cn1g",
+            "videoId": "8EBWxW5Cn1g",
+            "verifiedAt": "2026-10-02T12:00:25Z"
+          },
+          {
+            "title": "Requirement Gathering from Client by Business Analyst in Agile",
+            "channel": "Pramod Hanumappa",
+            "url": "https://www.youtube.com/watch?v=AMb_4Cdi7zg",
+            "videoId": "AMb_4Cdi7zg",
+            "verifiedAt": "2026-10-02T12:00:26Z"
+          },
+          {
+            "title": "Business Analyst Requirement Gathering | Requirement Gathering in Business Analysis | Simplilearn",
+            "channel": "Simplilearn",
+            "url": "https://www.youtube.com/watch?v=qZ8AtqJijrw",
+            "videoId": "qZ8AtqJijrw",
+            "verifiedAt": "2026-10-02T12:00:27Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b03": {
+    "title": "Gap analysis",
+    "topics": {
+      "b03-ootb-config-custom": {
+        "title": "Out of the box vs configuration vs customisation",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Fit-to-standard and fit-gap analysis",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/process-focused-solution-fit-to-standard-fit-gap-analysis",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:52:42Z"
+          },
+          {
+            "label": "Microsoft Learn: Extend Dynamics 365 apps without compromising performance",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/extend-your-solution",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:54Z"
+          },
+          {
+            "label": "Microsoft Learn: Implement a solution based on business processes",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/process-focused-solution",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:52Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Configuration vs. Customization: Understanding the Differences",
+            "channel": "Technology Advisors, Inc.",
+            "url": "https://www.youtube.com/watch?v=drk4_gaw06Y",
+            "videoId": "drk4_gaw06Y",
+            "verifiedAt": "2026-10-02T12:00:27Z"
+          },
+          {
+            "title": "What is Customization Vs Configuration in ServiceNow? Know before you customize OOTB features",
+            "channel": "ServiceNowStar",
+            "url": "https://www.youtube.com/watch?v=LYQj2Vueex4",
+            "videoId": "LYQj2Vueex4",
+            "verifiedAt": "2026-10-02T12:00:28Z"
+          },
+          {
+            "title": "Fit-Gap Analysis Explained – Choosing the Right Solution for Your Business #businessanalysis",
+            "channel": "Global Insight Decode the World",
+            "url": "https://www.youtube.com/watch?v=dCORFJ5Ml-E",
+            "videoId": "dCORFJ5Ml-E",
+            "verifiedAt": "2026-10-02T12:00:30Z"
+          }
+        ]
+      },
+      "b03-estimating-billing-gaps": {
+        "title": "Estimating and billing the gaps",
+        "refs": [
+          {
+            "label": "Microsoft Learn training: Perform fit gap analysis",
+            "url": "https://learn.microsoft.com/en-us/training/modules/fit-gap-analysis/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:52:42Z"
+          },
+          {
+            "label": "Asana: Gap analysis, 4-step process",
+            "url": "https://asana.com/resources/gap-analysis",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:16Z"
+          },
+          {
+            "label": "Atlassian: Story points and agile estimation",
+            "url": "https://www.atlassian.com/agile/project-management/estimation",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:49:32Z"
+          },
+          {
+            "label": "Wikipedia: Gap analysis",
+            "url": "https://en.wikipedia.org/wiki/Gap_analysis",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:49:07Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a FIT-GAP analysis . How to determine Effort Estimate. E-Mail-careers@sapsol.com",
+            "channel": "SAPSOL Technologies",
+            "url": "https://www.youtube.com/watch?v=Wp3O8Vg-bkk",
+            "videoId": "Wp3O8Vg-bkk",
+            "verifiedAt": "2026-10-02T12:00:29Z"
+          },
+          {
+            "title": "Part-6: Fit-Gap Analysis: Learning Path to Become Functional Consultant",
+            "channel": "DynamicsClass",
+            "url": "https://www.youtube.com/watch?v=B8X5ZGXv8rA",
+            "videoId": "B8X5ZGXv8rA",
+            "verifiedAt": "2026-10-02T12:00:29Z"
+          }
+        ]
+      },
+      "b03-avoiding-custom-creep": {
+        "title": "Avoiding customisation creep",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Design a solution architecture that works for you",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/solution-architecture-design-pillars",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:53Z"
+          },
+          {
+            "label": "Atlassian: Scope creep in project management",
+            "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:49:30Z"
+          },
+          {
+            "label": "Wikipedia: Scope creep",
+            "url": "https://en.wikipedia.org/wiki/Scope_creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:00Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Jeevarajan Kumar | The Design Fit/Gap Framework | Mission: Implementation | Objective 02",
+            "channel": "Microsoft Dynamics 365 Community",
+            "url": "https://www.youtube.com/watch?v=_NgV9QT1Lpo",
+            "videoId": "_NgV9QT1Lpo",
+            "verifiedAt": "2026-10-02T12:00:32Z"
+          },
+          {
+            "title": "Project Management Scope Creep [MANAGE IT LIKE A PRO]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=_c-qzFV5yM4",
+            "videoId": "_c-qzFV5yM4",
+            "verifiedAt": "2026-10-02T12:00:31Z"
+          },
+          {
+            "title": "What is Scope Creep | Explained in 2 min",
+            "channel": "Productivity Guy",
+            "url": "https://www.youtube.com/watch?v=pTtt4Ui1OA4",
+            "videoId": "pTtt4Ui1OA4",
+            "verifiedAt": "2026-10-02T12:00:31Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b04": {
+    "title": "Collecting the brand kit",
+    "topics": {
+      "b04-brand-kit": {
+        "title": "The brand kit checklist",
+        "refs": [
+          {
+            "label": "Apple HIG: App icons",
+            "url": "https://developer.apple.com/design/human-interface-guidelines/app-icons",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:19Z"
+          },
+          {
+            "label": "Android Developers: Google Play icon design specifications",
+            "url": "https://developer.android.com/distribute/google-play/resources/icon-design-specifications",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:46Z"
+          },
+          {
+            "label": "Android Developers: Adaptive icons",
+            "url": "https://developer.android.com/develop/ui/views/launch/icon_design_adaptive",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:47Z"
+          },
+          {
+            "label": "Material Design 3: Color system overview",
+            "url": "https://m3.material.io/styles/color/system/overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:48Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "The Ultimate Brand Guidelines Design Tutorial for Beginners",
+            "channel": "HubSpot Marketing",
+            "url": "https://www.youtube.com/watch?v=AjgQBC_XyS4",
+            "videoId": "AjgQBC_XyS4",
+            "verifiedAt": "2026-10-02T12:00:33Z"
+          },
+          {
+            "title": "What is Brand Kit? |  How to create Brand Kit in Canva? | Canva Course | #10",
+            "channel": "Umar Tazkeer",
+            "url": "https://www.youtube.com/watch?v=1qrLnWYaOhY",
+            "videoId": "1qrLnWYaOhY",
+            "verifiedAt": "2026-10-02T12:00:33Z"
+          },
+          {
+            "title": "What Is Branding? 4 Minute Crash Course.",
+            "channel": "The Futur",
+            "url": "https://www.youtube.com/watch?v=sO4te2QNsHY",
+            "videoId": "sO4te2QNsHY",
+            "verifiedAt": "2026-10-02T12:00:34Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b05": {
+    "title": "Client-owned accounts",
+    "topics": {
+      "b05-accounts-ownership": {
+        "title": "Who owns what: accounts, domains and keys",
+        "refs": [
+          {
+            "label": "Apple Developer: Become a member (enrollment requirements)",
+            "url": "https://developer.apple.com/programs/enroll/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:14Z"
+          },
+          {
+            "label": "ICANN: Registrants' benefits and responsibilities",
+            "url": "https://www.icann.org/resources/pages/benefits-2013-09-16-en",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:47:50Z"
+          },
+          {
+            "label": "ICANN: Transfer Policy",
+            "url": "https://www.icann.org/resources/pages/transfer-policy-2016-06-01-en",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:47:51Z"
+          },
+          {
+            "label": "Cloudflare Learning: What is a domain name registrar?",
+            "url": "https://www.cloudflare.com/learning/dns/glossary/what-is-a-domain-name-registrar/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:36Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How Domain Ownership is Determined (& Why it Matters)",
+            "channel": "GoDaddy Help Center",
+            "url": "https://www.youtube.com/watch?v=VPN3Klr7U78",
+            "videoId": "VPN3Klr7U78",
+            "verifiedAt": "2026-10-02T12:00:36Z"
+          },
+          {
+            "title": "The difference between a domain name registrar, DNS, and hosting",
+            "channel": "48in48 Org",
+            "url": "https://www.youtube.com/watch?v=P0yCEzulERk",
+            "videoId": "P0yCEzulERk",
+            "verifiedAt": "2026-10-02T12:00:37Z"
+          }
+        ]
+      },
+      "b05-store-developer-accounts": {
+        "title": "Apple and Google developer accounts",
+        "refs": [
+          {
+            "label": "Apple Developer: D-U-N-S Number",
+            "url": "https://developer.apple.com/help/account/membership/D-U-N-S/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:14Z"
+          },
+          {
+            "label": "App Store Connect Help: Role permissions",
+            "url": "https://developer.apple.com/help/app-store-connect/reference/role-permissions",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:14Z"
+          },
+          {
+            "label": "Play Console Help: Required information to create a developer account",
+            "url": "https://support.google.com/googleplay/android-developer/answer/13628312?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:27Z"
+          },
+          {
+            "label": "Play Console Help: Transfer apps to a different developer account",
+            "url": "https://support.google.com/googleplay/android-developer/answer/6230247?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Create an Apple Developer Account for Your Organization: A Detailed Guide",
+            "channel": "Choicely",
+            "url": "https://www.youtube.com/watch?v=IcBkwgDe1IY",
+            "videoId": "IcBkwgDe1IY",
+            "verifiedAt": "2026-10-02T12:00:38Z"
+          },
+          {
+            "title": "App Store Connect Tutorial - Users and Roles",
+            "channel": "Rebeloper - Rebel Developer",
+            "url": "https://www.youtube.com/watch?v=eHslr76Frj8",
+            "videoId": "eHslr76Frj8",
+            "verifiedAt": "2026-10-02T12:00:39Z"
+          },
+          {
+            "title": "How to transfer apps from one google play developer account to another.",
+            "channel": "iRekha Tech Solutions",
+            "url": "https://www.youtube.com/watch?v=i2_KycVCYNs",
+            "videoId": "i2_KycVCYNs",
+            "verifiedAt": "2026-10-02T12:00:39Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b06": {
+    "title": "Configuration & custom modules",
+    "topics": {
+      "b06-configuration-setup": {
+        "title": "Setting up a client's configuration",
+        "refs": [
+          {
+            "label": "The Twelve-Factor App: III. Config",
+            "url": "https://12factor.net/config",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:47:57Z"
+          },
+          {
+            "label": "Android Developers: Configure build variants (product flavors)",
+            "url": "https://developer.android.com/build/build-variants",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:46Z"
+          },
+          {
+            "label": "Apple Developer: Adding a build configuration file to your project",
+            "url": "https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:19Z"
+          },
+          {
+            "label": "OpenFeature: Introduction",
+            "url": "https://openfeature.dev/docs/reference/intro",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:07Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Feature Flags Explained in 6 Minutes. What Are Feature Flags? (Feature Toggles)",
+            "channel": "CoderDave",
+            "url": "https://www.youtube.com/watch?v=c8KgKTgyFUE",
+            "videoId": "c8KgKTgyFUE",
+            "verifiedAt": "2026-10-02T12:00:40Z"
+          },
+          {
+            "title": "App White Labeling Made Easy with Codemagic | Step-by-Step Guide and Demo",
+            "channel": "Codemagic",
+            "url": "https://www.youtube.com/watch?v=nW66iben5zQ",
+            "videoId": "nW66iben5zQ",
+            "verifiedAt": "2026-10-02T12:00:41Z"
+          }
+        ]
+      },
+      "b06-custom-modules-as-crs": {
+        "title": "Custom modules as change requests",
+        "refs": [
+          {
+            "label": "Atlassian: IT change management, ITIL framework",
+            "url": "https://www.atlassian.com/itsm/change-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:57Z"
+          },
+          {
+            "label": "Asana: Change control process",
+            "url": "https://asana.com/resources/change-control-process",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:24Z"
+          },
+          {
+            "label": "Wikipedia: Change request",
+            "url": "https://en.wikipedia.org/wiki/Change_request",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:59Z"
+          },
+          {
+            "label": "Microsoft Learn: Extend Dynamics 365 apps without compromising performance",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/extend-your-solution",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:54Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a CHANGE REQUEST? PMBOK Key Concepts in Project Management",
+            "channel": "David McLachlan",
+            "url": "https://www.youtube.com/watch?v=ZdpoQLfiznQ",
+            "videoId": "ZdpoQLfiznQ",
+            "verifiedAt": "2026-10-02T12:00:41Z"
+          },
+          {
+            "title": "How to Control Change Requests on Projects - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=WWdgFFVkPgA",
+            "videoId": "WWdgFFVkPgA",
+            "verifiedAt": "2026-10-02T12:00:42Z"
+          },
+          {
+            "title": "What is the difference between Change Management and Change Request?",
+            "channel": "Niks Projects",
+            "url": "https://www.youtube.com/watch?v=ZeWg7dBBWoo",
+            "videoId": "ZeWg7dBBWoo",
+            "verifiedAt": "2026-10-02T12:00:42Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b07": {
+    "title": "Rebranded builds, QA & UAT",
+    "topics": {
+      "b07-rebranded-builds-qa": {
+        "title": "Rebranded builds, QA and UAT",
+        "refs": [
+          {
+            "label": "Android Developers: Configure build variants (product flavors)",
+            "url": "https://developer.android.com/build/build-variants",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:46Z"
+          },
+          {
+            "label": "Apple Developer: Configuring a new target in your project",
+            "url": "https://developer.apple.com/documentation/xcode/configuring-a-new-target-in-your-project",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:20Z"
+          },
+          {
+            "label": "App Store Connect Help: TestFlight overview",
+            "url": "https://developer.apple.com/help/app-store-connect/test-a-beta-version/testflight-overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:50:07Z"
+          },
+          {
+            "label": "Play Console Help: Set up an open, closed, or internal test",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9845334?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:39Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Development and Maintenance of White-Label Android Apps | Dmitrii Nikitin | Conf42 Chaos Engr 2025",
+            "channel": "Conf42",
+            "url": "https://www.youtube.com/watch?v=W7IGcIBB02Y",
+            "videoId": "W7IGcIBB02Y",
+            "verifiedAt": "2026-10-02T12:00:43Z"
+          },
+          {
+            "title": "Swift - White label iOS App | How to create multiple targets app | How to create white label apps",
+            "channel": "Code with Deepak",
+            "url": "https://www.youtube.com/watch?v=JZY0NSNhsww",
+            "videoId": "JZY0NSNhsww",
+            "verifiedAt": "2026-10-02T12:00:44Z"
+          },
+          {
+            "title": "TestFlight & Xcode: Upload, Distribute, and Beta Test Your iOS App In Under 10 Minutes! (2025)",
+            "channel": "Noah Does Coding",
+            "url": "https://www.youtube.com/watch?v=x0d8Jx3HvdI",
+            "videoId": "x0d8Jx3HvdI",
+            "verifiedAt": "2026-10-02T12:00:45Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b08": {
+    "title": "Store listing preparation",
+    "topics": {
+      "b08-listing-assets": {
+        "title": "Store listing assets and identifiers",
+        "refs": [
+          {
+            "label": "App Store Connect Help: Screenshot specifications",
+            "url": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:15Z"
+          },
+          {
+            "label": "App Store Connect Help: App information (name, subtitle, bundle ID, SKU)",
+            "url": "https://developer.apple.com/help/app-store-connect/reference/app-information",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:23Z"
+          },
+          {
+            "label": "Play Console Help: Add preview assets to showcase your app",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9866151?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:29Z"
+          },
+          {
+            "label": "Android Developers: Configure the app module (applicationId)",
+            "url": "https://developer.android.com/build/configure-app-module",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:48:46Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Create App Store Screenshots - Fast & Easy",
+            "channel": "Sean Allen",
+            "url": "https://www.youtube.com/watch?v=-7YHPpqaVFY",
+            "videoId": "-7YHPpqaVFY",
+            "verifiedAt": "2026-10-02T12:00:45Z"
+          },
+          {
+            "title": "App icon design specifications for Store Listing. Design and upload an app icon in Play Console.",
+            "channel": "iRekha Tech Solutions",
+            "url": "https://www.youtube.com/watch?v=CFhw7qFSpKI",
+            "videoId": "CFhw7qFSpKI",
+            "verifiedAt": "2026-10-02T12:00:46Z"
+          },
+          {
+            "title": "How To Create Android App Feature Graphic For Google Play Store | Google Play Console",
+            "channel": "SHAAD DEV STUDIO",
+            "url": "https://www.youtube.com/watch?v=YpRtH2eaaBg",
+            "videoId": "YpRtH2eaaBg",
+            "verifiedAt": "2026-10-02T12:00:47Z"
+          }
+        ]
+      },
+      "b08-privacy-review-guidelines": {
+        "title": "Privacy declarations and review guidelines",
+        "refs": [
+          {
+            "label": "Apple: App Review Guidelines",
+            "url": "https://developer.apple.com/app-store/review/guidelines/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:46:13Z"
+          },
+          {
+            "label": "Apple: App Privacy Details",
+            "url": "https://developer.apple.com/app-store/app-privacy-details/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:16Z"
+          },
+          {
+            "label": "Play Console Help: Data safety section",
+            "url": "https://support.google.com/googleplay/android-developer/answer/10787469?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:29Z"
+          },
+          {
+            "label": "Apple Developer: Privacy manifest files",
+            "url": "https://developer.apple.com/documentation/bundleresources/privacy-manifest-files",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:22Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to use Google Play's Data safety section",
+            "channel": "Google Help",
+            "url": "https://www.youtube.com/watch?v=62T6agNWpRI",
+            "videoId": "62T6agNWpRI",
+            "verifiedAt": "2026-10-02T12:00:47Z"
+          },
+          {
+            "title": "Your App Will Get Rejected | New Privacy Rules - 2024",
+            "channel": "Sean Allen",
+            "url": "https://www.youtube.com/watch?v=T6IvImk66m8",
+            "videoId": "T6IvImk66m8",
+            "verifiedAt": "2026-10-02T12:00:48Z"
+          },
+          {
+            "title": "Understand and Navigate App Store Privacy Labels",
+            "channel": "Jacob's QuickTips",
+            "url": "https://www.youtube.com/watch?v=bjYUkDjyctE",
+            "videoId": "bjYUkDjyctE",
+            "verifiedAt": "2026-10-02T12:00:49Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b09": {
+    "title": "Submission, rejection & resubmission",
+    "topics": {
+      "b09-submission": {
+        "title": "Submitting to the App Store and Google Play",
+        "refs": [
+          {
+            "label": "App Store Connect Help: Overview of submitting for review",
+            "url": "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/overview-of-submitting-for-review",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:16Z"
+          },
+          {
+            "label": "Apple: App Review (review times, expedited reviews)",
+            "url": "https://developer.apple.com/distribute/app-review/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:16Z"
+          },
+          {
+            "label": "Play Console Help: Publish your app",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9859751?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:45Z"
+          },
+          {
+            "label": "Play Console Help: Prepare your app for review",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9859455?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:38Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "App Store Submission Guide (2025): Publish Your iOS App to the Store (Xcode & App Store Connect)",
+            "channel": "Noah Does Coding",
+            "url": "https://www.youtube.com/watch?v=Qgq6jsRtfbA",
+            "videoId": "Qgq6jsRtfbA",
+            "verifiedAt": "2026-10-02T12:00:49Z"
+          },
+          {
+            "title": "How To Submit Your iOS App to the App Store (Full Guide)",
+            "channel": "John Kealy",
+            "url": "https://www.youtube.com/watch?v=miWvNAFpmew",
+            "videoId": "miWvNAFpmew",
+            "verifiedAt": "2026-10-02T12:01:12Z"
+          },
+          {
+            "title": "How to Publish Your Android App on Google Play Store in 2026 (Step-by-Step for Beginners) 🚀",
+            "channel": "Saddam Kassim",
+            "url": "https://www.youtube.com/watch?v=2JbdGXxh1V0",
+            "videoId": "2JbdGXxh1V0",
+            "verifiedAt": "2026-10-02T12:00:50Z"
+          }
+        ]
+      },
+      "b09-rejections": {
+        "title": "Handling rejections, including 4.2.6 and spam",
+        "refs": [
+          {
+            "label": "Apple: App Review Guidelines (4.2.6, 4.3, After You Submit)",
+            "url": "https://developer.apple.com/app-store/review/guidelines/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:46:13Z"
+          },
+          {
+            "label": "App Store Connect Help: Reply to App Review messages",
+            "url": "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/reply-to-app-review-messages",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:49:59Z"
+          },
+          {
+            "label": "Play Console Help: Spam policy",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9899034?hl=en",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:46:31Z"
+          },
+          {
+            "label": "App Store Connect Help: App and submission statuses",
+            "url": "https://developer.apple.com/help/app-store-connect/reference/app-and-submission-statuses",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:21Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "App Store is banning developers for this simple mistake: 4.3(a) Spam Rejections",
+            "channel": "Adam Lyttle",
+            "url": "https://www.youtube.com/watch?v=i48JgOr2W64",
+            "videoId": "i48JgOr2W64",
+            "verifiedAt": "2026-10-02T12:00:51Z"
+          },
+          {
+            "title": "Apple Rejected Your App for 4.3? Here’s How to Fix It",
+            "channel": "molfar - product wise guys",
+            "url": "https://www.youtube.com/watch?v=qvSt_lDUEOo",
+            "videoId": "qvSt_lDUEOo",
+            "verifiedAt": "2026-10-02T12:00:52Z"
+          },
+          {
+            "title": "Why My App Was Rejected and How I Got It Approved | App Store Review Process Explained",
+            "channel": "Think Like an Engineer",
+            "url": "https://www.youtube.com/watch?v=gvQiTtUU_LE",
+            "videoId": "gvQiTtUU_LE",
+            "verifiedAt": "2026-10-02T12:00:53Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b10": {
+    "title": "Go-live, licence & support plan",
+    "topics": {
+      "b10-golive-licence-support": {
+        "title": "Go-live, licence and support plan",
+        "refs": [
+          {
+            "label": "App Store Connect Help: Release a version update in phases",
+            "url": "https://developer.apple.com/help/app-store-connect/update-your-app/release-a-version-update-in-phases",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:20Z"
+          },
+          {
+            "label": "Play Console Help: Release app updates with staged rollouts",
+            "url": "https://support.google.com/googleplay/android-developer/answer/6346149?hl=en",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:46:41Z"
+          },
+          {
+            "label": "Microsoft Learn: Pricing models for a multitenant solution",
+            "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/pricing-models",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:49:13Z"
+          },
+          {
+            "label": "Atlassian: What is an SLA?",
+            "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:08Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Do You Know How Mobile Apps Are Released?",
+            "channel": "ByteByteGo",
+            "url": "https://www.youtube.com/watch?v=RIX4ufelA58",
+            "videoId": "RIX4ufelA58",
+            "verifiedAt": "2026-10-02T12:00:54Z"
+          },
+          {
+            "title": "SaaS Pricing Models Explained in 5 Minutes",
+            "channel": "Rob Walling",
+            "url": "https://www.youtube.com/watch?v=lC6Gpn0ugFI",
+            "videoId": "lC6Gpn0ugFI",
+            "verifiedAt": "2026-10-02T12:00:54Z"
+          },
+          {
+            "title": "What Is a Service Level Agreement (SLA)? | SLA Explained | The Knowledge Academy",
+            "channel": "The Knowledge Academy",
+            "url": "https://www.youtube.com/watch?v=iSCWolgYm_Y",
+            "videoId": "iSCWolgYm_Y",
+            "verifiedAt": "2026-10-02T12:00:55Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b11": {
+    "title": "Core product upgrades",
+    "topics": {
+      "b11-version-sync": {
+        "title": "Keeping client instances in sync with the core",
+        "refs": [
+          {
+            "label": "GitHub Docs: Syncing a fork",
+            "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:47:43Z"
+          },
+          {
+            "label": "Microsoft Learn: Considerations for updating a multitenant solution",
+            "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/updates",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:49:14Z"
+          },
+          {
+            "label": "Semantic Versioning 2.0.0",
+            "url": "https://semver.org/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:47:56Z"
+          },
+          {
+            "label": "Martin Fowler: Patterns for managing source code branches",
+            "url": "https://martinfowler.com/articles/branching-patterns.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:47:45Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Git Forking & Fetch: How to Keep your Fork in Sync with an Upstream Repository",
+            "channel": "Faraday Academy",
+            "url": "https://www.youtube.com/watch?v=deEYHVpE1c8",
+            "videoId": "deEYHVpE1c8",
+            "verifiedAt": "2026-10-02T12:00:56Z"
+          },
+          {
+            "title": "Never fear merge conflicts again - git merge/pull tutorial",
+            "channel": "Philomatics",
+            "url": "https://www.youtube.com/watch?v=DloR0BOGNU0",
+            "videoId": "DloR0BOGNU0",
+            "verifiedAt": "2026-10-02T12:00:57Z"
+          },
+          {
+            "title": "Keeping my sanity, when white-labeling 40 apps",
+            "channel": "The droidCon Archive",
+            "url": "https://www.youtube.com/watch?v=l-XIPnKVLys",
+            "videoId": "l-XIPnKVLys",
+            "verifiedAt": "2026-10-02T12:00:57Z"
+          }
+        ]
+      },
+      "b11-customisation-debt": {
+        "title": "Customisation debt and merge-conflict risk",
+        "refs": [
+          {
+            "label": "GitHub Docs: About merge conflicts",
+            "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:47:44Z"
+          },
+          {
+            "label": "Martin Fowler: Technical Debt",
+            "url": "https://martinfowler.com/bliki/TechnicalDebt.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:49:27Z"
+          },
+          {
+            "label": "Martin Fowler: Branch By Abstraction",
+            "url": "https://martinfowler.com/bliki/BranchByAbstraction.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:49:28Z"
+          },
+          {
+            "label": "Git docs: git-rerere (reuse recorded conflict resolution)",
+            "url": "https://git-scm.com/docs/git-rerere",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:49:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is technical debt?  Definition, Overview, and Best Practices",
+            "channel": "ProductPlan",
+            "url": "https://www.youtube.com/watch?v=qGcm6GVyDNw",
+            "videoId": "qGcm6GVyDNw",
+            "verifiedAt": "2026-10-02T12:00:58Z"
+          },
+          {
+            "title": "Technical Debt Explained for Beginners | What is Technical Debt | SCALER",
+            "channel": "SCALER",
+            "url": "https://www.youtube.com/watch?v=v4s-S-GkhjE",
+            "videoId": "v4s-S-GkhjE",
+            "verifiedAt": "2026-10-02T12:00:59Z"
+          },
+          {
+            "title": "What is Customization Vs Configuration in ServiceNow? Know before you customize OOTB features",
+            "channel": "ServiceNowStar",
+            "url": "https://www.youtube.com/watch?v=LYQj2Vueex4",
+            "videoId": "LYQj2Vueex4",
+            "verifiedAt": "2026-10-02T12:00:28Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-b12": {
+    "title": "Running many white-label clients",
+    "topics": {
+      "b12-portfolio-templates": {
+        "title": "Templates and automation for a white-label portfolio",
+        "refs": [
+          {
+            "label": "fastlane docs: match (shared code signing)",
+            "url": "https://docs.fastlane.tools/actions/match/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:47:47Z"
+          },
+          {
+            "label": "fastlane docs: deliver (App Store metadata and screenshots)",
+            "url": "https://docs.fastlane.tools/actions/deliver/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:47:48Z"
+          },
+          {
+            "label": "fastlane docs: supply (Google Play metadata)",
+            "url": "https://docs.fastlane.tools/actions/supply/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:47:48Z"
+          },
+          {
+            "label": "GitHub Docs: Running variations of jobs in a workflow (matrix)",
+            "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:19Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Keeping my sanity, when white-labeling 40 apps",
+            "channel": "The droidCon Archive",
+            "url": "https://www.youtube.com/watch?v=l-XIPnKVLys",
+            "videoId": "l-XIPnKVLys",
+            "verifiedAt": "2026-10-02T12:00:57Z"
+          },
+          {
+            "title": "Automating App Store Connect and Google Play Releases with Fastlane",
+            "channel": "ByteDistrict",
+            "url": "https://www.youtube.com/watch?v=NCmkL__Mq-I",
+            "videoId": "NCmkL__Mq-I",
+            "verifiedAt": "2026-10-02T12:01:00Z"
+          },
+          {
+            "title": "White-Labeling Android Apps at Scale Using Jenkins CI/CD — Mohammad Saqeeb",
+            "channel": "DroidTribe",
+            "url": "https://www.youtube.com/watch?v=iCrHs6uB6d0",
+            "videoId": "iCrHs6uB6d0",
+            "verifiedAt": "2026-10-02T12:01:01Z"
+          }
+        ]
+      }
+    }
+  }
+}

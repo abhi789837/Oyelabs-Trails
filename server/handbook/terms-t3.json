@@ -1,0 +1,1941 @@
+[
+  {
+    "id": "mom",
+    "name": "Minutes of meeting",
+    "aka": [
+      "MoM",
+      "meeting minutes",
+      "meeting notes"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A short written record of a meeting: who attended, what was discussed, the decisions taken and the action items with an owner and a due date. Sent soon after the meeting so everyone works from the same version of what was agreed.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who writes and sends the MoM (normally the PM), how soon after the meeting it must go out, where it is stored (e.g. the project folder or tool), and whether client silence for a set period counts as acceptance of the minutes.",
+    "example": "After a scope call on a Laravel booking platform for a UK client, the PM sends a MoM within the hour noting that the client agreed to drop the loyalty module from phase 1. Three weeks later, when the client asks why loyalty is missing, the PM links that MoM.",
+    "clientSentence": "I'll send you a short summary of what we decided and who is doing what, so we both have the same record.",
+    "impact": "No direct cost, but a missing MoM is the most common reason scope disputes become billing disputes. Typically sent the same day or within 24 hours.",
+    "related": [
+      "status-report",
+      "spoc",
+      "raid-log",
+      "escalation"
+    ],
+    "confusedWith": [
+      "status-report",
+      "eod-update"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Minutes of meeting",
+        "url": "https://www.lawinsider.com/dictionary/minutes-of-meeting",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian Confluence: Meeting minutes template",
+        "url": "https://www.atlassian.com/software/confluence/templates/meeting-notes",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "rag-status",
+    "name": "RAG status",
+    "aka": [
+      "RAG",
+      "red-amber-green",
+      "traffic-light status"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A red, amber or green rating that summarises the health of a project or one of its dimensions (schedule, budget, scope, quality). Green means on track, amber means at risk but recoverable with action, red means off track and needs a decision or help from above.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The exact criteria for each colour at Oyelabs (e.g. how many days of slippage turns amber or red), which dimensions are rated, who sets the rating, and whether a red automatically triggers an escalation.",
+    "example": "A white-label food-delivery app for a client in the UAE is waiting on the client's Apple developer account. The PM marks the schedule amber with the note 'go-live moves if the account is not approved by Friday', instead of keeping it green until the date is actually missed.",
+    "clientSentence": "Green means we're on track, amber means there's a risk we're managing, and red means we need a decision from you.",
+    "impact": "No cost in itself. A RAG kept green too long ('watermelon status': green outside, red inside) typically hides slippage until it is expensive to fix.",
+    "related": [
+      "status-report",
+      "risk",
+      "issue",
+      "escalation",
+      "steering-committee"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Law Insider: RAG rating",
+        "url": "https://www.lawinsider.com/dictionary/rag-rating",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian Confluence: Project status report template",
+        "url": "https://www.atlassian.com/software/confluence/templates/project-status",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "status-report",
+    "name": "Status report",
+    "aka": [
+      "weekly status",
+      "progress report",
+      "WSR"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A regular written update to the client and internal stakeholders on project progress: what was done, what is next, RAG status, risks and issues, decisions needed and upcoming milestones. Usually weekly for active delivery.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The status report cadence and day, its standard format (see the status-report-rag template), who receives it on the client side, and who reviews it internally before it is sent.",
+    "example": "Every Friday the PM of a React Native fitness app for a US client sends a one-page status report: sprint 4 done, sprint 5 goals, schedule amber because of a late payment-gateway sandbox, and one decision needed on push-notification copy.",
+    "clientSentence": "Every week you'll get a one-page update on progress, risks and anything we need from you.",
+    "impact": "Typically 30–60 minutes of PM time per week per project. Missing reports increase escalations and client anxiety more than bad news does.",
+    "related": [
+      "rag-status",
+      "raid-log",
+      "mom",
+      "eod-update",
+      "stakeholder"
+    ],
+    "confusedWith": [
+      "eod-update",
+      "mom"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Status report",
+        "url": "https://www.lawinsider.com/dictionary/status-report",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian Confluence: Project status report template",
+        "url": "https://www.atlassian.com/software/confluence/templates/project-status",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "eod-update",
+    "name": "EOD update",
+    "aka": [
+      "end-of-day update",
+      "EOD report",
+      "daily update"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A short end-of-day message summarising what was completed today, what is planned for tomorrow and any blockers. Common in offshore delivery to bridge time-zone gaps so the client starts their day with fresh information.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether EOD updates are sent to clients by default or only on request, who sends them (developer, tech lead or PM), the channel used, and the cut-off time relative to the client's time zone.",
+    "example": "For a Laravel marketplace for an Australian client, the PM posts an EOD in the shared Slack channel at 6 pm IST: three tickets moved to QA, one blocked on the client's SMTP credentials, tomorrow's focus is checkout.",
+    "clientSentence": "At the end of each working day we'll post a quick note on what got done, what's next and anything we're waiting on.",
+    "impact": "Typically 10–15 minutes a day. Useful for transparency, but it should not replace the weekly status report or become a micromanagement channel.",
+    "related": [
+      "status-report",
+      "spoc",
+      "issue"
+    ],
+    "confusedWith": [
+      "status-report",
+      "mom"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: End of day report",
+        "url": "https://www.lawinsider.com/dictionary/end-of-day-report",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: Standups for agile teams",
+        "url": "https://www.atlassian.com/agile/scrum/standups",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "escalation",
+    "name": "Escalation",
+    "aka": [
+      "escalate"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Raising a problem to a higher level of authority because it cannot be resolved at the current level within the agreed time, or because its impact needs a decision only someone senior can make. A healthy escalation is a planned path, not a complaint.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When a PM must escalate internally (e.g. a red RAG, a blocked dependency, a payment overdue), to whom at each level, the time allowed at each level before moving up, and how client-raised escalations are acknowledged.",
+    "example": "A client's SPOC has not approved designs for ten days on a React web portal, putting the milestone at risk. The PM escalates to the client sponsor with the impact on dates, as set out in the escalation matrix agreed at kickoff.",
+    "clientSentence": "If something is stuck and we can't resolve it between us, we'll raise it to the next level so it gets a decision quickly.",
+    "impact": "Late escalation typically costs far more than early escalation: delays compound and change requests pile up. Typical internal escalation windows are 24–72 hours per level.",
+    "related": [
+      "escalation-matrix",
+      "issue",
+      "rag-status",
+      "steering-committee",
+      "spoc"
+    ],
+    "confusedWith": [
+      "issue"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Escalation",
+        "url": "https://www.lawinsider.com/dictionary/escalation",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: Escalation policies",
+        "url": "https://www.atlassian.com/incident-management/on-call/escalation-policies",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "escalation-matrix",
+    "name": "Escalation matrix",
+    "aka": [
+      "escalation path",
+      "escalation plan"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A table that defines who to contact, at which level, for which kind of problem and after how long, on both the supplier and the client side. It turns escalation into a predictable process rather than an emotional one.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The standard levels in Oyelabs' matrix (e.g. PM, delivery head, leadership), the time window at each level, whether it is shared with the client at kickoff, and whether it forms part of the contract or SLA.",
+    "example": "At kickoff for a white-label taxi app for a client in Kenya, the PM shares a three-level matrix: level 1 PM and client SPOC; level 2 delivery head and client operations lead; level 3 Oyelabs leadership and client founder.",
+    "clientSentence": "This sheet shows who to call at each level if something isn't moving, on your side and ours.",
+    "impact": "No direct cost. A matrix agreed at kickoff typically shortens disputes because nobody has to argue about who to talk to.",
+    "related": [
+      "escalation",
+      "spoc",
+      "raci",
+      "sla",
+      "stakeholder"
+    ],
+    "confusedWith": [
+      "raci"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Escalation matrix clauses",
+        "url": "https://www.lawinsider.com/clause/escalation-matrix",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Escalation procedure",
+        "url": "https://www.lawinsider.com/dictionary/escalation-procedure",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "raci",
+    "name": "RACI",
+    "aka": [
+      "RACI matrix",
+      "RACI chart",
+      "responsibility assignment matrix"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A matrix that lists activities against roles and marks each role as Responsible (does the work), Accountable (owns the outcome, exactly one per activity), Consulted (gives input before) or Informed (told after). It removes ambiguity about who does and who decides.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The standard Oyelabs RACI per stage (custom and white-label), especially who is accountable for estimates, CR approval, release decisions and store submissions, and whether a RACI is shared with clients.",
+    "example": "On a custom e-commerce build, the RACI makes the tech lead responsible for the architecture document, the PM accountable for its delivery, the client's IT lead consulted, and the client sponsor informed.",
+    "clientSentence": "This chart shows, for each activity, who does it, who signs it off, who we ask, and who we keep posted.",
+    "impact": "Typically an hour to draft at kickoff. Missing RACIs show up later as delays waiting for the 'right' approver.",
+    "related": [
+      "stakeholder",
+      "spoc",
+      "escalation-matrix",
+      "steering-committee"
+    ],
+    "confusedWith": [
+      "escalation-matrix"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian: RACI chart",
+        "url": "https://www.atlassian.com/work-management/project-management/raci-chart",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "GOV.UK Service Manual: What each role does in a service team",
+        "url": "https://www.gov.uk/service-manual/the-team/what-each-role-does-in-service-team",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "spoc",
+    "name": "SPOC",
+    "aka": [
+      "single point of contact"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "The one named person on a side (client or supplier) through whom requests, approvals and communication flow. A SPOC prevents conflicting instructions from several people on the same team.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether the PM is always the Oyelabs SPOC, how a client SPOC is named (e.g. in the kickoff MoM), and what happens when instructions arrive from someone other than the client SPOC.",
+    "example": "On a Laravel CRM for a Canadian client, the marketing head and the CTO both send feature requests. The PM reminds them that the CTO was named SPOC at kickoff and routes all requests through her for a single priority order.",
+    "clientSentence": "To avoid mixed messages, we'd like one person on your side who confirms priorities and approvals.",
+    "impact": "No direct cost. Without a SPOC, typical consequences are rework from conflicting instructions and unbilled changes.",
+    "related": [
+      "stakeholder",
+      "raci",
+      "escalation-matrix",
+      "mom"
+    ],
+    "confusedWith": [
+      "stakeholder"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Single point of contact",
+        "url": "https://www.lawinsider.com/dictionary/single-point-of-contact",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "stakeholder",
+    "name": "Stakeholder",
+    "aka": [
+      "stakeholders"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Anyone who affects, or is affected by, the project: the client sponsor, end users, the client's IT and operations teams, the agency's delivery team and leadership. Stakeholders differ in influence and interest and need different communication.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether PMs keep a stakeholder register on every project, the minimum fields, and who on the Oyelabs side (BD, account manager, leadership) must be kept informed for which events.",
+    "example": "For a white-label grocery app in Saudi Arabia, the PM identifies the founder (sponsor), the operations manager (SPOC), a franchise partner who needs a store-owner panel, and the client's marketing agency, which supplies the brand kit.",
+    "clientSentence": "We'd like to know everyone on your side who has a say in this, so nobody is surprised later.",
+    "impact": "No direct cost. A stakeholder discovered late typically brings new requirements, which usually become change requests.",
+    "related": [
+      "spoc",
+      "raci",
+      "steering-committee",
+      "status-report"
+    ],
+    "confusedWith": [
+      "spoc"
+    ],
+    "sources": [
+      {
+        "label": "Investopedia: Stakeholder",
+        "url": "https://www.investopedia.com/terms/s/stakeholder.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "PMI: Stakeholder management",
+        "url": "https://www.pmi.org/learning/library/stakeholder-management-task-project-success-7736",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "steering-committee",
+    "name": "Steering committee",
+    "aka": [
+      "SteerCo",
+      "project board"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A small group of senior people from the client and the supplier who meet periodically to review progress, approve big decisions (scope, budget, timeline) and resolve escalations the project team cannot.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which project sizes or contract values warrant a steering committee, who sits on it from Oyelabs, how often it meets, and what decisions are reserved for it.",
+    "example": "On a nine-month custom logistics platform for a European client, a monthly SteerCo with the client COO, the client CTO and Oyelabs' delivery head approves moving the driver app to phase 2 to protect the launch date.",
+    "clientSentence": "Once a month a few senior people from both sides will review progress and take the big decisions.",
+    "impact": "Typically 1 hour per month plus preparation. Small projects rarely need one; the status report and escalation matrix are enough.",
+    "related": [
+      "stakeholder",
+      "escalation",
+      "rag-status",
+      "qbr",
+      "raci"
+    ],
+    "confusedWith": [
+      "qbr"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Project steering committee",
+        "url": "https://www.lawinsider.com/dictionary/project-steering-committee",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "qbr",
+    "name": "QBR",
+    "aka": [
+      "quarterly business review",
+      "account review"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A quarterly meeting with a client on an ongoing engagement (retainer, AMC, white-label licence) to review results against goals, service performance, the roadmap and opportunities. It focuses on the relationship and value rather than day-to-day delivery.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which accounts get a QBR (e.g. by retainer size), who runs it (PM, account manager or BD), the standard agenda, and whether upsell proposals are expected.",
+    "example": "For a white-label salon-booking client on a support plan, the account manager runs a QBR covering app ratings, ticket volumes against the SLA, the next core-product release and an optional loyalty add-on.",
+    "clientSentence": "Every quarter we'll step back with you to review how things are going and plan what's next.",
+    "impact": "Typically 1–2 hours plus preparation per quarter. A good QBR is often where renewals and new work are agreed.",
+    "related": [
+      "steering-committee",
+      "renewal",
+      "amc",
+      "retainer",
+      "sla"
+    ],
+    "confusedWith": [
+      "steering-committee",
+      "status-report"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Quarterly business review",
+        "url": "https://www.lawinsider.com/dictionary/quarterly-business-review",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "retrospective",
+    "name": "Retrospective",
+    "aka": [
+      "retro",
+      "sprint retrospective",
+      "lessons learned"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A meeting at the end of a sprint, release or project where the team reflects on what went well, what didn't and what to change, and agrees a small number of concrete improvements. It is blameless and about the process, not individuals.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether retros are held per sprint, per release or only at project closure, whether clients are invited, and where the lessons learned are recorded for other projects.",
+    "example": "After a store rejection delayed a white-label pharmacy app, the retro agrees one action: the store-listing checklist now includes checking the privacy-policy URL loads on a phone before submission.",
+    "clientSentence": "At the end we'll run a short review of what worked and what we'd do differently next time.",
+    "impact": "Typically 30–90 minutes per sprint or project. Skipped retros typically mean the same mistakes are paid for again.",
+    "related": [
+      "closure",
+      "rca",
+      "sprint",
+      "status-report"
+    ],
+    "confusedWith": [
+      "rca"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian Team Playbook: Retrospective",
+        "url": "https://www.atlassian.com/team-playbook/plays/retrospective",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "The Scrum Guide",
+        "url": "https://scrumguides.org/scrum-guide.html",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "risk",
+    "name": "Risk",
+    "aka": [
+      "project risk"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "An uncertain event that has not happened yet but would affect the project if it did. Each risk is logged with its likelihood, impact, owner and a response (avoid, reduce, transfer or accept).",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The scale used at Oyelabs for likelihood and impact, the threshold that requires sharing a risk with the client, and how often the PM reviews the RAID log.",
+    "example": "On a white-label taxi app, the PM logs a risk: 'Client's company has no D-U-N-S number yet; Apple organisation enrolment may take weeks'. The response is to start enrolment in week 1.",
+    "clientSentence": "A risk is something that might go wrong; we write it down early so we can stop it happening or limit the damage.",
+    "impact": "Managing a risk costs a little effort now; an unmanaged risk that turns into an issue typically costs time, money or both.",
+    "related": [
+      "issue",
+      "raid-log",
+      "assumption",
+      "dependency",
+      "rag-status"
+    ],
+    "confusedWith": [
+      "issue",
+      "assumption"
+    ],
+    "sources": [
+      {
+        "label": "Atlassian: Project risk management",
+        "url": "https://www.atlassian.com/work-management/project-management/project-risk-management",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Risk register",
+        "url": "https://www.lawinsider.com/dictionary/risk-register",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "issue",
+    "name": "Issue",
+    "aka": [
+      "project issue",
+      "blocker issue"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Something that is happening now and is affecting the project, needing action to resolve. A risk that materialises becomes an issue. Each issue has an owner, a due date and an impact assessment.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How issues are logged (RAID log, tracker), the time an issue may stay open before escalation, and which issues must be raised with the client in the status report.",
+    "example": "The payment-gateway sandbox for a React checkout has been down for two days. The PM logs an issue, assigns it to the client SPOC, who owns the gateway account, and notes that the milestone moves one day per day of delay.",
+    "clientSentence": "This is a problem that is affecting us right now, here's what it's doing to the plan and what we need to fix it.",
+    "impact": "Open issues typically consume schedule directly. Client-caused issues may justify a revised timeline or extra cost under the contract.",
+    "related": [
+      "risk",
+      "raid-log",
+      "escalation",
+      "blocker",
+      "client-dependency"
+    ],
+    "confusedWith": [
+      "risk",
+      "bug"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Issue log",
+        "url": "https://www.lawinsider.com/dictionary/issue-log",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Atlassian: Risk management plan",
+        "url": "https://www.atlassian.com/work-management/project-management/risk-management-plan",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "raid-log",
+    "name": "RAID log",
+    "aka": [
+      "RAID",
+      "risks, assumptions, issues and dependencies log"
+    ],
+    "category": "governance",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "One register that tracks the project's Risks, Assumptions, Issues and Dependencies (some teams use Decisions for the D). Each line has an owner, a status and a date, and the log is reviewed regularly.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether every project keeps a RAID log from kickoff, which template (see raid-log-template), the review cadence, and whether the client sees it in full or only in the status report.",
+    "example": "On a Laravel school-management system, the RAID log holds the assumption 'client provides SMS gateway credentials by week 3', its linked dependency, and the issue opened when the credentials arrived late.",
+    "clientSentence": "We keep one list of risks, assumptions, issues and dependencies, so nothing important slips through.",
+    "impact": "Typically 15–30 minutes a week to maintain. It is the evidence base when delays or CRs are disputed.",
+    "related": [
+      "risk",
+      "issue",
+      "assumption",
+      "dependency",
+      "client-dependency",
+      "status-report"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Law Insider: Risk register",
+        "url": "https://www.lawinsider.com/dictionary/risk-register",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Issue log",
+        "url": "https://www.lawinsider.com/dictionary/issue-log",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "white-label",
+    "name": "White-label",
+    "aka": [
+      "white label",
+      "WL"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "A product built by one company and sold to others, who rebrand it and offer it as their own. The buyer gets a proven product quickly; the maker keeps ownership of the core product and usually licenses it rather than selling the source code.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] What Oyelabs licenses in a white-label deal (app, panels, source code or not), what may be rebranded and configured, and how customisations beyond configuration are priced.",
+    "example": "A start-up in the UAE wants a food-delivery service in eight weeks. Instead of a custom build, it buys Oyelabs' white-label food-delivery product, rebranded with its name, colours and payment gateway.",
+    "clientSentence": "You get our proven product under your own brand, set up for your business, much faster than building from scratch.",
+    "impact": "Typically weeks rather than months to launch, with a setup fee plus licence or subscription. Customisations add cost and slow future upgrades.",
+    "related": [
+      "core-product",
+      "rebranding",
+      "configuration",
+      "customisation",
+      "private-label",
+      "reseller"
+    ],
+    "confusedWith": [
+      "private-label",
+      "reseller"
+    ],
+    "sources": [
+      {
+        "label": "Investopedia: White label product",
+        "url": "https://www.investopedia.com/terms/w/white-label-product.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "private-label",
+    "name": "Private label",
+    "aka": [
+      "private-label product"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "A product made by one company and sold exclusively under a retailer's or client's brand. In software it often implies more exclusivity than plain white-label, e.g. a dedicated instance, no other client in the same niche or market, or a deeper ownership arrangement.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs offers a private-label (exclusive) variant distinct from standard white-label, and what exclusivity, territory or ownership terms it would include.",
+    "example": "A grocery chain in Qatar asks that no other grocery client in Qatar receives the same app. The BD team checks whether that exclusivity can be offered and at what price before the PM promises anything.",
+    "clientSentence": "Private label means the product is yours alone under your brand, often with exclusivity terms written into the contract.",
+    "impact": "Exclusivity typically commands a higher fee. It limits who else the maker can sell to, so it is a commercial decision, not a PM decision.",
+    "related": [
+      "white-label",
+      "reseller",
+      "licence"
+    ],
+    "confusedWith": [
+      "white-label",
+      "reseller"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Private label",
+        "url": "https://www.lawinsider.com/dictionary/private-label",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Investopedia: White label product",
+        "url": "https://www.investopedia.com/terms/w/white-label-product.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "reseller",
+    "name": "Reseller",
+    "aka": [
+      "reseller partner",
+      "channel partner",
+      "VAR"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "A company that sells another company's product to its own customers, sometimes under its own brand. The reseller usually owns the end-customer relationship and first-line support, while the maker supplies the product and second-line support.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs works with resellers, who supports the end customer (reseller or Oyelabs), and how reseller discounts and support boundaries are documented.",
+    "example": "A digital agency in the UK resells a white-label booking app to three of its own clients. Oyelabs supports the agency, not the end clients, so the escalation matrix runs through the agency's PM.",
+    "clientSentence": "As a reseller, you sell our product to your customers, and we support you behind the scenes.",
+    "impact": "Reseller margins and support tiers are typically defined in a partner agreement; unclear support lines typically lead to unpaid support work.",
+    "related": [
+      "white-label",
+      "private-label",
+      "licence",
+      "support"
+    ],
+    "confusedWith": [
+      "white-label",
+      "private-label"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Reseller",
+        "url": "https://www.lawinsider.com/dictionary/reseller",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "core-product",
+    "name": "Core product",
+    "aka": [
+      "base product",
+      "product core",
+      "platform core"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "The standard, shared codebase of a white-label product that every client instance is built from. The product team owns it, improves it in releases, and keeps it free of single-client changes so that every client can upgrade.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which Oyelabs products have a core product, who owns its roadmap, and the rule for when a client request is added to the core (benefiting everyone) rather than built as a custom module.",
+    "example": "A client asks for scheduled orders in a white-label food app. The product team already plans this for the core product next quarter, so the PM offers it then at no extra cost instead of a paid custom module now.",
+    "clientSentence": "The core product is the shared base we keep improving; your app is built on top of it.",
+    "impact": "Changes to the core are typically funded by the product roadmap; client-only changes to the core are discouraged because they block upgrades.",
+    "related": [
+      "client-instance",
+      "product-version",
+      "custom-module",
+      "core-upgrade",
+      "white-label"
+    ],
+    "confusedWith": [
+      "client-instance",
+      "client-fork"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Core product",
+        "url": "https://www.lawinsider.com/dictionary/core-product",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Tenancy models for a multitenant solution",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "product-version",
+    "name": "Product version",
+    "aka": [
+      "core version",
+      "release version"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "The identified release of the core product (e.g. 4.2.0) that a client instance runs. Versions are usually numbered with semantic versioning: major for breaking changes, minor for new features, patch for fixes.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How Oyelabs numbers core-product versions, how long older versions are supported, and how the version each client runs is recorded.",
+    "example": "Two white-label clients report the same bug. The PM checks: one runs core 3.8, the other 4.1, where it is already fixed, so only the first needs an upgrade or a backported patch.",
+    "clientSentence": "Your app runs a specific version of our product; newer versions bring fixes and features.",
+    "impact": "Clients on old versions typically cost more to support; supporting several versions in parallel multiplies effort.",
+    "related": [
+      "core-product",
+      "core-upgrade",
+      "version-sync",
+      "version",
+      "release"
+    ],
+    "confusedWith": [
+      "version",
+      "release"
+    ],
+    "sources": [
+      {
+        "label": "Semantic Versioning 2.0.0",
+        "url": "https://semver.org/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "client-instance",
+    "name": "Client instance",
+    "aka": [
+      "instance",
+      "tenant instance",
+      "client deployment"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "One client's running copy of a white-label product: its own branding, configuration, data, domain, apps and accounts. Several instances can share one codebase or one infrastructure, depending on the tenancy model.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether each Oyelabs client gets a separate deployment, database and code branch, and where the instance register (version, URLs, accounts, custom modules) is kept.",
+    "example": "Client A and Client B both run the white-label taxi product. Each has its own admin panel URL, Stripe keys and branded apps, but both instances are built from core 4.0.",
+    "clientSentence": "Your instance is your own copy of the product, with your brand, settings and data.",
+    "impact": "Each instance typically adds hosting, monitoring and upgrade effort; these costs usually drive subscription or support pricing.",
+    "related": [
+      "core-product",
+      "single-tenant",
+      "multi-tenant",
+      "client-fork",
+      "configuration"
+    ],
+    "confusedWith": [
+      "client-fork",
+      "core-product"
+    ],
+    "sources": [
+      {
+        "label": "Microsoft Learn: Tenancy models for a multitenant solution",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Architect multitenant solutions",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "client-fork",
+    "name": "Client fork",
+    "aka": [
+      "fork",
+      "client branch"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "A copy of the core product's codebase that is changed for one client and evolves separately. Forks make one-off changes easy, but every core upgrade must then be merged by hand, so forks tend to fall behind.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs ever forks the core for a client, who approves a fork, and how forked instances are priced and supported for upgrades.",
+    "example": "Two years ago a client's taxi app was forked to add a fleet-leasing workflow. It is now nine versions behind the core, and a security patch takes three days to merge instead of an hour.",
+    "clientSentence": "A fork is a separate copy of the code just for you, which makes future upgrades slower and costlier.",
+    "impact": "Forking is typically cheap at first and expensive later: each core upgrade needs merge, regression testing and often a CR.",
+    "related": [
+      "client-instance",
+      "custom-module",
+      "version-sync",
+      "customisation-merge-conflicts",
+      "core-upgrade"
+    ],
+    "confusedWith": [
+      "client-instance",
+      "custom-module"
+    ],
+    "sources": [
+      {
+        "label": "GitHub Docs: About forks",
+        "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "GitHub Docs: Syncing a fork",
+        "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "single-tenant",
+    "name": "Single-tenant",
+    "aka": [
+      "single tenancy",
+      "dedicated instance"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "An architecture where each client has its own dedicated application stack and database. It gives strong isolation and client-specific scheduling of upgrades, at the cost of higher hosting and operations effort.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs' white-label products are deployed single-tenant, multi-tenant or both, and how the choice affects price, hosting ownership and upgrade timing.",
+    "example": "A healthcare client in the EU insists on its own database in an EU region. The product is deployed single-tenant on the client's own cloud account.",
+    "clientSentence": "Single-tenant means your app runs on its own servers and database, separate from other clients.",
+    "impact": "Typically higher hosting and maintenance cost per client than multi-tenant; upgrades are done instance by instance.",
+    "related": [
+      "multi-tenant",
+      "client-instance",
+      "hosting-account",
+      "core-upgrade"
+    ],
+    "confusedWith": [
+      "multi-tenant"
+    ],
+    "sources": [
+      {
+        "label": "Microsoft Learn: Tenancy models for a multitenant solution",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Single-tenant",
+        "url": "https://www.lawinsider.com/dictionary/single-tenant",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "multi-tenant",
+    "name": "Multi-tenant",
+    "aka": [
+      "multi tenancy",
+      "shared tenancy"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "An architecture where one application deployment serves many clients (tenants), with each client's data logically separated. It is cheaper to run and upgrade, but every tenant gets upgrades at the same time and isolation must be designed carefully.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which Oyelabs products, if any, run multi-tenant, how tenant data is separated, and what that means for client hosting ownership and data-export requests.",
+    "example": "A SaaS appointment-booking product serves 40 salons from one deployment. A new core release reaches every salon the same night; no salon can stay on the old version.",
+    "clientSentence": "Multi-tenant means many businesses share the same system safely, which keeps costs down and updates simple.",
+    "impact": "Typically the lowest running cost per client; client-specific customisations are much harder to support.",
+    "related": [
+      "single-tenant",
+      "client-instance",
+      "subscription-plan",
+      "feature-toggle"
+    ],
+    "confusedWith": [
+      "single-tenant"
+    ],
+    "sources": [
+      {
+        "label": "Microsoft Learn: Architect multitenant solutions",
+        "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/overview",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Multi-tenant",
+        "url": "https://www.lawinsider.com/dictionary/multi-tenant",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "theming",
+    "name": "Theming",
+    "aka": [
+      "theme",
+      "skinning"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Changing the look of an app through a defined set of design tokens (colours, fonts, corner radii, icons, splash screen) without changing its code or layout. A themable product exposes these as settings or a theme file.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which visual elements Oyelabs' products allow to be themed out of the box, which count as configuration, and where theming ends and paid design customisation begins.",
+    "example": "A white-label pharmacy app is themed for a client in Nigeria: primary colour, logo, font and splash screen are changed in the theme file; the checkout layout stays the same.",
+    "clientSentence": "Theming changes the colours, fonts and logo to match your brand without rebuilding the screens.",
+    "impact": "Theming is typically included in the setup fee; layout or flow changes go beyond theming and are typically quoted.",
+    "related": [
+      "rebranding",
+      "brand-kit",
+      "configuration",
+      "customisation"
+    ],
+    "confusedWith": [
+      "rebranding",
+      "customisation"
+    ],
+    "sources": [
+      {
+        "label": "Material Design 3: Customising Material",
+        "url": "https://m3.material.io/foundations/customization",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "rebranding",
+    "name": "Rebranding",
+    "aka": [
+      "re-branding",
+      "brand swap"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "Replacing the maker's identity with the client's throughout a white-label product: app name, icons, splash screen, colours, email and SMS templates, domain, store listings, legal pages and support contacts. Wider than theming.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The standard rebranding checklist for each product, what the client must supply, and which items (e.g. custom illustrations) are outside the standard scope.",
+    "example": "Rebranding a white-label taxi app for a client in Ghana covers the app names, icons, the admin panel logo, ride-receipt emails, SMS sender ID and the terms and privacy pages hosted on the client's domain.",
+    "clientSentence": "Rebranding puts your name and identity everywhere your customers will see it, from the app icon to receipts.",
+    "impact": "Typically part of the setup fee when the brand kit is complete; late or incomplete assets typically delay builds and store submissions.",
+    "related": [
+      "theming",
+      "brand-kit",
+      "white-label",
+      "store-listing-assets"
+    ],
+    "confusedWith": [
+      "theming"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Rebranding",
+        "url": "https://www.lawinsider.com/dictionary/rebranding",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Investopedia: Brand",
+        "url": "https://www.investopedia.com/terms/b/brand.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "brand-kit",
+    "name": "Brand kit",
+    "aka": [
+      "brand assets",
+      "brand guidelines"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "The set of brand assets a client provides for rebranding: logos in the required formats and sizes, colour codes, fonts, app icon, splash artwork, tone of voice and any brand guidelines.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The exact list and formats Oyelabs needs for each product (e.g. vector logo, icon sizes), the deadline relative to kickoff, and whether Oyelabs can create missing assets and at what cost.",
+    "example": "A client sends a 200-pixel JPEG logo. The PM's brand-kit checklist asks for an SVG or a 1024×1024 PNG with transparency, because app icons and store listings need high resolution.",
+    "clientSentence": "Please send your logo, colours and fonts in these formats so we can brand your app correctly.",
+    "impact": "A complete brand kit typically arrives in days; missing or low-quality assets are a common cause of white-label delays. Creating assets is typically design work outside setup.",
+    "related": [
+      "rebranding",
+      "theming",
+      "store-listing-assets",
+      "client-dependency"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Law Insider: Brand guidelines",
+        "url": "https://www.lawinsider.com/dictionary/brand-guidelines",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Investopedia: Brand",
+        "url": "https://www.investopedia.com/terms/b/brand.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "configuration-panel",
+    "name": "Configuration panel",
+    "aka": [
+      "admin settings",
+      "config panel",
+      "settings panel"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "The admin screen where business settings of a product are changed without code: commission rates, currencies, delivery zones, tax rules, notification text, feature on/off switches. Anything changeable here is configuration, not customisation.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which settings each Oyelabs product exposes in its configuration panel, who sets them at launch (Oyelabs or the client), and whether configuration help after go-live is billable.",
+    "example": "A client wants a 12% commission instead of 10%. The PM shows that it is a field in the configuration panel, so it is configured in minutes instead of being logged as a change request.",
+    "clientSentence": "This is a setting you can change yourself in the admin panel, with no development needed.",
+    "impact": "Configuration is typically included in setup; requests the panel cannot handle become customisation and are quoted.",
+    "related": [
+      "configuration",
+      "feature-toggle",
+      "customisation",
+      "client-instance"
+    ],
+    "confusedWith": [
+      "customisation"
+    ],
+    "sources": [
+      {
+        "label": "The Twelve-Factor App: Config",
+        "url": "https://12factor.net/config",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "feature-toggle",
+    "name": "Feature toggle",
+    "aka": [
+      "feature flag",
+      "feature switch"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A switch in the code or configuration that turns a feature on or off without a new release. Used to enable optional modules per client, to roll features out gradually, or to switch off a faulty feature quickly.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which features in Oyelabs' products are toggleable per client, whether turning a toggled feature on is billable, and who may change toggles in production.",
+    "example": "A white-label food app includes a toggle for table reservations. A client in Oman pays for the add-on and the PM requests it be switched on, with no code change and no new store submission.",
+    "clientSentence": "This feature is already built; we can switch it on for you without a new app release.",
+    "impact": "Toggled features are typically priced as add-ons or plan tiers. Every permanent toggle adds testing combinations, so old toggles should be removed.",
+    "related": [
+      "configuration-panel",
+      "subscription-plan",
+      "core-product",
+      "custom-module"
+    ],
+    "confusedWith": [
+      "custom-module"
+    ],
+    "sources": [
+      {
+        "label": "Martin Fowler: Feature Toggles (aka Feature Flags)",
+        "url": "https://martinfowler.com/articles/feature-toggles.html",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "custom-module",
+    "name": "Custom module",
+    "aka": [
+      "client module",
+      "bespoke module",
+      "add-on module"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "Client-specific functionality built on top of a white-label core, ideally as a separate, pluggable module rather than edits to core files, so the core can still be upgraded.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How Oyelabs builds custom modules (plugin, package or branch), how they are estimated and approved (normally as a CR), and who maintains them across core upgrades.",
+    "example": "A client in Saudi Arabia needs integration with a local fleet-tracking API. It is built as a separate Laravel package with its own tests, so upgrading the core to 5.0 needs only a compatibility check.",
+    "clientSentence": "This is extra functionality built just for you, kept separate so your app can still take our product updates.",
+    "impact": "Typically estimated and billed like custom development, plus ongoing upgrade compatibility effort, which is often priced into support.",
+    "related": [
+      "customisation",
+      "core-upgrade",
+      "change-request",
+      "client-fork",
+      "feature-toggle"
+    ],
+    "confusedWith": [
+      "feature-toggle",
+      "configuration-panel",
+      "client-fork"
+    ],
+    "sources": [
+      {
+        "label": "Laravel docs: Package development",
+        "url": "https://laravel.com/docs/packages",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "core-upgrade",
+    "name": "Core upgrade",
+    "aka": [
+      "product upgrade",
+      "platform upgrade"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "Moving a client instance to a newer core-product version, to get fixes, security patches, new features or OS and store compliance updates. Effort depends on how far behind the instance is and how many custom modules it has.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether core upgrades are included in the licence or support plan, how often they are offered, how customised instances are handled, and whether a client may decline an upgrade.",
+    "example": "Apple requires a newer SDK, so all white-label apps need core 4.3. Three clients upgrade in a day; one with a forked checkout needs a week of merging and regression testing, quoted separately.",
+    "clientSentence": "An upgrade brings your app up to our latest version, with fixes, security updates and new features.",
+    "impact": "Typically included or discounted under a support plan for uncustomised instances; custom modules and forks typically add billable merge and test effort.",
+    "related": [
+      "product-version",
+      "version-sync",
+      "custom-module",
+      "customisation-merge-conflicts",
+      "regression-test"
+    ],
+    "confusedWith": [
+      "version-sync"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Upgrade",
+        "url": "https://www.lawinsider.com/dictionary/upgrade",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Semantic Versioning 2.0.0",
+        "url": "https://semver.org/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "version-sync",
+    "name": "Version sync",
+    "aka": [
+      "upstream sync",
+      "core sync"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "Keeping a client's codebase or instance aligned with the current core-product version by regularly bringing core changes into it. Small, frequent syncs are much cheaper than rare, large ones.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The target sync frequency per client, who tracks how far each instance is behind, and how sync effort is billed when custom modules are affected.",
+    "example": "The PM's instance register shows one client is four minor versions behind. Instead of waiting for a large upgrade, the team syncs one version per month alongside regular support.",
+    "clientSentence": "We regularly bring your app up to date with our main product so it never falls far behind.",
+    "impact": "Regular syncs typically take hours; a sync after a year of drift can take weeks and typically becomes a CR.",
+    "related": [
+      "core-upgrade",
+      "product-version",
+      "client-fork",
+      "customisation-merge-conflicts"
+    ],
+    "confusedWith": [
+      "core-upgrade"
+    ],
+    "sources": [
+      {
+        "label": "GitHub Docs: Syncing a fork",
+        "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "customisation-merge-conflicts",
+    "name": "Customisation merge conflicts",
+    "aka": [
+      "merge conflicts",
+      "upgrade conflicts"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "Conflicts that arise when a core upgrade changes the same code that was customised for a client, so the changes cannot be combined automatically and must be resolved and re-tested by a developer.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How Oyelabs estimates and bills conflict resolution during upgrades, and the rule for how client customisations should be built to avoid them.",
+    "example": "A client's custom checkout edits core payment files. When core 5.0 rewrites payments, 40 files conflict and the upgrade turns into a two-week CR instead of a one-day sync.",
+    "clientSentence": "Because your app has custom changes in areas we've since updated, combining them needs extra development and testing.",
+    "impact": "Typically billable as upgrade or CR effort; the cost grows with every customisation made inside core files.",
+    "related": [
+      "core-upgrade",
+      "client-fork",
+      "custom-module",
+      "version-sync",
+      "regression"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "GitHub Docs: About merge conflicts",
+        "url": "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/about-merge-conflicts",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "client-owned-accounts",
+    "name": "Client-owned accounts",
+    "aka": [
+      "client accounts",
+      "account ownership"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "The principle that store, hosting, domain, payment and messaging accounts for a client's product are registered in the client's legal name and paid by the client, with the agency added as a user. This keeps the client in control and avoids transfer problems later.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which accounts Oyelabs requires to be client-owned, any exceptions (e.g. temporary agency hosting), the access level Oyelabs needs on each, and the deadline for them before submission.",
+    "example": "A client asks Oyelabs to publish its app under the Oyelabs Apple account 'to save time'. The PM explains that the app must be published from the client's own organisation account, since apps transfer slowly and store rules expect the brand owner as seller.",
+    "clientSentence": "These accounts should be in your company's name so you always own your app, data and payments; we just need access to set them up.",
+    "impact": "Opening accounts is typically quick, but organisation verification can take days to weeks; late accounts are a leading cause of delayed launches.",
+    "related": [
+      "apple-developer-account",
+      "google-play-console",
+      "hosting-account",
+      "domain-ownership",
+      "payment-gateway-account",
+      "messaging-provider-accounts"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Apple Developer Program: Enrol (individuals and organisations)",
+        "url": "https://developer.apple.com/programs/enroll/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Add developer account users and manage permissions",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9844686",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "apple-developer-account",
+    "name": "Apple developer account",
+    "aka": [
+      "Apple Developer Program",
+      "App Store Connect account"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "The paid Apple Developer Program membership needed to publish to the App Store. Businesses enrol as an organisation, which needs a legal entity and a D-U-N-S number and shows the company as the seller; individuals enrol under their personal name. The account holder can invite others with roles such as Admin or App Manager.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] That clients enrol as an organisation in their own legal name, which role Oyelabs needs (e.g. Admin or App Manager), who pays the annual fee, and how far ahead of submission enrolment must start.",
+    "example": "A UAE client starts enrolment in week 1, but its D-U-N-S record lists an old company name. Fixing it takes two weeks, so the PM logs a risk and plans TestFlight testing to continue meanwhile.",
+    "clientSentence": "To publish on the App Store under your company name, you need your own Apple organisation account, and we'll need access to submit on your behalf.",
+    "impact": "Apple charges an annual fee (amount on Apple's site). Organisation enrolment typically takes days to a few weeks, longer if D-U-N-S details need fixing.",
+    "related": [
+      "client-owned-accounts",
+      "bundle-id",
+      "store-listing-assets",
+      "app-review-rejection",
+      "google-play-console"
+    ],
+    "confusedWith": [
+      "google-play-console"
+    ],
+    "sources": [
+      {
+        "label": "Apple Developer Program: Enrol (individuals and organisations)",
+        "url": "https://developer.apple.com/programs/enroll/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Apple Developer Help: Program roles",
+        "url": "https://developer.apple.com/help/account/access/roles",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "google-play-console",
+    "name": "Google Play Console",
+    "aka": [
+      "Play Console",
+      "Google Play developer account"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Google's portal and developer account for publishing Android apps. Organisations register with verified business details; the owner can invite users and grant account-level or app-level permissions, so an agency can release without owning the account.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] That clients register an organisation account in their own name, which permissions Oyelabs needs (e.g. release management for the app), and the verification and testing steps clients must complete before launch.",
+    "example": "A client in Kenya invites the Oyelabs release manager to Play Console with app-level release permissions only, keeping payments and the account owner role with the client.",
+    "clientSentence": "You'll need your own Google Play developer account in your company's name, and you can give us just the permissions we need to publish.",
+    "impact": "Google charges a one-time registration fee (amount on Google's site). Identity and organisation verification typically takes days; new personal accounts may face extra testing requirements.",
+    "related": [
+      "client-owned-accounts",
+      "package-name",
+      "store-listing-assets",
+      "apple-developer-account"
+    ],
+    "confusedWith": [
+      "apple-developer-account"
+    ],
+    "sources": [
+      {
+        "label": "Play Console Help: Add developer account users and manage permissions",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9844686",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Required information to create a developer account",
+        "url": "https://support.google.com/googleplay/android-developer/answer/13628312",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "hosting-account",
+    "name": "Hosting account",
+    "aka": [
+      "cloud account",
+      "server account"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "The cloud or hosting provider account (e.g. AWS, Google Cloud, DigitalOcean) where the app's servers, databases and storage run. The account owner pays the bills and controls the infrastructure and data.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs hosts client instances itself or always on client-owned accounts, which provider is standard, who pays usage, and the access Oyelabs keeps after handover.",
+    "example": "A Laravel marketplace runs on an AWS account owned by the client, with an IAM user for Oyelabs. When the support contract ends, the client removes that access with no migration needed.",
+    "clientSentence": "Your app will run on a hosting account in your name, so you always control your servers and data.",
+    "impact": "Hosting cost is typically usage-based and paid by the account owner. Agency-hosted setups typically need a migration and a CR at handover.",
+    "related": [
+      "client-owned-accounts",
+      "domain-ownership",
+      "api-keys",
+      "single-tenant",
+      "handover"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "AWS Account Management reference",
+        "url": "https://docs.aws.amazon.com/accounts/latest/reference/welcome.html",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Hosting account",
+        "url": "https://www.lawinsider.com/dictionary/hosting-account",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "domain-ownership",
+    "name": "Domain ownership",
+    "aka": [
+      "domain registrant",
+      "domain name ownership"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Who is the registered holder (registrant) of the domain name a product uses. The registrant controls DNS, renewal and transfer; registering a client's domain in an agency's name creates lock-in and risk.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] That domains are registered by and in the name of the client, the DNS records Oyelabs needs the client to add, and how domains for staging or demo environments are handled.",
+    "example": "A client's domain was registered by its former freelancer, who no longer replies. Go-live slips while the client recovers it through the registrar, so the PM now confirms domain access at kickoff.",
+    "clientSentence": "The domain should be registered in your company's name so you always keep your web address.",
+    "impact": "Domains are typically a small yearly cost, but recovering a domain in someone else's name can take weeks and block go-live.",
+    "related": [
+      "client-owned-accounts",
+      "hosting-account",
+      "go-live"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "ICANN: Registrants' benefits and responsibilities",
+        "url": "https://www.icann.org/resources/pages/benefits-2013-09-16-en",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Domain name",
+        "url": "https://www.lawinsider.com/dictionary/domain-name",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "payment-gateway-account",
+    "name": "Payment gateway account",
+    "aka": [
+      "merchant account",
+      "Stripe account",
+      "PSP account"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "The client's account with a payment provider (e.g. Stripe, PayPal, Razorpay, a local bank gateway) that receives customer payments into the client's bank account. Marketplaces may need a platform feature such as Stripe Connect to pay out to vendors or drivers.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] That payment accounts are always in the client's legal name, which gateways each product supports out of the box, and that a new gateway integration is a custom module or CR.",
+    "example": "A white-label food app supports Stripe out of the box, but a client in Egypt wants a local gateway. The PM records it in the gap analysis as a custom integration and quotes it before setup.",
+    "clientSentence": "Payments go straight to your own payment account, so you'll need to open one in your company's name.",
+    "impact": "Gateway approval and KYC typically take days to weeks; unsupported gateways typically become billable integrations.",
+    "related": [
+      "client-owned-accounts",
+      "api-keys",
+      "custom-module",
+      "client-dependency"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Stripe Docs: Connect for platforms and marketplaces",
+        "url": "https://docs.stripe.com/connect",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "messaging-provider-accounts",
+    "name": "Messaging provider accounts",
+    "aka": [
+      "SMS provider",
+      "email provider",
+      "push notification account"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Accounts with services that send SMS, email, WhatsApp or push notifications for the app, such as Twilio, SendGrid or Firebase Cloud Messaging. Sender IDs, templates and number registration rules vary by country and can take time to approve.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which messaging providers each product supports, that accounts are client-owned and paid, and who registers sender IDs and templates in the client's country.",
+    "example": "OTP SMS for a white-label app in Saudi Arabia fails at UAT because the sender ID was never registered locally. The PM adds sender-ID registration to the onboarding checklist as a client dependency.",
+    "clientSentence": "Your app's texts, emails and notifications are sent from accounts in your name, which we'll help you set up.",
+    "impact": "Typically usage-based charges paid by the account owner; country sender registration can typically take days to weeks.",
+    "related": [
+      "client-owned-accounts",
+      "api-keys",
+      "client-dependency"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Twilio Docs: Programmable Messaging",
+        "url": "https://www.twilio.com/docs/messaging",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Firebase Cloud Messaging documentation",
+        "url": "https://firebase.google.com/docs/cloud-messaging",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "api-keys",
+    "name": "API keys",
+    "aka": [
+      "credentials",
+      "secret keys",
+      "access keys"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Secret values that let the app call a third-party service (maps, payments, SMS, analytics) on an account's behalf. They should be generated from client-owned accounts, stored in environment configuration rather than code, restricted and rotated when people leave.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How clients share keys securely with Oyelabs (never by email or chat), where keys are stored, who can see production keys, and rotation at handover.",
+    "example": "A client pastes its live Stripe secret key into a group chat. The PM asks them to roll the key in the Stripe dashboard and share the new one through the agreed password manager.",
+    "clientSentence": "These keys connect your app to services like payments and maps; please share them through our secure channel only.",
+    "impact": "Keys cost nothing in themselves, but leaked keys typically lead to fraud or usage bills; restricted keys reduce the damage.",
+    "related": [
+      "client-owned-accounts",
+      "payment-gateway-account",
+      "messaging-provider-accounts",
+      "hosting-account"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Google Cloud: Manage API keys",
+        "url": "https://cloud.google.com/docs/authentication/api-keys",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Stripe Docs: API keys",
+        "url": "https://docs.stripe.com/keys",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "bundle-id",
+    "name": "Bundle ID",
+    "aka": [
+      "bundle identifier",
+      "iOS app ID",
+      "CFBundleIdentifier"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "The unique reverse-domain identifier of an iOS app, such as com.clientname.food. It is registered in the developer account, cannot be changed after the app is published, and must be unique for every white-label client's app.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The bundle-ID naming convention for client apps (normally the client's own domain), who registers it, and the check that it is set before the first TestFlight build.",
+    "example": "A rebranded build is accidentally submitted with the demo app's bundle ID. Because the published ID cannot change, the PM catches it in the go-live checklist and rebuilds with com.clientbrand.taxi.",
+    "clientSentence": "This is your app's permanent technical ID on the App Store, based on your company's domain.",
+    "impact": "No cost, but a wrong bundle ID after publication typically means publishing a new app and losing ratings and reviews.",
+    "related": [
+      "package-name",
+      "apple-developer-account",
+      "store-listing-assets"
+    ],
+    "confusedWith": [
+      "package-name"
+    ],
+    "sources": [
+      {
+        "label": "Apple Developer Documentation: CFBundleIdentifier",
+        "url": "https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "App Store Connect Help: Add a new app",
+        "url": "https://developer.apple.com/help/app-store-connect/create-an-app-record/add-a-new-app",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "package-name",
+    "name": "Package name",
+    "aka": [
+      "application ID",
+      "applicationId"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "The unique identifier of an Android app on Google Play, such as com.clientname.food. It is set in the build configuration, cannot change once the app is published, and must differ for every client's app.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The naming convention for Android package names (normally matching the bundle ID), and who confirms it before the first Play upload.",
+    "example": "The first Play upload of a white-label pharmacy app uses com.oyedemo.pharmacy. The PM spots it in internal testing and fixes it before production, when it would have been locked.",
+    "clientSentence": "This is your app's permanent technical ID on Google Play, matching your company's name.",
+    "impact": "No cost, but a wrong package name after publication typically means a new listing and losing installs and reviews.",
+    "related": [
+      "bundle-id",
+      "google-play-console",
+      "store-listing-assets"
+    ],
+    "confusedWith": [
+      "bundle-id"
+    ],
+    "sources": [
+      {
+        "label": "Play Console Help: Create and set up your app",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9859152",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "store-listing-assets",
+    "name": "Store listing assets",
+    "aka": [
+      "store assets",
+      "ASO assets",
+      "app store metadata"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Everything shown on an app's store page: app name, subtitle or short description, full description, keywords, icon, screenshots in the required sizes, feature graphic, optional preview video, category, support and marketing URLs, and age rating answers.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who writes listing text and creates screenshots (Oyelabs or the client), the sizes and devices covered by default, and the deadline before submission.",
+    "example": "For a white-label salon app, Oyelabs produces screenshots for the required iPhone and Android sizes from the rebranded build, while the client writes the descriptions in English and Arabic.",
+    "clientSentence": "This is everything people see on your app's store page; we'll need your text and approval of the screenshots.",
+    "impact": "Typically a few days of design and copy effort; listings that misrepresent the app or use placeholder content are a common rejection reason.",
+    "related": [
+      "brand-kit",
+      "privacy-policy-url",
+      "app-review-rejection",
+      "bundle-id",
+      "package-name"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "App Store Connect Help: Screenshot specifications",
+        "url": "https://developer.apple.com/help/app-store-connect/reference/screenshot-specifications",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Add preview assets to showcase your app",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9866151",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "privacy-policy-url",
+    "name": "Privacy policy URL",
+    "aka": [
+      "privacy policy link"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "A public web link to the app's privacy policy, required by both Apple and Google, and shown in the store listing and inside the app. It must describe what data the app collects and how it is used, matching the app's actual behaviour and privacy declarations.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who drafts the privacy policy (always the client, as data controller, possibly with its lawyer), where it is hosted (normally the client's domain), and the check that it matches the store privacy declarations.",
+    "example": "An app is rejected because its privacy URL points to the demo product's policy. The client publishes its own policy on its domain, the PM updates the listing and the app's settings screen, and resubmits.",
+    "clientSentence": "Your app needs a public privacy policy on your website, written by you or your lawyer, explaining how you use customer data.",
+    "impact": "Typically quick to fix, but missing or mismatched policies are one of the most common rejection reasons. Drafting it is typically the client's legal cost.",
+    "related": [
+      "store-listing-assets",
+      "app-review-rejection",
+      "client-dependency"
+    ],
+    "confusedWith": [],
+    "sources": [
+      {
+        "label": "Apple: App Review Guidelines (incl. 4.2.6 and 5.1.1)",
+        "url": "https://developer.apple.com/app-store/review/guidelines/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: User Data policy",
+        "url": "https://support.google.com/googleplay/android-developer/answer/10144311",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "app-review-rejection",
+    "name": "App review rejection",
+    "aka": [
+      "store rejection",
+      "App Store rejection",
+      "Play policy rejection"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "When Apple or Google declines to publish an app or update because it breaks a review guideline or policy. Apple cites the guideline number (e.g. 4.2.6 for apps created from a commercialised template or app-generation service, unless submitted by the content provider itself; 5.1.1 for privacy). Google shows the policy issue in Play Console.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How rejection fixes are billed (typically free when caused by the build, billable when caused by client content or business model), who replies to the reviewer, and how 4.2.6 risk is handled by publishing from the client's own account.",
+    "example": "A white-label food app submitted from an agency account is rejected under 4.2.6. The PM moves it to the client's own organisation account, adds client-specific content, and resubmits.",
+    "clientSentence": "The store has asked for changes before approving; here is what they said and our plan to fix it.",
+    "impact": "Each review typically takes from a day to a few days; a rejection loop can add one to two weeks. Fixes are billable or not depending on the cause.",
+    "related": [
+      "resubmission",
+      "apple-developer-account",
+      "privacy-policy-url",
+      "store-listing-assets",
+      "client-owned-accounts"
+    ],
+    "confusedWith": [
+      "resubmission"
+    ],
+    "sources": [
+      {
+        "label": "Apple: App Review Guidelines (incl. 4.2.6 and 5.1.1)",
+        "url": "https://developer.apple.com/app-store/review/guidelines/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Play Console Help: Check your app's policy status",
+        "url": "https://support.google.com/googleplay/android-developer/answer/9842754",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "resubmission",
+    "name": "Resubmission",
+    "aka": [
+      "re-submission",
+      "appeal"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "definition": "Sending an app back for store review after fixing the reasons for a rejection, or replying to or appealing the reviewer's decision when the PM believes the app complies. A good resubmission answers every point raised.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who prepares and sends resubmissions, how the reply to the reviewer is approved, and when an appeal to Apple's App Review Board is used instead of a code change.",
+    "example": "After a rejection for missing demo credentials, the PM adds a working test account in the review notes and replies in App Store Connect; the app is approved the next day.",
+    "clientSentence": "We've fixed what the reviewer asked for and sent the app back; approval usually takes a few days.",
+    "impact": "Typically one to a few days per review cycle. Repeated rejections typically signal a business-model or content issue rather than a code issue.",
+    "related": [
+      "app-review-rejection",
+      "store-listing-assets",
+      "go-live"
+    ],
+    "confusedWith": [
+      "app-review-rejection"
+    ],
+    "sources": [
+      {
+        "label": "Apple Developer: App Review",
+        "url": "https://developer.apple.com/distribute/app-review/",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "App Store Connect Help: Overview of submitting for review",
+        "url": "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/overview-of-submitting-for-review",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": false
+  },
+  {
+    "id": "subscription-plan",
+    "name": "Subscription plan",
+    "aka": [
+      "licence plan",
+      "SaaS plan",
+      "plan tier"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "The recurring fee arrangement for using a white-label or SaaS product, often in tiers (e.g. by number of orders, users, branches or features). It usually covers the licence and some combination of hosting, support and core upgrades.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which plans Oyelabs offers per product, what each includes (hosting, support hours, upgrades, toggled features), the billing cycle, and what happens on non-payment.",
+    "example": "A client on the basic plan of a white-label booking app wants multi-branch support. The account manager shows it is in the next tier, so it is a plan upgrade rather than a CR.",
+    "clientSentence": "Your subscription covers using the product and the services listed in your plan; higher plans unlock more.",
+    "impact": "Typically billed monthly or yearly; amounts and inclusions are commercial terms set in the contract, not by the PM.",
+    "related": [
+      "setup-fee",
+      "feature-toggle",
+      "licence",
+      "support",
+      "renewal"
+    ],
+    "confusedWith": [
+      "setup-fee",
+      "amc"
+    ],
+    "sources": [
+      {
+        "label": "Investopedia: Software as a service (SaaS)",
+        "url": "https://www.investopedia.com/terms/s/software-as-a-service-saas.asp",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      },
+      {
+        "label": "Law Insider: Subscription fee",
+        "url": "https://www.lawinsider.com/dictionary/subscription-fee",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  },
+  {
+    "id": "setup-fee",
+    "name": "Setup fee",
+    "aka": [
+      "onboarding fee",
+      "implementation fee"
+    ],
+    "category": "whitelabel",
+    "projectTypes": [
+      "whitelabel"
+    ],
+    "definition": "A one-off charge for getting a client live on a white-label product: setting up the instance, rebranding, configuration, builds, store submission and training. Customisation and integrations beyond the standard scope are usually quoted on top.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] What the standard setup fee includes for each product, when it is invoiced (e.g. in advance), and which items move it into a separate quote.",
+    "example": "A client's setup fee covers branding, configuring two cities and publishing both apps. A request to add a loyalty-points system is quoted separately as a custom module.",
+    "clientSentence": "The setup fee covers getting your branded product live; anything beyond the standard setup is quoted separately.",
+    "impact": "Typically invoiced in advance or at start; amounts are commercial terms in the contract.",
+    "related": [
+      "subscription-plan",
+      "advance-payment",
+      "rebranding",
+      "configuration"
+    ],
+    "confusedWith": [
+      "subscription-plan"
+    ],
+    "sources": [
+      {
+        "label": "Law Insider: Setup fee",
+        "url": "https://www.lawinsider.com/dictionary/setup-fee",
+        "verifiedAt": "2026-10-02T11:50:00Z"
+      }
+    ],
+    "status": "to-confirm",
+    "contractual": true
+  }
+]

@@ -1,0 +1,764 @@
+[
+  {
+    "id": "cr-form",
+    "name": "Change request form",
+    "purpose": "Describe a requested change, its impact on scope, time and cost, and capture written approval before work starts.",
+    "format": "docx",
+    "stageIds": [
+      "custom-scope-control",
+      "wl-gap-analysis",
+      "wl-configuration"
+    ],
+    "sections": [
+      "CR details (ID, date, requested by, project)",
+      "Description of the change",
+      "Reason and business value",
+      "Classification (CR, enhancement, new feature)",
+      "Impact on scope",
+      "Effort estimate",
+      "Impact on timeline and milestones",
+      "Cost and payment terms",
+      "Assumptions and exclusions",
+      "Risks",
+      "Approval (client and Oyelabs)"
+    ],
+    "example": [
+      [
+        "CR ID",
+        "CR-007"
+      ],
+      [
+        "Project",
+        "Laravel booking platform for a UK clinic group"
+      ],
+      [
+        "Requested by",
+        "Client SPOC (operations manager), 14 March"
+      ],
+      [
+        "Description",
+        "Add SMS appointment reminders 24 hours before each booking, with a link to cancel or reschedule."
+      ],
+      [
+        "Reason",
+        "Reduce no-shows, which the client estimates at 15% of bookings."
+      ],
+      [
+        "Classification",
+        "Change request: reminders were out of scope in the signed SOW (section 4.2)."
+      ],
+      [
+        "Impact on scope",
+        "New scheduled job, SMS template management in admin, cancel/reschedule deep link."
+      ],
+      [
+        "Effort estimate",
+        "Development 5 days, QA 2 days, PM 0.5 day."
+      ],
+      [
+        "Timeline impact",
+        "Milestone 3 moves by one week, from 28 March to 4 April."
+      ],
+      [
+        "Cost",
+        "Fixed price per the agreed rate card, invoiced with milestone 3."
+      ],
+      [
+        "Assumptions",
+        "Client provides a Twilio account and registered sender ID by 20 March."
+      ],
+      [
+        "Approval",
+        "Approved by client sponsor by signed form on 16 March; Oyelabs PM and account manager countersigned."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "mom",
+    "name": "Minutes of meeting",
+    "purpose": "Record attendees, decisions, action items and open points from a meeting, sent soon after it.",
+    "format": "docx",
+    "stageIds": [
+      "custom-client-kickoff",
+      "custom-sprints",
+      "wl-demo-call"
+    ],
+    "sections": [
+      "Meeting details (title, date, time, attendees)",
+      "Agenda",
+      "Discussion summary",
+      "Decisions",
+      "Action items (owner, due date)",
+      "Open questions",
+      "Next meeting"
+    ],
+    "example": [
+      [
+        "Meeting",
+        "Sprint 4 demo – React fitness app"
+      ],
+      [
+        "Date",
+        "Thursday 10 April, 4 pm GST"
+      ],
+      [
+        "Attendees",
+        "Client: product owner, marketing lead. Oyelabs: PM, tech lead, QA."
+      ],
+      [
+        "Summary",
+        "Demoed workout tracking and the subscription paywall. Client liked the flow; asked about Apple Health sync."
+      ],
+      [
+        "Decision",
+        "Apple Health sync is out of scope; PM to raise a CR for estimation."
+      ],
+      [
+        "Decision",
+        "Paywall copy approved as shown."
+      ],
+      [
+        "Action",
+        "Client to send final paywall pricing tiers – marketing lead – 14 April."
+      ],
+      [
+        "Action",
+        "PM to send CR-004 for Apple Health sync – PM – 15 April."
+      ],
+      [
+        "Open question",
+        "Should free-trial length differ by country?"
+      ],
+      [
+        "Next meeting",
+        "Sprint 5 demo, 24 April"
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "status-report-rag",
+    "name": "Status report (RAG)",
+    "purpose": "Weekly one-page report of progress, RAG status, risks, issues and decisions needed, shared with the client and internal stakeholders.",
+    "format": "xlsx",
+    "stageIds": [
+      "custom-sprints",
+      "custom-support",
+      "wl-configuration"
+    ],
+    "sections": [
+      "Project",
+      "Reporting week",
+      "Overall RAG",
+      "Schedule RAG",
+      "Scope RAG",
+      "Budget RAG",
+      "Completed this week",
+      "Planned next week",
+      "Milestones and dates",
+      "Top risks",
+      "Open issues",
+      "Decisions needed from client",
+      "Client dependencies due",
+      "Comments"
+    ],
+    "example": [
+      [
+        "Project",
+        "White-label food-delivery app – UAE client"
+      ],
+      [
+        "Reporting week",
+        "Week 6 (ending 9 May)"
+      ],
+      [
+        "Overall RAG",
+        "Amber"
+      ],
+      [
+        "Schedule RAG",
+        "Amber – Apple organisation enrolment still pending; go-live at risk by about one week."
+      ],
+      [
+        "Scope RAG",
+        "Green"
+      ],
+      [
+        "Budget RAG",
+        "Green"
+      ],
+      [
+        "Completed",
+        "Branding applied to all apps; two cities configured; custom loyalty module 70% done."
+      ],
+      [
+        "Planned next week",
+        "Loyalty module QA; TestFlight build to client."
+      ],
+      [
+        "Top risk",
+        "D-U-N-S details mismatch may delay Apple enrolment (owner: client SPOC)."
+      ],
+      [
+        "Decision needed",
+        "Confirm delivery fee per zone by 13 May."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "kickoff-agenda",
+    "name": "Kickoff agenda",
+    "purpose": "Agenda and checklist for the client kickoff meeting so goals, scope, governance and dependencies are agreed on day one.",
+    "format": "docx",
+    "stageIds": [
+      "custom-internal-kickoff",
+      "custom-client-kickoff"
+    ],
+    "sections": [
+      "Introductions and roles",
+      "Project goals and success criteria",
+      "Scope summary and out-of-scope items",
+      "Timeline and milestones",
+      "Team, RACI and SPOCs",
+      "Communication cadence and tools",
+      "Escalation matrix",
+      "Client dependencies and dates",
+      "Risks and assumptions",
+      "Next steps"
+    ],
+    "example": [
+      [
+        "Project",
+        "Laravel + React marketplace for an Australian retailer"
+      ],
+      [
+        "Duration",
+        "75 minutes, video call"
+      ],
+      [
+        "Goals",
+        "Launch a multi-vendor marketplace with 50 vendors within six months."
+      ],
+      [
+        "Out of scope",
+        "Native mobile apps (phase 2), ERP integration."
+      ],
+      [
+        "Milestones",
+        "Discovery sign-off week 3; design approval week 6; UAT week 18; go-live week 20."
+      ],
+      [
+        "SPOCs",
+        "Client: e-commerce manager. Oyelabs: PM."
+      ],
+      [
+        "Cadence",
+        "Weekly status report on Fridays; sprint demo every second Thursday; shared Slack channel."
+      ],
+      [
+        "Client dependencies",
+        "Payment gateway account by week 4; product catalogue CSV by week 8."
+      ],
+      [
+        "Next steps",
+        "Discovery workshops booked for next Tuesday and Thursday."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "requirement-signoff",
+    "name": "Requirement sign-off",
+    "purpose": "Formal client confirmation that the documented requirements are complete and correct, freezing the scope baseline.",
+    "format": "docx",
+    "stageIds": [
+      "custom-discovery"
+    ],
+    "sections": [
+      "Document reference and version",
+      "Scope summary",
+      "Documents included (BRD/PRD, user stories, designs)",
+      "Out of scope",
+      "Assumptions and dependencies",
+      "Change control statement",
+      "Sign-off (client and Oyelabs)"
+    ],
+    "example": [
+      [
+        "Document",
+        "PRD v1.3 and 64 user stories in the project tracker"
+      ],
+      [
+        "Project",
+        "Laravel school-management system for a client in Kenya"
+      ],
+      [
+        "Scope summary",
+        "Admissions, attendance, fees, exams and parent app."
+      ],
+      [
+        "Out of scope",
+        "Transport tracking and library module."
+      ],
+      [
+        "Assumption",
+        "Client provides existing student data in the agreed CSV format by week 5."
+      ],
+      [
+        "Change control",
+        "Changes after this sign-off go through the change request process."
+      ],
+      [
+        "Signed",
+        "Client sponsor (principal) on 2 June; Oyelabs PM on 2 June."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "uat-signoff",
+    "name": "UAT sign-off",
+    "purpose": "Formal client acceptance that the product passed user acceptance testing and may go live, listing any accepted known issues.",
+    "format": "docx",
+    "stageIds": [
+      "custom-qa-uat",
+      "wl-builds-qa"
+    ],
+    "sections": [
+      "Release and build reference",
+      "UAT period and environment",
+      "Scenarios tested and results",
+      "Open known issues accepted",
+      "Deferred items",
+      "Acceptance statement",
+      "Sign-off (client and Oyelabs)"
+    ],
+    "example": [
+      [
+        "Release",
+        "v1.0.0, build 48, UAT environment"
+      ],
+      [
+        "UAT period",
+        "3–14 July"
+      ],
+      [
+        "Results",
+        "112 scenarios tested; 109 passed; 3 minor issues logged."
+      ],
+      [
+        "Accepted known issue",
+        "Report export takes longer than 10 seconds above 5,000 rows; fix planned in v1.0.1."
+      ],
+      [
+        "Deferred",
+        "Arabic translation review, moved to v1.1 by agreement."
+      ],
+      [
+        "Acceptance",
+        "The client accepts the release as meeting the agreed acceptance criteria for go-live."
+      ],
+      [
+        "Signed",
+        "Client SPOC on 15 July."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "golive-checklist",
+    "name": "Go-live checklist",
+    "purpose": "Step-by-step checklist for go/no-go, cutover, store release, smoke test and rollback, with owners and status.",
+    "format": "xlsx",
+    "stageIds": [
+      "custom-release",
+      "wl-golive"
+    ],
+    "sections": [
+      "#",
+      "Area",
+      "Task",
+      "Owner",
+      "Due",
+      "Status",
+      "Evidence or notes"
+    ],
+    "example": [
+      [
+        "Pre-release",
+        "UAT sign-off received – PM – done"
+      ],
+      [
+        "Accounts",
+        "Production hosting, domain and store accounts in the client's name – Tech lead – done"
+      ],
+      [
+        "Config",
+        "Production keys (payments, SMS, maps) set and tested – Developer – done"
+      ],
+      [
+        "Data",
+        "Database backup taken before deployment – Tech lead – done"
+      ],
+      [
+        "Go/no-go",
+        "Go decision recorded in MoM with client sponsor – PM – done"
+      ],
+      [
+        "Deploy",
+        "Production deployment and migrations – Developer – done"
+      ],
+      [
+        "Smoke test",
+        "Sign-up, booking, payment and notification flows – QA – done"
+      ],
+      [
+        "Stores",
+        "iOS and Android released to the public – Developer – done"
+      ],
+      [
+        "Rollback",
+        "Rollback plan tested on staging; trigger: payment failure rate above agreed threshold – Tech lead – ready"
+      ],
+      [
+        "Comms",
+        "Go-live email sent to client stakeholders – PM – done"
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "hypercare-log",
+    "name": "Hypercare log",
+    "purpose": "Log of every issue reported during hypercare and warranty, with classification, severity, owner and resolution times.",
+    "format": "xlsx",
+    "stageIds": [
+      "custom-hypercare",
+      "wl-golive"
+    ],
+    "sections": [
+      "ID",
+      "Date reported",
+      "Reported by",
+      "Description",
+      "Classification (bug, CR, clarification)",
+      "Severity",
+      "Priority",
+      "Owner",
+      "Status",
+      "Response time",
+      "Resolution time",
+      "Resolution notes"
+    ],
+    "example": [
+      [
+        "ID",
+        "HC-012"
+      ],
+      [
+        "Date",
+        "2 August, 09:40 GST"
+      ],
+      [
+        "Reported by",
+        "Client operations manager"
+      ],
+      [
+        "Description",
+        "Drivers in one zone receive no new-order notifications."
+      ],
+      [
+        "Classification",
+        "Bug under warranty"
+      ],
+      [
+        "Severity / priority",
+        "High / P1"
+      ],
+      [
+        "Owner",
+        "Backend developer"
+      ],
+      [
+        "Status",
+        "Resolved"
+      ],
+      [
+        "Response / resolution",
+        "Responded in 30 minutes; resolved in 4 hours (hotfix approved by tech lead and PM)."
+      ],
+      [
+        "Notes",
+        "Zone ID missing from the notification topic after a configuration change; RCA shared."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "handover-kt-checklist",
+    "name": "Handover & KT checklist",
+    "purpose": "Checklist of code, documentation, credentials, accounts and knowledge-transfer sessions needed for the client to own the product.",
+    "format": "docx",
+    "stageIds": [
+      "custom-handover"
+    ],
+    "sections": [
+      "Source code and repositories",
+      "Documentation (architecture, setup, API, admin guide)",
+      "Credentials and accounts",
+      "Environments and hosting",
+      "Third-party services and licences",
+      "KT sessions (topics, attendees, recordings)",
+      "Open items and known issues",
+      "Access removal plan",
+      "Acceptance"
+    ],
+    "example": [
+      [
+        "Source code",
+        "Repositories transferred to the client's GitHub organisation; final tag v1.2.0."
+      ],
+      [
+        "Documentation",
+        "Architecture overview, local setup guide, API reference and admin manual in the shared drive."
+      ],
+      [
+        "Credentials",
+        "All production credentials moved to the client's password manager; Oyelabs keys rotated."
+      ],
+      [
+        "Hosting",
+        "AWS account owned by the client; Oyelabs IAM users to be removed after support ends."
+      ],
+      [
+        "Third-party",
+        "Stripe, Twilio and Google Maps accounts in the client's name."
+      ],
+      [
+        "KT sessions",
+        "Three recorded sessions with the client's in-house developers: architecture, deployments, admin."
+      ],
+      [
+        "Known issues",
+        "Two minor UI issues listed in the known-issues register."
+      ],
+      [
+        "Acceptance",
+        "Signed by client CTO on 30 September."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "whitelabel-onboarding",
+    "name": "White-label onboarding checklist",
+    "purpose": "Tracks everything a white-label client must provide or set up, from brand kit to accounts and listing content, with owners and dates.",
+    "format": "xlsx",
+    "stageIds": [
+      "wl-brand-kit",
+      "wl-accounts",
+      "wl-configuration",
+      "wl-store-listing"
+    ],
+    "sections": [
+      "#",
+      "Item",
+      "Category (brand, account, content, configuration)",
+      "Owner",
+      "Required by",
+      "Status",
+      "Notes"
+    ],
+    "example": [
+      [
+        "Brand",
+        "Logo as SVG or 1024×1024 PNG with transparency – client – received"
+      ],
+      [
+        "Brand",
+        "Primary and secondary colours (hex) and font – client – received"
+      ],
+      [
+        "Account",
+        "Apple Developer organisation account, Oyelabs invited as Admin – client – pending D-U-N-S"
+      ],
+      [
+        "Account",
+        "Google Play Console, Oyelabs invited with release permissions – client – done"
+      ],
+      [
+        "Account",
+        "Hosting account and domain in the client's name – client – done"
+      ],
+      [
+        "Account",
+        "Payment gateway live keys shared via password manager – client – pending"
+      ],
+      [
+        "Account",
+        "SMS provider with registered sender ID – client – in progress"
+      ],
+      [
+        "Content",
+        "Privacy policy and terms published on the client's domain – client – pending"
+      ],
+      [
+        "Content",
+        "Store descriptions in English and Arabic – client – draft received"
+      ],
+      [
+        "Configuration",
+        "Cities, delivery zones, commission and tax settings confirmed – client SPOC – done"
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "raid-log-template",
+    "name": "RAID log",
+    "purpose": "One register of risks, assumptions, issues and dependencies with owners, ratings, actions and status.",
+    "format": "xlsx",
+    "stageIds": [
+      "custom-bd-handover",
+      "custom-internal-kickoff",
+      "custom-sprints"
+    ],
+    "sections": [
+      "ID",
+      "Type (risk, assumption, issue, dependency)",
+      "Description",
+      "Raised on",
+      "Owner",
+      "Likelihood",
+      "Impact",
+      "Rating",
+      "Response or action",
+      "Due date",
+      "Status",
+      "Last reviewed"
+    ],
+    "example": [
+      [
+        "R-03",
+        "Risk – Apple organisation enrolment may take weeks because the client has no D-U-N-S number. Owner: client SPOC. Likelihood high, impact high. Action: start enrolment in week 1; open."
+      ],
+      [
+        "A-02",
+        "Assumption – Client supplies the product catalogue CSV in the agreed format by week 8. Owner: client SPOC. Validated at kickoff."
+      ],
+      [
+        "I-05",
+        "Issue – Payment gateway sandbox down for two days; checkout testing blocked. Owner: client SPOC. Action: escalated to client sponsor; open."
+      ],
+      [
+        "D-01",
+        "Dependency – Logistics partner API documentation from the client's courier. Owner: PM. Due week 6; received."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "escalation-matrix-template",
+    "name": "Escalation matrix",
+    "purpose": "Who to contact at each escalation level, on both sides, for which kinds of problem and after how long.",
+    "format": "xlsx",
+    "stageIds": [
+      "custom-client-kickoff",
+      "wl-golive"
+    ],
+    "sections": [
+      "Level",
+      "When to escalate (trigger)",
+      "Time at previous level before escalating",
+      "Oyelabs contact (role, name, email, phone)",
+      "Client contact (role, name, email, phone)",
+      "Expected response time",
+      "Channel"
+    ],
+    "example": [
+      [
+        "Level 1",
+        "Day-to-day delivery questions, blockers, delays under a week – PM and client SPOC."
+      ],
+      [
+        "Level 2",
+        "Unresolved after the agreed window, a red RAG, or a P1 issue – delivery head and client operations lead."
+      ],
+      [
+        "Level 3",
+        "Commercial disputes or unresolved level 2 matters – Oyelabs leadership and client founder."
+      ],
+      [
+        "Response times",
+        "Typical values agreed at kickoff and written into this sheet; illustrative only."
+      ],
+      [
+        "Channel",
+        "Email with the project ID in the subject, followed by a call for level 2 and 3."
+      ]
+    ],
+    "status": "to-confirm"
+  },
+  {
+    "id": "closure-report",
+    "name": "Closure report",
+    "purpose": "Summary at project end of what was delivered, how the project performed against plan, open items, lessons learned and next steps.",
+    "format": "docx",
+    "stageIds": [
+      "custom-closure"
+    ],
+    "sections": [
+      "Project summary",
+      "Objectives and outcomes",
+      "Scope delivered vs planned",
+      "Change requests summary",
+      "Schedule and budget performance",
+      "Quality summary (defects, known issues)",
+      "Handover status",
+      "Lessons learned",
+      "Open items and recommendations",
+      "Sign-off"
+    ],
+    "example": [
+      [
+        "Project",
+        "React Native fitness app for a US client, nine months"
+      ],
+      [
+        "Outcome",
+        "Launched on both stores; 10,000 sign-ups in the first month."
+      ],
+      [
+        "Scope",
+        "All 72 signed-off stories delivered; 5 CRs approved and delivered."
+      ],
+      [
+        "Schedule",
+        "Go-live two weeks later than baseline, caused by CR-003 (approved date change)."
+      ],
+      [
+        "Budget",
+        "Within the approved budget including CRs."
+      ],
+      [
+        "Quality",
+        "No P1 issues in hypercare; four minor known issues handed over."
+      ],
+      [
+        "Lessons learned",
+        "Start store-account setup in week 1; consolidate design feedback through one SPOC."
+      ],
+      [
+        "Recommendations",
+        "Phase 2: Apple Health sync and coach dashboard."
+      ],
+      [
+        "Sign-off",
+        "Client sponsor and Oyelabs PM, 12 December."
+      ]
+    ],
+    "status": "to-confirm"
+  }
+]

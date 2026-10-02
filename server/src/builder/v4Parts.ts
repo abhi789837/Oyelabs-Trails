@@ -16,7 +16,40 @@ import type { PriorityPath, StartLevel } from "./priorityPath";
  *
  * AI-found gaps never become an item here; they stay in "Also suggested". Pure: the run calls it
  * and `assertV4Order` checks what it produced.
+ *
+ * **PM (v4.2).** Part 1 is: the diagnostic refresh (when the assessment found gaps); the custom and
+ * white-label lifecycle courses where the assessment found them weak or they are Critical; project
+ * terminology; client meetings; then the other Critical and High priorities by slider. Part 2 is AI;
+ * Part 3 onward is the rest by slider, with the theory course last.
  */
+
+/** v4.2: the PM process courses that open Part 1, in this order. */
+export const PM_LIFECYCLE_SKILL_IDS: readonly string[] = ["pm-proc-custom", "pm-proc-whitelabel"];
+export const PM_TERMS_SKILL_ID = "pm-proc-terms";
+export const PM_MEETINGS_SKILL_ID = "pm-proc-meetings";
+
+/** Weak = the assessment measured the skill at level 3 or below. Unmeasured is not weak. */
+export function isWeak(assessedLevel: number | null | undefined): boolean {
+  return assessedLevel != null && assessedLevel <= 3;
+}
+
+/**
+ * Where a PM priority sits inside Part 1 (0 first), or null when it does not belong in Part 1:
+ * 0 the lifecycle courses (weak or Critical), 1 terminology, 2 client meetings, 3 every other
+ * Critical or High priority.
+ */
+export function pmPart1Rank(skillId: string | null, slider: number, assessedLevel: number | null | undefined): number | null {
+  const weak = isWeak(assessedLevel);
+  if (skillId && PM_LIFECYCLE_SKILL_IDS.includes(skillId) && (slider === 5 || weak)) return 0;
+  if (skillId === PM_TERMS_SKILL_ID && (slider >= 4 || weak)) return 1;
+  if (skillId === PM_MEETINGS_SKILL_ID && (slider >= 4 || weak)) return 2;
+  return slider >= 4 ? 3 : null;
+}
+
+/** The generic PM theory course goes last on a PM path. */
+export function isTheorySkill(skill: Pick<Skill, "id" | "tags"> | null | undefined): boolean {
+  return Boolean(skill && (skill.tags.includes("theory") || skill.id === "pm-foundations-theory"));
+}
 
 export interface PlannedItem {
   gap: ScoredGap;
@@ -25,6 +58,8 @@ export interface PlannedItem {
   startLevel: StartLevel;
   targetSkill: string | null;
   skillId: string | null;
+  /** What the assessment measured for this target (0-5), when it did. */
+  assessedLevel?: number | null;
 }
 
 export interface V4PartsInput {
@@ -45,6 +80,8 @@ export interface V4PartsInput {
    */
   refreshSkill?: Skill | null;
   assessmentFoundGaps?: boolean;
+  /** v4.2: the department; "pm" applies the PM process order. */
+  departmentId?: string;
 }
 
 function synthetic(skill: string, summary: string, severity = 0.6): ScoredGap {
@@ -73,12 +110,20 @@ export function orderV4Parts(input: V4PartsInput): PlannedItem[] {
   const part1: Plan[] = [];
   const part2: Plan[] = [];
   const rest: Plan[] = [];
+  const pm = input.departmentId === "pm";
+  const pmRank = (plan: Plan) => pmPart1Rank(entryFor(plan.target.skill)?.skillId ?? null, entryFor(plan.target.skill)?.slider ?? 0, plan.assessedLevel);
   for (const plan of input.spine.targets) {
     const entry = entryFor(plan.target.skill);
     const skill = skillFor(plan.target.skill);
     if (skill?.isAiSkill) part2.push(plan);
-    else if ((entry?.slider ?? 0) === 5 || ((entry?.slider ?? 0) === 4 && ownTrack(skill))) part1.push(plan);
+    else if (pm ? pmRank(plan) !== null : (entry?.slider ?? 0) === 5 || ((entry?.slider ?? 0) === 4 && ownTrack(skill))) part1.push(plan);
     else rest.push(plan);
+  }
+  if (pm) {
+    // Stable sorts: inside a rank (and inside "the rest") the spine's slider order stands.
+    part1.sort((a, b) => (pmRank(a) ?? 9) - (pmRank(b) ?? 9));
+    const slider = (plan: Plan) => entryFor(plan.target.skill)?.slider ?? 0;
+    rest.sort((a, b) => Number(isTheorySkill(skillFor(a.target.skill))) - Number(isTheorySkill(skillFor(b.target.skill))) || slider(b) - slider(a));
   }
 
   const items: PlannedItem[] = [];
@@ -92,6 +137,7 @@ export function orderV4Parts(input: V4PartsInput): PlannedItem[] {
         startLevel: plan.startLevel,
         targetSkill: plan.target.skill,
         skillId: entryFor(plan.target.skill)?.skillId ?? null,
+        assessedLevel: plan.assessedLevel,
       });
       for (const prerequisite of plan.prerequisites) {
         items.push({ gap: prerequisite, partNumber, partType, startLevel: "beginner", targetSkill: plan.target.skill, skillId: null });
@@ -155,8 +201,18 @@ export function orderV4Parts(input: V4PartsInput): PlannedItem[] {
   return items;
 }
 
+export interface V4OrderCheck {
+  /** "pm" also checks the PM process order. */
+  departmentId?: string;
+  refreshSkillId?: string | null;
+  /** Skills that must come after every other priority (PM: the theory course). */
+  theorySkillIds?: readonly string[];
+  /** AI skill ids (Part 2), so they are not counted as Critical/High missing from Part 1. */
+  aiSkillIds?: readonly string[];
+}
+
 /** What `orderV4Parts` promises, checked after the fact and stored where the admin can see it. */
-export function assertV4Order(items: readonly PlannedItem[], priorities: readonly PriorityEntry[]): string[] {
+export function assertV4Order(items: readonly PlannedItem[], priorities: readonly PriorityEntry[], check: V4OrderCheck = {}): string[] {
   const problems: string[] = [];
   if (items[0]?.partNumber !== 1) problems.push("The path does not open with Part 1");
   const firstTwo = items.findIndex((i) => i.partNumber === 2);
@@ -169,6 +225,32 @@ export function assertV4Order(items: readonly PlannedItem[], priorities: readonl
   for (const item of items) {
     if (item.targetSkill && critical.has(item.targetSkill.toLowerCase()) && item.partNumber > 2) problems.push(`Critical ${item.targetSkill} is after Part 2`);
   }
+  if (check.departmentId === "pm") problems.push(...assertPmOrder(items, priorities, check));
+  return problems;
+}
+
+/** The PM order (v4.2): refresh, lifecycle, terminology, meetings, other Critical/High; AI; rest; theory last. */
+function assertPmOrder(items: readonly PlannedItem[], priorities: readonly PriorityEntry[], check: V4OrderCheck): string[] {
+  const problems: string[] = [];
+  const slider = new Map(priorities.map((p) => [p.skillId, p.slider]));
+  const refreshAt = check.refreshSkillId ? items.findIndex((i) => i.skillId === check.refreshSkillId && !i.targetSkill) : -1;
+  if (refreshAt > 0) problems.push("The diagnostic refresh does not open the PM path");
+  const targets = items.filter((i) => i.targetSkill && i.skillId && slider.has(i.skillId) && i.gap.skill === i.targetSkill);
+  const part1 = targets.filter((i) => i.partNumber === 1);
+  const ranks = part1.map((i) => pmPart1Rank(i.skillId, slider.get(i.skillId!) ?? 0, i.assessedLevel));
+  if (ranks.some((r) => r === null)) problems.push("A PM priority below High that the assessment did not find weak is in Part 1");
+  if (ranks.some((r, index) => index > 0 && (r ?? 9) < (ranks[index - 1] ?? 9))) problems.push("PM Part 1 is not lifecycle, terminology, meetings, then the other Critical and High priorities");
+  const ai = new Set(check.aiSkillIds ?? []);
+  for (const item of targets) {
+    if (ai.has(item.skillId!)) continue;
+    const rank = pmPart1Rank(item.skillId, slider.get(item.skillId!) ?? 0, item.assessedLevel);
+    if (rank !== null && item.partNumber !== 1) problems.push(`${item.targetSkill} belongs in Part 1 of a PM path`);
+  }
+  // Theory is last among the rest (Part 3 onward); an admin who made it High keeps it in Part 1.
+  const theory = new Set(check.theorySkillIds ?? []);
+  const later = targets.filter((i) => i.partNumber >= 3);
+  const lastNonTheory = later.reduce((last, item, index) => (theory.has(item.skillId!) ? last : index), -1);
+  if (later.some((item, index) => theory.has(item.skillId!) && index < lastNonTheory)) problems.push("The theory course is not last on the PM path");
   return problems;
 }
 

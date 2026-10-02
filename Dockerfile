@@ -66,6 +66,8 @@ COPY --from=build --chown=node:node /app/server/content ./server/content
 COPY --from=build --chown=node:node /app/server/drizzle ./server/drizzle
 # v4: the validated question bank seed, inserted at boot when absent.
 COPY --from=build --chown=node:node /app/server/bank ./server/bank
+# v4.2: the Process Handbook seed (terms, stages, rules, templates), inserted or refreshed at boot.
+COPY --from=build --chown=node:node /app/server/handbook ./server/handbook
 
 # The mounted volume: SQLite, proctoring snapshots and nightly backups.
 # --chown on each COPY above rather than `chown -R /app` here: a recursive chown rewrites every

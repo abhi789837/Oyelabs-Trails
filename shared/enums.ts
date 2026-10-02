@@ -82,6 +82,10 @@ export const aiPurposeSchema = z.enum([
   "item_generate",
   /** v4.1: checking a generated text MCQ has exactly one right answer. */
   "item_check",
+  /** v4.2: the AI client's reply in a role-play conversation. */
+  "roleplay",
+  /** v4.2: scoring a finished role-play against its rubric. */
+  "roleplay_score",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 
@@ -148,6 +152,8 @@ export const jobTypeSchema = z.enum([
   "assessment.personalise",
   /** v4.1: weekly calibration of the timing formula from real answer times. */
   "timing.calibrate",
+  /** v4.2: re-checks one bank item against a handbook entry that changed. */
+  "bank.revalidate",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 

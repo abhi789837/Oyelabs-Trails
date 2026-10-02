@@ -20,6 +20,10 @@ import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import CoursePage from "@/pages/CoursePage";
 import CoursesPage from "@/pages/CoursesPage";
+import ClassifyPage from "@/features/handbook/ClassifyPage";
+import FlashcardsPage from "@/features/handbook/FlashcardsPage";
+import GlossaryPage from "@/features/handbook/GlossaryPage";
+import RoleplayPracticePage from "@/features/roleplay/RoleplayPracticePage";
 
 /** How often to re-check an assessment the server is still working on. */
 const ASSESSMENT_POLL_MS = 30_000;
@@ -125,6 +129,12 @@ function AnimatedRoutes() {
           <Route path="track/:trackId/topic/:topicId" element={<LegacyTopicRedirect />} />
           <Route path="courses" element={<CoursesPage />} />
           <Route path="courses/:courseId" element={<CoursePage />} />
+          {/* v4.2: the Process Handbook, for every department. */}
+          <Route path="glossary" element={<GlossaryPage />} />
+          <Route path="glossary/practice" element={<FlashcardsPage />} />
+          <Route path="glossary/:termId" element={<GlossaryPage />} />
+          <Route path="tools/classify" element={<ClassifyPage />} />
+          <Route path="practice/roleplay" element={<RoleplayPracticePage />} />
           <Route path="report/:trackId" element={<CertificatePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

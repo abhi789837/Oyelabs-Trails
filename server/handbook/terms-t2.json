@@ -1,0 +1,2033 @@
+[
+  {
+    "aka": [
+      "Discovery phase",
+      "Discovery workshop"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "brd",
+      "prd",
+      "user-story",
+      "estimate",
+      "scope-baseline",
+      "assumption",
+      "wireframe"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "discovery",
+    "name": "Discovery",
+    "definition": "A short, time-boxed phase at the start of a project used to understand the client's business problem, users, constraints and risks before committing to a detailed solution, plan and price. It usually produces documented requirements, early user flows, a technical approach and a refined estimate.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether discovery is a separate paid phase or folded into the first milestone, its usual length for custom and white-label projects, who runs it (PM, BA, architect), and which documents it must produce before design starts.",
+    "example": "Before quoting a Laravel booking platform for a UK physiotherapy chain, the team runs two weeks of workshops, maps the booking, payment and reminder flows, and finds that an existing clinic system must be integrated, which changes the estimate.",
+    "clientSentence": "Discovery is a short phase where we make sure we fully understand your business and users before we design and build anything, so the plan and price are based on facts rather than guesses.",
+    "impact": "Typically 1–4 weeks for a custom project and a few days for a white-label gap call. Often billed as a fixed fee or the first milestone; skipping it usually shows up later as change requests and rework.",
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: How the discovery phase works",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Discovery phase definition",
+        "url": "https://www.lawinsider.com/dictionary/discovery-phase",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "BRD",
+      "Business requirements"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "prd",
+      "discovery",
+      "scope-baseline",
+      "sign-off",
+      "requirement-freeze"
+    ],
+    "confusedWith": [
+      "prd",
+      "user-story"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "brd",
+    "name": "Business requirements document",
+    "definition": "A document that describes what the business needs and why: objectives, business processes, stakeholders, scope, high-level business rules and success measures. It is written from the business's point of view and deliberately says little about how the software will be built.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs produces a BRD, a PRD or both, who writes and signs it, the template to use, and whether client sign-off on it fixes the scope baseline.",
+    "example": "For a fleet-management web app for a client in Saudi Arabia, the BRD records the goal of cutting fuel costs, the dispatcher and driver processes, reporting needs and the rule that only managers can approve trips.",
+    "clientSentence": "The BRD captures what your business needs to achieve and why, in your language, so we agree the goals before we talk about screens and features.",
+    "impact": "Typically produced during discovery. A clear, signed BRD reduces disputes later; changing business goals after sign-off normally comes through a change request.",
+    "sources": [
+      {
+        "label": "Wikipedia: Business requirements",
+        "url": "https://en.wikipedia.org/wiki/Business_requirements",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Business requirements document definition",
+        "url": "https://www.lawinsider.com/dictionary/business-requirements-document",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "PRD",
+      "Functional specification",
+      "FSD"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "brd",
+      "user-story",
+      "acceptance-criteria",
+      "backlog",
+      "scope-baseline",
+      "mvp"
+    ],
+    "confusedWith": [
+      "brd",
+      "user-story"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "prd",
+    "name": "Product requirements document",
+    "definition": "A document that describes what the product must do to meet the business need: features, user flows, functional and non-functional requirements, release scope and success metrics. It turns the business goals into a product definition that design and engineering can work from.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether a PRD or functional specification is a standard Oyelabs deliverable, its required sections, who approves it, and how it links to the backlog and user stories.",
+    "example": "For a React Native grocery app for a client in Kenya, the PRD lists the catalogue, cart, M-Pesa checkout and rider-tracking features, offline behaviour, target devices and the launch scope versus phase 2.",
+    "clientSentence": "The PRD describes exactly what the app will do, feature by feature, so you and our team share one picture of the product before we build it.",
+    "impact": "Typically written during discovery and refined before sprints. Anything not described in the signed PRD is usually treated as out of scope and handled as a change request.",
+    "sources": [
+      {
+        "label": "Atlassian: What is a product requirements document (PRD)?",
+        "url": "https://www.atlassian.com/agile/product-management/requirements",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Product requirements document",
+        "url": "https://en.wikipedia.org/wiki/Product_requirements_document",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Story"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "acceptance-criteria",
+      "definition-of-ready",
+      "backlog",
+      "sprint",
+      "prd"
+    ],
+    "confusedWith": [
+      "prd",
+      "brd"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "user-story",
+    "name": "User story",
+    "definition": "A short description of a piece of functionality from the user's point of view, usually written as 'As a <type of user>, I want <goal> so that <benefit>'. Each story is small enough to build within a sprint and is paired with acceptance criteria that define when it works.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The story format and tool Oyelabs uses (for example Jira), who writes and refines stories, and whether clients review or approve stories before a sprint starts.",
+    "example": "On a Laravel tenancy portal for a UK letting agent: 'As a tenant, I want to report a repair with photos so that the agent can send the right contractor.' It is estimated at 5 points and built in sprint 3.",
+    "clientSentence": "A user story is one small piece of the product described from your user's point of view, so we can build, show and approve it in short steps.",
+    "impact": "Stories drive sprint planning and estimates. Adding new stories after the scope baseline usually counts as a change request or new feature rather than free work.",
+    "sources": [
+      {
+        "label": "Atlassian: User stories with examples and a template",
+        "url": "https://www.atlassian.com/agile/project-management/user-stories",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "GOV.UK Service Manual: Writing user stories",
+        "url": "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "AC",
+      "Given-When-Then"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "user-story",
+      "definition-of-done",
+      "test-case",
+      "uat",
+      "sign-off"
+    ],
+    "confusedWith": [
+      "definition-of-done"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "acceptance-criteria",
+    "name": "Acceptance criteria",
+    "definition": "The specific, testable conditions a user story or feature must meet to be accepted by the client or product owner. They describe observable behaviour, often in a Given–When–Then form, and become the basis of test cases and UAT.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who writes and agrees acceptance criteria (PM, BA or client), the format required, and whether client agreement on criteria is a gate before development of a story starts.",
+    "example": "For a password-reset story on a React web app for an Australian client: given a registered email, when the user requests a reset, a link valid for 30 minutes is sent; an unknown email shows the same neutral message.",
+    "clientSentence": "Acceptance criteria are the checklist we agree in advance, so we both know exactly what 'working' means for each feature.",
+    "impact": "Clear criteria shorten UAT and reduce arguments over whether something is a bug or a change. Work that meets the agreed criteria but not a new expectation is usually a change request.",
+    "sources": [
+      {
+        "label": "Atlassian: What is acceptance criteria?",
+        "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Atlassian: User stories with examples and a template",
+        "url": "https://www.atlassian.com/agile/project-management/user-stories",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "DoR"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "definition-of-done",
+      "user-story",
+      "acceptance-criteria",
+      "sprint",
+      "client-dependency"
+    ],
+    "confusedWith": [
+      "definition-of-done"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "definition-of-ready",
+    "name": "Definition of Ready",
+    "definition": "A team-agreed checklist a backlog item must satisfy before it can be pulled into a sprint, such as a clear story, agreed acceptance criteria, available designs, known dependencies and an estimate. It prevents the team starting work that is still unclear.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The checklist items in Oyelabs' Definition of Ready, for example approved designs, API details and client content, and who checks it during sprint planning.",
+    "example": "A checkout story for a white-label food-delivery app in the UAE is held back from sprint 4 because the client has not yet supplied payment-gateway credentials, one of the Definition of Ready items.",
+    "clientSentence": "Before we start a feature, we check it is fully ready, with designs, details and anything we need from you, so the team doesn't stop half-way.",
+    "impact": "Items that fail the Definition of Ready slip to a later sprint. Repeated client delays in meeting it are a common source of timeline impact and should be logged as client dependencies.",
+    "sources": [
+      {
+        "label": "Atlassian: What is Definition of Ready?",
+        "url": "https://www.atlassian.com/agile/project-management/definition-of-ready",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "DoD"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "definition-of-ready",
+      "acceptance-criteria",
+      "qa",
+      "sprint"
+    ],
+    "confusedWith": [
+      "acceptance-criteria",
+      "definition-of-ready"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "definition-of-done",
+    "name": "Definition of Done",
+    "definition": "A shared, formal description of the quality standard every increment must meet to be considered complete, for example code reviewed, tests passed, deployed to staging and documented. Unlike acceptance criteria, it applies to all work items, not one story.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The items in Oyelabs' standard Definition of Done (code review, QA pass, staging deployment, documentation) and whether it differs between custom and white-label work.",
+    "example": "On a Laravel inventory system for a Dutch wholesaler, a story is only 'done' once it has passed code review, QA on staging, has automated tests and the release note is updated, even though the feature already works locally.",
+    "clientSentence": "Our Definition of Done is the quality bar every feature must pass, tested and reviewed, before we tell you it is finished.",
+    "impact": "A strict Definition of Done adds effort per story but reduces bugs found in UAT and production. Weakening it to hit a date usually creates hidden rework.",
+    "sources": [
+      {
+        "label": "Atlassian: What is the Definition of Done (DoD)?",
+        "url": "https://www.atlassian.com/agile/project-management/definition-of-done",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "The Scrum Guide (scrumguides.org)",
+        "url": "https://scrumguides.org/scrum-guide.html",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Low-fidelity design",
+      "Wireframes"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "mockup",
+      "prototype",
+      "design-approval",
+      "discovery"
+    ],
+    "confusedWith": [
+      "mockup",
+      "prototype"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "wireframe",
+    "name": "Wireframe",
+    "definition": "A simple, usually greyscale layout of a screen showing structure, content blocks and navigation without final visual design. Wireframes are used early to agree flows and information layout cheaply before investing in detailed design.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether wireframes are a standard step before mockups, how many review rounds are included, and the tool used (for example Figma).",
+    "example": "For a React Native clinic app for a client in Qatar, the designer produces greyscale wireframes of booking, profile and history screens; the client moves the booking button to the home screen before any colour work starts.",
+    "clientSentence": "Wireframes are simple sketches of each screen so we can agree the layout and flow quickly, before spending time on colours and styling.",
+    "impact": "Changes at wireframe stage are cheap; the same change after development is typically many times more expensive. Extra review rounds beyond those agreed may be billable.",
+    "sources": [
+      {
+        "label": "Wikipedia: Website wireframe",
+        "url": "https://en.wikipedia.org/wiki/Website_wireframe",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Nielsen Norman Group: UX prototypes, low vs high fidelity",
+        "url": "https://www.nngroup.com/articles/ux-prototype-hi-lo-fidelity/",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "High-fidelity design",
+      "UI design",
+      "Visual design"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "wireframe",
+      "prototype",
+      "design-approval",
+      "brand-kit",
+      "rebranding"
+    ],
+    "confusedWith": [
+      "wireframe",
+      "prototype"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "mockup",
+    "name": "Mockup",
+    "definition": "A static, high-fidelity image of a screen that shows the final visual design: colours, typography, imagery and real-looking content. It shows how the product will look but is not interactive.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How many mockup revision rounds are included in a standard estimate, and how brand-kit changes in white-label projects are handled versus new custom screens.",
+    "example": "For a white-label salon-booking app for a client in Malaysia, the designer applies the client's brand kit to the core screens and shares mockups of home, booking and checkout for approval.",
+    "clientSentence": "Mockups show exactly how your screens will look, with your colours and fonts, so you can approve the look before we build it.",
+    "impact": "Typically 1–3 review rounds are included in an estimate. Late visual changes after design approval can cause rework in development and are usually change requests.",
+    "sources": [
+      {
+        "label": "Wikipedia: Mockup",
+        "url": "https://en.wikipedia.org/wiki/Mockup",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Nielsen Norman Group: UX prototypes, low vs high fidelity",
+        "url": "https://www.nngroup.com/articles/ux-prototype-hi-lo-fidelity/",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Clickable prototype",
+      "Clickable demo"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "wireframe",
+      "mockup",
+      "design-approval",
+      "discovery",
+      "mvp"
+    ],
+    "confusedWith": [
+      "mockup",
+      "mvp"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "prototype",
+    "name": "Prototype",
+    "definition": "An interactive model of the product, from linked wireframes to realistic clickable designs, that lets users try key flows before development. It is used to test ideas and gather feedback; it is not production code.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When a clickable prototype is included (for example only in discovery or larger custom projects), the tool used, and how clearly it is labelled as 'not working software' to clients.",
+    "example": "For an investor demo, a startup in the UK asks for a clickable Figma prototype of its React Native marketplace app; testing it with five users shows the seller onboarding is confusing before any code is written.",
+    "clientSentence": "A prototype is a clickable demo of the key screens so you and your users can try the flow before we build the real app.",
+    "impact": "Typically adds a few days to a few weeks of design time. Clients sometimes mistake a polished prototype for a nearly finished product, so expectations must be set.",
+    "sources": [
+      {
+        "label": "GOV.UK Service Manual: Making prototypes",
+        "url": "https://www.gov.uk/service-manual/design/making-prototypes",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Software prototyping",
+        "url": "https://en.wikipedia.org/wiki/Software_prototyping",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Design sign-off",
+      "UI sign-off"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "mockup",
+      "wireframe",
+      "sign-off",
+      "change-request",
+      "milestone"
+    ],
+    "confusedWith": [
+      "sign-off"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "design-approval",
+    "name": "Design approval",
+    "definition": "The formal, recorded confirmation from the client that the designs (wireframes, mockups or prototype) are accepted as the basis for development. After approval, design changes are normally managed through change control.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How design approval is recorded (email, sign-off form, Figma comment), who on the client side may approve, the number of review rounds before it, and whether it is a billing milestone.",
+    "example": "On a Laravel e-learning platform for a client in Canada, the client's marketing lead approves the final mockups by email; two weeks later a request to redesign the course page is logged as a change request.",
+    "clientSentence": "Once you approve the designs, we build exactly what you approved, and any later design changes go through a short change-request process.",
+    "impact": "Often a payment milestone in fixed-bid projects. Late or missing approval typically delays development start; changes after approval are usually billable.",
+    "sources": [
+      {
+        "label": "Law Insider: Design approval definition",
+        "url": "https://www.lawinsider.com/dictionary/design-approval",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Design review",
+        "url": "https://en.wikipedia.org/wiki/Design_review",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Sprint zero",
+      "Iteration zero",
+      "Inception sprint"
+    ],
+    "projectTypes": [
+      "custom"
+    ],
+    "related": [
+      "sprint",
+      "environment",
+      "dev-environment",
+      "staging-environment",
+      "backlog",
+      "definition-of-ready"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "sprint-0",
+    "name": "Sprint 0",
+    "definition": "A preparatory iteration before feature development in which the team sets up repositories, environments, CI/CD, architecture, coding standards and the initial backlog. It is not part of the official Scrum framework but is common in agency projects.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs uses a Sprint 0 on custom projects, its typical length, its checklist (repos, environments, CI, architecture decisions) and whether it is billed or shown to the client as a milestone.",
+    "example": "Before sprint 1 of a Laravel and React logistics platform for a client in Germany, Sprint 0 sets up GitHub, dev and staging environments, a deployment pipeline, the database schema and a refined backlog.",
+    "clientSentence": "Sprint 0 is a short setup period where we prepare the technical foundations, so every sprint after it can deliver visible features.",
+    "impact": "Typically 1–2 weeks. Clients see few visible features from it, so explain its purpose up front; skipping it usually slows the first feature sprints.",
+    "sources": [
+      {
+        "label": "Law Insider: Sprint zero definition",
+        "url": "https://www.lawinsider.com/dictionary/sprint-zero",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "The Scrum Guide (scrumguides.org)",
+        "url": "https://scrumguides.org/scrum-guide.html",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Iteration"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "sprint-0",
+      "backlog",
+      "user-story",
+      "definition-of-done",
+      "retrospective"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "sprint",
+    "name": "Sprint",
+    "definition": "A fixed-length period, typically one to four weeks, in which a team builds an agreed set of backlog items into a usable increment. Each sprint has planning, daily coordination, a review or demo and a retrospective.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Oyelabs' standard sprint length, which ceremonies are run with the client (planning, demo), and how sprints map to billing milestones.",
+    "example": "A React Native fitness app for a client in the US runs two-week sprints; every second Friday the PM demos the completed stories on the staging build and agrees the next sprint's priorities.",
+    "clientSentence": "A sprint is a short, fixed period, usually two weeks, at the end of which we show you working features and agree what comes next.",
+    "impact": "Typically 2 weeks in agency work. Changing a sprint's scope mid-sprint usually pushes other items out; extra items need re-prioritising or a change request.",
+    "sources": [
+      {
+        "label": "Atlassian: Scrum sprints",
+        "url": "https://www.atlassian.com/agile/scrum/sprints",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "The Scrum Guide (scrumguides.org)",
+        "url": "https://scrumguides.org/scrum-guide.html",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Software release",
+      "Release candidate"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "version",
+      "build",
+      "deployment",
+      "go-live",
+      "known-issues",
+      "hotfix"
+    ],
+    "confusedWith": [
+      "deployment",
+      "go-live",
+      "build"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "release",
+    "name": "Release",
+    "definition": "A packaged, versioned set of changes that is approved to be made available to users, along with its release notes. A release is the 'what'; deployment is the technical act of installing it, and go-live is the business moment users start relying on it.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How Oyelabs names and plans releases, who approves a release, whether release notes are always sent to clients, and how releases differ for white-label core upgrades.",
+    "example": "Release 1.4.0 of a white-label taxi app for a client in Nigeria bundles three bug fixes and a new promo-code screen; it is tested on staging, approved by the client and then deployed to the stores.",
+    "clientSentence": "A release is a tested bundle of changes we're ready to give your users, and we'll always tell you what is in it.",
+    "impact": "Release frequency affects testing effort and cost; bundling many changes increases risk. Store-based mobile releases typically add review time of a day to several days.",
+    "sources": [
+      {
+        "label": "Atlassian: Software releases",
+        "url": "https://www.atlassian.com/agile/software-development/release",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Release definition",
+        "url": "https://www.lawinsider.com/dictionary/release",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Build artefact",
+      "APK",
+      "IPA",
+      "Binary"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "version",
+      "release",
+      "deployment",
+      "environment",
+      "bundle-id"
+    ],
+    "confusedWith": [
+      "release",
+      "version"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "build",
+    "name": "Build",
+    "definition": "The compiled, runnable output produced from a specific version of the source code, such as an Android APK/AAB, an iOS IPA or a bundled web application. Each build is usually numbered so testers and clients know exactly what they are testing.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How builds are numbered and shared with clients (TestFlight, Firebase App Distribution, staging URL), and who is allowed to trigger a client-facing build.",
+    "example": "QA on a React Native delivery app for a client in Pakistan reports that a bug is fixed in build 57 but still appears in build 56, which the client is still running from TestFlight.",
+    "clientSentence": "A build is a numbered installable copy of the app, so when you test we can be sure we're both looking at exactly the same version.",
+    "impact": "Creating and distributing builds is routine but each mobile store build typically needs signing and upload time. Testing on an old build wastes UAT time.",
+    "sources": [
+      {
+        "label": "Wikipedia: Software build",
+        "url": "https://en.wikipedia.org/wiki/Software_build",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Build definition",
+        "url": "https://www.lawinsider.com/dictionary/build",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Version number",
+      "SemVer"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "build",
+      "release",
+      "patch",
+      "hotfix",
+      "product-version"
+    ],
+    "confusedWith": [
+      "build",
+      "release"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "version",
+    "name": "Version",
+    "definition": "An identifier for a particular state of the software, commonly in Semantic Versioning form MAJOR.MINOR.PATCH, where major means breaking changes, minor means new backwards-compatible features and patch means fixes. Mobile apps also carry a separate internal build number.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The versioning scheme Oyelabs uses for custom apps and for white-label core products, and how a client instance's version maps to the core product version.",
+    "example": "A Laravel API for a client in Ireland moves from 2.3.1 to 2.4.0 when a new reporting endpoint is added, and to 2.4.1 when a date-format bug in it is fixed.",
+    "clientSentence": "The version number tells us exactly which edition of your software is running, so we can track every change and fix.",
+    "impact": "Clear versioning makes support, warranty claims and rollbacks faster. Unclear versions typically slow bug triage.",
+    "sources": [
+      {
+        "label": "Semantic Versioning 2.0.0",
+        "url": "https://semver.org/",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Software versioning",
+        "url": "https://en.wikipedia.org/wiki/Software_versioning",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Emergency fix"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "patch",
+      "critical-issue",
+      "severity",
+      "production-environment",
+      "rca",
+      "warranty"
+    ],
+    "confusedWith": [
+      "patch"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "hotfix",
+    "name": "Hotfix",
+    "definition": "An urgent fix applied directly to production, outside the normal release cycle, to resolve a serious live problem such as an outage, data loss or security hole. It is kept as small as possible and is merged back into the main codebase afterwards.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which severities qualify for a hotfix, who approves it out of hours, the minimum testing required before release, and whether hotfixes after warranty are billed.",
+    "example": "Hours after go-live, a Laravel ticketing site for a client in South Africa double-charges cards. The team ships a one-line hotfix to production that evening, then adds a regression test.",
+    "clientSentence": "A hotfix is an urgent, focused fix we release straight away to stop a serious live problem, outside the normal release schedule.",
+    "impact": "Typically same day for critical issues. Hotfixes bypass some testing, so they carry risk; frequent hotfixes signal quality problems. Billing depends on warranty and support terms.",
+    "sources": [
+      {
+        "label": "Wikipedia: Hotfix",
+        "url": "https://en.wikipedia.org/wiki/Hotfix",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Hotfix definition",
+        "url": "https://www.lawinsider.com/dictionary/hotfix",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Patch release",
+      "Bug-fix release"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "hotfix",
+      "version",
+      "release",
+      "bug",
+      "warranty",
+      "maintenance"
+    ],
+    "confusedWith": [
+      "hotfix"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "patch",
+    "name": "Patch",
+    "definition": "A planned, usually small update that fixes bugs or security issues in an existing version without adding features, often released as a patch version (for example 2.4.1). Unlike a hotfix, it goes through the normal test and release process.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How often patch releases are scheduled for clients in support, and which fixes wait for a patch versus qualify for a hotfix.",
+    "example": "Five minor bugs reported during the first month of a white-label pharmacy app in Kenya are bundled into patch release 1.0.1, tested on staging and submitted to the stores together.",
+    "clientSentence": "A patch is a scheduled update that fixes known problems without changing features, tested through our normal process.",
+    "impact": "Typically bundled every few weeks during support. Bundling fixes into patches is cheaper and safer than many hotfixes.",
+    "sources": [
+      {
+        "label": "Wikipedia: Patch (computing)",
+        "url": "https://en.wikipedia.org/wiki/Patch_(computing)",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Patch definition",
+        "url": "https://www.lawinsider.com/dictionary/patch",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Env",
+      "Server environment"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "dev-environment",
+      "staging-environment",
+      "uat-environment",
+      "production-environment",
+      "deployment",
+      "hosting-account"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "environment",
+    "name": "Environment",
+    "definition": "A separate, configured copy of the system (servers, database, settings, integrations) used for a specific purpose such as development, testing, client acceptance or live use. Keeping environments separate stops unfinished work affecting real users and data.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Oyelabs' standard environment set (for example dev, staging, UAT, production), who owns and pays for hosting each one, and whether it differs for white-label instances.",
+    "example": "A Laravel HR portal for a client in Singapore has dev, staging and production environments; the client tests on staging with dummy data while production holds real employee records.",
+    "clientSentence": "We keep separate copies of your system for building, testing and live use, so testing never touches your real customers or data.",
+    "impact": "Each extra environment typically adds hosting cost and setup time. Who pays for environments, and for how long after go-live, should be agreed up front.",
+    "sources": [
+      {
+        "label": "Wikipedia: Deployment environment",
+        "url": "https://en.wikipedia.org/wiki/Deployment_environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Microsoft Learn: ALM environment strategy",
+        "url": "https://learn.microsoft.com/en-us/power-platform/alm/environment-strategy-alm",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Dev",
+      "Dev environment",
+      "Local environment"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "environment",
+      "staging-environment",
+      "sprint-0"
+    ],
+    "confusedWith": [
+      "staging-environment"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "dev-environment",
+    "name": "Development environment",
+    "definition": "The environment where developers write and integrate code, either on their own machines or on a shared dev server. It changes often, may be unstable and normally uses fake or sample data.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether clients ever get access to the dev environment, and the rule on using real client data there.",
+    "example": "On a React Native travel app for a client in Spain, developers point the app at a shared dev API that is redeployed many times a day, so the client is not given access to it.",
+    "clientSentence": "The development environment is our workshop where code changes constantly, so we show you work on staging instead.",
+    "impact": "Usually low hosting cost. Showing clients the dev environment typically causes confusion and false bug reports.",
+    "sources": [
+      {
+        "label": "Wikipedia: Deployment environment",
+        "url": "https://en.wikipedia.org/wiki/Deployment_environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Development environment definition",
+        "url": "https://www.lawinsider.com/dictionary/development-environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Staging",
+      "Pre-production",
+      "QA environment"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "environment",
+      "uat-environment",
+      "production-environment",
+      "qa",
+      "regression-test"
+    ],
+    "confusedWith": [
+      "uat-environment",
+      "dev-environment"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "staging-environment",
+    "name": "Staging environment",
+    "definition": "An environment that mirrors production as closely as possible, used for internal QA, sprint demos and final checks before release. Code reaches staging only after passing development checks.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether staging and UAT are the same environment at Oyelabs, how long staging is kept after go-live, and who pays for it.",
+    "example": "A white-label grocery app for a client in Oman is deployed to staging with the client's branding and test payment keys, where QA runs the full regression suite before release.",
+    "clientSentence": "Staging is a private copy of your live system where we test every change before it reaches your real users.",
+    "impact": "Typically adds hosting cost similar to a smaller production setup. Differences between staging and production are a common cause of 'it worked in testing' failures.",
+    "sources": [
+      {
+        "label": "Wikipedia: Deployment environment",
+        "url": "https://en.wikipedia.org/wiki/Deployment_environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Staging environment definition",
+        "url": "https://www.lawinsider.com/dictionary/staging-environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "UAT",
+      "Acceptance environment"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "uat",
+      "staging-environment",
+      "environment",
+      "sign-off"
+    ],
+    "confusedWith": [
+      "staging-environment"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "uat-environment",
+    "name": "UAT environment",
+    "definition": "An environment set aside for the client to run user acceptance testing on a stable build, with realistic data and configuration. Some teams use staging for this; others keep a separate UAT environment so internal QA does not disturb client testing.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs provides a separate UAT environment or uses staging, how test data is prepared, and how long the client has access to it.",
+    "example": "For a Laravel claims portal for an insurer in the UK, the client's claims team tests in a dedicated UAT environment for two weeks while developers keep fixing on staging.",
+    "clientSentence": "The UAT environment is where your team tests the finished features in a stable setting before you approve them for go-live.",
+    "impact": "A separate UAT environment typically adds hosting cost but prevents testing clashes. Changing the build mid-UAT usually restarts parts of testing.",
+    "sources": [
+      {
+        "label": "Wikipedia: Deployment environment",
+        "url": "https://en.wikipedia.org/wiki/Deployment_environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: UAT environment definition",
+        "url": "https://www.lawinsider.com/dictionary/uat-environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Production",
+      "Prod",
+      "Live"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "environment",
+      "deployment",
+      "go-live",
+      "hosting-account",
+      "rollback",
+      "hotfix"
+    ],
+    "confusedWith": [
+      "staging-environment"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "production-environment",
+    "name": "Production environment",
+    "definition": "The live environment that real users and real data depend on. Changes reach it only through a controlled deployment, and access is restricted because mistakes affect the business directly.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who owns the production hosting account (client or Oyelabs), who at Oyelabs may deploy to it, and the approval needed for each production change.",
+    "example": "After go-live of a React and Laravel ordering site for a café chain in Australia, every production deployment needs PM approval and is scheduled outside opening hours.",
+    "clientSentence": "Production is your live system that real customers use, so we change it only through careful, approved releases.",
+    "impact": "Production hosting is usually an ongoing client cost. Production incidents drive severity, response-time and warranty obligations.",
+    "sources": [
+      {
+        "label": "Wikipedia: Deployment environment",
+        "url": "https://en.wikipedia.org/wiki/Deployment_environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Production environment definition",
+        "url": "https://www.lawinsider.com/dictionary/production-environment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Deploy"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "release",
+      "go-live",
+      "cutover",
+      "rollback",
+      "environment",
+      "feature-toggle"
+    ],
+    "confusedWith": [
+      "release",
+      "go-live"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "deployment",
+    "name": "Deployment",
+    "definition": "The technical act of installing a build onto an environment, such as staging or production, and making it run. A deployment may happen many times without users noticing, and does not by itself mean the product is live for the business.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who may deploy to each environment, the deployment checklist and window, and how deployments are announced to the client.",
+    "example": "A Laravel booking API for a client in France is deployed to production on Tuesday night with new features hidden behind a feature toggle; the business go-live happens the following Monday.",
+    "clientSentence": "A deployment is us installing a new version on a server; it isn't always the moment your users see changes.",
+    "impact": "Automated deployments are quick and low-risk; manual ones typically take longer and need a rollback plan. Deployments to app stores also depend on store review.",
+    "sources": [
+      {
+        "label": "Atlassian: Continuous integration vs. delivery vs. deployment",
+        "url": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Software deployment",
+        "url": "https://en.wikipedia.org/wiki/Software_deployment",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Cutover plan",
+      "Switchover"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "go-live",
+      "go-no-go",
+      "rollback",
+      "deployment",
+      "smoke-test"
+    ],
+    "confusedWith": [
+      "go-live",
+      "deployment"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "cutover",
+    "name": "Cutover",
+    "definition": "The planned, step-by-step switch from an old system or state to the new one at go-live, covering data migration, DNS changes, freezes on the old system, checks and the point of no return. It is usually run from a timed cutover plan with named owners.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When a written cutover plan is required, its template, who signs it off, and the typical cutover window agreed with clients.",
+    "example": "Moving a UK retailer from an old PHP shop to a new Laravel platform, the cutover plan freezes orders at 22:00 Saturday, migrates customers and orders, switches DNS and runs smoke tests before reopening.",
+    "clientSentence": "Cutover is the carefully timed switch from your old system to the new one, with a step-by-step plan and a way back if needed.",
+    "impact": "Typically a few hours to a weekend, often outside business hours. Weekend or out-of-hours cutover work may carry extra cost depending on the contract.",
+    "sources": [
+      {
+        "label": "Law Insider: Cutover definition",
+        "url": "https://www.lawinsider.com/dictionary/cutover",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Prepare your production environment to go live",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-to-go-live",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Go/no-go meeting",
+      "Launch readiness review"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "go-live",
+      "cutover",
+      "known-issues",
+      "uat",
+      "sign-off",
+      "rollback"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "go-no-go",
+    "name": "Go/no-go decision",
+    "definition": "A formal checkpoint shortly before go-live where the team and client review readiness criteria (open defects, UAT sign-off, data, infrastructure, support, rollback plan) and decide whether to proceed, delay or proceed with known issues.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The go/no-go checklist, who must attend and decide on each side, how far before go-live it is held, and how the decision is recorded.",
+    "example": "At the go/no-go for a white-label food-delivery app in the UAE, one open payment bug is rated high severity, so the team and client agree a no-go and move launch by four days.",
+    "clientSentence": "The go/no-go meeting is where we check together that everything is ready, and agree whether to launch now or wait.",
+    "impact": "Typically held 1–3 days before go-live. A no-go delays launch but is cheaper than a failed go-live; the reason for delay affects who bears the cost.",
+    "sources": [
+      {
+        "label": "Wikipedia: Launch status check (go/no-go poll)",
+        "url": "https://en.wikipedia.org/wiki/Launch_status_check",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Prepare your production environment to go live",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-to-go-live",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Launch",
+      "Go-live date"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "cutover",
+      "go-no-go",
+      "hypercare",
+      "warranty",
+      "deployment",
+      "release",
+      "milestone"
+    ],
+    "confusedWith": [
+      "deployment",
+      "release",
+      "cutover"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "go-live",
+    "name": "Go-live",
+    "definition": "The business moment when the new system is made available to real users and starts being used for real work. It usually follows UAT sign-off and a go/no-go decision, and often starts the hypercare and warranty periods.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The formal definition of go-live in Oyelabs contracts (production deployment, store approval or first real transaction), and which periods (hypercare, warranty, support) start from it.",
+    "example": "A white-label pharmacy app for a client in Saudi Arabia goes live when both store listings are approved and the first real order is placed; the warranty clock starts that day.",
+    "clientSentence": "Go-live is the day your users start using the new system for real, and our post-launch support starts from then.",
+    "impact": "Often a final or major payment milestone. Warranty is typically 30–90 days from go-live; the go-live date definition matters for billing and support obligations.",
+    "sources": [
+      {
+        "label": "Law Insider: Go-live definition",
+        "url": "https://www.lawinsider.com/dictionary/go-live",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Prepare your production environment to go live",
+        "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-to-go-live",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Roll back",
+      "Revert"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "deployment",
+      "cutover",
+      "go-no-go",
+      "hotfix",
+      "production-environment",
+      "rca"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "rollback",
+    "name": "Rollback",
+    "definition": "Returning a system to its previous known-good version or state after a failed deployment or go-live, by redeploying the earlier build and, where needed, restoring data. A rollback plan should exist and be tested before every significant release.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether a rollback plan is mandatory for every production release, who can decide to roll back, and how data changes are handled.",
+    "example": "After deploying a new search feature to a Laravel property portal in Dubai, response times triple; the team rolls back to the previous release within 20 minutes and investigates on staging.",
+    "clientSentence": "A rollback means putting the previous working version back quickly if a release causes a problem, so your users are protected.",
+    "impact": "Code rollbacks are typically minutes; data rollbacks can take hours and risk data loss. Mobile store builds usually cannot be rolled back, only replaced.",
+    "sources": [
+      {
+        "label": "Law Insider: Rollback definition",
+        "url": "https://www.lawinsider.com/dictionary/rollback",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Microsoft Learn: Safe deployment practices",
+        "url": "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Hypercare period",
+      "Post-go-live support",
+      "Early life support"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "go-live",
+      "warranty",
+      "support",
+      "handover",
+      "response-time",
+      "resolution-time"
+    ],
+    "confusedWith": [
+      "warranty",
+      "support"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "hypercare",
+    "name": "Hypercare",
+    "definition": "A short period of intensive, heightened support immediately after go-live, with the delivery team on hand, faster response targets and close monitoring, until the system is stable enough to move to normal support.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The standard hypercare length, coverage hours, response targets, whether it is included in the project price or billed, and the exit criteria for moving to support or AMC.",
+    "example": "For two weeks after go-live of a Laravel school-fees portal in Kenya, the original developers monitor logs daily and fix issues the same day, then hand over to the support team.",
+    "clientSentence": "Hypercare is a short period right after launch when the build team stays closely on hand to fix anything quickly while things settle.",
+    "impact": "Typically 2–6 weeks after go-live. Often included in the project price; extending it is usually billable. It may overlap with but is not the same as warranty.",
+    "sources": [
+      {
+        "label": "ERP Research glossary: Hypercare",
+        "url": "https://erpresearch.com/glossary/hypercare",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Hypercare period definition",
+        "url": "https://www.lawinsider.com/dictionary/hypercare-period",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Project handover",
+      "Delivery handover"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "knowledge-transfer",
+      "source-code-handover",
+      "closure",
+      "ip-ownership",
+      "client-owned-accounts"
+    ],
+    "confusedWith": [
+      "knowledge-transfer"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "handover",
+    "name": "Handover",
+    "definition": "The formal transfer of the delivered product and everything needed to own and run it, such as source code, credentials, documentation, accounts and environments, from the delivery team to the client or support team, usually confirmed by a signed checklist.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] What the standard handover pack contains, whether source code handover depends on final payment, and who signs the handover checklist.",
+    "example": "At the end of a React Native ride-hailing build for a client in Ghana, the PM hands over the GitHub repo, AWS and store account access, API documentation and admin credentials against a signed checklist.",
+    "clientSentence": "Handover is when we formally give you everything you need to own and run your product: code, access and documents.",
+    "impact": "Typically 1–2 weeks. Often tied to final payment and IP transfer; incomplete handover creates disputes and delays support.",
+    "sources": [
+      {
+        "label": "Law Insider: Handover definition",
+        "url": "https://www.lawinsider.com/dictionary/handover",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "OpenClassrooms: Close a project",
+        "url": "https://openclassrooms.com/en/courses/4849646-project-management-101/5175801-close-a-project",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "KT",
+      "KT sessions"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "handover",
+      "closure",
+      "source-code-handover",
+      "support"
+    ],
+    "confusedWith": [
+      "handover"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "knowledge-transfer",
+    "name": "Knowledge transfer",
+    "definition": "Sessions and documents that pass the understanding needed to run, support or extend a system, such as architecture, deployment steps and known quirks, from one team to another. It covers know-how, whereas handover covers assets and access.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How many KT sessions are included, whether they are recorded, who attends, and whether KT to a client's in-house team is billable.",
+    "example": "A Canadian client's new in-house developers attend three recorded KT sessions on the Laravel platform's architecture, deployment pipeline and queue jobs before taking over maintenance.",
+    "clientSentence": "Knowledge transfer is a set of walkthrough sessions so your team understands how the system works and can look after it confidently.",
+    "impact": "Typically a few sessions over 1–2 weeks. Extra or repeated sessions beyond those agreed are often billable.",
+    "sources": [
+      {
+        "label": "Wikipedia: Knowledge transfer",
+        "url": "https://en.wikipedia.org/wiki/Knowledge_transfer",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Knowledge transfer definition",
+        "url": "https://www.lawinsider.com/dictionary/knowledge-transfer",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Closure",
+      "Close-out"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "handover",
+      "knowledge-transfer",
+      "sign-off",
+      "retrospective",
+      "amc",
+      "phase-2"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "closure",
+    "name": "Project closure",
+    "definition": "The final phase that formally ends a project: confirming deliverables are accepted, completing handover, settling invoices, releasing the team, archiving documents and recording lessons learned, often in a closure report.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The closure checklist, who signs the closure report, whether a retrospective with the client is standard, and how the account moves to support or AMC.",
+    "example": "Three months after go-live of a Laravel CRM for a client in Belgium, the PM confirms final payment, archives the project, runs an internal retrospective and moves the client to a support retainer.",
+    "clientSentence": "Project closure is how we formally wrap up: confirm everything is delivered and paid, hand over, and agree how support continues.",
+    "impact": "Typically 1–2 weeks of PM time. Unclosed projects often leak unbilled work; closure is also the natural point to propose support or phase 2.",
+    "sources": [
+      {
+        "label": "OpenClassrooms: Close a project",
+        "url": "https://openclassrooms.com/en/courses/4849646-project-management-101/5175801-close-a-project",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Project closure definition",
+        "url": "https://www.lawinsider.com/dictionary/project-closure",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "delivery"
+  },
+  {
+    "aka": [
+      "Sev",
+      "Impact"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "priority",
+      "p1-p4",
+      "critical-issue",
+      "blocker",
+      "response-time",
+      "resolution-time"
+    ],
+    "confusedWith": [
+      "priority"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "severity",
+    "name": "Severity",
+    "definition": "How much damage a defect or incident causes to the system or business, from total outage or data loss (highest) to cosmetic issues (lowest). Severity describes impact; it is usually set by QA or support, not by how urgently anyone wants it fixed.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Oyelabs' severity levels and their definitions with examples, and who sets severity on a client-reported issue.",
+    "example": "A typo on the about page of a client's Laravel site is low severity; failed card payments on a white-label grocery app are critical severity, even if the client asks for the typo first.",
+    "clientSentence": "Severity tells us how badly an issue affects your system or users, which helps us decide how fast it must be fixed.",
+    "impact": "Severity usually drives response and resolution targets in support terms. Over-rating severity is common and should be challenged politely with evidence.",
+    "sources": [
+      {
+        "label": "Atlassian: Understanding incident severity levels",
+        "url": "https://www.atlassian.com/incident-management/kpis/severity-levels",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Severity level definition",
+        "url": "https://www.lawinsider.com/dictionary/severity-level",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Fix priority"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "severity",
+      "p1-p4",
+      "backlog",
+      "tat"
+    ],
+    "confusedWith": [
+      "severity"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "priority",
+    "name": "Priority",
+    "definition": "How soon an issue should be fixed relative to other work, based on business need, deadlines and severity. Priority is a scheduling decision, often set by the PM or client, and can differ from severity: a minor issue can be high priority before a launch.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Who sets priority on client-reported issues, the priority scale used, and how priority maps to support response and resolution targets.",
+    "example": "A wrong logo on the splash screen of a white-label app is low severity but high priority because store screenshots are being taken tomorrow.",
+    "clientSentence": "Priority is about when we fix something compared with other work, which we agree together based on what matters most to your business.",
+    "impact": "Priority decides sprint and support queue order. Raising one item's priority usually delays others, which should be made visible to the client.",
+    "sources": [
+      {
+        "label": "Atlassian: Understanding incident severity levels",
+        "url": "https://www.atlassian.com/incident-management/kpis/severity-levels",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Priority level definition",
+        "url": "https://www.lawinsider.com/dictionary/priority-level",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "Priority levels"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "severity",
+      "priority",
+      "critical-issue",
+      "response-time",
+      "resolution-time",
+      "sla",
+      "amc"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "p1-p4",
+    "name": "P1–P4 priority levels",
+    "definition": "A common four-level scale for support tickets and incidents: P1 critical (system down or major business stop), P2 high (major function impaired, no workaround), P3 medium (limited impact or workaround exists) and P4 low (cosmetic or minor). Each level usually carries response and resolution targets.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Oyelabs' exact P1–P4 definitions with examples, the response and resolution target for each, the coverage hours, and whether they apply in warranty, AMC or both.",
+    "example": "In the support terms for a Laravel booking platform in the UK, checkout failing for all users is logged as P1, a broken export as P2, a slow report as P3 and a misaligned icon as P4.",
+    "clientSentence": "We classify every issue from P1 to P4 so the most serious problems always get the fastest response.",
+    "impact": "Typical industry targets are P1 response within 1 hour and P4 within a few business days, but values vary by contract. P1 out-of-hours cover is often extra cost.",
+    "sources": [
+      {
+        "label": "Law Insider: Priority 1 definition",
+        "url": "https://www.lawinsider.com/dictionary/priority-1",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Atlassian: Understanding incident severity levels",
+        "url": "https://www.atlassian.com/incident-management/kpis/severity-levels",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Blocking issue",
+      "Impediment",
+      "Showstopper"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "critical-issue",
+      "severity",
+      "client-dependency",
+      "escalation",
+      "dependency"
+    ],
+    "confusedWith": [
+      "critical-issue"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "blocker",
+    "name": "Blocker",
+    "definition": "Anything that stops work or testing from continuing: a defect that prevents further testing or release, or an impediment such as missing client input, access or a third-party outage. In defect tracking, a blocker is usually the highest severity.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] How blockers are logged and escalated, the expected time to raise a blocker with the client, and how client-caused blockers are recorded for timeline impact.",
+    "example": "UAT of a React Native banking-lite app for a client in Egypt stops because login fails on Android; QA marks it a blocker and developers pause other work to fix it.",
+    "clientSentence": "A blocker is something that stops progress completely, so we raise it immediately and agree who needs to act.",
+    "impact": "Unresolved blockers stop the timeline; client-side blockers (missing access, content, credentials) typically shift dates and may justify a change in plan.",
+    "sources": [
+      {
+        "label": "Law Insider: Blocker definition",
+        "url": "https://www.lawinsider.com/dictionary/blocker",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Software bug",
+        "url": "https://en.wikipedia.org/wiki/Software_bug",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Critical defect",
+      "Critical incident",
+      "Sev 1"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "severity",
+      "p1-p4",
+      "blocker",
+      "hotfix",
+      "rca",
+      "escalation"
+    ],
+    "confusedWith": [
+      "blocker"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "critical-issue",
+    "name": "Critical issue",
+    "definition": "A production issue with the highest business impact, such as an outage, data loss or corruption, a security breach or failure of a core revenue flow, with no acceptable workaround. It triggers the fastest response and usually an escalation.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The list of situations Oyelabs treats as critical, who is notified and how (call, WhatsApp, email), out-of-hours cover, and whether an RCA is mandatory.",
+    "example": "A white-label taxi app in Nigeria stops assigning drivers after a map-API key expires; it is treated as critical, the PM calls the client and the fix is live within two hours.",
+    "clientSentence": "A critical issue means your users or business can't operate, so we treat it as our top priority until it's resolved.",
+    "impact": "Typically demands response within an hour and continuous work until a workaround or fix. Often followed by an RCA; the cause decides whether the fix is billable.",
+    "sources": [
+      {
+        "label": "Law Insider: Critical issue definition",
+        "url": "https://www.lawinsider.com/dictionary/critical-issue",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Atlassian: Understanding incident severity levels",
+        "url": "https://www.atlassian.com/incident-management/kpis/severity-levels",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "TAT"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "response-time",
+      "resolution-time",
+      "sla",
+      "priority"
+    ],
+    "confusedWith": [
+      "response-time",
+      "resolution-time"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "tat",
+    "name": "Turnaround time",
+    "definition": "The total elapsed time to complete a request from submission to delivery, for example a support ticket, a change-request estimate or a design revision. In support, TAT is often used loosely for resolution time, so it should always be defined.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which requests Oyelabs commits a TAT for (estimates, support tickets, design revisions), the TAT values, and whether it is measured in business or calendar hours.",
+    "example": "A client in Australia sends a change request on Friday; Oyelabs' quoted estimate turnaround is two business days, so the estimate is due on Tuesday, not Sunday.",
+    "clientSentence": "Turnaround time is how long it takes from your request to our completed response, and we'll always tell you what to expect.",
+    "impact": "Typical TATs are stated in business hours or days. Ambiguity between business and calendar time, or time zones, is a frequent source of client frustration.",
+    "sources": [
+      {
+        "label": "Wikipedia: Turnaround time",
+        "url": "https://en.wikipedia.org/wiki/Turnaround_time",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Turnaround time definition",
+        "url": "https://www.lawinsider.com/dictionary/turnaround-time",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Time to respond",
+      "Time to acknowledge",
+      "MTTA"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "resolution-time",
+      "tat",
+      "p1-p4",
+      "sla",
+      "support"
+    ],
+    "confusedWith": [
+      "resolution-time",
+      "tat"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "response-time",
+    "name": "Response time",
+    "definition": "The time from when an issue is reported to when the support team first acknowledges it and starts working on it. It does not mean the issue is fixed; that is resolution time.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Response targets for each priority level, the channels that count as reporting, coverage hours and time zone, and whether an automated acknowledgement counts.",
+    "example": "A P2 ticket from a client in Canada arrives at 9:00 their time; a support engineer acknowledges it and asks for screenshots at 10:15, meeting a two-hour response target.",
+    "clientSentence": "Response time is how quickly we acknowledge your issue and start working on it, not how long the fix takes.",
+    "impact": "Typical targets range from under an hour for critical issues to a business day or more for low priority. 24/7 response is usually a premium service.",
+    "sources": [
+      {
+        "label": "Atlassian: Common incident management metrics",
+        "url": "https://www.atlassian.com/incident-management/kpis/common-metrics",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Response time definition",
+        "url": "https://www.lawinsider.com/dictionary/response-time",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Time to resolve",
+      "Fix time",
+      "MTTR"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "response-time",
+      "tat",
+      "p1-p4",
+      "sla",
+      "hotfix",
+      "patch"
+    ],
+    "confusedWith": [
+      "response-time",
+      "tat"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "resolution-time",
+    "name": "Resolution time",
+    "definition": "The time from when an issue is reported to when it is fixed or a workaround restores service. Contracts should state whether the clock pauses while waiting for client information, and whether a workaround counts as resolution.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Resolution targets by priority, whether they are commitments or best-effort targets, clock-pause rules and whether a workaround counts as resolved.",
+    "example": "A broken PDF export (P3) in a Laravel accounting tool for a client in Malta is acknowledged in an hour, paused for a day waiting for sample files, and fixed in the next patch.",
+    "clientSentence": "Resolution time is how long it takes to fix your issue or give you a working alternative, once you've reported it.",
+    "impact": "Typical targets range from hours for critical issues to weeks for low priority. Resolution commitments are costlier than response commitments, so many contracts make them targets only.",
+    "sources": [
+      {
+        "label": "Atlassian: Common incident management metrics",
+        "url": "https://www.atlassian.com/incident-management/kpis/common-metrics",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Resolution time definition",
+        "url": "https://www.lawinsider.com/dictionary/resolution-time",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "RCA",
+      "Postmortem",
+      "5 Whys"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "critical-issue",
+      "hotfix",
+      "known-issues",
+      "retrospective",
+      "warranty"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "rca",
+    "name": "Root cause analysis",
+    "definition": "A structured investigation after a significant incident to find the underlying cause, not just the symptom, and the actions that will stop it happening again. Good RCAs are blameless and end with owned, dated follow-up actions.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Which incidents require an RCA, the RCA template, the deadline for sharing it with the client, and who reviews it before it is sent.",
+    "example": "After an outage of a React and Laravel ticketing site in Ireland, the RCA finds the server disk filled with uncompressed logs; actions include log rotation and a disk-space alert.",
+    "clientSentence": "A root cause analysis explains what really caused the problem and what we're doing so it doesn't happen again.",
+    "impact": "Typically shared within a few business days of a critical incident. The root cause often decides responsibility and whether fix work falls under warranty.",
+    "sources": [
+      {
+        "label": "Atlassian: Incident postmortem process and best practices",
+        "url": "https://www.atlassian.com/incident-management/postmortem",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Google SRE book: Postmortem culture",
+        "url": "https://sre.google/sre-book/postmortem-culture/",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Smoke testing",
+      "Sanity check",
+      "Build verification test"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "regression-test",
+      "qa",
+      "deployment",
+      "cutover",
+      "go-live"
+    ],
+    "confusedWith": [
+      "regression-test"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "smoke-test",
+    "name": "Smoke test",
+    "definition": "A quick, shallow set of checks run on a new build or deployment to confirm the most important functions work at all, such as app opens, login works and main flow completes, before deeper testing or opening to users.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The standard smoke-test checklist after each deployment and go-live, who runs it, and whether the client is asked to run a short smoke test too.",
+    "example": "Right after cutover of a Laravel e-commerce store for a client in Poland, QA runs a 15-minute smoke test: home page, search, add to cart, test payment, order email.",
+    "clientSentence": "A smoke test is a quick check of the key features right after an update, to confirm nothing major is broken.",
+    "impact": "Typically minutes to an hour. Skipping it is a common reason production issues are found by users instead of the team.",
+    "sources": [
+      {
+        "label": "Wikipedia: Smoke testing (software)",
+        "url": "https://en.wikipedia.org/wiki/Smoke_testing_(software)",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Atlassian: The different types of testing in software",
+        "url": "https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Regression test",
+      "Regression suite"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "regression",
+      "smoke-test",
+      "qa",
+      "test-case",
+      "core-upgrade"
+    ],
+    "confusedWith": [
+      "smoke-test",
+      "regression"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "regression-test",
+    "name": "Regression testing",
+    "definition": "Re-testing previously working features after a change to make sure nothing that used to work has broken. It is broader than a smoke test and is often automated so it can be repeated on every release.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] When a full regression is required (each release, core upgrade, hotfix), how much is automated, and how regression effort is estimated in change requests.",
+    "example": "Before a core upgrade of a white-label salon app for a client in Malaysia, QA re-runs the regression suite and finds the client's custom loyalty module no longer awards points.",
+    "clientSentence": "Regression testing means re-checking existing features after a change, to make sure fixing one thing hasn't broken another.",
+    "impact": "A manual regression typically takes days on a large app; automation reduces this. Regression effort should be included in change-request and upgrade estimates.",
+    "sources": [
+      {
+        "label": "Wikipedia: Regression testing",
+        "url": "https://en.wikipedia.org/wiki/Regression_testing",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Atlassian: The different types of testing in software",
+        "url": "https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "TC",
+      "Test scenario"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "acceptance-criteria",
+      "qa",
+      "uat",
+      "regression-test",
+      "smoke-test"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "test-case",
+    "name": "Test case",
+    "definition": "A documented set of preconditions, steps, input data and expected results used to check one specific behaviour. Test cases are usually derived from acceptance criteria and are reused in QA, regression and UAT.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Where test cases are stored, whether they are shared with the client for UAT, and the minimum coverage expected per user story.",
+    "example": "For a refund feature on a Laravel marketplace in the UAE, QA writes test cases for full refund, partial refund, refund after payout and refund on a cancelled order, each with expected results.",
+    "clientSentence": "A test case is a step-by-step check with an expected result, so testing is repeatable and nothing important is missed.",
+    "impact": "Writing test cases typically adds QA effort per story but cuts UAT time and repeat bugs. Sharing them with clients often speeds up UAT.",
+    "sources": [
+      {
+        "label": "Wikipedia: Test case (software)",
+        "url": "https://en.wikipedia.org/wiki/Test_case_(software)",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: Test case definition",
+        "url": "https://www.lawinsider.com/dictionary/test-case",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "QA",
+      "Testing",
+      "Internal testing"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "uat",
+      "test-case",
+      "regression-test",
+      "smoke-test",
+      "defect-leakage",
+      "definition-of-done"
+    ],
+    "confusedWith": [
+      "uat"
+    ],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "qa",
+    "name": "Quality assurance",
+    "definition": "The delivery team's own process of preventing and finding defects, from reviews and standards to functional, regression and device testing, before work is shown to the client. QA checks the product against requirements; UAT checks it against the client's business needs.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Oyelabs' QA process, which test types and devices are covered by default, and the QA exit criteria before a build goes to client UAT.",
+    "example": "Before a React Native fitness app for a client in the US goes to UAT, the QA engineer tests every story on three Android and two iOS devices and logs 14 bugs for the sprint.",
+    "clientSentence": "QA is our own testing before you see anything, so that what reaches you is already checked against what we agreed.",
+    "impact": "QA is typically a meaningful share of project effort. Reducing QA to save cost usually moves defects into UAT or production, where they are more expensive.",
+    "sources": [
+      {
+        "label": "Wikipedia: Software quality assurance",
+        "url": "https://en.wikipedia.org/wiki/Software_quality_assurance",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Quality assurance",
+        "url": "https://en.wikipedia.org/wiki/Quality_assurance",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "UAT",
+      "Acceptance testing"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "qa",
+      "uat-environment",
+      "acceptance-criteria",
+      "sign-off",
+      "go-no-go",
+      "change-request",
+      "bug"
+    ],
+    "confusedWith": [
+      "qa"
+    ],
+    "status": "to-confirm",
+    "contractual": true,
+    "id": "uat",
+    "name": "User acceptance testing",
+    "definition": "Testing carried out by the client or their users to confirm the delivered software meets their business needs and the agreed acceptance criteria. Successful UAT normally ends in formal sign-off, which is often a contractual acceptance point.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] The standard UAT window, how client feedback is collected and classified (bug, change request, clarification), what counts as deemed acceptance if the client is silent, and the UAT sign-off form.",
+    "example": "For a Laravel claims portal for a UK insurer, the client's team tests for two weeks; 9 reports are bugs fixed under the project, and 4 are new requests logged as change requests.",
+    "clientSentence": "UAT is when your team tests the product with real scenarios and confirms it does what your business needs before go-live.",
+    "impact": "Typically 1–3 weeks. UAT sign-off is often a payment milestone; late or incomplete UAT is a frequent cause of go-live delay. New requests found in UAT are usually change requests.",
+    "sources": [
+      {
+        "label": "Wikipedia: Acceptance testing",
+        "url": "https://en.wikipedia.org/wiki/Acceptance_testing",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Law Insider: User acceptance testing definition",
+        "url": "https://www.lawinsider.com/dictionary/user-acceptance-testing",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Bug leakage",
+      "Escaped defects"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "qa",
+      "uat",
+      "regression-test",
+      "bug",
+      "rca"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "defect-leakage",
+    "name": "Defect leakage",
+    "definition": "The share of defects that escape one testing stage and are found in a later one, especially defects found by the client in UAT or by users in production. Commonly calculated as defects found later divided by all defects found, as a percentage.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether Oyelabs tracks defect leakage, the stages measured (QA to UAT, UAT to production), the target value and how it is reported to clients or used in reviews.",
+    "example": "On a white-label pharmacy app, QA found 90 bugs and the client found 10 more in UAT, a defect leakage of 10%; the team adds Android tablet tests to the QA checklist.",
+    "clientSentence": "Defect leakage measures how many issues slip past our testing to you, and we use it to keep improving our QA.",
+    "impact": "Lower leakage typically means shorter UAT and fewer warranty fixes. High leakage harms client trust and erodes margin on fixed-bid projects.",
+    "sources": [
+      {
+        "label": "Testsigma: Defect leakage in software testing",
+        "url": "https://testsigma.com/blog/defect-leakage-in-software-testing/",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  },
+  {
+    "aka": [
+      "Known issues list",
+      "Known defects",
+      "Release caveats"
+    ],
+    "projectTypes": [
+      "custom",
+      "whitelabel"
+    ],
+    "related": [
+      "go-no-go",
+      "release",
+      "go-live",
+      "patch",
+      "warranty",
+      "bug"
+    ],
+    "confusedWith": [],
+    "status": "to-confirm",
+    "contractual": false,
+    "id": "known-issues",
+    "name": "Known issues",
+    "definition": "A documented list of defects or limitations that the team and client are aware of and have agreed to release with, each with its impact, workaround and planned fix. It is often attached to release notes or the go/no-go decision.",
+    "oyelabsMeaning": "[Oyelabs SOP – admin to confirm] Whether a known-issues list is mandatory at go-live, who must approve going live with known issues, and whether those issues are fixed under the project or under warranty.",
+    "example": "A Laravel events platform for a client in Spain goes live with two known issues, a slow CSV export and a misaligned label on old Safari, both with workarounds and fixes planned in patch 1.0.1.",
+    "clientSentence": "Known issues are minor problems we've agreed to launch with, each with a workaround and a plan to fix them soon.",
+    "impact": "Agreeing known issues avoids delaying go-live for low-impact defects. Who fixes them, and when, should be written down to avoid billing disputes.",
+    "sources": [
+      {
+        "label": "Law Insider: Known issues definition",
+        "url": "https://www.lawinsider.com/dictionary/known-issues",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      },
+      {
+        "label": "Wikipedia: Release notes",
+        "url": "https://en.wikipedia.org/wiki/Release_notes",
+        "verifiedAt": "2026-10-02T11:52:00Z"
+      }
+    ],
+    "category": "quality"
+  }
+]

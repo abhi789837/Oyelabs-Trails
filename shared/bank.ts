@@ -83,6 +83,11 @@ export const bankItemSchema = z
     task: taskSchema.nullable().default(null),
     /** v4.1: context themes for personalised reuse ("international clients", "Laravel"). */
     tags: z.array(z.string().max(40)).max(12).optional(),
+    /**
+     * v4.2: handbook entries the item's answer depends on, as `kind:id` (e.g. `term:change-request`).
+     * When an admin changes one, the item drops to draft until it is re-checked.
+     */
+    handbookRefs: z.array(z.string().regex(/^(term|stage|rule|template):[a-z0-9]+(?:-[a-z0-9]+)*$/)).max(8).optional(),
   })
   .superRefine((item, ctx) => {
     if (item.type === "coding" && !item.coding) ctx.addIssue({ code: "custom", message: "coding item needs `coding`" });

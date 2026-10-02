@@ -1,4 +1,5 @@
 import {
+  BookMarked,
   BookOpen,
   ClipboardList,
   Building2,
@@ -80,6 +81,7 @@ const groups: SectionGroup[] = [
       { to: "/admin/question-bank", end: false, label: "Question bank", icon: ListChecks },
       { to: "/admin/courses", end: false, label: "Courses", icon: BookOpen },
       { to: "/admin/sop", end: false, label: "Company SOPs", icon: ClipboardList },
+      { to: "/admin/handbook", end: false, label: "Handbook", icon: BookMarked },
       { to: "/admin/generated", end: false, label: "Generated", icon: Sparkles },
     ],
   },

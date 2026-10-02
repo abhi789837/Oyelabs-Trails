@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import type { ItemResponseV4 } from "../../../shared/assessmentV4";
 import { trackBasics } from "../../../shared/catalog";
-import { wordCount, type WriteTask } from "../../../shared/tasks";
+import { combineFormScore, gradeFormChecks, wordCount, type FormTask, type WriteTask } from "../../../shared/tasks";
 import type { AiService } from "../ai/service";
 import { getCatalog } from "../catalog/repo";
 import type { ContentStore } from "../content/store";
@@ -14,6 +14,7 @@ import { notify, staffIds } from "../lib/notify";
 import { publishPlan } from "../plans/repo";
 import type { PolyglotDeps } from "../sandbox/polyglot";
 import { getSetup } from "../setup/repo";
+import { gradeRoleplayItem } from "../roleplay/engine";
 import { computeResult, finalizeItems, itemsOf, keyOf } from "./v4";
 
 export interface EvaluateV4Deps extends PolyglotDeps {
@@ -77,6 +78,65 @@ export async function gradeWritten(ai: AiService, task: WriteTask, text: string,
   return { score: max ? Math.round((total / max) * over * 1000) / 1000 : 0, feedback: result.data.feedback };
 }
 
+const FORM_LENS: Record<FormTask["variant"], string> = {
+  cr: "Lens: a change request. Judge whether the scope, the impact on time and cost, the assumptions and the approval needed are clear and follow from the client's email.",
+  mom: "Lens: minutes of a meeting. Judge whether the decisions, the action items (each with an owner and a date) and the open questions are captured from the transcript, without padding.",
+  status: "Lens: a status report from board data. Judge whether progress, risks and next steps are accurate to the data, the RAG reasoning is sound and the client could act on it.",
+  template: "Lens: a handbook template. Judge whether each section is complete, specific to the context and usable as written.",
+};
+
+/**
+ * v4.2: grades the rubric part of a `form` task, next to `gradeWritten`: the same AI task, so the
+ * same model, budget and urgency. The exact checks are graded by code (`gradeFormChecks`) and
+ * weighted in with `combineFormScore`. Returns null when no AI credential is set (the item then
+ * waits for a person, like a written answer).
+ */
+export async function gradeForm(ai: AiService, task: FormTask, values: Record<string, string>, meta: { subjectUserId: string; assessmentId: string }) {
+  if (!ai.isConfigured()) return null;
+  const checks = gradeFormChecks(task, values);
+  const checkScore = checks.checks?.score ?? null;
+  if (!task.fields.some((f) => (values[f.id] ?? "").trim())) return { score: 0, checkScore: 0, rubricScore: 0, feedback: "No answer was given.", lines: checks.detail };
+  const exact = new Set(task.checks.map((c) => c.fieldId));
+  const ids = task.rubric.map((_, i) => `r${i + 1}`);
+  const answerLines = task.fields.map((f) => `${f.label}${exact.has(f.id) ? " [checked]" : ""}: ${(values[f.id] ?? "").slice(0, 1500) || "(blank)"}`);
+  const user = [
+    `Task: ${task.prompt}`,
+    task.context ? `Context:\n${task.context}` : "",
+    FORM_LENS[task.variant],
+    `Rubric:\n${task.rubric.map((r, i) => `- ${ids[i]} (${r.label}, ${r.points} points)${r.description ? `: ${r.description}` : ""}`).join("\n")}`,
+    exact.size ? "Fields marked [checked] are graded separately by exact match; judge them only as part of the whole." : "",
+    `A strong sample, for calibration only (other good answers exist):\n${task.fields.map((f) => `${f.label}: ${(task.sampleAnswer[f.id] ?? "").slice(0, 400)}`).join("\n")}`,
+    `Answer:\n"""\n${answerLines.join("\n").slice(0, 6000)}\n"""`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+  const result = await ai.generateJson({
+    purpose: "grade_written",
+    task: "grade_written",
+    system: RUBRIC_SYSTEM,
+    user,
+    schema: rubricResultSchema,
+    schemaName: "rubric_grade",
+    maxOutputTokens: 400,
+    meta,
+  });
+  let total = 0;
+  let max = 0;
+  task.rubric.forEach((r, i) => {
+    const got = result.data.criteria.find((x) => x.id === ids[i])?.score ?? 0;
+    total += got * r.points;
+    max += 3 * r.points;
+  });
+  const rubricScore = max ? total / max : 0;
+  return {
+    score: combineFormScore(task, checkScore, rubricScore),
+    checkScore,
+    rubricScore: Math.round(rubricScore * 1000) / 1000,
+    feedback: result.data.feedback,
+    lines: checks.detail,
+  };
+}
+
 /** Topic ids for the plan: the modules that teach each prioritised skill, in priority order. */
 function planTopics(content: ContentStore, moduleIds: string[]): string[] {
   const out: string[] = [];
@@ -101,20 +161,60 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
   // 1. Everything still open is submitted with its last draft (Finish, the deadline, or a crash).
   await finalizeItems(deps, assessmentId);
 
-  // 2. Written answers: the rubric, one small call each.
+  // 2. Written answers and forms: the rubric, one small call each.
   let model = "rules";
   for (const item of itemsOf(db, assessmentId)) {
     const key = keyOf(item);
-    if (key.type !== "task" || key.task?.kind !== "write" || item.score != null) continue;
+    if (key.type !== "task" || !key.task || item.score != null) continue;
+    if (key.task.kind !== "write" && key.task.kind !== "form") continue;
     const response = item.response as ItemResponseV4 | null;
-    if (!response || !("task" in response) || response.task.kind !== "write") continue;
+    if (!response || !("task" in response) || response.task.kind !== key.task.kind) continue;
+    const meta = { subjectUserId: assessment.userId, assessmentId };
     try {
-      const graded = await gradeWritten(deps.ai, key.task, response.task.text, { subjectUserId: assessment.userId, assessmentId });
+      if (key.task.kind === "form" && response.task.kind === "form") {
+        const graded = await gradeForm(deps.ai, key.task, response.task.values, meta);
+        if (!graded) continue;
+        model = "rubric";
+        db.update(schema.assessmentItems)
+          .set({ score: graded.score, aiScore: Math.round(graded.rubricScore * 100), aiFeedback: JSON.stringify({ lines: [...graded.lines, graded.feedback] }).slice(0, 2000) })
+          .where(eq(schema.assessmentItems.id, item.id))
+          .run();
+        continue;
+      }
+      if (key.task.kind !== "write" || response.task.kind !== "write") continue;
+      const graded = await gradeWritten(deps.ai, key.task, response.task.text, meta);
       if (!graded) continue;
       model = "rubric";
       db.update(schema.assessmentItems).set({ score: graded.score, aiScore: Math.round(graded.score * 100), aiFeedback: graded.feedback }).where(eq(schema.assessmentItems.id, item.id)).run();
     } catch (error) {
       deps.log?.(`rubric grading failed for ${item.id}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  // 2b. Client role-plays (v4.2): the score of the session the server holds for that item. It is
+  // finished now if the learner never pressed Finish, and scored now if it has not been.
+  for (const item of itemsOf(db, assessmentId)) {
+    const key = keyOf(item);
+    if (key.type !== "task" || key.task?.kind !== "roleplay" || item.score != null) continue;
+    const response = item.response as ItemResponseV4 | null;
+    const answer = response && "task" in response && response.task.kind === "roleplay" ? response.task : null;
+    try {
+      const graded = await gradeRoleplayItem(deps, { assessmentId, itemId: item.id, userId: assessment.userId, followUpEmail: answer?.followUpEmail });
+      // The stored response always reflects the server's transcript, whatever the browser sent.
+      const stored = graded.sessionId
+        ? { task: { kind: "roleplay" as const, sessionId: graded.sessionId, transcript: graded.transcript, ...(graded.followUpEmail ? { followUpEmail: graded.followUpEmail } : {}) } }
+        : response;
+      if (graded.score == null) {
+        db.update(schema.assessmentItems).set({ response: stored }).where(eq(schema.assessmentItems.id, item.id)).run();
+        continue;
+      }
+      model = "rubric";
+      db.update(schema.assessmentItems)
+        .set({ response: stored, score: graded.score, aiScore: Math.round(graded.score * 100), aiFeedback: graded.feedback || null })
+        .where(eq(schema.assessmentItems.id, item.id))
+        .run();
+    } catch (error) {
+      deps.log?.(`roleplay grading failed for ${item.id}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

@@ -163,6 +163,22 @@ export function summariseTaskResponse(task: LearnerTask, response: TaskResponse)
       }
       return lines;
     }
+    case "categorize": {
+      if (task.kind !== "categorize") return Object.entries(response.picks).map(([item, cat]) => `${item}: ${cat}`);
+      const label = new Map(task.categories.map((c) => [c.id, c.label]));
+      return task.items.map((item) => `${item.text} → ${response.picks[item.id] ? (label.get(response.picks[item.id]) ?? response.picks[item.id]) : "no pick"}`);
+    }
+    case "form": {
+      if (task.kind !== "form") return Object.entries(response.values).filter(([, v]) => v.trim()).map(([k, v]) => `${k}: ${v}`);
+      return task.fields.map((field) => `${field.label}: ${response.values[field.id]?.trim() || "blank"}`);
+    }
+    case "roleplay": {
+      const replies = response.transcript.filter((t) => t.role === "pm").length;
+      const lines = [`${replies} repl${replies === 1 ? "y" : "ies"} in the conversation.`];
+      lines.push(...response.transcript.map((t) => `${t.role === "pm" ? "PM" : "Client"}: ${t.text}`));
+      if (response.followUpEmail?.trim()) lines.push(`Follow-up email: ${response.followUpEmail.trim()}`);
+      return lines;
+    }
   }
 }
 
@@ -196,6 +212,17 @@ export function expectedTaskAnswer(task: Task): string[] {
         ...task.rows.filter((r) => r.issue).map((r) => `Flag: ${r.cells.filter(Boolean).slice(0, 2).join(" · ")} — ${r.issue}`),
         ...task.questions.map((q) => `${q.question} → ${q.options[q.correctIndex]}`),
       ];
+    case "categorize": {
+      const label = new Map(task.categories.map((c) => [c.id, c.label]));
+      return task.items.map((item) => `${item.text} → ${label.get(task.answer[item.id]) ?? task.answer[item.id]}`);
+    }
+    case "form":
+      return [
+        ...task.checks.map((c) => `${task.fields.find((f) => f.id === c.fieldId)?.label ?? c.fieldId}: ${c.expected}${c.tolerance ? ` (±${c.tolerance})` : ""}`),
+        ...task.rubric.map((r) => `${r.label} (${r.points} pt)`),
+      ];
+    case "roleplay":
+      return [`Brief: ${task.brief}`, ...task.rubric.map((r) => `${r.label} (${r.points} pt)`)];
   }
 }
 

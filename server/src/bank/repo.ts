@@ -30,7 +30,7 @@ export function bankFolder(): string | null {
 }
 
 /** Stable JSON: keys sorted at every level, so a hash depends on content and not on key order. */
-function stable(value: unknown): string {
+export function stable(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
   if (value && typeof value === "object") {
     return `{${Object.keys(value)
@@ -91,19 +91,44 @@ export function ensureBankSeed(db: Db): number {
   const { items, validated } = loadSeedItems();
   if (items.length === 0) return 0;
   const at = now();
+  // v4.2: an item's handbook refs are stored with the entry versions it was written against, so a
+  // later admin edit to one of those entries can find it and re-check it.
+  const versions = handbookVersions(db);
   let inserted = 0;
   db.transaction((tx) => {
     for (const item of items) {
       const status: BankStatus = validated[item.id] === itemHash(item) ? "active" : "draft";
       const result = tx
         .insert(schema.questionBank)
-        .values({ ...toColumns(item), status, source: "seed", validatedAt: status === "active" ? at : null, createdAt: at, updatedAt: at })
+        .values({
+          ...toColumns(item),
+          handbookRefs: citedRefs(item.handbookRefs, versions),
+          status,
+          source: "seed",
+          validatedAt: status === "active" ? at : null,
+          createdAt: at,
+          updatedAt: at,
+        })
         .onConflictDoNothing()
         .run();
       inserted += result.changes;
     }
   });
   return inserted;
+}
+
+/** `kind:id` → the entry's current version, for every handbook entry in the database. */
+function handbookVersions(db: Db): Map<string, number> {
+  const rows = db.select({ kind: schema.handbookEntries.kind, id: schema.handbookEntries.id, version: schema.handbookEntries.version }).from(schema.handbookEntries).all();
+  return new Map(rows.map((r) => [`${r.kind}:${r.id}`, r.version]));
+}
+
+/** `["term:change-request"]` → `[{ kind: "term", id: "change-request", version }]`. An unknown entry is cited at version 0. */
+export function citedRefs(refs: readonly string[] | undefined, versions: Map<string, number>): { id: string; kind: string; version: number }[] {
+  return (refs ?? []).map((ref) => {
+    const [kind, id] = ref.split(":") as [string, string];
+    return { kind, id, version: versions.get(ref) ?? 0 };
+  });
 }
 
 export function toColumns(item: BankItem) {
@@ -143,6 +168,7 @@ export function fromRow(row: Row): BankItemRow {
     mcq: (row.mcq as BankItem["mcq"]) ?? null,
     task: (row.task as BankItem["task"]) ?? null,
     tags: row.tags ?? [],
+    ...(row.handbookRefs?.length ? { handbookRefs: row.handbookRefs.map((r) => `${r.kind}:${r.id}`) } : {}),
     status: row.status,
     source: row.source,
     timesUsed: row.timesUsed,

@@ -1,4 +1,5 @@
 // v2 curriculum model: tracks are made of modules ("camps"), modules of topics.
+import type { TopicHandbookRefs, TopicInteractive, TopicSection } from "@shared/content";
 import type { Task } from "@shared/tasks";
 
 export type ChallengeType = "code" | "quiz";
@@ -102,6 +103,12 @@ export interface Topic {
    * and email templates). Shown as "[Oyelabs SOP – admin to fill]" blocks until an admin fills them.
    */
   sop?: { title: string; prompt: string }[];
+  /** v4.2: a handbook tool rendered after the summary. */
+  interactive?: TopicInteractive;
+  /** v4.2: structured guide sections after the summary (agenda, script, worked example…). */
+  sections?: TopicSection[];
+  /** v4.2: handbook stages, rules and templates shown live on the topic, by id. */
+  handbook?: TopicHandbookRefs;
 }
 
 export interface Module {

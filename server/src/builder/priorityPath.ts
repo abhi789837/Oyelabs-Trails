@@ -319,3 +319,52 @@ export function fitPrerequisites(path: PriorityPath, weeklyBudgetMinutes: number
 
   return kept;
 }
+
+// ---------------------------------------------------------------------------
+// v4.2: where a course starts, in camps and topics
+// ---------------------------------------------------------------------------
+
+export type TopicLevelBand = "beginner" | "intermediate" | "advanced" | "expert";
+const LEVEL_ORDER: readonly TopicLevelBand[] = ["beginner", "intermediate", "advanced", "expert"];
+
+/** The topic levels a course that starts at `startLevel` teaches: that level and everything above. */
+export function levelsFrom(startLevel: StartLevel): TopicLevelBand[] {
+  return LEVEL_ORDER.slice(LEVEL_ORDER.indexOf(startLevel));
+}
+
+/**
+ * Level-banded camps: each camp has one topic per level band (B/I/A/X), so where the learner starts
+ * decides topics, not camps. Today that is the process academy (`pmp-*`).
+ */
+export function isLevelBandedCamp(moduleId: string): boolean {
+  return moduleId.startsWith("pmp-");
+}
+
+export interface CampSelection {
+  moduleIds: string[];
+  topicIds: string[];
+}
+
+/**
+ * The camps and topics a course attaches, given where it starts.
+ *
+ * **Advanced unlock.** For level-banded camps, a learner who scored level 4 or more on the skill
+ * starts at Advanced: only the advanced and expert topics are attached, and a camp with none of
+ * those (an overview camp of beginner and intermediate topics) is skipped altogether. An
+ * Intermediate start drops the beginner topics the same way. Every camp of the course is attached,
+ * because a process course is the whole lifecycle, not its first two stages.
+ *
+ * Other camps are levels in themselves (`pm-beginner`, `fe-js-core`): the first two attach whole,
+ * as before. If a start level would leave nothing (camps not written yet), the whole course attaches.
+ */
+export function campsFor(modules: readonly { id: string; topics: readonly { id: string; level: string }[] }[], startLevel: StartLevel): CampSelection {
+  const banded = modules.length > 0 && modules.every((m) => isLevelBandedCamp(m.id));
+  if (!banded) {
+    const first = modules.slice(0, 2);
+    return { moduleIds: first.map((m) => m.id), topicIds: first.flatMap((m) => m.topics.map((t) => t.id)) };
+  }
+  const wanted = new Set<string>(levelsFrom(startLevel));
+  const kept = modules.map((m) => ({ id: m.id, topics: m.topics.filter((t) => wanted.has(t.level)) })).filter((m) => m.topics.length > 0);
+  const chosen = kept.length > 0 ? kept : modules;
+  return { moduleIds: chosen.map((m) => m.id), topicIds: chosen.flatMap((m) => m.topics.map((t) => t.id)) };
+}

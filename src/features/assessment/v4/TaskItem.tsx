@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import type { ItemComponentProps } from "./types";
 
 /** A hands-on task (Write, Rank, Calculate, Scenario, Spot) inside the sheet. No answers, ever. */
-export function TaskItem({ item, response, onResponse }: ItemComponentProps<TaskSheetItem>) {
+export function TaskItem({ assessmentId, item, response, onResponse }: ItemComponentProps<TaskSheetItem>) {
   const value = response && "task" in response ? response.task : null;
   return (
     <div className="space-y-4">
@@ -19,6 +19,7 @@ export function TaskItem({ item, response, onResponse }: ItemComponentProps<Task
         readOnly={item.state === "submitted"}
         idPrefix={`item-${item.id}`}
         hidePrompt={item.task.prompt.trim() === item.prompt.trim()}
+        assessment={{ assessmentId, itemId: item.id }}
       />
     </div>
   );

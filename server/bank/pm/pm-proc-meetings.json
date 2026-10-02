@@ -1,0 +1,737 @@
+[
+  {
+    "id": "pm-proc-meetings-t3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A short client chat. You have two messages.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "roleplay",
+      "scenarioId": "scope-creep",
+      "personaId": "startup-founder",
+      "maxTurns": 2,
+      "brief": "Rohan wants loyalty points this sprint, free. Hold the signed scope, offer a change request or a trade-off, and agree a next step.",
+      "rubric": [
+        {
+          "label": "Clarity",
+          "points": 2,
+          "description": "Short, plain messages; the main point comes first; no jargon the client would not know."
+        },
+        {
+          "label": "Correct use of process and terms",
+          "points": 3,
+          "description": "Names the right process (change request, warranty, UAT triage, client-owned accounts) and uses agency terms correctly, explained where needed."
+        },
+        {
+          "label": "Empathy",
+          "points": 2,
+          "description": "Acknowledges the client's situation and feelings; asks about the underlying need before defending a position."
+        },
+        {
+          "label": "A firm and fair scope position",
+          "points": 3,
+          "description": "Holds the signed scope and the rate card without conceding work for free, while offering fair options (phase it, trade off, a CR)."
+        },
+        {
+          "label": "A clear next step",
+          "points": 2,
+          "description": "Ends with a concrete next step: who does what, by when."
+        }
+      ],
+      "followUp": false
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "term:scope-creep",
+      "term:change-request",
+      "term:scope-baseline",
+      "rule:cr-when-needed",
+      "rule:billing-change-request"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t3-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A short client chat. You have two messages.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "roleplay",
+      "scenarioId": "delay-announcement",
+      "personaId": "enterprise-stakeholder",
+      "maxTurns": 2,
+      "brief": "Tell Daniel the UAT release slips a week. Give both causes honestly, the new date and a mitigation, and offer it in writing.",
+      "rubric": [
+        {
+          "label": "Clarity",
+          "points": 2,
+          "description": "Short, plain messages; the main point comes first; no jargon the client would not know."
+        },
+        {
+          "label": "Correct use of process and terms",
+          "points": 3,
+          "description": "Names the right process (change request, warranty, UAT triage, client-owned accounts) and uses agency terms correctly, explained where needed."
+        },
+        {
+          "label": "Empathy",
+          "points": 2,
+          "description": "Acknowledges the client's situation and feelings; asks about the underlying need before defending a position."
+        },
+        {
+          "label": "A firm and fair scope position",
+          "points": 3,
+          "description": "Holds the signed scope and the rate card without conceding work for free, while offering fair options (phase it, trade off, a CR)."
+        },
+        {
+          "label": "A clear next step",
+          "points": 2,
+          "description": "Ends with a concrete next step: who does what, by when."
+        }
+      ],
+      "followUp": false
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "term:client-dependency",
+      "term:regression",
+      "term:raid-log",
+      "term:uat",
+      "rule:weekly-status-report"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t4-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A short client chat. You have two messages.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "roleplay",
+      "scenarioId": "bug-or-cr",
+      "personaId": "startup-founder",
+      "maxTurns": 2,
+      "brief": "The client calls missing SMS reminders a warranty bug. Use the signed acceptance criteria to show why it isn't, and offer a fast change request.",
+      "rubric": [
+        {
+          "label": "Clarity",
+          "points": 2,
+          "description": "Short, plain messages; the main point comes first; no jargon the client would not know."
+        },
+        {
+          "label": "Correct use of process and terms",
+          "points": 3,
+          "description": "Names the right process (change request, warranty, UAT triage, client-owned accounts) and uses agency terms correctly, explained where needed."
+        },
+        {
+          "label": "Empathy",
+          "points": 2,
+          "description": "Acknowledges the client's situation and feelings; asks about the underlying need before defending a position."
+        },
+        {
+          "label": "A firm and fair scope position",
+          "points": 3,
+          "description": "Holds the signed scope and the rate card without conceding work for free, while offering fair options (phase it, trade off, a CR)."
+        },
+        {
+          "label": "A clear next step",
+          "points": 2,
+          "description": "Ends with a concrete next step: who does what, by when."
+        }
+      ],
+      "followUp": false
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "term:bug",
+      "term:change-request",
+      "term:acceptance-criteria",
+      "term:warranty",
+      "rule:warranty-coverage"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Write the minutes from this demo call.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "form",
+      "variant": "mom",
+      "prompt": "Fill both fields.",
+      "context": "PM: Demo done: workout tracking and the paywall.\nProduct owner: Paywall copy approved. Can we add Apple Health sync?\nPM: That's outside the scope. I'll send a CR by 15 April.\nMarketing lead: I'll send the final pricing tiers by 14 April.",
+      "templateId": "mom",
+      "fields": [
+        {
+          "id": "decisions",
+          "label": "Decisions",
+          "input": "textarea",
+          "required": true
+        },
+        {
+          "id": "actions",
+          "label": "Action items (owner, due date)",
+          "input": "textarea",
+          "required": true
+        }
+      ],
+      "checks": [],
+      "rubric": [
+        {
+          "label": "Records both decisions",
+          "points": 2,
+          "description": "Paywall copy approved; Apple Health sync is out of scope and goes through a CR."
+        },
+        {
+          "label": "Each action has an owner and a due date",
+          "points": 2,
+          "description": "PM sends the CR by 15 April; marketing lead sends the pricing tiers by 14 April."
+        }
+      ],
+      "sampleAnswer": {
+        "decisions": "Paywall copy approved as shown. Apple Health sync is out of scope; PM to raise a CR.",
+        "actions": "PM: send the CR for Apple Health sync by 15 April. Marketing lead: send the final pricing tiers by 14 April."
+      }
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "template:mom",
+      "rule:mom-after-every-client-meeting",
+      "term:mom",
+      "term:change-request"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "Order a weekly status meeting agenda the way the status report template runs.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "First item at the top.",
+      "items": [
+        {
+          "id": "a",
+          "label": "Overall RAG status"
+        },
+        {
+          "id": "b",
+          "label": "Completed this week"
+        },
+        {
+          "id": "c",
+          "label": "Planned next week"
+        },
+        {
+          "id": "d",
+          "label": "Top risks and open issues"
+        },
+        {
+          "id": "e",
+          "label": "Decisions needed from the client"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e"
+      ],
+      "explanation": "The template opens with the RAG, then progress and plan, then risks and issues, then the decisions needed."
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "template:status-report-rag",
+      "rule:weekly-status-report",
+      "term:rag-status",
+      "term:status-report"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Order the client kickoff agenda.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "First item at the top.",
+      "items": [
+        {
+          "id": "a",
+          "label": "Introductions and roles"
+        },
+        {
+          "id": "b",
+          "label": "Goals and success criteria"
+        },
+        {
+          "id": "c",
+          "label": "Scope and out-of-scope items"
+        },
+        {
+          "id": "d",
+          "label": "Timeline and milestones"
+        },
+        {
+          "id": "e",
+          "label": "Escalation matrix"
+        },
+        {
+          "id": "f",
+          "label": "Client dependencies and dates"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "explanation": "As in the kickoff agenda template: introductions, goals, scope, timeline, governance (team, cadence, escalation), then client dependencies."
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "template:kickoff-agenda",
+      "stage:custom-client-kickoff",
+      "term:escalation-matrix",
+      "term:client-dependency"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t2-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "On Tuesday you learn the UAT release due Friday will be a week late: the client's gateway keys came six days late, and QA found a regression.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "When do you tell the client?",
+          "options": [
+            "Today",
+            "Friday, if we can't catch up",
+            "In next week's report"
+          ],
+          "correctIndex": 0,
+          "explanation": "Bad news early: holding it back hides slippage until it is expensive."
+        },
+        {
+          "id": "s2",
+          "question": "What cause do you give?",
+          "options": [
+            "Only the late keys",
+            "Both the late keys and our regression",
+            "Just 'technical issues'"
+          ],
+          "correctIndex": 1,
+          "explanation": "Be honest about both: the client dependency and your own regression."
+        },
+        {
+          "id": "s3",
+          "question": "What follows the call?",
+          "options": [
+            "Nothing in writing",
+            "Revised plan in writing; RAID log updated",
+            "A discount offer"
+          ],
+          "correctIndex": 1,
+          "explanation": "Put the revised plan in writing and record the dependency and issue in the RAID log."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "term:client-dependency",
+      "term:regression",
+      "term:rag-status",
+      "term:raid-log",
+      "rule:weekly-status-report"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t2-4",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "In a sprint demo the client loves the paywall and asks: \"Can you add Apple Health sync next sprint?\" It is not in the signed scope.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you say?",
+          "options": [
+            "\"Sure, we'll fit it in.\"",
+            "\"Good idea. It's out of scope; I'll send a CR with the impact.\"",
+            "\"No, that's out of scope.\""
+          ],
+          "correctIndex": 1,
+          "explanation": "Acknowledge it, name it as out of scope, and offer a CR; demo feedback is not a free change."
+        },
+        {
+          "id": "s2",
+          "question": "How do you record it?",
+          "options": [
+            "In the demo MoM, with the CR action and date",
+            "In a developer's notes",
+            "As a bug in the backlog"
+          ],
+          "correctIndex": 0,
+          "explanation": "The MoM records the decision and the action owner and date."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "template:mom",
+      "term:change-request",
+      "rule:cr-when-needed",
+      "stage:custom-sprints",
+      "term:out-of-scope"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t3-3",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "The client SPOC hasn't approved the designs for ten days, and two reminders got no reply. The milestone is now at risk.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "Choose the best option at each step.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What next?",
+          "options": [
+            "Escalate to the client sponsor with the date impact",
+            "Keep waiting for the SPOC",
+            "Build on the unapproved designs"
+          ],
+          "correctIndex": 0,
+          "explanation": "Escalate along the agreed matrix, with the impact on dates; late escalation costs more."
+        },
+        {
+          "id": "s2",
+          "question": "The sponsor agrees to approve by Thursday. You…",
+          "options": [
+            "Rely on the call",
+            "Send a MoM with the decision, owner and date",
+            "Mark the schedule green"
+          ],
+          "correctIndex": 1,
+          "explanation": "Record decisions and action owners in a MoM after every client meeting."
+        }
+      ]
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "term:escalation",
+      "rule:escalation-levels",
+      "template:escalation-matrix-template",
+      "term:design-approval",
+      "rule:mom-after-every-client-meeting"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-t3-4",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A PM's minutes from a scope call. Mark the lines that make the MoM weak or risky.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the weak lines.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Attendees: client sponsor and SPOC; Oyelabs PM and tech lead.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Decision: loyalty module moved from phase 1 to phase 2.",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Action: someone to look into the payment gateway.",
+          "issue": "No owner and no due date."
+        },
+        {
+          "id": "s4",
+          "text": "Action: client SPOC to send the product CSV by 14 May.",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Phase 2 pricing agreed verbally; not recorded here.",
+          "issue": "Decisions must be recorded in the MoM."
+        },
+        {
+          "id": "s6",
+          "text": "Next meeting: sprint 3 demo, 22 May.",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "These minutes will be sent after the next sprint ends.",
+          "issue": "A MoM is sent soon after the meeting."
+        }
+      ],
+      "askExplanation": false
+    },
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "template:mom",
+      "term:mom",
+      "rule:mom-after-every-client-meeting"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-m1-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 0.5,
+    "prompt": "What must every action item in a MoM have?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "An owner and a due date",
+        "The client's signature",
+        "A RAG colour",
+        "An estimate in hours"
+      ],
+      "correctIndex": 0,
+      "explanation": "A MoM records decisions and action items, each with an owner and a due date, so everyone works from the same version."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "template:mom",
+      "term:mom"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-m2-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Nothing changed on a project this week. What about the weekly status report?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Send it as usual",
+        "Skip it until there is news",
+        "Replace it with a quick call",
+        "Send a monthly summary instead"
+      ],
+      "correctIndex": 0,
+      "explanation": "The status report goes out at the fixed cadence even when there is no news; missing reports raise anxiety more than bad news does."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "rule:weekly-status-report",
+      "term:status-report"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-m2-2",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 0.5,
+    "prompt": "Who on the client side must attend the kickoff for it to work?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "A decision-maker, such as the sponsor",
+        "Only the client's developers",
+        "Nobody: the MoM is enough",
+        "Only their procurement team"
+      ],
+      "correctIndex": 0,
+      "explanation": "A kickoff with no client decision-maker present is a known pitfall: goals, scope and SPOCs need someone who can confirm them."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "stage:custom-client-kickoff",
+      "template:kickoff-agenda"
+    ]
+  },
+  {
+    "id": "pm-proc-meetings-m3-1",
+    "departmentId": "pm",
+    "skillId": "pm-proc-meetings",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 0.5,
+    "prompt": "The project is red and the SPOC cannot clear the blocker within the agreed window. Typically, what next?",
+    "coding": null,
+    "mcq": {
+      "snippet": null,
+      "snippetLanguage": null,
+      "options": [
+        "Escalate to the next level in the matrix and record the outcome",
+        "Wait another week before raising it",
+        "Go straight to the client's CEO",
+        "Report it as green until it is fixed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Escalation runs through defined levels, each with a time window; every escalation is recorded with its outcome."
+    },
+    "task": null,
+    "tags": [
+      "process",
+      "meetings",
+      "client"
+    ],
+    "handbookRefs": [
+      "rule:escalation-levels",
+      "term:escalation",
+      "template:escalation-matrix-template"
+    ]
+  }
+]

@@ -28,6 +28,8 @@ export const AI_TASKS = [
   "legacy_generation",
   "legacy_critic",
   "verify",
+  "roleplay",
+  "roleplay_score",
 ] as const;
 export const aiTaskSchema = z.enum(AI_TASKS);
 export type AiTask = z.infer<typeof aiTaskSchema>;
@@ -64,6 +66,8 @@ export const TASK_DEFAULTS: Record<AiTask, TaskDefault> = {
   legacy_generation: { label: "Legacy assessment generation", model: SONNET, maxTokens: 8000, urgent: false, batch: false, note: "v3 format only" },
   legacy_critic: { label: "Legacy item critic", model: SONNET, maxTokens: 3000, urgent: false, batch: false, note: "v3 format only" },
   verify: { label: "Credential check", model: HAIKU, maxTokens: 64, urgent: true, batch: false, note: "" },
+  roleplay: { label: "Role-play: the AI client's replies", model: HAIKU, maxTokens: 300, urgent: false, batch: false, note: "One short call per learner message; capped monthly" },
+  roleplay_score: { label: "Role-play: rubric scoring", model: HAIKU, maxTokens: 900, urgent: false, batch: false, note: "One call per finished conversation" },
 };
 
 /** Calls that predate task types are routed by their purpose. */
@@ -98,6 +102,10 @@ export function taskForPurpose(purpose: AiPurpose): AiTask {
       return "item_generate";
     case "item_check":
       return "item_check";
+    case "roleplay":
+      return "roleplay";
+    case "roleplay_score":
+      return "roleplay_score";
   }
 }
 

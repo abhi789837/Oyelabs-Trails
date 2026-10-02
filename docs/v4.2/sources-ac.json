@@ -1,0 +1,3348 @@
+{
+  "pmp-a00": {
+    "title": "The custom lifecycle at a glance",
+    "topics": {
+      "pmp-a00-lifecycle-map": {
+        "title": "The custom delivery lifecycle map",
+        "refs": [
+          {
+            "label": "Atlassian: Software development life cycle (SDLC) guide",
+            "url": "https://www.atlassian.com/agile/software-development/sdlc",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:28Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Choose a project methodology",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/implementation-strategy-choose-methodology",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:01Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: How the discovery phase works",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: How the live phase works",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-live-phase-works",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:25Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Software Development Life Cycle: Explained",
+            "channel": "AltexSoft",
+            "url": "https://www.youtube.com/watch?v=SaCYkPD4_K0",
+            "videoId": "SaCYkPD4_K0",
+            "verifiedAt": "2026-10-02T12:16:54Z"
+          },
+          {
+            "title": "Project Management for Agencies - A Complete Guide",
+            "channel": "Matt Byrom",
+            "url": "https://www.youtube.com/watch?v=HoY8WoROwB8",
+            "videoId": "HoY8WoROwB8",
+            "verifiedAt": "2026-10-02T12:16:54Z"
+          }
+        ]
+      },
+      "pmp-a00-raci-roles": {
+        "title": "Who does what: RACI across the lifecycle",
+        "refs": [
+          {
+            "label": "Atlassian: RACI chart - what it is and how to use it",
+            "url": "https://www.atlassian.com/work-management/project-management/raci-chart",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:57Z"
+          },
+          {
+            "label": "Asana: RACI charts - the ultimate guide",
+            "url": "https://asana.com/resources/raci-chart",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:22Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Roles and responsibilities",
+            "url": "https://www.atlassian.com/team-playbook/plays/roles-and-responsibilities",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:23Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: What each role does in a service team",
+            "url": "https://www.gov.uk/service-manual/the-team/what-each-role-does-in-service-team",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "RACI Matrix Basics Explained with Examples | TeamGantt",
+            "channel": "TeamGantt",
+            "url": "https://www.youtube.com/watch?v=xc5NbJ8VgTI",
+            "videoId": "xc5NbJ8VgTI",
+            "verifiedAt": "2026-10-02T12:16:54Z"
+          },
+          {
+            "title": "What is a RACI Matrix? [CLEAR BREAKDOWN]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=dyoOIIaACcE",
+            "videoId": "dyoOIIaACcE",
+            "verifiedAt": "2026-10-02T12:16:55Z"
+          },
+          {
+            "title": "RACI explained its simple yet powerful - The most watched RACI matrix video on YouTube",
+            "channel": "RACI",
+            "url": "https://www.youtube.com/watch?v=1U2gngDxFkc",
+            "videoId": "1U2gngDxFkc",
+            "verifiedAt": "2026-10-02T12:16:55Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a01": {
+    "title": "BD handover to delivery",
+    "topics": {
+      "pmp-a01-handover-checklist": {
+        "title": "The BD-to-delivery handover checklist",
+        "refs": [
+          {
+            "label": "Copper: The sales-to-delivery handoff playbook",
+            "url": "https://www.copper.com/resources/sales-delivery-playbook",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:01:26Z"
+          },
+          {
+            "label": "Birdview PSA: Sales-to-delivery handoff checklist for consulting firms",
+            "url": "https://birdviewpsa.com/blog/sales-to-delivery-handoff-checklist-consulting/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:01:28Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Project poster",
+            "url": "https://www.atlassian.com/team-playbook/plays/project-poster",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:26Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Roles and responsibilities",
+            "url": "https://www.atlassian.com/team-playbook/plays/roles-and-responsibilities",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:23Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "​​Master Your Sales To Production Hand Off: Less Finger Pointing, More Referrals - Paul Atherton",
+            "channel": "Breakthrough Academy",
+            "url": "https://www.youtube.com/watch?v=s4VM1DDSE9M",
+            "videoId": "s4VM1DDSE9M",
+            "verifiedAt": "2026-10-02T12:16:55Z"
+          },
+          {
+            "title": "How to Improve Handoffs from Sales to Delivery - Ep #214",
+            "channel": "Parakeeto",
+            "url": "https://www.youtube.com/watch?v=PveVEElIFc0",
+            "videoId": "PveVEElIFc0",
+            "verifiedAt": "2026-10-02T12:16:55Z"
+          },
+          {
+            "title": "The biz dev handoff - Agency Management Tip for Owners",
+            "channel": "Agency Management Institute",
+            "url": "https://www.youtube.com/watch?v=NrH0qSD31fU",
+            "videoId": "NrH0qSD31fU",
+            "verifiedAt": "2026-10-02T12:16:55Z"
+          }
+        ]
+      },
+      "pmp-a01-reading-sow": {
+        "title": "Reading a SOW and MSA like a PM",
+        "refs": [
+          {
+            "label": "Ironclad: MSA vs SOW - which one to use when",
+            "url": "https://ironcladapp.com/journal/contracts/msa-vs-sow",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:51:37Z"
+          },
+          {
+            "label": "ProjectManager: Statement of work (SOW) template",
+            "url": "https://www.projectmanager.com/templates/statement-of-work-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:03:25Z"
+          },
+          {
+            "label": "GOV.UK: Model Services Contract (UK government template contract)",
+            "url": "https://www.gov.uk/government/collections/model-services-contract",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:28Z"
+          },
+          {
+            "label": "Atlassian: What is project scope",
+            "url": "https://www.atlassian.com/work-management/project-management/project-scope",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:57Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a Statement of Work (SOW)? And what are the different types?",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=1picY6dlLOc",
+            "videoId": "1picY6dlLOc",
+            "verifiedAt": "2026-10-02T12:16:55Z"
+          },
+          {
+            "title": "How to Write a Scope of Work Document - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=oacSSamqP6s",
+            "videoId": "oacSSamqP6s",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          }
+        ]
+      },
+      "pmp-a01-risky-assumptions": {
+        "title": "Spotting risky assumptions before you commit",
+        "refs": [
+          {
+            "label": "Asana: RAID log - risks, assumptions, issues and decisions",
+            "url": "https://asana.com/resources/raid-log",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:18Z"
+          },
+          {
+            "label": "Asana: Project constraints - 6 types to manage",
+            "url": "https://asana.com/resources/project-constraints",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:50Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Pre-mortem",
+            "url": "https://www.atlassian.com/team-playbook/plays/pre-mortem",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:21Z"
+          },
+          {
+            "label": "PMI: Lexicon of Project Management Terms",
+            "url": "https://www.pmi.org/standards/lexicon",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Project Management Concept #9: Assumptions vs Constraints",
+            "channel": "Belinda Goodrich, Speaker, Author, Educator",
+            "url": "https://www.youtube.com/watch?v=sru-hs5JjUg",
+            "videoId": "sru-hs5JjUg",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          },
+          {
+            "title": "What is an Assumptions Log? Project Management in Under 5",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=C9hifA0M7r8",
+            "videoId": "C9hifA0M7r8",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          },
+          {
+            "title": "Risks, Assumptions, and Issues: What are their differences (and similarities)?",
+            "channel": "PM4NGOs",
+            "url": "https://www.youtube.com/watch?v=Iwhctssm2o0",
+            "videoId": "Iwhctssm2o0",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a02": {
+    "title": "Estimation & commercial models",
+    "topics": {
+      "pmp-a02-commercial-models": {
+        "title": "Commercial models: fixed bid, T&M, retainer, dedicated team",
+        "refs": [
+          {
+            "label": "Acquisition.gov: FAR Part 16 - Types of Contracts",
+            "url": "https://www.acquisition.gov/far/part-16",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:30Z"
+          },
+          {
+            "label": "Acquisition.gov: FAR 16.601 Time-and-materials contracts",
+            "url": "https://www.acquisition.gov/far/16.601",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:30Z"
+          },
+          {
+            "label": "ProjectManager: Fixed price contract - what you need to know",
+            "url": "https://www.projectmanager.com/blog/fixed-price-contract",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:12Z"
+          },
+          {
+            "label": "ProjectManager: Time and materials contract (T&M) - when to use one",
+            "url": "https://www.projectmanager.com/blog/time-and-materials-contract",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:14Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Fixed-Price Contracts VS Time-and-Materials for Your Software Development Project",
+            "channel": "Matt Brickwood",
+            "url": "https://www.youtube.com/watch?v=PyobLk8aGu0",
+            "videoId": "PyobLk8aGu0",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          },
+          {
+            "title": "Fixed Fee vs Time & Materials Contracts: Comparison",
+            "channel": "Brainhub",
+            "url": "https://www.youtube.com/watch?v=WrUYVqs2-BY",
+            "videoId": "WrUYVqs2-BY",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          },
+          {
+            "title": "Time & Materials (T&M) Contract Tutorial",
+            "channel": "AcqNotes",
+            "url": "https://www.youtube.com/watch?v=76gvFtvdJw4",
+            "videoId": "76gvFtvdJw4",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          }
+        ]
+      },
+      "pmp-a02-estimation-support": {
+        "title": "Supporting estimation as a PM",
+        "refs": [
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "Atlassian: Story points and agile estimation",
+            "url": "https://www.atlassian.com/agile/project-management/estimation",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:06Z"
+          },
+          {
+            "label": "Mountain Goat Software: Planning Poker",
+            "url": "https://www.mountaingoatsoftware.com/agile/story-points/planning-poker",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:10Z"
+          },
+          {
+            "label": "Construx (Steve McConnell): The Cone of Uncertainty",
+            "url": "https://www.construx.com/books/the-cone-of-uncertainty/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:12Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What Are Story Points in Agile? (Agile Estimation Explained)",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=VsSaolMtkKU",
+            "videoId": "VsSaolMtkKU",
+            "verifiedAt": "2026-10-02T12:16:57Z"
+          },
+          {
+            "title": "Planning Poker Explained: How Agile Teams Estimate Story Points",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=gE7srp2BzoM",
+            "videoId": "gE7srp2BzoM",
+            "verifiedAt": "2026-10-02T12:16:58Z"
+          },
+          {
+            "title": "Story Points vs Hours : Agile Estimation (4 of 4 ) #PMP #Agile",
+            "channel": "iZenBridge Consultancy Pvt Ltd.",
+            "url": "https://www.youtube.com/watch?v=gSJVmemODYs",
+            "videoId": "gSJVmemODYs",
+            "verifiedAt": "2026-10-02T12:16:58Z"
+          }
+        ]
+      },
+      "pmp-a02-milestone-billing": {
+        "title": "Milestone billing and payment triggers",
+        "refs": [
+          {
+            "label": "Microsoft Learn (Project Operations): Invoice schedules and fixed-price milestones on a contract line",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/project-operations/pro/sales/invoice-schedules-contract-line-sales",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:23Z"
+          },
+          {
+            "label": "Microsoft Learn (Project Operations): Manage the project billing backlog",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/project-operations/pro/proforma-invoicing/manage-billing-backlog-sales",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:23Z"
+          },
+          {
+            "label": "GOV.UK: Invoices - what they must include",
+            "url": "https://www.gov.uk/invoicing-and-taking-payment-from-customers/invoices-what-they-must-include",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:05:27Z"
+          },
+          {
+            "label": "Acquisition.gov: FAR 16.202-1 Firm-fixed-price contracts",
+            "url": "https://www.acquisition.gov/far/16.202-1",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:29Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Progress vs. Milestone Billing: Why It Matters | Cash Flow, Billing & Collections",
+            "channel": "The Construction CPA",
+            "url": "https://www.youtube.com/watch?v=m78TqF7PGf8",
+            "videoId": "m78TqF7PGf8",
+            "verifiedAt": "2026-10-02T12:16:58Z"
+          },
+          {
+            "title": "How to manage a milestone contract",
+            "channel": "RemotePass",
+            "url": "https://www.youtube.com/watch?v=8T58rXkcVWM",
+            "videoId": "8T58rXkcVWM",
+            "verifiedAt": "2026-10-02T12:16:58Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a03": {
+    "title": "Internal kickoff",
+    "topics": {
+      "pmp-a03-internal-kickoff": {
+        "title": "Running the internal kickoff",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Project kickoff",
+            "url": "https://www.atlassian.com/team-playbook/plays/project-kickoff",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:21Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Working agreements",
+            "url": "https://www.atlassian.com/team-playbook/plays/working-agreements",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:27Z"
+          },
+          {
+            "label": "Asana: Project kickoff meeting - 10-step guide",
+            "url": "https://asana.com/resources/project-kickoff-meeting",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:26Z"
+          },
+          {
+            "label": "The Digital Project Manager: Project kickoff guide",
+            "url": "https://thedigitalprojectmanager.com/project-management/project-kickoff-guide/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:55Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Project Kickoff Meetings | 5-Minute Guide",
+            "channel": "TeamGantt",
+            "url": "https://www.youtube.com/watch?v=Bu84BEkN2e4",
+            "videoId": "Bu84BEkN2e4",
+            "verifiedAt": "2026-10-02T12:16:58Z"
+          },
+          {
+            "title": "Kickoff Meeting [YOUR GUIDE TO STARTING PROJECTS]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=0PQLEyFEgag",
+            "videoId": "0PQLEyFEgag",
+            "verifiedAt": "2026-10-02T12:16:58Z"
+          },
+          {
+            "title": "How to Run a Brilliant Project Kick Off Meeting | The Everyday Project Manager",
+            "channel": "The Everyday Project Manager",
+            "url": "https://www.youtube.com/watch?v=ccgKREwz0jg",
+            "videoId": "ccgKREwz0jg",
+            "verifiedAt": "2026-10-02T12:16:59Z"
+          }
+        ]
+      },
+      "pmp-a03-plan-risks-environments": {
+        "title": "Plan, risk register and environments",
+        "refs": [
+          {
+            "label": "Atlassian: What is a risk register",
+            "url": "https://www.atlassian.com/work-management/project-management/risk-register",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:06:32Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Pre-mortem",
+            "url": "https://www.atlassian.com/team-playbook/plays/pre-mortem",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:21Z"
+          },
+          {
+            "label": "The Twelve-Factor App: Dev/prod parity",
+            "url": "https://12factor.net/dev-prod-parity",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:00Z"
+          },
+          {
+            "label": "APM: What is risk management?",
+            "url": "https://www.apm.org.uk/resources/what-is-project-management/what-is-risk-management/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:08:03Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a Risk Register & When To Use It - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=voR0FBnC2ZU",
+            "videoId": "voR0FBnC2ZU",
+            "verifiedAt": "2026-10-02T12:16:59Z"
+          },
+          {
+            "title": "Risk Register Example – All You Need to Know About It",
+            "channel": "IT Project Managers",
+            "url": "https://www.youtube.com/watch?v=9tbe9tAwnCk",
+            "videoId": "9tbe9tAwnCk",
+            "verifiedAt": "2026-10-02T12:16:59Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a04": {
+    "title": "Client kickoff",
+    "topics": {
+      "pmp-a04-client-kickoff": {
+        "title": "Running the client kickoff",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Project kickoff",
+            "url": "https://www.atlassian.com/team-playbook/plays/project-kickoff",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:21Z"
+          },
+          {
+            "label": "The Digital Project Manager: Project kickoff guide",
+            "url": "https://thedigitalprojectmanager.com/project-management/project-kickoff-guide/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:55Z"
+          },
+          {
+            "label": "ProjectManager: How to create a kickoff meeting agenda",
+            "url": "https://www.projectmanager.com/blog/kickoff-meeting-agenda",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:29Z"
+          },
+          {
+            "label": "Atlassian: How to nail your project kickoff meeting",
+            "url": "https://www.atlassian.com/work-management/project-management/project-kickoff",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:06:32Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Client Kickoff Meeting Agenda | How To Set the Stage for Success",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=ZnWZQ3G-HkM",
+            "videoId": "ZnWZQ3G-HkM",
+            "verifiedAt": "2026-10-02T12:16:59Z"
+          },
+          {
+            "title": "Kickoff Best Practices | How to Run a Client Kickoff Meeting Successfully",
+            "channel": "The Digital Project Manager",
+            "url": "https://www.youtube.com/watch?v=4ESb9qoXVyo",
+            "videoId": "4ESb9qoXVyo",
+            "verifiedAt": "2026-10-02T12:16:59Z"
+          },
+          {
+            "title": "Best Project Kickoff Meeting Checklist - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=LOCkV-mENq8",
+            "videoId": "LOCkV-mENq8",
+            "verifiedAt": "2026-10-02T12:16:59Z"
+          }
+        ]
+      },
+      "pmp-a04-expectations-governance": {
+        "title": "Setting expectations and governance",
+        "refs": [
+          {
+            "label": "GOV.UK Service Manual: Governance principles for agile service delivery",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/governance-principles-for-agile-service-delivery",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:27Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Project governance",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/project-governance",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:01Z"
+          },
+          {
+            "label": "APM (Association for Project Management): What is governance?",
+            "url": "https://www.apm.org.uk/resources/what-is-project-management/what-is-governance/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:39Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Stakeholder communications plan",
+            "url": "https://www.atlassian.com/team-playbook/plays/stakeholder-communications-plan",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:24Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is Project Governance? [CLEAR BREAKDOWN]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=NHmxGCI8sos",
+            "videoId": "NHmxGCI8sos",
+            "verifiedAt": "2026-10-02T12:16:59Z"
+          },
+          {
+            "title": "What is Project Governance? Project Management in Under 5",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=qoro7iML1DA",
+            "videoId": "qoro7iML1DA",
+            "verifiedAt": "2026-10-02T12:17:00Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a05": {
+    "title": "Discovery & requirements",
+    "topics": {
+      "pmp-a05-discovery": {
+        "title": "Running discovery",
+        "refs": [
+          {
+            "label": "GOV.UK Service Manual: How the discovery phase works",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "Nielsen Norman Group: Discovery - definition",
+            "url": "https://www.nngroup.com/articles/discovery-phase/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:35Z"
+          },
+          {
+            "label": "Nielsen Norman Group: Stakeholder interviews 101",
+            "url": "https://www.nngroup.com/articles/stakeholder-interviews/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:07:34Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Customer interview",
+            "url": "https://www.atlassian.com/team-playbook/plays/customer-interview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:05:51Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a Discovery Phase? (And Why It's Critical for Software Development Project Success)",
+            "channel": "SumatoSoft",
+            "url": "https://www.youtube.com/watch?v=J8zEEST9z3s",
+            "videoId": "J8zEEST9z3s",
+            "verifiedAt": "2026-10-02T12:17:00Z"
+          },
+          {
+            "title": "The what, why and how of a Discovery Phase",
+            "channel": "Zaizi",
+            "url": "https://www.youtube.com/watch?v=DTnY6tgqOgc",
+            "videoId": "DTnY6tgqOgc",
+            "verifiedAt": "2026-10-02T12:17:00Z"
+          },
+          {
+            "title": "Discovery Phase: How to properly plan your software development project? SaaS Product Roadmapping",
+            "channel": "SoftFormance OU",
+            "url": "https://www.youtube.com/watch?v=7LmHJFXlmII",
+            "videoId": "7LmHJFXlmII",
+            "verifiedAt": "2026-10-02T12:17:00Z"
+          }
+        ]
+      },
+      "pmp-a05-stories-acceptance": {
+        "title": "User stories and acceptance criteria",
+        "refs": [
+          {
+            "label": "GOV.UK Service Manual: Writing user stories",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:25Z"
+          },
+          {
+            "label": "Atlassian: User stories with examples and a template",
+            "url": "https://www.atlassian.com/agile/project-management/user-stories",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:06:17Z"
+          },
+          {
+            "label": "Atlassian: Acceptance criteria - definition, examples and tips",
+            "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:23Z"
+          },
+          {
+            "label": "Martin Fowler: Given When Then",
+            "url": "https://martinfowler.com/bliki/GivenWhenThen.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:07:50Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "User Stories and Acceptance Criteria EXAMPLE (Agile Story Tutorial)",
+            "channel": "The Business Analysis Doctor - IIBA Certification",
+            "url": "https://www.youtube.com/watch?v=q26147zlcMU",
+            "videoId": "q26147zlcMU",
+            "verifiedAt": "2026-10-02T12:17:00Z"
+          },
+          {
+            "title": "How to write good User Stories in Agile",
+            "channel": "The Agile Shop",
+            "url": "https://www.youtube.com/watch?v=7hoGqhb6qAs",
+            "videoId": "7hoGqhb6qAs",
+            "verifiedAt": "2026-10-02T12:17:01Z"
+          },
+          {
+            "title": "How to Identify Given-When-Then (Gherkin) Scenarios From Functional Requirements",
+            "channel": "BA-EXPERTS - Learn Business Analysis by Example",
+            "url": "https://www.youtube.com/watch?v=2uB93oc2TxA",
+            "videoId": "2uB93oc2TxA",
+            "verifiedAt": "2026-10-02T12:17:05Z"
+          }
+        ]
+      },
+      "pmp-a05-freeze-signoff": {
+        "title": "Requirements freeze and sign-off",
+        "refs": [
+          {
+            "label": "PMI: Lexicon of Project Management Terms",
+            "url": "https://www.pmi.org/standards/lexicon",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          },
+          {
+            "label": "APM: What is scope management?",
+            "url": "https://www.apm.org.uk/resources/what-is-project-management/what-is-scope-management/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:08:04Z"
+          },
+          {
+            "label": "APM: What is change control?",
+            "url": "https://www.apm.org.uk/resources/what-is-project-management/what-is-change-control/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:08:06Z"
+          },
+          {
+            "label": "ProjectManager: How to make a project baseline and why it matters",
+            "url": "https://www.projectmanager.com/blog/project-baseline",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:52Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Gaining Buy-In and Sign-Off in Business Analysis for Requirements",
+            "channel": "Bridging the Gap - Resources for Business Analysts",
+            "url": "https://www.youtube.com/watch?v=l1iap5Dp3fQ",
+            "videoId": "l1iap5Dp3fQ",
+            "verifiedAt": "2026-10-02T12:17:05Z"
+          },
+          {
+            "title": "The 'Scope Creep' Killer: Why You MUST Get Client Sign-Off on Requirements",
+            "channel": "Quality Cynic",
+            "url": "https://www.youtube.com/watch?v=_LrbFaRH0ZU",
+            "videoId": "_LrbFaRH0ZU",
+            "verifiedAt": "2026-10-02T12:17:05Z"
+          },
+          {
+            "title": "Understanding Scope Baseline || Preventing Scope Creep",
+            "channel": "Project Management & Leadership Concepts",
+            "url": "https://www.youtube.com/watch?v=kw3LckoEeNo",
+            "videoId": "kw3LckoEeNo",
+            "verifiedAt": "2026-10-02T12:17:06Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a06": {
+    "title": "UI/UX & design approval",
+    "topics": {
+      "pmp-a06-design-process": {
+        "title": "The design process: wireframes to approved UI",
+        "refs": [
+          {
+            "label": "GOV.UK Service Manual: Making prototypes",
+            "url": "https://www.gov.uk/service-manual/design/making-prototypes",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:26Z"
+          },
+          {
+            "label": "Nielsen Norman Group: UX prototypes - low vs high fidelity",
+            "url": "https://www.nngroup.com/articles/ux-prototype-hi-lo-fidelity/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:37Z"
+          },
+          {
+            "label": "Nielsen Norman Group: Wireflows",
+            "url": "https://www.nngroup.com/articles/wireflows/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:36Z"
+          },
+          {
+            "label": "Figma Learn: Guide to Dev Mode",
+            "url": "https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:31Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Step-by-Step UX Project Workflow",
+            "channel": "What The *UX! Studio",
+            "url": "https://www.youtube.com/watch?v=Nf3RRfLzvXI",
+            "videoId": "Nf3RRfLzvXI",
+            "verifiedAt": "2026-10-02T12:17:06Z"
+          },
+          {
+            "title": "Figma tutorial: Collaboration and handoff in Dev Mode",
+            "channel": "Figma",
+            "url": "https://www.youtube.com/watch?v=xCJsRuH7v9w",
+            "videoId": "xCJsRuH7v9w",
+            "verifiedAt": "2026-10-02T12:17:06Z"
+          },
+          {
+            "title": "How to Hand off your UX designs to developers like a PRO",
+            "channel": "Design With Destiny",
+            "url": "https://www.youtube.com/watch?v=Kmp85DeC3K4",
+            "videoId": "Kmp85DeC3K4",
+            "verifiedAt": "2026-10-02T12:17:06Z"
+          }
+        ]
+      },
+      "pmp-a06-review-rounds": {
+        "title": "Managing design review rounds",
+        "refs": [
+          {
+            "label": "Nielsen Norman Group: Design critiques",
+            "url": "https://www.nngroup.com/articles/design-critiques/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:35Z"
+          },
+          {
+            "label": "Figma Learn: Guide to comments in Figma",
+            "url": "https://help.figma.com/hc/en-us/articles/360039825314-Guide-to-comments-in-Figma",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:07:27Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Sparring (structured peer feedback)",
+            "url": "https://www.atlassian.com/team-playbook/plays/sparring",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:27Z"
+          },
+          {
+            "label": "Figma: Guide to developer handoff",
+            "url": "https://www.figma.com/best-practices/guide-to-developer-handoff/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:07:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "No More Revisions! Working With Clients — Project Management Tips",
+            "channel": "The Futur",
+            "url": "https://www.youtube.com/watch?v=xoOo1bjYsKs",
+            "videoId": "xoOo1bjYsKs",
+            "verifiedAt": "2026-10-02T12:17:06Z"
+          },
+          {
+            "title": "The Logo Feedback Form I Use With Clients to Avoid Vague Revisions",
+            "channel": "Megan Weeks",
+            "url": "https://www.youtube.com/watch?v=sJwzrvEgvXw",
+            "videoId": "sJwzrvEgvXw",
+            "verifiedAt": "2026-10-02T12:17:07Z"
+          },
+          {
+            "title": "How to Handle Client Feedback as a Brand Designer",
+            "channel": "4 The Creatives",
+            "url": "https://www.youtube.com/watch?v=NGQrkbPhzCA",
+            "videoId": "NGQrkbPhzCA",
+            "verifiedAt": "2026-10-02T12:17:07Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a07": {
+    "title": "Architecture & Sprint 0",
+    "topics": {
+      "pmp-a07-sprint0": {
+        "title": "Sprint 0: setting up to deliver",
+        "refs": [
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "The Twelve-Factor App: Config",
+            "url": "https://12factor.net/config",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:54:59Z"
+          },
+          {
+            "label": "The Twelve-Factor App: Dev/prod parity",
+            "url": "https://12factor.net/dev-prod-parity",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:00Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Maintaining version control in coding",
+            "url": "https://www.gov.uk/service-manual/technology/maintaining-version-control-in-coding",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is Sprint Zero in Scrum? Everything You Should Know",
+            "channel": "Agile Coach",
+            "url": "https://www.youtube.com/watch?v=fmHPOaTcduk",
+            "videoId": "fmHPOaTcduk",
+            "verifiedAt": "2026-10-02T12:17:07Z"
+          },
+          {
+            "title": "What is Sprint Zero?",
+            "channel": "iZenBridge Consultancy Pvt Ltd.",
+            "url": "https://www.youtube.com/watch?v=JARjUZG4oJE",
+            "videoId": "JARjUZG4oJE",
+            "verifiedAt": "2026-10-02T12:17:07Z"
+          },
+          {
+            "title": "Do you need a Sprint Zero?",
+            "channel": "All Things Agile",
+            "url": "https://www.youtube.com/watch?v=oovN9u_rWDk",
+            "videoId": "oovN9u_rWDk",
+            "verifiedAt": "2026-10-02T12:17:07Z"
+          }
+        ]
+      },
+      "pmp-a07-architecture-decisions": {
+        "title": "Architecture decisions and ADRs",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Maintain an architecture decision record (ADR)",
+            "url": "https://learn.microsoft.com/en-us/azure/well-architected/architect-role/architecture-decision-record",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:30Z"
+          },
+          {
+            "label": "adr.github.io: Architectural Decision Records",
+            "url": "https://adr.github.io/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:07:58Z"
+          },
+          {
+            "label": "Michael Nygard (Cognitect): Documenting architecture decisions",
+            "url": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:08:03Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Choosing technology: an introduction",
+            "url": "https://www.gov.uk/service-manual/technology/choosing-technology-an-introduction",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Architecture Decision Records (ADR) as a LOG that answers \"WHY?\"",
+            "channel": "CodeOpinion",
+            "url": "https://www.youtube.com/watch?v=6H6zfCNeqek",
+            "videoId": "6H6zfCNeqek",
+            "verifiedAt": "2026-10-02T12:17:07Z"
+          },
+          {
+            "title": "Lesson 55 - Architecture Decision Records",
+            "channel": "Software Architecture Monday",
+            "url": "https://www.youtube.com/watch?v=LMBqGPLvonU",
+            "videoId": "LMBqGPLvonU",
+            "verifiedAt": "2026-10-02T12:17:08Z"
+          },
+          {
+            "title": "Architecture Decision Records (ADR) - The Basics",
+            "channel": "Saxion Media Xpert Centre",
+            "url": "https://www.youtube.com/watch?v=7Gqn2dbt_JY",
+            "videoId": "7Gqn2dbt_JY",
+            "verifiedAt": "2026-10-02T12:17:08Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a08": {
+    "title": "Sprint execution",
+    "topics": {
+      "pmp-a08-sprint-cadence": {
+        "title": "Sprint cadence and Scrum events",
+        "refs": [
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "Atlassian: Agile ceremonies and scrum meetings",
+            "url": "https://www.atlassian.com/agile/scrum/ceremonies",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:14Z"
+          },
+          {
+            "label": "Atlassian: Sprint planning",
+            "url": "https://www.atlassian.com/agile/scrum/sprint-planning",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:24Z"
+          },
+          {
+            "label": "Microsoft Learn: Manage sprint timelines (Azure Boards)",
+            "url": "https://learn.microsoft.com/en-us/azure/devops/boards/sprints/define-sprints?view=azure-devops",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:33Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Scrum Events Explained | Sprint Planning, Daily Standups, Sprint Review & Retrospective",
+            "channel": "PM Expert",
+            "url": "https://www.youtube.com/watch?v=-UXdINVaj9c",
+            "videoId": "-UXdINVaj9c",
+            "verifiedAt": "2026-10-02T12:17:08Z"
+          },
+          {
+            "title": "Scrum Events | Sprint, Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective",
+            "channel": "Volkerdon",
+            "url": "https://www.youtube.com/watch?v=Gfl9qvRwHzw",
+            "videoId": "Gfl9qvRwHzw",
+            "verifiedAt": "2026-10-02T12:17:08Z"
+          }
+        ]
+      },
+      "pmp-a08-demos-feedback": {
+        "title": "Sprint demos and client feedback",
+        "refs": [
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "Atlassian: What is a sprint review",
+            "url": "https://www.atlassian.com/agile/scrum/sprint-reviews",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:25Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Demo trust",
+            "url": "https://www.atlassian.com/team-playbook/plays/demo-trust",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:06:06Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Sprint Reviews - The most important meeting in Scrum",
+            "channel": "ScrumMastered",
+            "url": "https://www.youtube.com/watch?v=vhRrpe3v5dQ",
+            "videoId": "vhRrpe3v5dQ",
+            "verifiedAt": "2026-10-02T12:17:08Z"
+          },
+          {
+            "title": "A Real Sprint Review Meeting Example",
+            "channel": "DataMiner by Skyline Communications",
+            "url": "https://www.youtube.com/watch?v=as9IYFrTiKc",
+            "videoId": "as9IYFrTiKc",
+            "verifiedAt": "2026-10-02T12:17:08Z"
+          },
+          {
+            "title": "How to RUN the MOST EFFECTIVE & EFFICIENT Sprint Review",
+            "channel": "Agile Coach",
+            "url": "https://www.youtube.com/watch?v=9-XKTBBETaQ",
+            "videoId": "9-XKTBBETaQ",
+            "verifiedAt": "2026-10-02T12:17:08Z"
+          }
+        ]
+      },
+      "pmp-a08-eod-updates": {
+        "title": "Daily standups and EOD updates",
+        "refs": [
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "Atlassian: Standups for agile teams",
+            "url": "https://www.atlassian.com/agile/scrum/standups",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:12Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Agile tools and techniques",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/agile-tools-techniques",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:08:10Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Daily Scrum Explained: A Better Way to Run It",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=MZdK4SX0mfI",
+            "videoId": "MZdK4SX0mfI",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          },
+          {
+            "title": "How to Hold a Daily Stand-up Meeting",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=JSFfyse_EXM",
+            "videoId": "JSFfyse_EXM",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          },
+          {
+            "title": "A Real Daily Standup Meeting Example",
+            "channel": "DataMiner by Skyline Communications",
+            "url": "https://www.youtube.com/watch?v=T8GcCl8w-_E",
+            "videoId": "T8GcCl8w-_E",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a09": {
+    "title": "Scope control: CR, enhancement, bug",
+    "topics": {
+      "pmp-a09-classifying-requests": {
+        "title": "Classifying requests: CR, enhancement or bug",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Define, capture, triage and manage bugs (Azure Boards)",
+            "url": "https://learn.microsoft.com/en-us/azure/devops/boards/backlogs/manage-bugs?view=azure-devops",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:32Z"
+          },
+          {
+            "label": "Atlassian Support (Jira): What are work types (epic, story, task, bug)",
+            "url": "https://support.atlassian.com/jira-cloud-administration/docs/what-are-issue-types/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:29Z"
+          },
+          {
+            "label": "Atlassian: Scope creep in project management",
+            "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:56Z"
+          },
+          {
+            "label": "TeamGantt: What is scope creep and how to avoid it",
+            "url": "https://www.teamgantt.com/project-management-guide/taming-scope-creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:54Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Issue Tracking, Incident, Bug, Service Request, Change, Info, Feature, Ticket | Prof. Griesbauer",
+            "channel": "Prof Joe",
+            "url": "https://www.youtube.com/watch?v=eZmhXEEkDsE",
+            "videoId": "eZmhXEEkDsE",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          },
+          {
+            "title": "How to HANDLE CHANGES in User Stories, Requirements & Scope during THE SPRINT",
+            "channel": "Agile Coach",
+            "url": "https://www.youtube.com/watch?v=RfVA81R_7eU",
+            "videoId": "RfVA81R_7eU",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          },
+          {
+            "title": "What's the Difference? Variations, Scope Creep, and Gold-plating",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=FtdpduGS8yc",
+            "videoId": "FtdpduGS8yc",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          }
+        ]
+      },
+      "pmp-a09-writing-crs": {
+        "title": "Writing and pricing change requests",
+        "refs": [
+          {
+            "label": "APM: What is change control?",
+            "url": "https://www.apm.org.uk/resources/what-is-project-management/what-is-change-control/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:08:06Z"
+          },
+          {
+            "label": "Asana: Change control process - 5 steps and example",
+            "url": "https://asana.com/resources/change-control-process",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:21Z"
+          },
+          {
+            "label": "ProjectManager: Change request form template",
+            "url": "https://www.projectmanager.com/templates/change-request-form",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:49Z"
+          },
+          {
+            "label": "PMI: Lexicon of Project Management Terms",
+            "url": "https://www.pmi.org/standards/lexicon",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Manage the Change Control Process",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=pTtqmy6gD_M",
+            "videoId": "pTtqmy6gD_M",
+            "verifiedAt": "2026-10-02T12:17:10Z"
+          },
+          {
+            "title": "What is Change Control in Project Management?",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=N5bE0aYc2mo",
+            "videoId": "N5bE0aYc2mo",
+            "verifiedAt": "2026-10-02T12:17:10Z"
+          },
+          {
+            "title": "What is Change Control? Project Management in Under 5",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=7JU_G7loIvw",
+            "videoId": "7JU_G7loIvw",
+            "verifiedAt": "2026-10-02T12:17:10Z"
+          }
+        ]
+      },
+      "pmp-a09-replanning": {
+        "title": "Replanning and re-baselining after change",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Trade-off analysis",
+            "url": "https://www.atlassian.com/team-playbook/plays/trade-offs",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:24Z"
+          },
+          {
+            "label": "ProjectManager: How to make a project baseline and why it matters",
+            "url": "https://www.projectmanager.com/blog/project-baseline",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:52Z"
+          },
+          {
+            "label": "Construx (Steve McConnell): The Cone of Uncertainty",
+            "url": "https://www.construx.com/books/the-cone-of-uncertainty/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:12Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Project governance",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/project-governance",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:01Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What Is Project Re-baselining And When Do You Do It? - The Project Manager Toolkit",
+            "channel": "The Project Manager Toolkit",
+            "url": "https://www.youtube.com/watch?v=y6Q5-saTSjA",
+            "videoId": "y6Q5-saTSjA",
+            "verifiedAt": "2026-10-02T12:17:10Z"
+          },
+          {
+            "title": "How Do Project Managers Re-baseline Schedules?",
+            "channel": "The Project Manager Toolkit",
+            "url": "https://www.youtube.com/watch?v=o7ugTmEtB4I",
+            "videoId": "o7ugTmEtB4I",
+            "verifiedAt": "2026-10-02T12:17:10Z"
+          },
+          {
+            "title": "MS Project Tutorial 6 Recovering a Schedule",
+            "channel": "Tom Stephenson",
+            "url": "https://www.youtube.com/watch?v=ENTWTIDYkfQ",
+            "videoId": "ENTWTIDYkfQ",
+            "verifiedAt": "2026-10-02T12:17:10Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a10": {
+    "title": "QA, UAT & sign-off",
+    "topics": {
+      "pmp-a10-qa-vs-uat": {
+        "title": "QA vs UAT",
+        "refs": [
+          {
+            "label": "GOV.UK Service Manual: Quality assurance: testing your service regularly",
+            "url": "https://www.gov.uk/service-manual/technology/quality-assurance-testing-your-service-regularly",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:28Z"
+          },
+          {
+            "label": "Atlassian: The different types of software testing",
+            "url": "https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:26Z"
+          },
+          {
+            "label": "TechTarget: What is user acceptance testing (UAT)?",
+            "url": "https://www.techtarget.com/it-infrastructure/definition/What-is-user-acceptance-testing-UAT",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:42Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Test your solution before deployment",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/testing-strategy",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:54Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is the difference between QA and UAT",
+            "channel": "Thomas Ryan",
+            "url": "https://www.youtube.com/watch?v=6Pdy0TUCK90",
+            "videoId": "6Pdy0TUCK90",
+            "verifiedAt": "2026-10-02T12:17:11Z"
+          },
+          {
+            "title": "Software Testing Process Guide: What is User Acceptance Testing - UAT?",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=sGwm4p9sGPI",
+            "videoId": "sGwm4p9sGPI",
+            "verifiedAt": "2026-10-02T12:17:11Z"
+          },
+          {
+            "title": "Difference between SIT and UAT | Software Testing",
+            "channel": "The Quality Analyst",
+            "url": "https://www.youtube.com/watch?v=WsEwSJvb8Mo",
+            "videoId": "WsEwSJvb8Mo",
+            "verifiedAt": "2026-10-02T12:17:11Z"
+          }
+        ]
+      },
+      "pmp-a10-uat-signoff": {
+        "title": "Running UAT to a clean sign-off",
+        "refs": [
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Test your solution before deployment",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/testing-strategy",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:54Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Go-live checklist",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-go-live-checklist",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:00:59Z"
+          },
+          {
+            "label": "TechTarget: What is user acceptance testing (UAT)?",
+            "url": "https://www.techtarget.com/it-infrastructure/definition/What-is-user-acceptance-testing-UAT",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:42Z"
+          },
+          {
+            "label": "Atlassian: Acceptance criteria - definition, examples and tips",
+            "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:23Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to get #UserAcceptanceTesting (UAT) Sign-offs easily",
+            "channel": "Business Analyst & Scrum Master In-Demand",
+            "url": "https://www.youtube.com/watch?v=lTRoxp4nGdo",
+            "videoId": "lTRoxp4nGdo",
+            "verifiedAt": "2026-10-02T12:17:11Z"
+          },
+          {
+            "title": "How to Plan Your UAT - User Acceptance Test Plans That Work! | Business Analyst Training",
+            "channel": "Karaleise ",
+            "url": "https://www.youtube.com/watch?v=AU8SV7091-s",
+            "videoId": "AU8SV7091-s",
+            "verifiedAt": "2026-10-02T12:17:11Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a11": {
+    "title": "Release & go-live",
+    "topics": {
+      "pmp-a11-go-no-go": {
+        "title": "The go/no-go decision",
+        "refs": [
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Go-live checklist",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-go-live-checklist",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:00:59Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Prepare to go live",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-to-go-live",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:00:59Z"
+          },
+          {
+            "label": "Microsoft Learn: Safe deployment practices (Well-Architected)",
+            "url": "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:30Z"
+          },
+          {
+            "label": "Atlassian: Software releases - 3 ingredients for success",
+            "url": "https://www.atlassian.com/agile/software-development/release",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:25Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Go/No-Go Decisions in Business Analysis and Project Management – PMI-PBA Video Certification",
+            "channel": "InterfaceTT",
+            "url": "https://www.youtube.com/watch?v=jZlPDyamGoM",
+            "videoId": "jZlPDyamGoM",
+            "verifiedAt": "2026-10-02T12:17:12Z"
+          },
+          {
+            "title": "Getting a GO NO GO decision, a MUST !",
+            "channel": "The Executive Producer",
+            "url": "https://www.youtube.com/watch?v=ZZDTR5mfiOc",
+            "videoId": "ZZDTR5mfiOc",
+            "verifiedAt": "2026-10-02T12:17:12Z"
+          },
+          {
+            "title": "Best Go-Live Checklist and Go-Live Plan for Project Management Teams",
+            "channel": "OCM Solution (OCMS)",
+            "url": "https://www.youtube.com/watch?v=xBezWG1U6RQ",
+            "videoId": "xBezWG1U6RQ",
+            "verifiedAt": "2026-10-02T12:17:12Z"
+          }
+        ]
+      },
+      "pmp-a11-cutover-rollback": {
+        "title": "Cutover and rollback planning",
+        "refs": [
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Cutover strategy and plan",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/prepare-go-live-cutover-strategy",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:00:59Z"
+          },
+          {
+            "label": "Microsoft Learn: Safe deployment practices (Well-Architected)",
+            "url": "https://learn.microsoft.com/en-us/azure/well-architected/operational-excellence/safe-deployments",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:30Z"
+          },
+          {
+            "label": "Martin Fowler: Blue green deployment",
+            "url": "https://martinfowler.com/bliki/BlueGreenDeployment.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:01Z"
+          },
+          {
+            "label": "AWS Whitepaper: Blue/green deployments on AWS",
+            "url": "https://docs.aws.amazon.com/whitepapers/latest/blue-green-deployments/introduction.html",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:09:37Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is Blue Green Deployment?",
+            "channel": "Telusko",
+            "url": "https://www.youtube.com/watch?v=23EghFNQdj4",
+            "videoId": "23EghFNQdj4",
+            "verifiedAt": "2026-10-02T12:17:12Z"
+          },
+          {
+            "title": "Top 5 Most-Used Deployment Strategies",
+            "channel": "ByteByteGo",
+            "url": "https://www.youtube.com/watch?v=AWVTKBUnoIg",
+            "videoId": "AWVTKBUnoIg",
+            "verifiedAt": "2026-10-02T12:17:12Z"
+          },
+          {
+            "title": "Production Deployment Explained | Technical Project Managers",
+            "channel": "BeTechnological",
+            "url": "https://www.youtube.com/watch?v=HseJyFDrTrM",
+            "videoId": "HseJyFDrTrM",
+            "verifiedAt": "2026-10-02T12:17:12Z"
+          }
+        ]
+      },
+      "pmp-a11-store-submission": {
+        "title": "App Store and Play Store submission",
+        "refs": [
+          {
+            "label": "Apple Developer: App Review",
+            "url": "https://developer.apple.com/distribute/app-review/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:05Z"
+          },
+          {
+            "label": "Apple Developer: App Review Guidelines",
+            "url": "https://developer.apple.com/app-store/review/guidelines/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:06Z"
+          },
+          {
+            "label": "App Store Connect Help: Overview of submitting for review",
+            "url": "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/overview-of-submitting-for-review",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:09:21Z"
+          },
+          {
+            "label": "Play Console Help: Prepare your app for review",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9859455",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:28Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How To Submit Your iOS App to the App Store (Full Guide)",
+            "channel": "John Kealy",
+            "url": "https://www.youtube.com/watch?v=miWvNAFpmew",
+            "videoId": "miWvNAFpmew",
+            "verifiedAt": "2026-10-02T12:17:12Z"
+          },
+          {
+            "title": "How to Publish Your App to the Play Store (Step by Step, 2026)",
+            "channel": "Code with Beto",
+            "url": "https://www.youtube.com/watch?v=wcexBIANCCk",
+            "videoId": "wcexBIANCCk",
+            "verifiedAt": "2026-10-02T12:17:13Z"
+          },
+          {
+            "title": "iOS App Store Submission Tutorial",
+            "channel": "freeCodeCamp.org",
+            "url": "https://www.youtube.com/watch?v=9vkkJ4tC4SQ",
+            "videoId": "9vkkJ4tC4SQ",
+            "verifiedAt": "2026-10-02T12:17:13Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a12": {
+    "title": "Hypercare & warranty",
+    "topics": {
+      "pmp-a12-hypercare": {
+        "title": "Running hypercare after go-live",
+        "refs": [
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Plan your support operations",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/transition-to-support-operations",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:00:59Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Checklist for transitioning to support",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/transition-to-support-checklist",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:01Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: How the live phase works",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-live-phase-works",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:25Z"
+          },
+          {
+            "label": "Atlassian: Incident management - processes and best practices",
+            "url": "https://www.atlassian.com/incident-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:46Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Why Post Go-Live Support Is So Important",
+            "channel": "DGTL Ventures",
+            "url": "https://www.youtube.com/watch?v=5w9ruMs93kQ",
+            "videoId": "5w9ruMs93kQ",
+            "verifiedAt": "2026-10-02T12:17:13Z"
+          },
+          {
+            "title": "Andrew Wingate | Post Go-Live Support & Stabilization | Mission: Implementation | Dynamics 365",
+            "channel": "Microsoft Dynamics 365 Community",
+            "url": "https://www.youtube.com/watch?v=fDPkPBTKxDU",
+            "videoId": "fDPkPBTKxDU",
+            "verifiedAt": "2026-10-02T12:17:13Z"
+          },
+          {
+            "title": "Planning Solutions Implementation: Part 9, Hypercare",
+            "channel": "PMsquare",
+            "url": "https://www.youtube.com/watch?v=SOIV3jKjQTE",
+            "videoId": "SOIV3jKjQTE",
+            "verifiedAt": "2026-10-02T12:17:13Z"
+          }
+        ]
+      },
+      "pmp-a12-warranty-claims": {
+        "title": "Handling warranty claims",
+        "refs": [
+          {
+            "label": "Cornell LII Wex: warranty",
+            "url": "https://www.law.cornell.edu/wex/warranty",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:51:33Z"
+          },
+          {
+            "label": "Investopedia: Warranty - definition, types and example",
+            "url": "https://www.investopedia.com/terms/w/warranty.asp",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:05:17Z"
+          },
+          {
+            "label": "GOV.UK: Model Services Contract (UK government template contract)",
+            "url": "https://www.gov.uk/government/collections/model-services-contract",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:28Z"
+          },
+          {
+            "label": "Microsoft Learn: Define, capture, triage and manage bugs (Azure Boards)",
+            "url": "https://learn.microsoft.com/en-us/azure/devops/boards/backlogs/manage-bugs?view=azure-devops",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:32Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Warranties, Indemnities and Liability in IT Contracts: (3) Warranty Clauses in IT Contracts",
+            "channel": "Kemp IT Law",
+            "url": "https://www.youtube.com/watch?v=Jd0muYzi6yY",
+            "videoId": "Jd0muYzi6yY",
+            "verifiedAt": "2026-10-02T12:17:14Z"
+          },
+          {
+            "title": "Why Is the Warranty Clause Crucial in Technology Contracts",
+            "channel": "LawSikho Technology & AI Law",
+            "url": "https://www.youtube.com/watch?v=2hj20DB1BCk",
+            "videoId": "2hj20DB1BCk",
+            "verifiedAt": "2026-10-02T12:17:14Z"
+          },
+          {
+            "title": "What is a Software Warranty?",
+            "channel": "Attorney Thoughts",
+            "url": "https://www.youtube.com/watch?v=KmeSSleTXtU",
+            "videoId": "KmeSSleTXtU",
+            "verifiedAt": "2026-10-02T12:17:14Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a13": {
+    "title": "Handover & KT",
+    "topics": {
+      "pmp-a13-handover-checklist": {
+        "title": "The handover and KT checklist",
+        "refs": [
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Checklist for transitioning to support",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/transition-to-support-checklist",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:01Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Making source code open and reusable",
+            "url": "https://www.gov.uk/service-manual/technology/making-source-code-open-and-reusable",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:27Z"
+          },
+          {
+            "label": "Atlassian: Internal documentation",
+            "url": "https://www.atlassian.com/work-management/knowledge-sharing/documentation",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:21Z"
+          },
+          {
+            "label": "ProjectManager: Project handover template",
+            "url": "https://www.projectmanager.com/templates/project-handover-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:13Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Best Practices for Knowledge Transfer and Software Developer Project Handoff",
+            "channel": "Praxent",
+            "url": "https://www.youtube.com/watch?v=bEir1fAcDNw",
+            "videoId": "bEir1fAcDNw",
+            "verifiedAt": "2026-10-02T12:17:14Z"
+          },
+          {
+            "title": "How to hand over your project to another software house? A CEO guide",
+            "channel": "Merixstudio",
+            "url": "https://www.youtube.com/watch?v=kepsFRRzRGU",
+            "videoId": "kepsFRRzRGU",
+            "verifiedAt": "2026-10-02T12:17:16Z"
+          },
+          {
+            "title": "Project Handover Process [OVER TO YOU!]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=OLibddcR3Yg",
+            "videoId": "OLibddcR3Yg",
+            "verifiedAt": "2026-10-02T12:17:16Z"
+          }
+        ]
+      },
+      "pmp-a13-ownership-credentials": {
+        "title": "Transferring ownership, accounts and credentials",
+        "refs": [
+          {
+            "label": "OWASP Cheat Sheet Series: Secrets management",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:58Z"
+          },
+          {
+            "label": "GitHub Docs: Transferring a repository",
+            "url": "https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:56Z"
+          },
+          {
+            "label": "App Store Connect Help: Overview of app transfer",
+            "url": "https://developer.apple.com/help/app-store-connect/transfer-an-app/overview-of-app-transfer",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:07Z"
+          },
+          {
+            "label": "Play Console Help: Transfer apps to a different developer account",
+            "url": "https://support.google.com/googleplay/android-developer/answer/6230247",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:17Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Works Made for Hire",
+            "channel": "U.S. Copyright Office",
+            "url": "https://www.youtube.com/watch?v=G3hDdlMsFh8",
+            "videoId": "G3hDdlMsFh8",
+            "verifiedAt": "2026-10-02T12:17:16Z"
+          },
+          {
+            "title": "How to Transfer an Android App to Another Google Play Console Account? | thewodmapps",
+            "channel": "ThewodmApps",
+            "url": "https://www.youtube.com/watch?v=wD7kGi5cxK0",
+            "videoId": "wD7kGi5cxK0",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          },
+          {
+            "title": "Source Code Ownership",
+            "channel": "Andrew Wilcox",
+            "url": "https://www.youtube.com/watch?v=-UT-6R5K63o",
+            "videoId": "-UT-6R5K63o",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a14": {
+    "title": "Support, AMC & retainers",
+    "topics": {
+      "pmp-a14-support-models": {
+        "title": "Support models, levels and SLAs",
+        "refs": [
+          {
+            "label": "Atlassian: Service request management",
+            "url": "https://www.atlassian.com/itsm/service-request-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:44Z"
+          },
+          {
+            "label": "Atlassian: What is an SLA? Service level agreements explained",
+            "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:42Z"
+          },
+          {
+            "label": "Atlassian Support (Jira Service Management): What are SLAs?",
+            "url": "https://support.atlassian.com/jira-service-management-cloud/docs/what-are-slas/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:26Z"
+          },
+          {
+            "label": "Atlassian: ITIL 4 guiding principles and practices",
+            "url": "https://www.atlassian.com/itsm/itil",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:31Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What Does IT Support Do? Level 1, Level 2, Level 3 Escalations [Overview]",
+            "channel": "Tech With Emilio",
+            "url": "https://www.youtube.com/watch?v=AfeuTK2SF_I",
+            "videoId": "AfeuTK2SF_I",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          },
+          {
+            "title": "Basic job responsibilities of L1, L2 and L3 profiles in IT | My Experience | ENG Subtitles",
+            "channel": "Abhimanyu Gautam",
+            "url": "https://www.youtube.com/watch?v=hfpccsqzYDk",
+            "videoId": "hfpccsqzYDk",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          }
+        ]
+      },
+      "pmp-a14-amc-retainer": {
+        "title": "AMC and retainer engagements",
+        "refs": [
+          {
+            "label": "ISO/IEC/IEEE 14764:2022 - Software maintenance (standard page)",
+            "url": "https://www.iso.org/standard/80710.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          },
+          {
+            "label": "Investopedia: Retainer fee - definition and how it works",
+            "url": "https://www.investopedia.com/terms/r/retainer-fee.asp",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:05Z"
+          },
+          {
+            "label": "Atlassian: What is technical debt",
+            "url": "https://www.atlassian.com/agile/software-development/technical-debt",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:27Z"
+          },
+          {
+            "label": "Atlassian Support (Jira Service Management): Create SLAs to manage goals",
+            "url": "https://support.atlassian.com/jira-service-management-cloud/docs/create-service-level-agreements-slas/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Perfective, Preventive, Adaptive, Corrective Maintenance in Software Engineering",
+            "channel": "Gate Smashers",
+            "url": "https://www.youtube.com/watch?v=nulFv99VBGs",
+            "videoId": "nulFv99VBGs",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          },
+          {
+            "title": "How Do Agency Retainers Work?",
+            "channel": "Butler Branding Agency",
+            "url": "https://www.youtube.com/watch?v=FaMtj25UUvQ",
+            "videoId": "FaMtj25UUvQ",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          },
+          {
+            "title": "Agency Pricing Models - Creative Flexibility & Retainers",
+            "channel": "Creative Agency Success",
+            "url": "https://www.youtube.com/watch?v=WgJ2f7OViKw",
+            "videoId": "WgJ2f7OViKw",
+            "verifiedAt": "2026-10-02T12:17:18Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-a15": {
+    "title": "Closure",
+    "topics": {
+      "pmp-a15-retro-closure": {
+        "title": "Retrospective and project closure",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Retrospective",
+            "url": "https://www.atlassian.com/team-playbook/plays/retrospective",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:23Z"
+          },
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "ProjectManager: 7 steps to project closure",
+            "url": "https://www.projectmanager.com/blog/project-closure",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:49Z"
+          },
+          {
+            "label": "Asana: Lessons learned in project management",
+            "url": "https://asana.com/resources/lessons-learned",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:43Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Closing the Project [5 STEPS TO PROJECT CLOSURE]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=Fl5BVFzigt8",
+            "videoId": "Fl5BVFzigt8",
+            "verifiedAt": "2026-10-02T12:17:18Z"
+          },
+          {
+            "title": "How and Why to Close a Project - Project Management Training",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=aakuB-BtdlQ",
+            "videoId": "aakuB-BtdlQ",
+            "verifiedAt": "2026-10-02T12:17:18Z"
+          }
+        ]
+      },
+      "pmp-a15-case-study-upsell": {
+        "title": "Case study and upsell after closure",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Goals, signals and measures",
+            "url": "https://www.atlassian.com/team-playbook/plays/goals-signals-measures",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:28Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Customer interview",
+            "url": "https://www.atlassian.com/team-playbook/plays/customer-interview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:05:51Z"
+          },
+          {
+            "label": "Shopify Partners: A guide to growing your agency by upselling clients",
+            "url": "https://www.shopify.com/partners/blog/a-guide-to-growing-your-agency-by-upselling-clients",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:01:30Z"
+          },
+          {
+            "label": "Insites: How to upsell to your existing agency clients",
+            "url": "https://insites.com/blog/how-to-upsell-to-your-existing-agency-clients/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:01:32Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Make A Case Study That Gets Client Work",
+            "channel": "The Futur",
+            "url": "https://www.youtube.com/watch?v=31Uc5TA8ntA",
+            "videoId": "31Uc5TA8ntA",
+            "verifiedAt": "2026-10-02T12:17:18Z"
+          },
+          {
+            "title": "Account Management 101: Exactly How to Get Existing Customers to Buy More (Without Feeling Sold To)",
+            "channel": "Sell Better",
+            "url": "https://www.youtube.com/watch?v=XTlrt4S4W38",
+            "videoId": "XTlrt4S4W38",
+            "verifiedAt": "2026-10-02T12:17:18Z"
+          },
+          {
+            "title": "How to Upsell Your Current Agency Clients",
+            "channel": "ZenPilot",
+            "url": "https://www.youtube.com/watch?v=z4moCpOHcLY",
+            "videoId": "z4moCpOHcLY",
+            "verifiedAt": "2026-10-02T12:17:18Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c01": {
+    "title": "Commercial & contract terms",
+    "topics": {
+      "pmp-c01-msa-sow-nda": {
+        "title": "MSA, SOW and NDA",
+        "refs": [
+          {
+            "label": "Ironclad: MSA vs SOW - which one to use when",
+            "url": "https://ironcladapp.com/journal/contracts/msa-vs-sow",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:51:37Z"
+          },
+          {
+            "label": "Investopedia: Non-disclosure agreements (NDAs)",
+            "url": "https://www.investopedia.com/terms/n/nda.asp",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:00Z"
+          },
+          {
+            "label": "GOV.UK: Model Services Contract (UK government template contract)",
+            "url": "https://www.gov.uk/government/collections/model-services-contract",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:28Z"
+          },
+          {
+            "label": "Cornell LII Wex: indemnity",
+            "url": "https://www.law.cornell.edu/wex/indemnity",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:51:36Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Master Service Agreement (MSA) Explained in Simple Terms",
+            "channel": "Malcolm Zoppi | Corporate and M&A Solicitor ",
+            "url": "https://www.youtube.com/watch?v=SyoXHjRR5KA",
+            "videoId": "SyoXHjRR5KA",
+            "verifiedAt": "2026-10-02T12:17:19Z"
+          },
+          {
+            "title": "How to Review a Master Services Agreement [Top Terms to Understand]",
+            "channel": "ContractsCounsel",
+            "url": "https://www.youtube.com/watch?v=CDNAUczyQck",
+            "videoId": "CDNAUczyQck",
+            "verifiedAt": "2026-10-02T12:17:19Z"
+          },
+          {
+            "title": "What Is An NDA? Non Disclosure Agreement (NDA) Explained",
+            "channel": "Tetrault Wealth",
+            "url": "https://www.youtube.com/watch?v=GrW6_yCBw6M",
+            "videoId": "GrW6_yCBw6M",
+            "verifiedAt": "2026-10-02T12:17:19Z"
+          }
+        ]
+      },
+      "pmp-c01-estimate-quote-po": {
+        "title": "Estimate, quote, PO and invoice",
+        "refs": [
+          {
+            "label": "ProjectManager: Purchase order process explained",
+            "url": "https://www.projectmanager.com/blog/purchase-order-process-explained",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:16Z"
+          },
+          {
+            "label": "GOV.UK: Invoices - what they must include",
+            "url": "https://www.gov.uk/invoicing-and-taking-payment-from-customers/invoices-what-they-must-include",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:05:27Z"
+          },
+          {
+            "label": "Asana: Project estimation methods",
+            "url": "https://asana.com/resources/project-estimation",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:20Z"
+          },
+          {
+            "label": "Microsoft Learn (Project Operations): Manage the project billing backlog",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/project-operations/pro/proforma-invoicing/manage-billing-backlog-sales",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:23Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Quotation vs Estimate vs Invoice - What's the Difference?",
+            "channel": "Let's Go Digital",
+            "url": "https://www.youtube.com/watch?v=7BoY2-u4ao8",
+            "videoId": "7BoY2-u4ao8",
+            "verifiedAt": "2026-10-02T12:17:19Z"
+          },
+          {
+            "title": "What is a Purchase Order and How Does It Work?",
+            "channel": "The Bookkeeping Channel",
+            "url": "https://www.youtube.com/watch?v=2mDpe8RpcPA",
+            "videoId": "2mDpe8RpcPA",
+            "verifiedAt": "2026-10-02T12:17:19Z"
+          },
+          {
+            "title": "The Difference Between a Quote and an Estimate!",
+            "channel": "Brandon Adams",
+            "url": "https://www.youtube.com/watch?v=kDJtfe-vrMI",
+            "videoId": "kDJtfe-vrMI",
+            "verifiedAt": "2026-10-02T12:17:19Z"
+          }
+        ]
+      },
+      "pmp-c01-pricing-models": {
+        "title": "Pricing model terms",
+        "refs": [
+          {
+            "label": "Acquisition.gov: FAR Part 16 - Types of Contracts",
+            "url": "https://www.acquisition.gov/far/part-16",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:30Z"
+          },
+          {
+            "label": "ProjectManager: Fixed price contract - what you need to know",
+            "url": "https://www.projectmanager.com/blog/fixed-price-contract",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:12Z"
+          },
+          {
+            "label": "ProjectManager: Time and materials contract (T&M) - when to use one",
+            "url": "https://www.projectmanager.com/blog/time-and-materials-contract",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:14Z"
+          },
+          {
+            "label": "Investopedia: Retainer fee - definition and how it works",
+            "url": "https://www.investopedia.com/terms/r/retainer-fee.asp",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:05Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Fixed Fee vs Time & Materials Contracts: Comparison",
+            "channel": "Brainhub",
+            "url": "https://www.youtube.com/watch?v=WrUYVqs2-BY",
+            "videoId": "WrUYVqs2-BY",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          },
+          {
+            "title": "Types of Services Contracts",
+            "channel": "Drupalize.Me",
+            "url": "https://www.youtube.com/watch?v=gOL2p9UuN10",
+            "videoId": "gOL2p9UuN10",
+            "verifiedAt": "2026-10-02T12:17:20Z"
+          },
+          {
+            "title": "Contract Type - Fixed Price , T&M and Cost+ - PMP Exam Topic",
+            "channel": "iZenBridge Consultancy Pvt Ltd.",
+            "url": "https://www.youtube.com/watch?v=God5KMi9tAs",
+            "videoId": "God5KMi9tAs",
+            "verifiedAt": "2026-10-02T12:17:20Z"
+          }
+        ]
+      },
+      "pmp-c01-ip-licence-handover": {
+        "title": "IP, licences and handover terms",
+        "refs": [
+          {
+            "label": "U.S. Copyright Office: Circular 30, Works Made for Hire (PDF)",
+            "url": "https://www.copyright.gov/circs/circ30.pdf",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:31Z"
+          },
+          {
+            "label": "GOV.UK: Intellectual property and your work",
+            "url": "https://www.gov.uk/intellectual-property-an-overview",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:29Z"
+          },
+          {
+            "label": "Cornell LII Wex: work made for hire",
+            "url": "https://www.law.cornell.edu/wex/work_made_for_hire",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:51:34Z"
+          },
+          {
+            "label": "choosealicense.com (GitHub): Choose an open source license",
+            "url": "https://choosealicense.com/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:58Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Works Made for Hire",
+            "channel": "U.S. Copyright Office",
+            "url": "https://www.youtube.com/watch?v=G3hDdlMsFh8",
+            "videoId": "G3hDdlMsFh8",
+            "verifiedAt": "2026-10-02T12:17:16Z"
+          },
+          {
+            "title": "What Every Software Developer Should Know About Intellectual Property Law by Ido Tuchman",
+            "channel": "Full Stack Talks",
+            "url": "https://www.youtube.com/watch?v=xMJPSKnY1UI",
+            "videoId": "xMJPSKnY1UI",
+            "verifiedAt": "2026-10-02T12:17:20Z"
+          },
+          {
+            "title": "Typical Intellectual Property Mistakes in Software and Cloud Contracts | LinkedIn Live, Sept 16 2021",
+            "channel": "Tech Contracts Academy",
+            "url": "https://www.youtube.com/watch?v=Hql5EYaUqLk",
+            "videoId": "Hql5EYaUqLk",
+            "verifiedAt": "2026-10-02T12:17:20Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c02": {
+    "title": "Scope terms",
+    "topics": {
+      "pmp-c02-cr-enh-bug-feature": {
+        "title": "CR vs enhancement vs bug vs feature",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Define, capture, triage and manage bugs (Azure Boards)",
+            "url": "https://learn.microsoft.com/en-us/azure/devops/boards/backlogs/manage-bugs?view=azure-devops",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:32Z"
+          },
+          {
+            "label": "Atlassian Support (Jira): What are work types (epic, story, task, bug)",
+            "url": "https://support.atlassian.com/jira-cloud-administration/docs/what-are-issue-types/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:29Z"
+          },
+          {
+            "label": "Atlassian: Epics, stories and initiatives",
+            "url": "https://www.atlassian.com/agile/project-management/epics-stories-themes",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:16Z"
+          },
+          {
+            "label": "Atlassian: Scope creep in project management",
+            "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:56Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Issue Tracking, Incident, Bug, Service Request, Change, Info, Feature, Ticket | Prof. Griesbauer",
+            "channel": "Prof Joe",
+            "url": "https://www.youtube.com/watch?v=eZmhXEEkDsE",
+            "videoId": "eZmhXEEkDsE",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          },
+          {
+            "title": "What's the Difference? Variations, Scope Creep, and Gold-plating",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=FtdpduGS8yc",
+            "videoId": "FtdpduGS8yc",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          }
+        ]
+      },
+      "pmp-c02-assumption-dependency-constraint": {
+        "title": "Assumption, dependency and constraint",
+        "refs": [
+          {
+            "label": "Asana: Project constraints - 6 types to manage",
+            "url": "https://asana.com/resources/project-constraints",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:50Z"
+          },
+          {
+            "label": "Asana: Project dependencies - types and how to manage them",
+            "url": "https://asana.com/resources/project-dependencies",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:47Z"
+          },
+          {
+            "label": "Asana: RAID log - risks, assumptions, issues and decisions",
+            "url": "https://asana.com/resources/raid-log",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:18Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Dependency mapping",
+            "url": "https://www.atlassian.com/team-playbook/plays/dependency-mapping",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:05:47Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Assumptions constraints dependencies video",
+            "channel": "Bill Bowen",
+            "url": "https://www.youtube.com/watch?v=kno0FOmLuIY",
+            "videoId": "kno0FOmLuIY",
+            "verifiedAt": "2026-10-02T12:17:20Z"
+          },
+          {
+            "title": "Project Management Concept #9: Assumptions vs Constraints",
+            "channel": "Belinda Goodrich, Speaker, Author, Educator",
+            "url": "https://www.youtube.com/watch?v=sru-hs5JjUg",
+            "videoId": "sru-hs5JjUg",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          },
+          {
+            "title": "What are Task Dependencies in Project Management?",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=KzOevm0uQQM",
+            "videoId": "KzOevm0uQQM",
+            "verifiedAt": "2026-10-02T12:17:21Z"
+          }
+        ]
+      },
+      "pmp-c02-creep-goldplating": {
+        "title": "Scope creep vs gold plating",
+        "refs": [
+          {
+            "label": "PMI: Lexicon of Project Management Terms",
+            "url": "https://www.pmi.org/standards/lexicon",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          },
+          {
+            "label": "TeamGantt: What is scope creep and how to avoid it",
+            "url": "https://www.teamgantt.com/project-management-guide/taming-scope-creep",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:58:54Z"
+          },
+          {
+            "label": "PMI Learning Library: Top five causes of scope creep",
+            "url": "https://www.pmi.org/learning/library/top-five-causes-scope-creep-6675",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:01:33Z"
+          },
+          {
+            "label": "monday.com: How to avoid gold plating in project management",
+            "url": "https://monday.com/blog/project-management/gold-plating-project-management/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:01:32Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What's the Difference? Variations, Scope Creep, and Gold-plating",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=FtdpduGS8yc",
+            "videoId": "FtdpduGS8yc",
+            "verifiedAt": "2026-10-02T12:17:09Z"
+          },
+          {
+            "title": "What is the Difference Between Scope Creep and Gold Plating? Scope Creep vs Gold Plating Explained!",
+            "channel": "projectcubicle",
+            "url": "https://www.youtube.com/watch?v=-1_fOHVftks",
+            "videoId": "-1_fOHVftks",
+            "verifiedAt": "2026-10-02T12:17:21Z"
+          },
+          {
+            "title": "Gold Plating in Project Management (PMP)",
+            "channel": "PMC Lounge",
+            "url": "https://www.youtube.com/watch?v=tXXxfYHblXs",
+            "videoId": "tXXxfYHblXs",
+            "verifiedAt": "2026-10-02T12:17:21Z"
+          }
+        ]
+      },
+      "pmp-c02-config-vs-custom": {
+        "title": "Configuration vs customisation",
+        "refs": [
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Customize and extend - configuration first",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/extend-your-solution-scenarios",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:00Z"
+          },
+          {
+            "label": "Microsoft Learn (Dynamics 365 implementation guide): Extend apps without compromising performance",
+            "url": "https://learn.microsoft.com/en-us/dynamics365/guidance/implementation-guide/extend-your-solution",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:01Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Choosing technology: an introduction",
+            "url": "https://www.gov.uk/service-manual/technology/choosing-technology-an-introduction",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:27Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Configuration vs. Customization: Understanding the Differences",
+            "channel": "Technology Advisors, Inc.",
+            "url": "https://www.youtube.com/watch?v=drk4_gaw06Y",
+            "videoId": "drk4_gaw06Y",
+            "verifiedAt": "2026-10-02T12:17:21Z"
+          },
+          {
+            "title": "ERP Software Customization vs. Software Best Practices",
+            "channel": "Digital Transformation with Eric Kimberling",
+            "url": "https://www.youtube.com/watch?v=MGRSzaHcbqw",
+            "videoId": "MGRSzaHcbqw",
+            "verifiedAt": "2026-10-02T12:17:21Z"
+          },
+          {
+            "title": "What is Customization Vs Configuration in ServiceNow? Know before you customize OOTB features",
+            "channel": "ServiceNowStar",
+            "url": "https://www.youtube.com/watch?v=LYQj2Vueex4",
+            "videoId": "LYQj2Vueex4",
+            "verifiedAt": "2026-10-02T12:17:21Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c03": {
+    "title": "Delivery terms",
+    "topics": {
+      "pmp-c03-brd-prd-story": {
+        "title": "BRD vs PRD vs user story",
+        "refs": [
+          {
+            "label": "Asana: Business requirements document template",
+            "url": "https://asana.com/resources/business-requirements-document-template",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:42Z"
+          },
+          {
+            "label": "ProjectManager: How to write a business requirements document (BRD)",
+            "url": "https://www.projectmanager.com/blog/business-requirements-document",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:14Z"
+          },
+          {
+            "label": "Atlassian: Product requirements document (PRD)",
+            "url": "https://www.atlassian.com/agile/product-management/requirements",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:23Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Writing user stories",
+            "url": "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:25Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Business Requirements Document Explained: Your Blueprint for Project Success",
+            "channel": "AltexSoft",
+            "url": "https://www.youtube.com/watch?v=mm8sTgoUhRY",
+            "videoId": "mm8sTgoUhRY",
+            "verifiedAt": "2026-10-02T12:17:21Z"
+          },
+          {
+            "title": "Requirement Specification vs User Stories",
+            "channel": "Modern Software Engineering",
+            "url": "https://www.youtube.com/watch?v=KP0U3I-f9-Y",
+            "videoId": "KP0U3I-f9-Y",
+            "verifiedAt": "2026-10-02T12:17:22Z"
+          },
+          {
+            "title": "BRD FRD and SRS || Dhirendra Kumar Panda || The Business Analyst Trainer",
+            "channel": "The Business Analyst Trainer",
+            "url": "https://www.youtube.com/watch?v=Adkxkio84PY",
+            "videoId": "Adkxkio84PY",
+            "verifiedAt": "2026-10-02T12:17:22Z"
+          }
+        ]
+      },
+      "pmp-c03-dor-dod": {
+        "title": "Definition of Ready and Definition of Done",
+        "refs": [
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "Atlassian: What is the Definition of Ready",
+            "url": "https://www.atlassian.com/agile/project-management/definition-of-ready",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:17Z"
+          },
+          {
+            "label": "Atlassian: Definition of Done (DoD)",
+            "url": "https://www.atlassian.com/agile/project-management/definition-of-done",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:23Z"
+          },
+          {
+            "label": "Atlassian: Acceptance criteria - definition, examples and tips",
+            "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:23Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Definition of ready vs Definition of done  | CT Academy",
+            "channel": "CT Academy",
+            "url": "https://www.youtube.com/watch?v=kfSeI6Qvt_Q",
+            "videoId": "kfSeI6Qvt_Q",
+            "verifiedAt": "2026-10-02T12:17:22Z"
+          },
+          {
+            "title": "What Is the Definition of Ready In Agile and Why Is It Dangerous?",
+            "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+            "url": "https://www.youtube.com/watch?v=4SVwNF3quZo",
+            "videoId": "4SVwNF3quZo",
+            "verifiedAt": "2026-10-02T12:17:22Z"
+          },
+          {
+            "title": "definition of ready vs definition of done vs acceptance criteria I scrum master interview questions",
+            "channel": "CareersTalk",
+            "url": "https://www.youtube.com/watch?v=YlUsgI4s-Vs",
+            "videoId": "YlUsgI4s-Vs",
+            "verifiedAt": "2026-10-02T12:17:22Z"
+          }
+        ]
+      },
+      "pmp-c03-release-deploy-golive": {
+        "title": "Release vs deploy vs go-live",
+        "refs": [
+          {
+            "label": "Atlassian: Continuous integration vs delivery vs deployment",
+            "url": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:26Z"
+          },
+          {
+            "label": "Martin Fowler (Pete Hodgson): Feature toggles",
+            "url": "https://martinfowler.com/articles/feature-toggles.html",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:01Z"
+          },
+          {
+            "label": "GOV.UK Service Manual: Deploying software regularly",
+            "url": "https://www.gov.uk/service-manual/technology/deploying-software-regularly",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:26Z"
+          },
+          {
+            "label": "Google SRE book: Release engineering",
+            "url": "https://sre.google/sre-book/release-engineering/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:03Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is the difference between deployment and release?",
+            "channel": "Romano Roth",
+            "url": "https://www.youtube.com/watch?v=qmItPR0I-OE",
+            "videoId": "qmItPR0I-OE",
+            "verifiedAt": "2026-10-02T12:17:23Z"
+          },
+          {
+            "title": "What are Feature Flags?",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=AJa2B-twtG4",
+            "videoId": "AJa2B-twtG4",
+            "verifiedAt": "2026-10-02T12:17:23Z"
+          },
+          {
+            "title": "Continuous Deployment vs. Continuous Delivery",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=LNLKZ4Rvk8w",
+            "videoId": "LNLKZ4Rvk8w",
+            "verifiedAt": "2026-10-02T12:17:24Z"
+          }
+        ]
+      },
+      "pmp-c03-hotfix-patch-version": {
+        "title": "Hotfix, patch and version numbers",
+        "refs": [
+          {
+            "label": "Semantic Versioning 2.0.0",
+            "url": "https://semver.org/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:54:58Z"
+          },
+          {
+            "label": "Atlassian Git Tutorial: Gitflow workflow (release and hotfix branches)",
+            "url": "https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:55Z"
+          },
+          {
+            "label": "Apple Developer Documentation: CFBundleShortVersionString (release version number)",
+            "url": "https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleshortversionstring",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:12Z"
+          },
+          {
+            "label": "Keep a Changelog 1.1.0",
+            "url": "https://keepachangelog.com/en/1.1.0/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:09:50Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is Semantic Versioning? (semver)",
+            "channel": "Syntax",
+            "url": "https://www.youtube.com/watch?v=97i9pOa2EyE",
+            "videoId": "97i9pOa2EyE",
+            "verifiedAt": "2026-10-02T12:17:24Z"
+          },
+          {
+            "title": "Gitflow Hotfix Branch Example",
+            "channel": "Cameron McKenzie",
+            "url": "https://www.youtube.com/watch?v=5q75eeEYApk",
+            "videoId": "5q75eeEYApk",
+            "verifiedAt": "2026-10-02T12:17:24Z"
+          },
+          {
+            "title": "Software Versioning Explained - Semantic (SemVer), Calendar (CalVer), etc.",
+            "channel": "DevOps & AI Toolkit",
+            "url": "https://www.youtube.com/watch?v=xvPiZyx0cDc",
+            "videoId": "xvPiZyx0cDc",
+            "verifiedAt": "2026-10-02T12:17:24Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c04": {
+    "title": "Quality & support terms",
+    "topics": {
+      "pmp-c04-severity-priority": {
+        "title": "Severity vs priority",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Define, capture, triage and manage bugs (Azure Boards)",
+            "url": "https://learn.microsoft.com/en-us/azure/devops/boards/backlogs/manage-bugs?view=azure-devops",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:32Z"
+          },
+          {
+            "label": "ISTQB Glossary (search: severity, priority, defect, regression testing)",
+            "url": "https://glossary.istqb.org/en_US/home",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:41Z"
+          },
+          {
+            "label": "Atlassian: Understanding incident severity levels",
+            "url": "https://www.atlassian.com/incident-management/kpis/severity-levels",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:51Z"
+          },
+          {
+            "label": "PagerDuty Incident Response: Severity levels",
+            "url": "https://response.pagerduty.com/before/severity_levels/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:05Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Severity and Priority in Software Testing",
+            "channel": "Software Testing Material",
+            "url": "https://www.youtube.com/watch?v=HW_tnUnUav8",
+            "videoId": "HW_tnUnUav8",
+            "verifiedAt": "2026-10-02T12:17:24Z"
+          },
+          {
+            "title": "Severity Vs Priority| Difference between them With Examples | Most Asked Interview Questions",
+            "channel": "SoftwaretestingbyMKT",
+            "url": "https://www.youtube.com/watch?v=xhNFH5FBbC0",
+            "videoId": "xhNFH5FBbC0",
+            "verifiedAt": "2026-10-02T12:17:24Z"
+          },
+          {
+            "title": "Bug Severity vs Priority 🔥 | The Most Confusing QA Concept Simplified!",
+            "channel": "Suresh SDET Automation",
+            "url": "https://www.youtube.com/watch?v=Ew5R85_Z37o",
+            "videoId": "Ew5R85_Z37o",
+            "verifiedAt": "2026-10-02T12:17:25Z"
+          }
+        ]
+      },
+      "pmp-c04-qa-uat-smoke-regression": {
+        "title": "QA, UAT, smoke and regression testing",
+        "refs": [
+          {
+            "label": "ISTQB Glossary (search: severity, priority, defect, regression testing)",
+            "url": "https://glossary.istqb.org/en_US/home",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:41Z"
+          },
+          {
+            "label": "TechTarget: What is smoke testing?",
+            "url": "https://www.techtarget.com/it-infrastructure/definition/smoke-testing",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:45Z"
+          },
+          {
+            "label": "TechTarget: What is regression testing?",
+            "url": "https://www.techtarget.com/it-infrastructure/definition/What-is-regression-testing",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:46Z"
+          },
+          {
+            "label": "Atlassian: The different types of software testing",
+            "url": "https://www.atlassian.com/continuous-delivery/software-testing/types-of-software-testing",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:54:26Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Smoke vs Sanity vs Regression testing - explained with example",
+            "channel": "Software Testing Tips and Tricks",
+            "url": "https://www.youtube.com/watch?v=1L_P6K6Zw3M",
+            "videoId": "1L_P6K6Zw3M",
+            "verifiedAt": "2026-10-02T12:17:25Z"
+          },
+          {
+            "title": "Smoke Testing Vs Regression Testing | Software Testing | QA | Functional Testing",
+            "channel": "Testing Talks with Faisal Khatri",
+            "url": "https://www.youtube.com/watch?v=Qt6xTQln3WU",
+            "videoId": "Qt6xTQln3WU",
+            "verifiedAt": "2026-10-02T12:17:25Z"
+          },
+          {
+            "title": "Regression Testing with Real Life Examples | Software Engineering",
+            "channel": "Gate Smashers",
+            "url": "https://www.youtube.com/watch?v=5496sXljdnQ",
+            "videoId": "5496sXljdnQ",
+            "verifiedAt": "2026-10-02T12:17:25Z"
+          }
+        ]
+      },
+      "pmp-c04-response-resolution-tat": {
+        "title": "Response time, resolution time and TAT",
+        "refs": [
+          {
+            "label": "Atlassian Support (Jira Service Management): Create SLAs to manage goals",
+            "url": "https://support.atlassian.com/jira-service-management-cloud/docs/create-service-level-agreements-slas/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:26Z"
+          },
+          {
+            "label": "Atlassian Support (Jira Service Management): What are SLAs?",
+            "url": "https://support.atlassian.com/jira-service-management-cloud/docs/what-are-slas/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:01:26Z"
+          },
+          {
+            "label": "Atlassian: What is an SLA? Service level agreements explained",
+            "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:42Z"
+          },
+          {
+            "label": "Atlassian: Common incident management metrics (MTTA, MTTR)",
+            "url": "https://www.atlassian.com/incident-management/kpis/common-metrics",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:54Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Response Time vs Resolution Time: Key SLA Metrics Explained",
+            "channel": "CodeLucky",
+            "url": "https://www.youtube.com/watch?v=t82UmqYL3mY",
+            "videoId": "t82UmqYL3mY",
+            "verifiedAt": "2026-10-02T12:17:25Z"
+          },
+          {
+            "title": "Response Time VS Resolution Time Explained for IT Support",
+            "channel": "ComTech Network Solutions",
+            "url": "https://www.youtube.com/watch?v=3Jul8iev-JQ",
+            "videoId": "3Jul8iev-JQ",
+            "verifiedAt": "2026-10-02T12:17:25Z"
+          },
+          {
+            "title": "SLAs, SLOs, and SLIs EXPLAINED in 7 Minutes (2025)",
+            "channel": "Better Stack",
+            "url": "https://www.youtube.com/watch?v=pouVbehfnqQ",
+            "videoId": "pouVbehfnqQ",
+            "verifiedAt": "2026-10-02T12:17:28Z"
+          }
+        ]
+      },
+      "pmp-c04-rca-known-issues": {
+        "title": "RCA, known errors and known issues",
+        "refs": [
+          {
+            "label": "Atlassian: Problem management in ITIL",
+            "url": "https://www.atlassian.com/itsm/problem-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:30Z"
+          },
+          {
+            "label": "Google SRE book: Postmortem culture",
+            "url": "https://sre.google/sre-book/postmortem-culture/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:55:02Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: 5 Whys analysis",
+            "url": "https://www.atlassian.com/team-playbook/plays/5-whys",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:53:20Z"
+          },
+          {
+            "label": "TechTarget: What is root cause analysis?",
+            "url": "https://www.techtarget.com/it-infrastructure/definition/What-is-root-cause-analysis",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:07Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is 5 Why - A Root Cause Analysis Technique",
+            "channel": "LeanVlog",
+            "url": "https://www.youtube.com/watch?v=-_nN_YTDsuk",
+            "videoId": "-_nN_YTDsuk",
+            "verifiedAt": "2026-10-02T12:17:32Z"
+          },
+          {
+            "title": "BEFORE You Do A 5 WHYs Root Cause Analysis Watch This…",
+            "channel": "Stefano - The Agile Business Analyst",
+            "url": "https://www.youtube.com/watch?v=zZRmCs7Dag8",
+            "videoId": "zZRmCs7Dag8",
+            "verifiedAt": "2026-10-02T12:17:32Z"
+          },
+          {
+            "title": "Blameless Postmortem Culture In Software Engineering",
+            "channel": "Clément Mihailescu",
+            "url": "https://www.youtube.com/watch?v=Fv0nwb1Qn6A",
+            "videoId": "Fv0nwb1Qn6A",
+            "verifiedAt": "2026-10-02T12:17:32Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c05": {
+    "title": "Warranty, support & maintenance",
+    "topics": {
+      "pmp-c05-warranty-support-amc": {
+        "title": "Warranty vs support vs AMC",
+        "refs": [
+          {
+            "label": "ISO/IEC/IEEE 14764:2022 - Software maintenance (standard page)",
+            "url": "https://www.iso.org/standard/80710.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          },
+          {
+            "label": "Cornell LII Wex: warranty",
+            "url": "https://www.law.cornell.edu/wex/warranty",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:51:33Z"
+          },
+          {
+            "label": "Atlassian: What is an SLA? Service level agreements explained",
+            "url": "https://www.atlassian.com/itsm/service-request-management/slas",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:42Z"
+          },
+          {
+            "label": "Investopedia: Retainer fee - definition and how it works",
+            "url": "https://www.investopedia.com/terms/r/retainer-fee.asp",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:05Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Perfective, Preventive, Adaptive, Corrective Maintenance in Software Engineering",
+            "channel": "Gate Smashers",
+            "url": "https://www.youtube.com/watch?v=nulFv99VBGs",
+            "videoId": "nulFv99VBGs",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          },
+          {
+            "title": "Key Issues In Software Maintenance Agreements (312) 263-0570",
+            "channel": "Marcus Harris Software & Tech Attorney",
+            "url": "https://www.youtube.com/watch?v=AKpMZ6XRW-0",
+            "videoId": "AKpMZ6XRW-0",
+            "verifiedAt": "2026-10-02T12:17:33Z"
+          },
+          {
+            "title": "Warranties, Indemnities and Liability in IT Contracts: (3) Warranty Clauses in IT Contracts",
+            "channel": "Kemp IT Law",
+            "url": "https://www.youtube.com/watch?v=Jd0muYzi6yY",
+            "videoId": "Jd0muYzi6yY",
+            "verifiedAt": "2026-10-02T12:17:14Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c06": {
+    "title": "Communication & governance",
+    "topics": {
+      "pmp-c06-raci-spoc-steerco": {
+        "title": "RACI, SPOC and SteerCo",
+        "refs": [
+          {
+            "label": "Atlassian: RACI chart - what it is and how to use it",
+            "url": "https://www.atlassian.com/work-management/project-management/raci-chart",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:57Z"
+          },
+          {
+            "label": "GOV.UK: Role of the senior responsible owner",
+            "url": "https://www.gov.uk/government/publications/the-role-of-the-senior-responsible-owner",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:51:28Z"
+          },
+          {
+            "label": "TechTarget: What is a steering committee?",
+            "url": "https://www.techtarget.com/it-strategy/definition/steering-committee",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:08Z"
+          },
+          {
+            "label": "ProjectManager: Steering committee definition, roles and meeting tips",
+            "url": "https://www.projectmanager.com/blog/steering-committee-definition",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:04:25Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is a Steering Committee [PURPOSE AND ROLES EXPLAINED]",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=oDDBIYxIBX0",
+            "videoId": "oDDBIYxIBX0",
+            "verifiedAt": "2026-10-02T12:17:33Z"
+          },
+          {
+            "title": "RACI explained its simple yet powerful - The most watched RACI matrix video on YouTube",
+            "channel": "RACI",
+            "url": "https://www.youtube.com/watch?v=1U2gngDxFkc",
+            "videoId": "1U2gngDxFkc",
+            "verifiedAt": "2026-10-02T12:16:55Z"
+          },
+          {
+            "title": "Successful Project Steering Committee Meetings",
+            "channel": "Stuart Taylor - Project Management",
+            "url": "https://www.youtube.com/watch?v=uZrimlzyj9k",
+            "videoId": "uZrimlzyj9k",
+            "verifiedAt": "2026-10-02T12:17:33Z"
+          }
+        ]
+      },
+      "pmp-c06-risk-vs-issue-raid": {
+        "title": "Risk vs issue and the RAID log",
+        "refs": [
+          {
+            "label": "Asana: RAID log - risks, assumptions, issues and decisions",
+            "url": "https://asana.com/resources/raid-log",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:57:18Z"
+          },
+          {
+            "label": "ProjectManager: What is a RAID log",
+            "url": "https://www.projectmanager.com/blog/raid-log-use-one",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:50Z"
+          },
+          {
+            "label": "APM: What is risk management?",
+            "url": "https://www.apm.org.uk/resources/what-is-project-management/what-is-risk-management/",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:08:03Z"
+          },
+          {
+            "label": "PMI: Lexicon of Project Management Terms",
+            "url": "https://www.pmi.org/standards/lexicon",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "RAID Log Explained within 5 Minutes | Risks, Assumptions, Issues & Dependencies | Project Management",
+            "channel": "VKG Labs",
+            "url": "https://www.youtube.com/watch?v=s87zt4fwlyA",
+            "videoId": "s87zt4fwlyA",
+            "verifiedAt": "2026-10-02T12:17:33Z"
+          },
+          {
+            "title": "How to Use RAID Log in REAL-LIFE Project (+ Template)",
+            "channel": "Tactical Project Manager",
+            "url": "https://www.youtube.com/watch?v=inZI16nIvdo",
+            "videoId": "inZI16nIvdo",
+            "verifiedAt": "2026-10-02T12:17:33Z"
+          },
+          {
+            "title": "Risks, Assumptions, and Issues: What are their differences (and similarities)?",
+            "channel": "PM4NGOs",
+            "url": "https://www.youtube.com/watch?v=Iwhctssm2o0",
+            "videoId": "Iwhctssm2o0",
+            "verifiedAt": "2026-10-02T12:16:56Z"
+          }
+        ]
+      },
+      "pmp-c06-escalation-matrix": {
+        "title": "The escalation matrix",
+        "refs": [
+          {
+            "label": "ProjectManager: Escalation matrix how-to guide with example",
+            "url": "https://www.projectmanager.com/blog/escalation-matrix",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:56:50Z"
+          },
+          {
+            "label": "Atlassian: Escalation policies for incidents",
+            "url": "https://www.atlassian.com/incident-management/on-call/escalation-policies",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:53Z"
+          },
+          {
+            "label": "PagerDuty Support: Escalation policy basics",
+            "url": "https://support.pagerduty.com/main/docs/escalation-policies",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:09:54Z"
+          },
+          {
+            "label": "PagerDuty Incident Response documentation",
+            "url": "https://response.pagerduty.com/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:04Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Project Issue Escalation Matrix In Project Management",
+            "channel": "Project Astute",
+            "url": "https://www.youtube.com/watch?v=ABK7CFZExgk",
+            "videoId": "ABK7CFZExgk",
+            "verifiedAt": "2026-10-02T12:17:33Z"
+          },
+          {
+            "title": "How to Set up an Escalation Process?",
+            "channel": "Project Booster",
+            "url": "https://www.youtube.com/watch?v=DSz0lWLXryE",
+            "videoId": "DSz0lWLXryE",
+            "verifiedAt": "2026-10-02T12:17:33Z"
+          },
+          {
+            "title": "8 Steps To Manage Client Escalations Like a PRO",
+            "channel": "VenuMuvvala",
+            "url": "https://www.youtube.com/watch?v=fTGJMYcLVR0",
+            "videoId": "fTGJMYcLVR0",
+            "verifiedAt": "2026-10-02T12:17:34Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c07": {
+    "title": "White-label terms",
+    "topics": {
+      "pmp-c07-whitelabel-reseller-private": {
+        "title": "White-label, reseller and private label",
+        "refs": [
+          {
+            "label": "Investopedia: White label products",
+            "url": "https://www.investopedia.com/terms/w/white-label-product.asp",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:52:03Z"
+          },
+          {
+            "label": "Shopify: White label products",
+            "url": "https://www.shopify.com/blog/white-label-products",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:05:20Z"
+          },
+          {
+            "label": "Shopify: Private label products",
+            "url": "https://www.shopify.com/blog/private-label",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:05:19Z"
+          },
+          {
+            "label": "Apple Developer: App Review Guidelines",
+            "url": "https://developer.apple.com/app-store/review/guidelines/",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:06Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "What is White Label? Products, Software, and More",
+            "channel": "Vendasta",
+            "url": "https://www.youtube.com/watch?v=AYmcCfQgIPg",
+            "videoId": "AYmcCfQgIPg",
+            "verifiedAt": "2026-10-02T12:17:34Z"
+          },
+          {
+            "title": "White Label vs. Private Label - What’s the difference?",
+            "channel": "Women's Business Link",
+            "url": "https://www.youtube.com/watch?v=phzkv3iJmmI",
+            "videoId": "phzkv3iJmmI",
+            "verifiedAt": "2026-10-02T12:17:34Z"
+          },
+          {
+            "title": "White-Label Software Explained: How Does It Actually Work?",
+            "channel": "SaaS Yaari",
+            "url": "https://www.youtube.com/watch?v=X3Fqxa84LQ8",
+            "videoId": "X3Fqxa84LQ8",
+            "verifiedAt": "2026-10-02T12:17:34Z"
+          }
+        ]
+      },
+      "pmp-c07-tenancy-instance-fork": {
+        "title": "Tenant, instance and fork",
+        "refs": [
+          {
+            "label": "Microsoft Learn: Tenancy models for a multitenant solution",
+            "url": "https://learn.microsoft.com/en-us/azure/architecture/guide/multitenant/considerations/tenancy-models",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:29Z"
+          },
+          {
+            "label": "AWS SaaS Lens: Silo, pool and bridge models",
+            "url": "https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/silo-pool-and-bridge-models.html",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:55Z"
+          },
+          {
+            "label": "AWS Whitepaper: SaaS tenant isolation strategies",
+            "url": "https://docs.aws.amazon.com/whitepapers/latest/saas-tenant-isolation-strategies/saas-tenant-isolation-strategies.html",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T12:09:43Z"
+          },
+          {
+            "label": "GitHub Docs: Forks",
+            "url": "https://docs.github.com/en/pull-requests/reference/forks",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:57Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Multitenancy Explained",
+            "channel": "IBM Technology",
+            "url": "https://www.youtube.com/watch?v=60ccSmOxpMw",
+            "videoId": "60ccSmOxpMw",
+            "verifiedAt": "2026-10-02T12:17:34Z"
+          },
+          {
+            "title": "Multi-tenant Architecture for SaaS",
+            "channel": "CodeOpinion",
+            "url": "https://www.youtube.com/watch?v=e8k6TynqGFs",
+            "videoId": "e8k6TynqGFs",
+            "verifiedAt": "2026-10-02T12:17:34Z"
+          }
+        ]
+      },
+      "pmp-c07-client-owned-accounts": {
+        "title": "Client-owned store, cloud and code accounts",
+        "refs": [
+          {
+            "label": "App Store Connect Help: Overview of app transfer",
+            "url": "https://developer.apple.com/help/app-store-connect/transfer-an-app/overview-of-app-transfer",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:07Z"
+          },
+          {
+            "label": "Play Console Help: Transfer apps to a different developer account",
+            "url": "https://support.google.com/googleplay/android-developer/answer/6230247",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:17Z"
+          },
+          {
+            "label": "Apple Developer Account Help: Apple Developer Program roles",
+            "url": "https://developer.apple.com/help/account/access/roles/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:09Z"
+          },
+          {
+            "label": "Play Console Help: Add developer account users and manage permissions",
+            "url": "https://support.google.com/googleplay/android-developer/answer/9844686",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:55:20Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "How to Transfer an Android App to Another Google Play Console Account? | thewodmapps",
+            "channel": "ThewodmApps",
+            "url": "https://www.youtube.com/watch?v=wD7kGi5cxK0",
+            "videoId": "wD7kGi5cxK0",
+            "verifiedAt": "2026-10-02T12:17:17Z"
+          },
+          {
+            "title": "How to Transfer Android App to Another Google Play Console Account | Transfer Android Apps | android",
+            "channel": "Code Micros",
+            "url": "https://www.youtube.com/watch?v=69_8ykYJUCI",
+            "videoId": "69_8ykYJUCI",
+            "verifiedAt": "2026-10-02T12:17:35Z"
+          },
+          {
+            "title": "Add Team Members to Apple Developer Account Without Mistakes",
+            "channel": "Kamran Ceation",
+            "url": "https://www.youtube.com/watch?v=VMJjMdHx5N8",
+            "videoId": "VMJjMdHx5N8",
+            "verifiedAt": "2026-10-02T12:17:35Z"
+          }
+        ]
+      }
+    }
+  },
+  "pmp-c08": {
+    "title": "Drills",
+    "topics": {
+      "pmp-c08-classification-drill": {
+        "title": "Classification drill: incident, problem, change, CR, bug",
+        "refs": [
+          {
+            "label": "Atlassian: ITIL 4 guiding principles and practices",
+            "url": "https://www.atlassian.com/itsm/itil",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:31Z"
+          },
+          {
+            "label": "Atlassian: Problem management in ITIL",
+            "url": "https://www.atlassian.com/itsm/problem-management",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:30Z"
+          },
+          {
+            "label": "Atlassian: Change management types (standard, normal, emergency)",
+            "url": "https://www.atlassian.com/itsm/change-management/types",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T12:06:10Z"
+          },
+          {
+            "label": "Microsoft Learn: Define, capture, triage and manage bugs (Azure Boards)",
+            "url": "https://learn.microsoft.com/en-us/azure/devops/boards/backlogs/manage-bugs?view=azure-devops",
+            "kind": "docs",
+            "verifiedAt": "2026-10-02T11:54:32Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "IT Incident Management vs. Problem Management - ITIL4",
+            "channel": "ACI Learning",
+            "url": "https://www.youtube.com/watch?v=BYvHOqZjne0",
+            "videoId": "BYvHOqZjne0",
+            "verifiedAt": "2026-10-02T12:17:35Z"
+          },
+          {
+            "title": "Difference between Incident,Problem and Change Management",
+            "channel": "Rajbir Singh",
+            "url": "https://www.youtube.com/watch?v=WPYXTpzqUbE",
+            "videoId": "WPYXTpzqUbE",
+            "verifiedAt": "2026-10-02T12:17:36Z"
+          },
+          {
+            "title": "What is the difference between a change, an incident and a problem with TOPdesk",
+            "channel": "TOPdesk North America",
+            "url": "https://www.youtube.com/watch?v=eE-9ZrcLzi8",
+            "videoId": "eE-9ZrcLzi8",
+            "verifiedAt": "2026-10-02T12:17:36Z"
+          }
+        ]
+      },
+      "pmp-c08-fix-the-wrong-term": {
+        "title": "Fix the wrong term",
+        "refs": [
+          {
+            "label": "PMI: Lexicon of Project Management Terms",
+            "url": "https://www.pmi.org/standards/lexicon",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          },
+          {
+            "label": "ISTQB Glossary (search: severity, priority, defect, regression testing)",
+            "url": "https://glossary.istqb.org/en_US/home",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:41Z"
+          },
+          {
+            "label": "ISO/IEC/IEEE 24765 - Systems and software engineering vocabulary (standard page)",
+            "url": "https://www.iso.org/standard/71952.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T12:10:13Z"
+          },
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "Top 12 Project Management Jargon Terms Project Managers Use",
+            "channel": "Online PM Courses - Mike Clayton",
+            "url": "https://www.youtube.com/watch?v=F25BGXAlaG0",
+            "videoId": "F25BGXAlaG0",
+            "verifiedAt": "2026-10-02T12:17:36Z"
+          },
+          {
+            "title": "50 Project Management Industry Terms You NEED to Know in 2024",
+            "channel": "Max Mao",
+            "url": "https://www.youtube.com/watch?v=OYVE_4T4q_I",
+            "videoId": "OYVE_4T4q_I",
+            "verifiedAt": "2026-10-02T12:17:36Z"
+          }
+        ]
+      },
+      "pmp-c08-flashcards": {
+        "title": "Terminology flashcards",
+        "refs": [
+          {
+            "label": "PMI: Lexicon of Project Management Terms",
+            "url": "https://www.pmi.org/standards/lexicon",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:40Z"
+          },
+          {
+            "label": "Scrum Guides: The Scrum Guide (2020)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:51:24Z"
+          },
+          {
+            "label": "Atlassian: ITIL 4 guiding principles and practices",
+            "url": "https://www.atlassian.com/itsm/itil",
+            "kind": "article",
+            "verifiedAt": "2026-10-02T11:53:31Z"
+          },
+          {
+            "label": "ISTQB Glossary (search: severity, priority, defect, regression testing)",
+            "url": "https://glossary.istqb.org/en_US/home",
+            "kind": "spec",
+            "verifiedAt": "2026-10-02T11:55:41Z"
+          }
+        ],
+        "videos": [
+          {
+            "title": "10 Project Management Terms You Need to Know",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=aTEK0BmsH-g",
+            "videoId": "aTEK0BmsH-g",
+            "verifiedAt": "2026-10-02T12:17:36Z"
+          },
+          {
+            "title": "Top 10 Project Management Terms & Concepts - ProjectManager",
+            "channel": "ProjectManager",
+            "url": "https://www.youtube.com/watch?v=7c8xP1gRIWs",
+            "videoId": "7c8xP1gRIWs",
+            "verifiedAt": "2026-10-02T12:17:36Z"
+          },
+          {
+            "title": "50 Project Management Terms You Need To Know",
+            "channel": "Adriana Girdler",
+            "url": "https://www.youtube.com/watch?v=8SeDDbw6KKM",
+            "videoId": "8SeDDbw6KKM",
+            "verifiedAt": "2026-10-02T12:17:37Z"
+          }
+        ]
+      }
+    }
+  }
+}
