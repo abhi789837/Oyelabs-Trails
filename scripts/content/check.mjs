@@ -10,6 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { Worker } from "node:worker_threads";
 import { loadCurriculum, SOLUTIONS_DIR } from "./load.mjs";
+import { checkTask, taskSchema } from "../../shared/tasks.ts";
 
 const args = process.argv.slice(2);
 const only = args.flatMap((a, i) => (a === "--module" ? [args[i + 1]] : []));
@@ -213,6 +214,15 @@ for (const { track, entry, file, mod } of loaded) {
       if (!fs.existsSync(solutionFile)) err(w, `missing reference solution content-tests/solutions/${topic.id}.js`);
       else if (runSolutions && topic.codeChallenge) solutionJobs.push({ w, topic, solutionFile });
     } else err(w, `challengeType must be "quiz" or "code"`);
+
+    // v4: the non-engineering trails replace code challenges with a hands-on practice task.
+    const needsPractice = topic.trackId === "pm" || topic.trackId === "bd";
+    if (needsPractice && !topic.practice) err(w, "PM/BD topics need a practice task");
+    if (topic.practice) {
+      const parsed = taskSchema.safeParse(topic.practice);
+      if (!parsed.success) err(w, `practice task is invalid: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join(".")} ${i.message}`).join("; ")}`);
+      else for (const problem of checkTask(parsed.data)) err(w, `practice: ${problem}`);
+    }
   }
 }
 

@@ -11,6 +11,8 @@ import {
 } from "../../../shared/builder";
 import { schema, type Db } from "../db";
 import { newId, now } from "../lib/ids";
+import { listSkillPriorities, listSkip, replaceSkipByNames, writeLegacyTargets } from "../setup/repo";
+import { sliderToPriority } from "../../../shared/setup";
 import type { BuiltCourse } from "./pipeline";
 
 /** The statuses a generated course can hold. Mirrors the column's own union. */
@@ -29,13 +31,23 @@ type GeneratedStatus = "draft" | "pending_review" | "published" | "rejected" | "
 // Priorities
 // ---------------------------------------------------------------------------
 
+/**
+ * v4: `mustHave` and `skip` are projections of the slider and skip tables — the single source — so
+ * the weekly plan and gap scoring read what the admin set on the Setup screen, not a stale column.
+ */
+function projectedMustHave(db: Db, userId: string): LearnerPriorities["mustHave"] {
+  return listSkillPriorities(db, userId).map((p) => ({ skill: p.skillName, weight: sliderToPriority(p.slider) }));
+}
+
 export function getPriorities(db: Db, userId: string): LearnerPriorities {
   const row = db.select().from(schema.learnerPriorities).where(eq(schema.learnerPriorities.userId, userId)).get();
-  if (!row) return EMPTY_PRIORITIES;
+  const mustHave = projectedMustHave(db, userId);
+  const skip = listSkip(db, userId).map((s) => s.skillName);
+  if (!row) return { ...EMPTY_PRIORITIES, mustHave, skip };
   return {
     targetRole: row.targetRole,
-    mustHave: row.mustHave ?? [],
-    skip: row.skip ?? [],
+    mustHave,
+    skip,
     deadlineWeeks: row.deadlineWeeks,
     courseCap: row.courseCap,
     autoPublish: row.autoPublish,
@@ -46,6 +58,17 @@ export function getPriorities(db: Db, userId: string): LearnerPriorities {
 }
 
 export function setPriorities(db: Db, userId: string, priorities: LearnerPriorities, actorId: string): void {
+  /* Only rewrite the slider rows when the v3 caller actually changed the list: round-tripping the
+     three-way projection would flatten Critical to High and Optional to Low. */
+  const currentMust = projectedMustHave(db, userId);
+  const currentSkip = listSkip(db, userId).map((s) => s.skillName);
+  const mustChanged = JSON.stringify(currentMust) !== JSON.stringify(priorities.mustHave);
+  const skipChanged = JSON.stringify(currentSkip) !== JSON.stringify(priorities.skip);
+  if (mustChanged) {
+    writeLegacyTargets(db, userId, priorities.mustHave.map((m) => ({ skill: m.skill, priority: m.weight })), skipChanged ? priorities.skip : null, actorId);
+  } else if (skipChanged) {
+    replaceSkipByNames(db, userId, priorities.skip, actorId);
+  }
   const values = {
     targetRole: priorities.targetRole,
     mustHave: priorities.mustHave,

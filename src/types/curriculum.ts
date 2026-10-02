@@ -1,7 +1,9 @@
 // v2 curriculum model: tracks are made of modules ("camps"), modules of topics.
+import type { Task } from "@shared/tasks";
+
 export type ChallengeType = "code" | "quiz";
 export type TopicLevel = "beginner" | "intermediate" | "advanced" | "expert";
-export type TrackId = "frontend" | "backend" | "fullstack" | "ai-driven" | "php" | "mobile" | "devops";
+export type TrackId = "frontend" | "backend" | "fullstack" | "ai-driven" | "php" | "mobile" | "devops" | "pm" | "bd";
 
 /**
  * `glacier` extends the brief's tokens: the brief assigns `ridge` to both Full-Stack and
@@ -86,6 +88,11 @@ export interface Topic {
   challengeType: ChallengeType;
   quiz?: QuizQuestion[];
   codeChallenge?: CodeChallenge;
+  /**
+   * v4: a hands-on task for departments that do not write code (PM, BD). Formative — the graded
+   * challenge is still the quiz — so answers ship with it and are revealed after a check.
+   */
+  practice?: Task;
 }
 
 export interface Module {

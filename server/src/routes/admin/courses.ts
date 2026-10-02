@@ -58,6 +58,8 @@ export async function registerAdminCourseRoutes(app: FastifyInstance): Promise<v
         accent: body.accent,
         audience: body.audience,
         published: body.published,
+        level: body.level ?? null,
+        departmentId: body.departmentId ?? null,
         position: nextPosition(app.db, "courses"),
         createdBy: actor.id,
         createdAt: timestamp,
@@ -98,6 +100,8 @@ export async function registerAdminCourseRoutes(app: FastifyInstance): Promise<v
     app.db
       .update(schema.courses)
       .set({
+        ...(body.level !== undefined ? { level: body.level } : {}),
+        ...(body.departmentId !== undefined ? { departmentId: body.departmentId } : {}),
         title: body.title,
         summary: body.summary,
         accent: body.accent,

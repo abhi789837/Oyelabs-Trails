@@ -141,4 +141,29 @@ export const registry: TrackEntry[] = [
       { id: "devops-observability", name: "Observability", idPrefix: "obs-" },
     ],
   },
+  // v4: the first two non-engineering trails. Each camp is one level of the department's ladder.
+  {
+    id: "pm",
+    name: "Project Management",
+    tagline: "Delivering client software at an agency, from the first stand-up to portfolio governance.",
+    accentToken: "ridge",
+    modules: [
+      { id: "pm-beginner", name: "PM Foundations", idPrefix: "pm-b-" },
+      { id: "pm-intermediate", name: "Running Delivery", idPrefix: "pm-i-" },
+      { id: "pm-advanced", name: "Advanced Delivery", idPrefix: "pm-a-" },
+      { id: "pm-expert", name: "Programme, Portfolio & AI-Era PM", idPrefix: "pm-x-" },
+    ],
+  },
+  {
+    id: "bd",
+    name: "Business Development",
+    tagline: "Winning and growing agency work: from the first cold email to strategic accounts.",
+    accentToken: "canyon",
+    modules: [
+      { id: "bd-beginner", name: "BD Foundations", idPrefix: "bd-b-" },
+      { id: "bd-intermediate", name: "Winning Deals", idPrefix: "bd-i-" },
+      { id: "bd-advanced", name: "Complex Sales & Accounts", idPrefix: "bd-a-" },
+      { id: "bd-expert", name: "Strategic BD & AI-Powered Selling", idPrefix: "bd-x-" },
+    ],
+  },
 ];

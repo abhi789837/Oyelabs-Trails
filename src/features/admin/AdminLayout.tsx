@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  Building2,
   Cpu,
   LayoutDashboard,
   Library,
@@ -56,6 +57,7 @@ const groups: SectionGroup[] = [
     items: [
       { to: "/admin/people", end: false, label: "People", icon: Users },
       { to: "/admin/onboard", end: false, label: "Onboard learner", icon: UserPlus },
+      { to: "/admin/departments", end: false, label: "Departments", icon: Building2 },
     ],
   },
   {

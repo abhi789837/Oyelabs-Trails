@@ -18,6 +18,8 @@ export interface GeneratedCourseRow {
   courseId: string;
   title: string;
   summary: string;
+  /** v4. Null = shown to every department. */
+  departmentId: string | null;
   skill: string;
   scope: "learner" | "global";
   status: "draft" | "pending_review" | "published" | "rejected" | "needs_review";

@@ -63,6 +63,8 @@ export function getCourse(db: Db, courseId: string): Course | null {
     position: row.position,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+    level: row.level ?? null,
+    departmentId: row.departmentId ?? null,
     sections: sections.map<CourseSection>((section) => ({
       id: section.id,
       courseId: section.courseId,
@@ -110,7 +112,18 @@ export function coursesFor(db: Db, userId: string): CourseCard[] {
       .map((row) => row.courseId),
   );
 
-  const visible = published.filter((course) => course.audience === "everyone" || assignedIds.has(course.id));
+  /* An `everyone` course tagged with a department is everyone *in that department*; an explicit
+     assignment always wins, so an admin can still hand a BD course to an engineer. */
+  const department = db
+    .select({ departmentId: schema.learnerProfiles.departmentId })
+    .from(schema.learnerProfiles)
+    .where(eq(schema.learnerProfiles.userId, userId))
+    .get()?.departmentId ?? "engineering";
+  const visible = published.filter(
+    (course) =>
+      assignedIds.has(course.id) ||
+      (course.audience === "everyone" && (course.departmentId == null || course.departmentId === department)),
+  );
   if (visible.length === 0) return [];
 
   const courseIds = visible.map((c) => c.id);

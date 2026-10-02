@@ -15,6 +15,8 @@ import { useCurrentUser } from "@/features/auth/AuthProvider";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { ALL_DEPARTMENTS } from "../catalog/helpers";
+import { useCatalog } from "../catalog/useCatalog";
 import { builderApi, type GeneratedCourseRow } from "./api";
 
 /**
@@ -28,6 +30,7 @@ import { builderApi, type GeneratedCourseRow } from "./api";
  */
 export default function AdminGeneratedPage() {
   useDocumentTitle("Generated courses");
+  const { departmentOptions } = useCatalog();
   const me = useCurrentUser();
   const confirm = useConfirm();
   const { query, setQuery } = useTableQueryState();
@@ -128,12 +131,20 @@ export default function AdminGeneratedPage() {
           { value: "global", label: "Catalogue" },
         ],
       },
+      {
+        name: "departmentId",
+        label: "Department",
+        type: "enum",
+        quick: true,
+        accessor: (row) => row.departmentId ?? ALL_DEPARTMENTS,
+        options: [...departmentOptions, { value: ALL_DEPARTMENTS, label: "All departments" }],
+      },
       { name: "reviewScore", label: "Review", type: "number", min: 1, max: 5, step: 0.1, quick: true },
       { name: "deadLinks", label: "Dead links", type: "number", min: 0, max: 50, quick: true },
       { name: "topicCount", label: "Lessons", type: "number", min: 0, max: 60 },
       { name: "createdAt", label: "Written", type: "date", quick: true },
     ],
-    [],
+    [departmentOptions],
   );
 
   const columns = useMemo<ColumnDef<GeneratedCourseRow, unknown>[]>(

@@ -59,6 +59,10 @@ export const courseSchema = z.object({
   position: z.number(),
   createdAt: z.number(),
   updatedAt: z.number(),
+  /** v4. Null on courses that predate levels. */
+  level: z.enum(["beginner", "intermediate", "advanced", "expert"]).nullable().default(null),
+  /** v4. Null = shown to every department. */
+  departmentId: z.string().nullable().default(null),
   sections: z.array(courseSectionSchema),
 });
 export type Course = z.infer<typeof courseSchema>;
@@ -85,6 +89,8 @@ export const upsertCourseRequestSchema = z.object({
   accent: accentTokenSchema.default("glacier"),
   audience: courseAudienceSchema.default("everyone"),
   published: z.boolean().default(false),
+  level: z.enum(["beginner", "intermediate", "advanced", "expert"]).nullable().optional(),
+  departmentId: z.string().max(48).nullable().optional(),
 });
 export type UpsertCourseRequest = z.infer<typeof upsertCourseRequestSchema>;
 

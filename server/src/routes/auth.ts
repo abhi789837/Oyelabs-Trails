@@ -14,6 +14,7 @@ import { checkPasswordPolicy, hashPassword, verifyPassword } from "../auth/passw
 import { requireUser } from "../auth/guards";
 import { createSession, deleteSession, revokeUserSessions } from "../auth/sessions";
 import { schema } from "../db";
+import { departmentForUser } from "../catalog/repo";
 import type { Env } from "../env";
 import { writeAudit } from "../lib/audit";
 import { badRequest, locked, parseOrThrow, unauthenticated } from "../lib/errors";
@@ -54,7 +55,16 @@ function toSessionUser(row: typeof schema.users.$inferSelect): SessionUser {
 export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
   const env = app.env;
 
-  app.get("/api/auth/me", async (request): Promise<MeResponse> => ({ user: request.currentUser }));
+  app.get("/api/auth/me", async (request): Promise<MeResponse> => {
+    const user = request.currentUser;
+    const department = user ? departmentForUser(app.db, user.id) : null;
+    return {
+      user,
+      department: department
+        ? { id: department.id, name: department.name, assessmentFormat: department.assessmentFormat, practiceNoun: department.practiceNoun }
+        : null,
+    };
+  });
 
   app.post(
     "/api/auth/login",

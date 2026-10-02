@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ChevronDown, ChevronUp, GripVertical, Pencil, Plus, Send, Trash2, Undo2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
+import { LEVEL_BANDS, LEVEL_BAND_LABELS, type LevelBand } from "@shared/catalog";
 import type { Course, CourseLink, CourseSection, CourseTopic } from "@shared/courses";
 import { youtubeId } from "@shared/courses";
 
@@ -18,6 +19,7 @@ import { fadeUp, stagger, transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
 import { cn, formatMinutesCompact } from "@/lib/utils";
 import type { AccentToken } from "@/types/curriculum";
+import { useCatalog } from "../catalog/useCatalog";
 import { coursesApi } from "./api";
 
 /**
@@ -35,6 +37,7 @@ export default function AdminCourseEditorPage() {
   const { courseId = "" } = useParams();
   const confirm = useConfirm();
   const formDialog = useFormDialog();
+  const { departmentOptions, departmentName } = useCatalog();
 
   const [course, setCourse] = useState<Course | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -118,16 +121,62 @@ export default function AdminCourseEditorPage() {
               </select>
             )}
           </Field>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Department" hint="Who sees it when it is for everyone.">
+              {({ id, describedBy }) => (
+                <select
+                  id={id}
+                  name="departmentId"
+                  aria-describedby={describedBy}
+                  defaultValue={course.departmentId ?? ""}
+                  className="w-full rounded-md border border-input bg-surface px-3 py-2 text-sm"
+                >
+                  <option value="">All departments</option>
+                  {/* The course's own department stays selectable even if it has since been archived. */}
+                  {course.departmentId && !departmentOptions.some((o) => o.value === course.departmentId) && (
+                    <option value={course.departmentId}>{departmentName(course.departmentId)}</option>
+                  )}
+                  {departmentOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </Field>
+            <Field label="Level">
+              {({ id }) => (
+                <select
+                  id={id}
+                  name="level"
+                  defaultValue={course.level ?? ""}
+                  className="w-full rounded-md border border-input bg-surface px-3 py-2 text-sm"
+                >
+                  <option value="">Any level</option>
+                  {LEVEL_BANDS.map((band) => (
+                    <option key={band} value={band}>
+                      {LEVEL_BAND_LABELS[band]}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </Field>
+          </div>
         </div>
       ),
-      onSubmit: (data) =>
-        coursesApi.update(course.id, {
+      onSubmit: (data) => {
+        const level = String(data.get("level") ?? "");
+        const departmentId = String(data.get("departmentId") ?? "");
+        return coursesApi.update(course.id, {
           title: String(data.get("title") ?? "").trim(),
           summary: String(data.get("summary") ?? "").trim(),
           accent: course.accent,
           audience: data.get("audience") === "assigned" ? "assigned" : "everyone",
           published: course.published,
-        }),
+          level: (LEVEL_BANDS as readonly string[]).includes(level) ? (level as LevelBand) : null,
+          departmentId: departmentId || null,
+        });
+      },
     });
     if (saved) setCourse(saved.course);
   };
@@ -210,6 +259,8 @@ export default function AdminCourseEditorPage() {
                 {topicCount} lesson{topicCount === 1 ? "" : "s"}
               </span>
               <span>· {course.audience === "everyone" ? "everyone" : "assigned people only"}</span>
+              <span>· {departmentName(course.departmentId).toLowerCase()}</span>
+              {course.level && <span>· {LEVEL_BAND_LABELS[course.level].toLowerCase()}</span>}
             </p>
           </div>
         </div>

@@ -11,15 +11,15 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - [x] 1.5 Checkpoint + commit `feat(v4-p1)`
 
 ## Phase 2: Departments foundation
-- [ ] 2.1 Schema: departments, tracks, skills (+ course level, skill links), migration
-- [ ] 2.2 Seed Engineering/PM/BD + their tracks; migrate learners to Engineering
-- [ ] 2.3 Learner department + track; department-aware wording
-- [ ] 2.4 Department filter on People, Curriculum, Courses, Generated
-- [ ] 2.5 /admin/departments (add, rename, reorder, archive departments/tracks/skills)
-- [ ] 2.6 Checkpoint + commit `feat(v4-p2)`
+- [x] 2.1 Schema: departments, tracks, skills (+ course level, skill links), migration
+- [x] 2.2 Seed Engineering/PM/BD + their tracks; migrate learners to Engineering
+- [x] 2.3 Learner department + track; department-aware wording
+- [x] 2.4 Department filter on People, Curriculum, Courses, Generated
+- [x] 2.5 /admin/departments (add, rename, reorder, archive departments/tracks/skills)
+- [x] 2.6 Checkpoint + commit `feat(v4-p2)`
 
 ## Phase 3: Admin learner setup
-- [ ] 3.1 learner_priorities (slider 1–5, order) + learner_skip; migrate builder settings + targets
+- [x] 3.1 learner_priorities (slider 1–5, order) + learner_skip; migrate builder settings + targets
 - [ ] 3.2 Setup tab / onboard screen (pickers, stack/tools, experience/level, skill picker + sliders, skip, hours, summary)
 - [ ] 3.3 Skill request (pending skill) flow
 - [ ] 3.4 Tabs merged: Setup · Assessment · Path · Library · Progress · Account
@@ -93,3 +93,5 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 ## Notes
 - P1: PM/BD source research (`RESEARCH_PM_BD.md`, `sources-pm-bd.json`) still running in a subagent at commit time; it is consumed in Phase 7 and committed then.
 - Piston test container `piston_test` runs locally on 127.0.0.1:2000 (volume `piston_packages`) — used by bank validation and e2e.
+- P2: department/catalog server + client done. The People/Curriculum/Courses/Generated filters ship; the AI calls table filter waits for Phase 6 (it needs a server param). Skill catalog: engineering 270, PM 85, BD 78 skills.
+- P2 commit also carries Phase 3 server groundwork (slider + skip tables, migration 0014, setup repo + routes, `issueAssessment` extraction, `shared/setup.ts` mix allocator, `shared/tasks.ts`) because boot depends on it; Phase 3 client follows.

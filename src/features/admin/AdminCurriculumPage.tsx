@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { useNavigate } from "react-router-dom";
 
+import { trailDepartment } from "@shared/catalog";
 import type { TopicLevelValue, TrackIdValue } from "@shared/enums";
 
 import { DataTable, useTableQueryState, type TableFieldDef } from "@/components/data-table";
@@ -10,6 +11,7 @@ import { topicPath, useTracks } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { levelLabels } from "@/lib/track-meta";
 import { formatMinutesCompact } from "@/lib/utils";
+import { useCatalog } from "./catalog/useCatalog";
 
 interface CurriculumRow {
   id: string;
@@ -18,6 +20,8 @@ interface CurriculumRow {
      take the row directly instead of being cast into accepting it. */
   trackId: TrackIdValue;
   trackName: string;
+  /** The department the trail belongs to, via `trailDepartment`. */
+  departmentId: string;
   moduleId: string;
   moduleName: string;
   level: TopicLevelValue;
@@ -48,6 +52,7 @@ export default function AdminCurriculumPage() {
   const navigate = useNavigate();
   const tracks = useTracks();
   const { query, setQuery } = useTableQueryState();
+  const { departmentOptions } = useCatalog();
 
   const rows = useMemo<CurriculumRow[]>(() => {
     const out: CurriculumRow[] = [];
@@ -59,6 +64,7 @@ export default function AdminCurriculumPage() {
             title: topic.title,
             trackId: track.id,
             trackName: track.name,
+            departmentId: trailDepartment(track.id),
             moduleId: module.id,
             moduleName: module.name,
             level: topic.level,
@@ -81,6 +87,17 @@ export default function AdminCurriculumPage() {
     return [
       { name: "title", label: "Topic", type: "string", searchable: true },
       { name: "id", label: "Topic id", type: "string", searchable: true },
+      {
+        name: "departmentId",
+        label: "Department",
+        type: "enum",
+        quick: true,
+        // Catalog departments, plus any a trail names that the catalog does not (yet) have.
+        options: [
+          ...departmentOptions,
+          ...distinct((r) => r.departmentId).filter((o) => !departmentOptions.some((d) => d.value === o.value)),
+        ],
+      },
       { name: "trackName", label: "Trail", type: "enum", quick: true, options: distinct((r) => r.trackName) },
       { name: "moduleName", label: "Camp", type: "enum", quick: true, options: distinct((r) => r.moduleName) },
       {
@@ -112,7 +129,7 @@ export default function AdminCurriculumPage() {
       { name: "isMilestone", label: "Milestone", type: "boolean", trueLabel: "Milestones", falseLabel: "Ordinary topics" },
       { name: "available", label: "Written", type: "boolean", trueLabel: "Written", falseLabel: "Not written yet" },
     ];
-  }, [rows]);
+  }, [rows, departmentOptions]);
 
   const columns = useMemo<ColumnDef<CurriculumRow, unknown>[]>(
     () => [

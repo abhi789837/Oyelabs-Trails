@@ -49,8 +49,19 @@ export const sessionUserSchema = z.object({
 });
 export type SessionUser = z.infer<typeof sessionUserSchema>;
 
+/** The department a learner belongs to, for wording ("Code" vs "Task workspace"). v4. */
+export const sessionDepartmentSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  assessmentFormat: z.enum(["coding", "tasks"]),
+  practiceNoun: z.string(),
+});
+export type SessionDepartment = z.infer<typeof sessionDepartmentSchema>;
+
 export const meResponseSchema = z.object({
   user: sessionUserSchema.nullable(),
+  /** Absent for staff without a profile, and on responses from servers older than v4. */
+  department: sessionDepartmentSchema.nullable().optional(),
 });
 export type MeResponse = z.infer<typeof meResponseSchema>;
 

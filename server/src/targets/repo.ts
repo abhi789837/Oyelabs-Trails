@@ -1,8 +1,9 @@
-import { asc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 import { orderedTargets, type LearnerTarget, type LearnerTrack } from "../../../shared/targets";
 import { schema, type Db } from "../db";
-import { newId, now } from "../lib/ids";
+import { now } from "../lib/ids";
+import { listSkillPriorities, targetsFromPriorities, writeLegacyTargets } from "../setup/repo";
 
 /**
  * Reading and writing what a learner is being trained for.
@@ -21,24 +22,14 @@ export interface LearnerFocus {
   targets: LearnerTarget[];
 }
 
-/** Always High-first, then by position: the order everything downstream is entitled to assume. */
+/**
+ * Always High-first, then by position: the order everything downstream is entitled to assume.
+ *
+ * v4: a projection of `learner_skill_priorities` (Critical and High → high, Medium → medium,
+ * Low and Optional → low), so every v3 reader sees the admin's current sliders.
+ */
 export function listTargets(db: Db, userId: string): LearnerTarget[] {
-  const rows = db
-    .select()
-    .from(schema.learnerTargets)
-    .where(eq(schema.learnerTargets.userId, userId))
-    .orderBy(asc(schema.learnerTargets.position))
-    .all();
-
-  return orderedTargets(
-    rows.map((row) => ({
-      id: row.id,
-      skill: row.skill,
-      priority: row.priority,
-      position: row.position,
-      targetDate: row.targetDate,
-    })),
-  );
+  return orderedTargets(targetsFromPriorities(listSkillPriorities(db, userId)));
 }
 
 /** The track, the stack and the targets in one read — what the assessment builder needs. */
@@ -61,44 +52,8 @@ export function getFocus(db: Db, userId: string): LearnerFocus {
  * depend on row insertion order, which is not a thing anybody dragged.
  */
 export function setTargets(db: Db, userId: string, targets: readonly LearnerTarget[]): LearnerTarget[] {
-  const timestamp = now();
-  const existing = new Map(
-    db
-      .select({ id: schema.learnerTargets.id, skill: schema.learnerTargets.skill })
-      .from(schema.learnerTargets)
-      .where(eq(schema.learnerTargets.userId, userId))
-      .all()
-      .map((row) => [row.skill.trim().toLowerCase(), row.id] as const),
-  );
-
-  db.transaction((tx) => {
-    tx.delete(schema.learnerTargets).where(eq(schema.learnerTargets.userId, userId)).run();
-
-    // Positions are per priority, so "first High" and "first Medium" are both 0 and neither is
-    // ranked against the other by anything but its priority.
-    const counters: Record<string, number> = {};
-
-    for (const target of targets) {
-      const skill = target.skill.trim();
-      if (skill.length < 2) continue;
-      const position = counters[target.priority] ?? 0;
-      counters[target.priority] = position + 1;
-
-      tx.insert(schema.learnerTargets)
-        .values({
-          // Kept where the skill is unchanged, so a reorder is a reorder rather than a replacement.
-          id: target.id ?? existing.get(skill.toLowerCase()) ?? newId(),
-          userId,
-          skill,
-          priority: target.priority,
-          position,
-          targetDate: target.targetDate ?? null,
-          createdAt: timestamp,
-        })
-        .run();
-    }
-  });
-
+  // v4: written through to the slider table. Kept for the v3 `/targets` endpoint for one release.
+  writeLegacyTargets(db, userId, orderedTargets(targets), null, null);
   return listTargets(db, userId);
 }
 

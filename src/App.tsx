@@ -12,6 +12,7 @@ import AdminCourseEditorPage from "@/features/admin/courses/AdminCourseEditorPag
 import AdminCoursesPage from "@/features/admin/courses/AdminCoursesPage";
 import AdminGeneratedPage from "@/features/admin/builder/AdminGeneratedPage";
 import AdminCurriculumPage from "@/features/admin/AdminCurriculumPage";
+import AdminDepartmentsPage from "@/features/admin/catalog/AdminDepartmentsPage";
 import AdminIntegrityFeedPage from "@/features/admin/AdminIntegrityFeedPage";
 import AdminIntegrityPage from "@/features/admin/AdminIntegrityPage";
 import AdminLivePage from "@/features/admin/AdminLivePage";
@@ -59,6 +60,7 @@ export default function App() {
                   <Route index element={<AdminOverviewPage />} />
                   <Route path="people" element={<AdminPeoplePage />} />
                   <Route path="onboard" element={<AdminOnboardPage />} />
+                  <Route path="departments" element={<AdminDepartmentsPage />} />
                   <Route path="people/:userId" element={<AdminLearnerPage />} />
                   {/* The one page inside the console that an admin does not get. */}
                   <Route

@@ -39,6 +39,10 @@ export const userSummarySchema = z.object({
   lastLoginAt: z.number().nullable(),
   roleTitle: z.string().nullable(),
   yearsExperience: z.number().nullable(),
+  /** v4. Null for staff. */
+  departmentId: z.string().nullable().default(null),
+  /** v4 job track id. */
+  trackId: z.string().nullable().default(null),
   /** Null until an assessment has been issued. */
   assessmentStatus: assessmentStatusSchema.nullable(),
   overallLevel: skillLevelSchema.nullable(),

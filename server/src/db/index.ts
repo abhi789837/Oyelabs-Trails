@@ -6,6 +6,8 @@ import Database from "better-sqlite3";
 import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
+import { ensureCatalogSeed } from "../catalog/repo";
+import { migrateLegacyPriorities } from "../setup/repo";
 import type { Env } from "../env";
 import * as schema from "./schema";
 
@@ -54,6 +56,12 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
   sqlite.pragma("synchronous = NORMAL");
 
   const db = drizzle(sqlite, { schema });
-  if (options.runMigrations !== false) migrate(db, { migrationsFolder: migrationsFolder() });
+  if (options.runMigrations !== false) {
+    migrate(db, { migrationsFolder: migrationsFolder() });
+    // Seed rows are inserted only when absent, so this never undoes an admin's edit.
+    ensureCatalogSeed(db);
+    // Once per database: v3 targets and must-have lists become slider rows.
+    migrateLegacyPriorities(db);
+  }
   return { db, sqlite };
 }

@@ -1,11 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
-import type { LoginRequest, MeResponse, SessionUser } from "@shared/auth";
+import type { LoginRequest, MeResponse, SessionDepartment, SessionUser } from "@shared/auth";
 
 import { api, ApiRequestError } from "@/api/client";
 
 interface AuthState {
   user: SessionUser | null;
+  /** The signed-in person's department, for wording. Null for staff without one, or before v4. */
+  department: SessionDepartment | null;
   /** True until the first /api/auth/me has settled, so guards do not redirect prematurely. */
   loading: boolean;
   /** Set when the session could not be loaded at all (server down), not when simply signed out. */
@@ -20,6 +22,7 @@ const AuthContext = createContext<AuthState | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
+  const [department, setDepartment] = useState<SessionDepartment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,10 +30,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const me = await api.get<MeResponse>("/api/auth/me", signal);
       setUser(me.user);
+      setDepartment(me.department ?? null);
       setError(null);
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
       setUser(null);
+      setDepartment(null);
       setError(err instanceof ApiRequestError ? err.message : "Could not reach the server.");
     } finally {
       setLoading(false);
@@ -48,6 +53,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!result.user) throw new Error("Signed in but no account came back.");
     setUser(result.user);
     setError(null);
+    // The login response carries no department; /me does. Not awaited: wording can follow a beat
+    // behind, the redirect should not wait on it.
+    if (result.department !== undefined) setDepartment(result.department ?? null);
+    else
+      void api
+        .get<MeResponse>("/api/auth/me")
+        .then((me) => setDepartment(me.department ?? null))
+        .catch(() => undefined);
     return result.user;
   }, []);
 
@@ -57,6 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } finally {
       // Clear locally even if the request failed: the intent was to sign out.
       setUser(null);
+      setDepartment(null);
     }
   }, []);
 
@@ -68,8 +82,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<AuthState>(
-    () => ({ user, loading, error, signIn, signOut, changePassword, refresh: () => load() }),
-    [user, loading, error, signIn, signOut, changePassword, load],
+    () => ({ user, department, loading, error, signIn, signOut, changePassword, refresh: () => load() }),
+    [user, department, loading, error, signIn, signOut, changePassword, load],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -86,4 +100,17 @@ export function useCurrentUser(): SessionUser {
   const { user } = useAuth();
   if (!user) throw new Error("useCurrentUser used outside an authenticated route");
   return user;
+}
+
+/** What a learner sees when no department came back: every account before v4 was an engineer. */
+const DEFAULT_DEPARTMENT: SessionDepartment = {
+  id: "engineering",
+  name: "Engineering",
+  assessmentFormat: "coding",
+  practiceNoun: "Code",
+};
+
+/** The signed-in person's department, falling back to engineering so wording never goes blank. */
+export function useDepartment(): SessionDepartment {
+  return useAuth().department ?? DEFAULT_DEPARTMENT;
 }

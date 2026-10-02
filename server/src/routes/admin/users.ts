@@ -66,6 +66,8 @@ function summarize(db: Db, user: typeof schema.users.$inferSelect): UserSummary 
     lastLoginAt: user.lastLoginAt,
     roleTitle: profile?.roleTitle ?? null,
     yearsExperience: profile?.yearsExperience ?? null,
+    departmentId: profile?.departmentId ?? (user.role === "learner" ? "engineering" : null),
+    trackId: profile?.trackId ?? profile?.track ?? null,
     assessmentStatus: assessment?.status ?? null,
     overallLevel: null,
     hardWarnings: assessment?.hardWarnings ?? 0,

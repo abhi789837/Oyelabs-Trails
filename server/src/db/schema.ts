@@ -86,6 +86,14 @@ export const learnerProfiles = sqliteTable("learner_profiles", {
   stack: text("stack"),
   /** The admin's read of their level, 1–5, before any testing. The blueprint's starting hypothesis. */
   selfLevel: integer("self_level"),
+  /** v4. Null only for staff accounts; every learner is migrated to `engineering`. */
+  departmentId: text("department_id"),
+  /** v4 job track id (`tracks.id`). Supersedes `track` above, which is kept for one release. */
+  trackId: text("track_id"),
+  /** v4: stacks or tools picked on the Setup screen (`stacks.id`). */
+  stackIds: text("stack_ids", { mode: "json" }).$type<string[]>().notNull().default([]),
+  /** v4: `0`, `1-2`, `3-5`, `6+`. */
+  experienceBand: text("experience_band"),
   updatedAt: integer("updated_at").notNull(),
   updatedBy: text("updated_by"),
 });
@@ -503,6 +511,10 @@ export const courses = sqliteTable(
     published: integer("published", { mode: "boolean" }).notNull().default(false),
     /** A `generated` course carries a `generated_courses` row saying what it answers and how it scored. */
     origin: text("origin").$type<"manual" | "generated">().notNull().default("manual"),
+    /** v4. Null on courses that predate levels; shown as "Super advanced" for `expert`. */
+    level: text("level").$type<"beginner" | "intermediate" | "advanced" | "expert">(),
+    /** v4. Null = every department may see it. */
+    departmentId: text("department_id"),
     position: integer("position").notNull().default(0),
     createdBy: text("created_by"),
     createdAt: integer("created_at").notNull(),
@@ -1034,3 +1046,157 @@ export const weeklyPlanItems = sqliteTable(
     uniqueIndex("weekly_plan_items_plan_lesson_idx").on(t.planId, t.lessonId),
   ],
 );
+
+// ---------------------------------------------------------------------------
+// v4: departments, job tracks, stacks/tools and the skill catalog
+// ---------------------------------------------------------------------------
+
+/**
+ * Engineering, Project Management, Business Development — and whatever is added next (Design, QA,
+ * HR) without a code change. `assessment_format` is what makes a department behave differently:
+ * `coding` serves code problems, `tasks` serves the written/rank/calculate task types.
+ */
+export const departments = sqliteTable("departments", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull(),
+  icon: text("icon").notNull().default("users"),
+  colour: text("colour").notNull().default("#2067D3"),
+  assessmentFormat: text("assessment_format").$type<"coding" | "tasks">().notNull().default("tasks"),
+  /** What "Practice" is called for this department: "Code", "Task workspace". */
+  practiceNoun: text("practice_noun").notNull().default("Task workspace"),
+  position: integer("position").notNull().default(0),
+  archivedAt: integer("archived_at"),
+  createdAt: integer("created_at").notNull(),
+});
+
+/**
+ * A job track inside a department ("Frontend", "Agile Delivery PM").
+ *
+ * Not the content trails in `TRACK_IDS`: those say what curriculum exists, these say what somebody
+ * was hired to do. Engineering's ids match the old `learner_profiles.track` values on purpose.
+ */
+export const tracks = sqliteTable(
+  "tracks",
+  {
+    id: text("id").primaryKey(),
+    departmentId: text("department_id").notNull(),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    position: integer("position").notNull().default(0),
+    archivedAt: integer("archived_at"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("tracks_department_idx").on(t.departmentId, t.position)],
+);
+
+/** Engineering stacks and languages, PM and BD tools. */
+export const stacks = sqliteTable(
+  "stacks",
+  {
+    id: text("id").primaryKey(),
+    departmentId: text("department_id").notNull(),
+    name: text("name").notNull(),
+    kind: text("kind").$type<"stack" | "tool">().notNull(),
+    /** Sandbox language for an engineering stack's coding questions. */
+    language: text("language"),
+    aliases: text("aliases", { mode: "json" }).$type<string[]>().notNull().default([]),
+    position: integer("position").notNull().default(0),
+    archivedAt: integer("archived_at"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("stacks_department_idx").on(t.departmentId, t.position)],
+);
+
+export const skills = sqliteTable(
+  "skills",
+  {
+    id: text("id").primaryKey(),
+    departmentId: text("department_id").notNull(),
+    name: text("name").notNull(),
+    /** The picker's group header. */
+    area: text("area").notNull().default("General"),
+    aliases: text("aliases", { mode: "json" }).$type<string[]>().notNull().default([]),
+    tags: text("tags", { mode: "json" }).$type<string[]>().notNull().default([]),
+    levelMin: text("level_min").$type<"beginner" | "intermediate" | "advanced" | "expert">().notNull().default("beginner"),
+    levelMax: text("level_max").$type<"beginner" | "intermediate" | "advanced" | "expert">().notNull().default("expert"),
+    /** Tracks this skill is typical for: the picker pre-suggests it there. */
+    trackIds: text("track_ids", { mode: "json" }).$type<string[]>().notNull().default([]),
+    prerequisites: text("prerequisites", { mode: "json" }).$type<string[]>().notNull().default([]),
+    /** Engineering: the stacks it belongs to, for "own stack only". Empty = stack-agnostic. */
+    stackIds: text("stack_ids", { mode: "json" }).$type<string[]>().notNull().default([]),
+    language: text("language"),
+    /** Content-trail module ids that teach it, for course matching. */
+    contentModules: text("content_modules", { mode: "json" }).$type<string[]>().notNull().default([]),
+    /** Part 2 of a path: "AI-driven work for your role". */
+    isAiSkill: integer("is_ai_skill", { mode: "boolean" }).notNull().default(false),
+    /** `pending` is a request waiting for the superadmin. Pending skills can still be prioritised. */
+    status: text("status").$type<"active" | "pending" | "archived">().notNull().default("active"),
+    requestedBy: text("requested_by"),
+    position: integer("position").notNull().default(0),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("skills_department_idx").on(t.departmentId, t.status, t.area)],
+);
+
+/** Which skills a course teaches. Many-to-many: a Laravel testing course is Laravel and testing. */
+export const courseSkills = sqliteTable(
+  "course_skills",
+  {
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "cascade" }),
+    skillId: text("skill_id").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.courseId, t.skillId] }), index("course_skills_skill_idx").on(t.skillId)],
+);
+
+// ---------------------------------------------------------------------------
+// v4: the admin's priorities, as slider rows, and the skip list
+// ---------------------------------------------------------------------------
+
+/**
+ * One prioritised skill per row: the spine of the learner's path.
+ *
+ * `slider` is the admin's 5-stop scale (1 Optional · 2 Low · 3 Medium · 4 High · 5 Critical).
+ * `position` is selection order, which breaks ties between equal sliders. Replaces
+ * `learner_targets` and `learner_priorities.must_have`; both are migrated in once at boot and
+ * then left untouched for one release.
+ */
+export const learnerSkillPriorities = sqliteTable(
+  "learner_skill_priorities",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    skillId: text("skill_id").notNull(),
+    /** Denormalised so the path keeps its heading if a skill is later renamed or archived. */
+    skillName: text("skill_name").notNull(),
+    slider: integer("slider").notNull(),
+    position: integer("position").notNull().default(0),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.skillId] }), index("learner_skill_priorities_user_idx").on(t.userId, t.slider)],
+);
+
+/** Skills that are never tested and never taught for this learner. */
+export const learnerSkip = sqliteTable(
+  "learner_skip",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    skillId: text("skill_id").notNull(),
+    skillName: text("skill_name").notNull(),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.skillId] })],
+);
+
+/** Small key/value facts about the database itself: which one-time data migrations have run. */
+export const appMeta = sqliteTable("app_meta", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});

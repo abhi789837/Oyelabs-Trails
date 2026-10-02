@@ -1,7 +1,7 @@
 import type { UserSummary } from "@shared/admin";
 import { EMPTY_TABLE_QUERY, type TableQuery } from "@shared/table";
 
-import type { BuiltInView, TableFieldDef } from "../types";
+import type { BuiltInView, FieldOption, TableFieldDef } from "../types";
 
 /**
  * The People table's field catalogue and its built-in views.
@@ -90,6 +90,22 @@ export const peopleFields: TableFieldDef<UserSummary>[] = [
     accessor: (row) => (row.planTopicCount === 0 ? 0 : Math.round((row.planCompletedCount / row.planTopicCount) * 100)),
   },
 ];
+
+/**
+ * The field list with a Department filter, whose options are the catalog's departments — rows, not
+ * an enum, so they arrive at runtime. Staff have no department; a null never matches the filter.
+ */
+export function peopleFieldsFor(departments: readonly FieldOption[]): TableFieldDef<UserSummary>[] {
+  const department: TableFieldDef<UserSummary> = {
+    name: "departmentId",
+    label: "Department",
+    type: "enum",
+    quick: true,
+    options: departments,
+  };
+  const at = peopleFields.findIndex((field) => field.name === "status");
+  return [...peopleFields.slice(0, at), department, ...peopleFields.slice(at)];
+}
 
 const DAY = 86_400_000;
 

@@ -10,6 +10,7 @@ import { TopicStatusBadge } from "@/components/trail/TopicStatusBadge";
 import { VideoPlayer } from "@/components/trail/VideoPlayer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useDepartment } from "@/features/auth/AuthProvider";
 import { findTopic, modulePath, topicNeighbors, topicPath, type ModuleMeta, type TopicMeta, type TrackMeta } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useModuleContent } from "@/hooks/useModuleContent";
@@ -43,6 +44,7 @@ export function LegacyTopicRedirect() {
 function TopicScreen({ track, module, meta }: { track: TrackMeta; module: ModuleMeta; meta: TopicMeta }) {
   const content = useModuleContent(track.id, module.id);
   const progress = useTopicProgress(meta.id);
+  const department = useDepartment();
   const markInProgress = useProgressStore((s) => s.markInProgress);
   const { prev, next } = topicNeighbors(meta.id);
   const index = module.topics.findIndex((t) => t.id === meta.id);
@@ -104,7 +106,12 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
         <section aria-labelledby="challenge-heading" className="mt-14 max-w-3xl border-t pt-8">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h2 id="challenge-heading" className="text-xl font-semibold">
-              {topic.challengeType === "quiz" ? "Checkpoint quiz" : "Coding challenge"}
+              {/* A tasks department calls practice by its own name; engineering keeps "Coding challenge". */}
+              {topic.challengeType === "quiz"
+                ? "Checkpoint quiz"
+                : department.assessmentFormat === "coding"
+                  ? "Coding challenge"
+                  : department.practiceNoun}
             </h2>
             {progress.attempts > 0 && (
               <span className="font-mono text-xs text-muted-foreground">

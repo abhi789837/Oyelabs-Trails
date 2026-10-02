@@ -101,6 +101,7 @@ function buildActions(role: Role | undefined, context: "learner" | "admin"): Com
   const admin = [
     entry("action:admin-people", "People", "/admin/people", "Every learner on the platform"),
     entry("action:admin-onboard", "Onboard learner", "/admin/onboard", "Create an account and issue an assessment"),
+    entry("action:admin-departments", "Departments", "/admin/departments", "Tracks, stacks and skills per department"),
     entry(GO_TO_LEARNER, "Go to learner…", "", "Search people by name or username"),
     entry("action:admin-live", "Live assessments", "/admin/live", "Who is sitting one right now"),
     // The one console destination an admin does not have. Offering it would send them to a

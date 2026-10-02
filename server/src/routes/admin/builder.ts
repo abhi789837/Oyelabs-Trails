@@ -197,6 +197,7 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
           courseId: row.courseId,
           title: course?.title ?? "(deleted)",
           summary: course?.summary ?? "",
+          departmentId: course?.departmentId ?? null,
           skill: row.skill,
           scope: row.scope,
           status: row.status,

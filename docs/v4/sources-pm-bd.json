@@ -1,0 +1,2877 @@
+{
+  "_meta": {
+    "generated": "2026-10-02",
+    "verification": "refs: curl -L with browser UA returned HTTP 200 (verified='200'); 'method':'webfetch' means curl was blocked by Cloudflare bot protection but WebFetch returned the real page. videos: YouTube oEmbed returned 200 (so embeddable) and title/channel are copied verbatim from oEmbed.",
+    "pmp_eco": {
+      "domains": {
+        "People": "33%",
+        "Process": "41%",
+        "Business Environment": "26%"
+      },
+      "previous": {
+        "People": "42%",
+        "Process": "50%",
+        "Business Environment": "8%"
+      },
+      "effective": "July 2026 (PMI: 'In July 2026, we updated the PMP exam'; ECO PDF titled 'July 2026 PMP Certification Exam Update'. Third-party trainers cite 9 July 2026 as the switchover date; not stated on the PMI pages fetched.)",
+      "sources": [
+        "https://www.pmi.org/certifications/project-management-pmp/new-exam",
+        "https://www.pmi.org/-/media/pmi/documents/public/pdf/certifications/new-pmp-examination-content-outline-2026.pdf"
+      ]
+    },
+    "scrum_guide_version": "2020 (November 2020) is still the current Scrum Guide on scrumguides.org",
+    "kanban_guide_version": "kanbanguides.org: The Kanban Guide (May 2025, latest); Kanban University publishes a separate Official Kanban Guide",
+    "pmbok_version": "PMBOK Guide 8th edition, published November 2025 (pmi.org/standards/pmbok)"
+  },
+  "pm": {
+    "pm-project-lifecycle-roles": {
+      "title": "Project lifecycle & roles",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "PMI: What is Project Management?",
+          "url": "https://www.pmi.org/about/what-is-project-management",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Project management intro",
+          "url": "https://www.atlassian.com/agile/project-management/project-management-intro",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "GOV.UK Service Manual: What each role does in a service team",
+          "url": "https://www.gov.uk/service-manual/the-team/what-each-role-does-in-service-team",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "GOV.UK Service Manual: Agile delivery (phases)",
+          "url": "https://www.gov.uk/service-manual/agile-delivery",
+          "kind": "docs",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "The Project Management Life Cycle - Project Management Training",
+          "channel": "ProjectManager",
+          "url": "https://www.youtube.com/watch?v=POuGKD3xLqs",
+          "videoId": "POuGKD3xLqs"
+        },
+        {
+          "title": "Phases of a Project [PROJECT MANAGEMENT LIFE CYCLE EXPLAINED]",
+          "channel": "Adriana Girdler",
+          "url": "https://www.youtube.com/watch?v=qoY6VX_nRCs",
+          "videoId": "qoY6VX_nRCs"
+        },
+        {
+          "title": "Basics of Project Management  ...in 4 minutes",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=AOmS_UrnBD0",
+          "videoId": "AOmS_UrnBD0"
+        }
+      ]
+    },
+    "pm-scope-time-cost": {
+      "title": "Scope, time and cost basics",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Atlassian: Project scope",
+          "url": "https://www.atlassian.com/work-management/project-management/project-scope",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Scope creep",
+          "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PMBOK Guide (8th edition) overview",
+          "url": "https://www.pmi.org/standards/pmbok",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "The Project Management Triple Constraint - Project Management Training",
+          "channel": "ProjectManager",
+          "url": "https://www.youtube.com/watch?v=wJoipiqjsTc",
+          "videoId": "wJoipiqjsTc"
+        },
+        {
+          "title": "Project Planning: Plan Your Project - PM Fundamentals",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=LhBo0T4wcM0",
+          "videoId": "LhBo0T4wcM0"
+        }
+      ]
+    },
+    "pm-scrum-fundamentals": {
+      "title": "Agile & Scrum fundamentals (accountabilities, events, artifacts)",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "The Scrum Guide (November 2020, current)",
+          "url": "https://scrumguides.org/scrum-guide.html",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian Agile Coach: Scrum",
+          "url": "https://www.atlassian.com/agile/scrum",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Mountain Goat Software: Scrum",
+          "url": "https://www.mountaingoatsoftware.com/agile/scrum",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Manifesto for Agile Software Development + 12 principles",
+          "url": "https://agilemanifesto.org/principles.html",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "The Scrum Guide: FULL COURSE",
+          "channel": "David McLachlan",
+          "url": "https://www.youtube.com/watch?v=s3y95I79D_Q",
+          "videoId": "s3y95I79D_Q"
+        },
+        {
+          "title": "Intro to Scrum in Under 10 Minutes",
+          "channel": "Axosoft",
+          "url": "https://www.youtube.com/watch?v=XU0llRltyFM",
+          "videoId": "XU0llRltyFM"
+        },
+        {
+          "title": "Scrum Essentials in Under 10 Minutes",
+          "channel": "Scrum Alliance",
+          "url": "https://www.youtube.com/watch?v=RtQ3tpq-RuE",
+          "videoId": "RtQ3tpq-RuE"
+        }
+      ]
+    },
+    "pm-kanban-basics": {
+      "title": "Kanban basics",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "The Kanban Guide (May 2025) - kanbanguides.org",
+          "url": "https://kanbanguides.org/the-kanban-guide/2025.5/",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Kanban University: The Official Kanban Guide",
+          "url": "https://kanban.university/kanban-guide/",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian Agile Coach: Kanban",
+          "url": "https://www.atlassian.com/agile/kanban",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: WIP limits",
+          "url": "https://www.atlassian.com/agile/kanban/wip-limits",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is Kanban? Kanban Explained with a Coffee Cup",
+          "channel": "Development That Pays",
+          "url": "https://www.youtube.com/watch?v=Lib1vFmfCng",
+          "videoId": "Lib1vFmfCng"
+        },
+        {
+          "title": "Scrum vs Kanban - What's the Difference?",
+          "channel": "Development That Pays",
+          "url": "https://www.youtube.com/watch?v=rIaz-l1Kf8w",
+          "videoId": "rIaz-l1Kf8w"
+        }
+      ]
+    },
+    "pm-user-stories-acceptance-criteria": {
+      "title": "User stories & acceptance criteria",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Mountain Goat Software: User stories",
+          "url": "https://www.mountaingoatsoftware.com/agile/user-stories",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: User stories",
+          "url": "https://www.atlassian.com/agile/project-management/user-stories",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Acceptance criteria",
+          "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "GOV.UK Service Manual: Writing user stories",
+          "url": "https://www.gov.uk/service-manual/agile-delivery/writing-user-stories",
+          "kind": "docs",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What Is a User Story in Agile? (Examples + Template)",
+          "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+          "url": "https://www.youtube.com/watch?v=kkihaNjwRik",
+          "videoId": "kkihaNjwRik"
+        },
+        {
+          "title": "User Stories Explained: What They Are, How to Write Them, and Why They Work",
+          "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+          "url": "https://www.youtube.com/watch?v=6q5-cVeNjCE",
+          "videoId": "6q5-cVeNjCE"
+        },
+        {
+          "title": "How to Split User Stories with SPIDR | 5 Story Splitting Techniques",
+          "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+          "url": "https://www.youtube.com/watch?v=k2PwtI6JyFM",
+          "videoId": "k2PwtI6JyFM"
+        }
+      ]
+    },
+    "pm-jira-clickup-basics": {
+      "title": "Jira / ClickUp basics",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Atlassian: Jira guide - getting started",
+          "url": "https://www.atlassian.com/software/jira/guides/getting-started/introduction",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Jira Cloud support: Use your Scrum backlog",
+          "url": "https://support.atlassian.com/jira-software-cloud/docs/use-your-scrum-backlog/",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "ClickUp Help: Intro to the Hierarchy",
+          "url": "https://help.clickup.com/hc/en-us/articles/13856392825367-Intro-to-the-Hierarchy",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "ClickUp Help: Organize your Hierarchy for agency management",
+          "url": "https://help.clickup.com/hc/en-us/articles/20808672437271-Organize-your-Hierarchy-for-agency-management",
+          "kind": "docs",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Jira Tutorial for Beginners | Atlassian Answered",
+          "channel": "Atlassian",
+          "url": "https://www.youtube.com/watch?v=emidrJeUTaM",
+          "videoId": "emidrJeUTaM"
+        },
+        {
+          "title": "Jira Tutorial for Beginners — Learn Jira in 20 Minutes",
+          "channel": "Kevin Stratvert",
+          "url": "https://www.youtube.com/watch?v=GPOWZSxEslU",
+          "videoId": "GPOWZSxEslU"
+        },
+        {
+          "title": "ClickUp Tutorial - How to use ClickUp for Beginners",
+          "channel": "Ravi Abuvala",
+          "url": "https://www.youtube.com/watch?v=0Q8aA0Lwuyc",
+          "videoId": "0Q8aA0Lwuyc"
+        }
+      ]
+    },
+    "pm-running-standups": {
+      "title": "Running stand-ups",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Atlassian: Stand-ups",
+          "url": "https://www.atlassian.com/agile/scrum/standups",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Mountain Goat Software: Daily Scrum",
+          "url": "https://www.mountaingoatsoftware.com/agile/scrum/meetings/daily-scrum",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "The Scrum Guide: Daily Scrum section",
+          "url": "https://scrumguides.org/scrum-guide.html",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Daily Scrum Explained: A Better Way to Run It",
+          "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+          "url": "https://www.youtube.com/watch?v=MZdK4SX0mfI",
+          "videoId": "MZdK4SX0mfI"
+        },
+        {
+          "title": "How to Hold a Daily Stand-up Meeting",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=JSFfyse_EXM",
+          "videoId": "JSFfyse_EXM"
+        }
+      ]
+    },
+    "pm-status-reporting-client-comms": {
+      "title": "Status reporting & client communication",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "ProjectManager: Project status reports (guide)",
+          "url": "https://www.projectmanager.com/guides/status-report",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Asana: How project status reports work",
+          "url": "https://asana.com/resources/how-project-status-reports",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Teamwork.com: Client project management for agencies",
+          "url": "https://www.teamwork.com/blog/client-project/",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Project Management Status Reports [WHAT TO INCLUDE]",
+          "channel": "Adriana Girdler",
+          "url": "https://www.youtube.com/watch?v=8C1PBSs_cMI",
+          "videoId": "8C1PBSs_cMI"
+        },
+        {
+          "title": "What goes into a Project Progress Report? (Step-by-Step Guide)",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=Ip90-6mVREU",
+          "videoId": "Ip90-6mVREU"
+        }
+      ]
+    },
+    "pm-requirements-gathering": {
+      "title": "Requirements gathering",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Asana: Requirements gathering",
+          "url": "https://asana.com/resources/requirements-gathering",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Requirements gathering guide",
+          "url": "https://www.projectmanager.com/blog/requirements-gathering-guide",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "GOV.UK Service Manual: How the discovery phase works",
+          "url": "https://www.gov.uk/service-manual/agile-delivery/how-the-discovery-phase-works",
+          "kind": "docs",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Gather Project Requirements",
+          "channel": "Adriana Girdler",
+          "url": "https://www.youtube.com/watch?v=WrPmccFpdaU",
+          "videoId": "WrPmccFpdaU"
+        },
+        {
+          "title": "Requirements Gathering Techniques & Template | TeamGantt",
+          "channel": "TeamGantt",
+          "url": "https://www.youtube.com/watch?v=5idGzKLf-W8",
+          "videoId": "5idGzKLf-W8"
+        }
+      ]
+    },
+    "pm-software-basics-for-pms": {
+      "title": "Software basics for PMs (environments, APIs, Git flow, deployment)",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "AWS: What is an API?",
+          "url": "https://aws.amazon.com/what-is/api/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Gitflow workflow",
+          "url": "https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: CI vs continuous delivery vs continuous deployment",
+          "url": "https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Microsoft Learn: Azure Pipelines environments (dev/test/staging/prod)",
+          "url": "https://learn.microsoft.com/en-us/azure/devops/pipelines/process/environments?view=azure-devops",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Martin Fowler: Patterns for managing source code branches",
+          "url": "https://martinfowler.com/articles/branching-patterns.html",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "The Twelve-Factor App: Config",
+          "url": "https://12factor.net/config",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "APIs Explained (in 4 Minutes)",
+          "channel": "Aced (formerly Exponent)",
+          "url": "https://www.youtube.com/watch?v=bxuYDT-BWaI",
+          "videoId": "bxuYDT-BWaI"
+        },
+        {
+          "title": "3 Git Workflows Every Developer Should Know (And When to Use Each)",
+          "channel": "TechWorld with Nana",
+          "url": "https://www.youtube.com/watch?v=GQQqf-C2ha4",
+          "videoId": "GQQqf-C2ha4"
+        },
+        {
+          "title": "How Git Works: Explained in 4 Minutes",
+          "channel": "ByteByteGo",
+          "url": "https://www.youtube.com/watch?v=e9lnsKot_SQ",
+          "videoId": "e9lnsKot_SQ"
+        }
+      ]
+    },
+    "pm-sprint-planning": {
+      "title": "Sprint planning",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "The Scrum Guide: Sprint Planning",
+          "url": "https://scrumguides.org/scrum-guide.html",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Sprint planning",
+          "url": "https://www.atlassian.com/agile/scrum/sprint-planning",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Mountain Goat Software: Sprint planning meeting",
+          "url": "https://www.mountaingoatsoftware.com/agile/scrum/meetings/sprint-planning-meeting",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Mountain Goat Software: Why I don't use story points for sprint planning",
+          "url": "https://www.mountaingoatsoftware.com/agile/why-i-dont-use-story-points-for-sprint-planning",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is Sprint Planning in Scrum?",
+          "channel": "The Agile Shop",
+          "url": "https://www.youtube.com/watch?v=R7oXgtPOj74",
+          "videoId": "R7oXgtPOj74"
+        },
+        {
+          "title": "What Is Sprint Planning in Agile ? | Sprint Planning Meeting in Agile Explained | Simplilearn",
+          "channel": "Simplilearn",
+          "url": "https://www.youtube.com/watch?v=iMnhzjhkdXM",
+          "videoId": "iMnhzjhkdXM"
+        }
+      ]
+    },
+    "pm-estimation-story-points-velocity": {
+      "title": "Estimation (story points, velocity)",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Mountain Goat Software: What are story points?",
+          "url": "https://www.mountaingoatsoftware.com/agile/what-are-story-points",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Mountain Goat Software: Planning poker",
+          "url": "https://www.mountaingoatsoftware.com/agile/story-points/planning-poker",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Agile estimation",
+          "url": "https://www.atlassian.com/agile/project-management/estimation",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What Are Story Points in Agile? (Agile Estimation Explained)",
+          "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+          "url": "https://www.youtube.com/watch?v=VsSaolMtkKU",
+          "videoId": "VsSaolMtkKU"
+        },
+        {
+          "title": "Planning Poker Explained: How Agile Teams Estimate Story Points",
+          "channel": "Mountain Goat Software: Agile & Scrum Mastery",
+          "url": "https://www.youtube.com/watch?v=gE7srp2BzoM",
+          "videoId": "gE7srp2BzoM"
+        },
+        {
+          "title": "Agile   Velocity and Capacity Planning Relationship",
+          "channel": "Ajeet SD",
+          "url": "https://www.youtube.com/watch?v=QcVzdDO3YXE",
+          "videoId": "QcVzdDO3YXE"
+        }
+      ]
+    },
+    "pm-backlog-prioritisation": {
+      "title": "Backlog prioritisation (MoSCoW, RICE, WSJF)",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Agile Business Consortium (DSDM): MoSCoW prioritisation",
+          "url": "https://www.agilebusiness.org/resource/what-is-moscow-prioritization/",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Intercom: RICE prioritization (original article)",
+          "url": "https://www.intercom.com/blog/rice-simple-prioritization-for-product-managers/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "SAFe: WSJF",
+          "url": "https://framework.scaledagile.com/wsjf",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Prioritization frameworks",
+          "url": "https://www.atlassian.com/agile/product-management/prioritization-framework",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is MoSCoW Prioritization Method? Definition, Overview, and Best Practices",
+          "channel": "ProductPlan",
+          "url": "https://www.youtube.com/watch?v=pm4GbSRMElc",
+          "videoId": "pm4GbSRMElc"
+        },
+        {
+          "title": "What is the RICE Scoring Model?",
+          "channel": "ProductPlan",
+          "url": "https://www.youtube.com/watch?v=pzyRafZJ-0M",
+          "videoId": "pzyRafZJ-0M"
+        },
+        {
+          "title": "WSJF (Weighted Shortest Job First) Backlog Prioritization Framework + Example in Jira",
+          "channel": "Monday Coffee by Appfire ",
+          "url": "https://www.youtube.com/watch?v=-HCzJewpEkk",
+          "videoId": "-HCzJewpEkk"
+        }
+      ]
+    },
+    "pm-change-requests-scope-control": {
+      "title": "Change requests & scope control",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Asana: Change control process",
+          "url": "https://asana.com/resources/change-control-process",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Change control board roles & processes",
+          "url": "https://www.projectmanager.com/blog/change-control-board-roles-responsibilities-processes",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Scope creep",
+          "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Project Management Scope Creep: 7 Top Tips To Prevent It!",
+          "channel": "ProjectManager",
+          "url": "https://www.youtube.com/watch?v=lKcJW1XqY4E",
+          "videoId": "lKcJW1XqY4E"
+        },
+        {
+          "title": "Project Management Scope Creep [MANAGE IT LIKE A PRO]",
+          "channel": "Adriana Girdler",
+          "url": "https://www.youtube.com/watch?v=_c-qzFV5yM4",
+          "videoId": "_c-qzFV5yM4"
+        }
+      ]
+    },
+    "pm-raid-risk-management": {
+      "title": "RAID logs & risk management",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Asana: RAID log",
+          "url": "https://asana.com/resources/raid-log",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: RAID log template",
+          "url": "https://www.projectmanager.com/templates/raid-log-template",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PMBOK Guide (8th edition) overview - risk is a performance domain",
+          "url": "https://www.pmi.org/standards/pmbok",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Use RAID Log in REAL-LIFE Project (+ Template)",
+          "channel": "Tactical Project Manager",
+          "url": "https://www.youtube.com/watch?v=inZI16nIvdo",
+          "videoId": "inZI16nIvdo"
+        },
+        {
+          "title": "RAID Log in Project Management (FREE Risk Register Template Included!)",
+          "channel": "Alvin the PM - Become a Certified Project Manager",
+          "url": "https://www.youtube.com/watch?v=1i_pYJXs-H0",
+          "videoId": "1i_pYJXs-H0"
+        },
+        {
+          "title": "Project Risk Management Tutorial 2026 | Complete PMP Risk Management Guide | Simplilearn",
+          "channel": "Simplilearn",
+          "url": "https://www.youtube.com/watch?v=rscnTR_E40c",
+          "videoId": "rscnTR_E40c"
+        }
+      ]
+    },
+    "pm-stakeholder-mapping-raci": {
+      "title": "Stakeholder mapping & RACI",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Atlassian: RACI chart",
+          "url": "https://www.atlassian.com/work-management/project-management/raci-chart",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Asana: RACI chart",
+          "url": "https://asana.com/resources/raci-chart",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Stakeholder analysis 101",
+          "url": "https://www.projectmanager.com/blog/stakeholder-analysis-101",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Stakeholder Analysis: How to Use the Power/Interest Grid",
+          "channel": "AssistKD",
+          "url": "https://www.youtube.com/watch?v=G3R4TO1l6LY",
+          "videoId": "G3R4TO1l6LY"
+        },
+        {
+          "title": "RACI Matrix Basics Explained with Examples | TeamGantt",
+          "channel": "TeamGantt",
+          "url": "https://www.youtube.com/watch?v=xc5NbJ8VgTI",
+          "videoId": "xc5NbJ8VgTI"
+        },
+        {
+          "title": "Stakeholder Engagement Tips: 5 Tips For Project Managers",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=APc9S_8v7YY",
+          "videoId": "APc9S_8v7YY"
+        }
+      ]
+    },
+    "pm-agency-commercial-models": {
+      "title": "Agency commercial models (fixed bid, T&M, retainer) & time tracking",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "ProjectManager: Time and materials contract",
+          "url": "https://www.projectmanager.com/blog/time-and-materials-contract",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Fixed-price contract",
+          "url": "https://www.projectmanager.com/blog/fixed-price-contract",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Harvest: Project pricing - which model to choose",
+          "url": "https://www.getharvest.com/resources/project-pricing",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Productive.io: What is a retainer in business?",
+          "url": "https://productive.io/blog/what-is-a-retainer-in-business/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Teamwork.com: Agency pricing models 101",
+          "url": "https://www.teamwork.com/blog/agency-pricing-models/",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Fixed-Price Contracts VS Time-and-Materials for Your Software Development Project",
+          "channel": "Matt Brickwood",
+          "url": "https://www.youtube.com/watch?v=PyobLk8aGu0",
+          "videoId": "PyobLk8aGu0"
+        },
+        {
+          "title": "Contract Type - Fixed Price , T&M and Cost+ - PMP Exam Topic",
+          "channel": "iZenBridge Consultancy Pvt Ltd.",
+          "url": "https://www.youtube.com/watch?v=God5KMi9tAs",
+          "videoId": "God5KMi9tAs"
+        },
+        {
+          "title": "Fixed Fee vs Time & Materials Contracts: Comparison",
+          "channel": "Brainhub",
+          "url": "https://www.youtube.com/watch?v=WrUYVqs2-BY",
+          "videoId": "WrUYVqs2-BY"
+        }
+      ]
+    },
+    "pm-qa-uat-coordination": {
+      "title": "QA & UAT coordination",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Atlassian: Acceptance criteria",
+          "url": "https://www.atlassian.com/work-management/project-management/acceptance-criteria",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Acceptance criteria in project management",
+          "url": "https://www.projectmanager.com/blog/acceptance-criteria-project-management",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Software Testing Process Guide: What is User Acceptance Testing - UAT?",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=sGwm4p9sGPI",
+          "videoId": "sGwm4p9sGPI"
+        },
+        {
+          "title": "What is the difference between QA and UAT",
+          "channel": "Thomas Ryan",
+          "url": "https://www.youtube.com/watch?v=6Pdy0TUCK90",
+          "videoId": "6Pdy0TUCK90"
+        }
+      ]
+    },
+    "pm-release-management": {
+      "title": "Release management",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Atlassian: Release planning / agile release",
+          "url": "https://www.atlassian.com/agile/software-development/release",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Asana: Release management",
+          "url": "https://asana.com/resources/release-management",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Martin Fowler: Feature flags",
+          "url": "https://martinfowler.com/bliki/FeatureFlag.html",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is Release Management?",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=dvFQrsY_tKg",
+          "videoId": "dvFQrsY_tKg"
+        }
+      ]
+    },
+    "pm-retrospectives": {
+      "title": "Retrospectives",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "The Scrum Guide: Sprint Retrospective",
+          "url": "https://scrumguides.org/scrum-guide.html",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Retrospectives",
+          "url": "https://www.atlassian.com/agile/scrum/retrospectives",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Mountain Goat Software: Sprint retrospective",
+          "url": "https://www.mountaingoatsoftware.com/agile/scrum/meetings/sprint-retrospective",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Facilitate the Sprint Retrospective",
+          "channel": "Scrum.org",
+          "url": "https://www.youtube.com/watch?v=TD-XsdD2n3s",
+          "videoId": "TD-XsdD2n3s"
+        }
+      ]
+    },
+    "pm-managing-client-expectations": {
+      "title": "Managing client expectations",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "PMI library: Setting expectations (client relationship)",
+          "url": "https://www.pmi.org/learning/library/setting-expectations-client-relationship-4667",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI library: Managing expectations",
+          "url": "https://www.pmi.org/learning/library/approaches-manage-expectations-3135",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Client management - win and retain clients",
+          "url": "https://www.projectmanager.com/blog/client-management-how-to-win-and-retain-clients",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "No More Revisions! Working With Clients — Project Management Tips",
+          "channel": "The Futur",
+          "url": "https://www.youtube.com/watch?v=xoOo1bjYsKs",
+          "videoId": "xoOo1bjYsKs"
+        },
+        {
+          "title": "Tips for Managing Client Expectations",
+          "channel": "GoDaddy Pro",
+          "url": "https://www.youtube.com/watch?v=hNlEohG08XM",
+          "videoId": "hNlEohG08XM"
+        }
+      ]
+    },
+    "pm-hybrid-delivery": {
+      "title": "Hybrid delivery",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "ProjectManager: Agile vs waterfall and hybrid projects",
+          "url": "https://www.projectmanager.com/guides/agile-vs-waterfall-hybrid-projects",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI library: Hybrid approach within a waterfall environment",
+          "url": "https://www.pmi.org/learning/library/outcomes-hybrid-approach-waterfall-environment-5839",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: Disciplined Agile",
+          "url": "https://www.pmi.org/disciplined-agile",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Scrumban",
+          "url": "https://www.atlassian.com/agile/project-management/scrumban",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Project Management: Waterfall, Agile, & Hybrid Approaches",
+          "channel": "Kandis Porter",
+          "url": "https://www.youtube.com/watch?v=bLZ9MNwV2vE",
+          "videoId": "bLZ9MNwV2vE"
+        },
+        {
+          "title": "Waterfall vs Agile vs Hybrid Approaches Explained in 10 Minutes!",
+          "channel": "Alvin the PM - Become a Certified Project Manager",
+          "url": "https://www.youtube.com/watch?v=qf0Yzrzr_i4",
+          "videoId": "qf0Yzrzr_i4"
+        }
+      ]
+    },
+    "pm-capacity-planning": {
+      "title": "Multi-project & resource capacity planning",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Asana: Capacity planning",
+          "url": "https://asana.com/resources/capacity-planning",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Resource management guide",
+          "url": "https://www.projectmanager.com/guides/resource-management",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Asana: Resource planning",
+          "url": "https://asana.com/uses/resource-planning",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Best Practices for Resource Capacity Planning",
+          "channel": "Acuity PPM",
+          "url": "https://www.youtube.com/watch?v=tmE7pimtB5E",
+          "videoId": "tmE7pimtB5E"
+        },
+        {
+          "title": "Agile   Velocity and Capacity Planning Relationship",
+          "channel": "Ajeet SD",
+          "url": "https://www.youtube.com/watch?v=QcVzdDO3YXE",
+          "videoId": "QcVzdDO3YXE"
+        }
+      ]
+    },
+    "pm-delivery-metrics": {
+      "title": "Metrics (burndown, cycle time, throughput)",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Atlassian: Agile metrics",
+          "url": "https://www.atlassian.com/agile/project-management/metrics",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Burndown charts",
+          "url": "https://www.atlassian.com/agile/tutorials/burndown-charts",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Kanban metrics",
+          "url": "https://www.atlassian.com/agile/project-management/kanban-metrics",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Cycle time",
+          "url": "https://www.atlassian.com/agile/project-management/cycle-time",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Kanban Guide (May 2025): flow measures",
+          "url": "https://kanbanguides.org/the-kanban-guide/2025.5/",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Scrum Sessions: The Burndown Chart | What Is It And How Does It Work?",
+          "channel": "Scrum Inc.",
+          "url": "https://www.youtube.com/watch?v=BVTZxAe-8Wc",
+          "videoId": "BVTZxAe-8Wc"
+        },
+        {
+          "title": "What are a Burndown Chart, a Burnup Chart, and Velocity?",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=2K84aZn9AY8",
+          "videoId": "2K84aZn9AY8"
+        },
+        {
+          "title": "Cumulative Flow Diagram (CFD) Explained in Two Minutes",
+          "channel": "Businessmap",
+          "url": "https://www.youtube.com/watch?v=eo2uv8avEsU",
+          "videoId": "eo2uv8avEsU"
+        }
+      ]
+    },
+    "pm-evm-basics": {
+      "title": "EVM basics (CPI/SPI)",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "PMI blog: Earned Value Management - reading the numbers",
+          "url": "https://www.pmi.org/blog/earned-value-management",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI library: How to make earned value work on your project",
+          "url": "https://www.pmi.org/learning/library/make-earned-value-work-project-6001",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Cost Performance Index (CPI)",
+          "url": "https://www.projectmanager.com/blog/cost-performance-index",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Schedule Performance Index (SPI)",
+          "url": "https://www.projectmanager.com/blog/schedule-performance-index-spi",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: How to calculate CPI",
+          "url": "https://www.atlassian.com/work-management/project-management/cost-performance-index",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is Earned Value Management? | EVM | CV, SV, CPI, SPI, EAC, ETC, TCPI, VAC | PMP Exam",
+          "channel": "Sunny Sensei",
+          "url": "https://www.youtube.com/watch?v=7qGUyTfjWCw",
+          "videoId": "7qGUyTfjWCw"
+        },
+        {
+          "title": "PMP Exam, Earned Value Management Full Course Part 6 - Best EVM course to Passing All EMV Questions",
+          "channel": "Andrew Ramdayal",
+          "url": "https://www.youtube.com/watch?v=iKEIxsNW2Og",
+          "videoId": "iKEIxsNW2Og"
+        }
+      ]
+    },
+    "pm-sow-contract-management": {
+      "title": "SOWs & contract management",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "PMI library: Statement of Work - delivering successful service projects",
+          "url": "https://www.pmi.org/learning/library/statement-work-delivering-successful-service-projects-4761",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI library: Higher-quality SOWs for outsourced software projects",
+          "url": "https://www.pmi.org/learning/library/framework-delivering-higher-quality-statements-work-6012",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: What is a statement of work",
+          "url": "https://www.projectmanager.com/blog/statement-work-definition-examples",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: What is a statement of work",
+          "url": "https://www.atlassian.com/work-management/knowledge-sharing/documentation/what-is-statement-of-work",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is a Statement of Work (SOW)? And what are the different types?",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=1picY6dlLOc",
+          "videoId": "1picY6dlLOc"
+        },
+        {
+          "title": "TYPES OF CONTRACTS IN PROCUREMENT and Project Management | PMP Exam Prep | Contract Management",
+          "channel": "PMPwithRay",
+          "url": "https://www.youtube.com/watch?v=AIXiMzAXtdw",
+          "videoId": "AIXiMzAXtdw"
+        }
+      ]
+    },
+    "pm-escalations-difficult-conversations": {
+      "title": "Escalations & difficult conversations",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Atlassian Team Playbook: Clean escalations",
+          "url": "https://www.atlassian.com/team-playbook/plays/clean-escalations",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "PMI library: Escalate is not a dirty word",
+          "url": "https://www.pmi.org/learning/library/escalate-not-dirty-word-3637",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Escalation matrix",
+          "url": "https://www.projectmanager.com/blog/escalation-matrix",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Manage Difficult Stakeholders [6 COMMON CHALLENGES]",
+          "channel": "Adriana Girdler",
+          "url": "https://www.youtube.com/watch?v=NaGhBpfZLzg",
+          "videoId": "NaGhBpfZLzg"
+        },
+        {
+          "title": "This is TERRIBLE PMP Advice - Never Escalate, Never Close",
+          "channel": "David McLachlan",
+          "url": "https://www.youtube.com/watch?v=LMGOE663mZY",
+          "videoId": "LMGOE663mZY"
+        },
+        {
+          "title": "How to Deal with Difficult Stakeholders - In Conversation with Andy Kaufman",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=DqXSeSkC93A",
+          "videoId": "DqXSeSkC93A"
+        }
+      ]
+    },
+    "pm-project-recovery": {
+      "title": "Project recovery",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "PMI library: Six steps to project recovery",
+          "url": "https://www.pmi.org/learning/library/six-steps-project-recovery-4641",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI library: Five critical first steps in recovering troubled projects",
+          "url": "https://www.pmi.org/learning/library/critical-steps-recovering-troubled-projects-7352",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Four Ways to Recover a Failing Project",
+          "channel": "David McLachlan",
+          "url": "https://www.youtube.com/watch?v=RZ4eBKF-aC0",
+          "videoId": "RZ4eBKF-aC0"
+        },
+        {
+          "title": "When Your Project is in Trouble - Project Management",
+          "channel": "ProjectManager",
+          "url": "https://www.youtube.com/watch?v=nIaU9j9xwHY",
+          "videoId": "nIaU9j9xwHY"
+        },
+        {
+          "title": "How to Rescue the Problem Project [SAVE YOUR FAILING PROJECT]",
+          "channel": "Adriana Girdler",
+          "url": "https://www.youtube.com/watch?v=yl8SMYK5adM",
+          "videoId": "yl8SMYK5adM"
+        }
+      ]
+    },
+    "pm-vendor-management": {
+      "title": "Vendor management",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "ProjectManager: Vendor management",
+          "url": "https://www.projectmanager.com/blog/vendor-management",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Procurement contracting - contract types",
+          "url": "https://www.projectmanager.com/blog/procurement-contracting",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork: Software development outsourcing guide",
+          "url": "https://www.upwork.com/resources/software-development-outsourcing",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Project Procurement Management Overview | PMBOK Video Course",
+          "channel": "David McLachlan",
+          "url": "https://www.youtube.com/watch?v=Ig0uVNXhR9Q",
+          "videoId": "Ig0uVNXhR9Q"
+        },
+        {
+          "title": "Mastering Vendor Management: Unveiling Practical Risk Tips",
+          "channel": "Prabh Nair",
+          "url": "https://www.youtube.com/watch?v=-MmqZ2CBlUQ",
+          "videoId": "-MmqZ2CBlUQ"
+        }
+      ]
+    },
+    "pm-programme-portfolio-governance": {
+      "title": "Programme & portfolio governance",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "PMI: The Standard for Program Management",
+          "url": "https://www.pmi.org/standards/program-management",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PgMP certification",
+          "url": "https://www.pmi.org/certifications/program-management-pgmp",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PfMP certification",
+          "url": "https://www.pmi.org/certifications/portfolio-management-pfmp",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "SAFe: Lean Portfolio Management",
+          "url": "https://framework.scaledagile.com/lean-portfolio-management",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Program management",
+          "url": "https://www.atlassian.com/agile/project-management/program-management",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is Program Management?",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=TPPLWC_zd1I",
+          "videoId": "TPPLWC_zd1I"
+        },
+        {
+          "title": "The Differences Between Portfolio, Programme and Project Management | Fundamentals",
+          "channel": "Psoda",
+          "url": "https://www.youtube.com/watch?v=i9-1v7ujvTk",
+          "videoId": "i9-1v7ujvTk"
+        },
+        {
+          "title": "SAFe® Lean Portfolio Management: Defining Portfolio (1 of 4 )",
+          "channel": "iZenBridge Consultancy Pvt Ltd.",
+          "url": "https://www.youtube.com/watch?v=-WLAeKNfwPU",
+          "videoId": "-WLAeKNfwPU"
+        }
+      ]
+    },
+    "pm-business-case-value-realisation": {
+      "title": "Business cases & value realisation",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "Atlassian: Business case",
+          "url": "https://www.atlassian.com/work-management/project-management/business-case",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Asana: Business case",
+          "url": "https://asana.com/resources/business-case",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PMBOK Guide 8th edition (value delivery, outcomes)",
+          "url": "https://www.pmi.org/standards/pmbok",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is a Business Case? Project Management in Under 5",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=c95wGysj9Nc",
+          "videoId": "c95wGysj9Nc"
+        },
+        {
+          "title": "Understand Benefits Realization",
+          "channel": "Project Management Institute (PMI)",
+          "url": "https://www.youtube.com/watch?v=UxJb40pAnac",
+          "videoId": "UxJb40pAnac"
+        }
+      ]
+    },
+    "pm-ai-in-project-delivery": {
+      "title": "AI in project delivery (LLMs for PRDs, notes, risk, estimates; managing AI-assisted teams)",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "PMI: AI in Project Management hub",
+          "url": "https://www.pmi.org/learning/ai-in-project-management",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Claude Docs: Prompt engineering overview",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Claude Docs: Reduce hallucinations",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "DORA: Balancing AI tensions (AI-assisted software delivery research)",
+          "url": "https://dora.dev/insights/balancing-ai-tensions/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "AI Tools for Project Management: Top 10 Ways to Boost Results",
+          "channel": "Project Management Institute (PMI)",
+          "url": "https://www.youtube.com/watch?v=tLabykkGbEw",
+          "videoId": "tLabykkGbEw"
+        },
+        {
+          "title": "Tips for Using Generative AI Tools in Project Management",
+          "channel": "Project Management Institute (PMI)",
+          "url": "https://www.youtube.com/watch?v=bN8vPip_7y4",
+          "videoId": "bN8vPip_7y4"
+        },
+        {
+          "title": "How Anthropic uses Claude in Product Management",
+          "channel": "Claude",
+          "url": "https://www.youtube.com/watch?v=91AJ0cpgLlQ",
+          "videoId": "91AJ0cpgLlQ"
+        }
+      ]
+    },
+    "pm-scaling-agile": {
+      "title": "Scaling agile overview (SAFe, LeSS)",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "SAFe Framework (Scaled Agile)",
+          "url": "https://framework.scaledagile.com/",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "SAFe: PI Planning",
+          "url": "https://framework.scaledagile.com/pi-planning",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "LeSS framework",
+          "url": "https://less.works/less/framework",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: What is SAFe?",
+          "url": "https://www.atlassian.com/agile/agile-at-scale/what-is-safe",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "SAFe Explained in Five Minutes",
+          "channel": "Scaled Agile, Inc.",
+          "url": "https://www.youtube.com/watch?v=aW2m-BtCJyE",
+          "videoId": "aW2m-BtCJyE"
+        },
+        {
+          "title": "Introduction to LeSS - Dawson",
+          "channel": "LeSS for companies adapting in a fast moving world",
+          "url": "https://www.youtube.com/watch?v=1BZf_Oa7W94",
+          "videoId": "1BZf_Oa7W94"
+        }
+      ]
+    },
+    "pm-pmp-acp-exam-alignment": {
+      "title": "PMP & PMI-ACP exam alignment",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "PMI: PMP certification (domain weights People 33% / Process 41% / Business Environment 26%)",
+          "url": "https://www.pmi.org/certifications/project-management-pmp",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: New PMP exam launched July 2026",
+          "url": "https://www.pmi.org/certifications/project-management-pmp/new-exam",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PMP Examination Content Outline 2026 (PDF)",
+          "url": "https://www.pmi.org/-/media/pmi/documents/public/pdf/certifications/new-pmp-examination-content-outline-2026.pdf",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PMI-ACP certification",
+          "url": "https://www.pmi.org/certifications/agile-acp",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "PMI: PMBOK Guide 8th edition",
+          "url": "https://www.pmi.org/standards/pmbok",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "PMI just changed the PMP exam again",
+          "channel": "Andrew Ramdayal",
+          "url": "https://www.youtube.com/watch?v=VImgXWb7sJ0",
+          "videoId": "VImgXWb7sJ0"
+        },
+        {
+          "title": "The PMP Cheat Sheet (2026 exam) - Check this to see if you're ready for the Exam",
+          "channel": "David McLachlan",
+          "url": "https://www.youtube.com/watch?v=5qDVekl5_tA",
+          "videoId": "5qDVekl5_tA"
+        },
+        {
+          "title": "PMBOK® Guide 8th Ed Processes Explained with Ricardo Vargas!",
+          "channel": "Ricardo Vargas",
+          "url": "https://www.youtube.com/watch?v=TZMum9cuoJY",
+          "videoId": "TZMum9cuoJY"
+        },
+        {
+          "title": "The Complete Project Management Body of Knowledge in One Video (PMBOK® Guide 8th Edition)",
+          "channel": "David McLachlan",
+          "url": "https://www.youtube.com/watch?v=LcZvGRTJnLo",
+          "videoId": "LcZvGRTJnLo"
+        },
+        {
+          "title": "PMI-ACP Exam (Full Overview) - Exam Content Outline",
+          "channel": "Praizion (Leadership, Agile, PMP)",
+          "url": "https://www.youtube.com/watch?v=FRPtDzN8mUs",
+          "videoId": "FRPtDzN8mUs"
+        }
+      ]
+    },
+    "pm-coaching-other-pms": {
+      "title": "Coaching other PMs",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "PMI Disciplined Agile: Agile coach overview",
+          "url": "https://www.pmi.org/disciplined-agile/agile-coach",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "PMI Disciplined Agile: Coaching tips",
+          "url": "https://www.pmi.org/microsites/disciplined-agile/agile-coach/concepts-coaching-tips",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce: 10 effective coaching tips (transferable 1:1 coaching model)",
+          "url": "https://www.salesforce.com/blog/sales/effectively-coach-sales-team-blog/",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Coaching and Mentoring for Project Managers",
+          "channel": "Online PM Courses - Mike Clayton",
+          "url": "https://www.youtube.com/watch?v=KRmatpP6HQc",
+          "videoId": "KRmatpP6HQc"
+        },
+        {
+          "title": "Agile coaching skills every scrum master should know | Become a better scrum master",
+          "channel": "All Things Agile",
+          "url": "https://www.youtube.com/watch?v=rMFzBX0PT2w",
+          "videoId": "rMFzBX0PT2w"
+        }
+      ]
+    }
+  },
+  "bd": {
+    "bd-agency-services-offerings": {
+      "title": "Agency services & offerings (what an AI/app dev agency sells)",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Upwork: Software development outsourcing guide",
+          "url": "https://www.upwork.com/resources/software-development-outsourcing",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "IBM: What is mobile application development?",
+          "url": "https://www.ibm.com/think/topics/mobile-application-development",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "AWS: What is generative AI?",
+          "url": "https://aws.amazon.com/what-is/generative-ai/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Clutch: Top custom software development companies (how buyers compare agencies)",
+          "url": "https://clutch.co/developers",
+          "kind": "article",
+          "verified": "200",
+          "method": "webfetch (curl blocked by Cloudflare)"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Get High Paying Clients As A Custom Software Agency? 5 Strategies That ACTUALLY Work",
+          "channel": "Kieran Moloney",
+          "url": "https://www.youtube.com/watch?v=pMOT-RMpdDU",
+          "videoId": "pMOT-RMpdDU"
+        },
+        {
+          "title": "How to Sell Software to Businesses",
+          "channel": "Sales Scripter",
+          "url": "https://www.youtube.com/watch?v=1xpuMOn7pCk",
+          "videoId": "1xpuMOn7pCk"
+        }
+      ]
+    },
+    "bd-icp-personas": {
+      "title": "ICP & personas",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Gong: What is an ICP for sales?",
+          "url": "https://www.gong.io/blog/icp-sales",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Ideal customer profile template",
+          "url": "https://www.hubspot.com/make-my-persona/ideal-customer-profile-template",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Buyer persona research",
+          "url": "https://blog.hubspot.com/marketing/buyer-persona-research",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Nielsen Norman Group: Personas",
+          "url": "https://www.nngroup.com/articles/persona/",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Define Your Ideal Customer Profile (ICP)",
+          "channel": "HubSpot Marketing",
+          "url": "https://www.youtube.com/watch?v=WOVhHWR5B3E",
+          "videoId": "WOVhHWR5B3E"
+        },
+        {
+          "title": "How To Create a Buyer Persona (FREE Template)",
+          "channel": "HubSpot Marketing",
+          "url": "https://www.youtube.com/watch?v=v6EWN4EjHM0",
+          "videoId": "v6EWN4EjHM0"
+        }
+      ]
+    },
+    "bd-lead-sources": {
+      "title": "Lead sources (Upwork, LinkedIn, Clutch, referrals, inbound)",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "HubSpot: How 347 SMB salespeople generate their best leads (referrals, inbound)",
+          "url": "https://blog.hubspot.com/sales/how-small-business-salespeople-generate-their-best-leads",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Gong: Inbound vs outbound sales",
+          "url": "https://www.gong.io/blog/inbound-vs-outbound-sales",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "LinkedIn Sales Navigator",
+          "url": "https://business.linkedin.com/sell/sales-navigator",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork Help Center",
+          "url": "https://support.upwork.com/hc/en-us",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Clutch: development agency directory",
+          "url": "https://clutch.co/developers",
+          "kind": "article",
+          "verified": "200",
+          "method": "webfetch (curl blocked by Cloudflare)"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Meet Clutch - B2B Ratings and Reviews",
+          "channel": "Clutch.co",
+          "url": "https://www.youtube.com/watch?v=9T6oFuTYR5k",
+          "videoId": "9T6oFuTYR5k"
+        },
+        {
+          "title": "How to Get Your First 10 Customers",
+          "channel": "Y Combinator",
+          "url": "https://www.youtube.com/watch?v=_FBivfgOvuE",
+          "videoId": "_FBivfgOvuE"
+        },
+        {
+          "title": "How to generate B2B leads from Clutch",
+          "channel": "Belkins",
+          "url": "https://www.youtube.com/watch?v=B80ON8VhK2Y",
+          "videoId": "B80ON8VhK2Y"
+        }
+      ]
+    },
+    "bd-crm-hygiene": {
+      "title": "CRM hygiene",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Salesforce: What is CRM?",
+          "url": "https://www.salesforce.com/crm/what-is-crm/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Data hygiene",
+          "url": "https://blog.hubspot.com/marketing/data-hygiene",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce: What is dirty data? (sales ops)",
+          "url": "https://www.salesforce.com/blog/sales/sales-ops-accurate-crm-data/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce Trailhead: Data hygiene best practices",
+          "url": "https://trailhead.salesforce.com/content/learn/modules/marketing-cloud-account-optimization/clean-your-data",
+          "kind": "docs",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "The Official HubSpot Sales Hub Tutorial",
+          "channel": "HubSpot Academy",
+          "url": "https://www.youtube.com/watch?v=tRpOCQ15L7M",
+          "videoId": "tRpOCQ15L7M"
+        },
+        {
+          "title": "What Is CRM? | Introduction To CRM Software| CRM Projects For Beginners | CRM 2022 | Simplilearn",
+          "channel": "Simplilearn",
+          "url": "https://www.youtube.com/watch?v=sQD7kaZ5h0s",
+          "videoId": "sQD7kaZ5h0s"
+        }
+      ]
+    },
+    "bd-cold-email-linkedin-outreach": {
+      "title": "Cold email & LinkedIn outreach basics",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "HubSpot: B2B cold email templates",
+          "url": "https://blog.hubspot.com/sales/the-cold-email-template-that-won-16-new-b2b-customers",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce: Cold email templates",
+          "url": "https://www.salesforce.com/blog/sales/cold-email-templates/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Social selling on LinkedIn",
+          "url": "https://blog.hubspot.com/sales/social-selling-linkedin",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "FTC: CAN-SPAM Act compliance guide",
+          "url": "https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "ICO (UK): Direct marketing & PECR",
+          "url": "https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Steal This Cold Email Template That Gets 20% Reply Rate",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=cJ3RJZfN-gs",
+          "videoId": "cJ3RJZfN-gs"
+        },
+        {
+          "title": "Outbound Prospecting Masterclass: Everything You Need to Book Meetings in 2026",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=dDM80maP1N0",
+          "videoId": "dDM80maP1N0"
+        },
+        {
+          "title": "The Only LinkedIn Outreach Video You Will Ever Need",
+          "channel": "lemlist",
+          "url": "https://www.youtube.com/watch?v=-LtGmHnpioI",
+          "videoId": "-LtGmHnpioI"
+        }
+      ]
+    },
+    "bd-business-writing": {
+      "title": "Professional business writing",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "Digital.gov: Plain language guide series",
+          "url": "https://digital.gov/guides/plain-language",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Grammarly: Using plain language at work",
+          "url": "https://www.grammarly.com/blog/writing-techniques/plain-language/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Email etiquette rules",
+          "url": "https://blog.hubspot.com/sales/email-etiquette-tips-rules",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "8 Email Etiquette Tips - How to Write Better Emails at Work",
+          "channel": "Harvard Business Review",
+          "url": "https://www.youtube.com/watch?v=1XctnF7C74s",
+          "videoId": "1XctnF7C74s"
+        }
+      ]
+    },
+    "bd-tech-literacy": {
+      "title": "Tech literacy for BD (web vs mobile vs AI, MVP, APIs, estimation)",
+      "level": "beginner",
+      "refs": [
+        {
+          "label": "MDN: How the web works",
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "AWS: What is an API?",
+          "url": "https://aws.amazon.com/what-is/api/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Minimum viable product",
+          "url": "https://www.atlassian.com/agile/product-management/minimum-viable-product",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: Agile estimation",
+          "url": "https://www.atlassian.com/agile/project-management/estimation",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "IBM: Mobile application development",
+          "url": "https://www.ibm.com/think/topics/mobile-application-development",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Michael Seibel - How to Plan an MVP",
+          "channel": "Y Combinator",
+          "url": "https://www.youtube.com/watch?v=1hHMwLxN6EM",
+          "videoId": "1hHMwLxN6EM"
+        },
+        {
+          "title": "What Are APIs? - Simply Explained",
+          "channel": "Simply Explained",
+          "url": "https://www.youtube.com/watch?v=OVvTv9Hy91Q",
+          "videoId": "OVvTv9Hy91Q"
+        },
+        {
+          "title": "How To Estimate Software Development Time",
+          "channel": "Modern Software Engineering",
+          "url": "https://www.youtube.com/watch?v=v21jg8wb1eU",
+          "videoId": "v21jg8wb1eU"
+        },
+        {
+          "title": "Web App Vs Mobile App - Is There A difference?",
+          "channel": "Mike Munroe",
+          "url": "https://www.youtube.com/watch?v=QTY61TC1qc8",
+          "videoId": "QTY61TC1qc8"
+        }
+      ]
+    },
+    "bd-spin-discovery": {
+      "title": "Discovery calls (SPIN selling)",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "HubSpot: SPIN selling ultimate guide",
+          "url": "https://blog.hubspot.com/sales/spin-selling-the-ultimate-guide",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Discovery call questions",
+          "url": "https://blog.hubspot.com/sales/discovery-call-questions",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Gong: Discovery call",
+          "url": "https://www.gong.io/blog/discovery-call",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce: What is a discovery call?",
+          "url": "https://www.salesforce.com/blog/sales/what-is-a-discovery-call/",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Structure The Perfect Discovery Call (Sell Playbook)",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=AzRZqz01hc0",
+          "videoId": "AzRZqz01hc0"
+        },
+        {
+          "title": "SPIN Selling Explained (Does It Work In 2026?)",
+          "channel": "Salesman․com",
+          "url": "https://www.youtube.com/watch?v=bhYG5nxazVA",
+          "videoId": "bhYG5nxazVA"
+        }
+      ]
+    },
+    "bd-qualification-bant-meddpicc": {
+      "title": "Qualification (BANT to MEDDIC/MEDDPICC)",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "MEDDICC.com: MEDDPICC sales methodology",
+          "url": "https://meddicc.com/meddpicc-sales-methodology-and-process",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: BANT",
+          "url": "https://blog.hubspot.com/sales/bant",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Ultimate guide to sales qualification",
+          "url": "https://blog.hubspot.com/sales/ultimate-guide-to-sales-qualification",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Implementing MEDDIC - MEDDPICC Explained In 10 Minutes!",
+          "channel": "MEDDICC",
+          "url": "https://www.youtube.com/watch?v=l4yTE-5R5Zo",
+          "videoId": "l4yTE-5R5Zo"
+        },
+        {
+          "title": "What is BANT? (And How to Implement It)",
+          "channel": "Tech Sales With Higher Levels",
+          "url": "https://www.youtube.com/watch?v=MjtZ4DdDJNM",
+          "videoId": "MjtZ4DdDJNM"
+        }
+      ]
+    },
+    "bd-upwork-mastery": {
+      "title": "Upwork mastery (job selection, Connects, proposals, profile)",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "Upwork Help: Understanding and using Connects",
+          "url": "https://support.upwork.com/hc/en-us/articles/211062898-Understanding-and-using-Connects",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork Help: Examples of great freelancer profiles",
+          "url": "https://support.upwork.com/hc/en-us/articles/211063208-See-examples-of-great-Upwork-freelancer-profiles",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork Help: Talent badges (Top Rated etc.)",
+          "url": "https://support.upwork.com/hc/en-us/articles/360049702614-Learn-about-Upwork-s-talent-badges",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork: How to create a proposal that wins jobs",
+          "url": "https://www.upwork.com/resources/how-to-create-a-proposal-that-wins-jobs",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork: How to boost your proposal",
+          "url": "https://www.upwork.com/resources/how-to-boost-proposal",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork: Freelancer profile tips",
+          "url": "https://www.upwork.com/resources/freelancer-profile-tips",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "I sent 3,255 Upwork Proposals (Here's how to get clients)",
+          "channel": "Oliver",
+          "url": "https://www.youtube.com/watch?v=biofL6ndsOk",
+          "videoId": "biofL6ndsOk"
+        },
+        {
+          "title": "Upwork Profile Optimization Masterclass (Complete guide)",
+          "channel": "Nico Hessel",
+          "url": "https://www.youtube.com/watch?v=CWobTmECeOo",
+          "videoId": "CWobTmECeOo"
+        },
+        {
+          "title": "Upwork Connects Explained: How to Use, Buy & Get Free Connects (2026)",
+          "channel": "LobodaTech",
+          "url": "https://www.youtube.com/watch?v=g8OuZqYQQJ0",
+          "videoId": "g8OuZqYQQJ0"
+        }
+      ]
+    },
+    "bd-proposals-sows": {
+      "title": "Writing proposals & SOWs with engineering",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "PMI library: Higher-quality SOWs for outsourced software projects",
+          "url": "https://www.pmi.org/learning/library/framework-delivering-higher-quality-statements-work-6012",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Atlassian: What is a statement of work",
+          "url": "https://www.atlassian.com/work-management/knowledge-sharing/documentation/what-is-statement-of-work",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: The RFP/proposal response formula (agency)",
+          "url": "https://blog.hubspot.com/agency/proposal-formula",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork: How to create a proposal that wins jobs",
+          "url": "https://www.upwork.com/resources/how-to-create-a-proposal-that-wins-jobs",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Write a Business Proposal Step-by-Step with FREE Template",
+          "channel": "HubSpot Marketing",
+          "url": "https://www.youtube.com/watch?v=2j3cKR28r5Q",
+          "videoId": "2j3cKR28r5Q"
+        },
+        {
+          "title": "Key Insights into MSA and SOW",
+          "channel": "247Digitize",
+          "url": "https://www.youtube.com/watch?v=HaoOPubX4uo",
+          "videoId": "HaoOPubX4uo"
+        }
+      ]
+    },
+    "bd-pricing-models": {
+      "title": "Pricing models (fixed, T&M, retainer, dedicated team)",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "ProjectManager: Fixed-price contract",
+          "url": "https://www.projectmanager.com/blog/fixed-price-contract",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "ProjectManager: Time and materials contract",
+          "url": "https://www.projectmanager.com/blog/time-and-materials-contract",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Productive.io: Professional services pricing models",
+          "url": "https://productive.io/blog/professional-services-pricing-models/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Upwork: Software development outsourcing (engagement models)",
+          "url": "https://www.upwork.com/resources/software-development-outsourcing",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Investopedia: Cost-plus contract",
+          "url": "https://www.investopedia.com/terms/c/cost-plus-contract.asp",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Best Outsourcing Model Explained: Dedicated Team vs Fixed Price vs Time & Material",
+          "channel": "Future Dev Lab",
+          "url": "https://www.youtube.com/watch?v=OaJQOww9hO4",
+          "videoId": "OaJQOww9hO4"
+        },
+        {
+          "title": "Fixed-Price Contracts VS Time-and-Materials for Your Software Development Project",
+          "channel": "Matt Brickwood",
+          "url": "https://www.youtube.com/watch?v=PyobLk8aGu0",
+          "videoId": "PyobLk8aGu0"
+        }
+      ]
+    },
+    "bd-objection-handling": {
+      "title": "Objection handling",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "HubSpot: Handling common sales objections",
+          "url": "https://blog.hubspot.com/sales/handling-common-sales-objections",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Gong: Sales objections",
+          "url": "https://www.gong.io/blog/sales-objections",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "42.5 Minutes of Cold Call Objection Handling Tips & Roleplays",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=4Gwt4w4Ran4",
+          "videoId": "4Gwt4w4Ran4"
+        },
+        {
+          "title": "How To Prevent Every Sales Objection (Full Masterclass)",
+          "channel": "Jeremy Miner",
+          "url": "https://www.youtube.com/watch?v=_YEpn6s6DIY",
+          "videoId": "_YEpn6s6DIY"
+        }
+      ]
+    },
+    "bd-follow-up-cadences": {
+      "title": "Follow-up cadences",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "HubSpot: Sales sequences best practices",
+          "url": "https://blog.hubspot.com/sales/sales-sequence",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Gong: How to create a winning sales cadence",
+          "url": "https://www.gong.io/blog/sales-cadence",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce: What is a sales cadence?",
+          "url": "https://www.salesforce.com/sales/cadence/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Prospecting touchpoints - quantity, timing, type",
+          "url": "https://blog.hubspot.com/sales/the-ultimate-guide-to-prospecting-how-many-touchpoints-when-and-what-type",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Use This Cold Email Sequence to 3x Your Replies in 2026",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=f1FdxGD_aY4",
+          "videoId": "f1FdxGD_aY4"
+        },
+        {
+          "title": "Never Say “Just Following Up” on a Sales Call (Say This Instead)",
+          "channel": "Jeremy Miner",
+          "url": "https://www.youtube.com/watch?v=MYgXS_zTfdo",
+          "videoId": "MYgXS_zTfdo"
+        }
+      ]
+    },
+    "bd-running-demos": {
+      "title": "Running demos",
+      "level": "intermediate",
+      "refs": [
+        {
+          "label": "HubSpot: How to deliver the perfect sales demo",
+          "url": "https://blog.hubspot.com/sales/how-to-deliver-the-perfect-sales-demo",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Gong: Sales demo tips backed by data",
+          "url": "https://www.gong.io/blog/sales-demos",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Gong: The 5 acts of winning demo scripts",
+          "url": "https://www.gong.io/blog/demo-script-examples",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Tips for a flawless technical demo",
+          "url": "https://blog.hubspot.com/sales/technical-demo",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "The Demo Framework That Actually Closes Deals | Robert Friedland",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=vDtLF0YoWqk",
+          "videoId": "vDtLF0YoWqk"
+        },
+        {
+          "title": "How to Present a MIND-BLOWING Software Demo That Closes Sales",
+          "channel": "Sales Feed",
+          "url": "https://www.youtube.com/watch?v=EZbIx94dMeU",
+          "videoId": "EZbIx94dMeU"
+        }
+      ]
+    },
+    "bd-consultative-challenger-selling": {
+      "title": "Consultative / solution / Challenger selling",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Challenger Inc: What is the Challenger sales methodology?",
+          "url": "https://challengerinc.com/what-is-challenger-sales-methodology/",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Consultative selling",
+          "url": "https://blog.hubspot.com/sales/consultative-selling",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Solution selling",
+          "url": "https://blog.hubspot.com/sales/solution-selling",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce: Challenger sales methodology",
+          "url": "https://www.salesforce.com/blog/sales/challenger-sales-methodology/",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Sales Methodologies | Challenger sales model",
+          "channel": "Pipedrive",
+          "url": "https://www.youtube.com/watch?v=nvQNm5VD9E0",
+          "videoId": "nvQNm5VD9E0"
+        },
+        {
+          "title": "What is the Difference Between Consultative Selling and Normal Selling?",
+          "channel": "Brian Tracy",
+          "url": "https://www.youtube.com/watch?v=FBgRuRDIqSU",
+          "videoId": "FBgRuRDIqSU"
+        }
+      ]
+    },
+    "bd-negotiation-batna": {
+      "title": "Negotiation (BATNA, concessions)",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Harvard PON: BATNA (topic hub)",
+          "url": "https://www.pon.harvard.edu/tag/batna/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Harvard PON: Translate your BATNA to the current deal",
+          "url": "https://www.pon.harvard.edu/daily/batna/translate-your-batna-to-the-current-deal/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Harvard PON: How to find the ZOPA in business negotiations",
+          "url": "https://www.pon.harvard.edu/daily/business-negotiations/how-to-find-the-zopa-in-business-negotiations/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Harvard PON: Price anchoring 101",
+          "url": "https://www.pon.harvard.edu/daily/negotiation-skills-daily/price-anchoring-101/",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "The Harvard Principles of Negotiation",
+          "channel": "Erich Pommer Institut",
+          "url": "https://www.youtube.com/watch?v=RfTalFEeKKE",
+          "videoId": "RfTalFEeKKE"
+        },
+        {
+          "title": "29 Years of Sales Negotiation Lessons In 30 Minutes",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=AtO39nkL0Io",
+          "videoId": "AtO39nkL0Io"
+        },
+        {
+          "title": "What is Tactical Empathy? How It Can Help in Negotiations at Work | Chris Voss",
+          "channel": "Chris Voss & The Black Swan Group",
+          "url": "https://www.youtube.com/watch?v=yTy6NiJgk_w",
+          "videoId": "yTy6NiJgk_w"
+        }
+      ]
+    },
+    "bd-rfp-responses": {
+      "title": "RFP responses",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Salesforce: What is an RFP? A complete guide",
+          "url": "https://www.salesforce.com/sales/request-for-proposal-rfp/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Loopio: Ideal RFP response process (8 steps)",
+          "url": "https://loopio.com/ultimate-rfp-response-process/",
+          "kind": "article",
+          "verified": "200",
+          "method": "webfetch (curl blocked by Cloudflare)"
+        },
+        {
+          "label": "Investopedia: Request for proposal",
+          "url": "https://www.investopedia.com/terms/r/request-for-proposal.asp",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: RFP response formula",
+          "url": "https://blog.hubspot.com/agency/proposal-formula",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How To Respond To A RFP (Request for Proposal)? What Should You Include In Your Proposal?",
+          "channel": "The Futur",
+          "url": "https://www.youtube.com/watch?v=b9k6Ff0OMp8",
+          "videoId": "b9k6Ff0OMp8"
+        },
+        {
+          "title": "How to Create a Request for Proposal (RFP) and RFP Response",
+          "channel": "Visme",
+          "url": "https://www.youtube.com/watch?v=hNT0-R_0AJk",
+          "videoId": "hNT0-R_0AJk"
+        }
+      ]
+    },
+    "bd-enterprise-deals-procurement": {
+      "title": "Enterprise deals & procurement",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "HubSpot: Enterprise sales",
+          "url": "https://blog.hubspot.com/sales/enterprise-sales",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Enterprise sales prospecting",
+          "url": "https://blog.hubspot.com/sales/enterprise-sales-prospecting",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "MEDDICC.com: MEDDPICC (Paper Process, Economic Buyer)",
+          "url": "https://meddicc.com/meddpicc-sales-methodology-and-process",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Enterprise Sales | Startup School",
+          "channel": "Y Combinator",
+          "url": "https://www.youtube.com/watch?v=0fKYVl12VTA",
+          "videoId": "0fKYVl12VTA"
+        }
+      ]
+    },
+    "bd-account-management-upselling": {
+      "title": "Account management & upselling",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Salesforce: What is account management?",
+          "url": "https://www.salesforce.com/sales/account-management/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Key account management",
+          "url": "https://blog.hubspot.com/sales/key-account-management",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Upselling",
+          "url": "https://blog.hubspot.com/sales/upselling",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Upsell & Expansion Masterclass: 7 Levers to Grow Any Account",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=KPJbIItdYPI",
+          "videoId": "KPJbIItdYPI"
+        },
+        {
+          "title": "How to Open & Close More Deals With Key Accounts | Maddy Jackson",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=zo_AvA4ZLRc",
+          "videoId": "zo_AvA4ZLRc"
+        }
+      ]
+    },
+    "bd-pipeline-metrics-forecasting": {
+      "title": "Pipeline metrics & forecasting (win rate, sales cycle, ACV)",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Salesforce: What is a sales pipeline?",
+          "url": "https://www.salesforce.com/sales/pipeline/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Sales forecasting",
+          "url": "https://blog.hubspot.com/sales/sales-forecasting",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Win rate",
+          "url": "https://blog.hubspot.com/sales/win-rate",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Sales cycle",
+          "url": "https://blog.hubspot.com/sales/sales-cycle",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Build a Bulletproof Sales Forecast w/ Taylor Wilding",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=4FypEKgtxnk",
+          "videoId": "4FypEKgtxnk"
+        },
+        {
+          "title": "How to Create Accurate Sales Forecasts in 2024",
+          "channel": "HubSpot ",
+          "url": "https://www.youtube.com/watch?v=-4o0PgZMQ28",
+          "videoId": "-4o0PgZMQ28"
+        },
+        {
+          "title": "How to Run a Lightning-Fast Pipeline Review That Actually Works",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=xCipPy7y_Nk",
+          "videoId": "xCipPy7y_Nk"
+        }
+      ]
+    },
+    "bd-case-studies-social-proof": {
+      "title": "Case studies & social proof",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "HubSpot: How to write a case study (guide & template)",
+          "url": "https://blog.hubspot.com/blog/tabid/6307/bid/33282/the-ultimate-guide-to-creating-compelling-case-studies.aspx",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Turn a case study into a customer success story",
+          "url": "https://blog.hubspot.com/marketing/customer-success-story",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Case study examples",
+          "url": "https://blog.hubspot.com/marketing/case-study-examples",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Creating Customer Success Stories that Drive B2B Sales with Joel Klettke",
+          "channel": "Aaron Zakowski",
+          "url": "https://www.youtube.com/watch?v=NqoM9i7LFJc",
+          "videoId": "NqoM9i7LFJc"
+        },
+        {
+          "title": "Sales Training Tip #62 - Social Proof : Testimonials, Case Studies or Videos",
+          "channel": "Victor Antonio",
+          "url": "https://www.youtube.com/watch?v=kB0hYOj8C0M",
+          "videoId": "kB0hYOj8C0M"
+        }
+      ]
+    },
+    "bd-white-label-partnerships": {
+      "title": "White-label partnerships",
+      "level": "advanced",
+      "refs": [
+        {
+          "label": "Investopedia: White-label product",
+          "url": "https://www.investopedia.com/terms/w/white-label-product.asp",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Solutions Partner Program FAQs (agency/reseller partnership model)",
+          "url": "https://www.hubspot.com/partners/faqs",
+          "kind": "docs",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "What is a White Label Partnership?",
+          "channel": "51Blocks",
+          "url": "https://www.youtube.com/watch?v=Kdn8eVHb6NQ",
+          "videoId": "Kdn8eVHb6NQ"
+        },
+        {
+          "title": "Why Is White-Label Partnership So Profitable? | Agency Talk Two Minute Takes",
+          "channel": "Conduit Digital | Scale Smarter, Not Harder",
+          "url": "https://www.youtube.com/watch?v=dKGmyrddHho",
+          "videoId": "dKGmyrddHho"
+        }
+      ]
+    },
+    "bd-strategic-accounts-expansion": {
+      "title": "Strategic accounts & expansion to new regions/verticals",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "HubSpot: Key account management",
+          "url": "https://blog.hubspot.com/sales/key-account-management",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Market development strategy",
+          "url": "https://blog.hubspot.com/marketing/market-development-strategy",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Sales territory planning",
+          "url": "https://blog.hubspot.com/sales/how-to-strategically-divide-your-sales-territories",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Company growth strategy",
+          "url": "https://blog.hubspot.com/sales/growth-strategy",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Open & Close More Deals With Key Accounts | Maddy Jackson",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=zo_AvA4ZLRc",
+          "videoId": "zo_AvA4ZLRc"
+        },
+        {
+          "title": "Land and Expand: The Most Misunderstood Strategy in SaaS",
+          "channel": "Willingness to Pay",
+          "url": "https://www.youtube.com/watch?v=2fsOKMsCeqw",
+          "videoId": "2fsOKMsCeqw"
+        }
+      ]
+    },
+    "bd-pricing-strategy-margins": {
+      "title": "Pricing strategy & margins",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "Investopedia: Gross profit margin",
+          "url": "https://www.investopedia.com/terms/g/gross_profit_margin.asp",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Investopedia: Contribution margin",
+          "url": "https://www.investopedia.com/terms/c/contributionmargin.asp",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Investopedia: Markup (vs margin)",
+          "url": "https://www.investopedia.com/terms/m/markup.asp",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Corporate Finance Institute: Gross margin ratio",
+          "url": "https://corporatefinanceinstitute.com/resources/accounting/gross-margin-ratio/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Value-based pricing",
+          "url": "https://blog.hubspot.com/sales/value-based-pricing",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Pricing strategy",
+          "url": "https://blog.hubspot.com/sales/pricing-strategy",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Digital Agency Profit Margin Guide: What Your Agency Profit Margin be (and how to get there)",
+          "channel": "Jason Swenk",
+          "url": "https://www.youtube.com/watch?v=3jLt2bR0mPU",
+          "videoId": "3jLt2bR0mPU"
+        },
+        {
+          "title": "How To Price Agency Services & Increase Profit Margins By 110% | Ep: 002",
+          "channel": "Move At Pace",
+          "url": "https://www.youtube.com/watch?v=38rkkamOP2o",
+          "videoId": "38rkkamOP2o"
+        }
+      ]
+    },
+    "bd-playbooks-team-leadership": {
+      "title": "Building BD playbooks & leading a team",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "Salesforce: Sales playbook guide",
+          "url": "https://www.salesforce.com/blog/sales/sales-playbook/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Sales coaching",
+          "url": "https://blog.hubspot.com/sales/sales-coaching",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Gong: Coaching sales teams",
+          "url": "https://www.gong.io/blog/sales-team-performance-coaching",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "HubSpot: Business development strategies for startups",
+          "url": "https://www.hubspot.com/startups/business-development-for-startups",
+          "kind": "article",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How to Create a Sales Playbook (Guide)",
+          "channel": "HubSpot Marketing",
+          "url": "https://www.youtube.com/watch?v=gWX3bKqEDhQ",
+          "videoId": "gWX3bKqEDhQ"
+        },
+        {
+          "title": "The Sales Playbook For Founders | Startup School",
+          "channel": "Y Combinator",
+          "url": "https://www.youtube.com/watch?v=DH7REvnQ1y4",
+          "videoId": "DH7REvnQ1y4"
+        }
+      ]
+    },
+    "bd-ai-powered-bd": {
+      "title": "AI-powered BD (research, personalisation, proposal drafting, accuracy checks)",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "HubSpot: AI in sales",
+          "url": "https://blog.hubspot.com/sales/ai-in-sales",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Salesforce: AI for sales",
+          "url": "https://www.salesforce.com/sales/ai/",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Claude Docs: Prompt engineering overview",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "Claude Docs: Reduce hallucinations",
+          "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "NIST AI Risk Management Framework",
+          "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+          "kind": "spec",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "How I Use Claude to Book 4-6 Meetings Every Week (Live Walkthrough)",
+          "channel": "30 Minutes to President’s Club",
+          "url": "https://www.youtube.com/watch?v=FiSwFnWMc8o",
+          "videoId": "FiSwFnWMc8o"
+        },
+        {
+          "title": "Claude Cowork for sales",
+          "channel": "Claude",
+          "url": "https://www.youtube.com/watch?v=dDg7vhvtbEE",
+          "videoId": "dDg7vhvtbEE"
+        }
+      ]
+    },
+    "bd-contract-essentials": {
+      "title": "Contract essentials (MSA, NDA, IP) - not legal advice",
+      "level": "expert",
+      "refs": [
+        {
+          "label": "UpCounsel: Master service agreement",
+          "url": "https://www.upcounsel.com/master-service-agreement",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "UpCounsel: IP ownership clause in contracts",
+          "url": "https://www.upcounsel.com/ip-ownership-clause",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "UpCounsel: MSA for software development - key terms",
+          "url": "https://www.upcounsel.com/master-service-agreement-for-software-development",
+          "kind": "article",
+          "verified": "200"
+        },
+        {
+          "label": "Cornell LII (Wex): Work made for hire",
+          "url": "https://www.law.cornell.edu/wex/work_made_for_hire",
+          "kind": "docs",
+          "verified": "200"
+        },
+        {
+          "label": "US Copyright Office Circular 30: Works made for hire (PDF)",
+          "url": "https://www.copyright.gov/circs/circ30.pdf",
+          "kind": "spec",
+          "verified": "200"
+        },
+        {
+          "label": "GOV.UK: Intellectual property - an overview",
+          "url": "https://www.gov.uk/intellectual-property-an-overview",
+          "kind": "docs",
+          "verified": "200"
+        }
+      ],
+      "videos": [
+        {
+          "title": "Master Service Agreement (MSA) Explained in Simple Terms",
+          "channel": "Malcolm Zoppi | Corporate and M&A Solicitor ",
+          "url": "https://www.youtube.com/watch?v=SyoXHjRR5KA",
+          "videoId": "SyoXHjRR5KA"
+        },
+        {
+          "title": "What Is Work for Hire? (Who Owns the Copyright Explained)! Lawyer Edition!",
+          "channel": "Entertainment Lawyer",
+          "url": "https://www.youtube.com/watch?v=06TtpOvcEeo",
+          "videoId": "06TtpOvcEeo"
+        },
+        {
+          "title": "How to draft a NON-DISCLOSURE AGREEMENT [NDA] | Rohit Pradhan",
+          "channel": "Rohit Pradhan - Attorney at Law",
+          "url": "https://www.youtube.com/watch?v=utPDC4eUnEQ",
+          "videoId": "utPDC4eUnEQ"
+        }
+      ]
+    }
+  }
+}

@@ -8,7 +8,7 @@ import type { UserStatus } from "@shared/enums";
 import { isStaff } from "@shared/enums";
 
 import { api, ApiRequestError } from "@/api/client";
-import { DataTable, useTableQueryState, peopleBuiltInViews, peopleFields } from "@/components/data-table";
+import { DataTable, useTableQueryState, peopleBuiltInViews, peopleFieldsFor } from "@/components/data-table";
 import { FormAlert } from "@/components/form/Field";
 import { relativeTime } from "@/components/layout/notifications";
 import { useConfirm } from "@/components/overlays";
@@ -28,6 +28,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { notify } from "@/lib/toast";
 import { formatTimestamp } from "@/lib/utils";
 import { adminApi } from "./api";
+import { useCatalog } from "./catalog/useCatalog";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
 
 /** What the Role column says for someone with no role title of their own. */
@@ -54,6 +55,10 @@ export default function AdminPeoplePage() {
   useDocumentTitle("People");
   const confirm = useConfirm();
   const me = useCurrentUser();
+  const { departmentOptions, departmentName } = useCatalog();
+  const fields = useMemo(() => peopleFieldsFor(departmentOptions), [departmentOptions]);
+  /** Staff carry no department, so a missing one is a dash rather than "All departments". */
+  const deptLabel = useCallback((u: UserSummary) => (u.departmentId ? departmentName(u.departmentId) : null), [departmentName]);
   const { query, setQuery } = useTableQueryState();
 
   const [users, setUsers] = useState<UserSummary[] | null>(null);
@@ -254,6 +259,15 @@ export default function AdminPeoplePage() {
             <span className="text-muted-foreground">{row.original.roleTitle ?? "Learner"}</span>
           ),
       },
+      {
+        id: "departmentId",
+        header: "Department",
+        meta: { exportValue: (u) => deptLabel(u) ?? "" },
+        cell: ({ row }) => {
+          const label = deptLabel(row.original);
+          return label ? <Badge variant="outline">{label}</Badge> : <Dash />;
+        },
+      },
       { id: "status", header: "Status", cell: ({ row }) => <StatusCell user={row.original} /> },
       {
         id: "assessmentStatus",
@@ -332,7 +346,7 @@ export default function AdminPeoplePage() {
         ),
       },
     ],
-    [busyId, handleReset, handleStatus, handleDelete, me],
+    [busyId, handleReset, handleStatus, handleDelete, me, deptLabel],
   );
 
   /* Bulk actions run one request per row rather than one batched call, because no batched endpoint
@@ -507,7 +521,7 @@ export default function AdminPeoplePage() {
         <DataTable
           data={rows ?? []}
           columns={columns}
-          fields={peopleFields}
+          fields={fields}
           getRowId={(u) => u.id}
           query={query}
           onQueryChange={setQuery}
@@ -535,7 +549,7 @@ export default function AdminPeoplePage() {
             ),
           }}
           bulkActions={bulkActions}
-          renderDetail={(u) => <PersonDetail user={u} />}
+          renderDetail={(u) => <PersonDetail user={u} department={deptLabel(u)} />}
           detailTitle={(u) => u.displayName}
           detailSubtitle={(u) => <span className="font-mono text-xs">{u.username}</span>}
           detailFooter={(u) =>
@@ -545,7 +559,7 @@ export default function AdminPeoplePage() {
               </Button>
             )
           }
-          mobileCard={(u) => <PersonCard user={u} />}
+          mobileCard={(u) => <PersonCard user={u} department={deptLabel(u)} />}
         />
       </div>
     </div>
@@ -733,7 +747,7 @@ function RowActions({
 }
 
 /** The card a row becomes below 768px: the same facts, stacked, with nothing cut off. */
-function PersonCard({ user }: { user: UserSummary }) {
+function PersonCard({ user, department }: { user: UserSummary; department: string | null }) {
   const pct = user.planTopicCount === 0 ? null : Math.round((user.planCompletedCount / user.planTopicCount) * 100);
   return (
     <div className="space-y-3">
@@ -753,6 +767,7 @@ function PersonCard({ user }: { user: UserSummary }) {
             opposite of the truth. The desktop column shows a badge instead of a title here for the
             same reason. */}
         <Fact label="Role">{user.roleTitle ?? ROLE_FALLBACK[user.role]}</Fact>
+        <Fact label="Department">{department ?? "—"}</Fact>
         <Fact label="Level">{user.overallLevel ?? "—"}</Fact>
         <Fact label="Plan">{pct === null ? "—" : `${user.planCompletedCount}/${user.planTopicCount}`}</Fact>
         <Fact label="Last seen">{user.lastLoginAt === null ? "Never" : relativeTime(user.lastLoginAt)}</Fact>
@@ -762,7 +777,7 @@ function PersonCard({ user }: { user: UserSummary }) {
 }
 
 /** What a row opens into: enough to decide, with the full profile one click further on. */
-function PersonDetail({ user }: { user: UserSummary }) {
+function PersonDetail({ user, department }: { user: UserSummary; department: string | null }) {
   const pct = user.planTopicCount === 0 ? null : Math.round((user.planCompletedCount / user.planTopicCount) * 100);
   return (
     <div className="space-y-6">
@@ -795,6 +810,7 @@ function PersonDetail({ user }: { user: UserSummary }) {
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
         <Fact label="Role">{user.roleTitle ?? ROLE_FALLBACK[user.role]}</Fact>
+        <Fact label="Department">{department ?? "—"}</Fact>
         <Fact label="Experience">{user.yearsExperience === null ? "—" : `${user.yearsExperience} yrs`}</Fact>
         <Fact label="Overall level">{user.overallLevel === null ? "Not evaluated" : `${user.overallLevel} of 5`}</Fact>
         <Fact label="Hard warnings">

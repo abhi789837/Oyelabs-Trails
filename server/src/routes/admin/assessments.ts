@@ -1,4 +1,4 @@
-import { and, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
@@ -14,12 +14,12 @@ import {
 } from "../../../../shared/assessment";
 import { approveAssessment } from "../../assessment/approval";
 import { generationLogFor } from "../../assessment/generationLog";
+import { issueAssessment } from "../../assessment/issue";
 import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
-import { enqueue } from "../../jobs/queue";
 import { writeAudit } from "../../lib/audit";
 import { badRequest, conflict, notFound, parseOrThrow } from "../../lib/errors";
-import { newId, now } from "../../lib/ids";
+
 
 const userParams = z.object({ id: z.string().min(1).max(64) });
 const assessmentParams = z.object({ assessmentId: z.string().min(1).max(64) });
@@ -86,63 +86,12 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
     const { id } = parseOrThrow(userParams, request.params);
     const body = parseOrThrow(issueAssessmentRequestSchema, request.body ?? {});
 
-    const user = app.db.select().from(schema.users).where(eq(schema.users.id, id)).get();
-    if (!user) throw notFound("No such person.");
-    if (user.role !== "learner") throw badRequest("Only learners take placement assessments.");
-
-    const latest = app.db
-      .select()
-      .from(schema.assessments)
-      .where(eq(schema.assessments.userId, id))
-      .orderBy(desc(schema.assessments.attemptNo))
-      .get();
-
-    /* A learner may hold several open assessments — a placement one and a company-process one, say
-       — and take them independently. What they cannot do is sit two at once: `in_progress` means a
-       clock is running and a proctor is watching, and a second would fight the first for the camera
-       and the deadline. So the guard narrowed from "anything live" to exactly that. */
-    const inProgress = app.db
-      .select({ id: schema.assessments.id })
-      .from(schema.assessments)
-      .where(and(eq(schema.assessments.userId, id), eq(schema.assessments.status, "in_progress")))
-      .get();
-    if (inProgress) {
-      throw conflict("This person is sitting an assessment right now. Wait for it to finish, or end it from the live board.");
-    }
-
     if (!app.ai.isConfigured()) {
       throw badRequest("No AI credential is set up yet. Add one under Admin → AI connection first.");
     }
-
-    const assessmentId = newId();
-    app.db
-      .insert(schema.assessments)
-      .values({
-        id: assessmentId,
-        userId: id,
-        attemptNo: (latest?.attemptNo ?? 0) + 1,
-        label: body.label ?? null,
-        status: "generating",
-        config: body.timeLimitMinutes ? { timeLimitMinutes: body.timeLimitMinutes } : {},
-        hardWarnings: 0,
-        softWarnings: 0,
-        createdBy: actor.id,
-        createdAt: now(),
-      })
-      .run();
-
-    const jobId = enqueue(app.db, { type: "assessment.blueprint", payload: { assessmentId } });
-
-    writeAudit(app.db, {
-      actorId: actor.id,
-      action: "assessment.issued",
-      targetType: "assessment",
-      targetId: assessmentId,
-      details: { userId: id, attemptNo: (latest?.attemptNo ?? 0) + 1, label: body.label ?? null },
-    });
-
+    const result = issueAssessment(app, { userId: id, actorId: actor.id, label: body.label ?? null, timeLimitMinutes: body.timeLimitMinutes ?? null });
     reply.status(202);
-    return { assessmentId, jobId, status: "generating" };
+    return result;
   });
 
   app.get("/api/admin/users/:id/assessments", async (request) => {

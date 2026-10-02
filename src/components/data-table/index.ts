@@ -78,4 +78,4 @@ export type {
   TableFieldType,
 } from "./types";
 
-export { peopleBuiltInViews, peopleFields } from "./presets/people";
+export { peopleBuiltInViews, peopleFields, peopleFieldsFor } from "./presets/people";

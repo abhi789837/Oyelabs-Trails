@@ -18,6 +18,8 @@ import { buildCsp } from "./lib/csp";
 import { HttpError } from "./lib/errors";
 import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminBuilderRoutes } from "./routes/admin/builder";
+import { registerAdminCatalogRoutes } from "./routes/admin/catalog";
+import { registerAdminSetupRoutes } from "./routes/admin/setup";
 import { registerAdminCourseRoutes } from "./routes/admin/courses";
 import { registerAdminAssessmentRoutes } from "./routes/admin/assessments";
 import { registerAdminLiveRoutes } from "./routes/admin/live";
@@ -180,6 +182,8 @@ export async function buildApp({
   await app.register(registerAdminAssessmentRoutes);
   await app.register(registerAdminLiveRoutes);
   await app.register(registerAdminOverviewRoutes);
+  await app.register(registerAdminCatalogRoutes);
+  await app.register(registerAdminSetupRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

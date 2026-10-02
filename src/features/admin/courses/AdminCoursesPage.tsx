@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { BookOpen, Plus, Search, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
+import { LEVEL_BAND_LABELS } from "@shared/catalog";
 import type { Course } from "@shared/courses";
 
 import { ApiRequestError } from "@/api/client";
@@ -18,6 +19,7 @@ import { fadeUp, stagger, transition } from "@/lib/motion";
 import { notify } from "@/lib/toast";
 import { cn, formatMinutes, formatTimestamp } from "@/lib/utils";
 import type { AccentToken } from "@/types/curriculum";
+import { useCatalog } from "../catalog/useCatalog";
 import { coursesApi } from "./api";
 
 /**
@@ -36,6 +38,8 @@ export default function AdminCoursesPage() {
   const [status, setStatus] = useState<"all" | "published" | "draft">("all");
   const [audience, setAudience] = useState<"all" | "everyone" | "assigned">("all");
   const [search, setSearch] = useState("");
+  const [department, setDepartment] = useState("");
+  const { departmentOptions, departmentName } = useCatalog();
 
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
@@ -58,11 +62,13 @@ export default function AdminCoursesPage() {
     if (status === "published" && !course.published) return false;
     if (status === "draft" && course.published) return false;
     if (audience !== "all" && course.audience !== audience) return false;
+    // A course with no department is shown to every department, so it matches each of them.
+    if (department && course.departmentId !== null && course.departmentId !== department) return false;
     const query = search.trim().toLowerCase();
     if (query && !`${course.title} ${course.summary}`.toLowerCase().includes(query)) return false;
     return true;
   });
-  const filtering = status !== "all" || audience !== "all" || search.trim() !== "";
+  const filtering = status !== "all" || audience !== "all" || department !== "" || search.trim() !== "";
 
   const handleCreate = async () => {
     const created = await formDialog({
@@ -152,6 +158,21 @@ export default function AdminCoursesPage() {
           <Chip active={audience === "assigned"} onClick={() => setAudience("assigned")}>
             Assigned
           </Chip>
+          {departmentOptions.length > 1 && (
+            <select
+              aria-label="Department"
+              value={department}
+              onChange={(event) => setDepartment(event.target.value)}
+              className="rounded-md border border-input bg-surface px-3 py-1.5 text-xs"
+            >
+              <option value="">Any department</option>
+              {departmentOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          )}
           <span className="ml-auto text-xs text-muted-foreground" aria-live="polite">
             {visible.length} of {courses.length}
           </span>
@@ -182,7 +203,9 @@ export default function AdminCoursesPage() {
               {filtering ? "No course matches those filters." : "Nothing to show."}
             </li>
           ) : (
-            visible.map((course) => <CourseCard key={course.id} course={course} />)
+            visible.map((course) => (
+              <CourseCard key={course.id} course={course} departmentLabel={departmentName(course.departmentId)} />
+            ))
           )}
         </motion.ul>
       )}
@@ -190,7 +213,7 @@ export default function AdminCoursesPage() {
   );
 }
 
-function CourseCard({ course }: { course: Course }) {
+function CourseCard({ course, departmentLabel }: { course: Course; departmentLabel: string }) {
   const accent = accentClasses[course.accent as AccentToken];
   const topics = course.sections.reduce((total, section) => total + section.topics.length, 0);
   const minutes = course.sections.reduce(
@@ -230,6 +253,8 @@ function CourseCard({ course }: { course: Course }) {
             {topics} lesson{topics === 1 ? "" : "s"}
           </span>
           {minutes > 0 && <span>{formatMinutes(minutes)}</span>}
+          {course.level && <span>{LEVEL_BAND_LABELS[course.level].toLowerCase()}</span>}
+          <span>{departmentLabel.toLowerCase()}</span>
           <span className="flex items-center gap-1">
             <Users className="size-3" aria-hidden="true" />
             {course.audience === "everyone" ? "everyone" : "assigned"}
