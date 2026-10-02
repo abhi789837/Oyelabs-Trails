@@ -28,3 +28,6 @@ npm-debug.log*
 # AI-connection shots carry the last four characters of whatever credential the machine has
 # configured — a hint the admin console shows on purpose, but not one to put in a git history.
 /docs/ui-audit
+
+# Server-specific compose settings (see docker-compose.override.example.yml).
+docker-compose.override.yml

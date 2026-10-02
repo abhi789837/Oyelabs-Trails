@@ -14,6 +14,7 @@ import { requeueOrphanedEvaluations, sweepOnce } from "./assessment/sweeper";
 import { startDailyMaintenance } from "./maintenance/retention";
 import { bankFillHandler } from "./bank/fillJob";
 import { batchPollHandler } from "./ai/batches";
+import { ensurePistonPackages } from "./sandbox/pistonSetup";
 import { enqueue } from "./jobs/queue";
 import { buildPathHandler } from "./jobs/handlers/buildPath";
 import { refineWeekHandler } from "./jobs/handlers/refineWeek";
@@ -136,6 +137,9 @@ async function main(): Promise<void> {
   process.on("SIGTERM", () => void shutdown("SIGTERM"));
 
   await app.listen({ port: env.port, host: env.host });
+
+  // v4: install any missing code-runner languages in the background (first boot only).
+  if (env.pistonUrl) void ensurePistonPackages(env.pistonUrl, (m) => console.log(`[oyelearn] ${m}`));
 
   // v4: read the model ids this credential can use, so the router never sends one it cannot.
   void ai.refreshModels().then((ids) => {

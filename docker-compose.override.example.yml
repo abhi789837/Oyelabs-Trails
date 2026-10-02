@@ -1,0 +1,14 @@
+# Copy to docker-compose.override.yml on a server where the app must NOT publish a host port and
+# the reverse proxy reaches it over a shared Docker network instead (the learn.oyegen.com box).
+# Compose loads docker-compose.override.yml automatically, and git ignores it, so `git pull`
+# never conflicts with it.
+services:
+  oyelearn:
+    ports: !reset []
+    networks:
+      - hypha_default
+      - code_net
+
+networks:
+  hypha_default:
+    external: true

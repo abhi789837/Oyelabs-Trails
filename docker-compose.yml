@@ -2,7 +2,10 @@
 #
 #   cp .env.example .env    # then fill in APP_MASTER_KEY and SESSION_SECRET
 #   docker compose up -d --build
-#   ./scripts/deploy/piston-install.sh    # once: installs the code-runner languages (~3 GB)
+#
+# Deploying an update is one command:  git pull && docker compose up -d --build
+# The app backs the database up before any new migration, and installs the code runner's
+# languages in the background on first boot (~3 GB, kept in the piston-packages volume).
 #
 # The app listens on 127.0.0.1:8787 and Caddy terminates TLS in front of it (Caddyfile.example).
 # The code runner (Piston) is on an internal network only the app can reach; nothing new is
@@ -53,8 +56,10 @@ services:
       - no-new-privileges:true
 
   # v4: the code runner for Python, PHP, SQL, Java and Dart (docs/v4/RESEARCH_SANDBOX_AI.md).
-  # Piston's isolate sandbox needs `privileged` and a cgroup v2 host. It has no published port and
-  # sits on an internal network with no egress, so the only thing that can reach it is the app.
+  # Piston's isolate sandbox needs `privileged` and a cgroup v2 host. It has no published port, so
+  # only containers on `code_net` (the app) can reach it. The network is not `internal`, so the
+  # app can install language packages on first boot; learner code itself never has network
+  # access — PISTON_DISABLE_NETWORKING removes it inside every run.
   piston:
     image: ghcr.io/engineer-man/piston@sha256:2f66b7456189c4d713aa986d98eccd0b6ee16d26c7ec5f21b30e942756fd127a
     restart: unless-stopped
@@ -81,8 +86,7 @@ services:
       options: { max-size: "10m", max-file: "3" }
 
 networks:
-  code_net:
-    internal: true
+  code_net: {}
 
 volumes:
   oyelearn-data:

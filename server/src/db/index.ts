@@ -63,6 +63,7 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
 
   const db = drizzle(sqlite, { schema });
   if (options.runMigrations !== false && !options.template) {
+    backupBeforeMigrating(sqlite, file, env);
     migrate(db, { migrationsFolder: migrationsFolder() });
     // Seed rows are inserted only when absent, so this never undoes an admin's edit.
     ensureCatalogSeed(db);
@@ -72,4 +73,25 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
     ensureBankSeed(db);
   }
   return { db, sqlite };
+}
+
+/**
+ * Copies the database aside before any migration it has not had yet is applied.
+ *
+ * This is what makes `git pull && docker compose up -d --build` a safe deploy on its own: the
+ * first boot of a release that changes the schema leaves `backups/pre-migrate-<time>.db` behind,
+ * taken with `VACUUM INTO` so it is consistent even in WAL mode. Boots with nothing to migrate
+ * write nothing.
+ */
+function backupBeforeMigrating(sqlite: Database.Database, file: string, env: Env): void {
+  if (file === ":memory:") return;
+  const hasTable = sqlite.prepare("select 1 from sqlite_master where type='table' and name='__drizzle_migrations'").get();
+  if (!hasTable) return; // A brand-new database has nothing to lose.
+  const applied = (sqlite.prepare("select count(*) as n from __drizzle_migrations").get() as { n: number }).n;
+  const journal = JSON.parse(fs.readFileSync(path.join(migrationsFolder(), "meta", "_journal.json"), "utf8")) as { entries: unknown[] };
+  if (journal.entries.length <= applied) return;
+  fs.mkdirSync(env.backupsDir, { recursive: true });
+  const target = path.join(env.backupsDir, `pre-migrate-${new Date().toISOString().replace(/[:.]/g, "-")}.db`);
+  sqlite.exec(`VACUUM INTO '${target.replace(/'/g, "''")}'`);
+  console.log(`[oyelearn] database backed up before migrating (${applied} -> ${journal.entries.length}): ${target}`);
 }
