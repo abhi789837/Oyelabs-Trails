@@ -37,15 +37,146 @@ export function editorScopeProps(): Record<string, string> {
   return { [EDITOR_SCOPE_ATTRIBUTE]: "true" };
 }
 
+/**
+ * The scope root an event happened in, or null outside every scope.
+ *
+ * Monaco types into a hidden `<textarea>` that lives inside its own DOM, which lives inside the
+ * wrapper carrying the attribute — so its keyboard and clipboard events resolve here like any other
+ * element. A text node (a selection inside rendered lines) is walked up to its parent first.
+ */
+export function scopeRootOf(target: EventTarget | null): Element | null {
+  if (typeof Element === "undefined" || !target) return null;
+  const element = target instanceof Element ? target : ((target as Node).parentElement ?? null);
+  return element?.closest(`[${EDITOR_SCOPE_ATTRIBUTE}]`) ?? null;
+}
+
 /** Is this event happening inside the learner's own editor? */
 export function isInsideEditor(target: EventTarget | null): boolean {
-  if (!(target instanceof Element)) {
-    // A text node, or a selection inside a shadow root. Walk up to something we can ask.
-    const node = target as Node | null;
-    const element = node?.parentElement ?? null;
-    return element !== null && element.closest(`[${EDITOR_SCOPE_ATTRIBUTE}]`) !== null;
+  return scopeRootOf(target) !== null;
+}
+
+// ---------------------------------------------------------------------------
+// What was copied — read from the editor, not from `document.getSelection()`
+// ---------------------------------------------------------------------------
+
+/**
+ * Per-scope readers for "what is selected right now".
+ *
+ * `document.getSelection()` is the wrong question for an editor: Firefox returns "" for a selection
+ * inside a textarea, and Monaco's real selection lives in its model while the DOM selection sits in
+ * a hidden textarea holding a few characters around the caret. So an editor registers how to read
+ * its own selection (Monaco: `model.getValueInRange(selection)`), and the copy handler asks it.
+ */
+const copySources = new Map<Element, () => string>();
+
+/** Registers a selection reader for one scope root. Returns the unregister function. */
+export function registerCopySource(root: Element, read: () => string): () => void {
+  copySources.set(root, read);
+  return () => {
+    if (copySources.get(root) === read) copySources.delete(root);
+  };
+}
+
+/**
+ * Every candidate for "the text this copy put on the clipboard", most reliable first: the scope's
+ * registered reader, what the clipboard event already carries (Monaco writes it before the event
+ * bubbles to the document), a text field's own selection range, and the document selection last.
+ * Each one is remembered — a fingerprint is cheap and a false "not from this page" is a hard warning.
+ */
+export function copiedTextCandidates(target: EventTarget | null, clipboardText = ""): string[] {
+  const out: string[] = [];
+  const root = scopeRootOf(target);
+  const reader = root ? copySources.get(root) : undefined;
+  if (reader) {
+    try {
+      out.push(reader());
+    } catch {
+      // An editor torn down mid-event. The other candidates still apply.
+    }
   }
-  return target.closest(`[${EDITOR_SCOPE_ATTRIBUTE}]`) !== null;
+  out.push(clipboardText);
+  if (typeof HTMLTextAreaElement !== "undefined" && (target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement)) {
+    const { selectionStart, selectionEnd, value } = target;
+    if (selectionStart != null && selectionEnd != null) out.push(value.slice(selectionStart, selectionEnd));
+  }
+  if (typeof document !== "undefined") out.push(String(document.getSelection() ?? ""));
+  return out.filter((text) => text.trim() !== "");
+}
+
+// ---------------------------------------------------------------------------
+// The whitelist, as a pure decision
+// ---------------------------------------------------------------------------
+
+export type ScopedEventType =
+  | "copy"
+  | "cut"
+  | "paste"
+  | "selectstart"
+  | "contextmenu"
+  | "click"
+  | "pointerdown"
+  | "focusin"
+  | "focusout"
+  | "keydown"
+  | "input";
+
+export interface ScopedEvent {
+  type: ScopedEventType;
+  /** Inside a `data-proctor-editor` scope (Monaco, the task inputs). */
+  inScope: boolean;
+  /** A plain input/textarea/contenteditable outside any scope. */
+  inTextField?: boolean;
+  /** `[data-proctor-allow-select]`. */
+  allowSelect?: boolean;
+  /** Paste: the clipboard's text/plain. */
+  clipboardText?: string;
+  /** Copy/cut: the candidates from `copiedTextCandidates`. */
+  copiedTexts?: string[];
+}
+
+export interface ScopedVerdict {
+  /** The signal to report, or null for ordinary work. */
+  signal: "copy_cut_attempt" | "paste_attempt" | "context_menu_attempt" | "text_selection_attempt" | null;
+  /** Whether the browser's default action is stopped. */
+  prevent: boolean;
+}
+
+const ALLOW: ScopedVerdict = { signal: null, prevent: false };
+
+/**
+ * What the proctoring engine does with one DOM event. `browserSignals.ts` calls this for every
+ * clipboard, selection and context-menu event, so the rules live here, testable without a DOM.
+ *
+ * - copy/cut inside a scope: allowed, and the copied text is fingerprinted. Anywhere else: blocked
+ *   and flagged.
+ * - paste: allowed only inside a scope AND when the text was copied from this page. Text from
+ *   another window is blocked and flagged, editor or not.
+ * - selection: allowed in a scope, a text field or an allow-select region.
+ * - context menu: the native menu is always suppressed; inside a scope that is not reported (a
+ *   right-click in your own code is not an attempt at anything).
+ * - clicks (Run, Submit), focus moving between the question and the editor, typing, undo: never
+ *   a signal. They are listed so a test can hold that down.
+ */
+export function judgeScopedEvent(event: ScopedEvent): ScopedVerdict {
+  switch (event.type) {
+    case "copy":
+    case "cut":
+      if (event.inScope) {
+        for (const text of event.copiedTexts ?? []) rememberCopiedText(text);
+        return ALLOW;
+      }
+      return { signal: "copy_cut_attempt", prevent: true };
+    case "paste":
+      if (event.inScope && wasCopiedFromPage(event.clipboardText ?? "")) return ALLOW;
+      return { signal: "paste_attempt", prevent: true };
+    case "selectstart":
+      if (event.inScope || event.inTextField || event.allowSelect) return ALLOW;
+      return { signal: "text_selection_attempt", prevent: true };
+    case "contextmenu":
+      return { signal: event.inScope ? null : "context_menu_attempt", prevent: true };
+    default:
+      return ALLOW;
+  }
 }
 
 /**

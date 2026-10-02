@@ -94,9 +94,9 @@ export function WeekTab({ userId, displayName }: { userId: string; displayName: 
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="font-display text-lg font-semibold">
+          <h3 className="font-display text-base font-semibold">
             {week ? `Week ${week.weekNumber}` : "No week yet"}
-          </h2>
+          </h3>
           <p className="mt-1 text-sm text-muted-foreground">
             {week ? (
               <>
@@ -109,8 +109,8 @@ export function WeekTab({ userId, displayName }: { userId: string; displayName: 
             )}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Built from their priorities. Change the hours per week, the must-have list or the skip list on the{" "}
-            <span className="font-medium">AI path</span> tab, then regenerate here.
+            Built from their priorities. Change the hours per week, the priorities or the skip list on the{" "}
+            <span className="font-medium">Setup</span> tab, then rebuild here.
           </p>
         </div>
 
@@ -183,7 +183,7 @@ function AdminLane({
     <section className={cn("rounded-lg border", meta.border)}>
       <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2.5", meta.soft)}>
         <Icon className={cn("h-4 w-4 shrink-0", meta.text)} aria-hidden="true" />
-        <h3 className="font-medium">{meta.label}</h3>
+        <h4 className="font-medium">{meta.label}</h4>
         <p className="font-mono text-[11px] text-muted-foreground">
           {items.length} item{items.length === 1 ? "" : "s"} <span aria-hidden="true">·</span> {formatMinutes(minutes)}
         </p>

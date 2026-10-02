@@ -20,12 +20,12 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 
 ## Phase 3: Admin learner setup
 - [x] 3.1 learner_priorities (slider 1–5, order) + learner_skip; migrate builder settings + targets
-- [ ] 3.2 Setup tab / onboard screen (pickers, stack/tools, experience/level, skill picker + sliders, skip, hours, summary)
-- [ ] 3.3 Skill request (pending skill) flow
-- [ ] 3.4 Tabs merged: Setup · Assessment · Path · Library · Progress · Account
-- [ ] 3.5 Path tab results-only
-- [ ] 3.6 Priority rule enforced + tests
-- [ ] 3.7 Checkpoint + commit `feat(v4-p3)`
+- [x] 3.2 Setup tab / onboard screen (pickers, stack/tools, experience/level, skill picker + sliders, skip, hours, summary)
+- [x] 3.3 Skill request (pending skill) flow
+- [x] 3.4 Tabs merged: Setup · Assessment · Path · Library · Progress · Account
+- [x] 3.5 Path tab results-only
+- [x] 3.6 Priority rule enforced + tests
+- [x] 3.7 Checkpoint + commit `feat(v4-p3)`
 
 ## Phase 4: New assessment format
 - [ ] 4.1 Shape: ≤25 (18 hands-on + 7 MCQ), 30 min target, 50 min hard cap, auto-submit, free nav, navigator, clock
@@ -95,3 +95,6 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - Piston test container `piston_test` runs locally on 127.0.0.1:2000 (volume `piston_packages`) — used by bank validation and e2e.
 - P2: department/catalog server + client done. The People/Curriculum/Courses/Generated filters ship; the AI calls table filter waits for Phase 6 (it needs a server param). Skill catalog: engineering 270, PM 85, BD 78 skills.
 - P2 commit also carries Phase 3 server groundwork (slider + skip tables, migration 0014, setup repo + routes, `issueAssessment` extraction, `shared/setup.ts` mix allocator, `shared/tasks.ts`) because boot depends on it; Phase 3 client follows.
+- P3 done: Setup screen shared by onboarding and the learner page; tabs Setup · Assessment · Path · Library · Progress · Account; results-only Path tab; slider/skip single source with v3 readers as projections (fixes the weekly plan reading stale `must_have`); priority rule tests in `builder/priorityRule.v4.test.ts`.
+- P3 commit also carries the Phase 4 server engine (bank schema 0015, assembler, polyglot runner + Piston, v4 sheet/run/submit/finish routes, deterministic evaluation) and the first validated bank files; v4 client + remaining bank seeds follow in P4/P5.
+- `server/src/sandbox/polyglot.test.ts` Java case can time out while other processes load the local Piston; passes alone.

@@ -1,0 +1,2678 @@
+[
+  {
+    "id": "eng-react-fundamentals-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In a todo app, `addTodo` builds the next state for `setTodos`. It must **not** change the array it is given, or React may skip the re-render.\n\nFix `addTodo` so it returns a new array with `{ id, text, done: false }` appended, where `id` is `todos.length + 1`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "check",
+      "starterCode": "function addTodo(todos, text) {\n  todos.push({ id: todos.length + 1, text, done: false });\n  return todos;\n}\n\n// Test driver (leave as is)\nfunction check(todos, text) {\n  const next = addTodo(todos, text);\n  return { originalLength: todos.length, next, sameArray: next === todos };\n}",
+      "referenceSolution": "function addTodo(todos, text) {\n  return [...todos, { id: todos.length + 1, text, done: false }];\n}\n\n// Test driver (leave as is)\nfunction check(todos, text) {\n  const next = addTodo(todos, text);\n  return { originalLength: todos.length, next, sameArray: next === todos };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [],
+            "Buy milk"
+          ],
+          "expected": {
+            "originalLength": 0,
+            "next": [
+              {
+                "id": 1,
+                "text": "Buy milk",
+                "done": false
+              }
+            ],
+            "sameArray": false
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "A",
+                "done": true
+              }
+            ],
+            "B"
+          ],
+          "expected": {
+            "originalLength": 1,
+            "next": [
+              {
+                "id": 1,
+                "text": "A",
+                "done": true
+              },
+              {
+                "id": 2,
+                "text": "B",
+                "done": false
+              }
+            ],
+            "sameArray": false
+          }
+        },
+        {
+          "args": [
+            [],
+            ""
+          ],
+          "expected": {
+            "originalLength": 0,
+            "next": [
+              {
+                "id": 1,
+                "text": "",
+                "done": false
+              }
+            ],
+            "sameArray": false
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "A",
+                "done": false
+              },
+              {
+                "id": 2,
+                "text": "B",
+                "done": false
+              }
+            ],
+            "C"
+          ],
+          "expected": {
+            "originalLength": 2,
+            "next": [
+              {
+                "id": 1,
+                "text": "A",
+                "done": false
+              },
+              {
+                "id": 2,
+                "text": "B",
+                "done": false
+              },
+              {
+                "id": 3,
+                "text": "C",
+                "done": false
+              }
+            ],
+            "sameArray": false
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Clicking a todo's checkbox calls `toggleTodo(todos, id)`. Fix it so only the todo with that `id` flips its `done` flag; every other todo stays as it was.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toggleTodo",
+      "starterCode": "function toggleTodo(todos, id) {\n  return todos.map((t) => ({ ...t, done: !t.done }));\n}",
+      "referenceSolution": "function toggleTodo(todos, id) {\n  return todos.map((t) => (t.id === id ? { ...t, done: !t.done } : t));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": false
+              },
+              {
+                "id": 2,
+                "done": false
+              }
+            ],
+            2
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": false
+            },
+            {
+              "id": 2,
+              "done": true
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              }
+            ],
+            1
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": false
+              },
+              {
+                "id": 2,
+                "done": true
+              }
+            ],
+            9
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": false
+            },
+            {
+              "id": 2,
+              "done": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            1
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": false
+              },
+              {
+                "id": 2,
+                "done": true
+              },
+              {
+                "id": 3,
+                "done": false
+              }
+            ],
+            2
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": false
+            },
+            {
+              "id": 2,
+              "done": false
+            },
+            {
+              "id": 3,
+              "done": false
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The filter tabs above a todo list pass `\"all\"`, `\"active\"` or `\"done\"`. Complete `visibleTodos` so each tab shows the right todos (active = not done).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "visibleTodos",
+      "starterCode": "function visibleTodos(todos, filter) {\n  if (filter === \"done\") return todos.filter((t) => t.done);\n  return todos;\n}",
+      "referenceSolution": "function visibleTodos(todos, filter) {\n  if (filter === \"done\") return todos.filter((t) => t.done);\n  if (filter === \"active\") return todos.filter((t) => !t.done);\n  return todos;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              },
+              {
+                "id": 2,
+                "done": false
+              }
+            ],
+            "done"
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": true
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              },
+              {
+                "id": 2,
+                "done": false
+              }
+            ],
+            "active"
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              },
+              {
+                "id": 2,
+                "done": false
+              }
+            ],
+            "all"
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "done": true
+            },
+            {
+              "id": 2,
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            "active"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "done": true
+              }
+            ],
+            "active"
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A header shows `Hi, <name>` for a signed-in user and `Please sign in` when `user` is `null`. Fix `greeting` so it no longer crashes for a signed-out visitor.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "greeting",
+      "starterCode": "function greeting(user) {\n  return \"Hi, \" + user.name;\n}",
+      "referenceSolution": "function greeting(user) {\n  if (!user) return \"Please sign in\";\n  return \"Hi, \" + user.name;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ada"
+            }
+          ],
+          "expected": "Hi, Ada"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": "Please sign in"
+        },
+        {
+          "args": [
+            {
+              "name": "Bo"
+            }
+          ],
+          "expected": "Hi, Bo"
+        },
+        {
+          "args": [
+            {
+              "name": "Chen Li"
+            }
+          ],
+          "expected": "Hi, Chen Li"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A cart badge shows `No items`, `1 item` or `<n> items`. Fix `itemLabel` so all three cases read correctly.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "itemLabel",
+      "starterCode": "function itemLabel(n) {\n  return n + \" items\";\n}",
+      "referenceSolution": "function itemLabel(n) {\n  if (n === 0) return \"No items\";\n  if (n === 1) return \"1 item\";\n  return n + \" items\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            3
+          ],
+          "expected": "3 items"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": "No items"
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": "1 item"
+        },
+        {
+          "args": [
+            2
+          ],
+          "expected": "2 items"
+        },
+        {
+          "args": [
+            120
+          ],
+          "expected": "120 items"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Clicking **Add** does not update the list on screen. Mark the line(s) that cause it.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function TagList() {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const [tags, setTags] = useState([]);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  function addTag(tag) {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    tags.push(tag);",
+          "issue": "Mutates the state array in place instead of creating a new one."
+        },
+        {
+          "id": "l5",
+          "text": "    setTags(tags);",
+          "issue": "Passes the same array reference back, so React sees no change and skips the re-render. Use setTags([...tags, tag])."
+        },
+        {
+          "id": "l6",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  return <button onClick={() => addTag('new')}>Add</button>;",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A child component receives `title` as a prop and wants to change it when clicked. What is the React way?",
+    "mcq": {
+      "options": [
+        "The parent owns the value in state and passes a callback like `onTitleChange` that the child calls",
+        "The child assigns `props.title = 'New'` and calls `forceUpdate()`",
+        "The child copies `props.title` into a global variable and edits that",
+        "The child re-imports the parent component and calls its render function"
+      ],
+      "correctIndex": 0,
+      "explanation": "Props are read-only for the component that receives them. Data flows down; changes flow up through callbacks the parent passes, and the parent updates its own state.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why does React warn when you render a list without a `key` on each item?",
+    "mcq": {
+      "options": [
+        "Keys let React match each item to its previous render, so it updates, moves or removes the right element and keeps its state",
+        "Keys are required for the item to be visible in the DOM",
+        "Keys are passed to the child as `props.key` so it can display its index",
+        "Keys make React render the list in sorted order"
+      ],
+      "correctIndex": 0,
+      "explanation": "React uses keys to identify list items between renders. Without stable keys it falls back to position, which can update the wrong element or carry state over to the wrong row. `key` is not passed through as a prop.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You call `setName('Ana')` inside a click handler and immediately `console.log(name)` on the next line. What is logged?",
+    "mcq": {
+      "options": [
+        "The previous value of `name`: the new value shows up in the next render",
+        "`'Ana'`, because the setter updates the variable synchronously",
+        "`undefined` until the component re-mounts",
+        "An error, because state cannot be read inside a handler"
+      ],
+      "correctIndex": 0,
+      "explanation": "`name` is a constant for this render. The setter schedules a re-render, and the next call to the component gets the new value.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Every input in a profile form calls `updateField(form, name, value)` and passes the result to `setForm`. Fix it so it returns a new object and leaves `form` untouched.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "check",
+      "starterCode": "function updateField(form, name, value) {\n  form[name] = value;\n  return form;\n}\n\n// Test driver (leave as is)\nfunction check(form, name, value) {\n  const before = JSON.stringify(form);\n  const next = updateField(form, name, value);\n  return { next, originalUnchanged: JSON.stringify(form) === before, sameObject: next === form };\n}",
+      "referenceSolution": "function updateField(form, name, value) {\n  return { ...form, [name]: value };\n}\n\n// Test driver (leave as is)\nfunction check(form, name, value) {\n  const before = JSON.stringify(form);\n  const next = updateField(form, name, value);\n  return { next, originalUnchanged: JSON.stringify(form) === before, sameObject: next === form };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "",
+              "email": ""
+            },
+            "name",
+            "Ada"
+          ],
+          "expected": {
+            "next": {
+              "name": "Ada",
+              "email": ""
+            },
+            "originalUnchanged": true,
+            "sameObject": false
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "Ada",
+              "email": ""
+            },
+            "email",
+            "a@x.io"
+          ],
+          "expected": {
+            "next": {
+              "name": "Ada",
+              "email": "a@x.io"
+            },
+            "originalUnchanged": true,
+            "sameObject": false
+          }
+        },
+        {
+          "args": [
+            {},
+            "city",
+            "Pune"
+          ],
+          "expected": {
+            "next": {
+              "city": "Pune"
+            },
+            "originalUnchanged": true,
+            "sameObject": false
+          }
+        },
+        {
+          "args": [
+            {
+              "age": 30
+            },
+            "age",
+            31
+          ],
+          "expected": {
+            "next": {
+              "age": 31
+            },
+            "originalUnchanged": true,
+            "sameObject": false
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An API sometimes returns the same product twice, which gives React duplicate keys. Fix `dedupeById` to keep the **first** item for each `id`, in the original order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "dedupeById",
+      "starterCode": "function dedupeById(items) {\n  return [...new Set(items)];\n}",
+      "referenceSolution": "function dedupeById(items) {\n  const seen = new Set();\n  return items.filter((item) => {\n    if (seen.has(item.id)) return false;\n    seen.add(item.id);\n    return true;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "n": "a"
+              },
+              {
+                "id": 2,
+                "n": "b"
+              },
+              {
+                "id": 1,
+                "n": "c"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "n": "a"
+            },
+            {
+              "id": 2,
+              "n": "b"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "n": "x"
+              },
+              {
+                "id": 3,
+                "n": "y"
+              },
+              {
+                "id": 3,
+                "n": "z"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 3,
+              "n": "x"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 2,
+                "n": "b"
+              },
+              {
+                "id": 1,
+                "n": "a"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "n": "b"
+            },
+            {
+              "id": 1,
+              "n": "a"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "n": 1
+              },
+              {
+                "id": "b",
+                "n": 2
+              },
+              {
+                "id": "a",
+                "n": 3
+              },
+              {
+                "id": "c",
+                "n": 4
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "n": 1
+            },
+            {
+              "id": "b",
+              "n": 2
+            },
+            {
+              "id": "c",
+              "n": 4
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A sign-up form shows errors under each field. Complete `validateSignup` so it returns an object with only the fields that have a problem:\n\n- `email`: `\"Email is required\"` when empty, `\"Email is invalid\"` when it has no `@`\n- `password`: `\"Password must be at least 8 characters\"` when shorter than 8\n\nA valid form returns `{}`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "validateSignup",
+      "starterCode": "function validateSignup(values) {\n  const errors = {};\n  if (!values.email) errors.email = \"Email is required\";\n  else if (!values.email.includes(\"@\")) errors.email = \"Email is invalid\";\n  return errors;\n}",
+      "referenceSolution": "function validateSignup(values) {\n  const errors = {};\n  if (!values.email) errors.email = \"Email is required\";\n  else if (!values.email.includes(\"@\")) errors.email = \"Email is invalid\";\n  if ((values.password || \"\").length < 8) errors.password = \"Password must be at least 8 characters\";\n  return errors;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "email": "ada@x.io",
+              "password": "correcthorse"
+            }
+          ],
+          "expected": {}
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "email": "",
+              "password": "correcthorse"
+            }
+          ],
+          "expected": {
+            "email": "Email is required"
+          }
+        },
+        {
+          "args": [
+            {
+              "email": "ada",
+              "password": "short"
+            }
+          ],
+          "expected": {
+            "email": "Email is invalid",
+            "password": "Password must be at least 8 characters"
+          }
+        },
+        {
+          "args": [
+            {
+              "email": "ada@x.io",
+              "password": "1234567"
+            }
+          ],
+          "expected": {
+            "password": "Password must be at least 8 characters"
+          }
+        },
+        {
+          "args": [
+            {
+              "email": "ada@x.io",
+              "password": "12345678"
+            }
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A `Button` merges the props it gets over its defaults (`size: \"md\"`, `variant: \"primary\"`, `disabled: false`). Fix `withDefaults` so props the caller passes win over the defaults.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "withDefaults",
+      "starterCode": "const DEFAULTS = { size: \"md\", variant: \"primary\", disabled: false };\n\nfunction withDefaults(props) {\n  return { ...props, ...DEFAULTS };\n}",
+      "referenceSolution": "const DEFAULTS = { size: \"md\", variant: \"primary\", disabled: false };\n\nfunction withDefaults(props) {\n  return { ...DEFAULTS, ...props };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "size": "md",
+            "variant": "primary",
+            "disabled": false
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "size": "lg"
+            }
+          ],
+          "expected": {
+            "size": "lg",
+            "variant": "primary",
+            "disabled": false
+          }
+        },
+        {
+          "args": [
+            {
+              "disabled": true,
+              "label": "Save"
+            }
+          ],
+          "expected": {
+            "size": "md",
+            "variant": "primary",
+            "disabled": true,
+            "label": "Save"
+          }
+        },
+        {
+          "args": [
+            {
+              "variant": "ghost",
+              "size": "sm"
+            }
+          ],
+          "expected": {
+            "size": "sm",
+            "variant": "ghost",
+            "disabled": false
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The cart total is derived from the cart items on each render rather than stored in state. Fix `cartTotal` so it accounts for each item's `qty`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cartTotal",
+      "starterCode": "function cartTotal(items) {\n  return items.reduce((sum, item) => sum + item.price, 0);\n}",
+      "referenceSolution": "function cartTotal(items) {\n  return items.reduce((sum, item) => sum + item.price * item.qty, 0);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "price": 10,
+                "qty": 2
+              },
+              {
+                "price": 5,
+                "qty": 1
+              }
+            ]
+          ],
+          "expected": 25
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 3,
+                "qty": 4
+              }
+            ]
+          ],
+          "expected": 12
+        },
+        {
+          "args": [
+            [
+              {
+                "price": 10,
+                "qty": 0
+              },
+              {
+                "price": 2,
+                "qty": 3
+              }
+            ]
+          ],
+          "expected": 6
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Two sibling components need the same data.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A `SearchBox` and a `ResultsList` sit side by side inside `ProductsPage`. Typing in the search box should filter the results.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "Where should the search text live?",
+          "options": [
+            "In `useState` inside `ProductsPage`, passed down to both children",
+            "In `useState` inside `SearchBox`, with `ResultsList` reading it from the DOM",
+            "In a module-level variable both components import",
+            "In `useState` in both children, kept in sync with `useEffect`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Lift state to the closest common parent so both siblings read one source of truth."
+        },
+        {
+          "id": "s2",
+          "question": "How does `SearchBox` change the text now that the parent owns it?",
+          "options": [
+            "The parent passes `value` and an `onChange` callback; `SearchBox` calls `onChange(newText)`",
+            "`SearchBox` mutates `props.value` directly",
+            "`SearchBox` dispatches a browser `CustomEvent` that the parent listens for"
+          ],
+          "correctIndex": 0,
+          "explanation": "The child stays controlled: it renders `value` and reports changes through a callback prop."
+        },
+        {
+          "id": "s3",
+          "question": "The results list needs the filtered products. What is the simplest correct approach?",
+          "options": [
+            "Compute `products.filter(...)` during render from `products` and the search text",
+            "Store the filtered list in a second `useState` and update it in `useEffect`",
+            "Filter inside `SearchBox` and save the result to `localStorage`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Filtered results are derived data. Computing them during render avoids an extra state that can go stale."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "This handler runs once. `count` starts at 0. What is `count` after the re-render?\n\n```jsx\nfunction handleClick() {\n  setCount(count + 1);\n  setCount(count + 1);\n  setCount(count + 1);\n}\n```",
+    "mcq": {
+      "options": [
+        "1",
+        "3",
+        "0",
+        "2"
+      ],
+      "correctIndex": 0,
+      "explanation": "Every call reads the same `count` (0) from this render, so each one sets 1. Use the updater form `setCount(c => c + 1)` to add 3.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An `<input value={name} />` has no `onChange`. What happens when the user types?",
+    "mcq": {
+      "options": [
+        "Nothing changes: the input is controlled by `name`, and React warns that it is read-only",
+        "The input updates and `name` updates with it",
+        "The input updates but `name` stays the same",
+        "React throws and unmounts the form"
+      ],
+      "correctIndex": 0,
+      "explanation": "A `value` prop makes the input controlled. Without `onChange` updating `name`, React keeps resetting it to `name`. Add `onChange` or use `defaultValue` for an uncontrolled input.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A component stores both `items` and `itemCount` in `useState`, updating `itemCount` every time `items` changes. What is the better design?",
+    "mcq": {
+      "options": [
+        "Drop `itemCount` state and compute `items.length` during render",
+        "Keep both and sync them in a `useEffect`",
+        "Store `itemCount` in a `useRef` instead",
+        "Move `itemCount` into a context provider"
+      ],
+      "correctIndex": 0,
+      "explanation": "Values you can calculate from existing state or props are derived data. Storing them separately adds a second source of truth that can drift.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A drag-and-drop list calls `moveItem(list, from, to)` and passes the result to `setState`. Fix it so it returns a **new** array with the item moved, and the original array is untouched.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "check",
+      "starterCode": "function moveItem(list, from, to) {\n  const [item] = list.splice(from, 1);\n  list.splice(to, 0, item);\n  return list;\n}\n\n// Test driver (leave as is)\nfunction check(list, from, to) {\n  const before = JSON.stringify(list);\n  const next = moveItem(list, from, to);\n  return { next, originalUnchanged: JSON.stringify(list) === before };\n}",
+      "referenceSolution": "function moveItem(list, from, to) {\n  const next = [...list];\n  const [item] = next.splice(from, 1);\n  next.splice(to, 0, item);\n  return next;\n}\n\n// Test driver (leave as is)\nfunction check(list, from, to) {\n  const before = JSON.stringify(list);\n  const next = moveItem(list, from, to);\n  return { next, originalUnchanged: JSON.stringify(list) === before };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            0,
+            2
+          ],
+          "expected": {
+            "next": [
+              "b",
+              "c",
+              "a"
+            ],
+            "originalUnchanged": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            2,
+            0
+          ],
+          "expected": {
+            "next": [
+              "c",
+              "a",
+              "b"
+            ],
+            "originalUnchanged": true
+          }
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b"
+            ],
+            1,
+            1
+          ],
+          "expected": {
+            "next": [
+              "a",
+              "b"
+            ],
+            "originalUnchanged": true
+          }
+        },
+        {
+          "args": [
+            [
+              "x"
+            ],
+            0,
+            0
+          ],
+          "expected": {
+            "next": [
+              "x"
+            ],
+            "originalUnchanged": true
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            1,
+            2
+          ],
+          "expected": {
+            "next": [
+              1,
+              3,
+              2,
+              4
+            ],
+            "originalUnchanged": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "State is `{ users: { [id]: { name, address: { city } } } }`. Fix `setCity` so it returns new objects along the path it changes and leaves the previous state exactly as it was.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "check",
+      "starterCode": "function setCity(state, id, city) {\n  const users = { ...state.users };\n  users[id].address.city = city;\n  return { ...state, users };\n}\n\n// Test driver (leave as is)\nfunction check(state, id, city) {\n  const before = JSON.stringify(state);\n  const next = setCity(state, id, city);\n  return { next, originalUnchanged: JSON.stringify(state) === before };\n}",
+      "referenceSolution": "function setCity(state, id, city) {\n  const user = state.users[id];\n  return {\n    ...state,\n    users: { ...state.users, [id]: { ...user, address: { ...user.address, city } } },\n  };\n}\n\n// Test driver (leave as is)\nfunction check(state, id, city) {\n  const before = JSON.stringify(state);\n  const next = setCity(state, id, city);\n  return { next, originalUnchanged: JSON.stringify(state) === before };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "users": {
+                "u1": {
+                  "name": "Ada",
+                  "address": {
+                    "city": "Paris"
+                  }
+                }
+              }
+            },
+            "u1",
+            "Lyon"
+          ],
+          "expected": {
+            "next": {
+              "users": {
+                "u1": {
+                  "name": "Ada",
+                  "address": {
+                    "city": "Lyon"
+                  }
+                }
+              }
+            },
+            "originalUnchanged": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "users": {
+                "u1": {
+                  "name": "Ada",
+                  "address": {
+                    "city": "Paris",
+                    "zip": "75"
+                  }
+                },
+                "u2": {
+                  "name": "Bo",
+                  "address": {
+                    "city": "Rome"
+                  }
+                }
+              },
+              "theme": "dark"
+            },
+            "u2",
+            "Milan"
+          ],
+          "expected": {
+            "next": {
+              "users": {
+                "u1": {
+                  "name": "Ada",
+                  "address": {
+                    "city": "Paris",
+                    "zip": "75"
+                  }
+                },
+                "u2": {
+                  "name": "Bo",
+                  "address": {
+                    "city": "Milan"
+                  }
+                }
+              },
+              "theme": "dark"
+            },
+            "originalUnchanged": true
+          }
+        },
+        {
+          "args": [
+            {
+              "users": {
+                "a": {
+                  "name": "A",
+                  "address": {
+                    "city": ""
+                  }
+                }
+              }
+            },
+            "a",
+            "Oslo"
+          ],
+          "expected": {
+            "next": {
+              "users": {
+                "a": {
+                  "name": "A",
+                  "address": {
+                    "city": "Oslo"
+                  }
+                }
+              }
+            },
+            "originalUnchanged": true
+          }
+        },
+        {
+          "args": [
+            {
+              "users": {
+                "a": {
+                  "name": "A",
+                  "address": {
+                    "city": "Oslo"
+                  }
+                }
+              }
+            },
+            "a",
+            "Oslo"
+          ],
+          "expected": {
+            "next": {
+              "users": {
+                "a": {
+                  "name": "A",
+                  "address": {
+                    "city": "Oslo"
+                  }
+                }
+              }
+            },
+            "originalUnchanged": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A sectioned product list renders one heading per category. Fix `groupByCategory` so it returns `{ [category]: [names...] }` keeping every product, in input order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "groupByCategory",
+      "starterCode": "function groupByCategory(products) {\n  const groups = {};\n  for (const p of products) {\n    groups[p.category] = [p.name];\n  }\n  return groups;\n}",
+      "referenceSolution": "function groupByCategory(products) {\n  const groups = {};\n  for (const p of products) {\n    (groups[p.category] ??= []).push(p.name);\n  }\n  return groups;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "Tea",
+                "category": "drinks"
+              },
+              {
+                "name": "Bun",
+                "category": "food"
+              }
+            ]
+          ],
+          "expected": {
+            "drinks": [
+              "Tea"
+            ],
+            "food": [
+              "Bun"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "Tea",
+                "category": "drinks"
+              },
+              {
+                "name": "Cola",
+                "category": "drinks"
+              },
+              {
+                "name": "Bun",
+                "category": "food"
+              }
+            ]
+          ],
+          "expected": {
+            "drinks": [
+              "Tea",
+              "Cola"
+            ],
+            "food": [
+              "Bun"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "A",
+                "category": "x"
+              },
+              {
+                "name": "B",
+                "category": "x"
+              },
+              {
+                "name": "C",
+                "category": "x"
+              }
+            ]
+          ],
+          "expected": {
+            "x": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A table's header checkbox is checked when every row is selected and shows a dash when only some are. Fix `selectionState` so an **empty** table is neither all nor partly selected.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "selectionState",
+      "starterCode": "function selectionState(rowIds, selectedIds) {\n  const count = rowIds.filter((id) => selectedIds.includes(id)).length;\n  return {\n    count,\n    all: rowIds.every((id) => selectedIds.includes(id)),\n    some: count > 0 && count < rowIds.length,\n  };\n}",
+      "referenceSolution": "function selectionState(rowIds, selectedIds) {\n  const count = rowIds.filter((id) => selectedIds.includes(id)).length;\n  return {\n    count,\n    all: rowIds.length > 0 && count === rowIds.length,\n    some: count > 0 && count < rowIds.length,\n  };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              2
+            ]
+          ],
+          "expected": {
+            "count": 1,
+            "all": false,
+            "some": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": {
+            "count": 0,
+            "all": false,
+            "some": false
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": {
+            "count": 2,
+            "all": true,
+            "some": false
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2
+            ],
+            [
+              9
+            ]
+          ],
+          "expected": {
+            "count": 0,
+            "all": false,
+            "some": false
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            [
+              1,
+              3,
+              7
+            ]
+          ],
+          "expected": {
+            "count": 2,
+            "all": false,
+            "some": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A form should only show an error once the user has left that field (`touched`), or after they press Submit. Fix `visibleErrors` so that after a submit attempt every error shows.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "visibleErrors",
+      "starterCode": "function visibleErrors(errors, touched, submitted) {\n  const out = {};\n  for (const field of Object.keys(errors)) {\n    if (touched[field]) out[field] = errors[field];\n  }\n  return out;\n}",
+      "referenceSolution": "function visibleErrors(errors, touched, submitted) {\n  const out = {};\n  for (const field of Object.keys(errors)) {\n    if (submitted || touched[field]) out[field] = errors[field];\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "email": "Required"
+            },
+            {
+              "email": true
+            },
+            false
+          ],
+          "expected": {
+            "email": "Required"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "email": "Required",
+              "name": "Required"
+            },
+            {},
+            true
+          ],
+          "expected": {
+            "email": "Required",
+            "name": "Required"
+          }
+        },
+        {
+          "args": [
+            {
+              "email": "Required",
+              "name": "Required"
+            },
+            {
+              "name": true
+            },
+            false
+          ],
+          "expected": {
+            "name": "Required"
+          }
+        },
+        {
+          "args": [
+            {},
+            {
+              "email": true
+            },
+            true
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "email": "Required"
+            },
+            {},
+            false
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Users can reorder and delete rows in this list; each row has its own text input. After deleting a row, the wrong row's text appears. Mark the line(s) that cause bugs.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function Rows({ rows, onDelete }) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  return (",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "    <ul>",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "      {rows.map((row, index) => (",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "        <li key={index}>",
+          "issue": "Index keys in a list that can reorder or delete make React reuse the wrong row's DOM and input state. Use key={row.id}."
+        },
+        {
+          "id": "l6",
+          "text": "          <input defaultValue={row.text} />",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "          <button onClick={() => onDelete(row.id)}>Delete</button>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "        </li>",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "      ))}",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "    </ul>",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`<EditProfile user={user} />` keeps form fields in local state initialised from `user`. When the parent switches to a different `user`, the old values stay in the form. What is the simplest fix?",
+    "mcq": {
+      "options": [
+        "Render `<EditProfile key={user.id} user={user} />` so React mounts a fresh instance per user",
+        "Call `setState` with the new user inside the component body on every render",
+        "Wrap `EditProfile` in `React.memo`",
+        "Move the form fields into `useRef`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`useState`'s initial value is read only on mount. Changing the `key` tells React it is a different component instance, so its state resets.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this log? You can run it before answering.",
+    "mcq": {
+      "options": [
+        "`\"\" Untitled 2`",
+        "`\"Untitled\" Untitled 2`",
+        "`\"\" \"\" 2`",
+        "`\"Untitled\" \"\" 1`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`??` only falls back for `null` or `undefined`, so an empty-string title is kept. Using `||` would replace `''` too, which matters for default props like counts (`0`) and labels.",
+      "snippet": "// Calling a function component directly, just to see what it returns.\nlet renders = 0;\nfunction Panel(props) {\n  renders++;\n  const title = props.title ?? \"Untitled\";\n  return title;\n}\nconsole.log(JSON.stringify(Panel({ title: \"\" })), Panel({}), renders);",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A `Card` component should let callers put any markup inside it, like `<Card><h2>Title</h2><p>Body</p></Card>`. How does `Card` render that content?",
+    "mcq": {
+      "options": [
+        "It renders `props.children` where the content should go",
+        "It reads the content with `document.querySelector` after mount",
+        "The caller must pass the markup as an HTML string in a `content` prop",
+        "It extends a `BaseCard` class that injects the content"
+      ],
+      "correctIndex": 0,
+      "explanation": "Nested JSX arrives as `props.children`. This is how React prefers composition over inheritance.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Polling returns changed rows. `mergeById(prev, incoming)` must:\n\n- replace rows whose `id` already exists (keeping their position)\n- append new rows at the end\n- keep the **same object** for rows not in `incoming`, so `React.memo` rows don't re-render\n\nFix it. The driver reports which rows kept their reference.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "check",
+      "starterCode": "function mergeById(prev, incoming) {\n  const byId = new Map(incoming.map((row) => [row.id, row]));\n  const merged = prev.map((row) => ({ ...row, ...byId.get(row.id) }));\n  const known = new Set(prev.map((row) => row.id));\n  return [...merged, ...incoming.filter((row) => !known.has(row.id))];\n}\n\n// Test driver (leave as is)\nfunction check(prev, incoming) {\n  const next = mergeById(prev, incoming);\n  return { next, kept: prev.map((row) => next.includes(row)) };\n}",
+      "referenceSolution": "function mergeById(prev, incoming) {\n  const byId = new Map(incoming.map((row) => [row.id, row]));\n  const merged = prev.map((row) => byId.get(row.id) ?? row);\n  const known = new Set(prev.map((row) => row.id));\n  return [...merged, ...incoming.filter((row) => !known.has(row.id))];\n}\n\n// Test driver (leave as is)\nfunction check(prev, incoming) {\n  const next = mergeById(prev, incoming);\n  return { next, kept: prev.map((row) => next.includes(row)) };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "v": "a"
+              },
+              {
+                "id": 2,
+                "v": "b"
+              }
+            ],
+            [
+              {
+                "id": 2,
+                "v": "B"
+              }
+            ]
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 1,
+                "v": "a"
+              },
+              {
+                "id": 2,
+                "v": "B"
+              }
+            ],
+            "kept": [
+              true,
+              false
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "v": "a"
+              }
+            ],
+            []
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 1,
+                "v": "a"
+              }
+            ],
+            "kept": [
+              true
+            ]
+          }
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "id": 5,
+                "v": "e"
+              }
+            ]
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 5,
+                "v": "e"
+              }
+            ],
+            "kept": []
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "v": "a"
+              },
+              {
+                "id": 2,
+                "v": "b"
+              },
+              {
+                "id": 3,
+                "v": "c"
+              }
+            ],
+            [
+              {
+                "id": 4,
+                "v": "d"
+              },
+              {
+                "id": 1,
+                "v": "A"
+              }
+            ]
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 1,
+                "v": "A"
+              },
+              {
+                "id": 2,
+                "v": "b"
+              },
+              {
+                "id": 3,
+                "v": "c"
+              },
+              {
+                "id": 4,
+                "v": "d"
+              }
+            ],
+            "kept": [
+              false,
+              true,
+              true
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A paginated table shows `paginate(items, page, pageSize)`. Pages start at 1. Fix it so:\n\n- `page` is clamped to `1..totalPages` (after a delete, the last page can disappear)\n- an empty list has `totalPages: 1`, `page: 1`, `items: []`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "paginate",
+      "starterCode": "function paginate(items, page, pageSize) {\n  const totalPages = Math.ceil(items.length / pageSize);\n  const start = (page - 1) * pageSize;\n  return { page, totalPages, items: items.slice(start, start + pageSize) };\n}",
+      "referenceSolution": "function paginate(items, page, pageSize) {\n  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));\n  const current = Math.min(Math.max(1, page), totalPages);\n  const start = (current - 1) * pageSize;\n  return { page: current, totalPages, items: items.slice(start, start + pageSize) };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "page": 2,
+            "totalPages": 3,
+            "items": [
+              3,
+              4
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            9,
+            2
+          ],
+          "expected": {
+            "page": 3,
+            "totalPages": 3,
+            "items": [
+              5
+            ]
+          }
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": {
+            "page": 1,
+            "totalPages": 1,
+            "items": []
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0,
+            2
+          ],
+          "expected": {
+            "page": 1,
+            "totalPages": 2,
+            "items": [
+              1,
+              2
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "page": 2,
+            "totalPages": 2,
+            "items": [
+              3,
+              4
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A recursive `<Comment>` component needs a tree. Fix `buildTree(comments)` so it turns a flat list of `{ id, parentId, text }` into nodes `{ id, text, children }`, in input order.\n\nA comment whose `parentId` is `null` **or points to a comment that is not in the list** (deleted) goes at the root.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "buildTree",
+      "starterCode": "function buildTree(comments) {\n  const nodes = new Map(comments.map((c) => [c.id, { id: c.id, text: c.text, children: [] }]));\n  const roots = [];\n  for (const c of comments) {\n    if (c.parentId === null) roots.push(nodes.get(c.id));\n    else nodes.get(c.parentId)?.children.push(nodes.get(c.id));\n  }\n  return roots;\n}",
+      "referenceSolution": "function buildTree(comments) {\n  const nodes = new Map(comments.map((c) => [c.id, { id: c.id, text: c.text, children: [] }]));\n  const roots = [];\n  for (const c of comments) {\n    const parent = c.parentId === null ? undefined : nodes.get(c.parentId);\n    if (parent) parent.children.push(nodes.get(c.id));\n    else roots.push(nodes.get(c.id));\n  }\n  return roots;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "parentId": null,
+                "text": "Hi"
+              },
+              {
+                "id": 2,
+                "parentId": 1,
+                "text": "Hey"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "text": "Hi",
+              "children": [
+                {
+                  "id": 2,
+                  "text": "Hey",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 2,
+                "parentId": 99,
+                "text": "orphan"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "text": "orphan",
+              "children": []
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "parentId": null,
+                "text": "a"
+              },
+              {
+                "id": 2,
+                "parentId": 1,
+                "text": "b"
+              },
+              {
+                "id": 3,
+                "parentId": 2,
+                "text": "c"
+              },
+              {
+                "id": 4,
+                "parentId": null,
+                "text": "d"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "text": "a",
+              "children": [
+                {
+                  "id": 2,
+                  "text": "b",
+                  "children": [
+                    {
+                      "id": 3,
+                      "text": "c",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "text": "d",
+              "children": []
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 3,
+                "parentId": 1,
+                "text": "late"
+              },
+              {
+                "id": 1,
+                "parentId": null,
+                "text": "root"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "text": "root",
+              "children": [
+                {
+                  "id": 3,
+                  "text": "late",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Rows added in an editable table have no server id yet, so they need a stable client key. `assignKeys(rows, nextKey)` must give each row **without** a `key` a new one (`\"tmp-<n>\"`, counting up from `nextKey`), keep existing keys, and return `{ rows, nextKey }` for the next call.\n\nThe current version uses the index, which changes when rows move. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "assignKeys",
+      "starterCode": "function assignKeys(rows, nextKey) {\n  return { rows: rows.map((row, i) => ({ ...row, key: \"tmp-\" + i })), nextKey };\n}",
+      "referenceSolution": "function assignKeys(rows, nextKey) {\n  let n = nextKey;\n  const out = rows.map((row) => (row.key ? row : { ...row, key: \"tmp-\" + n++ }));\n  return { rows: out, nextKey: n };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "a"
+              },
+              {
+                "name": "b"
+              }
+            ],
+            1
+          ],
+          "expected": {
+            "rows": [
+              {
+                "name": "a",
+                "key": "tmp-1"
+              },
+              {
+                "name": "b",
+                "key": "tmp-2"
+              }
+            ],
+            "nextKey": 3
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            5
+          ],
+          "expected": {
+            "rows": [],
+            "nextKey": 5
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "b",
+                "key": "tmp-2"
+              },
+              {
+                "name": "c"
+              },
+              {
+                "name": "a",
+                "key": "tmp-1"
+              }
+            ],
+            3
+          ],
+          "expected": {
+            "rows": [
+              {
+                "name": "b",
+                "key": "tmp-2"
+              },
+              {
+                "name": "c",
+                "key": "tmp-3"
+              },
+              {
+                "name": "a",
+                "key": "tmp-1"
+              }
+            ],
+            "nextKey": 4
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "x",
+                "key": "srv-9"
+              }
+            ],
+            1
+          ],
+          "expected": {
+            "rows": [
+              {
+                "name": "x",
+                "key": "srv-9"
+              }
+            ],
+            "nextKey": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "While saves are in flight, a list shows the server's items with the user's pending changes applied on top. Each pending op is one of:\n\n- `{ type: \"add\", item }` — append `item`\n- `{ type: \"remove\", id }` — drop the item with that id\n- `{ type: \"rename\", id, name }` — set that item's `name`\n\nApply them in order without mutating `server`. The rename case is missing; add it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "applyPending",
+      "starterCode": "function applyPending(server, pending) {\n  let list = server;\n  for (const op of pending) {\n    if (op.type === \"add\") list = [...list, op.item];\n    else if (op.type === \"remove\") list = list.filter((i) => i.id !== op.id);\n  }\n  return list;\n}",
+      "referenceSolution": "function applyPending(server, pending) {\n  let list = server;\n  for (const op of pending) {\n    if (op.type === \"add\") list = [...list, op.item];\n    else if (op.type === \"remove\") list = list.filter((i) => i.id !== op.id);\n    else if (op.type === \"rename\") list = list.map((i) => (i.id === op.id ? { ...i, name: op.name } : i));\n  }\n  return list;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "a"
+              }
+            ],
+            [
+              {
+                "type": "add",
+                "item": {
+                  "id": 2,
+                  "name": "b"
+                }
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "a"
+            },
+            {
+              "id": 2,
+              "name": "b"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "a"
+              },
+              {
+                "id": 2,
+                "name": "b"
+              }
+            ],
+            [
+              {
+                "type": "rename",
+                "id": 2,
+                "name": "B"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "a"
+            },
+            {
+              "id": 2,
+              "name": "B"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "a"
+              }
+            ],
+            []
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "name": "a"
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            [
+              {
+                "type": "add",
+                "item": {
+                  "id": 7,
+                  "name": "x"
+                }
+              },
+              {
+                "type": "rename",
+                "id": 7,
+                "name": "y"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 7,
+              "name": "y"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "name": "a"
+              },
+              {
+                "id": 2,
+                "name": "b"
+              }
+            ],
+            [
+              {
+                "type": "remove",
+                "id": 1
+              },
+              {
+                "type": "rename",
+                "id": 1,
+                "name": "z"
+              }
+            ]
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "name": "b"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "This settings panel is slow and loses what the user typed whenever the parent re-renders. Mark the line(s) that are bugs.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function Settings({ user, onSave }) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const [draft, setDraft] = useState(user);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  function Field({ name }) {",
+          "issue": "Defining a component inside another creates a new component type every render, so React unmounts and remounts the input and focus/typing is lost. Move Field outside."
+        },
+        {
+          "id": "l4",
+          "text": "    return <input value={draft[name]} onChange={(e) => update(name, e.target.value)} />;",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  function update(name, value) {",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    draft[name] = value;",
+          "issue": "Mutates the state object; React may not re-render. Use setDraft({ ...draft, [name]: value })."
+        },
+        {
+          "id": "l8",
+          "text": "    setDraft(draft);",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  }",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "  return <form onSubmit={() => onSave(draft)}><Field name=\"email\" /></form>;",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "`{count && <Badge count={count} />}` renders a stray `0` on the page when `count` is 0. Why? You can run the snippet.",
+    "mcq": {
+      "options": [
+        "`&&` returns the left operand when it is falsy, and React renders the number `0` (it only skips `false`, `null` and `undefined`)",
+        "React converts every falsy value to the string `'0'`",
+        "`Badge` renders its own `count` prop even when it is not mounted",
+        "JSX evaluates `&&` right to left"
+      ],
+      "correctIndex": 0,
+      "explanation": "`0 && x` is `0`, and React renders numbers. Write `count > 0 && <Badge />` or a ternary.",
+      "snippet": "const count = 0;\nconst rendered = count && \"<Badge />\";\nconsole.log(JSON.stringify(rendered));",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A parent re-renders 60 times a second during a drag. A heavy child `<Chart data={data} />` receives the same `data` each time but still re-renders. What is the first thing to try?",
+    "mcq": {
+      "options": [
+        "Wrap `Chart` in `React.memo` and make sure `data` keeps the same reference between renders",
+        "Move `Chart` into its own `useEffect`",
+        "Give `Chart` a random `key` on each render",
+        "Convert `Chart` to a class component"
+      ],
+      "correctIndex": 0,
+      "explanation": "By default a child re-renders whenever its parent does. `React.memo` skips the render when props are shallow-equal, which only works if `data` is not recreated each time. A random key would remount it, which is worse.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-fundamentals-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-fundamentals",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Inside one click handler you call `setA(1)` and then `setB(2)`. How many times does the component re-render in React 18?",
+    "mcq": {
+      "options": [
+        "Once: React batches state updates from the same event",
+        "Twice: once per setter",
+        "Three times: once per setter plus a commit render",
+        "Zero until the next user event"
+      ],
+      "correctIndex": 0,
+      "explanation": "React 18 batches updates in event handlers, timeouts and promises alike, then renders once with both new values.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

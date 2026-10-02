@@ -44,6 +44,8 @@ import { SECTION_ORDER } from "../../../shared/sections";
 import { badRequest, conflict, forbidden, notFound, parseOrThrow } from "../lib/errors";
 import { newId, now } from "../lib/ids";
 import { publishIntegrityEvent } from "./admin/live";
+import { configOf, finishV4, isV4, itemsOf } from "../assessment/v4";
+import { V4_MAX_MINUTES } from "../../../shared/assessmentV4";
 
 const idParams = z.object({ id: z.string().min(1).max(64) });
 const itemParams = z.object({ id: z.string().min(1).max(64), itemId: z.string().min(1).max(64) });
@@ -100,7 +102,9 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
         deadlineAt: row.deadlineAt,
         hardWarnings: row.hardWarnings,
         hardLimit: HARD_LIMIT,
-        timeLimitMinutes: config.timeLimitMinutes ?? DEFAULT_TIME_LIMIT_MIN,
+        timeLimitMinutes: isV4(row) ? V4_MAX_MINUTES : (config.timeLimitMinutes ?? DEFAULT_TIME_LIMIT_MIN),
+        format: isV4(row) ? "v4" : "legacy",
+        ...(isV4(row) ? { itemCount: itemsOf(app.db, row.id).length } : {}),
       },
     };
   });
@@ -161,6 +165,19 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
     if (inline) recordConsent(app, request, assessment.id, user.id, inline);
 
     if (!hasCurrentConsent(app, assessment)) throw badRequest("Consent is required before starting.");
+
+    if (isV4(assessment)) {
+      // One clock for the whole sheet: a target of about 30 minutes, a hard stop at 50.
+      const startedAt = now();
+      const maxMinutes = configOf(assessment).maxMinutes ?? V4_MAX_MINUTES;
+      const deadlineAt = startedAt + maxMinutes * 60_000;
+      app.db
+        .update(schema.assessments)
+        .set({ status: "in_progress", startedAt, deadlineAt, lastHeartbeatAt: startedAt, config: { ...configOf(assessment), pausedMs: 0 } })
+        .where(eq(schema.assessments.id, assessment.id))
+        .run();
+      return { deadlineAt, config: { timeLimitMinutes: maxMinutes, hardLimit: HARD_LIMIT, areas: [] } };
+    }
 
     const blueprint = assessment.blueprint as Blueprint | null;
     if (!blueprint) throw badRequest("This assessment has no blueprint and cannot be started.");
@@ -410,6 +427,14 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
 
   app.post("/api/assessment/:id/submit", async (request) => {
     const { assessment } = load(app, request, "in_progress");
+    if (isV4(assessment)) {
+      const minFinish = configOf(assessment).minFinishMinutes;
+      if (minFinish && assessment.startedAt && now() < assessment.startedAt + minFinish * 60_000 && !expired(assessment)) {
+        throw conflict(`Finish opens after ${minFinish} minutes.`);
+      }
+      finishV4(app.db, assessment, "submitted");
+      return { ok: true, status: "submitted" };
+    }
     finishAndEvaluate(app, assessment.id, "submitted");
     return { ok: true, status: "submitted" };
   });
@@ -479,7 +504,7 @@ function hasCurrentConsent(app: FastifyInstance, assessment: typeof schema.asses
   return assessment.consentAt !== null;
 }
 
-function load(app: FastifyInstance, request: Parameters<typeof requireActiveUser>[0], expect: "ready" | "in_progress" | "any") {
+export function load(app: FastifyInstance, request: Parameters<typeof requireActiveUser>[0], expect: "ready" | "in_progress" | "any") {
   const user = requireActiveUser(request);
   const { id } = parseOrThrow(idParams, request.params);
 
@@ -505,7 +530,7 @@ function load(app: FastifyInstance, request: Parameters<typeof requireActiveUser
   return { assessment, user };
 }
 
-function expired(assessment: typeof schema.assessments.$inferSelect): boolean {
+export function expired(assessment: typeof schema.assessments.$inferSelect): boolean {
   return assessment.deadlineAt !== null && now() > assessment.deadlineAt;
 }
 

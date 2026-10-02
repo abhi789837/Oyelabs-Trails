@@ -265,6 +265,19 @@ export const assessmentItems = sqliteTable(
     autoScore: integer("auto_score"),
     aiScore: integer("ai_score"),
     aiFeedback: text("ai_feedback"),
+    /** v4: the bank item this was copied from, for stats and "never seen before". */
+    bankItemId: text("bank_item_id"),
+    /** v4: order on the sheet, 0-based. */
+    position: integer("position"),
+    /** v4: Run presses counted by the server. The third one submits the item. */
+    runsUsed: integer("runs_used").notNull().default(0),
+    flagged: integer("flagged", { mode: "boolean" }).notNull().default(false),
+    /** v4: the learner's latest unsubmitted answer or code, autosaved. */
+    draft: text("draft", { mode: "json" }).$type<unknown>(),
+    /** v4: set when the item is submitted (explicitly, by the third run, or at the deadline). */
+    lockedAt: integer("locked_at"),
+    /** v4: 0..1 with partial credit; null until graded (a written task waits for its rubric). */
+    score: real("score"),
   },
   (t) => [
     index("assessment_items_assessment_idx").on(t.assessmentId),
@@ -1200,3 +1213,47 @@ export const appMeta = sqliteTable("app_meta", {
   value: text("value").notNull(),
   updatedAt: integer("updated_at").notNull(),
 });
+
+// ---------------------------------------------------------------------------
+// v4: the question bank
+// ---------------------------------------------------------------------------
+
+/**
+ * Reusable assessment items. An assessment is assembled from these by code, with no model call.
+ * Engineering items are coding/mcq; PM and BD items are task/mcq. See shared/bank.ts.
+ */
+export const questionBank = sqliteTable(
+  "question_bank",
+  {
+    id: text("id").primaryKey(),
+    departmentId: text("department_id").notNull(),
+    skillId: text("skill_id").notNull(),
+    trackId: text("track_id"),
+    stackId: text("stack_id"),
+    /** Sandbox language for coding items (and for an MCQ's runnable snippet). */
+    language: text("language"),
+    type: text("type").$type<"coding" | "mcq" | "task">().notNull(),
+    difficulty: integer("difficulty").notNull(),
+    prompt: text("prompt").notNull(),
+    /** Coding: mode, functionName, starter code, reference solution, sample and hidden tests. */
+    coding: text("coding", { mode: "json" }).$type<unknown>(),
+    /** MCQ: options, the answer, the explanation, an optional runnable snippet. */
+    mcq: text("mcq", { mode: "json" }).$type<unknown>(),
+    /** Task: the full task including its rubric or answer. */
+    task: text("task", { mode: "json" }).$type<unknown>(),
+    estMinutes: real("est_minutes").notNull().default(2),
+    timesUsed: integer("times_used").notNull().default(0),
+    timesScored: integer("times_scored").notNull().default(0),
+    scoreSum: real("score_sum").notNull().default(0),
+    discrimination: real("discrimination"),
+    status: text("status").$type<"draft" | "active" | "retired">().notNull().default("draft"),
+    retiredReason: text("retired_reason"),
+    source: text("source").$type<"seed" | "generated" | "admin">().notNull().default("seed"),
+    validatedAt: integer("validated_at"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [
+    index("question_bank_pick_idx").on(t.departmentId, t.status, t.skillId, t.type, t.difficulty),
+  ],
+);

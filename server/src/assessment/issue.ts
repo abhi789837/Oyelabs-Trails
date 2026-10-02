@@ -6,18 +6,27 @@ import { enqueue } from "../jobs/queue";
 import { writeAudit } from "../lib/audit";
 import { badRequest, conflict, notFound } from "../lib/errors";
 import { newId, now } from "../lib/ids";
+import { queueBankFill } from "../bank/fill";
+import { assembleInto } from "./v4";
 
 export interface IssueInput {
   userId: string;
   actorId: string;
   label?: string | null;
   timeLimitMinutes?: number | null;
+  /**
+   * `v4` (default): assembled from the question bank right now — no model call, `ready` at once.
+   * `legacy`: the v3 generated, adaptive assessment, kept for one release.
+   */
+  format?: "v4" | "legacy";
 }
 
 export interface IssueResult {
   assessmentId: string;
-  jobId: string;
-  status: "generating";
+  jobId: string | null;
+  status: "generating" | "ready";
+  /** v4: skills the bank could not fill, already queued for a one-off gap fill. */
+  shortfalls?: { skillId: string; type: string; missing: number }[];
 }
 
 /**
@@ -51,6 +60,43 @@ export function issueAssessment(app: FastifyInstance, input: IssueInput): IssueR
 
   const assessmentId = newId();
   const attemptNo = (latest?.attemptNo ?? 0) + 1;
+
+  if ((input.format ?? "v4") === "v4") {
+    app.db
+      .insert(schema.assessments)
+      .values({
+        id: assessmentId,
+        userId: input.userId,
+        attemptNo,
+        label: input.label ?? null,
+        status: "generating",
+        config: { format: "v4" },
+        hardWarnings: 0,
+        softWarnings: 0,
+        createdBy: input.actorId,
+        createdAt: now(),
+      })
+      .run();
+    let config;
+    try {
+      config = assembleInto(app.db, assessmentId, input.userId);
+    } catch (error) {
+      app.db.delete(schema.assessments).where(eq(schema.assessments.id, assessmentId)).run();
+      throw error;
+    }
+    // Deterministic and reviewed once as bank items, so there is no per-sitting approval gate.
+    app.db.update(schema.assessments).set({ status: "ready", config, approvedAt: now() }).where(eq(schema.assessments.id, assessmentId)).run();
+    if (config.shortfalls.length > 0) queueBankFill(app.db, config.departmentId, config.shortfalls);
+    writeAudit(app.db, {
+      actorId: input.actorId,
+      action: "assessment.issued",
+      targetType: "assessment",
+      targetId: assessmentId,
+      details: { userId: input.userId, attemptNo, label: input.label ?? null, format: "v4", shortfalls: config.shortfalls.length },
+    });
+    return { assessmentId, jobId: null, status: "ready", shortfalls: config.shortfalls };
+  }
+
   app.db
     .insert(schema.assessments)
     .values({

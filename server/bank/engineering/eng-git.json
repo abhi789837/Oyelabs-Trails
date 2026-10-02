@@ -1,0 +1,1591 @@
+[
+  {
+    "id": "eng-git-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`countCommits` receives the text output of `git log --oneline` and should return how many commits it lists. Fix it so empty output and a trailing newline are handled.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "countCommits",
+      "starterCode": "function countCommits(log) {\n  return log.split(\"\\n\").length;\n}",
+      "referenceSolution": "function countCommits(log) {\n  return log.split(\"\\n\").filter((line) => line.trim() !== \"\").length;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "a1b2c3d Fix typo in header\n9f8e7d6 Add login form"
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "abc1234 Initial commit\n"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "1111111 a\n2222222 b\n3333333 c"
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            "\n\n"
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`untracked` receives the output of `git status --short`. Untracked files appear as `?? <path>`. Return the list of untracked paths, in order. The current version returns paths with a leading space.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "untracked",
+      "starterCode": "def untracked(status):\n    return [line[2:] for line in status.splitlines() if line.startswith(\"??\")]",
+      "referenceSolution": "def untracked(status):\n    return [line[3:] for line in status.splitlines() if line.startswith(\"?? \")]",
+      "sampleTests": [
+        {
+          "args": [
+            "?? notes.txt\n M app.js"
+          ],
+          "expected": [
+            "notes.txt"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            " M a.js\nA  b.js"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "?? a\n?? dir/b.txt"
+          ],
+          "expected": [
+            "a",
+            "dir/b.txt"
+          ]
+        },
+        {
+          "args": [
+            "M  x.py\n?? .env.local"
+          ],
+          "expected": [
+            ".env.local"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This `.gitignore` was added to a Node.js project. Mark the lines that will cause trouble.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "node_modules/",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "*.js",
+          "issue": "Ignores every JavaScript file, including the source code you need to commit."
+        },
+        {
+          "id": "s3",
+          "text": "dist/",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": ".env",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "!.env",
+          "issue": "Re-includes `.env` right after ignoring it, so secrets get committed."
+        },
+        {
+          "id": "s6",
+          "text": ".DS_Store",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-git-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You need to start a feature in a fresh clone and share it with your team. Order the steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "`git switch -c feature/signup` to create and move to a new branch"
+        },
+        {
+          "id": "r2",
+          "label": "Edit the files for the feature"
+        },
+        {
+          "id": "r3",
+          "label": "`git add` the changed files"
+        },
+        {
+          "id": "r4",
+          "label": "`git commit -m \"Add signup form\"`"
+        },
+        {
+          "id": "r5",
+          "label": "`git push -u origin feature/signup`"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Branch first so the work never lands on `main`, stage then commit, and push with `-u` so the branch tracks the remote."
+    }
+  },
+  {
+    "id": "eng-git-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You ran `git status --short` before your first commit on a new project. Mark the files that should **not** be committed.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": " M src/app.js",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "A  .env",
+          "issue": "Holds secrets; it belongs in `.gitignore`, not in history."
+        },
+        {
+          "id": "s3",
+          "text": "A  node_modules/lodash/index.js",
+          "issue": "Installed dependencies are rebuilt from `package.json`; never commit `node_modules`."
+        },
+        {
+          "id": "s4",
+          "text": " M README.md",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "A  src/utils.js",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "A  package-lock.json",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-git-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You run `git push` on `main` and get: `! [rejected] main -> main (non-fast-forward)`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You run `git push` on `main` and get: `! [rejected] main -> main (non-fast-forward)`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What does the error mean?",
+          "options": [
+            "The remote has commits that your local branch does not have",
+            "You do not have permission to push",
+            "Your commit message is too long",
+            "The remote repository was deleted"
+          ],
+          "correctIndex": 0,
+          "explanation": "Non-fast-forward means the remote moved ahead; pushing would discard those commits."
+        },
+        {
+          "id": "q2",
+          "question": "What should you do next?",
+          "options": [
+            "`git push --force` to overwrite the remote",
+            "`git pull` (or `git pull --rebase`), fix any conflicts, then push again",
+            "Delete your local repo and clone again, losing your commit",
+            "Rename your branch and push that instead"
+          ],
+          "correctIndex": 1,
+          "explanation": "Bring in the remote commits first, then push. Force-pushing a shared branch throws away teammates' work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `git add src/app.js` do?",
+    "mcq": {
+      "options": [
+        "Stages the current contents of the file so the next commit includes them",
+        "Creates a commit containing the file",
+        "Uploads the file to GitHub",
+        "Starts tracking the file but never includes later edits"
+      ],
+      "correctIndex": 0,
+      "explanation": "`git add` copies the file's current state into the staging area (index). Nothing is committed or pushed until `git commit` and `git push`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `git fetch` and `git pull`?",
+    "mcq": {
+      "options": [
+        "`fetch` downloads remote commits without changing your branch; `pull` fetches and then merges (or rebases) into your branch",
+        "`fetch` uploads your commits; `pull` downloads them",
+        "They are identical aliases",
+        "`pull` only works on `main`; `fetch` works on any branch"
+      ],
+      "correctIndex": 0,
+      "explanation": "`git pull` is `git fetch` followed by integrating the fetched branch. `git fetch` alone is safe to run any time: it only updates remote-tracking branches like `origin/main`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which command shows what you changed but have **not** staged yet?",
+    "mcq": {
+      "options": [
+        "`git diff`",
+        "`git diff --staged`",
+        "`git log`",
+        "`git show HEAD`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Plain `git diff` compares the working tree with the staging area. `git diff --staged` compares staging with the last commit.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`currentBranch` receives the output of `git branch`. The current branch is the line starting with `* `. Return its name, or `null` if there is none (for example, empty output).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "currentBranch",
+      "starterCode": "function currentBranch(output) {\n  return output.split(\"\\n\")[0].trim();\n}",
+      "referenceSolution": "function currentBranch(output) {\n  const line = output.split(\"\\n\").find((l) => l.startsWith(\"* \"));\n  return line ? line.slice(2).trim() : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "  develop\n* feature/login\n  main"
+          ],
+          "expected": "feature/login"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "* main"
+          ],
+          "expected": "main"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "  a\n  b\n* c"
+          ],
+          "expected": "c"
+        },
+        {
+          "args": [
+            "  main\n  release/1.2"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "`is_conventional` checks a commit subject against the team rule: `type(optional-scope)!: description`, where type is one of `feat`, `fix`, `docs`, `chore`, `refactor`, `test` (lowercase), the scope is lowercase letters, digits or `-`, `!` is optional, and there is a space then a non-empty description. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "is_conventional",
+      "starterCode": "TYPES = {\"feat\", \"fix\", \"docs\", \"chore\", \"refactor\", \"test\"}\n\ndef is_conventional(msg):\n    return msg.split(\":\")[0] in TYPES",
+      "referenceSolution": "import re\n\ndef is_conventional(msg):\n    return re.match(r\"^(feat|fix|docs|chore|refactor|test)(\\([a-z0-9-]+\\))?!?: \\S\", msg) is not None",
+      "sampleTests": [
+        {
+          "args": [
+            "feat: add login"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "update stuff"
+          ],
+          "expected": false
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "fix(api): handle null user"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "feat:"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "feat!: drop node 16"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "Feat: capitalised"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "chore(deps-dev): bump vitest"
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "You made two commits on your local `main` that were meant for a feature branch. Nothing has been pushed yet.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You made two commits on your local `main` that were meant for a feature branch. Nothing has been pushed yet.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you keep the two commits on a new branch?",
+          "options": [
+            "`git branch feature/report` while on `main`",
+            "`git stash`",
+            "`git revert HEAD~2`",
+            "`git push origin main`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`git branch <name>` creates a branch pointing at your current commit, so the two commits are now safe on it."
+        },
+        {
+          "id": "q2",
+          "question": "Now `main` must match the remote again. What do you run on `main`?",
+          "options": [
+            "`git reset --hard origin/main`",
+            "`git revert HEAD` twice and push",
+            "`git rebase -i` and drop nothing",
+            "`git pull --force`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The commits live on `feature/report`, and nothing was pushed, so moving `main` back to `origin/main` is safe and leaves no extra revert commits."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`git merge main` into your feature branch reported conflicts. Order the steps to finish the merge properly.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Run `git status` to see which files are conflicted"
+        },
+        {
+          "id": "r2",
+          "label": "Open each conflicted file and resolve the `<<<<<<<` / `>>>>>>>` sections"
+        },
+        {
+          "id": "r3",
+          "label": "Run the tests and the app locally"
+        },
+        {
+          "id": "r4",
+          "label": "`git add` each resolved file"
+        },
+        {
+          "id": "r5",
+          "label": "`git commit` to conclude the merge"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Find the conflicts, resolve them, prove the result works, then mark them resolved and commit the merge."
+    }
+  },
+  {
+    "id": "eng-git-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "These are the commit subjects on a pull request. Mark the ones a reviewer should ask to reword.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "fix",
+          "issue": "Says nothing about what was fixed."
+        },
+        {
+          "id": "s2",
+          "text": "Add rate limit to login endpoint",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "WIP",
+          "issue": "A work-in-progress marker, not a description of the change."
+        },
+        {
+          "id": "s4",
+          "text": "Update README with local setup steps",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "asdf",
+          "issue": "Meaningless; the history becomes useless for `git log` and blame."
+        },
+        {
+          "id": "s6",
+          "text": "Move user queries into UserRepository",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Handle expired tokens in auth middleware",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-git-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A teammate pushed a commit that added `.env` with the production database password to `main` an hour ago.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A teammate pushed a commit that added `.env` with the production database password to `main` an hour ago.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the first thing to do?",
+          "options": [
+            "Rotate the database password",
+            "Delete the file in a new commit",
+            "Make the repository private",
+            "Ask everyone not to look at the commit"
+          ],
+          "correctIndex": 0,
+          "explanation": "Once a secret has been pushed, treat it as leaked. Rotating it is the only step that actually removes the risk."
+        },
+        {
+          "id": "q2",
+          "question": "How do you stop `.env` being tracked from now on, keeping the local file?",
+          "options": [
+            "Add `.env` to `.gitignore` and run `git rm --cached .env`, then commit",
+            "Add `.env` to `.gitignore` only",
+            "`git rm .env` and commit",
+            "`git update-index --assume-unchanged .env`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`.gitignore` does not affect files already tracked. `git rm --cached` untracks the file without deleting your copy."
+        },
+        {
+          "id": "q3",
+          "question": "After that commit, is the old password still in the repository?",
+          "options": [
+            "Yes, it is still in the history of the earlier commit",
+            "No, deleting the file removes it from every commit",
+            "Only if someone cloned before the delete"
+          ],
+          "correctIndex": 0,
+          "explanation": "Commits are snapshots; the earlier commit still contains the file. That is why rotation comes first."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A bad commit is already pushed to the shared `main` branch. Which is the safe way to undo it?",
+    "mcq": {
+      "options": [
+        "`git revert <sha>` and push the new commit",
+        "`git reset --hard HEAD~1` and `git push --force`",
+        "`git commit --amend` and push",
+        "Delete the branch on the remote and push it again"
+      ],
+      "correctIndex": 0,
+      "explanation": "`git revert` adds a new commit that undoes the change, so nobody's history is rewritten. Reset plus force-push breaks every teammate who already pulled.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You are halfway through a change when an urgent bug needs fixing on another branch. What does `git stash` do for you?",
+    "mcq": {
+      "options": [
+        "Saves your uncommitted changes and cleans the working tree, so you can switch branches and restore them later with `git stash pop`",
+        "Creates a hidden commit on `main`",
+        "Pushes your changes to a remote branch called `stash`",
+        "Deletes your uncommitted changes permanently"
+      ],
+      "correctIndex": 0,
+      "explanation": "Stash shelves working-tree and staged changes locally. `git stash pop` reapplies them and removes the stash entry.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `git diff --staged` show?",
+    "mcq": {
+      "options": [
+        "The changes staged for the next commit, compared with the last commit",
+        "Unstaged changes in the working tree",
+        "The difference between your branch and `origin/main`",
+        "Every commit not yet pushed"
+      ],
+      "correctIndex": 0,
+      "explanation": "`--staged` (same as `--cached`) shows exactly what `git commit` would record. Checking it before committing catches stray files.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`countByType` receives `git log --oneline` output (`<sha> <subject>`) and counts commits by conventional type: `feat`, `fix`, `docs` or `chore`, optionally followed by `(scope)` and/or `!` before the colon. Anything else counts as `other`. Fix it: scoped subjects like `feat(api): ...` are counted as `other`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "countByType",
+      "starterCode": "function countByType(log) {\n  const counts = {};\n  for (const line of log.split(\"\\n\")) {\n    if (!line.trim()) continue;\n    const subject = line.slice(line.indexOf(\" \") + 1);\n    const m = subject.match(/^(feat|fix|docs|chore):/);\n    const type = m ? m[1] : \"other\";\n    counts[type] = (counts[type] || 0) + 1;\n  }\n  return counts;\n}",
+      "referenceSolution": "function countByType(log) {\n  const counts = {};\n  for (const line of log.split(\"\\n\")) {\n    if (!line.trim()) continue;\n    const subject = line.slice(line.indexOf(\" \") + 1);\n    const m = subject.match(/^(feat|fix|docs|chore)(\\([^)]*\\))?!?:/);\n    const type = m ? m[1] : \"other\";\n    counts[type] = (counts[type] || 0) + 1;\n  }\n  return counts;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "a1b2c3d feat: login\nb2c3d4e fix: typo\nc3d4e5f Merge branch 'x'"
+          ],
+          "expected": {
+            "feat": 1,
+            "fix": 1,
+            "other": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "a1 feat(api): x\nb2 feat: y"
+          ],
+          "expected": {
+            "feat": 2
+          }
+        },
+        {
+          "args": [
+            "a1 docs(readme): z\nb2 chore!: bump node"
+          ],
+          "expected": {
+            "docs": 1,
+            "chore": 1
+          }
+        },
+        {
+          "args": [
+            "a1 featuring: nope"
+          ],
+          "expected": {
+            "other": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`next_version` picks the next semantic version from the commit subjects since the last release: any subject containing `BREAKING CHANGE` or `!:` bumps major, otherwise any starting with `feat` bumps minor, otherwise patch. Lower parts reset to 0 on a bump, and with no commits the version stays the same. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "next_version",
+      "starterCode": "def next_version(version, messages):\n    major, minor, patch = map(int, version.split(\".\"))\n    if any(\"BREAKING CHANGE\" in m or \"!:\" in m for m in messages):\n        major += 1\n    elif any(m.startswith(\"feat\") for m in messages):\n        minor += 1\n    else:\n        patch += 1\n    return f\"{major}.{minor}.{patch}\"",
+      "referenceSolution": "def next_version(version, messages):\n    if not messages:\n        return version\n    major, minor, patch = map(int, version.split(\".\"))\n    if any(\"BREAKING CHANGE\" in m or \"!:\" in m for m in messages):\n        return f\"{major + 1}.0.0\"\n    if any(m.startswith(\"feat\") for m in messages):\n        return f\"{major}.{minor + 1}.0\"\n    return f\"{major}.{minor}.{patch + 1}\"",
+      "sampleTests": [
+        {
+          "args": [
+            "1.4.2",
+            [
+              "fix: typo"
+            ]
+          ],
+          "expected": "1.4.3"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "1.4.2",
+            [
+              "feat: export csv",
+              "fix: y"
+            ]
+          ],
+          "expected": "1.5.0"
+        },
+        {
+          "args": [
+            "1.4.2",
+            [
+              "feat!: drop v1 api"
+            ]
+          ],
+          "expected": "2.0.0"
+        },
+        {
+          "args": [
+            "0.9.9",
+            []
+          ],
+          "expected": "0.9.9"
+        },
+        {
+          "args": [
+            "2.0.0",
+            [
+              "docs: readme"
+            ]
+          ],
+          "expected": "2.0.1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "You ran `git reset --hard HEAD~3` on your feature branch and lost three commits you needed. Order the recovery steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Run `git reflog` to list where `HEAD` has been"
+        },
+        {
+          "id": "r2",
+          "label": "Find the entry just before the reset and copy its sha"
+        },
+        {
+          "id": "r3",
+          "label": "`git branch rescue <sha>` to put a branch on it"
+        },
+        {
+          "id": "r4",
+          "label": "`git log rescue` to confirm the three commits are there"
+        },
+        {
+          "id": "r5",
+          "label": "Reset or merge your feature branch onto `rescue`"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "The reflog still records the old tip. Pin it with a branch before doing anything else, check it, then move your branch back."
+    }
+  },
+  {
+    "id": "eng-git-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Release `1.8` is cut on `release/1.8` and in QA. A production bug needs a fix in both `release/1.8` and `main`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Release `1.8` is cut on `release/1.8` and in QA. A production bug needs a fix in both `release/1.8` and `main`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Where do you make the fix first?",
+          "options": [
+            "On a branch off `release/1.8`, merged into the release, then brought to `main`",
+            "On `main` only; the release will pick it up next time",
+            "Directly on `release/1.8` and `main` as two unrelated hand-written commits",
+            "On a tag `v1.8.0`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Fix where it ships first, then carry the same commit to `main` so the fix is not lost in the next release."
+        },
+        {
+          "id": "q2",
+          "question": "Which command brings that single commit onto `main`?",
+          "options": [
+            "`git cherry-pick <sha>`",
+            "`git merge release/1.8 --squash` with every release change",
+            "`git rebase main release/1.8`",
+            "`git revert <sha>`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`cherry-pick` reapplies one commit's change on the current branch, without pulling in other release-only work."
+        },
+        {
+          "id": "q3",
+          "question": "The cherry-pick conflicts in a file another team owns and you do not understand the conflict. What now?",
+          "options": [
+            "Pause the cherry-pick and resolve it with the file's owner",
+            "Run `git checkout --ours` on the file and continue",
+            "Delete the conflicting lines and continue"
+          ],
+          "correctIndex": 0,
+          "explanation": "Picking a side blindly can silently drop the fix or their work. The owner knows which lines must survive."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A teammate posted these instructions for tidying up `feature/payments`, a branch three people push to. Mark the risky lines.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "`git fetch origin`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "`git switch feature/payments`",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "`git rebase -i origin/main` to squash everything into one commit",
+          "issue": "Rewriting a branch others push to forces them to reconcile rewritten history; agree on it first or squash at merge time."
+        },
+        {
+          "id": "s4",
+          "text": "`git push --force origin feature/payments`",
+          "issue": "Plain `--force` overwrites anything teammates pushed meanwhile; at least use `--force-with-lease`."
+        },
+        {
+          "id": "s5",
+          "text": "`git log --oneline -5` to check the result",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "`git clean -fdx` to remove build leftovers",
+          "issue": "`-x` also deletes ignored files such as `.env` and local config."
+        },
+        {
+          "id": "s7",
+          "text": "Open the pull request against `main`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-git-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Every `git pull` on your feature branch creates a commit like `Merge branch 'main' of github.com:org/app`, cluttering the history.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Every `git pull` on your feature branch creates a commit like `Merge branch 'main' of github.com:org/app`, cluttering the history.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why do these commits appear?",
+          "options": [
+            "Your branch and the remote both had new commits, so `pull` merged them",
+            "Git always creates a merge commit on pull",
+            "Someone force-pushed to the remote",
+            "Your `.gitignore` is misconfigured"
+          ],
+          "correctIndex": 0,
+          "explanation": "When both sides diverged, the default pull integrates by merging, which needs a merge commit."
+        },
+        {
+          "id": "q2",
+          "question": "What gives you a straight history instead?",
+          "options": [
+            "`git pull --rebase` (or `git config pull.rebase true`)",
+            "`git pull --no-commit`",
+            "`git fetch` then `git merge --no-ff`",
+            "`git pull --squash`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rebasing replays your local commits on top of the fetched ones, so no merge commit is needed."
+        },
+        {
+          "id": "q3",
+          "question": "When should you **not** rebase this way?",
+          "options": [
+            "When the local commits being rebased were already pushed and others built on them",
+            "When the remote has new commits",
+            "When you are on a feature branch"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rebase rewrites the commits it replays. Rewriting published commits others depend on breaks their history."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You rebase `feature` onto the latest `main`. What happens to the commits on `feature`?",
+    "mcq": {
+      "options": [
+        "They are recreated with new commit ids on top of `main`; the old commits are no longer on the branch",
+        "They keep their ids and `main` is moved under them",
+        "They are merged into one merge commit",
+        "They are deleted and must be recovered from `git reflog`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A commit id is a hash that includes its parent, so replaying a commit onto a new parent produces a new id. That is why rebasing pushed commits needs a force push.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "When is `git merge feature` a fast-forward merge?",
+    "mcq": {
+      "options": [
+        "When the current branch has no commits that `feature` lacks, so Git just moves the pointer forward",
+        "When there are no conflicts",
+        "When `feature` has only one commit",
+        "When you run it with `--squash`"
+      ],
+      "correctIndex": 0,
+      "explanation": "If the current branch is an ancestor of `feature`, no merge commit is needed. `--no-ff` forces a merge commit anyway when you want the branch recorded.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does `git cherry-pick a1b2c3d` do on your current branch?",
+    "mcq": {
+      "options": [
+        "Creates a new commit applying the same change as `a1b2c3d`",
+        "Moves commit `a1b2c3d` from its branch to yours, removing it from the original",
+        "Merges the whole branch that contains `a1b2c3d`",
+        "Checks out the files of `a1b2c3d` without committing"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cherry-pick copies the change as a new commit with a new id. The original commit stays where it was.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`mergeBase(parents, a, b)` gets a commit graph as `{ sha: [parentShas] }` and should return the nearest common ancestor of `a` and `b` (what `git merge-base` reports for these simple histories), or `null` if there is none. A commit is its own ancestor. The current version only compares direct parents.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mergeBase",
+      "starterCode": "function mergeBase(parents, a, b) {\n  if (a === b) return a;\n  for (const p of parents[a] || []) {\n    if ((parents[b] || []).includes(p)) return p;\n  }\n  return null;\n}",
+      "referenceSolution": "function mergeBase(parents, a, b) {\n  const ancestorsOfA = new Set();\n  const stack = [a];\n  while (stack.length) {\n    const c = stack.pop();\n    if (ancestorsOfA.has(c)) continue;\n    ancestorsOfA.add(c);\n    stack.push(...(parents[c] || []));\n  }\n  const queue = [b];\n  const visited = new Set();\n  while (queue.length) {\n    const c = queue.shift();\n    if (ancestorsOfA.has(c)) return c;\n    if (visited.has(c)) continue;\n    visited.add(c);\n    queue.push(...(parents[c] || []));\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "A": [],
+              "B": [
+                "A"
+              ],
+              "C": [
+                "B"
+              ],
+              "D": [
+                "B"
+              ],
+              "E": [
+                "D"
+              ]
+            },
+            "C",
+            "E"
+          ],
+          "expected": "B"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "A": [],
+              "B": [
+                "A"
+              ],
+              "C": [
+                "B"
+              ],
+              "D": [
+                "B"
+              ],
+              "E": [
+                "D"
+              ]
+            },
+            "C",
+            "C"
+          ],
+          "expected": "C"
+        },
+        {
+          "args": [
+            {
+              "A": [],
+              "B": [
+                "A"
+              ],
+              "C": [
+                "B"
+              ],
+              "D": [
+                "B"
+              ],
+              "E": [
+                "D"
+              ]
+            },
+            "E",
+            "D"
+          ],
+          "expected": "D"
+        },
+        {
+          "args": [
+            {
+              "X": [],
+              "Y": []
+            },
+            "X",
+            "Y"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "A": [],
+              "B": [
+                "A"
+              ],
+              "C": [
+                "A"
+              ],
+              "M": [
+                "B",
+                "C"
+              ],
+              "F": [
+                "C"
+              ]
+            },
+            "M",
+            "F"
+          ],
+          "expected": "C"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`big_files(numstat, limit)` reads `git diff --numstat` output (`added<TAB>deleted<TAB>path`) for a PR-size check. Return the paths whose added + deleted lines exceed `limit`, largest first, ties by path ascending. Binary files show `-` for both counts and must be skipped. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "big_files",
+      "starterCode": "def big_files(numstat, limit):\n    out = []\n    for line in numstat.splitlines():\n        added, deleted, path = line.split(\"\\t\")\n        total = int(added) + int(deleted)\n        if total > limit:\n            out.append((total, path))\n    out.sort(reverse=True)\n    return [p for _, p in out]",
+      "referenceSolution": "def big_files(numstat, limit):\n    out = []\n    for line in numstat.splitlines():\n        if not line.strip():\n            continue\n        added, deleted, path = line.split(\"\\t\", 2)\n        if added == \"-\" or deleted == \"-\":\n            continue\n        total = int(added) + int(deleted)\n        if total > limit:\n            out.append((-total, path))\n    out.sort()\n    return [p for _, p in out]",
+      "sampleTests": [
+        {
+          "args": [
+            "120\t30\tsrc/api.ts\n2\t1\tREADME.md",
+            100
+          ],
+          "expected": [
+            "src/api.ts"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "",
+            10
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "-\t-\tlogo.png\n50\t60\tapp.py",
+            100
+          ],
+          "expected": [
+            "app.py"
+          ]
+        },
+        {
+          "args": [
+            "300\t0\tb.ts\n200\t100\ta.ts\n10\t0\tc.ts",
+            50
+          ],
+          "expected": [
+            "a.ts",
+            "b.ts"
+          ]
+        },
+        {
+          "args": [
+            "5\t5\tx.md",
+            10
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "An AWS key was committed six months ago and the repo is shared with a contractor. You must purge it from history. Order the steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Revoke and rotate the AWS key"
+        },
+        {
+          "id": "r2",
+          "label": "Announce a short freeze on pushes to the repo"
+        },
+        {
+          "id": "r3",
+          "label": "Rewrite history with `git filter-repo` to remove the file"
+        },
+        {
+          "id": "r4",
+          "label": "Force-push all rewritten branches and tags"
+        },
+        {
+          "id": "r5",
+          "label": "Ask everyone to re-clone instead of pulling"
+        },
+        {
+          "id": "r6",
+          "label": "Ask the host to purge cached views and old PR refs"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Rotation first, because history rewriting never un-leaks a secret. Freeze so nobody pushes old history back, rewrite, push, make clones fresh, then clear host-side caches."
+    }
+  },
+  {
+    "id": "eng-git-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A feature merged into `main` via merge commit `M` broke production. The team wants it out now and back in next week once fixed.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A feature merged into `main` via merge commit `M` broke production. The team wants it out now and back in next week once fixed.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you undo the merge on `main`?",
+          "options": [
+            "`git revert -m 1 M`",
+            "`git revert M` (no options)",
+            "`git reset --hard M^` and force-push",
+            "`git cherry-pick -m 1 M`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Reverting a merge needs `-m 1` to say the first parent (`main`) is the mainline to keep."
+        },
+        {
+          "id": "q2",
+          "question": "Next week the fix is committed on the feature branch and merged again. Only the fix commit shows up; the original feature does not come back. Why, and what do you do?",
+          "options": [
+            "Git sees the original commits as already merged; revert the revert commit before merging",
+            "The merge failed silently; run it again with `--force`",
+            "The branch must be renamed first",
+            "Cherry-picking is the only way to merge a reverted branch"
+          ],
+          "correctIndex": 0,
+          "explanation": "The revert removed the changes but the commits stay in history as merged. Reverting the revert reintroduces them, then the fix applies on top."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A proposed repository policy for the main product repo. Mark the lines you would push back on.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Require one approving review on pull requests into `main`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Require CI status checks to pass before merging",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "Allow force-pushes to `main` for the whole team so rebases are easy",
+          "issue": "Anyone can then rewrite shared history and lose merged work; force-push to `main` should be blocked."
+        },
+        {
+          "id": "s4",
+          "text": "Keep deploy keys in `keys/` in the repo so new machines can deploy",
+          "issue": "Secrets in the repo are readable by everyone with access, forever in history."
+        },
+        {
+          "id": "s5",
+          "text": "Use squash merges for feature branches",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Delete release tags after each deploy to keep the tag list short",
+          "issue": "Tags are how you find exactly what was deployed for rollbacks and hotfixes."
+        },
+        {
+          "id": "s7",
+          "text": "Automatically delete merged feature branches",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-git-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "CI clones a large monorepo and the checkout takes four minutes.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "CI clones a large monorepo and the checkout takes four minutes.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "The build only needs the latest commit. What cuts clone time most?",
+          "options": [
+            "A shallow clone: `git clone --depth 1` (or `fetch-depth: 1`)",
+            "`git gc --aggressive` before every clone",
+            "Cloning over HTTPS instead of SSH",
+            "Running `git pull` twice"
+          ],
+          "correctIndex": 0,
+          "explanation": "A shallow clone downloads only the tip commit's objects instead of the whole history."
+        },
+        {
+          "id": "q2",
+          "question": "After the change, the version step `git describe --tags` fails with `No names found`. Why?",
+          "options": [
+            "The shallow clone has no tags or older commits to describe from",
+            "Tags are not supported in CI",
+            "`describe` needs a merge commit",
+            "The repo needs `git lfs`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`describe` walks history to the nearest tag; with depth 1 there is neither."
+        },
+        {
+          "id": "q3",
+          "question": "What is a sensible fix for just that job?",
+          "options": [
+            "Fetch full history and tags for the release job (`fetch-depth: 0` or `git fetch --unshallow --tags`)",
+            "Hard-code the version in CI",
+            "Go back to full clones for every job"
+          ],
+          "correctIndex": 0,
+          "explanation": "Keep fast shallow clones for ordinary builds and fetch the history only where a step needs it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-git-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why prefer `git push --force-with-lease` over `git push --force` after rebasing your branch?",
+    "mcq": {
+      "options": [
+        "It refuses to overwrite the remote branch if it moved since you last fetched, so you do not silently delete a teammate's push",
+        "It is faster because it sends fewer objects",
+        "It keeps the old commit ids on the remote",
+        "It works without permission to force-push"
+      ],
+      "correctIndex": 0,
+      "explanation": "The lease checks the remote ref still points where your remote-tracking branch says. If someone pushed in between, the push is rejected instead of discarding their commits.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Your teammate says: 'I reset my branch and lost commits, can you get them from your reflog?' Is that possible?",
+    "mcq": {
+      "options": [
+        "No. The reflog is local to each clone and is never pushed; they must use their own reflog",
+        "Yes, `git reflog` shows every developer's history",
+        "Yes, but only on `main`",
+        "Only if you both use the same remote"
+      ],
+      "correctIndex": 0,
+      "explanation": "Reflogs record movements of refs in your own repository. Their lost commits exist (for a while) only in their clone's reflog and object store.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-git-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-git",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A release branch needs a fix that exists as commit `F` on `main`, but `F` depends on a refactor commit `R` that came before it on `main`. Cherry-picking `F` alone conflicts. What is the most reasonable approach?",
+    "mcq": {
+      "options": [
+        "Cherry-pick `R` then `F` (in that order), or write a small release-specific fix if `R` is too big",
+        "Merge `main` into the release branch",
+        "Cherry-pick `F` with `--strategy-option theirs` and ship it",
+        "Revert `R` on `main` first"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cherry-picks carry changes, not context. Either bring the dependency too, or make a targeted fix for the release; merging `main` drags in unreleased work.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

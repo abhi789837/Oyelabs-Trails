@@ -147,7 +147,7 @@ describe("deleting", () => {
       method: "POST",
       url: `/api/admin/users/${learner.id}/assessments`,
       ...as(admin),
-      payload: {},
+      payload: { format: "legacy" },
     });
     const assessmentId: string = issued.json().assessmentId;
     await ctx.drainJobs();

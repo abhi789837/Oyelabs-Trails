@@ -59,6 +59,8 @@ export async function autoScoreItem(
     }
 
     case "explain":
+    case "task":
+      // `task` is v4-only and graded by assessment/v4.ts.
       return null;
   }
 }
@@ -76,5 +78,7 @@ export function hasResponse(kind: ItemKind, response: ItemResponse): boolean {
       return (response.code ?? "").trim().length > 0;
     case "explain":
       return (response.text ?? "").trim().length > 0;
+    case "task":
+      return false;
   }
 }

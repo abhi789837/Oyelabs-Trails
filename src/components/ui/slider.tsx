@@ -17,10 +17,12 @@ import { cn } from "@/lib/utils";
 export interface SliderProps extends Omit<React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>, "aria-label"> {
   /** One label per thumb, in order. */
   thumbLabels: readonly string[];
+  /** What a thumb's value reads as, when the number alone means nothing ("4" vs "High"). */
+  valueText?: (value: number) => string;
 }
 
 const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, SliderProps>(
-  ({ className, thumbLabels, ...props }, ref) => (
+  ({ className, thumbLabels, valueText, ...props }, ref) => (
     <SliderPrimitive.Root
       ref={ref}
       className={cn("relative flex w-full touch-none select-none items-center py-2", className)}
@@ -29,10 +31,11 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
       <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-surface-sunken">
         <SliderPrimitive.Range className="absolute h-full bg-primary" />
       </SliderPrimitive.Track>
-      {thumbLabels.map((label) => (
+      {thumbLabels.map((label, index) => (
         <SliderPrimitive.Thumb
           key={label}
           aria-label={label}
+          aria-valuetext={valueText && props.value?.[index] !== undefined ? valueText(props.value[index]) : undefined}
           className="block size-4 rounded-full border-2 border-primary bg-surface shadow-sm transition-transform duration-[120ms] hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong disabled:pointer-events-none disabled:opacity-50"
         />
       ))}

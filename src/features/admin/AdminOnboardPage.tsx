@@ -1,125 +1,53 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowLeft, Check, Plus, Sparkles, Trash2 } from "lucide-react";
+import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { EMPTY_PRIORITIES, type LearnerPriorities } from "@shared/builder";
-import type { ClaimedSkill, LearnerProfile } from "@shared/profile";
-import type { SkillLevel, TrackIdValue } from "@shared/enums";
-import type { TargetsRequest } from "@shared/targets";
-
-import type { AccentToken } from "@/types/curriculum";
+import type { UserSummary } from "@shared/admin";
+import { yearsFromBand, type SaveSetupRequest } from "@shared/setup";
 
 import { ApiRequestError } from "@/api/client";
-import { Field, FormAlert, NumberField, PasswordField, TextField } from "@/components/form/Field";
-import { Badge } from "@/components/ui/badge";
-import { StatusBadge } from "@/components/ui/status-badge";
+import { Field, FormAlert, PasswordField, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { useTracks } from "@/content";
 import { useCurrentUser } from "@/features/auth/AuthProvider";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
-import { duration, transition } from "@/lib/motion";
-import { passwordStrength } from "@/lib/password-strength";
-import { accentClasses } from "@/lib/accent";
 import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
-import { builderApi } from "./builder/api";
-import { PrioritiesFields, PrioritiesSummary } from "./builder/PrioritiesFields";
-import { TargetsFields, TargetsSummary } from "./builder/TargetsFields";
+import { setupApi } from "./setup/api";
+import { SetupForm, type SetupFormContext } from "./setup/SetupForm";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
 
-const LEVEL_LABELS: Record<SkillLevel, string> = {
-  1: "Aware",
-  2: "Can follow",
-  3: "Can build",
-  4: "Can design",
-  5: "Can teach",
-};
-
-/** What the notes field is worth aiming at. Not a limit — the server does not cap it. */
-const NOTES_TARGET = 400;
-
-const emptyProfile: LearnerProfile = {
-  roleTitle: null,
-  yearsExperience: null,
-  adminNotes: "",
-  claimedSkills: [],
-  targetTracks: [],
-};
-
-type StepId = "account" | "profile" | "skills" | "trails" | "priorities" | "review";
-
-const STEPS: { id: StepId; name: string; blurb: string }[] = [
-  { id: "account", name: "Account", blurb: "Who they are and how they sign in." },
-  { id: "profile", name: "Profile", blurb: "What you know before they are tested." },
-  { id: "skills", name: "Skills", blurb: "Your estimate of where they stand." },
-  { id: "trails", name: "Trails", blurb: "Where you want them to end up." },
-  { id: "priorities", name: "Targets", blurb: "What they are being trained for, in your order." },
-  { id: "review", name: "Review", blurb: "One last read before the account exists." },
-];
-
 /**
- * Onboarding (brief §13), as five steps rather than one long form.
+ * Onboarding (v4 Phase 3): the account, then the same Setup form the learner page uses.
  *
- * The form is split because the fields are not equally considered: a username is typed in seconds,
- * and the notes field — the single largest input to the AI blueprint — deserves a screen where it is
- * the only thing to look at. A wall of eight sections encourages skimming past exactly the field
- * that matters most.
+ * Two calls, in an order that matters. The account is created with `issueAssessment: false`, then
+ * the setup is saved with `assign` — so the assessment is built from the setup that was just saved,
+ * never from an empty one (the race the old three-call flow had). If the second call fails, the
+ * account already exists; the page remembers it, so pressing the button again saves the setup
+ * rather than trying to create the account twice.
  *
- * ## Two things this page does not do
- *
- * - **It does not validate the password itself.** `server/src/auth/password.ts` is the authority;
- *   `passwordStrength` mirrors it rule for rule and the meter reads from that one function, so the
- *   checklist and the 400 can never disagree. The submit button is not gated on the meter either —
- *   the server decides, and a client that refuses to submit something the server would accept is a
- *   bug that is invisible until someone complains.
- * - **It does not ask the server whether a username is free.** There is no such endpoint, and adding
- *   one would be a username oracle. A superadmin can already list every account, so the check runs
- *   against that list — which is honest about being a warning rather than a guarantee, because the
- *   real answer is the 409 on submit.
+ * The username check runs against the roster the admin can already list, as a hint: the 409 on
+ * submit is the real answer, and a dedicated "is this taken" endpoint would be a username oracle.
  */
 export default function AdminOnboardPage() {
   useDocumentTitle("Onboard a learner");
   const navigate = useNavigate();
-  // A superadmin's manifest is unfiltered, so this is the whole curriculum.
-  const tracks = useTracks();
-
   const me = useCurrentUser();
-  /* Only the superadmin may create staff, and the server enforces it — the control is hidden here
-     rather than shown-and-rejected, because an option that always fails is worse than none. */
+  /* Only the superadmin may create staff, and the server enforces it. */
   const mayCreateStaff = me.role === "superadmin";
+
   const [role, setRole] = useState<"learner" | "admin">("learner");
-  const [step, setStep] = useState<StepId>("account");
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [roleTitle, setRoleTitle] = useState("");
+  const [notes, setNotes] = useState("");
   const [passwordMode, setPasswordMode] = useState<"generate" | "set">("generate");
   const [password, setPassword] = useState("");
-  const [profile, setProfile] = useState<LearnerProfile>(emptyProfile);
-  const [issueAssessment, setIssueAssessment] = useState(true);
-  const [priorities, setPriorities] = useState<LearnerPriorities>(EMPTY_PRIORITIES);
-  /* The track, the stack and the ordered targets. Separate state from `priorities` because they land
-     in different tables — `learner_profiles` and `learner_targets` — and one endpoint writes both. */
-  const [targets, setTargets] = useState<TargetsRequest>({
-    track: "backend",
-    stack: "",
-    yearsExperience: null,
-    selfLevel: null,
-    targets: [],
-    skip: [],
-    hoursPerWeek: 15,
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [fields, setFields] = useState<Record<string, string>>({});
-  const [created, setCreated] = useState<{ username: string; displayName: string; password: string } | null>(null);
   const [takenUsernames, setTakenUsernames] = useState<Set<string> | null>(null);
+  const [created, setCreated] = useState<{ username: string; displayName: string; password: string } | null>(null);
+  /** The account from a submit whose setup save failed: retried without creating it again. */
+  const [pendingUser, setPendingUser] = useState<UserSummary | null>(null);
+  const [formKey, setFormKey] = useState(0);
 
-  // The existing roster, for the availability hint. A failure here is silent on purpose: the hint
-  // is a convenience, and an error banner about it would be noise on a form that is otherwise fine.
   useEffect(() => {
     const controller = new AbortController();
     adminApi
@@ -129,131 +57,212 @@ export default function AdminOnboardPage() {
     return () => controller.abort();
   }, []);
 
-  // The superadmin sees the full curriculum, so the module list is a fine source of skill areas.
-  const areaOptions = useMemo(
-    () => tracks.flatMap((track) => track.modules.filter((m) => m.available).map((m) => m.name)).sort(),
-    [tracks],
-  );
-
-  const update = (patch: Partial<LearnerProfile>) => setProfile((p) => ({ ...p, ...patch }));
-
-  const setSkill = (index: number, patch: Partial<ClaimedSkill>) =>
-    update({ claimedSkills: profile.claimedSkills.map((s, i) => (i === index ? { ...s, ...patch } : s)) });
-
   const trimmedUsername = username.trim().toLowerCase();
-  const usernameTaken = takenUsernames !== null && trimmedUsername.length > 0 && takenUsernames.has(trimmedUsername);
+  const usernameTaken =
+    pendingUser === null && takenUsernames !== null && trimmedUsername.length > 0 && takenUsernames.has(trimmedUsername);
+  const canSubmit = trimmedUsername.length > 0 && displayName.trim().length > 0 && !usernameTaken;
 
-  const index = STEPS.findIndex((s) => s.id === step);
-  const isLast = index === STEPS.length - 1;
-
-  /* Only the account step gates progress, and only on the two things that cannot be guessed later.
-     Every other step is skippable — an admin who knows nothing about a new hire's skills should be
-     able to onboard them and let the assessment find out, which is what it is for. */
-  const canAdvance =
-    step !== "account" || (trimmedUsername.length > 0 && displayName.trim().length > 0 && !usernameTaken);
-
-  const goTo = (next: StepId) => {
-    setStep(next);
-    // The steps are tall enough that advancing from the bottom of one lands mid-way down the next.
-    window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  const reset = () => {
+    setUsername("");
+    setDisplayName("");
+    setRoleTitle("");
+    setNotes("");
+    setPassword("");
+    setPendingUser(null);
+    setFormKey((k) => k + 1);
   };
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    if (submitting) return;
-    if (!isLast) {
-      if (canAdvance) goTo(STEPS[index + 1].id);
-      return;
-    }
-    setSubmitting(true);
-    setError(null);
-    setFields({});
-    try {
+  const createAccount = useCallback(
+    async (experienceBand: SaveSetupRequest["experienceBand"]) => {
       const result = await adminApi.onboard({
         username: username.trim(),
         displayName,
         role,
         ...(passwordMode === "set" && password ? { password } : {}),
         profile: {
-          ...profile,
-          // Drop rows the admin added but never filled in.
-          claimedSkills: profile.claimedSkills.filter((s) => s.area.trim().length > 0),
+          roleTitle: roleTitle.trim() || null,
+          yearsExperience: yearsFromBand(experienceBand),
+          adminNotes: notes,
+          claimedSkills: [],
+          targetTracks: [],
         },
-        issueAssessment,
+        // The setup save below issues it, after the setup exists.
+        issueAssessment: false,
       });
-      /* The server only returns a password it generated itself. When the admin typed one, it is
-         right here — and they still have to send it, so the same hand-off applies. Without this,
-         choosing "Set one now" silently skipped the invite step and dropped them on the People
-         list with nothing to copy. */
-      /* Saved separately, and deliberately not allowed to fail the onboarding. The account already
-         exists by this point; losing the priorities would be annoying, losing the account because
-         of them would be worse. They can be set again from the learner's page. */
-      const hasPriorities = priorities.targetRole.trim().length > 0 || priorities.mustHave.length > 0;
-      if (hasPriorities) {
-        try {
-          await builderApi.setPriorities(result.user.id, {
-            ...priorities,
-            mustHave: priorities.mustHave.filter((entry) => entry.skill.trim().length > 0),
-          });
-        } catch {
-          notify.error("The account was created, but the learning priorities did not save. Set them from their profile.");
-        }
-      }
-
-      /* Same rule as the priorities above: the account already exists by this point, so a failure
-         here is reported and survivable rather than fatal. The targets are the more important of the
-         two, though, so the message says where to go and does not pretend it was nothing. */
-      try {
-        await builderApi.setTargets(result.user.id, {
-          ...targets,
-          targets: targets.targets
-            .filter((entry) => entry.skill.trim().length > 0)
-            .map((entry, index) => ({ ...entry, position: index })),
-        });
-      } catch {
-        notify.error(
-          "The account was created, but their track and targets did not save. Set them on the AI path tab before issuing an assessment.",
-        );
-      }
-
+      /* The server returns only a password it generated; a typed one still has to be handed over. */
       const toSend = result.temporaryPassword ?? (passwordMode === "set" ? password : null);
-      if (toSend) {
-        setCreated({
-          username: result.user.username,
-          displayName: result.user.displayName,
-          password: toSend,
-        });
-        setUsername("");
-        setDisplayName("");
-        setPassword("");
-        setProfile(emptyProfile);
-        setPriorities(EMPTY_PRIORITIES);
-        setStep("account");
-      } else {
-        navigate("/admin/people");
-      }
-    } catch (err) {
-      if (err instanceof ApiRequestError) {
-        setError(err.message);
-        const errorFields = err.fields ?? {};
-        setFields(errorFields);
-        // Send the admin back to the step that owns the rejected field, rather than showing an
-        // error on the review screen about a box three steps behind them.
-        const owner = stepForField(Object.keys(errorFields)[0]);
-        if (owner) setStep(owner);
-      } else {
-        setError("Something went wrong. Try again.");
-      }
-    } finally {
-      setSubmitting(false);
+      if (toSend) setCreated({ username: result.user.username, displayName: result.user.displayName, password: toSend });
+      setTakenUsernames((current) => (current ? new Set(current).add(result.user.username.toLowerCase()) : current));
+      return { user: result.user, handedOver: Boolean(toSend) };
+    },
+    [username, displayName, role, passwordMode, password, roleTitle, notes],
+  );
+
+  const finish = (user: UserSummary, handedOver: boolean) => {
+    if (handedOver) {
+      reset();
+      window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    } else {
+      navigate(`/admin/people/${user.id}`);
     }
   };
 
+  const saveLearner = async (request: SaveSetupRequest) => {
+    let user = pendingUser;
+    let handedOver = created !== null;
+    if (!user) {
+      const result = await createAccount(request.experienceBand);
+      user = result.user;
+      handedOver = result.handedOver;
+    }
+    try {
+      await setupApi.save(user.id, request);
+    } catch (err) {
+      setPendingUser(user);
+      const reason = err instanceof ApiRequestError ? err.message : "the server did not answer";
+      throw Object.assign(
+        new Error(`The account was created, but the setup did not save (${reason}). Fix it and press the button again.`),
+        { fields: err instanceof ApiRequestError ? err.fields : undefined },
+      );
+    }
+    notify.success(
+      request.assign
+        ? `${user.displayName} is set up. The assessment is being built and waits for your approval.`
+        : `${user.displayName} is set up.`,
+    );
+    finish(user, handedOver);
+  };
+
+  const accountFields = ({ fields, pending }: SetupFormContext) => (
+    <section aria-labelledby="account-heading" className="space-y-5">
+      <h2 id="account-heading" className="font-display text-base font-semibold">
+        Account
+      </h2>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <TextField
+          label="Username"
+          required
+          value={username}
+          disabled={pending || pendingUser !== null}
+          error={fields.username ?? (usernameTaken ? "That username is already taken." : undefined)}
+          spellCheck={false}
+          autoCapitalize="none"
+          autoFocus
+          placeholder="priya.sharma"
+          hint={usernameTaken ? undefined : "Lowercase letters, digits, dot, dash or underscore."}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Full name"
+          required
+          value={displayName}
+          disabled={pending || pendingUser !== null}
+          error={fields.displayName}
+          placeholder="Priya Sharma"
+          onChange={(e) => setDisplayName(e.target.value)}
+        />
+        <TextField
+          label="Role title"
+          value={roleTitle}
+          disabled={pending || pendingUser !== null}
+          error={fields["profile.roleTitle"]}
+          placeholder="Frontend Engineer"
+          onChange={(e) => setRoleTitle(e.target.value)}
+        />
+      </div>
+
+      {mayCreateStaff && (
+        <fieldset className="space-y-2">
+          <legend className="mb-1.5 text-sm font-medium">Account type</legend>
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Choice
+              name="account-role"
+              checked={role === "learner"}
+              disabled={pending || pendingUser !== null}
+              onSelect={() => setRole("learner")}
+              title="Learner"
+              body="Takes assessments and works through a plan."
+            />
+            <Choice
+              name="account-role"
+              checked={role === "admin"}
+              disabled={pending || pendingUser !== null}
+              onSelect={() => setRole("admin")}
+              title="Admin"
+              body="Runs the console for learners. Cannot manage other admins."
+            />
+          </div>
+        </fieldset>
+      )}
+
+      <fieldset className="space-y-2">
+        <legend className="mb-1.5 text-sm font-medium">First password</legend>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <Choice
+            name="password-mode"
+            checked={passwordMode === "generate"}
+            disabled={pending || pendingUser !== null}
+            onSelect={() => setPasswordMode("generate")}
+            title="Generate one"
+            body="Shown to you once, then never again."
+          />
+          <Choice
+            name="password-mode"
+            checked={passwordMode === "set"}
+            disabled={pending || pendingUser !== null}
+            onSelect={() => setPasswordMode("set")}
+            title="Set one now"
+            body="For handing over in person."
+          />
+        </div>
+        {passwordMode === "set" && (
+          <PasswordField
+            label="Password"
+            value={password}
+            error={fields.password}
+            meter
+            username={username}
+            autoComplete="new-password"
+            disabled={pending || pendingUser !== null}
+            containerClassName="max-w-sm"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        )}
+        <p className="text-xs text-muted-foreground">They choose their own password at first sign-in.</p>
+      </fieldset>
+    </section>
+  );
+
+  const notesField = ({ fields, pending }: SetupFormContext) => (
+    <Field
+      label="Notes"
+      hint="What they have built, where they are strong or struggle. The assessment reads this."
+      error={fields["profile.adminNotes"]}
+    >
+      {({ id, describedBy, invalid }) => (
+        <textarea
+          id={id}
+          aria-describedby={describedBy}
+          aria-invalid={invalid || undefined}
+          rows={5}
+          value={notes}
+          disabled={pending || pendingUser !== null}
+          onChange={(e) => setNotes(e.target.value)}
+          className={cn(
+            "w-full rounded-md border border-input bg-surface px-3 py-2 text-sm leading-relaxed placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
+            invalid && "border-destructive",
+          )}
+          placeholder="Two years on our React dashboards. Comfortable with hooks; async error handling is shaky."
+        />
+      )}
+    </Field>
+  );
+
   return (
-    <div className="max-w-3xl px-4 py-8 sm:px-6">
+    <div className="max-w-6xl px-4 py-8 sm:px-6">
       <h1 className="text-2xl font-bold">Onboard a learner</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Creates the account and the profile the placement assessment is built from.
+        Creates the account and the setup their placement assessment is built from.
       </p>
 
       {created && (
@@ -270,638 +279,111 @@ export default function AdminOnboardPage() {
         />
       )}
 
-      <Stepper current={index} onJump={(i) => i < index && goTo(STEPS[i].id)} />
-
-      <form onSubmit={handleSubmit} className="mt-8" noValidate>
-        {error && (
-          <div className="mb-6">
-            <FormAlert>{error}</FormAlert>
-          </div>
-        )}
-
-        <div>
-          <h2 className="font-display text-lg font-semibold">{STEPS[index].name}</h2>
-          <p className="mt-0.5 text-sm text-muted-foreground">{STEPS[index].blurb}</p>
-        </div>
-
-        {/* One panel at a time, sliding in the direction of travel. `mode="wait"` so two tall
-            panels never overlap and double the page height mid-transition. */}
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -12 }}
-            transition={{ duration: duration.base }}
-            className="mt-6 space-y-6"
+      <div className="mt-8">
+        {role === "learner" ? (
+          <SetupForm
+            key={formKey}
+            initial={null}
+            onSave={saveLearner}
+            primaryLabel={pendingUser ? "Save setup & assign assessment" : "Create & assign assessment"}
+            secondaryLabel={pendingUser ? "Save setup" : "Create"}
+            canSubmit={canSubmit}
+            leading={accountFields}
+            trailing={notesField}
+          />
+        ) : (
+          <StaffForm
+            canSubmit={canSubmit}
+            onCreate={async () => {
+              const { user, handedOver } = await createAccount(null);
+              notify.success(`${user.displayName} can now sign in as an admin.`);
+              finish(user, handedOver);
+            }}
           >
-            {step === "account" && (
-              <>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <TextField
-                    label="Username"
-                    required
-                    value={username}
-                    error={fields.username ?? (usernameTaken ? "That username is already taken." : undefined)}
-                    spellCheck={false}
-                    autoCapitalize="none"
-                    autoFocus
-                    placeholder="priya.sharma"
-                    hint={
-                      usernameTaken
-                        ? undefined
-                        : trimmedUsername.length > 0 && takenUsernames !== null
-                          ? "Available."
-                          : "Lowercase letters, digits, dot, dash or underscore."
-                    }
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                  <TextField
-                    label="Full name"
-                    required
-                    value={displayName}
-                    error={fields.displayName}
-                    placeholder="Priya Sharma"
-                    onChange={(e) => setDisplayName(e.target.value)}
-                  />
-                </div>
-
-                <fieldset className="space-y-3">
-                  <legend className="text-sm font-medium">First password</legend>
-                  <PasswordChoice
-                    checked={passwordMode === "generate"}
-                    onSelect={() => setPasswordMode("generate")}
-                    title="Generate one for me"
-                    body="The server makes a readable 20-character password and shows it to you exactly once. Nothing stores it afterwards, which is why it cannot be looked up later."
-                  />
-                  <PasswordChoice
-                    checked={passwordMode === "set"}
-                    onSelect={() => setPasswordMode("set")}
-                    title="Set one now"
-                    body="Useful when you are handing it over in person."
-                  >
-                    <PasswordField
-                      label="Password"
-                      value={password}
-                      error={fields.password}
-                      meter
-                      username={username}
-                      autoComplete="new-password"
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </PasswordChoice>
-                  <p className="text-xs text-muted-foreground">
-                    Either way they choose their own password at first sign-in, and this one stops working then.
-                  </p>
-                </fieldset>
-
-                {mayCreateStaff && (
-                  <fieldset className="space-y-3">
-                    <legend className="text-sm font-medium">What kind of account</legend>
-                    <PasswordChoice
-                      checked={role === "learner"}
-                      onSelect={() => setRole("learner")}
-                      title="Learner"
-                      body="Takes assessments and works through a plan. Sees only their own trail."
-                    />
-                    <PasswordChoice
-                      checked={role === "admin"}
-                      onSelect={() => setRole("admin")}
-                      title="Admin"
-                      body="Runs the console for everyone: onboarding, assessments, plans, the live board. Cannot change the shared AI credential and cannot create or disable other admins — those stay with you."
-                    />
-                  </fieldset>
-                )}
-              </>
-            )}
-
-            {step === "profile" && (
-              <>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <TextField
-                    label="Role title"
-                    value={profile.roleTitle ?? ""}
-                    error={fields["profile.roleTitle"]}
-                    placeholder="Frontend Engineer"
-                    onChange={(e) => update({ roleTitle: e.target.value || null })}
-                  />
-                  <NumberField
-                    label="Years of experience"
-                    min={0}
-                    max={60}
-                    step={0.5}
-                    value={profile.yearsExperience}
-                    error={fields["profile.yearsExperience"]}
-                    onChange={(years) => update({ yearsExperience: years })}
-                  />
-                </div>
-
-                <Field
-                  label="Notes"
-                  error={fields["profile.adminNotes"]}
-                  hint="The single most useful input to the assessment. What have they built? Where are they strong, where do they struggle, how do they perform under pressure? Write plainly — nobody but you and the assessment sees this."
-                >
-                  {({ id, describedBy, invalid }) => (
-                    <>
-                      <textarea
-                        id={id}
-                        aria-describedby={describedBy}
-                        aria-invalid={invalid || undefined}
-                        rows={10}
-                        value={profile.adminNotes}
-                        onChange={(e) => update({ adminNotes: e.target.value })}
-                        className={cn(
-                          "w-full rounded-md border border-input bg-surface px-3 py-2 text-sm leading-relaxed placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong",
-                          invalid && "border-destructive",
-                        )}
-                        placeholder="Two years on our React dashboards. Comfortable with components and hooks, but async JavaScript and error handling are shaky — needed help with a race condition last sprint. Has never worked on a backend."
-                      />
-                      {/* A guide, not a limit: the server does not cap this, so the counter counts
-                          up to a useful length rather than down from a ceiling that does not exist. */}
-                      <p className="mt-1 text-right text-xs text-muted-foreground" aria-live="polite">
-                        {profile.adminNotes.length} characters
-                        {profile.adminNotes.length < NOTES_TARGET && ` · a paragraph or two works best`}
-                      </p>
-                    </>
-                  )}
-                </Field>
-              </>
-            )}
-
-            {step === "skills" && (
-              <>
-                <p className="text-sm text-muted-foreground">
-                  Your estimate, not theirs. The assessment probes these and reports where it agrees.
-                </p>
-
-                {profile.claimedSkills.length === 0 && (
-                  <p className="rounded-md border border-dashed px-4 py-6 text-center text-sm text-muted-foreground">
-                    Nothing claimed yet. You can leave this empty — the assessment will find out on its own.
-                  </p>
-                )}
-
-                <ul className="space-y-3">
-                  {profile.claimedSkills.map((skill, i) => (
-                    <li key={i} className="grid gap-3 rounded-md border p-3 sm:grid-cols-[1fr_14rem_auto] sm:items-end">
-                      <Field label="Area">
-                        {({ id }) => (
-                          <Input
-                            id={id}
-                            list="skill-areas"
-                            value={skill.area}
-                            placeholder="React"
-                            onChange={(e) => setSkill(i, { area: e.target.value })}
-                          />
-                        )}
-                      </Field>
-
-                      <Field label={`Level ${skill.level} — ${LEVEL_LABELS[skill.level]}`}>
-                        {() => (
-                          <Slider
-                            min={1}
-                            max={5}
-                            step={1}
-                            value={[skill.level]}
-                            thumbLabels={[`${skill.area || "Skill"} level`]}
-                            onValueChange={([v]) => setSkill(i, { level: v as SkillLevel })}
-                          />
-                        )}
-                      </Field>
-
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="mb-1"
-                        onClick={() => update({ claimedSkills: profile.claimedSkills.filter((_, j) => j !== i) })}
-                      >
-                        <Trash2 aria-hidden="true" />
-                        <span className="sr-only">Remove {skill.area || "this skill"}</span>
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-
-                <datalist id="skill-areas">
-                  {areaOptions.map((area) => (
-                    <option key={area} value={area} />
-                  ))}
-                </datalist>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => update({ claimedSkills: [...profile.claimedSkills, { area: "", level: 3 }] })}
-                >
-                  <Plus aria-hidden="true" />
-                  Add a skill
-                </Button>
-              </>
-            )}
-
-            {step === "trails" && (
-              <>
-                <p className="text-sm text-muted-foreground">
-                  Where you want them to end up. The assessment focuses here, plus fundamentals.
-                </p>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {tracks.map((track) => (
-                    <TrackCard
-                      key={track.id}
-                      name={track.name}
-                      tagline={track.tagline}
-                      accent={track.accentToken}
-                      moduleCount={track.modules.filter((m) => m.available).length}
-                      selected={profile.targetTracks.includes(track.id as TrackIdValue)}
-                      onToggle={(on) =>
-                        update({
-                          targetTracks: on
-                            ? [...profile.targetTracks, track.id as TrackIdValue]
-                            : profile.targetTracks.filter((t) => t !== track.id),
-                        })
-                      }
-                    />
-                  ))}
-                </div>
-                {fields["profile.targetTracks"] && (
-                  <p className="text-xs font-medium text-destructive">{fields["profile.targetTracks"]}</p>
-                )}
-              </>
-            )}
-
-            {step === "priorities" && (
-              <>
-                <p className="max-w-prose text-sm text-muted-foreground">
-                  Once their placement assessment is graded, the AI compares what it found against
-                  this. Where a course already covers a gap it unlocks that one; where nothing does,
-                  it researches the topic and writes a course. What you set here decides the order.
-                </p>
-                <TargetsFields value={targets} onChange={setTargets} disabled={submitting} />
-
-                <details className="rounded-md border">
-                  <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium">
-                    Course builder settings
-                  </summary>
-                  <div className="border-t p-4">
-                    <PrioritiesFields value={priorities} onChange={setPriorities} disabled={submitting} />
-                  </div>
-                </details>
-              </>
-            )}
-
-            {step === "review" && (
-              <Review
-                username={username.trim()}
-                displayName={displayName}
-                role={role}
-                passwordMode={passwordMode}
-                passwordScore={passwordMode === "set" && password ? passwordStrength(password, username).score : null}
-                profile={profile}
-                priorities={priorities}
-                targets={targets}
-                tracks={tracks.map((t) => ({ id: t.id, name: t.name }))}
-                onEdit={goTo}
-              >
-                <label className="flex cursor-pointer items-start gap-3 rounded-md border p-4">
-                  <Checkbox
-                    checked={issueAssessment}
-                    onCheckedChange={(on) => setIssueAssessment(on === true)}
-                    className="mt-0.5"
-                  />
-                  <span>
-                    <span className="font-medium">Issue the placement assessment now</span>
-                    <span className="mt-0.5 block text-sm text-muted-foreground">
-                      Generation starts in the background and takes a few minutes. It then waits for your approval
-                      before the learner sees it — nothing reaches them until you say so, or until the auto-release
-                      deadline passes.
-                    </span>
-                  </span>
-                </label>
-              </Review>
-            )}
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="mt-8 flex flex-wrap items-center gap-3 border-t pt-6">
-          {index > 0 ? (
-            <Button type="button" variant="ghost" onClick={() => goTo(STEPS[index - 1].id)}>
-              <ArrowLeft aria-hidden="true" />
-              Back
-            </Button>
-          ) : (
-            <Button type="button" variant="ghost" onClick={() => navigate("/admin/people")}>
-              Cancel
-            </Button>
-          )}
-
-          <div className="ml-auto flex items-center gap-3">
-            {!isLast && (
-              <Button type="button" variant="link" size="sm" onClick={() => goTo("review")} disabled={!canAdvance}>
-                Skip to review
-              </Button>
-            )}
-            <Button type="submit" loading={submitting} disabled={!canAdvance}>
-              {isLast ? (
-                <>
-                  <Sparkles aria-hidden="true" />
-                  Create account
-                </>
-              ) : (
-                "Continue"
-              )}
-            </Button>
-          </div>
-        </div>
-      </form>
+            {accountFields}
+          </StaffForm>
+        )}
+      </div>
     </div>
   );
 }
 
-/** Which step owns a server field error, so a rejection lands where it can be fixed. */
-function stepForField(field: string | undefined): StepId | null {
-  if (!field) return null;
-  if (field === "username" || field === "displayName" || field === "password") return "account";
-  if (field === "profile.targetTracks") return "trails";
-  if (field.startsWith("profile.claimedSkills")) return "skills";
-  if (field.startsWith("profile.")) return "profile";
-  return null;
-}
+/** An admin account has no learning setup: just the account fields and one button. */
+function StaffForm({
+  canSubmit,
+  onCreate,
+  children,
+}: {
+  canSubmit: boolean;
+  onCreate: () => Promise<void>;
+  children: (context: SetupFormContext) => ReactNode;
+}) {
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [fields, setFields] = useState<Record<string, string>>({});
 
-/**
- * The progress rail.
- *
- * Completed steps are clickable and future ones are not, which is the honest affordance: you can
- * revisit what you have filled in, and jumping ahead is what "Skip to review" is for. The marker is
- * one `layoutId` so it slides between steps rather than five bars fading in and out.
- */
-function Stepper({ current, onJump }: { current: number; onJump: (index: number) => void }) {
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (pending || !canSubmit) return;
+    setPending(true);
+    setError(null);
+    setFields({});
+    try {
+      await onCreate();
+    } catch (err) {
+      setError(err instanceof ApiRequestError ? err.message : "Something went wrong. Try again.");
+      if (err instanceof ApiRequestError) setFields(err.fields ?? {});
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
-    <ol className="mt-8 flex flex-wrap gap-x-1 gap-y-2" aria-label="Onboarding steps">
-      {STEPS.map((step, i) => {
-        const done = i < current;
-        const active = i === current;
-        return (
-          <li key={step.id} className="min-w-0 flex-1">
-            <button
-              type="button"
-              disabled={!done}
-              onClick={() => onJump(i)}
-              aria-current={active ? "step" : undefined}
-              className={cn(
-                "group relative w-full pb-2 text-left",
-                done && "cursor-pointer",
-                !done && !active && "cursor-default",
-              )}
-            >
-              <span className="flex items-center gap-1.5">
-                <span
-                  className={cn(
-                    "flex size-5 shrink-0 items-center justify-center rounded-full border text-[11px] font-medium transition-colors",
-                    done && "border-summit bg-summit text-slate-50",
-                    active && "border-primary bg-primary/10 text-primary-strong",
-                    !done && !active && "border-border text-muted-foreground",
-                  )}
-                >
-                  {done ? <Check className="size-3" aria-hidden="true" /> : i + 1}
-                </span>
-                <span
-                  className={cn(
-                    "truncate text-xs font-medium",
-                    active ? "text-foreground" : "text-muted-foreground",
-                    done && "group-hover:text-foreground",
-                  )}
-                >
-                  {step.name}
-                </span>
-              </span>
-              <span
-                className={cn(
-                  "mt-2 block h-0.5 rounded-full",
-                  done ? "bg-summit" : active ? "bg-primary" : "bg-border",
-                )}
-              />
-              {done && <span className="sr-only">(completed — select to go back)</span>}
-            </button>
-          </li>
-        );
-      })}
-    </ol>
+    <form onSubmit={handleSubmit} noValidate className="max-w-3xl space-y-8">
+      {error && <FormAlert>{error}</FormAlert>}
+      {children({ fields, pending })}
+      <Button type="submit" loading={pending} disabled={!canSubmit}>
+        Create admin
+      </Button>
+    </form>
   );
 }
 
-function PasswordChoice({
+function Choice({
+  name,
   checked,
+  disabled,
   onSelect,
   title,
   body,
-  children,
 }: {
+  name: string;
   checked: boolean;
+  disabled?: boolean;
   onSelect: () => void;
   title: string;
   body: string;
-  children?: React.ReactNode;
 }) {
   return (
     <label
       className={cn(
-        "block cursor-pointer rounded-md border p-4 transition-colors",
+        "flex cursor-pointer items-start gap-3 rounded-md border p-3 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-strong",
         checked ? "border-primary bg-primary/5" : "hover:bg-surface-sunken/60",
-      )}
-    >
-      <span className="flex items-start gap-3">
-        <input
-          type="radio"
-          name="password-mode"
-          checked={checked}
-          onChange={onSelect}
-          className="mt-1 size-4 accent-[rgb(var(--primary))]"
-        />
-        <span>
-          <span className="font-medium">{title}</span>
-          <span className="mt-0.5 block text-sm text-muted-foreground">{body}</span>
-        </span>
-      </span>
-      {checked && children && <span className="mt-4 block">{children}</span>}
-    </label>
-  );
-}
-
-function TrackCard({
-  name,
-  tagline,
-  accent,
-  moduleCount,
-  selected,
-  onToggle,
-}: {
-  name: string;
-  tagline: string;
-  accent: AccentToken;
-  moduleCount: number;
-  selected: boolean;
-  onToggle: (on: boolean) => void;
-}) {
-  /* `accentClasses` is keyed by the whole `AccentToken` union, so all eight tracks colour correctly
-     and a ninth token would fail the build rather than quietly falling back to orange. Spelled-out
-     classes, because Tailwind cannot scan an interpolated `border-${accent}`. */
-  const { border, soft } = accentClasses[accent];
-
-  return (
-    <label
-      className={cn(
-        "relative flex cursor-pointer flex-col rounded-lg border p-4 transition-colors",
-        selected ? cn(border, soft) : "hover:bg-surface-sunken/60",
+        disabled && "cursor-default opacity-60",
       )}
     >
       <input
-        type="checkbox"
-        className="sr-only"
-        checked={selected}
-        onChange={(e) => onToggle(e.target.checked)}
+        type="radio"
+        name={name}
+        checked={checked}
+        disabled={disabled}
+        onChange={onSelect}
+        className="mt-1 size-4 accent-[rgb(var(--primary))]"
       />
-      <span className="flex items-start justify-between gap-2">
-        <span className="font-display font-semibold">{name}</span>
-        <motion.span
-          initial={false}
-          animate={{ scale: selected ? 1 : 0.6, opacity: selected ? 1 : 0 }}
-          transition={transition.fast}
-          className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-foreground text-background"
-        >
-          <Check className="size-2.5" aria-hidden="true" />
-        </motion.span>
-      </span>
-      <span className="mt-1 text-sm text-muted-foreground">{tagline}</span>
-      <span className="mt-3 font-mono text-[11px] text-muted-foreground">
-        {moduleCount} camp{moduleCount === 1 ? "" : "s"}
+      <span>
+        <span className="text-sm font-medium">{title}</span>
+        <span className="mt-0.5 block text-sm text-muted-foreground">{body}</span>
       </span>
     </label>
-  );
-}
-
-function Review({
-  username,
-  displayName,
-  role,
-  passwordMode,
-  passwordScore,
-  profile,
-  priorities,
-  targets,
-  tracks,
-  onEdit,
-  children,
-}: {
-  username: string;
-  displayName: string;
-  role: "learner" | "admin";
-  passwordMode: "generate" | "set";
-  passwordScore: number | null;
-  profile: LearnerProfile;
-  priorities: LearnerPriorities;
-  targets: TargetsRequest;
-  tracks: { id: string; name: string }[];
-  onEdit: (step: StepId) => void;
-  children: React.ReactNode;
-}) {
-  const skills = profile.claimedSkills.filter((s) => s.area.trim().length > 0);
-  const trackNames = profile.targetTracks.map((id) => tracks.find((t) => t.id === id)?.name ?? id);
-
-  return (
-    <div className="space-y-4">
-      <ReviewBlock title="Account" onEdit={() => onEdit("account")}>
-        <p className="flex flex-wrap items-center gap-2">
-          <span className="font-medium">{displayName || "—"}</span>
-          <span className="font-mono text-xs text-muted-foreground">{username || "—"}</span>
-          <StatusBadge kind="role" status={role} />
-        </p>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {passwordMode === "generate"
-            ? "A password will be generated and shown to you once."
-            : passwordScore !== null
-              ? `You are setting the password yourself (strength ${passwordScore + 1} of 5).`
-              : "You chose to set the password yourself, but have not typed one — the server will generate one instead."}
-        </p>
-      </ReviewBlock>
-
-      <ReviewBlock title="Profile" onEdit={() => onEdit("profile")}>
-        <p className="text-sm">
-          {profile.roleTitle ?? "No role title"}
-          {profile.yearsExperience !== null && ` · ${profile.yearsExperience} yrs`}
-        </p>
-        {profile.adminNotes.trim().length === 0 ? (
-          <p className="mt-1 text-sm text-trailmark-strong">
-            No notes. The assessment will be built from the claimed skills and trails alone, which makes it noticeably
-            more generic.
-          </p>
-        ) : (
-          <p className="mt-1 line-clamp-3 text-sm text-muted-foreground">{profile.adminNotes}</p>
-        )}
-      </ReviewBlock>
-
-      <ReviewBlock title="Claimed skills" onEdit={() => onEdit("skills")}>
-        {skills.length === 0 ? (
-          <p className="text-sm text-muted-foreground">None claimed.</p>
-        ) : (
-          <ul className="flex flex-wrap gap-1.5">
-            {skills.map((s, i) => (
-              <li key={i}>
-                <Badge variant="outline">
-                  {s.area} · {LEVEL_LABELS[s.level]}
-                </Badge>
-              </li>
-            ))}
-          </ul>
-        )}
-      </ReviewBlock>
-
-      <ReviewBlock title="Targets" onEdit={() => onEdit("priorities")}>
-        <TargetsSummary value={targets} />
-      </ReviewBlock>
-
-      <ReviewBlock title="Course builder settings" onEdit={() => onEdit("priorities")}>
-        <PrioritiesSummary value={priorities} />
-      </ReviewBlock>
-
-      <ReviewBlock title="Target trails" onEdit={() => onEdit("trails")}>
-        {trackNames.length === 0 ? (
-          <p className="text-sm text-muted-foreground">None chosen — the assessment will cover fundamentals broadly.</p>
-        ) : (
-          <ul className="flex flex-wrap gap-1.5">
-            {trackNames.map((name) => (
-              <li key={name}>
-                <Badge variant="brand">{name}</Badge>
-              </li>
-            ))}
-          </ul>
-        )}
-      </ReviewBlock>
-
-      {children}
-    </div>
-  );
-}
-
-function ReviewBlock({
-  title,
-  onEdit,
-  children,
-}: {
-  title: string;
-  onEdit: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-md border p-4">
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-sm font-semibold">{title}</h3>
-        <Button type="button" variant="link" size="sm" onClick={onEdit}>
-          Edit
-        </Button>
-      </div>
-      <div className="mt-2">{children}</div>
-    </section>
   );
 }

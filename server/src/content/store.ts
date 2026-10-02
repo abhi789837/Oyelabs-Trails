@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import type { Task } from "../../../shared/tasks";
 import path from "node:path";
 
 import type { ModuleMeta, TopicMeta, TrackMeta } from "../../../shared/content";
@@ -65,6 +66,8 @@ export interface AuthoredTopic {
   challengeType: "quiz" | "code";
   quiz?: AuthoredQuizQuestion[];
   codeChallenge?: AuthoredCodeChallenge;
+  /** v4: PM/BD practice task (shared/tasks.ts). */
+  practice?: Task;
 }
 
 export interface AuthoredModule {

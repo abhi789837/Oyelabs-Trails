@@ -12,6 +12,8 @@ import type { AiPurpose, ProviderId } from "../../../shared/enums";
 
 export interface GenerateJsonRequest<T> {
   purpose: AiPurpose;
+  /** v4: the router's task type (which model, which output cap). Defaults from `purpose`. */
+  task?: string;
   system: string;
   user: string;
   /** Converted to JSON Schema for the provider, and used to validate what comes back. */

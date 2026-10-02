@@ -1,0 +1,125 @@
+[
+  {
+    "id": "eng-js-closures-example-c1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-closures",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `makeCounter` so each call to the returned function returns the next number, starting at `start`. Two counters must not share state.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "countTimes",
+      "starterCode": "function makeCounter(start) {\n  // return a function that returns start, start + 1, ...\n}\n\n// Test driver (leave as is): calls the counter n times.\nfunction countTimes(start, n) {\n  const next = makeCounter(start);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(next());\n  return out;\n}",
+      "referenceSolution": "function makeCounter(start) {\n  let value = start;\n  return () => value++;\n}\n\nfunction countTimes(start, n) {\n  const next = makeCounter(start);\n  const out = [];\n  for (let i = 0; i < n; i++) out.push(next());\n  return out;\n}",
+      "sampleTests": [{ "args": [1, 3], "expected": [1, 2, 3] }],
+      "hiddenTests": [
+        { "args": [0, 1], "expected": [0] },
+        { "args": [5, 4], "expected": [5, 6, 7, 8] },
+        { "args": [-2, 3], "expected": [-2, -1, 0] },
+        { "args": [10, 0], "expected": [] }
+      ]
+    }
+  },
+  {
+    "id": "eng-python-example-c1",
+    "departmentId": "engineering",
+    "skillId": "eng-python",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `average` so it returns the mean of the list, or `None` for an empty list.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "average",
+      "starterCode": "def average(xs):\n    return sum(xs) / len(xs)",
+      "referenceSolution": "def average(xs):\n    if not xs:\n        return None\n    return sum(xs) / len(xs)",
+      "sampleTests": [{ "args": [[2, 4]], "expected": 3 }],
+      "hiddenTests": [
+        { "args": [[]], "expected": null },
+        { "args": [[5]], "expected": 5 },
+        { "args": [[1, 2]], "expected": 1.5 }
+      ]
+    }
+  },
+  {
+    "id": "eng-sql-joins-example-c1",
+    "departmentId": "engineering",
+    "skillId": "eng-sql-joins",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Return every customer's `name` and their number of orders as `orders`, including customers with no orders. Order by `name`.",
+    "coding": {
+      "language": "sql",
+      "mode": "sql",
+      "functionName": null,
+      "starterCode": "SELECT c.name, COUNT(o.id) AS orders\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nGROUP BY c.id\nORDER BY c.name;",
+      "referenceSolution": "SELECT c.name, COUNT(o.id) AS orders\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nGROUP BY c.id\nORDER BY c.name;",
+      "sampleTests": [{ "setup": "CREATE TABLE customers(id INT, name TEXT); CREATE TABLE orders(id INT, customer_id INT); INSERT INTO customers VALUES (1,'Ann'),(2,'Bo'); INSERT INTO orders VALUES (1,1),(2,1);", "expected": [{ "name": "Ann", "orders": 2 }, { "name": "Bo", "orders": 0 }] }],
+      "hiddenTests": [
+        { "setup": "CREATE TABLE customers(id INT, name TEXT); CREATE TABLE orders(id INT, customer_id INT); INSERT INTO customers VALUES (1,'Zed');", "expected": [{ "name": "Zed", "orders": 0 }] },
+        { "setup": "CREATE TABLE customers(id INT, name TEXT); CREATE TABLE orders(id INT, customer_id INT); INSERT INTO customers VALUES (1,'A'),(2,'B'),(3,'C'); INSERT INTO orders VALUES (1,2),(2,2),(3,3);", "expected": [{ "name": "A", "orders": 0 }, { "name": "B", "orders": 2 }, { "name": "C", "orders": 1 }] },
+        { "setup": "CREATE TABLE customers(id INT, name TEXT); CREATE TABLE orders(id INT, customer_id INT);", "expected": [] }
+      ]
+    }
+  },
+  {
+    "id": "eng-java-example-c1",
+    "departmentId": "engineering",
+    "skillId": "eng-java",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The program reads integers (one line, space separated) and should print their sum. Fix `sum`.",
+    "coding": {
+      "language": "java",
+      "mode": "program",
+      "functionName": null,
+      "starterCode": "import java.util.*;\n\npublic class Main {\n    static int sum(int[] xs) {\n        int total = 0;\n        for (int i = 1; i < xs.length; i++) total += xs[i];\n        return total;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(sum(xs));\n    }\n}",
+      "referenceSolution": "import java.util.*;\n\npublic class Main {\n    static int sum(int[] xs) {\n        int total = 0;\n        for (int i = 0; i < xs.length; i++) total += xs[i];\n        return total;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        List<Integer> list = new ArrayList<>();\n        while (in.hasNextInt()) list.add(in.nextInt());\n        int[] xs = list.stream().mapToInt(Integer::intValue).toArray();\n        System.out.println(sum(xs));\n    }\n}",
+      "sampleTests": [{ "stdin": "1 2 3", "expected": "6" }],
+      "hiddenTests": [{ "stdin": "5", "expected": "5" }, { "stdin": "", "expected": "0" }, { "stdin": "-1 1 10", "expected": "10" }]
+    }
+  },
+  {
+    "id": "eng-js-async-example-m1",
+    "departmentId": "engineering",
+    "skillId": "eng-js-async",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it before answering.",
+    "mcq": {
+      "options": ["A C B", "A B C", "C A B", "B A C"],
+      "correctIndex": 0,
+      "explanation": "`console.log('A')` runs first, the `.then` callback is a microtask that runs after the current script, so `C` prints before `B`.",
+      "snippet": "console.log('A');\nPromise.resolve().then(() => console.log('B'));\nconsole.log('C');",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-docker-example-t1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Mark the lines in this Dockerfile that make the image slower to rebuild or larger than it needs to be.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        { "id": "l1", "text": "FROM node:20", "issue": "The full image is ~1 GB; node:20-slim or alpine is enough at runtime." },
+        { "id": "l2", "text": "WORKDIR /app", "issue": null },
+        { "id": "l3", "text": "COPY . .", "issue": "Copying everything before installing dependencies busts the npm cache on every code change." },
+        { "id": "l4", "text": "RUN npm ci", "issue": null },
+        { "id": "l5", "text": "EXPOSE 3000", "issue": null },
+        { "id": "l6", "text": "CMD [\"node\", \"server.js\"]", "issue": null }
+      ],
+      "askExplanation": false
+    }
+  }
+]

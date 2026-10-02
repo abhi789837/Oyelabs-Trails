@@ -25,6 +25,12 @@ const rawSchema = z.object({
   SNAPSHOT_RETENTION_DAYS: z.coerce.number().int().positive().default(90),
   /** Dev-only escape hatch for the code sandbox on Windows, where isolated-vm may not build. */
   DEV_UNSAFE_RUNNER: z.coerce.boolean().default(false),
+  /**
+   * v4: the self-hosted Piston code runner (Python, PHP, SQL, Java, Dart). Internal network only.
+   * Unset = those languages report "the code runner is not configured"; JS/TS still work.
+   */
+  PISTON_URL: z.string().url().optional(),
+  PISTON_RUN_TIMEOUT_MS: z.coerce.number().int().positive().default(3000),
   /** Where the SPA build lives, served in production. */
   CLIENT_DIST: z.string().default("./dist"),
   /** Where build-server-content.mjs writes module JSON. */
@@ -45,6 +51,8 @@ export type Env = {
   superadminPassword: string | undefined;
   snapshotRetentionDays: number;
   devUnsafeRunner: boolean;
+  pistonUrl: string | null;
+  pistonRunTimeoutMs: number;
   clientDist: string;
   serverContentDir: string;
   snapshotsDir: string;
@@ -106,6 +114,8 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     superadminPassword: raw.SUPERADMIN_PASSWORD,
     snapshotRetentionDays: raw.SNAPSHOT_RETENTION_DAYS,
     devUnsafeRunner: raw.DEV_UNSAFE_RUNNER,
+    pistonUrl: raw.PISTON_URL ?? null,
+    pistonRunTimeoutMs: raw.PISTON_RUN_TIMEOUT_MS,
     clientDist: path.resolve(raw.CLIENT_DIST),
     serverContentDir: path.resolve(raw.SERVER_CONTENT_DIR),
     snapshotsDir: path.join(dataDir, "snapshots"),

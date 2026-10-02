@@ -8,6 +8,7 @@ import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 import { ensureCatalogSeed } from "../catalog/repo";
 import { migrateLegacyPriorities } from "../setup/repo";
+import { ensureBankSeed } from "../bank/repo";
 import type { Env } from "../env";
 import * as schema from "./schema";
 
@@ -62,6 +63,8 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
     ensureCatalogSeed(db);
     // Once per database: v3 targets and must-have lists become slider rows.
     migrateLegacyPriorities(db);
+    // v4 question bank: validated seed items, inserted when absent.
+    ensureBankSeed(db);
   }
   return { db, sqlite };
 }

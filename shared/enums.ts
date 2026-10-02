@@ -94,7 +94,7 @@ export const assessmentStatusSchema = z.enum([
 ]);
 export type AssessmentStatus = z.infer<typeof assessmentStatusSchema>;
 
-export const itemKindSchema = z.enum(["mcq", "multi", "predict_output", "find_bug", "code", "explain"]);
+export const itemKindSchema = z.enum(["mcq", "multi", "predict_output", "find_bug", "code", "explain", "task"]);
 export type ItemKind = z.infer<typeof itemKindSchema>;
 
 export const itemStatusSchema = z.enum(["pool", "served", "answered", "skipped", "dropped"]);
@@ -130,6 +130,8 @@ export const jobTypeSchema = z.enum([
    * make one inline and the learner's page sat on its skeleton for minutes.
    */
   "week.refine",
+  /** v4: generate, validate and add bank items for a skill the bank is thin on. Once, for everyone. */
+  "bank.fill",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 

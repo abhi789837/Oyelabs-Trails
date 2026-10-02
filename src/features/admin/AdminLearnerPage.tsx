@@ -26,25 +26,35 @@ import { IntegrityTab } from "./learner/IntegrityTab";
 import { PathTab } from "./learner/PathTab";
 import { PlanTab } from "./learner/PlanTab";
 import { WeekTab } from "./learner/WeekTab";
-import { ProfileTab } from "./learner/ProfileTab";
 import { ProgressTab } from "./learner/ProgressTab";
+import { SetupTab } from "./learner/SetupTab";
 
 const TABS = [
-  { id: "profile", label: "Profile" },
+  { id: "setup", label: "Setup" },
   { id: "assessment", label: "Assessment" },
-  { id: "integrity", label: "Integrity" },
-  { id: "evaluation", label: "Evaluation" },
-  { id: "week", label: "This week" },
-  { id: "plan", label: "Library" },
-  { id: "path", label: "AI path" },
+  { id: "path", label: "Path" },
+  { id: "library", label: "Library" },
   { id: "progress", label: "Progress" },
   { id: "account", label: "Account" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
-function isTabId(value: string | null): value is TabId {
-  return TABS.some((tab) => tab.id === value);
+/** Tabs from before v4, so an old link still lands on the section that now holds its content. */
+const LEGACY_TABS: Record<string, TabId> = {
+  profile: "setup",
+  targets: "setup",
+  integrity: "assessment",
+  evaluation: "assessment",
+  week: "path",
+  "ai-path": "path",
+  plan: "library",
+};
+
+function resolveTab(value: string | null): TabId {
+  if (!value) return "setup";
+  if (TABS.some((tab) => tab.id === value)) return value as TabId;
+  return LEGACY_TABS[value] ?? "setup";
 }
 
 /**
@@ -69,8 +79,9 @@ export default function AdminLearnerPage() {
   const [assessments, setAssessments] = useState<AssessmentSummary[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const tabParam = searchParams.get("tab");
-  const active: TabId = isTabId(tabParam) ? tabParam : "profile";
+  const active: TabId = resolveTab(searchParams.get("tab"));
+  const addSkill = searchParams.get("add");
+  const [setupVersion, setSetupVersion] = useState(0);
   const [visited, setVisited] = useState<Set<TabId>>(() => new Set<TabId>([active]));
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -108,12 +119,35 @@ export default function AdminLearnerPage() {
   const selectTab = useCallback(
     (id: TabId) => {
       const next = new URLSearchParams(searchParams);
-      if (id === "profile") next.delete("tab");
+      if (id === "setup") next.delete("tab");
       else next.set("tab", id);
       setSearchParams(next, { replace: true });
     },
     [searchParams, setSearchParams],
   );
+
+  /* Promote on the Path tab: open Setup with the skill pre-selected. The `add` param is consumed by
+     the form and removed again, so a reload does not add it twice. */
+  const promote = useCallback(
+    (skill: string) => {
+      const next = new URLSearchParams(searchParams);
+      next.delete("tab");
+      next.set("add", skill);
+      setSearchParams(next, { replace: true });
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const clearAdd = useCallback(() => {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        next.delete("add");
+        return next;
+      },
+      { replace: true },
+    );
+  }, [setSearchParams]);
 
   const handleTabKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     const current = TABS.findIndex((tab) => tab.id === active);
@@ -131,6 +165,11 @@ export default function AdminLearnerPage() {
   const reloadDetail = useCallback(async () => {
     setDetail(await adminApi.getUser(userId));
   }, [userId]);
+
+  const handleSetupSaved = useCallback(() => {
+    setSetupVersion((v) => v + 1);
+    void reloadDetail().catch(() => undefined);
+  }, [reloadDetail]);
 
   const reloadPlan = useCallback(async () => {
     setPlan(await api.get<PlanResponse>(`/api/admin/users/${userId}/plan`));
@@ -263,15 +302,25 @@ export default function AdminLearnerPage() {
             hidden={!selected}
             className={cn("mt-8 focus:outline-hidden", !selected && "hidden")}
           >
-            {tab.id === "profile" && (
-              <ProfileTab userId={userId} profile={detail.profile} onSaved={handleProfileSaved} />
+            {tab.id === "setup" && (
+              <SetupTab
+                userId={userId}
+                profile={detail.profile}
+                addSkill={addSkill}
+                onAddHandled={clearAdd}
+                onSaved={handleSetupSaved}
+                onAssigned={() => void reloadAssessments().catch(() => undefined)}
+                onProfileSaved={handleProfileSaved}
+              />
             )}
             {tab.id === "assessment" && (
-              <AssessmentTab userId={userId} assessments={assessments} onChanged={reloadAssessments} />
+              <div className="space-y-14">
+                <AssessmentTab userId={userId} assessments={assessments} onChanged={reloadAssessments} />
+                <IntegrityTab assessments={assessments} />
+                <EvaluationTab userId={userId} assessments={assessments} />
+              </div>
             )}
-            {tab.id === "integrity" && <IntegrityTab assessments={assessments} />}
-            {tab.id === "evaluation" && <EvaluationTab userId={userId} assessments={assessments} />}
-            {tab.id === "plan" && (
+            {tab.id === "library" && (
               <PlanTab
                 userId={userId}
                 displayName={detail.user.displayName}
@@ -280,8 +329,23 @@ export default function AdminLearnerPage() {
                 onPublished={reloadPlan}
               />
             )}
-            {tab.id === "week" && <WeekTab userId={userId} displayName={detail.user.displayName} />}
-            {tab.id === "path" && <PathTab userId={userId} displayName={detail.user.displayName} />}
+            {tab.id === "path" && (
+              <div className="space-y-14">
+                <PathTab
+                  userId={userId}
+                  displayName={detail.user.displayName}
+                  onPromote={promote}
+                  onOpenSetup={() => selectTab("setup")}
+                  refreshKey={setupVersion}
+                />
+                <section aria-labelledby="this-week-heading" className="border-t pt-8">
+                  <h2 id="this-week-heading" className="mb-4 font-display text-lg font-semibold">
+                    This week
+                  </h2>
+                  <WeekTab userId={userId} displayName={detail.user.displayName} />
+                </section>
+              </div>
+            )}
             {tab.id === "progress" && <ProgressTab userId={userId} progress={progress} plan={plan} />}
             {tab.id === "account" && <AccountTab user={detail.user} onChanged={reloadDetail} />}
           </div>

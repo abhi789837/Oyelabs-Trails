@@ -26,6 +26,10 @@ import { notify, staffIds } from "../lib/notify";
 import { publishPlan } from "../plans/repo";
 import { getProgress } from "../progress/repo";
 import { buildManifestDigest } from "./digest";
+import { evaluateV4 } from "./evaluateV4";
+import { isV4 } from "./v4";
+import type { CodeSandbox } from "../sandbox/types";
+import type { PistonClient } from "../sandbox/polyglot";
 import { integritySummary } from "./integrity";
 import { fallbackPlan, validatePlan } from "./planValidation";
 import { provisionalLevel, type SelectorState } from "./selector";
@@ -36,6 +40,9 @@ export interface EvaluateDeps {
   db: Db;
   ai: AiService;
   content: ContentStore;
+  /** v4: grading runs code, so the evaluator needs the sandboxes. */
+  sandbox?: CodeSandbox;
+  piston?: PistonClient | null;
   log?: (message: string) => void;
 }
 
@@ -63,6 +70,18 @@ export function evaluateHandler(deps: EvaluateDeps) {
 
     const user = db.select().from(schema.users).where(eq(schema.users.id, assessment.userId)).get();
     if (!user) return;
+
+    if (isV4(assessment)) {
+      if (!deps.sandbox) throw new Error("The v4 evaluator needs the code sandbox.");
+      try {
+        await evaluateV4({ ...deps, sandbox: deps.sandbox, piston: deps.piston ?? null }, assessmentId);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        db.update(schema.assessments).set({ status: "failed", terminatedReason: message.slice(0, 500) }).where(eq(schema.assessments.id, assessmentId)).run();
+        throw error;
+      }
+      return;
+    }
 
     const wasTerminated = assessment.status === "terminated";
     db.update(schema.assessments).set({ status: "evaluating" }).where(eq(schema.assessments.id, assessmentId)).run();

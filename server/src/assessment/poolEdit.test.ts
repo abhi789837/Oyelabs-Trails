@@ -39,7 +39,7 @@ beforeEach(async () => {
     method: "POST",
     url: `/api/admin/users/${learner.id}/assessments`,
     ...as(admin),
-    payload: {},
+    payload: { format: "legacy" },
   });
   assessmentId = issued.json().assessmentId;
   await ctx.drainJobs();
@@ -142,7 +142,7 @@ describe("editing the pool before release", () => {
       method: "POST",
       url: `/api/admin/users/${learner.id}/assessments`,
       ...as(admin),
-      payload: { label: "Second" },
+      payload: { format: "legacy", label: "Second" },
     });
     await ctx.drainJobs();
     const otherId: string = other.json().assessmentId;

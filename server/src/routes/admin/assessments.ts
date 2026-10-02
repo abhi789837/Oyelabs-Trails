@@ -86,10 +86,10 @@ export async function registerAdminAssessmentRoutes(app: FastifyInstance): Promi
     const { id } = parseOrThrow(userParams, request.params);
     const body = parseOrThrow(issueAssessmentRequestSchema, request.body ?? {});
 
-    if (!app.ai.isConfigured()) {
+    if (body.format === "legacy" && !app.ai.isConfigured()) {
       throw badRequest("No AI credential is set up yet. Add one under Admin → AI connection first.");
     }
-    const result = issueAssessment(app, { userId: id, actorId: actor.id, label: body.label ?? null, timeLimitMinutes: body.timeLimitMinutes ?? null });
+    const result = issueAssessment(app, { userId: id, actorId: actor.id, label: body.label ?? null, timeLimitMinutes: body.timeLimitMinutes ?? null, format: body.format });
     reply.status(202);
     return result;
   });

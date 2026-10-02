@@ -96,6 +96,7 @@ export function toServedTopic(topic: AuthoredTopic, includeKeys: boolean): Serve
     challengeType: topic.challengeType,
     ...(topic.quiz ? { quiz: topic.quiz.map((q) => toServedQuestion(q, includeKeys)) } : {}),
     ...(topic.codeChallenge ? { codeChallenge: toServedChallenge(topic.codeChallenge, includeKeys) } : {}),
+    ...(topic.practice ? { practice: topic.practice } : {}),
   };
 }
 

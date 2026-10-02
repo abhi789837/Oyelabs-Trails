@@ -1,0 +1,1513 @@
+[
+  {
+    "id": "eng-linux-shell-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`toOctal` turns an `ls -l` mode string such as `-rwxr-xr--` into its octal form (`\"754\"`): `r` = 4, `w` = 2, `x` = 1 for owner, group and others. It only handles the owner today. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toOctal",
+      "starterCode": "function toOctal(mode) {\n  const bits = mode.slice(1, 4);\n  let n = 0;\n  if (bits[0] === \"r\") n += 4;\n  if (bits[1] === \"w\") n += 2;\n  if (bits[2] === \"x\") n += 1;\n  return String(n);\n}",
+      "referenceSolution": "function toOctal(mode) {\n  let out = \"\";\n  for (let i = 1; i < 10; i += 3) {\n    const bits = mode.slice(i, i + 3);\n    let n = 0;\n    if (bits[0] === \"r\") n += 4;\n    if (bits[1] === \"w\") n += 2;\n    if (bits[2] === \"x\") n += 1;\n    out += n;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "-rwxr-xr--"
+          ],
+          "expected": "754"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "-rw-r--r--"
+          ],
+          "expected": "644"
+        },
+        {
+          "args": [
+            "drwx------"
+          ],
+          "expected": "700"
+        },
+        {
+          "args": [
+            "----------"
+          ],
+          "expected": "000"
+        },
+        {
+          "args": [
+            "-rwxrwxrwx"
+          ],
+          "expected": "777"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`grep_count(text, word)` should behave like `grep -c word`: return the number of **lines** that contain `word` (case-sensitive), not the number of occurrences. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "grep_count",
+      "starterCode": "def grep_count(text, word):\n    return text.count(word)",
+      "referenceSolution": "def grep_count(text, word):\n    return sum(1 for line in text.splitlines() if word in line)",
+      "sampleTests": [
+        {
+          "args": [
+            "error: disk full\nok\nerror: timeout",
+            "error"
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "",
+            "error"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "error error\nok",
+            "error"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "ERROR\nerror",
+            "error"
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            "a\nb",
+            "c"
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A new teammate wants to run these commands on a shared server. Mark the ones that are dangerous as written.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "`ls -la /var/www`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "`tail -n 50 /var/log/nginx/error.log`",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "`rm -rf / tmp/build`",
+          "issue": "The stray space makes this `rm -rf /` plus `tmp/build`: it tries to delete the whole filesystem."
+        },
+        {
+          "id": "s4",
+          "text": "`chmod -R 777 /var/www`",
+          "issue": "Makes every file writable (and executable) by every user on the box."
+        },
+        {
+          "id": "s5",
+          "text": "`mkdir -p ~/projects/app`",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "`cp config.yml config.yml.bak`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-linux-shell-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Build the pipeline that prints the 5 most frequent client IPs in `access.log` (IP is the first field). Order the stages left to right.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "`cut -d' ' -f1 access.log`"
+        },
+        {
+          "id": "r2",
+          "label": "`sort`"
+        },
+        {
+          "id": "r3",
+          "label": "`uniq -c`"
+        },
+        {
+          "id": "r4",
+          "label": "`sort -rn`"
+        },
+        {
+          "id": "r5",
+          "label": "`head -5`"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Extract the field, sort so duplicates are adjacent (`uniq` only collapses neighbours), count, sort by count descending, keep the top 5."
+    }
+  },
+  {
+    "id": "eng-linux-shell-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You cloned a repo onto a Linux server and run `./deploy.sh`. The shell says `Permission denied`. `ls -l deploy.sh` shows `-rw-r--r--`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You cloned a repo onto a Linux server and run `./deploy.sh`. The shell says `Permission denied`. `ls -l deploy.sh` shows `-rw-r--r--`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why does it fail?",
+          "options": [
+            "The file has no execute permission",
+            "You are not root",
+            "The script has a syntax error",
+            "The file is in the wrong directory"
+          ],
+          "correctIndex": 0,
+          "explanation": "`-rw-r--r--` has no `x` bit for anyone, so the shell refuses to execute it directly."
+        },
+        {
+          "id": "q2",
+          "question": "What is the right fix?",
+          "options": [
+            "`chmod +x deploy.sh`",
+            "`sudo ./deploy.sh`",
+            "`chmod 777 deploy.sh`",
+            "`chown root deploy.sh`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Add the execute bit and nothing else. `sudo` does not add `x`, and 777 lets anyone edit a script you run."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Set up key-based SSH access to a new server where password login currently works. Order the steps.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "On your laptop, run `ssh-keygen -t ed25519`"
+        },
+        {
+          "id": "r2",
+          "label": "Copy the **public** key to the server with `ssh-copy-id user@server`"
+        },
+        {
+          "id": "r3",
+          "label": "Connect with `ssh user@server` and check it does not ask for the password"
+        },
+        {
+          "id": "r4",
+          "label": "Run `whoami` on the server to confirm the account"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Generate a key pair locally, install only the public half on the server, then prove the key login works."
+    }
+  },
+  {
+    "id": "eng-linux-shell-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `echo hi > notes.txt` and `echo hi >> notes.txt`?",
+    "mcq": {
+      "options": [
+        "`>` overwrites the file; `>>` appends to the end of it",
+        "`>` appends; `>>` overwrites",
+        "`>>` writes to stderr",
+        "There is no difference"
+      ],
+      "correctIndex": 0,
+      "explanation": "`>` truncates the file first, which is an easy way to lose a log or config by accident. `>>` adds to the end.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You are in `/home/ana/projects`. Where does `cd ~` take you?",
+    "mcq": {
+      "options": [
+        "`/home/ana`, your home directory",
+        "`/`, the filesystem root",
+        "`/home`",
+        "The previous directory"
+      ],
+      "correctIndex": 0,
+      "explanation": "`~` expands to `$HOME`. `cd -` is the one that goes back to the previous directory.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why does `ls` not show `.env` in the project folder, while `ls -a` does?",
+    "mcq": {
+      "options": [
+        "Files whose names start with `.` are hidden by default; `-a` shows all entries",
+        "`.env` is a directory",
+        "`ls` only shows files you own",
+        "`.env` is ignored by Git, so `ls` skips it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dotfiles are hidden by convention. `ls -la` is the usual way to see them along with permissions.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`fullMounts(df, threshold)` receives `df -h` output and should return the mount points whose `Use%` is **at or above** `threshold`, in order. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "fullMounts",
+      "starterCode": "function fullMounts(df, threshold) {\n  return df\n    .split(\"\\n\")\n    .slice(1)\n    .filter(Boolean)\n    .map((line) => line.trim().split(/\\s+/))\n    .filter((cols) => parseInt(cols[4], 10) > threshold)\n    .map((cols) => cols[5]);\n}",
+      "referenceSolution": "function fullMounts(df, threshold) {\n  return df\n    .split(\"\\n\")\n    .slice(1)\n    .filter(Boolean)\n    .map((line) => line.trim().split(/\\s+/))\n    .filter((cols) => parseInt(cols[4], 10) >= threshold)\n    .map((cols) => cols[5]);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on\n/dev/sda1 50G 45G 5.0G 90% /\ntmpfs 2.0G 0 2.0G 0% /dev/shm",
+            80
+          ],
+          "expected": [
+            "/"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on",
+            80
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on\n/dev/sdb1 100G 80G 20G 80% /data",
+            80
+          ],
+          "expected": [
+            "/data"
+          ]
+        },
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on\n/dev/sda1 50G 49G 1G 98% /\n/dev/sdb1 100G 85G 15G 85% /var\n/dev/sdc1 10G 1G 9G 10% /home",
+            85
+          ],
+          "expected": [
+            "/",
+            "/var"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`top_mem(ps_output, n)` receives the output of `ps -eo pid,%mem,comm` (header first) and should return the `n` command names using the most memory, highest first. It sorts wrongly today. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "top_mem",
+      "starterCode": "def top_mem(ps_output, n):\n    rows = [line.split() for line in ps_output.strip().splitlines()[1:]]\n    rows.sort(key=lambda r: r[1], reverse=True)\n    return [r[2] for r in rows[:n]]",
+      "referenceSolution": "def top_mem(ps_output, n):\n    rows = [line.split() for line in ps_output.strip().splitlines()[1:]]\n    rows.sort(key=lambda r: float(r[1]), reverse=True)\n    return [r[2] for r in rows[:n]]",
+      "sampleTests": [
+        {
+          "args": [
+            "  PID %MEM COMMAND\n  101  9.5 nginx\n  202 12.0 node\n  303  0.4 sshd",
+            2
+          ],
+          "expected": [
+            "node",
+            "nginx"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "  PID %MEM COMMAND",
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "  PID %MEM COMMAND\n  1 2.0 a\n  2 10.5 b",
+            5
+          ],
+          "expected": [
+            "b",
+            "a"
+          ]
+        },
+        {
+          "args": [
+            "  PID %MEM COMMAND\n  7 30.1 postgres\n  8 4.2 redis\n  9 25.0 java",
+            1
+          ],
+          "expected": [
+            "postgres"
+          ]
+        },
+        {
+          "args": [
+            "  PID %MEM COMMAND\n  1 9.9 x\n  2 10.0 y",
+            1
+          ],
+          "expected": [
+            "y"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Alerts say the root disk on an app server is 100% full and the app is failing to write.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Alerts say the root disk on an app server is 100% full and the app is failing to write.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Which command finds where the space went?",
+          "options": [
+            "`sudo du -sh /var/* | sort -h`",
+            "`free -m`",
+            "`top`",
+            "`ls -la /`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`du` sums directory sizes; sorting them shows the biggest offenders. `free` is memory, not disk."
+        },
+        {
+          "id": "q2",
+          "question": "It is `/var/log/app/app.log` at 20 GB, still being written by the running app. You `rm` it, but `df` still shows 100%. Why?",
+          "options": [
+            "The app still holds the file open, so its blocks are not freed until the handle closes",
+            "`rm` only moves files to a trash folder",
+            "`df` caches results for an hour",
+            "Log files cannot be deleted while the disk is full"
+          ],
+          "correctIndex": 0,
+          "explanation": "Deleting removes the name, not the open inode. Truncate with `: > app.log` instead, or restart the process to release it."
+        },
+        {
+          "id": "q3",
+          "question": "How do you stop this happening again?",
+          "options": [
+            "Configure `logrotate` (size or daily rotation, compression, a retention count)",
+            "Run `rm` on the log from cron every hour",
+            "Mount a bigger disk and ignore it"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rotation keeps logs bounded and signals or copies-truncates safely, without losing the current log."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Review this build script before it goes into CI. Mark the lines that can go badly wrong.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "`#!/bin/bash`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "`BUILD_DIR=$1`",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "`rm -rf $BUILD_DIR/*`",
+          "issue": "Unquoted and unchecked: if no argument is passed this becomes `rm -rf /*`."
+        },
+        {
+          "id": "s4",
+          "text": "`mkdir -p \"$BUILD_DIR\"`",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "`cd \"$BUILD_DIR\"`",
+          "issue": "If `cd` fails the script continues in the wrong directory; use `cd \"$BUILD_DIR\" || exit 1` or `set -e`."
+        },
+        {
+          "id": "s6",
+          "text": "`npm run build > build.log 2>&1`",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "`echo \"Build finished\"`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-linux-shell-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A process (`node server.js`) is stuck and ignoring requests. Order the steps to stop it cleanly.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Find its PID with `pgrep -f \"node server.js\"`"
+        },
+        {
+          "id": "r2",
+          "label": "Send `kill <pid>` (SIGTERM) so it can shut down gracefully"
+        },
+        {
+          "id": "r3",
+          "label": "Wait a few seconds and check with `ps -p <pid>`"
+        },
+        {
+          "id": "r4",
+          "label": "Only if it is still running, `kill -9 <pid>` (SIGKILL)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "SIGTERM lets the process close connections and flush data. SIGKILL cannot be caught, so it is the last resort."
+    }
+  },
+  {
+    "id": "eng-linux-shell-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": "stack-linux",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "This is the `/etc/ssh/sshd_config` on an internet-facing server. Mark the settings you would change.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "`Port 22`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "`PermitRootLogin yes`",
+          "issue": "Lets attackers brute-force the most privileged account directly; use `no` or `prohibit-password`."
+        },
+        {
+          "id": "s3",
+          "text": "`PubkeyAuthentication yes`",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "`PasswordAuthentication yes`",
+          "issue": "Password login invites brute force; use keys only once they work."
+        },
+        {
+          "id": "s5",
+          "text": "`MaxAuthTries 3`",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "`X11Forwarding no`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-linux-shell-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `2>&1` do in `npm test > test.log 2>&1`?",
+    "mcq": {
+      "options": [
+        "Sends stderr to the same place as stdout, so errors also go into `test.log`",
+        "Runs the command twice",
+        "Sends stdout to stderr",
+        "Discards errors"
+      ],
+      "correctIndex": 0,
+      "explanation": "File descriptor 2 (stderr) is redirected to wherever 1 (stdout) currently points, which is `test.log`. Order matters: `2>&1 > file` would not capture stderr in the file.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A config file has mode `640` and owner `app:app`. Who can read it?",
+    "mcq": {
+      "options": [
+        "The `app` user (read/write) and members of the `app` group (read only); others cannot",
+        "Everyone can read it, only `app` can write",
+        "Only root",
+        "Only the `app` user"
+      ],
+      "correctIndex": 0,
+      "explanation": "6 = rw for the owner, 4 = r for the group, 0 = nothing for others.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `npm ci && npm run build` and `npm ci ; npm run build`?",
+    "mcq": {
+      "options": [
+        "With `&&` the build only runs if `npm ci` succeeded; with `;` it runs regardless",
+        "`&&` runs both at the same time",
+        "`;` only runs the second if the first failed",
+        "No difference"
+      ],
+      "correctIndex": 0,
+      "explanation": "`&&` checks the exit code (0 means success). `;` just sequences commands, so a failed install still triggers a confusing build failure.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`listeningPorts(ss)` receives `ss -tln` output (header first; the 4th column is `Local Address:Port`) and should return the unique listening port numbers, sorted ascending. IPv6 addresses like `[::]:80` break it today. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "listeningPorts",
+      "starterCode": "function listeningPorts(ss) {\n  return ss\n    .split(\"\\n\")\n    .slice(1)\n    .filter((l) => l.trim())\n    .map((l) => l.trim().split(/\\s+/))\n    .map((cols) => Number(cols[3].split(\":\")[1]));\n}",
+      "referenceSolution": "function listeningPorts(ss) {\n  const ports = ss\n    .split(\"\\n\")\n    .slice(1)\n    .filter((l) => l.trim())\n    .map((l) => l.trim().split(/\\s+/))\n    .map((cols) => Number(cols[3].slice(cols[3].lastIndexOf(\":\") + 1)));\n  return [...new Set(ports)].sort((a, b) => a - b);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "State Recv-Q Send-Q Local-Address:Port Peer-Address:Port\nLISTEN 0 4096 0.0.0.0:22 0.0.0.0:*\nLISTEN 0 511 [::]:80 [::]:*"
+          ],
+          "expected": [
+            22,
+            80
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "State Recv-Q Send-Q Local-Address:Port Peer-Address:Port"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "State Recv-Q Send-Q Local-Address:Port Peer-Address:Port\nLISTEN 0 244 127.0.0.1:5432 0.0.0.0:*\nLISTEN 0 244 [::1]:5432 [::]:*"
+          ],
+          "expected": [
+            5432
+          ]
+        },
+        {
+          "args": [
+            "State Recv-Q Send-Q Local-Address:Port Peer-Address:Port\nLISTEN 0 511 0.0.0.0:8080 0.0.0.0:*\nLISTEN 0 511 0.0.0.0:443 0.0.0.0:*\nLISTEN 0 511 127.0.0.1:3000 0.0.0.0:*"
+          ],
+          "expected": [
+            443,
+            3000,
+            8080
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": "stack-linux",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`login_users(passwd)` reads `/etc/passwd` text (`user:x:uid:gid:info:home:shell`) and should return the users that can log in, in order. Skip blank lines and `#` comments, and exclude shells ending in `nologin` (both `/sbin/nologin` and `/usr/sbin/nologin`) and `/bin/false`. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "login_users",
+      "starterCode": "def login_users(passwd):\n    users = []\n    for line in passwd.splitlines():\n        parts = line.split(\":\")\n        if parts[-1] != \"/sbin/nologin\":\n            users.append(parts[0])\n    return users",
+      "referenceSolution": "def login_users(passwd):\n    users = []\n    for line in passwd.splitlines():\n        line = line.strip()\n        if not line or line.startswith(\"#\"):\n            continue\n        parts = line.split(\":\")\n        shell = parts[6] if len(parts) > 6 else \"\"\n        if not shell or shell.endswith(\"nologin\") or shell == \"/bin/false\":\n            continue\n        users.append(parts[0])\n    return users",
+      "sampleTests": [
+        {
+          "args": [
+            "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1::/usr/sbin:/usr/sbin/nologin\nana:x:1000:1000::/home/ana:/bin/zsh"
+          ],
+          "expected": [
+            "root",
+            "ana"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "# system accounts\nsync:x:4:65534::/bin:/bin/false"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "svc:x:999:999::/srv:/sbin/nologin\n\nbo:x:1001:1001::/home/bo:/bin/bash"
+          ],
+          "expected": [
+            "bo"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": "stack-linux",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "`systemctl status app` shows the service in a restart loop: `activating (auto-restart)`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`systemctl status app` shows the service in a restart loop: `activating (auto-restart)`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Where do you look first?",
+          "options": [
+            "`journalctl -u app -n 100 --no-pager`",
+            "`dmesg`",
+            "`cat /etc/hosts`",
+            "`history`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The unit's own logs show why each start attempt exits."
+        },
+        {
+          "id": "q2",
+          "question": "The log says `Error: listen EADDRINUSE: address already in use :::3000`. What do you run next?",
+          "options": [
+            "`sudo ss -ltnp | grep :3000` to see which process holds the port",
+            "`chmod 777` the app directory",
+            "`systemctl restart app` until it works",
+            "`reboot`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`ss -p` shows the PID and program bound to the port, often an old instance started by hand."
+        },
+        {
+          "id": "q3",
+          "question": "You stop the stray process and also edit `/etc/systemd/system/app.service` to fix a path. What must run before `systemctl restart app` picks up the edit?",
+          "options": [
+            "`sudo systemctl daemon-reload`",
+            "`sudo systemctl enable app`",
+            "Nothing; systemd rereads units on restart"
+          ],
+          "correctIndex": 0,
+          "explanation": "systemd caches unit files; `daemon-reload` makes it reread them."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": "stack-linux",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Review this systemd unit for a Node.js API. Mark the lines you would change.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "`[Unit]`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "`Description=Orders API`",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "`[Service]`",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "`User=root`",
+          "issue": "The API does not need root; a compromise of the app becomes a compromise of the machine. Use a dedicated user."
+        },
+        {
+          "id": "s5",
+          "text": "`WorkingDirectory=/srv/orders`",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "`Environment=DB_PASSWORD=Sup3rS3cret`",
+          "issue": "Unit files are world-readable and the value shows in `systemctl show`; use an `EnvironmentFile` with mode 600."
+        },
+        {
+          "id": "s7",
+          "text": "`ExecStart=/usr/bin/node /srv/orders/server.js`",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "`Restart=on-failure`",
+          "issue": null
+        },
+        {
+          "id": "s9",
+          "text": "`[Install]`",
+          "issue": null
+        },
+        {
+          "id": "s10",
+          "text": "`WantedBy=multi-user.target`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-linux-shell-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": "stack-linux",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "You are switching a remote server to SSH keys only, connected right now with a password session. Order the steps so you cannot lock yourself out.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Add your public key to `~/.ssh/authorized_keys` on the server"
+        },
+        {
+          "id": "r2",
+          "label": "In a **second** terminal, confirm a key-based login works"
+        },
+        {
+          "id": "r3",
+          "label": "Set `PasswordAuthentication no` in `sshd_config`"
+        },
+        {
+          "id": "r4",
+          "label": "Check the config with `sudo sshd -t`"
+        },
+        {
+          "id": "r5",
+          "label": "Reload the daemon with `sudo systemctl reload ssh`"
+        },
+        {
+          "id": "r6",
+          "label": "Open a third session to confirm login still works before closing the original"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Prove the key works before disabling passwords, validate syntax before reloading, and keep the original session open until a fresh login succeeds."
+    }
+  },
+  {
+    "id": "eng-linux-shell-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "This crontab was added to the app server. The backup should run nightly. Mark the lines that are wrong.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "`MAILTO=ops@example.com`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "`PATH=/usr/local/bin:/usr/bin:/bin`",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "`* * * * * /opt/scripts/backup.sh`",
+          "issue": "Runs every minute, not nightly; something like `0 2 * * *` was intended."
+        },
+        {
+          "id": "s4",
+          "text": "`0 3 * * * cd /opt/app && ./report.sh >> /var/log/report.log 2>&1`",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "`30 4 * * * rm -rf $TMPDIR/*`",
+          "issue": "Cron's environment usually has no `TMPDIR`, so this expands to `rm -rf /*`."
+        },
+        {
+          "id": "s6",
+          "text": "`15 5 * * 0 /opt/scripts/weekly-cleanup.sh`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-linux-shell-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does `set -euo pipefail` at the top of a bash script do?",
+    "mcq": {
+      "options": [
+        "Exits on any failing command, treats unset variables as errors, and makes a pipeline fail if any stage fails",
+        "Prints every command before running it",
+        "Runs the script with root privileges",
+        "Ignores errors so the script always finishes"
+      ],
+      "correctIndex": 0,
+      "explanation": "`-e` stops on errors, `-u` catches typos like `$BUIDL_DIR`, and `pipefail` stops `cmd | tee log` hiding a failure of `cmd`. Printing commands is `-x`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does `find /var/log/app -name '*.log' -mtime +7 -delete` do?",
+    "mcq": {
+      "options": [
+        "Deletes `.log` files under `/var/log/app` last modified more than 7 days ago",
+        "Deletes logs created in the last 7 days",
+        "Lists files older than 7 days without deleting them",
+        "Deletes the 7 largest log files"
+      ],
+      "correctIndex": 0,
+      "explanation": "`-mtime +7` means modified more than 7 days ago. Run it once without `-delete` to see what would go.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "In a script, `grep -q ERROR app.log | wc -l` is followed by `echo $?`. Whose exit status is printed (without `pipefail`)?",
+    "mcq": {
+      "options": [
+        "`wc -l`, the last command in the pipeline",
+        "`grep`, the first command",
+        "The highest exit code of the two",
+        "Always 0"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without `pipefail`, a pipeline's status is its last command's. Use `${PIPESTATUS[0]}` or `set -o pipefail` to see earlier failures.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`loadStatus(uptime, cores)` reads a Linux `uptime` line and classifies the **5-minute** load per core: below 0.7 is `\"ok\"`, up to and including 1.0 is `\"busy\"`, above is `\"overloaded\"`. If the line has no load averages return `\"unknown\"`. It reads the wrong average today and crashes on bad input. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "loadStatus",
+      "starterCode": "function loadStatus(uptime, cores) {\n  const m = uptime.match(/load average: ([\\d.]+)/);\n  const perCore = parseFloat(m[1]) / cores;\n  if (perCore < 0.7) return \"ok\";\n  if (perCore <= 1.0) return \"busy\";\n  return \"overloaded\";\n}",
+      "referenceSolution": "function loadStatus(uptime, cores) {\n  const m = uptime.match(/load average: ([\\d.]+), ([\\d.]+), ([\\d.]+)/);\n  if (!m) return \"unknown\";\n  const perCore = parseFloat(m[2]) / cores;\n  if (perCore < 0.7) return \"ok\";\n  if (perCore <= 1.0) return \"busy\";\n  return \"overloaded\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            " 10:14:03 up 3 days,  2:01,  1 user,  load average: 0.10, 3.50, 2.00",
+            4
+          ],
+          "expected": "busy"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            " 09:00:00 up 1 day,  1 user,  load average: 9.00, 1.00, 0.50",
+            4
+          ],
+          "expected": "ok"
+        },
+        {
+          "args": [
+            " 09:00:00 up 1 day,  1 user,  load average: 1.00, 8.40, 6.00",
+            8
+          ],
+          "expected": "overloaded"
+        },
+        {
+          "args": [
+            "garbage",
+            2
+          ],
+          "expected": "unknown"
+        },
+        {
+          "args": [
+            " 12:00:00 up 5 min,  2 users,  load average: 0.00, 4.00, 1.00",
+            4
+          ],
+          "expected": "busy"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": "stack-linux",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`mem_available_pct(free_output)` reads `free -m` output and returns the percentage of memory **available** to new processes (the `available` column of the `Mem:` row divided by `total`), rounded to an integer. `free` (unused) is the wrong column: Linux uses spare RAM as cache. If the header has no `available` column, or there is no `Mem:` row, return `None`. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "mem_available_pct",
+      "starterCode": "def mem_available_pct(free_output):\n    for line in free_output.splitlines():\n        parts = line.split()\n        if parts and parts[0] == \"Mem:\":\n            return round(int(parts[3]) / int(parts[1]) * 100)\n    return None",
+      "referenceSolution": "def mem_available_pct(free_output):\n    lines = [l for l in free_output.splitlines() if l.strip()]\n    if not lines:\n        return None\n    header = lines[0].split()\n    if \"available\" not in header:\n        return None\n    for line in lines[1:]:\n        parts = line.split()\n        if parts[0] == \"Mem:\":\n            values = [int(v) for v in parts[1:]]\n            return round(values[header.index(\"available\")] / values[0] * 100)\n    return None",
+      "sampleTests": [
+        {
+          "args": [
+            "               total        used        free      shared  buff/cache   available\nMem:           15890        6012         512         301        9366        9201\nSwap:           2047           0        2047"
+          ],
+          "expected": 58
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "  total used free shared buff/cache available\nMem: 4000 2900 100 0 1000 1000"
+          ],
+          "expected": 25
+        },
+        {
+          "args": [
+            "  total used free shared buffers cached\nMem: 4000 3000 1000 0 100 500"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "  total used free shared buff/cache available\nMem: 8000 7900 50 0 50 60\nSwap: 0 0 0"
+          ],
+          "expected": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An API server (4 cores) is slow. `top` shows load average `12.0`, CPU `us` 5%, `sy` 3%, `wa` 70%.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An API server (4 cores) is slow. `top` shows load average `12.0`, CPU `us` 5%, `sy` 3%, `wa` 70%.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the bottleneck?",
+          "options": [
+            "Disk I/O: processes are waiting on storage, not on CPU",
+            "CPU: the load is three times the core count",
+            "Memory: the system is out of RAM",
+            "Network bandwidth"
+          ],
+          "correctIndex": 0,
+          "explanation": "Linux load counts tasks in uninterruptible I/O wait too. High `wa` with idle user CPU points at the disk."
+        },
+        {
+          "id": "q2",
+          "question": "How do you find which process is doing the I/O?",
+          "options": [
+            "`sudo iotop -o` or `pidstat -d 1`",
+            "`ps aux --sort=-%cpu`",
+            "`netstat -s`",
+            "`free -m`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Both show per-process disk read/write rates; sorting by CPU would show nothing useful here."
+        },
+        {
+          "id": "q3",
+          "question": "It is a nightly `pg_dump` that overran into business hours. Best fix?",
+          "options": [
+            "Schedule it off-peak and run it with lower I/O priority (`ionice -c3`), or dump from a replica",
+            "Kill it every morning",
+            "Add more CPU cores"
+          ],
+          "correctIndex": 0,
+          "explanation": "The backup must still happen; move it off the hot path and stop it competing with live traffic."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Review this deploy script written for CI. Mark the lines with security problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "`set -euo pipefail`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "`curl -s https://get.example-tool.sh | sudo bash`",
+          "issue": "Runs unpinned remote code as root with no checksum; download a pinned version and verify it."
+        },
+        {
+          "id": "s3",
+          "text": "`chmod 600 ~/.ssh/deploy_key`",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "`echo \"$DB_PASSWORD\" > /tmp/db.pass`",
+          "issue": "Writes the secret to a world-readable shared path that outlives the job."
+        },
+        {
+          "id": "s5",
+          "text": "`trap 'rm -f \"$LOCK_FILE\"' EXIT`",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "`ssh -o StrictHostKeyChecking=no deploy@\"$HOST\" 'sudo systemctl restart app'`",
+          "issue": "Disables host-key verification, so a spoofed host would receive the connection; pin the host key in `known_hosts`."
+        },
+        {
+          "id": "s7",
+          "text": "`rsync -az --delete dist/ deploy@\"$HOST\":/srv/app/`",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-linux-shell-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The database host's disk hit 100% at 03:00 and writes are failing. Order your incident response.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put these in the right order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Confirm with `df -h` and `df -i` which filesystem is full (blocks or inodes)"
+        },
+        {
+          "id": "r2",
+          "label": "Find the growth with `du -xh --max-depth=1 / | sort -h`"
+        },
+        {
+          "id": "r3",
+          "label": "Free space safely: compress or move old logs, never delete live database files"
+        },
+        {
+          "id": "r4",
+          "label": "Verify the database accepts writes and the app recovered"
+        },
+        {
+          "id": "r5",
+          "label": "Afterwards, add an alert at 80% and a fix for the cause"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Confirm what is full, find why, recover without destroying data, verify, then prevent recurrence."
+    }
+  },
+  {
+    "id": "eng-linux-shell-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": "stack-linux",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A Node.js service under systemd starts failing with `EMFILE: too many open files` during traffic peaks.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A Node.js service under systemd starts failing with `EMFILE: too many open files` during traffic peaks.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you check the limit that actually applies to the running process?",
+          "options": [
+            "`cat /proc/<pid>/limits` and look at `Max open files`",
+            "`ulimit -n` in your own SSH shell",
+            "`df -i`",
+            "`lsof | wc -l` for the whole system"
+          ],
+          "correctIndex": 0,
+          "explanation": "Your shell's `ulimit` is your session's limit, not the service's. `/proc/<pid>/limits` shows the process's real limits."
+        },
+        {
+          "id": "q2",
+          "question": "It shows 1024. Where do you raise it for this service?",
+          "options": [
+            "`LimitNOFILE=65536` in the unit's `[Service]` section (or a drop-in), then `daemon-reload` and restart",
+            "`/etc/security/limits.conf`",
+            "`ulimit -n 65536` in `.bashrc`",
+            "`sysctl -w fs.file-max=1024`"
+          ],
+          "correctIndex": 0,
+          "explanation": "systemd services do not go through PAM, so `limits.conf` does not apply. The unit's `LimitNOFILE` does."
+        },
+        {
+          "id": "q3",
+          "question": "A week later errors return at the new limit. What do you check?",
+          "options": [
+            "Whether the open-fd count (`ls /proc/<pid>/fd | wc -l`) keeps growing: a connection or file-handle leak",
+            "Raise the limit again to 1,000,000",
+            "Restart the service nightly from cron"
+          ],
+          "correctIndex": 0,
+          "explanation": "A steadily growing count under steady traffic means handles are never closed; raising the limit only delays the crash."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-linux-shell-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "`df` says a disk is full but `du` adds up to far less. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "Deleted files still held open by running processes; `lsof +L1` lists them",
+        "`du` does not count files over 1 GB",
+        "The filesystem is corrupted and needs `fsck` immediately",
+        "`df` counts swap space"
+      ],
+      "correctIndex": 0,
+      "explanation": "`du` walks names; a deleted-but-open file has no name but keeps its blocks until the process closes it or restarts.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does `ssh -L 5433:db.internal:5432 user@bastion` do?",
+    "mcq": {
+      "options": [
+        "Forwards local port 5433 through the bastion to port 5432 on `db.internal`",
+        "Opens port 5433 on the bastion to the internet",
+        "Copies the database to your machine",
+        "Forwards the bastion's port 5432 to `db.internal`'s 5433"
+      ],
+      "correctIndex": 0,
+      "explanation": "`-L local:host:port` makes connections to `localhost:5433` travel through the SSH session and out from the bastion to `db.internal:5432`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-linux-shell-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-linux-shell",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why is `kill -9` a poor first choice for stopping a database or app server?",
+    "mcq": {
+      "options": [
+        "SIGKILL cannot be caught, so the process cannot flush buffers, finish writes or close connections cleanly",
+        "It only works for root",
+        "It restarts the process instead of stopping it",
+        "It kills every process with the same name"
+      ],
+      "correctIndex": 0,
+      "explanation": "Send SIGTERM first and give it time; SIGKILL is for processes that ignore it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

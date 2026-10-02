@@ -1,0 +1,1652 @@
+[
+  {
+    "id": "eng-dockerfiles-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `baseImages` so it returns the image of every `FROM` line, in order, without the `AS <stage>` part. Instructions are case-insensitive and some lines are comments.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "baseImages",
+      "starterCode": "function baseImages(dockerfile) {\n  return dockerfile\n    .split(\"\\n\")\n    .filter((line) => line.startsWith(\"FROM \"))\n    .map((line) => line.slice(5));\n}",
+      "referenceSolution": "function baseImages(dockerfile) {\n  return dockerfile\n    .split(\"\\n\")\n    .map((line) => line.trim())\n    .filter((line) => /^from\\s/i.test(line))\n    .map((line) => line.split(/\\s+/)[1]);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "FROM node:20-slim\nWORKDIR /app\nCMD [\"node\", \"index.js\"]"
+          ],
+          "expected": [
+            "node:20-slim"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "FROM golang:1.22 AS build\nRUN go build -o /out/app\nFROM gcr.io/distroless/static\nCOPY --from=build /out/app /app"
+          ],
+          "expected": [
+            "golang:1.22",
+            "gcr.io/distroless/static"
+          ]
+        },
+        {
+          "args": [
+            "# FROM ubuntu:22.04 (old)\nfrom python:3.12-slim as base"
+          ],
+          "expected": [
+            "python:3.12-slim"
+          ]
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A build check makes sure `.dockerignore` excludes `node_modules`, `.git` and `.env`. Fix `missing_ignores` so entries written as `node_modules/` or `/.git` also count. Return the missing names in the order of `required`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "missing_ignores",
+      "starterCode": "def missing_ignores(lines, required):\n    return [r for r in required if r not in lines]",
+      "referenceSolution": "def missing_ignores(lines, required):\n    present = {line.strip().strip(\"/\") for line in lines if line.strip() and not line.strip().startswith(\"#\")}\n    return [r for r in required if r not in present]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "node_modules",
+              ".git"
+            ],
+            [
+              "node_modules",
+              ".git",
+              ".env"
+            ]
+          ],
+          "expected": [
+            ".env"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "node_modules/",
+              "/.git",
+              ".env"
+            ],
+            [
+              "node_modules",
+              ".git",
+              ".env"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            [
+              "node_modules",
+              ".env"
+            ]
+          ],
+          "expected": [
+            "node_modules",
+            ".env"
+          ]
+        },
+        {
+          "args": [
+            [
+              "# .env",
+              "dist"
+            ],
+            [
+              ".env"
+            ]
+          ],
+          "expected": [
+            ".env"
+          ]
+        },
+        {
+          "args": [
+            [
+              " .env ",
+              "coverage"
+            ],
+            [
+              ".env",
+              ".git"
+            ]
+          ],
+          "expected": [
+            ".git"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A first Dockerfile for a Flask app.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "FROM python:3.12-slim",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "WORKDIR /app",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "COPY . .",
+          "issue": "Copying all code before installing requirements means every code change reinstalls every package. Copy `requirements.txt` first."
+        },
+        {
+          "id": "l4",
+          "text": "RUN pip install --no-cache-dir -r requirements.txt",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "ENV STRIPE_SECRET_KEY=sk_live_51Hx...",
+          "issue": "A secret baked into the image is visible to anyone who can pull it. Pass it at runtime."
+        },
+        {
+          "id": "l6",
+          "text": "EXPOSE 5000",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "CMD [\"python\", \"app.py\"]",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You are writing a Dockerfile for a Node app and want rebuilds after code changes to be fast.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the instructions in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "`FROM node:20-slim`"
+        },
+        {
+          "id": "s2",
+          "label": "`WORKDIR /app`"
+        },
+        {
+          "id": "s3",
+          "label": "`COPY package.json package-lock.json ./`"
+        },
+        {
+          "id": "s4",
+          "label": "`RUN npm ci`"
+        },
+        {
+          "id": "s5",
+          "label": "`COPY . .`"
+        },
+        {
+          "id": "s6",
+          "label": "`CMD [\"node\", \"server.js\"]`"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "explanation": "Dependency files change rarely, so copying them and installing first lets Docker reuse that layer whenever only source code changes."
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Every build reinstalls all dependencies.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your Dockerfile is `FROM node:20-slim`, `WORKDIR /app`, `COPY . .`, `RUN npm ci`, `CMD [...]`. Each build takes 3 minutes even for a one-line change.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why is `npm ci` never cached?",
+          "options": [
+            "`COPY . .` changes whenever any file changes, which invalidates every layer after it",
+            "`npm ci` is never cacheable",
+            "The `node:20-slim` image is re-downloaded each time",
+            "`WORKDIR` resets the cache"
+          ],
+          "correctIndex": 0,
+          "explanation": "A layer is reused only if its instruction and its inputs are unchanged, and every later layer depends on the earlier ones."
+        },
+        {
+          "id": "q2",
+          "question": "What is the fix?",
+          "options": [
+            "Copy `package*.json`, run `npm ci`, then `COPY . .`",
+            "Add `--no-cache` to the build",
+            "Move `npm ci` into `CMD`",
+            "Use `ADD` instead of `COPY`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Now the install layer only rebuilds when the dependency files change."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A `.dockerignore` for a Node API whose Dockerfile runs `COPY . .` and then `npm run build`.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the entries that will break the build.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "node_modules",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": ".git",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "src",
+          "issue": "The build needs the source; ignoring `src` means `npm run build` has nothing to compile."
+        },
+        {
+          "id": "l4",
+          "text": ".env",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "package.json",
+          "issue": "Without `package.json`, `npm ci` and `npm run build` fail."
+        },
+        {
+          "id": "l6",
+          "text": "coverage",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `RUN` and `CMD` in a Dockerfile?",
+    "mcq": {
+      "options": [
+        "`RUN` executes while the image is built; `CMD` is the default command when a container starts",
+        "`RUN` executes when the container starts; `CMD` executes during the build",
+        "They are interchangeable",
+        "`CMD` can appear many times and all of them run in order"
+      ],
+      "correctIndex": 0,
+      "explanation": "`RUN` creates a layer at build time (installing packages). `CMD` is stored as metadata; only the last `CMD` counts.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `EXPOSE 3000` in a Dockerfile do?",
+    "mcq": {
+      "options": [
+        "Documents that the app listens on 3000; you still need `-p` to publish it",
+        "Publishes port 3000 on the host automatically",
+        "Opens port 3000 in the host firewall",
+        "Makes the app listen on port 3000"
+      ],
+      "correctIndex": 0,
+      "explanation": "`EXPOSE` is metadata. Publishing a port happens at `docker run -p`, and the app itself decides which port it listens on.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why add a `.dockerignore` file?",
+    "mcq": {
+      "options": [
+        "To keep files like `node_modules`, `.git` and `.env` out of the build context and the image",
+        "To stop Docker from pulling the base image",
+        "To list files Docker should delete from the host after building",
+        "To ignore errors in `RUN` steps"
+      ],
+      "correctIndex": 0,
+      "explanation": "Everything in the context is sent to the builder and can be copied into the image. Ignoring junk makes builds faster and keeps secrets out.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Before `docker run --env-file .env`, a script checks the file. Complete `missingKeys(envText, required)`: return the required keys that are absent **or empty**, in the order given. Ignore blank lines and `#` comments.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "missingKeys",
+      "starterCode": "function missingKeys(envText, required) {\n  return required.filter((key) => !envText.includes(key));\n}",
+      "referenceSolution": "function missingKeys(envText, required) {\n  const values = {};\n  for (const raw of envText.split(\"\\n\")) {\n    const line = raw.trim();\n    if (!line || line.startsWith(\"#\")) continue;\n    const eq = line.indexOf(\"=\");\n    if (eq < 1) continue;\n    values[line.slice(0, eq).trim()] = line.slice(eq + 1).trim();\n  }\n  return required.filter((key) => !values[key]);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "PORT=3000\nDATABASE_URL=postgres://db/app",
+            [
+              "PORT",
+              "DATABASE_URL",
+              "JWT_SECRET"
+            ]
+          ],
+          "expected": [
+            "JWT_SECRET"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "# JWT_SECRET=old\nPORT=80",
+            [
+              "PORT",
+              "JWT_SECRET"
+            ]
+          ],
+          "expected": [
+            "JWT_SECRET"
+          ]
+        },
+        {
+          "args": [
+            "PORT=\nNODE_ENV=production",
+            [
+              "PORT",
+              "NODE_ENV"
+            ]
+          ],
+          "expected": [
+            "PORT"
+          ]
+        },
+        {
+          "args": [
+            "",
+            [
+              "A"
+            ]
+          ],
+          "expected": [
+            "A"
+          ]
+        },
+        {
+          "args": [
+            "A=1\nB=2",
+            []
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Count the instructions in a Dockerfile that add filesystem layers: `RUN`, `COPY` and `ADD` (any case). Ignore comments and continuation lines that start with whitespace.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "layer_count",
+      "starterCode": "def layer_count(dockerfile):\n    return sum(1 for line in dockerfile.split(\"\\n\") if line.startswith(\"RUN\"))",
+      "referenceSolution": "def layer_count(dockerfile):\n    count = 0\n    for line in dockerfile.split(\"\\n\"):\n        if not line or line[0].isspace() or line.startswith(\"#\"):\n            continue\n        if line.split()[0].upper() in (\"RUN\", \"COPY\", \"ADD\"):\n            count += 1\n    return count",
+      "sampleTests": [
+        {
+          "args": [
+            "FROM alpine\nRUN apk add curl\nCOPY app /app"
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "FROM node:20\n# RUN echo skip\nRUN apt-get update && \\\n    apt-get install -y git\ncopy . .\nCMD [\"node\"]"
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            "FROM scratch\nADD rootfs.tar /\nCOPY bin /bin\nENTRYPOINT [\"/bin/app\"]"
+          ],
+          "expected": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "A Dockerfile that installs system packages.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that cause stale packages or a bigger image than needed.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "FROM ubuntu:24.04",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "RUN apt-get update",
+          "issue": "On its own line, this layer is cached forever, so a later `install` change can use an old package index. Combine update and install in one `RUN`."
+        },
+        {
+          "id": "l3",
+          "text": "RUN apt-get install -y curl ca-certificates",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "RUN apt-get install -y build-essential",
+          "issue": "Compilers are only needed to build; they bloat the runtime image. Use a build stage."
+        },
+        {
+          "id": "l5",
+          "text": "WORKDIR /srv",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "COPY ./bin/server /srv/server",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "CMD [\"/srv/server\"]",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Turn a React build into a small nginx image with a multi-stage Dockerfile.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the lines in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "`FROM node:20 AS build`"
+        },
+        {
+          "id": "s2",
+          "label": "`WORKDIR /app`"
+        },
+        {
+          "id": "s3",
+          "label": "`COPY package.json package-lock.json ./`"
+        },
+        {
+          "id": "s4",
+          "label": "`RUN npm ci`"
+        },
+        {
+          "id": "s5",
+          "label": "`COPY . .`"
+        },
+        {
+          "id": "s6",
+          "label": "`RUN npm run build`"
+        },
+        {
+          "id": "s7",
+          "label": "`FROM nginx:1.27-alpine`"
+        },
+        {
+          "id": "s8",
+          "label": "`COPY --from=build /app/dist /usr/share/nginx/html`"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s8"
+      ],
+      "explanation": "The build stage installs and compiles; the final stage starts fresh from nginx and copies only the built files, so Node and node_modules never reach production."
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The image is far too big.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A Go API's image is 1.1 GB. The Dockerfile is a single stage `FROM golang:1.22` that builds and runs the binary.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What gives the biggest reduction?",
+          "options": [
+            "A multi-stage build: compile in `golang`, copy only the binary into a minimal final image",
+            "Combine all `RUN` lines into one",
+            "Add a `.dockerignore`",
+            "Use `--squash`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The Go toolchain is most of the size, and the binary does not need it at runtime."
+        },
+        {
+          "id": "q2",
+          "question": "Which final base fits a statically linked Go binary that makes HTTPS calls?",
+          "options": [
+            "`gcr.io/distroless/static` (includes CA certificates)",
+            "`golang:1.22-alpine`",
+            "`ubuntu:24.04`",
+            "`node:20-slim`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Distroless static is tiny and ships CA certs and a non-root user. `scratch` works too if you copy certs in yourself."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Arguments to the container are not working.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The Dockerfile ends with `CMD [\"node\", \"cli.js\"]`. Running `docker run tool --verbose` fails with `exec: \"--verbose\": executable file not found`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why?",
+          "options": [
+            "Arguments after the image name replace `CMD` entirely, so Docker tries to run `--verbose`",
+            "Node does not accept flags",
+            "`CMD` must be in shell form for arguments",
+            "The image needs `EXPOSE`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`CMD` is the default command and is fully overridden by `docker run` arguments."
+        },
+        {
+          "id": "q2",
+          "question": "How do you make `docker run tool --verbose` pass the flag to the CLI?",
+          "options": [
+            "`ENTRYPOINT [\"node\", \"cli.js\"]` (with an optional `CMD` for default flags)",
+            "`CMD node cli.js $@`",
+            "`RUN node cli.js --verbose`",
+            "`ENV ARGS=--verbose`"
+          ],
+          "correctIndex": 0,
+          "explanation": "With an `ENTRYPOINT`, `docker run` arguments are appended to it, and `CMD` only supplies default arguments."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "When should you use `ADD` instead of `COPY`?",
+    "mcq": {
+      "options": [
+        "Rarely: `ADD` also extracts local tar archives and fetches URLs, so prefer `COPY` unless you need that",
+        "Always; `ADD` is the newer instruction",
+        "When copying more than one file",
+        "When the destination folder does not exist"
+      ],
+      "correctIndex": 0,
+      "explanation": "`COPY` does only one thing and is predictable. `ADD`'s extra behaviour (auto-extracting archives, remote URLs) surprises people.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `ARG` and `ENV`?",
+    "mcq": {
+      "options": [
+        "`ARG` exists only during the build; `ENV` is also set in containers started from the image",
+        "`ENV` exists only during the build; `ARG` persists into containers",
+        "`ARG` values are encrypted",
+        "They are identical"
+      ],
+      "correctIndex": 0,
+      "explanation": "Use `ARG` for build-time values (`--build-arg`) and `ENV` for runtime settings. Neither is a safe place for secrets.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "The Dockerfile has `COPY package*.json ./`, `RUN npm ci`, `COPY . .`, `RUN npm run build`. You edit only `src/App.tsx`. Which steps run again?",
+    "mcq": {
+      "options": [
+        "`COPY . .` and `RUN npm run build`",
+        "All four",
+        "Only `RUN npm run build`",
+        "None; Docker caches source files"
+      ],
+      "correctIndex": 0,
+      "explanation": "The dependency layers are unchanged, so they are reused. `COPY . .` sees a changed file and every step after it rebuilds.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Shell-form `CMD node server.js` runs under `/bin/sh` and swallows SIGTERM. Complete `toExecForm` so it turns a shell-form command into exec form JSON, e.g. `node  server.js --port 3000` → `[\"node\",\"server.js\",\"--port\",\"3000\"]`. Extra spaces should not produce empty strings.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "toExecForm",
+      "starterCode": "function toExecForm(command) {\n  return JSON.stringify(command.split(\" \"));\n}",
+      "referenceSolution": "function toExecForm(command) {\n  const parts = command.trim().split(/\\s+/).filter(Boolean);\n  return JSON.stringify(parts);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "node server.js"
+          ],
+          "expected": "[\"node\",\"server.js\"]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "node  server.js --port 3000"
+          ],
+          "expected": "[\"node\",\"server.js\",\"--port\",\"3000\"]"
+        },
+        {
+          "args": [
+            "  gunicorn app:app "
+          ],
+          "expected": "[\"gunicorn\",\"app:app\"]"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": "[]"
+        },
+        {
+          "args": [
+            "nginx -g daemon"
+          ],
+          "expected": "[\"nginx\",\"-g\",\"daemon\"]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Complete `lint` so it returns a sorted list of warning codes for a Dockerfile:\n- `unpinned-base`: a `FROM` image with no tag or `:latest` (ignore `scratch` and earlier stage names)\n- `uses-add`: an `ADD` instruction\n- `no-user`: no `USER` instruction anywhere",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "lint",
+      "starterCode": "def lint(dockerfile):\n    warnings = []\n    if \":latest\" in dockerfile:\n        warnings.append(\"unpinned-base\")\n    return warnings",
+      "referenceSolution": "def lint(dockerfile):\n    warnings = set()\n    stages = set()\n    has_user = False\n    for raw in dockerfile.split(\"\\n\"):\n        line = raw.strip()\n        if not line or line.startswith(\"#\"):\n            continue\n        parts = line.split()\n        op = parts[0].upper()\n        if op == \"FROM\":\n            image = parts[1]\n            if image != \"scratch\" and image not in stages:\n                name = image.split(\"/\")[-1]\n                if \":\" not in name or name.endswith(\":latest\"):\n                    warnings.add(\"unpinned-base\")\n            if len(parts) >= 4 and parts[2].upper() == \"AS\":\n                stages.add(parts[3])\n        elif op == \"ADD\":\n            warnings.add(\"uses-add\")\n        elif op == \"USER\":\n            has_user = True\n    if not has_user:\n        warnings.add(\"no-user\")\n    return sorted(warnings)",
+      "sampleTests": [
+        {
+          "args": [
+            "FROM node:20-slim\nUSER node\nCMD [\"node\", \"a.js\"]"
+          ],
+          "expected": []
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "FROM python\nCOPY . .\nCMD [\"python\", \"a.py\"]"
+          ],
+          "expected": [
+            "no-user",
+            "unpinned-base"
+          ]
+        },
+        {
+          "args": [
+            "FROM golang:1.22 AS build\nRUN go build\nFROM build\nUSER 1000"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "FROM scratch\nADD rootfs.tar /\nUSER 65532"
+          ],
+          "expected": [
+            "uses-add"
+          ]
+        },
+        {
+          "args": [
+            "FROM ubuntu:latest\nUSER app"
+          ],
+          "expected": [
+            "unpinned-base"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A multi-stage Dockerfile for a TypeScript API.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that put the wrong things into the production image or break shutdown.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "FROM node:20 AS build",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "WORKDIR /app",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "COPY package*.json ./",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "RUN npm ci",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "COPY . .",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "RUN npm run build",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "FROM node:20-slim",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "WORKDIR /app",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "COPY --from=build /app /app",
+          "issue": "Copies source, dev dependencies and anything else in the build folder. Copy `dist/` and install production deps only."
+        },
+        {
+          "id": "l10",
+          "text": "ENV NODE_ENV=development",
+          "issue": "Production images should run with `NODE_ENV=production`; development mode is slower and more verbose."
+        },
+        {
+          "id": "l11",
+          "text": "USER node",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "CMD npm start",
+          "issue": "Shell form plus npm as PID 1: SIGTERM does not reach Node, so `docker stop` waits and kills. Use `CMD [\"node\", \"dist/main.js\"]`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Layers should be ordered from least to most frequently changing so the cache works.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these from the earliest in the Dockerfile to the latest.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Install system packages (`apt-get install`)"
+        },
+        {
+          "id": "s2",
+          "label": "Copy the lockfile and install dependencies"
+        },
+        {
+          "id": "s3",
+          "label": "Copy the application source"
+        },
+        {
+          "id": "s4",
+          "label": "`ARG GIT_SHA` and a `LABEL` with the build's commit"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "explanation": "System packages change least; dependencies change sometimes; source changes most commits; the commit sha changes on every build, so it goes last or it busts everything after it."
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The build needs a private npm token.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`npm ci` must authenticate to a private registry with `NPM_TOKEN`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "A teammate used `ARG NPM_TOKEN` and `RUN echo \"//registry.npmjs.org/:_authToken=$NPM_TOKEN\" > .npmrc && npm ci`. What is wrong?",
+          "options": [
+            "The token is stored in the image: `docker history` shows the build arg, and `.npmrc` stays in the layer",
+            "`ARG` values cannot be used in `RUN`",
+            "npm ignores `.npmrc` in containers",
+            "Nothing; build args are hidden"
+          ],
+          "correctIndex": 0,
+          "explanation": "Build args are recorded in the image metadata, and a file created in a layer stays in that layer even if a later step deletes it."
+        },
+        {
+          "id": "q2",
+          "question": "What is the right way?",
+          "options": [
+            "A BuildKit secret: `RUN --mount=type=secret,id=npmrc,target=/root/.npmrc npm ci` with `docker build --secret id=npmrc,src=.npmrc`",
+            "`ENV NPM_TOKEN=...` and unset it at the end",
+            "Delete `.npmrc` in a later `RUN` line",
+            "Commit `.npmrc` to the repo"
+          ],
+          "correctIndex": 0,
+          "explanation": "A secret mount exists only for that one `RUN` step and is never written to a layer."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Switching to a non-root user broke uploads.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You added `USER node` before `CMD`. Now the app fails with `EACCES: permission denied, mkdir '/app/uploads'`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why?",
+          "options": [
+            "Files copied earlier are owned by root, so the `node` user cannot write under `/app`",
+            "The `node` user does not exist in Node images",
+            "`USER` disables the filesystem",
+            "Uploads need `--privileged`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`COPY` creates files as root by default, and the switch to `node` happens after."
+        },
+        {
+          "id": "q2",
+          "question": "What is the cleanest fix?",
+          "options": [
+            "Create the folder with the right owner, e.g. `COPY --chown=node:node . .` or `RUN mkdir /app/uploads && chown node:node /app/uploads`, and mount a volume there",
+            "Go back to running as root",
+            "`RUN chmod -R 777 /`",
+            "Write uploads to `/tmp` and never persist them"
+          ],
+          "correctIndex": 0,
+          "explanation": "Give the app user ownership of just the paths it writes, and put persistent data on a volume."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why prefer `CMD [\"node\", \"server.js\"]` over `CMD node server.js`?",
+    "mcq": {
+      "options": [
+        "Exec form runs Node as PID 1, so it receives SIGTERM from `docker stop` and can shut down cleanly",
+        "Exec form makes the image smaller",
+        "Shell form cannot run Node",
+        "Exec form caches better"
+      ],
+      "correctIndex": 0,
+      "explanation": "Shell form wraps the command in `/bin/sh -c`; the shell is PID 1 and usually does not forward signals.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does a `HEALTHCHECK` instruction do?",
+    "mcq": {
+      "options": [
+        "Docker runs the command periodically and marks the container `healthy` or `unhealthy`",
+        "Docker restarts the container automatically whenever the check fails",
+        "It runs once during the build to test the image",
+        "It blocks `docker run` until the app is ready"
+      ],
+      "correctIndex": 0,
+      "explanation": "The status shows in `docker ps` and can be used by orchestrators and `depends_on: condition: service_healthy`. Plain Docker does not restart on unhealthy by itself.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A build sends a 900 MB context and is slow before the first step even runs. What helps most?",
+    "mcq": {
+      "options": [
+        "A `.dockerignore` that excludes `node_modules`, `.git`, build output and data files",
+        "Reordering the `RUN` lines",
+        "Using `ADD` instead of `COPY`",
+        "A smaller base image"
+      ],
+      "correctIndex": 0,
+      "explanation": "The whole context is sent to the builder first. Ignoring large folders shrinks it and also stops them busting `COPY . .` cache.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "BuildKit builds only the stages a target needs. Each stage is `{ name, from }`, where `from` is an image or an earlier stage name. Complete `stagesToBuild(stages, target)` so it returns the needed stage names in build order (earliest first), or `[]` for an unknown target.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "stagesToBuild",
+      "starterCode": "function stagesToBuild(stages, target) {\n  const index = stages.findIndex((s) => s.name === target);\n  return stages.slice(0, index + 1).map((s) => s.name);\n}",
+      "referenceSolution": "function stagesToBuild(stages, target) {\n  const byName = new Map(stages.map((s) => [s.name, s]));\n  if (!byName.has(target)) return [];\n  const needed = new Set();\n  let current = byName.get(target);\n  while (current) {\n    needed.add(current.name);\n    current = byName.get(current.from);\n  }\n  return stages.filter((s) => needed.has(s.name)).map((s) => s.name);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "deps",
+                "from": "node:20"
+              },
+              {
+                "name": "build",
+                "from": "deps"
+              },
+              {
+                "name": "test",
+                "from": "build"
+              },
+              {
+                "name": "prod",
+                "from": "node:20-slim"
+              }
+            ],
+            "test"
+          ],
+          "expected": [
+            "deps",
+            "build",
+            "test"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "deps",
+                "from": "node:20"
+              },
+              {
+                "name": "test",
+                "from": "deps"
+              },
+              {
+                "name": "prod",
+                "from": "deps"
+              }
+            ],
+            "prod"
+          ],
+          "expected": [
+            "deps",
+            "prod"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "a",
+                "from": "alpine:3.20"
+              }
+            ],
+            "missing"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "lint",
+                "from": "node:20"
+              },
+              {
+                "name": "base",
+                "from": "python:3.12"
+              },
+              {
+                "name": "app",
+                "from": "base"
+              }
+            ],
+            "app"
+          ],
+          "expected": [
+            "base",
+            "app"
+          ]
+        },
+        {
+          "args": [
+            [],
+            "app"
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Release images are tagged from a semver version: `1.4.2` gets `1.4.2`, `1.4`, `1` and `latest`. A pre-release like `2.0.0-rc.1` gets only its own tag. Fix `release_tags`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "release_tags",
+      "starterCode": "def release_tags(version):\n    return [version, \"latest\"]",
+      "referenceSolution": "def release_tags(version):\n    version = version.lstrip(\"v\")\n    if \"-\" in version:\n        return [version]\n    major, minor, _patch = version.split(\".\")\n    return [version, f\"{major}.{minor}\", major, \"latest\"]",
+      "sampleTests": [
+        {
+          "args": [
+            "1.4.2"
+          ],
+          "expected": [
+            "1.4.2",
+            "1.4",
+            "1",
+            "latest"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "2.0.0-rc.1"
+          ],
+          "expected": [
+            "2.0.0-rc.1"
+          ]
+        },
+        {
+          "args": [
+            "v3.10.0"
+          ],
+          "expected": [
+            "3.10.0",
+            "3.10",
+            "3",
+            "latest"
+          ]
+        },
+        {
+          "args": [
+            "0.1.9"
+          ],
+          "expected": [
+            "0.1.9",
+            "0.1",
+            "0",
+            "latest"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A production Dockerfile for a Go service.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that will break the image or waste the build cache.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "FROM golang:1.22 AS build",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "WORKDIR /src",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "ARG GIT_SHA",
+          "issue": "Declared before the dependency download, a new sha every commit invalidates every following `RUN`. Declare it just before it is used."
+        },
+        {
+          "id": "l4",
+          "text": "COPY go.mod go.sum ./",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "RUN go mod download",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "COPY . .",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "RUN go build -ldflags \"-X main.sha=$GIT_SHA\" -o /out/api ./cmd/api",
+          "issue": "Without `CGO_ENABLED=0` the binary links against glibc and will not start on `scratch`."
+        },
+        {
+          "id": "l8",
+          "text": "FROM scratch",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "COPY --from=build /out/api /api",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "USER 65532:65532",
+          "issue": null
+        },
+        {
+          "id": "l12",
+          "text": "HEALTHCHECK CMD curl -f http://localhost:8080/health",
+          "issue": "`scratch` has no `curl` (or shell); the check always fails. Build a `/api healthcheck` subcommand instead."
+        },
+        {
+          "id": "l13",
+          "text": "ENTRYPOINT [\"/api\"]",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A critical CVE is fixed in your base image. You maintain one service image.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the rollout steps.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Update the pinned base tag or digest in the Dockerfile"
+        },
+        {
+          "id": "s2",
+          "label": "Rebuild with `--pull` so the new base is fetched, not a cached one"
+        },
+        {
+          "id": "s3",
+          "label": "Scan the new image and confirm the CVE is gone"
+        },
+        {
+          "id": "s4",
+          "label": "Run the test suite against the new image"
+        },
+        {
+          "id": "s5",
+          "label": "Push it with an immutable tag and deploy to staging"
+        },
+        {
+          "id": "s6",
+          "label": "Promote the same image to production"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "explanation": "Change the pin, build fresh, prove the fix and nothing else broke, then ship the exact image you tested through each environment."
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "CI builds never hit the cache.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "GitHub Actions builds the image on a fresh runner each time. Every build takes 9 minutes, even when only a README changed.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why is nothing cached?",
+          "options": [
+            "Each runner starts with an empty local build cache",
+            "BuildKit disables caching in CI",
+            "`COPY` always busts the cache in CI",
+            "The registry deletes layers after each push"
+          ],
+          "correctIndex": 0,
+          "explanation": "Docker's layer cache is local to the machine; ephemeral runners throw it away."
+        },
+        {
+          "id": "q2",
+          "question": "What is the standard fix?",
+          "options": [
+            "Export and import the cache: `--cache-to type=registry,ref=...` and `--cache-from` (or `type=gha`)",
+            "Add `--no-cache`",
+            "Pin the runner's Docker version",
+            "Combine every `RUN` into one"
+          ],
+          "correctIndex": 0,
+          "explanation": "BuildKit can store cache in a registry or the GitHub Actions cache and pull it on the next run."
+        },
+        {
+          "id": "q3",
+          "question": "The final stage now hits the cache, but the build stage still rebuilds every time. What setting helps?",
+          "options": [
+            "`mode=max`, which exports cache for intermediate stages too",
+            "`--squash`",
+            "`--platform linux/amd64`",
+            "`mode=min`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The default `mode=min` only exports layers of the final image; multi-stage builds need `mode=max`."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A native module fails in the slim image.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The build stage is `FROM node:20` (Debian) and runs `npm ci`, which compiles `bcrypt`. The final stage is `FROM node:20-alpine` and copies `node_modules` from the build stage. At start: `Error loading shared library ld-linux-x86-64.so.2`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the cause?",
+          "options": [
+            "The native module was compiled against glibc (Debian) but Alpine uses musl",
+            "`bcrypt` cannot run in containers",
+            "Alpine images do not support Node 20",
+            "The copy step lost file permissions"
+          ],
+          "correctIndex": 0,
+          "explanation": "Compiled binaries depend on the C library they were built against."
+        },
+        {
+          "id": "q2",
+          "question": "What is the right fix?",
+          "options": [
+            "Use the same libc family in both stages (e.g. `node:20-slim` for both, or build on `node:20-alpine`)",
+            "Install `glibc` hacks into Alpine",
+            "Run `npm rebuild` at container start in production",
+            "Switch to `--platform linux/arm64`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Matching build and runtime bases keeps native modules compatible without runtime compilation."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does `RUN --mount=type=cache,target=/root/.npm npm ci` give you?",
+    "mcq": {
+      "options": [
+        "npm's download cache persists between builds on that builder without being stored in the image",
+        "The `node_modules` folder is cached in the final image",
+        "The layer is never rebuilt",
+        "npm runs offline"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cache mounts survive across builds but are not part of any layer. When the layer must rebuild, packages come from the local cache instead of the network.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A Dockerfile starts with `ARG NODE_VERSION=20` then `FROM node:${NODE_VERSION}-slim`, and later runs `RUN echo $NODE_VERSION`, which prints an empty line. Why?",
+    "mcq": {
+      "options": [
+        "An `ARG` before `FROM` is only in scope for `FROM` lines; redeclare `ARG NODE_VERSION` inside the stage to use it",
+        "Build args are never visible in `RUN`",
+        "`echo` cannot print variables in Docker",
+        "The default value is ignored without `--build-arg`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Each stage has its own scope. A bare `ARG NODE_VERSION` after `FROM` brings the earlier value into the stage.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-dockerfiles-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-dockerfiles",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why build a production image from `node:20-slim@sha256:<digest>` rather than `node:20-slim`?",
+    "mcq": {
+      "options": [
+        "The build is reproducible: the same Dockerfile always uses the same base until you change the digest deliberately",
+        "Digests are faster to download",
+        "Only digests receive security patches",
+        "Tags cannot be used in multi-stage builds"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tags move as new patch images are published. A digest pin (updated by a bot like Renovate) gives repeatable builds and reviewable base upgrades.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

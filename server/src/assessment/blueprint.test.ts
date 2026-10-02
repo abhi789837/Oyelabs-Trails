@@ -42,7 +42,7 @@ async function issueAndGenerate(userId: string): Promise<string> {
     method: "POST",
     url: `/api/admin/users/${userId}/assessments`,
     ...as(admin),
-    payload: {},
+    payload: { format: "legacy" },
   });
   expect(issued.statusCode).toBe(202);
   await ctx.drainJobs();
@@ -56,7 +56,7 @@ describe("issuing", () => {
       method: "POST",
       url: `/api/admin/users/${userId}/assessments`,
       ...as(admin),
-      payload: {},
+      payload: { format: "legacy" },
     });
 
     expect(res.statusCode).toBe(202);
@@ -75,7 +75,7 @@ describe("issuing", () => {
       method: "POST",
       url: `/api/admin/users/${userId}/assessments`,
       ...as(admin),
-      payload: { label: "Frontend placement" },
+      payload: { format: "legacy", label: "Frontend placement" },
     });
     expect(first.statusCode).toBe(202);
 
@@ -83,7 +83,7 @@ describe("issuing", () => {
       method: "POST",
       url: `/api/admin/users/${userId}/assessments`,
       ...as(admin),
-      payload: { label: "Company process" },
+      payload: { format: "legacy", label: "Company process" },
     });
     expect(second.statusCode).toBe(202);
 
@@ -97,7 +97,7 @@ describe("issuing", () => {
   test("refuses a second while one is actually being sat", async () => {
     // The one thing concurrency cannot mean: two clocks and one camera.
     const userId = await onboardSample(0);
-    await ctx.app.inject({ method: "POST", url: `/api/admin/users/${userId}/assessments`, ...as(admin), payload: {} });
+    await ctx.app.inject({ method: "POST", url: `/api/admin/users/${userId}/assessments`, ...as(admin), payload: { format: "legacy" } });
     const live = ctx.db.select().from(schema.assessments).get()!;
     ctx.db.update(schema.assessments).set({ status: "in_progress" }).where(eq(schema.assessments.id, live.id)).run();
 
@@ -105,7 +105,7 @@ describe("issuing", () => {
       method: "POST",
       url: `/api/admin/users/${userId}/assessments`,
       ...as(admin),
-      payload: {},
+      payload: { format: "legacy" },
     });
     expect(second.statusCode).toBe(409);
     expect(second.json().error.message).toMatch(/sitting an assessment right now/i);
@@ -116,7 +116,7 @@ describe("issuing", () => {
       method: "POST",
       url: `/api/admin/users/${admin.user.id}/assessments`,
       ...as(admin),
-      payload: {},
+      payload: { format: "legacy" },
     });
     expect(res.statusCode).toBe(400);
   });

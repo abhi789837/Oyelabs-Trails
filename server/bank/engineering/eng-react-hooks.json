@@ -1,0 +1,2452 @@
+[
+  {
+    "id": "eng-react-hooks-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A counter uses `useReducer(counterReducer, 0)`. Complete the reducer so it handles\n`{ type: \"increment\" }`, `{ type: \"decrement\" }` and `{ type: \"reset\" }` (back to `0`).\nUnknown actions return the state unchanged.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "counterReducer",
+      "starterCode": "function counterReducer(state, action) {\n  switch (action.type) {\n    case \"increment\":\n      return state + 1;\n    default:\n      return state;\n  }\n}",
+      "referenceSolution": "function counterReducer(state, action) {\n  switch (action.type) {\n    case \"increment\":\n      return state + 1;\n    case \"decrement\":\n      return state - 1;\n    case \"reset\":\n      return 0;\n    default:\n      return state;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            3,
+            {
+              "type": "increment"
+            }
+          ],
+          "expected": 4
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            3,
+            {
+              "type": "decrement"
+            }
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            9,
+            {
+              "type": "reset"
+            }
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            0,
+            {
+              "type": "decrement"
+            }
+          ],
+          "expected": -1
+        },
+        {
+          "args": [
+            5,
+            {
+              "type": "unknown"
+            }
+          ],
+          "expected": 5
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`handleClick` should add 3 to the count, but the count only goes up by 1. React queues the\nthree updates and applies them in order. Fix `handleClick` (use the functional form of the setter).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "clickThreeTimes",
+      "starterCode": "function handleClick(count, setCount) {\n  setCount(count + 1);\n  setCount(count + 1);\n  setCount(count + 1);\n}\n\n// Test driver (leave as is): queues updates like React and applies them in order.\nfunction clickThreeTimes(start) {\n  const queue = [];\n  handleClick(start, (update) => queue.push(update));\n  let state = start;\n  for (const u of queue) state = typeof u === \"function\" ? u(state) : u;\n  return state;\n}",
+      "referenceSolution": "function handleClick(count, setCount) {\n  setCount((c) => c + 1);\n  setCount((c) => c + 1);\n  setCount((c) => c + 1);\n}\n\nfunction clickThreeTimes(start) {\n  const queue = [];\n  handleClick(start, (update) => queue.push(update));\n  let state = start;\n  for (const u of queue) state = typeof u === \"function\" ? u(state) : u;\n  return state;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": 3
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            10
+          ],
+          "expected": 13
+        },
+        {
+          "args": [
+            -3
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            1
+          ],
+          "expected": 4
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`addTodo` is used as `setTodos(todos => addTodo(todos, text))`. It mutates the array, so React\nsees the same reference and skips the re-render. Return a **new** array instead.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "addTodoCheck",
+      "starterCode": "type Todo = { id: number; text: string };\n\nfunction addTodo(todos: Todo[], text: string): Todo[] {\n  todos.push({ id: todos.length + 1, text });\n  return todos;\n}\n\n// Test driver (leave as is).\nfunction addTodoCheck(todos: Todo[], text: string) {\n  const before = todos.length;\n  const next = addTodo(todos, text);\n  return { next, newArray: next !== todos, originalLength: todos.length === before };\n}",
+      "referenceSolution": "type Todo = { id: number; text: string };\n\nfunction addTodo(todos: Todo[], text: string): Todo[] {\n  return [...todos, { id: todos.length + 1, text }];\n}\n\nfunction addTodoCheck(todos: Todo[], text: string) {\n  const before = todos.length;\n  const next = addTodo(todos, text);\n  return { next, newArray: next !== todos, originalLength: todos.length === before };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [],
+            "Buy milk"
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 1,
+                "text": "Buy milk"
+              }
+            ],
+            "newArray": true,
+            "originalLength": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "a"
+              }
+            ],
+            "b"
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 1,
+                "text": "a"
+              },
+              {
+                "id": 2,
+                "text": "b"
+              }
+            ],
+            "newArray": true,
+            "originalLength": true
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "a"
+              },
+              {
+                "id": 2,
+                "text": "b"
+              }
+            ],
+            ""
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 1,
+                "text": "a"
+              },
+              {
+                "id": 2,
+                "text": "b"
+              },
+              {
+                "id": 3,
+                "text": ""
+              }
+            ],
+            "newArray": true,
+            "originalLength": true
+          }
+        },
+        {
+          "args": [
+            [],
+            "x"
+          ],
+          "expected": {
+            "next": [
+              {
+                "id": 1,
+                "text": "x"
+              }
+            ],
+            "newArray": true,
+            "originalLength": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A `useToggle` hook keeps its logic in a pure `toggleReducer(on, action)`. Actions:\n`\"toggle\"` flips the value, `\"on\"` sets `true`, `\"off\"` sets `false`. Complete it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "applyToggle",
+      "starterCode": "function toggleReducer(on, action) {\n  return !on;\n}\n\n// Test driver (leave as is): applies the actions in order.\nfunction applyToggle(initial, actions) {\n  return actions.reduce(toggleReducer, initial);\n}",
+      "referenceSolution": "function toggleReducer(on, action) {\n  if (action === \"on\") return true;\n  if (action === \"off\") return false;\n  if (action === \"toggle\") return !on;\n  return on;\n}\n\nfunction applyToggle(initial, actions) {\n  return actions.reduce(toggleReducer, initial);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            false,
+            [
+              "toggle"
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            false,
+            [
+              "on",
+              "on"
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            true,
+            [
+              "off",
+              "toggle"
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            true,
+            []
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            false,
+            [
+              "toggle",
+              "toggle",
+              "off"
+            ]
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A form stores its values in one state object. `updateField` runs inside\n`setValues(v => updateField(v, name, value))`. It mutates the object, so the input does not\nre-render. Return a new object with the one field changed.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "changeField",
+      "starterCode": "function updateField(values, name, value) {\n  values[name] = value;\n  return values;\n}\n\n// Test driver (leave as is).\nfunction changeField(values, name, value) {\n  const next = updateField(values, name, value);\n  return { next, isNewObject: next !== values };\n}",
+      "referenceSolution": "function updateField(values, name, value) {\n  return { ...values, [name]: value };\n}\n\nfunction changeField(values, name, value) {\n  const next = updateField(values, name, value);\n  return { next, isNewObject: next !== values };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "email": "",
+              "name": "Ann"
+            },
+            "email",
+            "a@x.io"
+          ],
+          "expected": {
+            "next": {
+              "email": "a@x.io",
+              "name": "Ann"
+            },
+            "isNewObject": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            "name",
+            "Bo"
+          ],
+          "expected": {
+            "next": {
+              "name": "Bo"
+            },
+            "isNewObject": true
+          }
+        },
+        {
+          "args": [
+            {
+              "age": "3"
+            },
+            "age",
+            "4"
+          ],
+          "expected": {
+            "next": {
+              "age": "4"
+            },
+            "isNewObject": true
+          }
+        },
+        {
+          "args": [
+            {
+              "a": "1",
+              "b": "2"
+            },
+            "b",
+            ""
+          ],
+          "expected": {
+            "next": {
+              "a": "1",
+              "b": ""
+            },
+            "isNewObject": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This component should show a clock that ticks every second. Mark the lines with a bug.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function Clock() {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const [now, setNow] = useState(new Date());",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  useEffect(() => {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    const id = setInterval(() => setNow(new Date()), 1000);",
+          "issue": "The interval is never cleared: the effect should `return () => clearInterval(id)`, or intervals pile up and outlive the component."
+        },
+        {
+          "id": "l5",
+          "text": "  });",
+          "issue": "No dependency array: the effect re-runs after every render and starts a new interval each time; use `[]`."
+        },
+        {
+          "id": "l6",
+          "text": "  return <p>{now.toLocaleTimeString()}</p>;",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-hooks-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Why must hooks such as `useState` never be called inside an `if` block?",
+    "mcq": {
+      "options": [
+        "React identifies each hook by its call order, so skipping one on some renders mixes up which state belongs to which hook",
+        "Hooks inside `if` blocks are not allowed by JavaScript syntax",
+        "It makes the component render twice",
+        "`useState` can only be called with a constant initial value"
+      ],
+      "correctIndex": 0,
+      "explanation": "React stores hook state in a list per component and matches it by call order. A conditional call shifts the order between renders, so hooks read each other's state. Put the condition inside the hook or the effect instead.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In a click handler you write `setCount(count + 1); console.log(count);` while `count` is `0`. What is logged?",
+    "mcq": {
+      "options": [
+        "`0`",
+        "`1`",
+        "`undefined`",
+        "It depends on how fast the click is"
+      ],
+      "correctIndex": 0,
+      "explanation": "`count` is a constant for this render. The setter schedules a re-render; the new value is only visible in the next render's `count`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You need to keep a value between renders (for example an interval id) without causing a re-render when it changes. Which hook fits?",
+    "mcq": {
+      "options": [
+        "`useRef`",
+        "`useState`",
+        "`useEffect`",
+        "`useMemo`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A ref is a mutable box that survives renders; changing `ref.current` does not trigger a render. `useState` would re-render on every change.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Complete `todosReducer` for a `useReducer` todo list. Actions:\n- `{ type: \"added\", id, text }` appends `{ id, text, done: false }`\n- `{ type: \"toggled\", id }` flips `done` on that todo\n- `{ type: \"removed\", id }` removes it\n\nNever mutate `state`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "todosReducer",
+      "starterCode": "function todosReducer(state, action) {\n  switch (action.type) {\n    case \"added\":\n      return [...state, { id: action.id, text: action.text, done: false }];\n    case \"toggled\":\n      return state;\n    case \"removed\":\n      return state;\n    default:\n      return state;\n  }\n}",
+      "referenceSolution": "function todosReducer(state, action) {\n  switch (action.type) {\n    case \"added\":\n      return [...state, { id: action.id, text: action.text, done: false }];\n    case \"toggled\":\n      return state.map((t) => (t.id === action.id ? { ...t, done: !t.done } : t));\n    case \"removed\":\n      return state.filter((t) => t.id !== action.id);\n    default:\n      return state;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [],
+            {
+              "type": "added",
+              "id": 1,
+              "text": "Ship"
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "text": "Ship",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "a",
+                "done": false
+              },
+              {
+                "id": 2,
+                "text": "b",
+                "done": false
+              }
+            ],
+            {
+              "type": "toggled",
+              "id": 2
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "text": "a",
+              "done": false
+            },
+            {
+              "id": 2,
+              "text": "b",
+              "done": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "a",
+                "done": true
+              }
+            ],
+            {
+              "type": "toggled",
+              "id": 1
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "text": "a",
+              "done": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "a",
+                "done": false
+              },
+              {
+                "id": 2,
+                "text": "b",
+                "done": true
+              }
+            ],
+            {
+              "type": "removed",
+              "id": 1
+            }
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "text": "b",
+              "done": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "text": "a",
+                "done": false
+              }
+            ],
+            {
+              "type": "removed",
+              "id": 9
+            }
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "text": "a",
+              "done": false
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "React re-runs an effect when any dependency changed since the last render (compared with\n`Object.is`). Complete `depsChanged(prev, next)`. `prev` is `null` on the first render, which always counts as changed.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "depsChanged",
+      "starterCode": "function depsChanged(prev, next) {\n  if (prev === null) return true;\n  return prev.length !== next.length;\n}",
+      "referenceSolution": "function depsChanged(prev, next) {\n  if (prev === null) return true;\n  if (prev.length !== next.length) return true;\n  return next.some((value, i) => !Object.is(value, prev[i]));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              "a"
+            ],
+            [
+              1,
+              "a"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            null,
+            [
+              1
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              "a"
+            ],
+            [
+              1,
+              "b"
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [],
+            []
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              0,
+              true
+            ],
+            [
+              0,
+              false
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              "x",
+              2,
+              null
+            ],
+            [
+              "x",
+              2,
+              null
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            null,
+            []
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A `useLocalStorage(key, fallback)` hook reads its initial state with `readStored(raw, fallback)`,\nwhere `raw` is what `localStorage.getItem` returned. Return the parsed JSON, or `fallback` when\nnothing is stored (`null`) or the stored text is not valid JSON.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "readStored",
+      "starterCode": "function readStored(raw, fallback) {\n  return JSON.parse(raw);\n}",
+      "referenceSolution": "function readStored(raw, fallback) {\n  if (raw === null) return fallback;\n  try {\n    return JSON.parse(raw);\n  } catch {\n    return fallback;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "{\"theme\":\"dark\"}",
+            {}
+          ],
+          "expected": {
+            "theme": "dark"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null,
+            "light"
+          ],
+          "expected": "light"
+        },
+        {
+          "args": [
+            "not json",
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "0",
+            5
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "[1,2]",
+            []
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        },
+        {
+          "args": [
+            "",
+            "x"
+          ],
+          "expected": "x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "The pure core of a `usePagination` hook: return `{ pageItems, totalPages, hasNext }` for a\n1-based `page`. The last page shows the remainder; an empty list has `totalPages: 0`. The\nstarter shows the wrong slice.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "paginate",
+      "starterCode": "function paginate<T>(items: T[], page: number, pageSize: number) {\n  const start = page * pageSize;\n  const totalPages = Math.ceil(items.length / pageSize);\n  return { pageItems: items.slice(start, start + pageSize), totalPages, hasNext: page < totalPages };\n}",
+      "referenceSolution": "function paginate<T>(items: T[], page: number, pageSize: number) {\n  const start = (page - 1) * pageSize;\n  const totalPages = Math.ceil(items.length / pageSize);\n  return { pageItems: items.slice(start, start + pageSize), totalPages, hasNext: page < totalPages };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            1,
+            2
+          ],
+          "expected": {
+            "pageItems": [
+              1,
+              2
+            ],
+            "totalPages": 3,
+            "hasNext": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            3,
+            2
+          ],
+          "expected": {
+            "pageItems": [
+              5
+            ],
+            "totalPages": 3,
+            "hasNext": false
+          }
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": {
+            "pageItems": [],
+            "totalPages": 0,
+            "hasNext": false
+          }
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            1,
+            3
+          ],
+          "expected": {
+            "pageItems": [
+              "a",
+              "b",
+              "c"
+            ],
+            "totalPages": 1,
+            "hasNext": false
+          }
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ],
+            2,
+            2
+          ],
+          "expected": {
+            "pageItems": [
+              3,
+              4
+            ],
+            "totalPages": 2,
+            "hasNext": false
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A `usePrevious(value)` hook returns the value from the previous render (`null` on the first).\nIts core is `makePrevious()`, called once per component; the returned function is called once per\nrender. The starter returns the current value. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "renderHistory",
+      "starterCode": "function makePrevious() {\n  let ref = null;\n  return function usePrevious(value) {\n    ref = value;\n    return ref;\n  };\n}\n\n// Test driver (leave as is): one call per render.\nfunction renderHistory(values) {\n  const usePrevious = makePrevious();\n  return values.map((v) => usePrevious(v));\n}",
+      "referenceSolution": "function makePrevious() {\n  let ref = null;\n  return function usePrevious(value) {\n    const previous = ref;\n    ref = value;\n    return previous;\n  };\n}\n\nfunction renderHistory(values) {\n  const usePrevious = makePrevious();\n  return values.map((v) => usePrevious(v));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": [
+            null,
+            1,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a"
+            ]
+          ],
+          "expected": [
+            null
+          ]
+        },
+        {
+          "args": [
+            [
+              5,
+              5,
+              7
+            ]
+          ],
+          "expected": [
+            null,
+            5,
+            5
+          ]
+        },
+        {
+          "args": [
+            [
+              0,
+              1
+            ]
+          ],
+          "expected": [
+            null,
+            0
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The profile should reload whenever `userId` changes. Mark the lines with a bug.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function Profile({ userId }) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const [user, setUser] = useState(null);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  useEffect(() => {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "    fetchUser(userId).then(setUser);",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  }, []);",
+          "issue": "`userId` is used in the effect but missing from the dependency array, so a new id never refetches."
+        },
+        {
+          "id": "l6",
+          "text": "  if (!user) return <Spinner />;",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  user.lastSeen = Date.now();",
+          "issue": "Mutates state during render; derive the value or store it with the setter instead."
+        },
+        {
+          "id": "l8",
+          "text": "  return <Card user={user} />;",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-hooks-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A `Parent` renders a `Child`. Both have a `useEffect(() => console.log(name), [])`. In what order do the logs appear after the first render?",
+    "mcq": {
+      "options": [
+        "`Child` then `Parent`",
+        "`Parent` then `Child`",
+        "Only `Parent` logs",
+        "The order is random"
+      ],
+      "correctIndex": 0,
+      "explanation": "React commits the whole tree, then runs effects from the children up, so a child's effect runs before its parent's. This is why a parent effect can rely on its children having mounted.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "This simulates a component render capturing `count`. What does it print? You can run it.",
+    "mcq": {
+      "options": [
+        "`0`",
+        "`5`",
+        "`undefined`",
+        "`1`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`onTick` closes over the `count` of the render that created it. A `setInterval` set up once in `useEffect(..., [])` sees that stale value forever; use the functional setter or a ref.",
+      "snippet": "let state = 0;\nfunction render() {\n  const count = state;\n  return { onTick: () => console.log(count) };\n}\nconst first = render(); // the interval was set up here\nstate = 5;\nrender();\nfirst.onTick();",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-react-hooks-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "When is wrapping a handler in `useCallback` actually useful?",
+    "mcq": {
+      "options": [
+        "When it is passed to a child wrapped in `React.memo`, or used in another hook's dependency array",
+        "Always: it makes every function faster",
+        "When the function is only used inside the same component's JSX `onClick`",
+        "When the function has no arguments"
+      ],
+      "correctIndex": 0,
+      "explanation": "`useCallback` only keeps the same function reference between renders. That matters when something compares references (a memoized child, an effect's dependencies). Otherwise it adds work for nothing.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`React.memo` skips a render when the props are **shallowly** equal: same keys, and each value\nequal with `Object.is`. Nested objects are compared by reference, not by content. Fix `shallowEqual`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "shallowEqual",
+      "starterCode": "function shallowEqual(a, b) {\n  return JSON.stringify(a) === JSON.stringify(b);\n}",
+      "referenceSolution": "function shallowEqual(a, b) {\n  const keysA = Object.keys(a);\n  const keysB = Object.keys(b);\n  if (keysA.length !== keysB.length) return false;\n  return keysA.every((k) => Object.prototype.hasOwnProperty.call(b, k) && Object.is(a[k], b[k]));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": "x"
+            },
+            {
+              "a": 1,
+              "b": "x"
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": 2
+            },
+            {
+              "b": 2,
+              "a": 1
+            }
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "style": {
+                "color": "red"
+              }
+            },
+            {
+              "style": {
+                "color": "red"
+              }
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {
+              "a": 1,
+              "b": 2
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "a": null
+            },
+            {
+              "b": null
+            }
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The core of `useDebouncedValue(value, delay)`: given typed values with timestamps (ms, sorted),\nreturn the values that get committed. A value commits when no new value arrives within\n`delay` ms after it (a gap of exactly `delay` lets it commit). The last value always commits.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "committedValues",
+      "starterCode": "function committedValues(events, delay) {\n  const out = [];\n  for (let i = 0; i < events.length - 1; i++) {\n    if (events[i + 1].t - events[i].t >= delay) out.push(events[i].value);\n  }\n  return out;\n}",
+      "referenceSolution": "function committedValues(events, delay) {\n  const out = [];\n  for (let i = 0; i < events.length; i++) {\n    const next = events[i + 1];\n    if (!next || next.t - events[i].t >= delay) out.push(events[i].value);\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "r"
+              },
+              {
+                "t": 100,
+                "value": "re"
+              },
+              {
+                "t": 200,
+                "value": "rea"
+              }
+            ],
+            300
+          ],
+          "expected": [
+            "rea"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            300
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "a"
+              },
+              {
+                "t": 300,
+                "value": "ab"
+              }
+            ],
+            300
+          ],
+          "expected": [
+            "a",
+            "ab"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "x"
+              }
+            ],
+            50
+          ],
+          "expected": [
+            "x"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "t": 0,
+                "value": "a"
+              },
+              {
+                "t": 500,
+                "value": "ab"
+              },
+              {
+                "t": 600,
+                "value": "abc"
+              }
+            ],
+            300
+          ],
+          "expected": [
+            "a",
+            "abc"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A data-fetching hook uses this reducer. After a failed request and a retry that succeeds, the\nscreen still shows the old error. Fix the reducer so each state is consistent:\n- `start` → `loading`, keeps old `data`, clears `error`\n- `success` → `success` with `data`, no `error`\n- `failure` → `error` with `error`, keeps old `data`",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "fetchReducer",
+      "starterCode": "type State = { status: string; data: unknown; error: string | null };\n\nfunction fetchReducer(state: State, action: any): State {\n  switch (action.type) {\n    case \"start\":\n      return { ...state, status: \"loading\" };\n    case \"success\":\n      return { ...state, status: \"success\", data: action.data };\n    case \"failure\":\n      return { ...state, status: \"error\", error: action.error };\n    default:\n      return state;\n  }\n}",
+      "referenceSolution": "type State = { status: string; data: unknown; error: string | null };\n\nfunction fetchReducer(state: State, action: any): State {\n  switch (action.type) {\n    case \"start\":\n      return { ...state, status: \"loading\", error: null };\n    case \"success\":\n      return { status: \"success\", data: action.data, error: null };\n    case \"failure\":\n      return { ...state, status: \"error\", error: action.error };\n    default:\n      return state;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "status": "idle",
+              "data": null,
+              "error": null
+            },
+            {
+              "type": "start"
+            }
+          ],
+          "expected": {
+            "status": "loading",
+            "data": null,
+            "error": null
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "status": "error",
+              "data": null,
+              "error": "500"
+            },
+            {
+              "type": "start"
+            }
+          ],
+          "expected": {
+            "status": "loading",
+            "data": null,
+            "error": null
+          }
+        },
+        {
+          "args": [
+            {
+              "status": "loading",
+              "data": null,
+              "error": "500"
+            },
+            {
+              "type": "success",
+              "data": [
+                1
+              ]
+            }
+          ],
+          "expected": {
+            "status": "success",
+            "data": [
+              1
+            ],
+            "error": null
+          }
+        },
+        {
+          "args": [
+            {
+              "status": "loading",
+              "data": [
+                1
+              ],
+              "error": null
+            },
+            {
+              "type": "failure",
+              "error": "timeout"
+            }
+          ],
+          "expected": {
+            "status": "error",
+            "data": [
+              1
+            ],
+            "error": "timeout"
+          }
+        },
+        {
+          "args": [
+            {
+              "status": "idle",
+              "data": null,
+              "error": null
+            },
+            {
+              "type": "nope"
+            }
+          ],
+          "expected": {
+            "status": "idle",
+            "data": null,
+            "error": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Fix the `\"added\"` case of this cart reducer: adding a product that is already in the cart\nshould increase its `qty` by 1 instead of adding a second line. Keep it immutable.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "cartReducer",
+      "starterCode": "function cartReducer(cart, action) {\n  switch (action.type) {\n    case \"added\":\n      return [...cart, { id: action.id, qty: 1 }];\n    case \"removed\":\n      return cart.filter((line) => line.id !== action.id);\n    default:\n      return cart;\n  }\n}",
+      "referenceSolution": "function cartReducer(cart, action) {\n  switch (action.type) {\n    case \"added\":\n      if (cart.some((line) => line.id === action.id)) {\n        return cart.map((line) => (line.id === action.id ? { ...line, qty: line.qty + 1 } : line));\n      }\n      return [...cart, { id: action.id, qty: 1 }];\n    case \"removed\":\n      return cart.filter((line) => line.id !== action.id);\n    default:\n      return cart;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "p1",
+                "qty": 1
+              }
+            ],
+            {
+              "type": "added",
+              "id": "p1"
+            }
+          ],
+          "expected": [
+            {
+              "id": "p1",
+              "qty": 2
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            {
+              "type": "added",
+              "id": "p1"
+            }
+          ],
+          "expected": [
+            {
+              "id": "p1",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "qty": 1
+              },
+              {
+                "id": "b",
+                "qty": 3
+              }
+            ],
+            {
+              "type": "added",
+              "id": "b"
+            }
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "qty": 1
+            },
+            {
+              "id": "b",
+              "qty": 4
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "qty": 2
+              }
+            ],
+            {
+              "type": "added",
+              "id": "c"
+            }
+          ],
+          "expected": [
+            {
+              "id": "a",
+              "qty": 2
+            },
+            {
+              "id": "c",
+              "qty": 1
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "qty": 2
+              }
+            ],
+            {
+              "type": "removed",
+              "id": "a"
+            }
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`makeMemo` is a tiny `useMemo`: it should only recompute when a dependency changed\n(element by element with `Object.is`). Each render passes a **new** deps array, so comparing\nthe arrays themselves always recomputes. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "countComputations",
+      "starterCode": "function makeMemo() {\n  let lastDeps = null;\n  let lastValue = null;\n  return function useMemo(compute, deps) {\n    if (deps !== lastDeps) {\n      lastValue = compute();\n      lastDeps = deps;\n    }\n    return lastValue;\n  };\n}\n\n// Test driver (leave as is): one render per deps array; counts compute calls.\nfunction countComputations(renders) {\n  const useMemo = makeMemo();\n  let calls = 0;\n  for (const deps of renders) useMemo(() => ++calls, [...deps]);\n  return calls;\n}",
+      "referenceSolution": "function makeMemo() {\n  let lastDeps = null;\n  let lastValue = null;\n  return function useMemo(compute, deps) {\n    const changed = lastDeps === null || deps.length !== lastDeps.length || deps.some((d, i) => !Object.is(d, lastDeps[i]));\n    if (changed) {\n      lastValue = compute();\n      lastDeps = deps;\n    }\n    return lastValue;\n  };\n}\n\nfunction countComputations(renders) {\n  const useMemo = makeMemo();\n  let calls = 0;\n  for (const deps of renders) useMemo(() => ++calls, [...deps]);\n  return calls;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              [
+                1
+              ],
+              [
+                1
+              ],
+              [
+                2
+              ]
+            ]
+          ],
+          "expected": 2
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              [
+                "a",
+                1
+              ],
+              [
+                "a",
+                1
+              ],
+              [
+                "a",
+                1
+              ]
+            ]
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            [
+              [
+                1
+              ],
+              [
+                2
+              ],
+              [
+                1
+              ]
+            ]
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            [
+              [],
+              []
+            ]
+          ],
+          "expected": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Users can sort this list and delete rows. Mark the lines with a bug.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are bugs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "function Tasks({ initial }) {",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  const [tasks, setTasks] = useState(initial);",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  const sortByName = () => setTasks(tasks.sort(byName));",
+          "issue": "`sort` mutates the array in place and passes the same reference, so React skips the update; copy first: `[...tasks].sort(byName)`."
+        },
+        {
+          "id": "l4",
+          "text": "  const remove = (id) => setTasks((t) => t.filter((x) => x.id !== id));",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  return tasks.map((task, index) => (",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    <TaskRow key={index} task={task} onRemove={remove} />",
+          "issue": "Index keys in a reorderable list make React reuse the wrong row state after sorting or deleting; use `task.id`."
+        },
+        {
+          "id": "l7",
+          "text": "  ));",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-react-hooks-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An effect has `[options]` in its dependencies, where `const options = { page, size }` is created in the component body. What happens?",
+    "mcq": {
+      "options": [
+        "The effect runs after every render, because `options` is a new object each time",
+        "The effect runs only when `page` or `size` change",
+        "The effect runs once",
+        "React throws an error about object dependencies"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dependencies are compared with `Object.is`, and a fresh object is never equal to the last one. Depend on `page` and `size` directly, or create `options` with `useMemo`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You must measure an element's height and set a tooltip position before the browser paints, to avoid a visible jump. Which hook?",
+    "mcq": {
+      "options": [
+        "`useLayoutEffect`",
+        "`useEffect`",
+        "`useMemo`",
+        "`useInsertionEffect`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`useLayoutEffect` runs after the DOM is updated but before paint, so a state update inside it is applied before the user sees the frame. `useEffect` runs after paint, which can flicker.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "React bails out of a state update when the new state is the same per `Object.is`. Given this code, does `setItems(next)` re-render?",
+    "mcq": {
+      "options": [
+        "No: it is the same array reference, so React sees no change",
+        "Yes: the array now has a new item",
+        "Yes: `push` always triggers a render",
+        "Only in Strict Mode"
+      ],
+      "correctIndex": 0,
+      "explanation": "`next` and `items` are one array, so `Object.is` returns `true` and React skips the render. Create a new array: `setItems([...items, \"b\"])`.",
+      "snippet": "const items = [\"a\"];\nconst next = items;\nnext.push(\"b\");\nconsole.log(Object.is(items, next));",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-react-hooks-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A small external store is read with `useSyncExternalStore`. Every notification re-renders all\nsubscribers, so `setState` should notify only when the state actually changed (`Object.is`).\nFix `createStore`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runStore",
+      "starterCode": "function createStore(initial) {\n  let state = initial;\n  const listeners = new Set();\n  return {\n    getState: () => state,\n    subscribe(listener) {\n      listeners.add(listener);\n      return () => listeners.delete(listener);\n    },\n    setState(next) {\n      state = next;\n      listeners.forEach((l) => l());\n    },\n  };\n}\n\n// Test driver (leave as is).\nfunction runStore(initial, updates) {\n  const store = createStore(initial);\n  let notifications = 0;\n  store.subscribe(() => notifications++);\n  updates.forEach((u) => store.setState(u));\n  return { state: store.getState(), notifications };\n}",
+      "referenceSolution": "function createStore(initial) {\n  let state = initial;\n  const listeners = new Set();\n  return {\n    getState: () => state,\n    subscribe(listener) {\n      listeners.add(listener);\n      return () => listeners.delete(listener);\n    },\n    setState(next) {\n      if (Object.is(next, state)) return;\n      state = next;\n      listeners.forEach((l) => l());\n    },\n  };\n}\n\nfunction runStore(initial, updates) {\n  const store = createStore(initial);\n  let notifications = 0;\n  store.subscribe(() => notifications++);\n  updates.forEach((u) => store.setState(u));\n  return { state: store.getState(), notifications };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            0,
+            [
+              1,
+              1,
+              2
+            ]
+          ],
+          "expected": {
+            "state": 2,
+            "notifications": 2
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "a",
+            []
+          ],
+          "expected": {
+            "state": "a",
+            "notifications": 0
+          }
+        },
+        {
+          "args": [
+            5,
+            [
+              5,
+              5
+            ]
+          ],
+          "expected": {
+            "state": 5,
+            "notifications": 0
+          }
+        },
+        {
+          "args": [
+            0,
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          "expected": {
+            "state": 3,
+            "notifications": 3
+          }
+        },
+        {
+          "args": [
+            true,
+            [
+              false,
+              true,
+              true
+            ]
+          ],
+          "expected": {
+            "state": true,
+            "notifications": 2
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A search box fetches results in an effect keyed on `query`. Responses can arrive out of order,\nso a slow old response overwrites the newest one. Fix `runEffect` so its cleanup makes a stale\nresponse get ignored (the `let ignore = false` pattern).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "finalResult",
+      "starterCode": "function runEffect(query, setResult) {\n  const respond = (data) => setResult(data);\n  const cleanup = () => {};\n  return { respond, cleanup };\n}\n\n// Test driver (leave as is): one effect run per query (cleaning up the previous),\n// then responses arrive in arrivalOrder (indexes into queries).\nfunction finalResult(queries, arrivalOrder) {\n  let result = null;\n  const runs = [];\n  for (const q of queries) {\n    if (runs.length) runs[runs.length - 1].cleanup();\n    runs.push(runEffect(q, (r) => { result = r; }));\n  }\n  for (const i of arrivalOrder) runs[i].respond(\"results for \" + queries[i]);\n  return result;\n}",
+      "referenceSolution": "function runEffect(query, setResult) {\n  let ignore = false;\n  const respond = (data) => {\n    if (!ignore) setResult(data);\n  };\n  const cleanup = () => {\n    ignore = true;\n  };\n  return { respond, cleanup };\n}\n\nfunction finalResult(queries, arrivalOrder) {\n  let result = null;\n  const runs = [];\n  for (const q of queries) {\n    if (runs.length) runs[runs.length - 1].cleanup();\n    runs.push(runEffect(q, (r) => { result = r; }));\n  }\n  for (const i of arrivalOrder) runs[i].respond(\"results for \" + queries[i]);\n  return result;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "re",
+              "rea"
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "expected": "results for rea"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "a"
+            ],
+            [
+              0
+            ]
+          ],
+          "expected": "results for a"
+        },
+        {
+          "args": [
+            [
+              "a",
+              "ab",
+              "abc"
+            ],
+            [
+              2,
+              1,
+              0
+            ]
+          ],
+          "expected": "results for abc"
+        },
+        {
+          "args": [
+            [
+              "a",
+              "ab"
+            ],
+            [
+              0
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              "x",
+              "xy",
+              "xyz"
+            ],
+            [
+              0,
+              2,
+              1
+            ]
+          ],
+          "expected": "results for xyz"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "An editor keeps undo history in `{ past, present, future }`. Actions: `set` (with `value`),\n`undo`, `redo`. A new `set` after an undo must clear the redo stack, and setting the same value\nas `present` changes nothing. Fix the `set` case.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "historyReducer",
+      "starterCode": "function historyReducer(state, action) {\n  const { past, present, future } = state;\n  switch (action.type) {\n    case \"set\":\n      return { past: [...past, present], present: action.value, future };\n    case \"undo\":\n      if (!past.length) return state;\n      return { past: past.slice(0, -1), present: past[past.length - 1], future: [present, ...future] };\n    case \"redo\":\n      if (!future.length) return state;\n      return { past: [...past, present], present: future[0], future: future.slice(1) };\n    default:\n      return state;\n  }\n}",
+      "referenceSolution": "function historyReducer(state, action) {\n  const { past, present, future } = state;\n  switch (action.type) {\n    case \"set\":\n      if (Object.is(action.value, present)) return state;\n      return { past: [...past, present], present: action.value, future: [] };\n    case \"undo\":\n      if (!past.length) return state;\n      return { past: past.slice(0, -1), present: past[past.length - 1], future: [present, ...future] };\n    case \"redo\":\n      if (!future.length) return state;\n      return { past: [...past, present], present: future[0], future: future.slice(1) };\n    default:\n      return state;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "past": [
+                "a"
+              ],
+              "present": "b",
+              "future": [
+                "c"
+              ]
+            },
+            {
+              "type": "set",
+              "value": "x"
+            }
+          ],
+          "expected": {
+            "past": [
+              "a",
+              "b"
+            ],
+            "present": "x",
+            "future": []
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "past": [],
+              "present": "a",
+              "future": []
+            },
+            {
+              "type": "set",
+              "value": "a"
+            }
+          ],
+          "expected": {
+            "past": [],
+            "present": "a",
+            "future": []
+          }
+        },
+        {
+          "args": [
+            {
+              "past": [
+                "a"
+              ],
+              "present": "b",
+              "future": []
+            },
+            {
+              "type": "undo"
+            }
+          ],
+          "expected": {
+            "past": [],
+            "present": "a",
+            "future": [
+              "b"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "past": [],
+              "present": "a",
+              "future": [
+                "b",
+                "c"
+              ]
+            },
+            {
+              "type": "redo"
+            }
+          ],
+          "expected": {
+            "past": [
+              "a"
+            ],
+            "present": "b",
+            "future": [
+              "c"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "past": [],
+              "present": 1,
+              "future": [
+                2
+              ]
+            },
+            {
+              "type": "set",
+              "value": 3
+            }
+          ],
+          "expected": {
+            "past": [
+              1
+            ],
+            "present": 3,
+            "future": []
+          }
+        },
+        {
+          "args": [
+            {
+              "past": [],
+              "present": "a",
+              "future": []
+            },
+            {
+              "type": "undo"
+            }
+          ],
+          "expected": {
+            "past": [],
+            "present": "a",
+            "future": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Comments are added optimistically with a temporary id, then confirmed or rolled back.\n- `added`: append `{ id: tempId, text, pending: true }`\n- `confirmed`: replace the comment with `tempId` by `{ id, text, pending: false }`\n- `failed`: remove only the comment with `tempId`\n\nThe starter's `failed` case removes every pending comment. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "optimisticReducer",
+      "starterCode": "type Comment = { id: string; text: string; pending: boolean };\n\nfunction optimisticReducer(list: Comment[], action: any): Comment[] {\n  switch (action.type) {\n    case \"added\":\n      return [...list, { id: action.tempId, text: action.text, pending: true }];\n    case \"confirmed\":\n      return list.map((c) => (c.id === action.tempId ? { id: action.id, text: c.text, pending: false } : c));\n    case \"failed\":\n      return list.filter((c) => !c.pending);\n    default:\n      return list;\n  }\n}",
+      "referenceSolution": "type Comment = { id: string; text: string; pending: boolean };\n\nfunction optimisticReducer(list: Comment[], action: any): Comment[] {\n  switch (action.type) {\n    case \"added\":\n      return [...list, { id: action.tempId, text: action.text, pending: true }];\n    case \"confirmed\":\n      return list.map((c) => (c.id === action.tempId ? { id: action.id, text: c.text, pending: false } : c));\n    case \"failed\":\n      return list.filter((c) => c.id !== action.tempId);\n    default:\n      return list;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [],
+            {
+              "type": "added",
+              "tempId": "t1",
+              "text": "Hi"
+            }
+          ],
+          "expected": [
+            {
+              "id": "t1",
+              "text": "Hi",
+              "pending": true
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "t1",
+                "text": "Hi",
+                "pending": true
+              }
+            ],
+            {
+              "type": "confirmed",
+              "tempId": "t1",
+              "id": "c9"
+            }
+          ],
+          "expected": [
+            {
+              "id": "c9",
+              "text": "Hi",
+              "pending": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "t1",
+                "text": "a",
+                "pending": true
+              },
+              {
+                "id": "t2",
+                "text": "b",
+                "pending": true
+              }
+            ],
+            {
+              "type": "failed",
+              "tempId": "t1"
+            }
+          ],
+          "expected": [
+            {
+              "id": "t2",
+              "text": "b",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "c1",
+                "text": "a",
+                "pending": false
+              }
+            ],
+            {
+              "type": "failed",
+              "tempId": "t5"
+            }
+          ],
+          "expected": [
+            {
+              "id": "c1",
+              "text": "a",
+              "pending": false
+            }
+          ]
+        },
+        {
+          "args": [
+            [],
+            {
+              "type": "failed",
+              "tempId": "t1"
+            }
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A lint helper reports which values an effect uses but leaves out of its dependency array.\nValues React guarantees stable (state setters, `dispatch`, refs) are passed in `stable` and are\nnever required. Return the missing names, sorted, each once.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "missingDeps",
+      "starterCode": "function missingDeps(used, deps, stable) {\n  return used.filter((name) => !deps.includes(name)).sort();\n}",
+      "referenceSolution": "function missingDeps(used, deps, stable) {\n  return [...new Set(used)].filter((name) => !deps.includes(name) && !stable.includes(name)).sort();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "userId",
+              "setUser"
+            ],
+            [],
+            [
+              "setUser"
+            ]
+          ],
+          "expected": [
+            "userId"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "query",
+              "page",
+              "dispatch"
+            ],
+            [
+              "query"
+            ],
+            [
+              "dispatch"
+            ]
+          ],
+          "expected": [
+            "page"
+          ]
+        },
+        {
+          "args": [
+            [],
+            [],
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "ref",
+              "count"
+            ],
+            [
+              "count"
+            ],
+            [
+              "ref"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "b",
+              "a",
+              "b"
+            ],
+            [],
+            []
+          ],
+          "expected": [
+            "a",
+            "b"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A product search page lags while typing: every keystroke filters 20,000 rows and re-renders a `ProductList` wrapped in `React.memo` that receives `onSelect={(id) => select(id)}`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A search input feels slow. Work through the fix in order.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you do first?",
+          "options": [
+            "Record a React Profiler trace while typing to see which components render and how long they take",
+            "Wrap every component in `React.memo`",
+            "Rewrite the page with a different state library",
+            "Add `useCallback` to every function in the file"
+          ],
+          "correctIndex": 0,
+          "explanation": "Measure first; the profiler shows what actually re-renders and what is slow."
+        },
+        {
+          "id": "s2",
+          "question": "The profiler shows `ProductList` re-renders on every keystroke despite `React.memo`. Why?",
+          "options": [
+            "The inline `onSelect` arrow is a new function each render, so the shallow prop comparison fails",
+            "`React.memo` does not work on lists",
+            "`React.memo` only compares state, not props"
+          ],
+          "correctIndex": 0,
+          "explanation": "A new function reference breaks the shallow comparison; `useCallback` keeps it stable."
+        },
+        {
+          "id": "s3",
+          "question": "With stable props, filtering 20,000 rows still blocks typing. What keeps the input responsive?",
+          "options": [
+            "Filter against `useDeferredValue(query)` (or update the results in `startTransition`) so typing stays urgent and the list catches up",
+            "Call `setTimeout` inside the render function",
+            "Move the filter into a `useEffect` that sets state on every render",
+            "Store the input value in a ref so it never re-renders"
+          ],
+          "correctIndex": 0,
+          "explanation": "Deferred values and transitions keep the input update urgent and render the expensive list at lower priority."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-react-hooks-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "In development with Strict Mode, your `useEffect` that opens a WebSocket connects twice on mount. What is going on?",
+    "mcq": {
+      "options": [
+        "React mounts, unmounts and remounts components in dev to surface effects without proper cleanup; return a cleanup that closes the socket",
+        "It is a React bug; remove `<StrictMode>` to fix it",
+        "The dependency array is wrong, so the effect runs on every render",
+        "Production will also connect twice"
+      ],
+      "correctIndex": 0,
+      "explanation": "Strict Mode runs setup, cleanup, setup once in development. With a cleanup that closes the socket you end with exactly one open connection, the same as in production.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "`<Chart data={data} style={{ height: 200 }} />`: `Chart` is wrapped in `React.memo` and `data` comes from `useMemo`. The chart still re-renders whenever the parent renders. Why?",
+    "mcq": {
+      "options": [
+        "`style={{ height: 200 }}` creates a new object each render, so the shallow comparison fails",
+        "`React.memo` ignores `useMemo` values",
+        "`React.memo` performs a deep comparison that is too slow and gives up",
+        "A memoized component always renders when its parent renders"
+      ],
+      "correctIndex": 0,
+      "explanation": "Every prop is compared with `Object.is`. An inline object literal is a new reference each time; hoist it to a constant or memoize it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-react-hooks-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-react-hooks",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What does wrapping a state update in `startTransition` change?",
+    "mcq": {
+      "options": [
+        "The update is marked non-urgent: React can interrupt rendering it to handle more urgent updates like typing",
+        "The update runs in a Web Worker",
+        "The update is delayed by a fixed number of milliseconds",
+        "The update skips re-rendering children"
+      ],
+      "correctIndex": 0,
+      "explanation": "Transitions are interruptible, lower-priority renders. They do not debounce or move work off the main thread; they let urgent updates go first and keep showing the old UI until the new one is ready.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

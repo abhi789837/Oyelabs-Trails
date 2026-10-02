@@ -162,7 +162,7 @@ async function generateWith(damage: (items: unknown[], call: number) => unknown[
     method: "POST",
     url: `/api/admin/users/${userId}/assessments`,
     ...as(admin),
-    payload: {},
+    payload: { format: "legacy" },
   });
   expect(issued.statusCode).toBe(202);
   const assessmentId = issued.json().assessmentId as string;

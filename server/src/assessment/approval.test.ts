@@ -34,7 +34,7 @@ beforeEach(async () => {
     method: "POST",
     url: `/api/admin/users/${learner.id}/assessments`,
     ...as(admin),
-    payload: {},
+    payload: { format: "legacy" },
   });
   assessmentId = issued.json().assessmentId;
   await ctx.drainJobs();
@@ -97,7 +97,7 @@ describe("generation stops at the gate", () => {
       method: "POST",
       url: `/api/admin/users/${learner.id}/assessments`,
       ...as(admin),
-      payload: { label: "Second track" },
+      payload: { format: "legacy", label: "Second track" },
     });
     expect(res.statusCode).toBe(202);
 

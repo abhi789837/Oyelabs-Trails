@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Task } from "./tasks";
 
 import { topicLevelSchema, trackIdSchema, type TopicLevelValue, type TrackIdValue } from "./enums";
 
@@ -133,6 +134,11 @@ export interface ServedTopic {
   challengeType: ChallengeTypeValue;
   quiz?: ServedQuizQuestion[];
   codeChallenge?: ServedCodeChallenge;
+  /**
+   * v4: a hands-on practice task (PM/BD). Formative and not graded server-side, so it is served
+   * whole, answers included — the learner sees them after checking, as with any worked exercise.
+   */
+  practice?: Task;
 }
 
 export interface ServedModule {

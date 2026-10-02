@@ -29,6 +29,8 @@ export const TIME_LIMIT_SEC: Record<z.infer<typeof itemKindSchema>, number> = {
   // sitting, which is not a proportion any one question should own.
   code: 360,
   explain: 180,
+  // v4 has no per-item timer; legacy code never serves a task.
+  task: 180,
 };
 
 /**
@@ -260,6 +262,8 @@ export const assessmentSummarySchema = z.object({
 export type AssessmentSummary = z.infer<typeof assessmentSummarySchema>;
 
 export const issueAssessmentRequestSchema = z.object({
+  /** v4 (default) is assembled from the question bank; `legacy` is the v3 generated assessment. */
+  format: z.enum(["v4", "legacy"]).default("v4"),
   /** Overrides the blueprint's own suggestion. */
   timeLimitMinutes: z.number().int().min(MIN_TIME_LIMIT_MIN).max(MAX_TIME_LIMIT_MIN).optional(),
   /**
@@ -445,6 +449,10 @@ export interface MyAssessment {
   hardWarnings: number;
   hardLimit: number;
   timeLimitMinutes: number;
+  /** v4: one sheet, free navigation, a 50-minute cap. Absent/`legacy` for v3 adaptive sittings. */
+  format?: "v4" | "legacy";
+  /** v4: how many questions are on the sheet. */
+  itemCount?: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -511,6 +519,15 @@ export interface MyEvaluation {
   learnerSummary: string;
   areas: { area: string; level: SkillLevelValue; strengths: string[]; gaps: string[] }[];
   estimatedHours: number;
+  /**
+   * v4: the friendly report by priority skill. No overall percentage for the learner — the raw
+   * score is admin-only and is stripped before this leaves the server.
+   */
+  v4?: {
+    skills: { skillName: string; priority: "high" | "medium" | "low" | null; level: number | null; asked: number }[];
+    strengths: string[];
+    focusFirst: string[];
+  };
 }
 
 type SkillLevelValue = z.infer<typeof skillLevelSchema>;

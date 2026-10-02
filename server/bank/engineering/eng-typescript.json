@@ -1,0 +1,2130 @@
+[
+  {
+    "id": "eng-typescript-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`last` is optional. Fix `fullName` so a user without a last name gets just the first name (no trailing space, no `undefined`).",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "fullName",
+      "starterCode": "type User = { first: string; last?: string };\n\nfunction fullName(user: User): string {\n  return user.first + \" \" + user.last;\n}",
+      "referenceSolution": "type User = { first: string; last?: string };\n\nfunction fullName(user: User): string {\n  return user.last ? user.first + \" \" + user.last : user.first;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "first": "Ada",
+              "last": "Lovelace"
+            }
+          ],
+          "expected": "Ada Lovelace"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "first": "Linus"
+            }
+          ],
+          "expected": "Linus"
+        },
+        {
+          "args": [
+            {
+              "first": "Grace",
+              "last": "Hopper"
+            }
+          ],
+          "expected": "Grace Hopper"
+        },
+        {
+          "args": [
+            {
+              "first": "Bo",
+              "last": ""
+            }
+          ],
+          "expected": "Bo"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`parsePort` reads an env value that may be missing. Return the number, or `3000` when the value is `undefined` or blank.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "parsePort",
+      "starterCode": "function parsePort(value: string | undefined): number {\n  return Number(value);\n}",
+      "referenceSolution": "function parsePort(value: string | undefined): number {\n  if (value === undefined || value.trim() === \"\") return 3000;\n  return Number(value);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "8080"
+          ],
+          "expected": 8080
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": 3000
+        },
+        {
+          "args": [],
+          "expected": 3000
+        },
+        {
+          "args": [
+            "5173"
+          ],
+          "expected": 5173
+        },
+        {
+          "args": [
+            "  "
+          ],
+          "expected": 3000
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `cartTotal` so it returns the total of `price * qty` over all lines.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "cartTotal",
+      "starterCode": "interface CartLine {\n  sku: string;\n  price: number;\n  qty: number;\n}\n\nfunction cartTotal(lines: CartLine[]): number {\n  let total = 0;\n  for (const line of lines) total += line.price;\n  return total;\n}",
+      "referenceSolution": "interface CartLine {\n  sku: string;\n  price: number;\n  qty: number;\n}\n\nfunction cartTotal(lines: CartLine[]): number {\n  let total = 0;\n  for (const line of lines) total += line.price * line.qty;\n  return total;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "price": 10,
+                "qty": 2
+              }
+            ]
+          ],
+          "expected": 20
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "a",
+                "price": 5,
+                "qty": 1
+              },
+              {
+                "sku": "b",
+                "price": 3,
+                "qty": 3
+              }
+            ]
+          ],
+          "expected": 14
+        },
+        {
+          "args": [
+            [
+              {
+                "sku": "c",
+                "price": 7,
+                "qty": 0
+              }
+            ]
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`user` is `null` when nobody is signed in. Fix `isAdmin` so it returns `false` for `null` instead of throwing.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "isAdmin",
+      "starterCode": "type Role = \"admin\" | \"editor\" | \"viewer\";\ntype User = { id: number; role: Role };\n\nfunction isAdmin(user: User | null): boolean {\n  return user.role === \"admin\";\n}",
+      "referenceSolution": "type Role = \"admin\" | \"editor\" | \"viewer\";\ntype User = { id: number; role: Role };\n\nfunction isAdmin(user: User | null): boolean {\n  return user?.role === \"admin\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "role": "admin"
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "id": 2,
+              "role": "viewer"
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "id": 3,
+              "role": "editor"
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "id": 4,
+              "role": "admin"
+            }
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A new status `\"archived\"` was added to the union. Update `statusLabel` so it returns `\"Archived\"` for it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "statusLabel",
+      "starterCode": "type Status = \"draft\" | \"published\" | \"archived\";\n\nfunction statusLabel(status: Status): string {\n  switch (status) {\n    case \"draft\":\n      return \"Draft\";\n    case \"published\":\n      return \"Published\";\n  }\n  return \"\";\n}",
+      "referenceSolution": "type Status = \"draft\" | \"published\" | \"archived\";\n\nfunction statusLabel(status: Status): string {\n  switch (status) {\n    case \"draft\":\n      return \"Draft\";\n    case \"published\":\n      return \"Published\";\n    case \"archived\":\n      return \"Archived\";\n  }\n  return \"\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "draft"
+          ],
+          "expected": "Draft"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "archived"
+          ],
+          "expected": "Archived"
+        },
+        {
+          "args": [
+            "published"
+          ],
+          "expected": "Published"
+        },
+        {
+          "args": [
+            "draft"
+          ],
+          "expected": "Draft"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c1-6",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Complete `countTags` so it returns how many times each tag appears, e.g. `{ ts: 2, react: 1 }`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "countTags",
+      "starterCode": "function countTags(tags: string[]): Record<string, number> {\n  const counts: Record<string, number> = {};\n  for (const tag of tags) {\n    counts[tag]++;\n  }\n  return counts;\n}",
+      "referenceSolution": "function countTags(tags: string[]): Record<string, number> {\n  const counts: Record<string, number> = {};\n  for (const tag of tags) {\n    counts[tag] = (counts[tag] ?? 0) + 1;\n  }\n  return counts;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "ts",
+              "react",
+              "ts"
+            ]
+          ],
+          "expected": {
+            "ts": 2,
+            "react": 1
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              "a"
+            ]
+          ],
+          "expected": {
+            "a": 1
+          }
+        },
+        {
+          "args": [
+            [
+              "x",
+              "x",
+              "x",
+              "y"
+            ]
+          ],
+          "expected": {
+            "x": 3,
+            "y": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "The API sent `{\"name\": 5}`. What does this print? You can run it.",
+    "mcq": {
+      "options": [
+        "number",
+        "string",
+        "It throws a TypeError",
+        "It does not compile, so nothing prints"
+      ],
+      "correctIndex": 0,
+      "explanation": "Types are erased at runtime. `as User` only tells the compiler to trust you; nothing checks the data, so `name` is still the number 5. Validate external data (for example with zod) when it matters.",
+      "snippet": "interface User { name: string }\nconst user = JSON.parse('{\"name\": 5}') as User;\nconsole.log(typeof user.name);",
+      "snippetLanguage": "typescript"
+    }
+  },
+  {
+    "id": "eng-typescript-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Given `type Profile = { name: string; age?: number }`, which value is **not** a valid `Profile`?",
+    "mcq": {
+      "options": [
+        "`{ name: \"Ann\" }`",
+        "`{ name: \"Ann\", age: 30 }`",
+        "`{ age: 30 }`",
+        "`{ name: \"Ann\", age: undefined }`"
+      ],
+      "correctIndex": 2,
+      "explanation": "`age?` makes `age` optional (its type is `number | undefined`), but `name` is required. `{ age: 30 }` is missing `name`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-typescript-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`const ids: readonly number[] = [1, 2, 3];` What happens on `ids.push(4)`?",
+    "mcq": {
+      "options": [
+        "A compile error: `push` does not exist on `readonly number[]`",
+        "It works; `readonly` only stops reassigning `ids`",
+        "It throws at runtime because the array is frozen",
+        "It silently does nothing"
+      ],
+      "correctIndex": 0,
+      "explanation": "`readonly number[]` removes mutating methods like `push` from the type, so the compiler rejects it. It is a compile-time check only; the array is not frozen at runtime.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-typescript-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix the generic `groupBy` so each group keeps **all** items with that key, in input order.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "groupBy",
+      "starterCode": "function groupBy<T extends Record<string, unknown>>(items: T[], key: keyof T): Record<string, T[]> {\n  const groups: Record<string, T[]> = {};\n  for (const item of items) {\n    groups[String(item[key])] = [item];\n  }\n  return groups;\n}",
+      "referenceSolution": "function groupBy<T extends Record<string, unknown>>(items: T[], key: keyof T): Record<string, T[]> {\n  const groups: Record<string, T[]> = {};\n  for (const item of items) {\n    const k = String(item[key]);\n    (groups[k] ??= []).push(item);\n  }\n  return groups;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "team": "web"
+              },
+              {
+                "id": 2,
+                "team": "web"
+              }
+            ],
+            "team"
+          ],
+          "expected": {
+            "web": [
+              {
+                "id": 1,
+                "team": "web"
+              },
+              {
+                "id": 2,
+                "team": "web"
+              }
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "team"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "team": "a"
+              },
+              {
+                "id": 2,
+                "team": "b"
+              },
+              {
+                "id": 3,
+                "team": "a"
+              }
+            ],
+            "team"
+          ],
+          "expected": {
+            "a": [
+              {
+                "id": 1,
+                "team": "a"
+              },
+              {
+                "id": 3,
+                "team": "a"
+              }
+            ],
+            "b": [
+              {
+                "id": 2,
+                "team": "b"
+              }
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "ok": true
+              },
+              {
+                "id": 2,
+                "ok": false
+              }
+            ],
+            "ok"
+          ],
+          "expected": {
+            "true": [
+              {
+                "id": 1,
+                "ok": true
+              }
+            ],
+            "false": [
+              {
+                "id": 2,
+                "ok": false
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Complete `pick` so it behaves like the `Pick<T, K>` utility type at runtime: return a new object with only the listed keys that exist on `obj`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "pick",
+      "starterCode": "function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {\n  return obj;\n}",
+      "referenceSolution": "function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {\n  const out = {} as Pick<T, K>;\n  for (const key of keys) {\n    if (key in obj) out[key] = obj[key];\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "name": "Ann",
+              "email": "a@x.io"
+            },
+            [
+              "id",
+              "name"
+            ]
+          ],
+          "expected": {
+            "id": 1,
+            "name": "Ann"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 1,
+              "name": "Ann"
+            },
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": 2,
+              "c": 3
+            },
+            [
+              "c"
+            ]
+          ],
+          "expected": {
+            "c": 3
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 0,
+              "b": null,
+              "c": 1
+            },
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "expected": {
+            "a": 0,
+            "b": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`Shape` is a discriminated union on `kind`. One branch of `area` uses the wrong field. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "area",
+      "starterCode": "type Shape =\n  | { kind: \"circle\"; radius: number }\n  | { kind: \"square\"; size: number }\n  | { kind: \"rect\"; width: number; height: number };\n\nfunction area(shape: Shape): number {\n  switch (shape.kind) {\n    case \"circle\":\n      return Math.round(Math.PI * shape.radius ** 2 * 100) / 100;\n    case \"square\":\n      return shape.size * shape.size;\n    case \"rect\":\n      return shape.width * shape.width;\n  }\n}",
+      "referenceSolution": "type Shape =\n  | { kind: \"circle\"; radius: number }\n  | { kind: \"square\"; size: number }\n  | { kind: \"rect\"; width: number; height: number };\n\nfunction area(shape: Shape): number {\n  switch (shape.kind) {\n    case \"circle\":\n      return Math.round(Math.PI * shape.radius ** 2 * 100) / 100;\n    case \"square\":\n      return shape.size * shape.size;\n    case \"rect\":\n      return shape.width * shape.height;\n  }\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "kind": "square",
+              "size": 3
+            }
+          ],
+          "expected": 9
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "kind": "rect",
+              "width": 2,
+              "height": 5
+            }
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            {
+              "kind": "circle",
+              "radius": 1
+            }
+          ],
+          "expected": 3.14
+        },
+        {
+          "args": [
+            {
+              "kind": "rect",
+              "width": 0,
+              "height": 9
+            }
+          ],
+          "expected": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Use narrowing to finish `toLabel`: strings are trimmed, numbers are shown with 2 decimals, and `null` becomes `\"-\"`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "toLabel",
+      "starterCode": "function toLabel(value: string | number | null): string {\n  if (typeof value === \"string\") return value.trim();\n  return value.toFixed(2);\n}",
+      "referenceSolution": "function toLabel(value: string | number | null): string {\n  if (value === null) return \"-\";\n  if (typeof value === \"string\") return value.trim();\n  return value.toFixed(2);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            " hi "
+          ],
+          "expected": "hi"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": "-"
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": "3.00"
+        },
+        {
+          "args": [
+            0.5
+          ],
+          "expected": "0.50"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c2-5",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`withDefaults` should fill in only the options the caller did not pass. Right now the caller's options are overwritten. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "withDefaults",
+      "starterCode": "type Config = { retries: number; timeoutMs: number; verbose: boolean };\nconst DEFAULTS: Config = { retries: 3, timeoutMs: 5000, verbose: false };\n\nfunction withDefaults(options: Partial<Config>): Config {\n  return { ...options, ...DEFAULTS };\n}",
+      "referenceSolution": "type Config = { retries: number; timeoutMs: number; verbose: boolean };\nconst DEFAULTS: Config = { retries: 3, timeoutMs: 5000, verbose: false };\n\nfunction withDefaults(options: Partial<Config>): Config {\n  return { ...DEFAULTS, ...options };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "retries": 1
+            }
+          ],
+          "expected": {
+            "retries": 1,
+            "timeoutMs": 5000,
+            "verbose": false
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "retries": 3,
+            "timeoutMs": 5000,
+            "verbose": false
+          }
+        },
+        {
+          "args": [
+            {
+              "verbose": true,
+              "timeoutMs": 100
+            }
+          ],
+          "expected": {
+            "retries": 3,
+            "timeoutMs": 100,
+            "verbose": true
+          }
+        },
+        {
+          "args": [
+            {
+              "retries": 0
+            }
+          ],
+          "expected": {
+            "retries": 0,
+            "timeoutMs": 5000,
+            "verbose": false
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c2-6",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Numeric enums have a reverse mapping (`Level[2]` is `\"Medium\"`). Fix `levelName` so unknown numbers return `\"Unknown\"`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "levelName",
+      "starterCode": "enum Level {\n  Low = 1,\n  Medium,\n  High,\n}\n\nfunction levelName(n: number): string {\n  return Level[n];\n}",
+      "referenceSolution": "enum Level {\n  Low = 1,\n  Medium,\n  High,\n}\n\nfunction levelName(n: number): string {\n  return Level[n] ?? \"Unknown\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            2
+          ],
+          "expected": "Medium"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            1
+          ],
+          "expected": "Low"
+        },
+        {
+          "args": [
+            3
+          ],
+          "expected": "High"
+        },
+        {
+          "args": [
+            0
+          ],
+          "expected": "Unknown"
+        },
+        {
+          "args": [
+            9
+          ],
+          "expected": "Unknown"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which is true of `interface` but **not** of a `type` alias?",
+    "mcq": {
+      "options": [
+        "Two declarations with the same name merge into one",
+        "It can describe the shape of an object",
+        "It can be extended by another type",
+        "It can be generic"
+      ],
+      "correctIndex": 0,
+      "explanation": "Interfaces support declaration merging (that is how libraries let you augment `Window` or Express's `Request`). Both can describe objects, be generic and be extended (`extends` or `&`).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-typescript-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "`function shout(input: unknown) { return input.toUpperCase(); }` does not compile. What is the right fix?",
+    "mcq": {
+      "options": [
+        "Narrow first: `if (typeof input === \"string\") return input.toUpperCase();`",
+        "Change the parameter to `any`",
+        "Write `input!.toUpperCase()`",
+        "Add `// @ts-ignore` above the line"
+      ],
+      "correctIndex": 0,
+      "explanation": "`unknown` forces you to check before use; a `typeof` guard narrows it to `string`. `any` and `@ts-ignore` just switch the check off, and `!` only removes `null`/`undefined`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-typescript-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A form has a `quantity` that can legitimately be `0`. What does this print?",
+    "mcq": {
+      "options": [
+        "1 0",
+        "0 0",
+        "1 1",
+        "0 1"
+      ],
+      "correctIndex": 0,
+      "explanation": "`||` falls back on any falsy value, so `0 || 1` is `1`. `??` only falls back on `null` or `undefined`, so `0 ?? 1` keeps `0`. Use `??` for defaults when `0` or `\"\"` are valid.",
+      "snippet": "const quantity: number | undefined = 0;\nconsole.log(quantity || 1, quantity ?? 1);",
+      "snippetLanguage": "typescript"
+    }
+  },
+  {
+    "id": "eng-typescript-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Write the type guard `isUser` so it returns `true` only for an object with a string `name` and a number `age`. It must not throw on `null` or primitives.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "isUser",
+      "starterCode": "type User = { name: string; age: number };\n\nfunction isUser(value: unknown): value is User {\n  return typeof value === \"object\";\n}",
+      "referenceSolution": "type User = { name: string; age: number };\n\nfunction isUser(value: unknown): value is User {\n  if (typeof value !== \"object\" || value === null) return false;\n  const v = value as Record<string, unknown>;\n  return typeof v.name === \"string\" && typeof v.age === \"number\";\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ann",
+              "age": 30
+            }
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            null
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "name": "Ann"
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "name": "Ann",
+              "age": "30"
+            }
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "Ann"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            {
+              "name": "Bo",
+              "age": 0,
+              "extra": 1
+            }
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Return a `Result`: `{ ok: true, value }` for a whole-integer string (optional leading `-`), otherwise `{ ok: false, error: \"not an integer\" }`. `parseInt` alone accepts `\"12abc\"`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "safeParseInt",
+      "starterCode": "type Result = { ok: true; value: number } | { ok: false; error: string };\n\nfunction safeParseInt(input: string): Result {\n  const n = parseInt(input, 10);\n  if (Number.isNaN(n)) return { ok: false, error: \"not an integer\" };\n  return { ok: true, value: n };\n}",
+      "referenceSolution": "type Result = { ok: true; value: number } | { ok: false; error: string };\n\nfunction safeParseInt(input: string): Result {\n  if (!/^-?\\d+$/.test(input.trim())) return { ok: false, error: \"not an integer\" };\n  return { ok: true, value: parseInt(input, 10) };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "42"
+          ],
+          "expected": {
+            "ok": true,
+            "value": 42
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "12abc"
+          ],
+          "expected": {
+            "ok": false,
+            "error": "not an integer"
+          }
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": {
+            "ok": false,
+            "error": "not an integer"
+          }
+        },
+        {
+          "args": [
+            "-7"
+          ],
+          "expected": {
+            "ok": true,
+            "value": -7
+          }
+        },
+        {
+          "args": [
+            "3.5"
+          ],
+          "expected": {
+            "ok": false,
+            "error": "not an integer"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`uniqueBy` should drop later duplicates and keep the **first** item for each key, preserving order. The driver calls it with a field name.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "uniqueByField",
+      "starterCode": "function uniqueBy<T, K>(items: T[], getKey: (item: T) => K): T[] {\n  const seen = new Map<K, T>();\n  for (const item of items) seen.set(getKey(item), item);\n  return [...seen.values()];\n}\n\n// Test driver (leave as is)\nfunction uniqueByField(items: Record<string, unknown>[], field: string) {\n  return uniqueBy(items, (item) => item[field]);\n}",
+      "referenceSolution": "function uniqueBy<T, K>(items: T[], getKey: (item: T) => K): T[] {\n  const seen = new Map<K, T>();\n  for (const item of items) {\n    const key = getKey(item);\n    if (!seen.has(key)) seen.set(key, item);\n  }\n  return [...seen.values()];\n}\n\n// Test driver (leave as is)\nfunction uniqueByField(items: Record<string, unknown>[], field: string) {\n  return uniqueBy(items, (item) => item[field]);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "v": "a"
+              },
+              {
+                "id": 1,
+                "v": "b"
+              }
+            ],
+            "id"
+          ],
+          "expected": [
+            {
+              "id": 1,
+              "v": "a"
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            "id"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 2,
+                "v": "x"
+              },
+              {
+                "id": 1,
+                "v": "y"
+              },
+              {
+                "id": 2,
+                "v": "z"
+              }
+            ],
+            "id"
+          ],
+          "expected": [
+            {
+              "id": 2,
+              "v": "x"
+            },
+            {
+              "id": 1,
+              "v": "y"
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "e": "a@x"
+              },
+              {
+                "e": "b@x"
+              }
+            ],
+            "e"
+          ],
+          "expected": [
+            {
+              "e": "a@x"
+            },
+            {
+              "e": "b@x"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "The dashboard needs a count for **every** status, including ones with zero orders. Fix `countByStatus` so the result always has all three keys.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "countByStatus",
+      "starterCode": "type Status = \"pending\" | \"paid\" | \"refunded\";\ntype Order = { id: number; status: Status };\n\nfunction countByStatus(orders: Order[]): Record<Status, number> {\n  const counts = {} as Record<Status, number>;\n  for (const o of orders) counts[o.status] = (counts[o.status] ?? 0) + 1;\n  return counts;\n}",
+      "referenceSolution": "type Status = \"pending\" | \"paid\" | \"refunded\";\ntype Order = { id: number; status: Status };\n\nfunction countByStatus(orders: Order[]): Record<Status, number> {\n  const counts: Record<Status, number> = { pending: 0, paid: 0, refunded: 0 };\n  for (const o of orders) counts[o.status] += 1;\n  return counts;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "paid"
+              },
+              {
+                "id": 2,
+                "status": "paid"
+              }
+            ]
+          ],
+          "expected": {
+            "pending": 0,
+            "paid": 2,
+            "refunded": 0
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "pending": 0,
+            "paid": 0,
+            "refunded": 0
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "refunded"
+              },
+              {
+                "id": 2,
+                "status": "pending"
+              }
+            ]
+          ],
+          "expected": {
+            "pending": 1,
+            "paid": 0,
+            "refunded": 1
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "id": 1,
+                "status": "pending"
+              },
+              {
+                "id": 2,
+                "status": "pending"
+              },
+              {
+                "id": 3,
+                "status": "paid"
+              }
+            ]
+          ],
+          "expected": {
+            "pending": 2,
+            "paid": 1,
+            "refunded": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c3-5",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "`getPath(obj, \"a.b.c\")` should return the nested value, or `null` when any part of the path is missing. It currently throws on a missing middle key.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "getPath",
+      "starterCode": "function getPath(obj: Record<string, any>, path: string): unknown {\n  let current: any = obj;\n  for (const key of path.split(\".\")) {\n    current = current[key];\n  }\n  return current ?? null;\n}",
+      "referenceSolution": "function getPath(obj: Record<string, any>, path: string): unknown {\n  let current: any = obj;\n  for (const key of path.split(\".\")) {\n    if (current === null || current === undefined) return null;\n    current = current[key];\n  }\n  return current ?? null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "user": {
+                "address": {
+                  "city": "Pune"
+                }
+              }
+            },
+            "user.address.city"
+          ],
+          "expected": "Pune"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "user": {}
+            },
+            "user.address.city"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {},
+            "a.b.c"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": 0
+              }
+            },
+            "a.b"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": false
+              }
+            },
+            "a.b"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c3-6",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Return the sorted list of keys whose value differs between `before` and `after` (compare with `!==`), including keys that were added or removed.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "changedKeys",
+      "starterCode": "function changedKeys(before: Record<string, unknown>, after: Record<string, unknown>): string[] {\n  const changed: string[] = [];\n  for (const key of Object.keys(before)) {\n    if (before[key] !== after[key]) changed.push(key);\n  }\n  return changed.sort();\n}",
+      "referenceSolution": "function changedKeys(before: Record<string, unknown>, after: Record<string, unknown>): string[] {\n  const keys = new Set([...Object.keys(before), ...Object.keys(after)]);\n  const changed: string[] = [];\n  for (const key of keys) {\n    if (before[key] !== after[key]) changed.push(key);\n  }\n  return changed.sort();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "Ann",
+              "age": 30
+            },
+            {
+              "name": "Ann",
+              "age": 31
+            }
+          ],
+          "expected": [
+            "age"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            {
+              "a": 1,
+              "b": 2
+            }
+          ],
+          "expected": [
+            "b"
+          ]
+        },
+        {
+          "args": [
+            {
+              "a": 1,
+              "b": 2
+            },
+            {
+              "b": 3
+            }
+          ],
+          "expected": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "args": [
+            {
+              "x": "1"
+            },
+            {
+              "x": 1
+            }
+          ],
+          "expected": [
+            "x"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why use `satisfies` here instead of annotating `const config: Record<string, string | number>`?",
+    "mcq": {
+      "options": [
+        "`config.port` keeps its narrower type `number`, so `+ 1` compiles without a cast, while the shape is still checked",
+        "`satisfies` freezes the object at runtime",
+        "`satisfies` skips type checking so the build is faster",
+        "There is no difference; it is only style"
+      ],
+      "correctIndex": 0,
+      "explanation": "An annotation widens every property to `string | number`, so `config.port + 1` would need narrowing. `satisfies` checks the value against the type but keeps the inferred type of each property. It does nothing at runtime.",
+      "snippet": "const config = {\n  host: \"localhost\",\n  port: 5432,\n} satisfies Record<string, string | number>;\n\nconst next = config.port + 1;\nconsole.log(next);",
+      "snippetLanguage": "typescript"
+    }
+  },
+  {
+    "id": "eng-typescript-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Given `function longest<T extends { length: number }>(a: T, b: T): T`, which call does **not** compile?",
+    "mcq": {
+      "options": [
+        "`longest(10, 20)`",
+        "`longest(\"ab\", \"abc\")`",
+        "`longest([1, 2], [3])`",
+        "`longest({ length: 2 }, { length: 5 })`"
+      ],
+      "correctIndex": 0,
+      "explanation": "The constraint requires a `length: number` property. Strings, arrays and that object literal have one; `number` does not.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-typescript-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does this print? You can run it.",
+    "mcq": {
+      "options": [
+        "3",
+        "2",
+        "It throws because the array is frozen",
+        "It does not compile"
+      ],
+      "correctIndex": 0,
+      "explanation": "`as const` makes the type a readonly tuple of literals, but it is compile-time only: the array is not frozen. Casting around the type lets `push` run, so the length is 3. Use `Object.freeze` when you need runtime immutability.",
+      "snippet": "const roles = [\"admin\", \"member\"] as const;\n(roles as unknown as string[]).push(\"guest\");\nconsole.log(roles.length);",
+      "snippetLanguage": "typescript"
+    }
+  },
+  {
+    "id": "eng-typescript-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`TypedEmitter.off` should remove only the handler passed in, not every handler for the event. Fix it. The driver registers two handlers, may remove the first, and records which handlers ran.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "runEmitter",
+      "starterCode": "type Events = { saved: number; deleted: number };\ntype Handler<T> = (payload: T) => void;\n\nclass TypedEmitter<E extends Record<string, unknown>> {\n  private handlers = new Map<keyof E, Set<Handler<any>>>();\n\n  on<K extends keyof E>(event: K, handler: Handler<E[K]>) {\n    if (!this.handlers.has(event)) this.handlers.set(event, new Set());\n    this.handlers.get(event)!.add(handler);\n  }\n\n  off<K extends keyof E>(event: K, handler: Handler<E[K]>) {\n    this.handlers.delete(event);\n  }\n\n  emit<K extends keyof E>(event: K, payload: E[K]) {\n    this.handlers.get(event)?.forEach((h) => h(payload));\n  }\n}\n\n// Test driver (leave as is)\nfunction runEmitter(removeFirst: boolean, payloads: number[]): string[] {\n  const log: string[] = [];\n  const em = new TypedEmitter<Events>();\n  const a = (n: number) => log.push(\"a\" + n);\n  const b = (n: number) => log.push(\"b\" + n);\n  em.on(\"saved\", a);\n  em.on(\"saved\", b);\n  if (removeFirst) em.off(\"saved\", a);\n  for (const p of payloads) em.emit(\"saved\", p);\n  return log;\n}",
+      "referenceSolution": "type Events = { saved: number; deleted: number };\ntype Handler<T> = (payload: T) => void;\n\nclass TypedEmitter<E extends Record<string, unknown>> {\n  private handlers = new Map<keyof E, Set<Handler<any>>>();\n\n  on<K extends keyof E>(event: K, handler: Handler<E[K]>) {\n    if (!this.handlers.has(event)) this.handlers.set(event, new Set());\n    this.handlers.get(event)!.add(handler);\n  }\n\n  off<K extends keyof E>(event: K, handler: Handler<E[K]>) {\n    this.handlers.get(event)?.delete(handler);\n  }\n\n  emit<K extends keyof E>(event: K, payload: E[K]) {\n    this.handlers.get(event)?.forEach((h) => h(payload));\n  }\n}\n\n// Test driver (leave as is)\nfunction runEmitter(removeFirst: boolean, payloads: number[]): string[] {\n  const log: string[] = [];\n  const em = new TypedEmitter<Events>();\n  const a = (n: number) => log.push(\"a\" + n);\n  const b = (n: number) => log.push(\"b\" + n);\n  em.on(\"saved\", a);\n  em.on(\"saved\", b);\n  if (removeFirst) em.off(\"saved\", a);\n  for (const p of payloads) em.emit(\"saved\", p);\n  return log;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            false,
+            [
+              1
+            ]
+          ],
+          "expected": [
+            "a1",
+            "b1"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            true,
+            [
+              1
+            ]
+          ],
+          "expected": [
+            "b1"
+          ]
+        },
+        {
+          "args": [
+            true,
+            [
+              1,
+              2
+            ]
+          ],
+          "expected": [
+            "b1",
+            "b2"
+          ]
+        },
+        {
+          "args": [
+            true,
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            false,
+            [
+              3,
+              4
+            ]
+          ],
+          "expected": [
+            "a3",
+            "b3",
+            "a4",
+            "b4"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Parse a query string with a small schema: `number` fields go through `Number` (drop the key if not finite), `boolean` fields are `true` only for `\"true\"` or `\"1\"`, and keys not in the schema are dropped. The boolean handling is wrong. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "parseQuery",
+      "starterCode": "type FieldType = \"string\" | \"number\" | \"boolean\";\n\nfunction parseQuery(qs: string, schema: Record<string, FieldType>): Record<string, string | number | boolean> {\n  const out: Record<string, string | number | boolean> = {};\n  const params = new URLSearchParams(qs);\n  for (const [key, type] of Object.entries(schema)) {\n    const raw = params.get(key);\n    if (raw === null) continue;\n    if (type === \"number\") {\n      const n = Number(raw);\n      if (Number.isFinite(n)) out[key] = n;\n    } else if (type === \"boolean\") {\n      out[key] = Boolean(raw);\n    } else {\n      out[key] = raw;\n    }\n  }\n  return out;\n}",
+      "referenceSolution": "type FieldType = \"string\" | \"number\" | \"boolean\";\n\nfunction parseQuery(qs: string, schema: Record<string, FieldType>): Record<string, string | number | boolean> {\n  const out: Record<string, string | number | boolean> = {};\n  const params = new URLSearchParams(qs);\n  for (const [key, type] of Object.entries(schema)) {\n    const raw = params.get(key);\n    if (raw === null) continue;\n    if (type === \"number\") {\n      const n = Number(raw);\n      if (Number.isFinite(n)) out[key] = n;\n    } else if (type === \"boolean\") {\n      out[key] = raw === \"true\" || raw === \"1\";\n    } else {\n      out[key] = raw;\n    }\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "page=2&q=shoes",
+            {
+              "page": "number",
+              "q": "string"
+            }
+          ],
+          "expected": {
+            "page": 2,
+            "q": "shoes"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "inStock=false&page=1",
+            {
+              "inStock": "boolean",
+              "page": "number"
+            }
+          ],
+          "expected": {
+            "inStock": false,
+            "page": 1
+          }
+        },
+        {
+          "args": [
+            "inStock=1",
+            {
+              "inStock": "boolean"
+            }
+          ],
+          "expected": {
+            "inStock": true
+          }
+        },
+        {
+          "args": [
+            "page=abc&debug=1",
+            {
+              "page": "number"
+            }
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "",
+            {
+              "q": "string"
+            }
+          ],
+          "expected": {}
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Money is passed around as a branded `Cents` type. `toCents` must accept only non-negative amounts with at most two decimals (`\"12\"`, `\"12.3\"`, `\"12.34\"`) and return `null` for anything else. Avoid float maths.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "toCents",
+      "starterCode": "type Cents = number & { readonly __brand: \"Cents\" };\n\nfunction toCents(amount: string): Cents | null {\n  const n = parseFloat(amount);\n  if (Number.isNaN(n)) return null;\n  return Math.round(n * 100) as Cents;\n}",
+      "referenceSolution": "type Cents = number & { readonly __brand: \"Cents\" };\n\nfunction toCents(amount: string): Cents | null {\n  const match = /^(\\d+)(?:\\.(\\d{1,2}))?$/.exec(amount.trim());\n  if (!match) return null;\n  const whole = Number(match[1]);\n  const fraction = Number((match[2] ?? \"\").padEnd(2, \"0\"));\n  return (whole * 100 + fraction) as Cents;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "12.34"
+          ],
+          "expected": 1234
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "12.3"
+          ],
+          "expected": 1230
+        },
+        {
+          "args": [
+            "12"
+          ],
+          "expected": 1200
+        },
+        {
+          "args": [
+            "-1"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "1.234"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "abc"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "0.07"
+          ],
+          "expected": 7
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`setIn` must return an updated copy **without mutating** the original (React and Redux rely on this). The driver returns both, so a mutation shows up. Fix `setIn`.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "setInCheck",
+      "starterCode": "type Json = { [key: string]: any };\n\nfunction setIn(obj: Json, path: string[], value: unknown): Json {\n  let current = obj;\n  for (let i = 0; i < path.length - 1; i++) {\n    current[path[i]] ??= {};\n    current = current[path[i]];\n  }\n  current[path[path.length - 1]] = value;\n  return obj;\n}\n\n// Test driver (leave as is)\nfunction setInCheck(obj: Json, path: string[], value: unknown) {\n  const original = JSON.stringify(obj);\n  const result = setIn(obj, path, value);\n  return { result, originalUnchanged: JSON.stringify(obj) === original };\n}",
+      "referenceSolution": "type Json = { [key: string]: any };\n\nfunction setIn(obj: Json, path: string[], value: unknown): Json {\n  if (path.length === 0) return obj;\n  const [head, ...rest] = path;\n  const child = obj[head] && typeof obj[head] === \"object\" ? obj[head] : {};\n  return { ...obj, [head]: rest.length ? setIn(child, rest, value) : value };\n}\n\n// Test driver (leave as is)\nfunction setInCheck(obj: Json, path: string[], value: unknown) {\n  const original = JSON.stringify(obj);\n  const result = setIn(obj, path, value);\n  return { result, originalUnchanged: JSON.stringify(obj) === original };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "a": {
+                "b": 1
+              }
+            },
+            [
+              "a",
+              "b"
+            ],
+            2
+          ],
+          "expected": {
+            "result": {
+              "a": {
+                "b": 2
+              }
+            },
+            "originalUnchanged": true
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            [
+              "x",
+              "y"
+            ],
+            1
+          ],
+          "expected": {
+            "result": {
+              "x": {
+                "y": 1
+              }
+            },
+            "originalUnchanged": true
+          }
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": 1,
+                "c": 2
+              },
+              "d": 3
+            },
+            [
+              "a",
+              "c"
+            ],
+            9
+          ],
+          "expected": {
+            "result": {
+              "a": {
+                "b": 1,
+                "c": 9
+              },
+              "d": 3
+            },
+            "originalUnchanged": true
+          }
+        },
+        {
+          "args": [
+            {
+              "a": 1
+            },
+            [
+              "a"
+            ],
+            null
+          ],
+          "expected": {
+            "result": {
+              "a": null
+            },
+            "originalUnchanged": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A search box fires requests quickly and responses can arrive out of order. Fix `fetchReducer` so a `success` or `error` whose `requestId` is not the latest request is ignored. The driver replays a list of actions.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "replay",
+      "starterCode": "type State =\n  | { status: \"idle\"; requestId: number }\n  | { status: \"loading\"; requestId: number }\n  | { status: \"success\"; requestId: number; data: string[] }\n  | { status: \"error\"; requestId: number; error: string };\n\ntype Action =\n  | { type: \"start\"; requestId: number }\n  | { type: \"success\"; requestId: number; data: string[] }\n  | { type: \"error\"; requestId: number; error: string };\n\nfunction fetchReducer(state: State, action: Action): State {\n  switch (action.type) {\n    case \"start\":\n      return { status: \"loading\", requestId: action.requestId };\n    case \"success\":\n      return { status: \"success\", requestId: action.requestId, data: action.data };\n    case \"error\":\n      return { status: \"error\", requestId: action.requestId, error: action.error };\n  }\n}\n\n// Test driver (leave as is)\nfunction replay(actions: Action[]): State {\n  return actions.reduce(fetchReducer, { status: \"idle\", requestId: 0 } as State);\n}",
+      "referenceSolution": "type State =\n  | { status: \"idle\"; requestId: number }\n  | { status: \"loading\"; requestId: number }\n  | { status: \"success\"; requestId: number; data: string[] }\n  | { status: \"error\"; requestId: number; error: string };\n\ntype Action =\n  | { type: \"start\"; requestId: number }\n  | { type: \"success\"; requestId: number; data: string[] }\n  | { type: \"error\"; requestId: number; error: string };\n\nfunction fetchReducer(state: State, action: Action): State {\n  if (action.type !== \"start\" && action.requestId !== state.requestId) return state;\n  switch (action.type) {\n    case \"start\":\n      return { status: \"loading\", requestId: action.requestId };\n    case \"success\":\n      return { status: \"success\", requestId: action.requestId, data: action.data };\n    case \"error\":\n      return { status: \"error\", requestId: action.requestId, error: action.error };\n  }\n}\n\n// Test driver (leave as is)\nfunction replay(actions: Action[]): State {\n  return actions.reduce(fetchReducer, { status: \"idle\", requestId: 0 } as State);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "type": "start",
+                "requestId": 1
+              },
+              {
+                "type": "success",
+                "requestId": 1,
+                "data": [
+                  "a"
+                ]
+              }
+            ]
+          ],
+          "expected": {
+            "status": "success",
+            "requestId": 1,
+            "data": [
+              "a"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "type": "start",
+                "requestId": 1
+              },
+              {
+                "type": "start",
+                "requestId": 2
+              },
+              {
+                "type": "success",
+                "requestId": 1,
+                "data": [
+                  "old"
+                ]
+              }
+            ]
+          ],
+          "expected": {
+            "status": "loading",
+            "requestId": 2
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "start",
+                "requestId": 1
+              },
+              {
+                "type": "start",
+                "requestId": 2
+              },
+              {
+                "type": "success",
+                "requestId": 2,
+                "data": [
+                  "new"
+                ]
+              },
+              {
+                "type": "success",
+                "requestId": 1,
+                "data": [
+                  "old"
+                ]
+              }
+            ]
+          ],
+          "expected": {
+            "status": "success",
+            "requestId": 2,
+            "data": [
+              "new"
+            ]
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "type": "start",
+                "requestId": 1
+              },
+              {
+                "type": "start",
+                "requestId": 2
+              },
+              {
+                "type": "error",
+                "requestId": 1,
+                "error": "timeout"
+              }
+            ]
+          ],
+          "expected": {
+            "status": "loading",
+            "requestId": 2
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {
+            "status": "idle",
+            "requestId": 0
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-c4-6",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "`mergeDeep` should merge nested plain objects (source wins), replace arrays rather than merging them, and return a new object. It currently merges only the top level. Fix it.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "mergeDeep",
+      "starterCode": "type Obj = { [key: string]: unknown };\n\nfunction mergeDeep(target: Obj, source: Obj): Obj {\n  return { ...target, ...source };\n}",
+      "referenceSolution": "type Obj = { [key: string]: unknown };\n\nconst isPlainObject = (v: unknown): v is Obj => typeof v === \"object\" && v !== null && !Array.isArray(v);\n\nfunction mergeDeep(target: Obj, source: Obj): Obj {\n  const out: Obj = { ...target };\n  for (const [key, value] of Object.entries(source)) {\n    const existing = out[key];\n    out[key] = isPlainObject(existing) && isPlainObject(value) ? mergeDeep(existing, value) : value;\n  }\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "theme": {
+                "color": "blue",
+                "size": 12
+              }
+            },
+            {
+              "theme": {
+                "size": 14
+              }
+            }
+          ],
+          "expected": {
+            "theme": {
+              "color": "blue",
+              "size": 14
+            }
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {},
+            {}
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            {
+              "tags": [
+                "a",
+                "b"
+              ]
+            },
+            {
+              "tags": [
+                "c"
+              ]
+            }
+          ],
+          "expected": {
+            "tags": [
+              "c"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": {
+                  "c": 1,
+                  "d": 2
+                }
+              }
+            },
+            {
+              "a": {
+                "b": {
+                  "d": 3
+                }
+              }
+            }
+          ],
+          "expected": {
+            "a": {
+              "b": {
+                "c": 1,
+                "d": 3
+              }
+            }
+          }
+        },
+        {
+          "args": [
+            {
+              "a": {
+                "b": 1
+              }
+            },
+            {
+              "a": null
+            }
+          ],
+          "expected": {
+            "a": null
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-typescript-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is `R`?",
+    "mcq": {
+      "options": [
+        "`string[] | number[]`",
+        "`(string | number)[]`",
+        "`never`",
+        "`unknown[]`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A conditional type on a naked type parameter distributes over a union: it is applied to `string` and `number` separately. Wrap it as `[T] extends [unknown]` to get `(string | number)[]` instead.",
+      "snippet": "type ToArray<T> = T extends unknown ? T[] : never;\ntype R = ToArray<string | number>;",
+      "snippetLanguage": "typescript"
+    }
+  },
+  {
+    "id": "eng-typescript-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A route handler does `const body = (await req.json()) as CreateOrder;` and passes it straight to the database. What is the best fix?",
+    "mcq": {
+      "options": [
+        "Parse it with a runtime schema (for example zod) and derive `CreateOrder` from that schema",
+        "Use `satisfies CreateOrder` instead of `as`",
+        "Turn on `strict: true` in `tsconfig.json`",
+        "Annotate the variable: `const body: CreateOrder = await req.json()`"
+      ],
+      "correctIndex": 0,
+      "explanation": "None of the type-level options check anything at runtime; `req.json()` returns `any`, so all of them compile with bad data. A schema validates the data at the boundary and gives you the type from one source of truth.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-typescript-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-typescript",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why do many teams prefer `type Role = \"admin\" | \"member\"` over `enum Role { Admin = \"admin\", Member = \"member\" }`?",
+    "mcq": {
+      "options": [
+        "An enum emits runtime code, so type-only stripping (Node's built-in TypeScript support, `erasableSyntaxOnly`) cannot handle it; a union is erased entirely",
+        "Unions are checked at runtime and enums are not",
+        "Enums cannot be used in `switch` statements",
+        "Unions make the compiled bundle larger"
+      ],
+      "correctIndex": 0,
+      "explanation": "An enum is a real object in the output, which ties you to a full TypeScript transform. A literal union has no runtime footprint, works with plain strings from JSON, and still gives exhaustive checking. Neither is checked at runtime.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

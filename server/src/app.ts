@@ -20,6 +20,7 @@ import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminBuilderRoutes } from "./routes/admin/builder";
 import { registerAdminCatalogRoutes } from "./routes/admin/catalog";
 import { registerAdminSetupRoutes } from "./routes/admin/setup";
+import { registerAdminAssessmentV4Routes } from "./routes/admin/assessmentV4";
 import { registerAdminCourseRoutes } from "./routes/admin/courses";
 import { registerAdminAssessmentRoutes } from "./routes/admin/assessments";
 import { registerAdminLiveRoutes } from "./routes/admin/live";
@@ -28,12 +29,14 @@ import { registerAdminPlanRoutes } from "./routes/admin/plans";
 import { registerAdminUserRoutes } from "./routes/admin/users";
 import { registerAdminWeekRoutes } from "./routes/admin/week";
 import { registerAssessmentRoutes } from "./routes/assessment";
+import { registerAssessmentV4Routes } from "./routes/assessmentV4";
 import { registerAuthRoutes } from "./routes/auth";
 import { registerContentRoutes } from "./routes/content";
 import { registerHealthRoutes } from "./routes/health";
 import { registerMeRoutes } from "./routes/me";
 import { registerTopicRoutes } from "./routes/topics";
 import type { CodeSandbox } from "./sandbox";
+import { PistonClient } from "./sandbox/polyglot";
 
 export interface RouteRecord {
   method: string;
@@ -48,6 +51,8 @@ declare module "fastify" {
     content: ContentStore;
     /** Runs learner-submitted JavaScript. See server/src/sandbox for what it guarantees. */
     sandbox: CodeSandbox;
+    /** v4: the Piston client for every other language, or null when PISTON_URL is unset. */
+    piston: PistonClient | null;
     /** The only way the server talks to an AI provider. */
     ai: AiService;
     /** True when a dev-only mock provider is standing in. Surfaced in the admin UI. */
@@ -112,6 +117,7 @@ export async function buildApp({
   app.decorate("db", db);
   app.decorate("content", content);
   app.decorate("sandbox", sandbox);
+  app.decorate("piston", env.pistonUrl ? new PistonClient({ url: env.pistonUrl, runTimeoutMs: env.pistonRunTimeoutMs }) : null);
   app.decorate("ai", ai);
   app.decorate("usingMockProvider", usingMockProvider);
 
@@ -172,6 +178,7 @@ export async function buildApp({
   await registerContentRoutes(app);
   await registerTopicRoutes(app);
   await registerAssessmentRoutes(app);
+  await registerAssessmentV4Routes(app);
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
@@ -184,6 +191,7 @@ export async function buildApp({
   await app.register(registerAdminOverviewRoutes);
   await app.register(registerAdminCatalogRoutes);
   await app.register(registerAdminSetupRoutes);
+  await app.register(registerAdminAssessmentV4Routes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

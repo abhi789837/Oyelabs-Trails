@@ -1,0 +1,1720 @@
+[
+  {
+    "id": "eng-ai-reviewing-diffs-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An AI wrote `formatPrice` to turn cents into a dollar string. Review found it prints `$12.5` instead of `$12.50`. Fix it so there are always two decimals.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "formatPrice",
+      "starterCode": "function formatPrice(cents) {\n  return \"$\" + cents / 100;\n}",
+      "referenceSolution": "function formatPrice(cents) {\n  return \"$\" + (cents / 100).toFixed(2);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            1250
+          ],
+          "expected": "$12.50"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            0
+          ],
+          "expected": "$0.00"
+        },
+        {
+          "args": [
+            5
+          ],
+          "expected": "$0.05"
+        },
+        {
+          "args": [
+            199900
+          ],
+          "expected": "$1999.00"
+        },
+        {
+          "args": [
+            1999
+          ],
+          "expected": "$19.99"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An AI wrote `get_page` for an API where pages **start at 1**. Page 1 currently skips the first items. Fix it; a page below 1 or past the end returns `[]`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "get_page",
+      "starterCode": "def get_page(items, page, size):\n    return items[page * size:(page + 1) * size]",
+      "referenceSolution": "def get_page(items, page, size):\n    if page < 1:\n        return []\n    return items[(page - 1) * size:page * size]",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            1,
+            2
+          ],
+          "expected": [
+            1,
+            2
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            3,
+            2
+          ],
+          "expected": [
+            5
+          ]
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            5,
+            2
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            1,
+            10
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              1,
+              2,
+              3
+            ],
+            0,
+            2
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An AI added this file to the PR. Mark the lines you would block.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "+import Stripe from 'stripe';",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "+const stripe = new Stripe('sk_live_51HxQ2bLkd8sP0aQ');",
+          "issue": "A live secret key hard-coded and committed; read it from an env var and rotate this one."
+        },
+        {
+          "id": "s3",
+          "text": "+export async function refund(chargeId: string) {",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "+  return stripe.refunds.create({ charge: chargeId });",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "+}",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "+console.log('stripe client', stripe);",
+          "issue": "Logs the client object, which carries the key, on every start."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "The AI says it \"fixed the failing tests\". Mark the changed lines that are a problem.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "  it('adds an item', () => {",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "    expect(addItem(cart, 'sku1', 2).items).toHaveLength(1);",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "  });",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "+  it.skip('rejects negative quantities', () => {",
+          "issue": "The failing test was skipped instead of fixing `addItem`."
+        },
+        {
+          "id": "s5",
+          "text": "    expect(() => addItem(cart, 'sku1', -1)).toThrow();",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "  });",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "  it('totals the cart', () => {",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "-    expect(total(cart)).toBe(1999);",
+          "issue": null
+        },
+        {
+          "id": "s9",
+          "text": "+    expect(total(cart)).toBeGreaterThan(0);",
+          "issue": "The assertion was weakened so any positive total passes."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Order the steps for reviewing a small AI-generated pull request.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag into order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Read the task or PR description so you know what should change"
+        },
+        {
+          "id": "r2",
+          "label": "Scan the list of changed files for anything unexpected"
+        },
+        {
+          "id": "r3",
+          "label": "Read the diff line by line"
+        },
+        {
+          "id": "r4",
+          "label": "Run the tests and try the feature locally"
+        },
+        {
+          "id": "r5",
+          "label": "Approve or request changes"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "Know the goal, check the scope, read the code, then verify it actually works before deciding."
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "An AI's PR adds a dependency called `left-pad-utils-pro` to pad strings. You've never heard of it.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An AI's PR adds a dependency called `left-pad-utils-pro` to pad strings. You've never heard of it.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you check first?",
+          "options": [
+            "That the package really exists and is the one you expect on the registry",
+            "That it has a nice README",
+            "That the PR title is clear",
+            "Nothing; the AI chose it"
+          ],
+          "correctIndex": 0,
+          "explanation": "AI tools sometimes invent package names, and attackers register those names."
+        },
+        {
+          "id": "q2",
+          "question": "It exists but was published last week and has 3 weekly downloads. What now?",
+          "options": [
+            "Remove it and use the built-in `String.prototype.padStart`",
+            "Keep it, since it installs fine",
+            "Pin it to the latest version",
+            "Fork it into the repo"
+          ],
+          "correctIndex": 0,
+          "explanation": "An unknown, brand-new package is a supply-chain risk, and the standard library already does this."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You asked an AI to fix a typo in a button label. The diff also changes three unrelated files. What should you do?",
+    "mcq": {
+      "options": [
+        "Ask why, and revert the unrelated changes unless they are clearly needed",
+        "Approve it; more fixes are better",
+        "Merge, then check later",
+        "Only review the button file"
+      ],
+      "correctIndex": 0,
+      "explanation": "Unrequested changes are where surprises hide. Keep the diff to the task.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "CI is green on an AI-written PR. What does that tell you?",
+    "mcq": {
+      "options": [
+        "Only that existing checks pass; the tests may be missing, weakened or changed in the same PR",
+        "The code is correct",
+        "No review is needed",
+        "The AI wrote new tests"
+      ],
+      "correctIndex": 0,
+      "explanation": "Green CI is necessary, not sufficient. Read the test changes as carefully as the code.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An AI's code calls `fs.readFileAsync(path)` in Node. How do you check it is real?",
+    "mcq": {
+      "options": [
+        "Look it up in the Node docs or let the type checker / a quick run tell you",
+        "Trust it; AI knows the API",
+        "Ask the AI if it is sure",
+        "Search Stack Overflow for the name"
+      ],
+      "correctIndex": 0,
+      "explanation": "Invented APIs are a common AI error. Docs, types or running the code settle it quickly (Node has `fs.promises.readFile`, not `readFileAsync`).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "An AI wrote `buildSearch` by pasting filter values into the SQL text, which allows SQL injection. Rewrite it to use numbered placeholders (`$1`, `$2`, …) and return the values separately. Add `name` before `status`; with no filters there is no `WHERE`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "buildSearch",
+      "starterCode": "function buildSearch(filters) {\n  const clauses = [];\n  if (filters.name !== undefined) clauses.push(`name = '${filters.name}'`);\n  if (filters.status !== undefined) clauses.push(`status = '${filters.status}'`);\n  const text = \"SELECT id FROM users\" + (clauses.length ? \" WHERE \" + clauses.join(\" AND \") : \"\");\n  return { text, values: [] };\n}",
+      "referenceSolution": "function buildSearch(filters) {\n  const clauses = [];\n  const values = [];\n  if (filters.name !== undefined) {\n    values.push(filters.name);\n    clauses.push(`name = $${values.length}`);\n  }\n  if (filters.status !== undefined) {\n    values.push(filters.status);\n    clauses.push(`status = $${values.length}`);\n  }\n  const text = \"SELECT id FROM users\" + (clauses.length ? \" WHERE \" + clauses.join(\" AND \") : \"\");\n  return { text, values };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "name": "ann"
+            }
+          ],
+          "expected": {
+            "text": "SELECT id FROM users WHERE name = $1",
+            "values": [
+              "ann"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "name": "bo",
+              "status": "active"
+            }
+          ],
+          "expected": {
+            "text": "SELECT id FROM users WHERE name = $1 AND status = $2",
+            "values": [
+              "bo",
+              "active"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "status": "banned"
+            }
+          ],
+          "expected": {
+            "text": "SELECT id FROM users WHERE status = $1",
+            "values": [
+              "banned"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "name": "x' OR '1'='1"
+            }
+          ],
+          "expected": {
+            "text": "SELECT id FROM users WHERE name = $1",
+            "values": [
+              "x' OR '1'='1"
+            ]
+          }
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "text": "SELECT id FROM users",
+            "values": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Before sharing logs with an AI tool, `redact` replaces the value of any `KEY=value` line whose key ends in `_KEY`, `_SECRET`, `_TOKEN` or `PASSWORD` with `***`. The AI-written version only handles `_KEY`. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "redact",
+      "starterCode": "def redact(text):\n    out = []\n    for line in text.split(\"\\n\"):\n        if \"=\" in line:\n            key, _, value = line.partition(\"=\")\n            if key.strip().upper().endswith(\"_KEY\"):\n                line = key + \"=***\"\n        out.append(line)\n    return \"\\n\".join(out)",
+      "referenceSolution": "def redact(text):\n    out = []\n    for line in text.split(\"\\n\"):\n        if \"=\" in line:\n            key, _, value = line.partition(\"=\")\n            if key.strip().upper().endswith((\"_KEY\", \"_SECRET\", \"_TOKEN\", \"PASSWORD\")):\n                line = key + \"=***\"\n        out.append(line)\n    return \"\\n\".join(out)",
+      "sampleTests": [
+        {
+          "args": [
+            "API_KEY=abc\nPORT=3000"
+          ],
+          "expected": "API_KEY=***\nPORT=3000"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "DB_PASSWORD=pw\nGITHUB_TOKEN=gh_123"
+          ],
+          "expected": "DB_PASSWORD=***\nGITHUB_TOKEN=***"
+        },
+        {
+          "args": [
+            ""
+          ],
+          "expected": ""
+        },
+        {
+          "args": [
+            "# comment\nJWT_SECRET=a=b"
+          ],
+          "expected": "# comment\nJWT_SECRET=***"
+        },
+        {
+          "args": [
+            "NAME=app\nKEYBOARD=us"
+          ],
+          "expected": "NAME=app\nKEYBOARD=us"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An AI added these Express routes. Mark the lines with security problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "+router.get('/orders', requireAuth, async (req, res) => {",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "+  const { status } = req.query;",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "+  const rows = await db.query(`SELECT * FROM orders WHERE status = '${status}'`);",
+          "issue": "User input is pasted into SQL: injection. Use a placeholder."
+        },
+        {
+          "id": "s4",
+          "text": "+  res.json(rows);",
+          "issue": "Returns every customer's orders; nothing filters by `req.user.id`."
+        },
+        {
+          "id": "s5",
+          "text": "+});",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "+router.delete('/orders/:id', requireAuth, async (req, res) => {",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "+  await db.query('DELETE FROM orders WHERE id = $1 AND user_id = $2', [req.params.id, req.user.id]);",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "+  res.status(204).end();",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The AI says \"fixed the bug in #482\". Order the steps to verify it.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag into order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "Reproduce the bug on `main`"
+        },
+        {
+          "id": "r2",
+          "label": "Read the diff and check it changes the cause, not just the symptom"
+        },
+        {
+          "id": "r3",
+          "label": "Check a regression test was added that fails on `main`"
+        },
+        {
+          "id": "r4",
+          "label": "Run the full test suite on the branch"
+        },
+        {
+          "id": "r5",
+          "label": "Approve"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "explanation": "You can't confirm a fix for a bug you haven't seen; a regression test that fails before and passes after is the proof."
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You asked an agent to rename `userData` to `profile` in the profile page. The PR touches 40 files and 2,000 lines.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You asked an agent to rename `userData` to `profile` in the profile page. The PR touches 40 files and 2,000 lines.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you do?",
+          "options": [
+            "Ask for a PR limited to the rename, with anything else split out",
+            "Approve it; the tests pass",
+            "Review only the first five files",
+            "Merge and revert if something breaks"
+          ],
+          "correctIndex": 0,
+          "explanation": "A diff far bigger than the task can't be reviewed properly; scope it back down."
+        },
+        {
+          "id": "q2",
+          "question": "The smaller PR mixes the rename with reformatting of whole files. What do you ask for?",
+          "options": [
+            "Put formatting in a separate commit or PR so the real change is readable",
+            "Nothing; formatting is harmless",
+            "Turn off the formatter",
+            "Squash everything into one commit"
+          ],
+          "correctIndex": 0,
+          "explanation": "Separating mechanical changes from logic keeps the meaningful lines visible."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An AI wrote this Python. Mark the lines you would flag.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "+import requests",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "+def fetch_user(user_id):",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "+    resp = requests.get(f'{API}/users/{user_id}', timeout=5)",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "+    resp.raise_for_status()",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "+    return resp.json_safe()",
+          "issue": "`requests` has no `json_safe()`; this is an invented method. Use `resp.json()`."
+        },
+        {
+          "id": "s6",
+          "text": "+def save(user):",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "+    try:",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "+        db.insert(user)",
+          "issue": null
+        },
+        {
+          "id": "s9",
+          "text": "+    except Exception:\n+        pass",
+          "issue": "Swallows every error, so failed saves look successful."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An AI wrote `total`. What happens when it is called with an empty array? You can run it.",
+    "mcq": {
+      "options": [
+        "It throws a TypeError",
+        "It returns 0",
+        "It returns undefined",
+        "It returns NaN"
+      ],
+      "correctIndex": 0,
+      "explanation": "`reduce` with no initial value throws on an empty array. Ask for `reduce((a, b) => a + b, 0)`.",
+      "snippet": "const total = (nums) => nums.reduce((a, b) => a + b);\ntry {\n  console.log(total([]));\n} catch (e) {\n  console.log(e.constructor.name);\n}",
+      "snippetLanguage": "javascript"
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A one-line AI bug fix also rewrites 3,000 lines of `package-lock.json`. What is the right response?",
+    "mcq": {
+      "options": [
+        "Question it: the lockfile should only change if dependencies were meant to change",
+        "Ignore lockfiles in review",
+        "Approve; lockfiles are generated",
+        "Delete the lockfile"
+      ],
+      "correctIndex": 0,
+      "explanation": "Unexpected lockfile churn can silently upgrade or add packages. Ask for it to be reverted or explained.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Which review comment will get the best fix from an AI agent?",
+    "mcq": {
+      "options": [
+        "\"In `cart.ts` line 42, quantity `-1` is accepted; it should throw. Add a test for it.\"",
+        "\"This is wrong, fix it.\"",
+        "\"Please improve the quality.\"",
+        "\"Are you sure?\""
+      ],
+      "correctIndex": 0,
+      "explanation": "Point to the exact place, the expected behaviour and how to prove it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "An AI wrote `safePath` for a download endpoint. It only blocks `..`, so `/etc/passwd` gets through. Return `base + \"/\" + name` only for a plain file name; return `null` if the name is empty or contains `..`, `/` or `\\`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "safePath",
+      "starterCode": "function safePath(base, name) {\n  if (name.includes(\"..\")) return null;\n  return base + \"/\" + name;\n}",
+      "referenceSolution": "function safePath(base, name) {\n  if (!name || name.includes(\"..\") || name.includes(\"/\") || name.includes(\"\\\\\")) return null;\n  return base + \"/\" + name;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/srv/files",
+            "report.pdf"
+          ],
+          "expected": "/srv/files/report.pdf"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/srv/files",
+            "../secrets.env"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/srv/files",
+            "/etc/passwd"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/srv/files",
+            ""
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/srv/files",
+            "a/b.txt"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/srv/files",
+            "dir\\file.txt"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/srv/files",
+            "notes.v2.txt"
+          ],
+          "expected": "/srv/files/notes.v2.txt"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An AI wrote retry delays as `base * 2**i` for each retry, but forgot the cap. Fix `backoff_delays` so no delay exceeds `cap`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "backoff_delays",
+      "starterCode": "def backoff_delays(base, retries, cap):\n    return [base * 2 ** i for i in range(retries)]",
+      "referenceSolution": "def backoff_delays(base, retries, cap):\n    return [min(cap, base * 2 ** i) for i in range(retries)]",
+      "sampleTests": [
+        {
+          "args": [
+            100,
+            4,
+            1000
+          ],
+          "expected": [
+            100,
+            200,
+            400,
+            800
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            100,
+            6,
+            1000
+          ],
+          "expected": [
+            100,
+            200,
+            400,
+            800,
+            1000,
+            1000
+          ]
+        },
+        {
+          "args": [
+            100,
+            0,
+            1000
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            500,
+            2,
+            300
+          ],
+          "expected": [
+            300,
+            300
+          ]
+        },
+        {
+          "args": [
+            1,
+            3,
+            4
+          ],
+          "expected": [
+            1,
+            2,
+            4
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "An AI \"simplified\" this permission check. Mark the problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "export function canEditPost(user: User, post: Post) {",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "-  return user.id === post.authorId || user.role === 'admin';",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "+  if (!user) return true;",
+          "issue": "Anonymous requests can now edit any post."
+        },
+        {
+          "id": "s4",
+          "text": "+  return user.id === post.authorId || user.role.includes('admin');",
+          "issue": "`includes` matches roles like `not-admin` or `admin-readonly`; compare exactly."
+        },
+        {
+          "id": "s5",
+          "text": "}",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "+// tests were flaky, removed canEditPost.test.ts",
+          "issue": "Deleted the tests for security-critical code instead of fixing them."
+        },
+        {
+          "id": "s7",
+          "text": "+export const POSTS_PER_PAGE = 20;",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "+export const slugify = (t: string) => t.toLowerCase().trim().replace(/\\s+/g, '-');",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Review of an AI PR found these. Order them from most to least severe.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag into order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "A production database password committed in `config.ts`"
+        },
+        {
+          "id": "r2",
+          "label": "An unhandled promise rejection that crashes the server on malformed input"
+        },
+        {
+          "id": "r3",
+          "label": "An N+1 query on a page that lists 50 rows"
+        },
+        {
+          "id": "r4",
+          "label": "A variable named `data2`"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "explanation": "Leaked credentials are an active security incident; a crash is an availability bug anyone can trigger; N+1 is performance; naming is style."
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An agent fixed a flaky end-to-end test by adding `await sleep(2000)` before the assertion.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "An agent fixed a flaky end-to-end test by adding `await sleep(2000)` before the assertion.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is wrong with this fix?",
+          "options": [
+            "It hides a race: the test is slower and will still fail when the app takes longer than 2s",
+            "Nothing; sleeps make tests reliable",
+            "2000 should be 3000",
+            "Sleeps are not allowed in JavaScript"
+          ],
+          "correctIndex": 0,
+          "explanation": "A fixed sleep guesses at timing instead of waiting for the real condition."
+        },
+        {
+          "id": "q2",
+          "question": "What do you ask for instead?",
+          "options": [
+            "Wait for the actual condition (the element or response the test needs)",
+            "A retry of the whole test suite three times",
+            "Delete the test",
+            "Mark it as skipped in CI"
+          ],
+          "correctIndex": 0,
+          "explanation": "Waiting on the condition is fast when the app is fast and correct when it is slow."
+        },
+        {
+          "id": "q3",
+          "question": "How do you stop agents doing this again?",
+          "options": [
+            "Add a rule to the context file (no fixed sleeps in tests; use waitFor) and to the review checklist",
+            "Ban the agent from touching tests",
+            "Remind the agent in the PR comment only",
+            "Raise the CI timeout"
+          ],
+          "correctIndex": 0,
+          "explanation": "A written rule is applied every session; a PR comment is forgotten."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "An AI wrote this Next.js component. Mark the lines you would block.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "+function Comment({ comment }) {",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "+  return <div dangerouslySetInnerHTML={{ __html: comment.body }} />;",
+          "issue": "Renders user-written HTML unescaped: stored XSS."
+        },
+        {
+          "id": "s3",
+          "text": "+}",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "+const list = comments.map((c) => <Comment key={c.id} comment={c} />);",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "+useEffect(() => { fetch(`/api/comments?post=${postId}`).then((r) => r.json()).then(setComments); }, []);",
+          "issue": "Missing `postId` dependency: switching posts keeps showing the old comments."
+        },
+        {
+          "id": "s6",
+          "text": "+const API_URL = process.env.NEXT_PUBLIC_API_URL;",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "+const ADMIN_TOKEN = process.env.NEXT_PUBLIC_ADMIN_TOKEN;",
+          "issue": "`NEXT_PUBLIC_` variables are bundled into the browser, so the admin token is public."
+        },
+        {
+          "id": "s8",
+          "text": "+export default CommentList;",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An AI generates password-reset tokens with `Math.random().toString(36).slice(2)`. What is the problem?",
+    "mcq": {
+      "options": [
+        "`Math.random` is not cryptographically secure, so tokens can be predicted; use `crypto.randomBytes` or `crypto.randomUUID`",
+        "The tokens are too long",
+        "`toString(36)` is not supported in Node",
+        "Nothing; it is random"
+      ],
+      "correctIndex": 0,
+      "explanation": "Security tokens need a CSPRNG. This is a common AI shortcut worth looking for.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "To make CI pass, an agent added `// eslint-disable-next-line` and `as any` in six places. What do you do?",
+    "mcq": {
+      "options": [
+        "Ask for the real fixes; suppressions hide the errors the checks exist to catch",
+        "Approve, CI is green",
+        "Remove ESLint from CI",
+        "Ask it to add `@ts-ignore` too"
+      ],
+      "correctIndex": 0,
+      "explanation": "Silencing a check is not fixing it. Each suppression should be justified or removed.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An AI wrote this helper. What does it print? You can run it.",
+    "mcq": {
+      "options": [
+        "['a'] then ['a', 'b']",
+        "['a'] then ['b']",
+        "['a'] then ['a']",
+        "An error"
+      ],
+      "correctIndex": 0,
+      "explanation": "The default list is created once and shared between calls, so tags leak across calls. Use `tags=None` and create a new list inside.",
+      "snippet": "def add_tag(tag, tags=[]):\n    tags.append(tag)\n    return tags\n\nprint(add_tag(\"a\"))\nprint(add_tag(\"b\"))",
+      "snippetLanguage": "python"
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An AI wrote a sliding-window rate-limit check: allow a request if fewer than `limit` timestamps fall within the last `windowMs` (`now - t < windowMs`). It lets one extra request through. Fix `allow`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "allow",
+      "starterCode": "function allow(timestamps, now, limit, windowMs) {\n  const recent = timestamps.filter((t) => now - t < windowMs).length;\n  return recent <= limit;\n}",
+      "referenceSolution": "function allow(timestamps, now, limit, windowMs) {\n  const recent = timestamps.filter((t) => now - t < windowMs).length;\n  return recent < limit;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              1000,
+              2000
+            ],
+            2500,
+            3,
+            1000
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              1000,
+              2000,
+              2400
+            ],
+            2500,
+            3,
+            2000
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [],
+            5000,
+            1,
+            1000
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [],
+            5000,
+            0,
+            1000
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              100,
+              200,
+              300
+            ],
+            5000,
+            3,
+            1000
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            [
+              4100,
+              4500
+            ],
+            5000,
+            2,
+            1000
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              4000,
+              4500
+            ],
+            5000,
+            2,
+            1000
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "An AI wrote a webhook check that hashes only the body, so anyone can forge it. Fix `verify_signature`: the header is `sha256=` + the hex HMAC-SHA256 of `body` keyed with `secret`. Compare with `hmac.compare_digest`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "verify_signature",
+      "starterCode": "import hashlib\n\ndef verify_signature(secret, body, signature):\n    digest = hashlib.sha256(body.encode()).hexdigest()\n    return signature == \"sha256=\" + digest",
+      "referenceSolution": "import hashlib\nimport hmac\n\ndef verify_signature(secret, body, signature):\n    expected = \"sha256=\" + hmac.new(secret.encode(), body.encode(), hashlib.sha256).hexdigest()\n    return hmac.compare_digest(expected, signature)",
+      "sampleTests": [
+        {
+          "args": [
+            "whsec",
+            "{\"id\":1}",
+            "sha256=cc2f1f736275a85762c723f8a3c29fbecbb7c1427ad1ddbe14589ad49036a629"
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "whsec",
+            "{\"id\":1}",
+            "sha256=037c9214eef74cc3887f3a4f085b4e17d76280dafd273b0ee160c09c4ba1cfd4"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "whsec",
+            "{\"id\":2}",
+            "sha256=cc2f1f736275a85762c723f8a3c29fbecbb7c1427ad1ddbe14589ad49036a629"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "k2",
+            "",
+            "sha256=158d080636db28c36adb2abc69943ab091eb5a24e1426a6120daf9709d8ad17d"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "whsec",
+            "hello",
+            "bbdb60c6d3c3026568e921e91f6bac1813c06ac8c9317a997c4b67c067f47048"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "other",
+            "hello",
+            "sha256=bbdb60c6d3c3026568e921e91f6bac1813c06ac8c9317a997c4b67c067f47048"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An agent's PR renames `users.email` to `email_address` on a live table with millions of rows. Mark the lines that cause data loss, downtime or a leak.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "-- migration 0042_rename_email.sql",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "ALTER TABLE users DROP COLUMN email;",
+          "issue": "Drops every email before copying it; rename via add, backfill, switch reads, then drop."
+        },
+        {
+          "id": "s3",
+          "text": "ALTER TABLE users ADD COLUMN email_address TEXT NOT NULL;",
+          "issue": "NOT NULL with no default fails on existing rows (and the old data is already gone)."
+        },
+        {
+          "id": "s4",
+          "text": "CREATE UNIQUE INDEX idx_users_email_address ON users(email_address);",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "-- app code",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "+const user = await db.users.findOne({ where: { email_address: input.email } });",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "+logger.info('login attempt', { email: input.email, password: input.password });",
+          "issue": "Writes plaintext passwords to the logs."
+        },
+        {
+          "id": "s8",
+          "text": "+if (!user || !(await bcrypt.compare(input.password, user.passwordHash))) throw new AuthError();",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "Order these safeguards for agent-written changes from the one that catches problems earliest to latest.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag into order, first at the top.",
+      "items": [
+        {
+          "id": "r1",
+          "label": "A scoped prompt with clear acceptance criteria"
+        },
+        {
+          "id": "r2",
+          "label": "The agent runs typecheck and tests before it says it is done"
+        },
+        {
+          "id": "r3",
+          "label": "A pre-commit hook that scans for secrets"
+        },
+        {
+          "id": "r4",
+          "label": "Required CI checks on the pull request"
+        },
+        {
+          "id": "r5",
+          "label": "Human code review of the pull request"
+        },
+        {
+          "id": "r6",
+          "label": "A staged rollout behind a feature flag"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Each layer is cheaper the earlier it catches a problem: prompt, local checks, commit hook, CI, human review, then a careful release."
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Your team merges about 30 agent-written PRs a week. One added a little-known npm package whose `postinstall` script sent CI environment variables to an external server.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your team merges about 30 agent-written PRs a week. One added a little-known npm package whose `postinstall` script sent CI environment variables to an external server.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you do first?",
+          "options": [
+            "Rotate every secret that CI and dev machines exposed, and remove the package",
+            "Write a postmortem",
+            "Pin the package to an older version",
+            "Turn off CI for a week"
+          ],
+          "correctIndex": 0,
+          "explanation": "Assume the secrets are stolen; rotating them stops the damage."
+        },
+        {
+          "id": "q2",
+          "question": "Which process change most directly prevents a repeat?",
+          "options": [
+            "Flag every new dependency in a PR for explicit review (and block install scripts by default)",
+            "Ask agents to prefer popular packages",
+            "Review only PRs over 500 lines",
+            "Move to a different AI tool"
+          ],
+          "correctIndex": 0,
+          "explanation": "New dependencies are the risk; make them visible and gated."
+        },
+        {
+          "id": "q3",
+          "question": "How do you limit what the agent itself can do?",
+          "options": [
+            "Require approval for package installs and network commands in the agent's permissions",
+            "Tell it in the prompt to be careful",
+            "Give it a dedicated admin account",
+            "Let it run only at night"
+          ],
+          "correctIndex": 0,
+          "explanation": "Permissions enforce the boundary; prompts only ask for it."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "An AI added a profile cache to a long-running API server; keys are user ids. Mark the problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "+const cache = new Map();",
+          "issue": "Unbounded: one entry per user forever, so memory only grows. Add a size limit or TTL."
+        },
+        {
+          "id": "s2",
+          "text": "+export async function getProfile(userId) {",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "+  if (cache.has(userId)) return cache.get(userId);",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "+  const profile = await db.profiles.find(userId);",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "+  cache.set(userId, profile);",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "+  return profile;",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "+}",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "+export async function updateProfile(userId, patch) {",
+          "issue": null
+        },
+        {
+          "id": "s9",
+          "text": "+  await db.profiles.update(userId, patch);",
+          "issue": "Never invalidates the cache, so reads keep returning the old profile."
+        },
+        {
+          "id": "s10",
+          "text": "+}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "An agent wrote both the feature and its tests from the same prompt. What is the main risk?",
+    "mcq": {
+      "options": [
+        "The tests encode the same misunderstanding as the code, so they pass while the behaviour is wrong",
+        "The tests will be too slow",
+        "Agents can't write tests",
+        "The tests will use the wrong framework"
+      ],
+      "correctIndex": 0,
+      "explanation": "Review the tests against the requirements yourself, or write the key acceptance tests independently.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Which metric best tells you whether your AI-assisted review process is working?",
+    "mcq": {
+      "options": [
+        "The rate of bugs and reverts that escape to production from AI-authored PRs, compared with others",
+        "Lines of code generated per week",
+        "Number of PRs approved per reviewer",
+        "How quickly PRs are approved"
+      ],
+      "correctIndex": 0,
+      "explanation": "Output and speed say nothing about quality; escaped defects do.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-ai-reviewing-diffs-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-ai-reviewing-diffs",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "An agent adds a 70 kB date library to format one date as `2 Oct 2026`. What is the senior response?",
+    "mcq": {
+      "options": [
+        "Check whether the platform (`Intl.DateTimeFormat`) or an existing dependency already does it before accepting a new one",
+        "Approve; libraries are well tested",
+        "Ask it to vendor the library",
+        "Ask for an even bigger library that does more"
+      ],
+      "correctIndex": 0,
+      "explanation": "Every dependency adds size, upgrade work and supply-chain risk; the standard library covers this.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

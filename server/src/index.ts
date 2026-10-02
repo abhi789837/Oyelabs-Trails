@@ -69,7 +69,7 @@ async function main(): Promise<void> {
         log: (m) => console.log(`[oyelearn] ${m}`),
         publish: (line) => publishGenerationLine(app, line),
       }),
-      "assessment.evaluate": evaluateHandler({ db, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "assessment.evaluate": evaluateHandler({ db, ai, content, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "path.build": buildPathHandler({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "links.check": checkLinksHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "week.refine": refineWeekHandler({ db, content, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),

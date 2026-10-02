@@ -45,7 +45,7 @@ beforeEach(async () => {
     method: "POST",
     url: `/api/admin/users/${learner.id}/assessments`,
     ...as(admin),
-    payload: {},
+    payload: { format: "legacy" },
   });
   assessmentId = issued.json().assessmentId;
   await ctx.drainJobs();
@@ -181,7 +181,7 @@ describe("what does not count as consent", () => {
       method: "POST",
       url: `/api/admin/users/${learner.id}/assessments`,
       ...as(admin),
-      payload: { label: "Second" },
+      payload: { format: "legacy", label: "Second" },
     });
     const secondId: string = second.json().assessmentId;
     await ctx.drainJobs();
@@ -235,7 +235,7 @@ describe("errors that are not about consent", () => {
       method: "POST",
       url: `/api/admin/users/${learner.id}/assessments`,
       ...as(admin),
-      payload: { label: "Waiting" },
+      payload: { format: "legacy", label: "Waiting" },
     });
     const freshId: string = fresh.json().assessmentId;
     await ctx.drainJobs();

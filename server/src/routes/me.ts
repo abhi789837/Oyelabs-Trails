@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify";
+import type { V4Result } from "../../../shared/assessmentV4";
 
 import { and, desc, eq } from "drizzle-orm";
 import { z } from "zod";
@@ -153,6 +154,23 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
       .get();
     if (!row) return { evaluation: null };
 
+    if ((row.result as { format?: string }).format === "v4") {
+      const v4 = row.result as V4Result;
+      const levels = v4.skills.map((s) => s.level ?? 0);
+      return {
+        evaluation: {
+          overallLevel: Math.max(1, Math.min(5, Math.round(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length)))) as 1 | 2 | 3 | 4 | 5,
+          learnerSummary: v4.focusFirst.length ? `We'll start with ${v4.focusFirst.join(", ")}.` : "Your path builds on what you already know.",
+          areas: [],
+          estimatedHours: 0,
+          v4: {
+            skills: v4.skills.map((s) => ({ skillName: s.skillName, priority: s.priority, level: s.level, asked: s.asked })),
+            strengths: v4.strengths,
+            focusFirst: v4.focusFirst,
+          },
+        },
+      };
+    }
     const result = row.result as EvaluationResult;
     return {
       evaluation: {

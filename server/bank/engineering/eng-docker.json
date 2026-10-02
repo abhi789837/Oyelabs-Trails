@@ -1,0 +1,1578 @@
+[
+  {
+    "id": "eng-docker-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Complete `imageRef` so it returns `name:tag`. When the tag is empty or missing, Docker uses `latest`, so do the same.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "imageRef",
+      "starterCode": "function imageRef(name, tag) {\n  return name + \":\" + tag;\n}",
+      "referenceSolution": "function imageRef(name, tag) {\n  return name + \":\" + (tag ? tag : \"latest\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "nginx",
+            "1.25"
+          ],
+          "expected": "nginx:1.25"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "redis",
+            null
+          ],
+          "expected": "redis:latest"
+        },
+        {
+          "args": [
+            "api",
+            ""
+          ],
+          "expected": "api:latest"
+        },
+        {
+          "args": [
+            "node",
+            "20-slim"
+          ],
+          "expected": "node:20-slim"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "`port_mapping` receives the value of a `-p` flag and returns `[hostPort, containerPort]` as integers. The value may start with a host IP, like `127.0.0.1:5432:5432`. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "port_mapping",
+      "starterCode": "def port_mapping(value):\n    parts = value.split(\":\")\n    return [int(parts[0]), int(parts[1])]",
+      "referenceSolution": "def port_mapping(value):\n    parts = value.split(\":\")\n    return [int(parts[-2]), int(parts[-1])]",
+      "sampleTests": [
+        {
+          "args": [
+            "8080:80"
+          ],
+          "expected": [
+            8080,
+            80
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "127.0.0.1:5432:5432"
+          ],
+          "expected": [
+            5432,
+            5432
+          ]
+        },
+        {
+          "args": [
+            "3000:3000"
+          ],
+          "expected": [
+            3000,
+            3000
+          ]
+        },
+        {
+          "args": [
+            "0.0.0.0:8443:443"
+          ],
+          "expected": [
+            8443,
+            443
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "A teammate's notes for running the API locally. The goal: open `http://localhost:3000`, check the logs, then clean up.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the commands that will not do what the notes intend.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "docker build -t api:dev .",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "docker run -d --name api api:dev",
+          "issue": "No `-p 3000:3000`, so nothing is published and localhost:3000 will not answer."
+        },
+        {
+          "id": "l3",
+          "text": "docker logs -f api",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "docker exec -it api sh",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "docker rm api",
+          "issue": "`docker rm` refuses a running container; run `docker stop api` first (or `docker rm -f api`)."
+        },
+        {
+          "id": "l6",
+          "text": "docker images",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-docker-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You run `redis:7.2` as a container named `cache` and want to move to `redis:7.4`.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps in order.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "`docker pull redis:7.4`"
+        },
+        {
+          "id": "s2",
+          "label": "`docker stop cache`"
+        },
+        {
+          "id": "s3",
+          "label": "`docker rm cache`"
+        },
+        {
+          "id": "s4",
+          "label": "`docker run -d --name cache redis:7.4` (same flags and volume as before)"
+        },
+        {
+          "id": "s5",
+          "label": "`docker logs cache` to check it started cleanly"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Pull first so the gap is short, stop and remove the old container to free the name, start the new one with the same settings, then confirm in the logs."
+    }
+  },
+  {
+    "id": "eng-docker-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Your container stops as soon as it starts.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You run `docker run -d --name web my-app:1.0`. A second later `docker ps` shows nothing.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you run first?",
+          "options": [
+            "`docker ps -a` and `docker logs web`",
+            "`docker rmi my-app:1.0` and rebuild",
+            "Restart the Docker daemon",
+            "`docker run` again with `--restart always`"
+          ],
+          "correctIndex": 0,
+          "explanation": "`ps -a` shows stopped containers and the exit code; `logs` shows what the app printed before it died."
+        },
+        {
+          "id": "q2",
+          "question": "The logs say `Error: DATABASE_URL is not set`. What is the fix?",
+          "options": [
+            "Pass it in: `-e DATABASE_URL=...` or `--env-file .env`",
+            "Add `EXPOSE 5432` to the image",
+            "Run with `-it` instead of `-d`",
+            "Use `--restart unless-stopped` so it retries"
+          ],
+          "correctIndex": 0,
+          "explanation": "The app needs configuration the container never received. Environment variables are passed at `docker run` time."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "An onboarding note about Docker basics.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the sentences that are wrong.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "An image is a read-only template; a container is a running (or stopped) instance of an image.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "You can start many containers from the same image.",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "Deleting a container also deletes the image it was started from.",
+          "issue": "Removing a container leaves the image in place; `docker rmi` removes images."
+        },
+        {
+          "id": "l4",
+          "text": "`docker ps` lists running containers; add `-a` to include stopped ones.",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "Files a container writes outside a volume survive `docker rm`.",
+          "issue": "The container's writable layer is deleted with the container; use a volume to keep data."
+        },
+        {
+          "id": "l6",
+          "text": "`docker pull` downloads an image from a registry such as Docker Hub.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-docker-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What does `docker run -p 8080:80 nginx` do with the ports?",
+    "mcq": {
+      "options": [
+        "Traffic to port 8080 on the host goes to port 80 in the container",
+        "Traffic to port 80 on the host goes to port 8080 in the container",
+        "The container listens on both 8080 and 80",
+        "It only documents the ports; nothing is published"
+      ],
+      "correctIndex": 0,
+      "explanation": "The format is `host:container`. Browse to `localhost:8080` to reach nginx listening on 80 inside the container.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which statement about images and containers is right?",
+    "mcq": {
+      "options": [
+        "A container is a running instance of an image; one image can back many containers",
+        "An image is a running container that has been paused",
+        "Each image can only be used for one container",
+        "Containers are stored in a registry, images live only on your laptop"
+      ],
+      "correctIndex": 0,
+      "explanation": "Images are templates (pushed to registries); containers are instances created from them, as many as you like.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Your container crashed and `docker ps` shows nothing. How do you see it?",
+    "mcq": {
+      "options": [
+        "`docker ps -a`",
+        "`docker images`",
+        "`docker inspect --running`",
+        "`docker logs --all`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`docker ps` lists only running containers. `-a` includes stopped and exited ones with their exit status.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "You ran `docker ps -a --format '{{.Names}}\\t{{.Status}}'`. Complete `runningNames` so it returns the names of containers whose status starts with `Up`, in order. Output can be empty.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "runningNames",
+      "starterCode": "function runningNames(output) {\n  // each line: name<TAB>status\n  return [];\n}",
+      "referenceSolution": "function runningNames(output) {\n  return output\n    .split(\"\\n\")\n    .filter((line) => line.trim())\n    .map((line) => line.split(\"\\t\"))\n    .filter(([, status]) => status && status.startsWith(\"Up\"))\n    .map(([name]) => name);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "api\tUp 3 hours\ndb\tExited (0) 2 days ago"
+          ],
+          "expected": [
+            "api"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            ""
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "web\tUp 5 seconds\nworker\tUp 2 minutes (healthy)"
+          ],
+          "expected": [
+            "web",
+            "worker"
+          ]
+        },
+        {
+          "args": [
+            "old\tExited (137) 1 hour ago\nnew\tCreated"
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "cache\tUp 1 day\n"
+          ],
+          "expected": [
+            "cache"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`docker system df` prints sizes like `350MB`, `1.2GB`, `512kB` or `0B`. Complete `to_mb` so it returns the size in megabytes (Docker uses 1000, not 1024).",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "to_mb",
+      "starterCode": "def to_mb(size):\n    if size.endswith(\"GB\"):\n        return float(size[:-2]) * 1000\n    return float(size[:-2])",
+      "referenceSolution": "def to_mb(size):\n    units = {\"GB\": 1000, \"MB\": 1, \"kB\": 0.001}\n    for unit, factor in units.items():\n        if size.endswith(unit):\n            return round(float(size[:-len(unit)]) * factor, 6)\n    if size.endswith(\"B\"):\n        return round(float(size[:-1]) / 1_000_000, 6)\n    return 0",
+      "sampleTests": [
+        {
+          "args": [
+            "350MB"
+          ],
+          "expected": 350
+        },
+        {
+          "args": [
+            "1.2GB"
+          ],
+          "expected": 1200
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "512kB"
+          ],
+          "expected": 0.512
+        },
+        {
+          "args": [
+            "0B"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "2GB"
+          ],
+          "expected": 2000
+        },
+        {
+          "args": [
+            "12.5MB"
+          ],
+          "expected": 12.5
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "This command runs Postgres on a shared staging server.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the flags that are a problem on a shared server.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "docker run -d \\",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  --name db \\",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  -e POSTGRES_PASSWORD=supersecret \\",
+          "issue": "A literal password ends up in shell history and in `docker inspect`; use `--env-file` or a secret file."
+        },
+        {
+          "id": "l4",
+          "text": "  -p 5432:5432 \\",
+          "issue": "Publishes the database on every interface of the server; bind to `127.0.0.1:5432:5432` or keep it on a private network."
+        },
+        {
+          "id": "l5",
+          "text": "  -v pgdata:/var/lib/postgresql/data \\",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  --restart unless-stopped \\",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  postgres:latest",
+          "issue": "`latest` changes under you; a major Postgres upgrade cannot read the old data directory. Pin `postgres:16`."
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-docker-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "The server's disk is nearly full and Docker is the culprit.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order these from what to run first (safest) to last (most destructive).",
+      "items": [
+        {
+          "id": "s1",
+          "label": "`docker system df` to see what is using space"
+        },
+        {
+          "id": "s2",
+          "label": "`docker container prune` (stopped containers)"
+        },
+        {
+          "id": "s3",
+          "label": "`docker image prune` (dangling images only)"
+        },
+        {
+          "id": "s4",
+          "label": "`docker image prune -a` (every image no container uses)"
+        },
+        {
+          "id": "s5",
+          "label": "`docker volume prune` (unused volumes, which may hold data)"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Measure first, then remove things that are cheap to recreate. Volumes go last because they can hold data that cannot be recreated."
+    }
+  },
+  {
+    "id": "eng-docker-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Database data disappeared after an update.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Someone updated Postgres with `docker rm -f db` and `docker run -d --name db postgres:16`. All tables are gone.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why did the data disappear?",
+          "options": [
+            "The data lived in the old container's writable layer, removed with the container",
+            "Postgres 16 deletes data from older versions",
+            "`-f` wipes the image cache",
+            "The image was pulled again from scratch"
+          ],
+          "correctIndex": 0,
+          "explanation": "Without a volume, the data directory is part of the container and goes away with `docker rm`."
+        },
+        {
+          "id": "q2",
+          "question": "How should the database be run from now on?",
+          "options": [
+            "Mount a named volume at the data directory: `-v pgdata:/var/lib/postgresql/data`",
+            "Never remove the container; only restart it",
+            "Commit the container to an image after each change",
+            "Copy the data out with `docker cp` once a day"
+          ],
+          "correctIndex": 0,
+          "explanation": "A volume lives outside any container, so you can replace the container freely and the data stays."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "Your API container cannot reach the database.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The API runs in one container and Postgres in another, both started with plain `docker run`. The API's `DATABASE_URL` uses `localhost:5432` and gets `ECONNREFUSED`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Why does `localhost` fail?",
+          "options": [
+            "Inside a container, `localhost` is the container itself, not the host or other containers",
+            "Postgres does not accept TCP connections by default",
+            "Port 5432 is reserved by Docker",
+            "The API needs `--privileged` to open sockets"
+          ],
+          "correctIndex": 0,
+          "explanation": "Each container has its own network namespace and loopback interface."
+        },
+        {
+          "id": "q2",
+          "question": "What is the clean fix?",
+          "options": [
+            "Create a network (`docker network create app`), run both with `--network app`, and use `db:5432`",
+            "Use the container's IP from `docker inspect` in `DATABASE_URL`",
+            "Publish 5432 and hardcode the host's public IP",
+            "Run both processes in one container"
+          ],
+          "correctIndex": 0,
+          "explanation": "On a user-defined network, Docker's DNS resolves container names, and IPs can change on restart."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `docker run` and `docker exec`?",
+    "mcq": {
+      "options": [
+        "`run` creates and starts a new container; `exec` runs a command inside an already running container",
+        "`exec` creates a new container from an image; `run` re-runs the last command",
+        "They are aliases",
+        "`exec` only works on stopped containers"
+      ],
+      "correctIndex": 0,
+      "explanation": "Use `docker exec -it <name> sh` to look around inside a running container; `docker run` always makes a new one.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What does `docker logs api` show?",
+    "mcq": {
+      "options": [
+        "What the container's main process wrote to stdout and stderr",
+        "Every file under `/var/log` inside the container",
+        "The Docker daemon's own log",
+        "The build output of the image"
+      ],
+      "correctIndex": 0,
+      "explanation": "Docker captures the main process's stdout/stderr. Apps that log to files inside the container will not show up, which is why containerised apps log to stdout.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A teammate runs `docker run -e API_KEY=abc123 my-app`. Where can someone else on that machine see the key?",
+    "mcq": {
+      "options": [
+        "In `docker inspect` output for the container, and in the shell history",
+        "Nowhere; `-e` values are encrypted",
+        "Only inside the container",
+        "Only in the image layers on Docker Hub"
+      ],
+      "correctIndex": 0,
+      "explanation": "Environment variables are stored in the container config and shown by `docker inspect`. Use `--env-file` (kept out of git) or mounted secret files.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "CI tags images as `<branch>-<short sha>`. Complete `imageTag`: lowercase the branch, replace any character outside `a-z 0-9 . _ -` with `-`, strip leading `.` and `-`, then append `-` and the first 7 characters of the sha.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "imageTag",
+      "starterCode": "function imageTag(branch, sha) {\n  return branch.replace(\"/\", \"-\") + \"-\" + sha.slice(0, 7);\n}",
+      "referenceSolution": "function imageTag(branch, sha) {\n  const clean = branch\n    .toLowerCase()\n    .replace(/[^a-z0-9._-]/g, \"-\")\n    .replace(/^[.-]+/, \"\");\n  return clean + \"-\" + sha.slice(0, 7);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "main",
+            "a1b2c3d4e5f6"
+          ],
+          "expected": "main-a1b2c3d"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "feature/Login-Page",
+            "0123456789"
+          ],
+          "expected": "feature-login-page-0123456"
+        },
+        {
+          "args": [
+            "fix/api/v2 retry",
+            "ffffffffff"
+          ],
+          "expected": "fix-api-v2-retry-fffffff"
+        },
+        {
+          "args": [
+            "-hotfix",
+            "abcdef1234"
+          ],
+          "expected": "hotfix-abcdef1"
+        },
+        {
+          "args": [
+            "release_1.4",
+            "1234567890"
+          ],
+          "expected": "release_1.4-1234567"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Each line is `name|status` from `docker ps -a`. Complete `failed` so it returns the names of containers that exited with a non-zero code (e.g. `Exited (137) 2 hours ago`). `Exited (0)` is a clean stop.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "failed",
+      "starterCode": "def failed(lines):\n    return [l.split(\"|\")[0] for l in lines if \"Exited\" in l]",
+      "referenceSolution": "import re\n\ndef failed(lines):\n    out = []\n    for line in lines:\n        name, _, status = line.partition(\"|\")\n        m = re.match(r\"Exited \\((\\d+)\\)\", status)\n        if m and int(m.group(1)) != 0:\n            out.append(name)\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "api|Up 2 hours",
+              "job|Exited (1) 5 minutes ago"
+            ]
+          ],
+          "expected": [
+            "job"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a|Exited (0) 1 day ago",
+              "b|Exited (137) 3 hours ago"
+            ]
+          ],
+          "expected": [
+            "b"
+          ]
+        },
+        {
+          "args": [
+            [
+              "web|Up 1 second",
+              "seed|Exited (0) 10 seconds ago"
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "x|Exited (2) 1 minute ago",
+              "y|Created",
+              "z|Exited (143) 1 hour ago"
+            ]
+          ],
+          "expected": [
+            "x",
+            "z"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "This is how a log-shipping sidecar is started in production.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the flags that give the container far more power than it needs.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "docker run -d --name shipper \\",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "  --privileged \\",
+          "issue": "Turns off nearly all isolation: every device and capability on the host."
+        },
+        {
+          "id": "l3",
+          "text": "  -v /var/run/docker.sock:/var/run/docker.sock \\",
+          "issue": "The Docker socket is root on the host; a compromised shipper can start any container."
+        },
+        {
+          "id": "l4",
+          "text": "  -v /var/log/app:/logs:ro \\",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  --memory 256m \\",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "  --user 1000:1000 \\",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  --network host \\",
+          "issue": "Shares the host's network stack; the shipper only needs outbound traffic."
+        },
+        {
+          "id": "l8",
+          "text": "  shipper:2.3.1",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-docker-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A container keeps restarting. Work it out the usual way.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the debugging steps.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "`docker ps -a` to see the status and exit code"
+        },
+        {
+          "id": "s2",
+          "label": "`docker logs --tail 100 <name>` to read the last output"
+        },
+        {
+          "id": "s3",
+          "label": "`docker inspect <name>` to check env, mounts, command and `OOMKilled`"
+        },
+        {
+          "id": "s4",
+          "label": "`docker run -it --entrypoint sh <image>` to poke around the image by hand"
+        },
+        {
+          "id": "s5",
+          "label": "Fix the cause, rebuild or reconfigure, and watch it stay up"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5"
+      ],
+      "explanation": "Cheap, read-only checks first; the exit code and logs usually explain it. Inspect for configuration, then a shell for anything still unclear."
+    }
+  },
+  {
+    "id": "eng-docker-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "A worker container dies with exit code 137.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "`docker ps -a` shows `worker  Exited (137) 3 minutes ago`. It happens under load.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What does 137 usually mean?",
+          "options": [
+            "The process was killed with SIGKILL (128 + 9), often by the out-of-memory killer",
+            "The app returned an error code 137 on purpose",
+            "The image is for a different CPU",
+            "The container could not bind its port"
+          ],
+          "correctIndex": 0,
+          "explanation": "Exit codes above 128 mean killed by a signal; 9 is SIGKILL. Check `docker inspect` for `\"OOMKilled\": true`."
+        },
+        {
+          "id": "q2",
+          "question": "`docker inspect` shows `OOMKilled: true` and `--memory 256m`. What is the right next step?",
+          "options": [
+            "Check real memory use (`docker stats`) and either raise the limit or fix the leak",
+            "Remove the memory limit entirely in production",
+            "Add `--restart always` so it comes back",
+            "Switch to an Alpine base image"
+          ],
+          "correctIndex": 0,
+          "explanation": "Restarting hides the problem; removing the limit lets one container starve the host. Measure, then size the limit or fix the leak."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "An image works on your laptop but not on the server.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You built `api:1.3` on an Apple Silicon Mac and pushed it. On the x86 EC2 server the container exits immediately with `exec format error`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the cause?",
+          "options": [
+            "The image was built for arm64 and the server is amd64",
+            "The server's Docker version is too old",
+            "The entrypoint script has Windows line endings",
+            "The server is out of disk space"
+          ],
+          "correctIndex": 0,
+          "explanation": "`exec format error` means the binary is for another CPU architecture."
+        },
+        {
+          "id": "q2",
+          "question": "How do you fix it for good?",
+          "options": [
+            "Build for the server's platform, e.g. `docker buildx build --platform linux/amd64` (or both platforms), ideally in CI",
+            "Run the container with `--privileged`",
+            "Rename the tag to `api:1.3-x86`",
+            "Install Rosetta on the server"
+          ],
+          "correctIndex": 0,
+          "explanation": "buildx can build for another platform or a multi-arch image; building in CI on the target platform avoids laptop-specific images."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`docker stop api` always takes about 10 seconds before the container stops. What is the most likely reason?",
+    "mcq": {
+      "options": [
+        "The main process ignores SIGTERM, so Docker waits 10 s and then sends SIGKILL",
+        "Docker always waits 10 s to flush logs",
+        "The container has too little memory",
+        "The image is too large to unload quickly"
+      ],
+      "correctIndex": 0,
+      "explanation": "`docker stop` sends SIGTERM, waits (10 s default) and then kills. A shell wrapper as PID 1 that does not forward signals is the usual cause; use exec form or `--init`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "What does the `latest` tag guarantee?",
+    "mcq": {
+      "options": [
+        "Nothing special: it is just the default tag name used when none is given",
+        "That it is the newest image pushed to the repository",
+        "That the image has passed security scanning",
+        "That the image will never change"
+      ],
+      "correctIndex": 0,
+      "explanation": "`latest` is only whatever was last pushed with that tag (or nothing). Pin explicit versions for anything you deploy.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "You are developing locally and want code changes on your laptop to show up in the container instantly. Which mount fits?",
+    "mcq": {
+      "options": [
+        "A bind mount of the source folder, e.g. `-v $(pwd)/src:/app/src`",
+        "A named volume, e.g. `-v appsrc:/app/src`",
+        "A `tmpfs` mount at `/app/src`",
+        "No mount; rebuild the image on each save"
+      ],
+      "correctIndex": 0,
+      "explanation": "Bind mounts map a host path into the container, so edits are visible immediately. Named volumes are managed by Docker and suit data like databases.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Complete `parseImage` so it splits an image reference into `{ registry, repository, tag }` the way Docker does: the first part is a registry only if it contains `.` or `:` or is `localhost`; otherwise the registry is `docker.io`, and single-name images get the `library/` prefix. The tag defaults to `latest`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "parseImage",
+      "starterCode": "function parseImage(ref) {\n  const [repository, tag] = ref.split(\":\");\n  return { registry: \"docker.io\", repository, tag: tag || \"latest\" };\n}",
+      "referenceSolution": "function parseImage(ref) {\n  let registry = \"docker.io\";\n  let rest = ref;\n  const slash = ref.indexOf(\"/\");\n  if (slash > -1) {\n    const first = ref.slice(0, slash);\n    if (first.includes(\".\") || first.includes(\":\") || first === \"localhost\") {\n      registry = first;\n      rest = ref.slice(slash + 1);\n    }\n  }\n  let tag = \"latest\";\n  const lastSlash = rest.lastIndexOf(\"/\");\n  const colon = rest.lastIndexOf(\":\");\n  if (colon > lastSlash) {\n    tag = rest.slice(colon + 1);\n    rest = rest.slice(0, colon);\n  }\n  if (registry === \"docker.io\" && !rest.includes(\"/\")) rest = \"library/\" + rest;\n  return { registry, repository: rest, tag };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "ghcr.io/acme/api:1.2"
+          ],
+          "expected": {
+            "registry": "ghcr.io",
+            "repository": "acme/api",
+            "tag": "1.2"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "nginx"
+          ],
+          "expected": {
+            "registry": "docker.io",
+            "repository": "library/nginx",
+            "tag": "latest"
+          }
+        },
+        {
+          "args": [
+            "localhost:5000/app"
+          ],
+          "expected": {
+            "registry": "localhost:5000",
+            "repository": "app",
+            "tag": "latest"
+          }
+        },
+        {
+          "args": [
+            "acme/api:2"
+          ],
+          "expected": {
+            "registry": "docker.io",
+            "repository": "acme/api",
+            "tag": "2"
+          }
+        },
+        {
+          "args": [
+            "registry.example.com:443/team/web:v3.1"
+          ],
+          "expected": {
+            "registry": "registry.example.com:443",
+            "repository": "team/web",
+            "tag": "v3.1"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A cleanup job keeps the `keep` newest images **per repository** and deletes the rest. Each image is `{\"repo\", \"tag\", \"created\"}` (created is a unix time). Fix `to_delete` so it returns `repo:tag` strings to delete, sorted alphabetically.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "to_delete",
+      "starterCode": "def to_delete(images, keep):\n    newest = sorted(images, key=lambda i: i[\"created\"], reverse=True)\n    return sorted(f\"{i['repo']}:{i['tag']}\" for i in newest[keep:])",
+      "referenceSolution": "def to_delete(images, keep):\n    by_repo = {}\n    for image in images:\n        by_repo.setdefault(image[\"repo\"], []).append(image)\n    out = []\n    for repo_images in by_repo.values():\n        repo_images.sort(key=lambda i: i[\"created\"], reverse=True)\n        out += [f\"{i['repo']}:{i['tag']}\" for i in repo_images[keep:]]\n    return sorted(out)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "repo": "api",
+                "tag": "1",
+                "created": 1
+              },
+              {
+                "repo": "api",
+                "tag": "2",
+                "created": 2
+              },
+              {
+                "repo": "api",
+                "tag": "3",
+                "created": 3
+              }
+            ],
+            2
+          ],
+          "expected": [
+            "api:1"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "repo": "api",
+                "tag": "1",
+                "created": 10
+              },
+              {
+                "repo": "web",
+                "tag": "a",
+                "created": 1
+              },
+              {
+                "repo": "api",
+                "tag": "2",
+                "created": 20
+              }
+            ],
+            1
+          ],
+          "expected": [
+            "api:1"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "repo": "web",
+                "tag": "a",
+                "created": 5
+              },
+              {
+                "repo": "web",
+                "tag": "b",
+                "created": 6
+              },
+              {
+                "repo": "api",
+                "tag": "x",
+                "created": 7
+              },
+              {
+                "repo": "api",
+                "tag": "y",
+                "created": 8
+              }
+            ],
+            1
+          ],
+          "expected": [
+            "api:x",
+            "web:a"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "repo": "api",
+                "tag": "1",
+                "created": 1
+              }
+            ],
+            0
+          ],
+          "expected": [
+            "api:1"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "The runbook for new Docker hosts.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the steps that are dangerous.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "Install Docker Engine from Docker's official apt repository.",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "Enable the remote API on `tcp://0.0.0.0:2375` so CI can deploy.",
+          "issue": "An unauthenticated Docker API on the network is root on the host for anyone who reaches it; use an SSH context or TLS."
+        },
+        {
+          "id": "l3",
+          "text": "Set `log-driver: json-file` with `max-size: 10m` and `max-file: 3` in `daemon.json`.",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "Start services with `--restart unless-stopped`.",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "Deploy by pulling `:latest` on every server so all hosts stay current.",
+          "issue": "Not reproducible: hosts can end up on different builds and you cannot roll back to a known tag. Deploy immutable tags."
+        },
+        {
+          "id": "l6",
+          "text": "Mount secrets as read-only files rather than environment variables.",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "Run `docker system prune -a --volumes -f` nightly from cron.",
+          "issue": "Deletes volumes not attached to a running container, which can be database data during a restart."
+        },
+        {
+          "id": "l8",
+          "text": "Alert when `/var/lib/docker` passes 80% disk.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-docker-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You deploy a containerised API on a single host behind nginx and want zero downtime.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Order the deploy steps.",
+      "items": [
+        {
+          "id": "s1",
+          "label": "Build and push an image tagged with the git sha"
+        },
+        {
+          "id": "s2",
+          "label": "Pull the new image on the host"
+        },
+        {
+          "id": "s3",
+          "label": "Start the new container next to the old one on a different port"
+        },
+        {
+          "id": "s4",
+          "label": "Wait until its health check passes"
+        },
+        {
+          "id": "s5",
+          "label": "Point the nginx upstream at the new container and reload nginx"
+        },
+        {
+          "id": "s6",
+          "label": "Stop and remove the old container"
+        }
+      ],
+      "correctOrder": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "explanation": "The old container keeps serving until the new one is proven healthy and traffic has moved. Only then remove it, which also leaves a quick rollback path until the last step."
+    }
+  },
+  {
+    "id": "eng-docker-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "A production host ran out of disk.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Alerts fire: `/` is 100% full on a Docker host. Containers have been up for months.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Where do you look first?",
+          "options": [
+            "`docker system df -v` and `du -sh /var/lib/docker/containers/*` to find large container logs",
+            "Delete `/var/lib/docker` and restart Docker",
+            "Run `docker volume prune -f`",
+            "Reboot the host"
+          ],
+          "correctIndex": 0,
+          "explanation": "Unbounded `json-file` logs under `/var/lib/docker/containers/<id>/` are the classic cause. Measure before deleting anything."
+        },
+        {
+          "id": "q2",
+          "question": "One container's `-json.log` is 40 GB. What is the long-term fix?",
+          "options": [
+            "Set log rotation (`max-size`, `max-file`) in `daemon.json` or on the container",
+            "Add a cron job that deletes the log file",
+            "Turn logging off with `--log-driver none` everywhere",
+            "Move `/var/lib/docker` to a bigger disk and stop there"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rotation keeps the logs useful and bounded. Deleting an open file does not free space, and disabling logs loses them."
+        },
+        {
+          "id": "q3",
+          "question": "You updated `daemon.json`. Why is the big container still not rotating?",
+          "options": [
+            "Log options apply to containers created after the change, so it must be recreated",
+            "The daemon ignores `daemon.json` for running hosts",
+            "Rotation only works with Alpine images",
+            "You also need `--privileged`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Log settings are fixed at container creation. Recreate the container (same image and flags) to pick them up."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "A bad release needs rolling back.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your servers run `api:latest`. The new build broke checkout, and the previous build was also pushed as `api:latest`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "How do you find the previous image to roll back to?",
+          "options": [
+            "Look up its digest or sha tag in the registry or CI history, then run that exact reference",
+            "Run `docker pull api:latest` again",
+            "Use `docker rollback api`",
+            "Rebuild the old commit and hope it matches"
+          ],
+          "correctIndex": 0,
+          "explanation": "Once a tag is overwritten, only digests or other tags identify the old image. `docker rollback` does not exist."
+        },
+        {
+          "id": "q2",
+          "question": "What process change prevents this next time?",
+          "options": [
+            "Tag every image with an immutable version (git sha or semver) and deploy that tag",
+            "Keep using `latest` but add a second `latest-old` tag",
+            "Disable image pulls on servers",
+            "Only deploy on Fridays"
+          ],
+          "correctIndex": 0,
+          "explanation": "Immutable tags make every deploy and rollback a specific, reproducible image."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-docker-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A container runs as `root` (the default) with `-v /etc:/host-etc`. What can its process do?",
+    "mcq": {
+      "options": [
+        "Edit the host's `/etc` as root, since container root maps to host root without user-namespace remapping",
+        "Nothing on the host, because containers are fully isolated from the host's files",
+        "Only read the files; bind mounts are always read-only",
+        "Write only files it created itself"
+      ],
+      "correctIndex": 0,
+      "explanation": "By default UID 0 in the container is UID 0 on the host. Bind mounts expose host files with those permissions; run as a non-root user and mount `:ro` where possible.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is the difference between `--restart always` and `--restart unless-stopped`?",
+    "mcq": {
+      "options": [
+        "`unless-stopped` will not bring a container back after the daemon restarts if you had stopped it manually; `always` will",
+        "`always` restarts only on non-zero exit codes",
+        "`unless-stopped` never restarts after a crash",
+        "They are identical"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both restart after crashes. After a daemon or host restart, `always` starts every such container, while `unless-stopped` respects a manual `docker stop`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-docker-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-docker",
+    "trackId": null,
+    "stackId": "stack-docker",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "Why pin an image as `node@sha256:<digest>` instead of `node:20`?",
+    "mcq": {
+      "options": [
+        "A digest always refers to the exact same image bytes; a tag can be moved to a new image",
+        "Digests download faster",
+        "Tags cannot be used in production",
+        "A digest also pins the host's Docker version"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tags are mutable pointers (`node:20` gets new patch releases). A digest is content-addressed, so builds and deploys are reproducible; update it deliberately.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

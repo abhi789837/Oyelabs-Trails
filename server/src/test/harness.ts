@@ -86,7 +86,7 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}):
         sandbox,
         publish: (line) => publishGenerationLine(app, line),
       }),
-      "assessment.evaluate": evaluateHandler({ db, ai, content }),
+      "assessment.evaluate": evaluateHandler({ db, ai, content, sandbox, piston: app.piston }),
     },
   });
 

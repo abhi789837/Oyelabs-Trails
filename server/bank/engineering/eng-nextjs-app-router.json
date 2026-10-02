@@ -1,0 +1,2133 @@
+[
+  {
+    "id": "eng-nextjs-app-router-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `fileToUrl` so it turns an App Router page file into its URL. It must work for the root page and for any extension (`.js`, `.jsx`, `.ts`, `.tsx`).\n- `app/about/page.tsx` → `/about`\n- `app/page.js` → `/`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "fileToUrl",
+      "starterCode": "function fileToUrl(file) {\n  return file.replace(\"app\", \"\").replace(\"/page.tsx\", \"\");\n}",
+      "referenceSolution": "function fileToUrl(file) {\n  const parts = file.split(\"/\").slice(1, -1);\n  return \"/\" + parts.join(\"/\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "app/about/page.tsx"
+          ],
+          "expected": "/about"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "app/page.tsx"
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            "app/page.js"
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            "app/blog/[slug]/page.jsx"
+          ],
+          "expected": "/blog/[slug]"
+        },
+        {
+          "args": [
+            "app/settings/profile/page.ts"
+          ],
+          "expected": "/settings/profile"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`getParamName` returns the param name of a dynamic folder name, or `null` for a static one. It handles `[id]` but not catch-alls. Fix it:\n- `[id]` → `\"id\"`, `[...slug]` → `\"slug\"`, `[[...slug]]` → `\"slug\"`\n- `about` → `null`, `(marketing)` → `null`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "getParamName",
+      "starterCode": "function getParamName(segment) {\n  if (segment.startsWith(\"[\")) return segment.slice(1, -1);\n  return null;\n}",
+      "referenceSolution": "function getParamName(segment) {\n  if (!segment.startsWith(\"[\")) return null;\n  return segment.replace(/^\\[+/, \"\").replace(/\\]+$/, \"\").replace(/^\\.\\.\\./, \"\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "[id]"
+          ],
+          "expected": "id"
+        },
+        {
+          "args": [
+            "about"
+          ],
+          "expected": null
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "[...slug]"
+          ],
+          "expected": "slug"
+        },
+        {
+          "args": [
+            "[[...slug]]"
+          ],
+          "expected": "slug"
+        },
+        {
+          "args": [
+            "(marketing)"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "[productId]"
+          ],
+          "expected": "productId"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "In a page, a search param can be a string, an array (`?tag=a&tag=b`) or missing. Fix `firstParam` to return the first string value, or `fallback` when the key is missing or the array is empty.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "firstParam",
+      "starterCode": "type SearchParams = Record<string, string | string[] | undefined>;\n\nfunction firstParam(searchParams: SearchParams, key: string, fallback: string): string {\n  return (searchParams[key] as string) ?? fallback;\n}",
+      "referenceSolution": "type SearchParams = Record<string, string | string[] | undefined>;\n\nfunction firstParam(searchParams: SearchParams, key: string, fallback: string): string {\n  const value = searchParams[key];\n  if (Array.isArray(value)) return value.length ? value[0] : fallback;\n  return value ?? fallback;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "q": "shoes"
+            },
+            "q",
+            ""
+          ],
+          "expected": "shoes"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "q": [
+                "red",
+                "blue"
+              ]
+            },
+            "q",
+            ""
+          ],
+          "expected": "red"
+        },
+        {
+          "args": [
+            {},
+            "q",
+            "all"
+          ],
+          "expected": "all"
+        },
+        {
+          "args": [
+            {
+              "q": []
+            },
+            "q",
+            "all"
+          ],
+          "expected": "all"
+        },
+        {
+          "args": [
+            {
+              "sort": "price"
+            },
+            "q",
+            ""
+          ],
+          "expected": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `pageFromSearchParams` so it reads `searchParams.page` as a whole page number:\n- missing, non-numeric, zero or negative → `1`\n- `\"2.5\"` → `2` (drop the fraction)",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pageFromSearchParams",
+      "starterCode": "function pageFromSearchParams(searchParams) {\n  return Number(searchParams.page) || 1;\n}",
+      "referenceSolution": "function pageFromSearchParams(searchParams) {\n  const n = parseInt(searchParams.page ?? \"\", 10);\n  return Number.isInteger(n) && n >= 1 ? n : 1;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "page": "3"
+            }
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            {}
+          ],
+          "expected": 1
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "page": "-3"
+            }
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            {
+              "page": "2.5"
+            }
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            {
+              "page": "abc"
+            }
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            {
+              "page": "0"
+            }
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            {
+              "page": "12"
+            }
+          ],
+          "expected": 12
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c1-5",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "`isRouteFile` should say whether a file name inside `app/` makes a segment publicly routable: `page` with `.js`, `.jsx`, `.ts` or `.tsx`, or a route handler `route.js` / `route.ts`. Everything else (`layout.tsx`, `loading.tsx`, components) is not. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "isRouteFile",
+      "starterCode": "function isRouteFile(name) {\n  return name === \"page.tsx\";\n}",
+      "referenceSolution": "function isRouteFile(name) {\n  return /^page\\.(js|jsx|ts|tsx)$/.test(name) || /^route\\.(js|ts)$/.test(name);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "page.tsx"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "layout.tsx"
+          ],
+          "expected": false
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "page.js"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "route.ts"
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "loading.tsx"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "Button.tsx"
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "pages.tsx"
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This file is `app/components/LikeButton.tsx`, imported by a page. It fails to build. Mark the lines that cannot work as written.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "import { useState } from \"react\";",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "export default function LikeButton({ initial }: { initial: number }) {",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "  const [likes, setLikes] = useState(initial);",
+          "issue": "The file has no \"use client\" directive, so it is a Server Component, and useState only works in Client Components."
+        },
+        {
+          "id": "l4",
+          "text": "  return (",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "    <button onClick={() => setLikes(likes + 1)}>",
+          "issue": "Event handlers like onClick cannot be attached in a Server Component; add \"use client\" at the top of the file."
+        },
+        {
+          "id": "l6",
+          "text": "      {likes} likes",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "    </button>",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "  );",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You add a component file under `app/` with no directive at the top. What kind of component is it by default?",
+    "mcq": {
+      "options": [
+        "A Server Component",
+        "A Client Component",
+        "A static HTML file with no React",
+        "It depends on whether it is imported by `layout.tsx`"
+      ],
+      "correctIndex": 0,
+      "explanation": "In the App Router every component is a Server Component unless its file (or a file that imports it) starts with `\"use client\"`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Which file creates the route `/blog/my-first-post` for any post slug?",
+    "mcq": {
+      "options": [
+        "`app/blog/[slug]/page.tsx`",
+        "`app/blog/slug/page.tsx`",
+        "`app/blog/[slug].tsx`",
+        "`pages/app/blog/[slug].tsx`"
+      ],
+      "correctIndex": 0,
+      "explanation": "A folder in square brackets is a dynamic segment, and only a `page` file inside it makes the route public. The value arrives as `params.slug`.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "You want a skeleton to show instantly while `/dashboard` fetches its data on the server. Which file do you add?",
+    "mcq": {
+      "options": [
+        "`app/dashboard/loading.tsx`",
+        "`app/dashboard/error.tsx`",
+        "`app/dashboard/template.tsx`",
+        "`app/dashboard/not-found.tsx`"
+      ],
+      "correctIndex": 0,
+      "explanation": "`loading.tsx` wraps the segment's page in a Suspense boundary with that file as the fallback, so it shows while the page renders.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`matchRoute` returns the params when a URL path matches a route pattern with `[param]` segments, or `null` when it doesn't. It wrongly matches paths with a different number of segments. Fix it.\n- `matchRoute(\"/blog/[slug]\", \"/blog/hello\")` → `{ slug: \"hello\" }`\n- `matchRoute(\"/blog/[slug]\", \"/blog/a/b\")` → `null`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matchRoute",
+      "starterCode": "function matchRoute(pattern, path) {\n  const p = pattern.split(\"/\").filter(Boolean);\n  const s = path.split(\"/\").filter(Boolean);\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(\"[\")) params[p[i].slice(1, -1)] = s[i];\n    else if (p[i] !== s[i]) return null;\n  }\n  return params;\n}",
+      "referenceSolution": "function matchRoute(pattern, path) {\n  const p = pattern.split(\"/\").filter(Boolean);\n  const s = path.split(\"/\").filter(Boolean);\n  if (p.length !== s.length) return null;\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(\"[\")) params[p[i].slice(1, -1)] = s[i];\n    else if (p[i] !== s[i]) return null;\n  }\n  return params;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/blog/[slug]",
+            "/blog/hello"
+          ],
+          "expected": {
+            "slug": "hello"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/blog/[slug]",
+            "/blog/a/b"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/blog/[slug]",
+            "/blog"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/shop/[category]/[id]",
+            "/shop/shoes/42"
+          ],
+          "expected": {
+            "category": "shoes",
+            "id": "42"
+          }
+        },
+        {
+          "args": [
+            "/about",
+            "/about"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "/blog/[slug]",
+            "/news/hello"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Route groups — folders in parentheses like `(marketing)` — organise files but never appear in the URL. `fileToUrl` only drops a group at the top level. Fix it so groups are removed at any depth.\n- `app/(marketing)/about/page.tsx` → `/about`\n- `app/dashboard/(settings)/profile/page.tsx` → `/dashboard/profile`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "fileToUrl",
+      "starterCode": "function fileToUrl(file) {\n  const parts = file.split(\"/\").slice(1, -1);\n  if (parts[0] && parts[0].startsWith(\"(\")) parts.shift();\n  return \"/\" + parts.join(\"/\");\n}",
+      "referenceSolution": "function fileToUrl(file) {\n  const parts = file.split(\"/\").slice(1, -1).filter((p) => !(p.startsWith(\"(\") && p.endsWith(\")\")));\n  return \"/\" + parts.join(\"/\");\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "app/(marketing)/about/page.tsx"
+          ],
+          "expected": "/about"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "app/dashboard/(settings)/profile/page.tsx"
+          ],
+          "expected": "/dashboard/profile"
+        },
+        {
+          "args": [
+            "app/(shop)/page.tsx"
+          ],
+          "expected": "/"
+        },
+        {
+          "args": [
+            "app/(shop)/(featured)/deals/page.tsx"
+          ],
+          "expected": "/deals"
+        },
+        {
+          "args": [
+            "app/blog/[slug]/page.tsx"
+          ],
+          "expected": "/blog/[slug]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Filter links on a listing page are built with `hrefWithParams(path, current, patch)`: merge `patch` into the current search params, sort keys alphabetically and URL-encode values. A `null` or `\"\"` value in the patch must **remove** that key, and there is no `?` when nothing is left. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "hrefWithParams",
+      "starterCode": "function hrefWithParams(path, current, patch) {\n  const merged = { ...current, ...patch };\n  const qs = Object.keys(merged)\n    .sort()\n    .map((k) => k + \"=\" + encodeURIComponent(merged[k]))\n    .join(\"&\");\n  return qs ? path + \"?\" + qs : path;\n}",
+      "referenceSolution": "function hrefWithParams(path, current, patch) {\n  const merged = { ...current, ...patch };\n  const qs = Object.keys(merged)\n    .filter((k) => merged[k] !== null && merged[k] !== undefined && merged[k] !== \"\")\n    .sort()\n    .map((k) => k + \"=\" + encodeURIComponent(merged[k]))\n    .join(\"&\");\n  return qs ? path + \"?\" + qs : path;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/shop",
+            {
+              "q": "shoe"
+            },
+            {
+              "page": "2"
+            }
+          ],
+          "expected": "/shop?page=2&q=shoe"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/shop",
+            {
+              "q": "x",
+              "page": "3"
+            },
+            {
+              "page": null
+            }
+          ],
+          "expected": "/shop?q=x"
+        },
+        {
+          "args": [
+            "/shop",
+            {
+              "q": "x"
+            },
+            {
+              "q": ""
+            }
+          ],
+          "expected": "/shop"
+        },
+        {
+          "args": [
+            "/shop",
+            {},
+            {
+              "q": "red shoes"
+            }
+          ],
+          "expected": "/shop?q=red%20shoes"
+        },
+        {
+          "args": [
+            "/shop",
+            {
+              "sort": "new"
+            },
+            {}
+          ],
+          "expected": "/shop?sort=new"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`app/docs/[...slug]/page.tsx` prerenders every doc. `generateStaticParams` must return one object per page whose `slug` is an **array** of path segments. Fix `docsStaticParams`, which receives doc paths like `\"guides/setup\"`. Ignore leading/trailing slashes.\n- `[\"intro\", \"guides/setup\"]` → `[{ slug: [\"intro\"] }, { slug: [\"guides\", \"setup\"] }]`",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "docsStaticParams",
+      "starterCode": "function docsStaticParams(paths) {\n  return paths.map((p) => ({ slug: p }));\n}",
+      "referenceSolution": "function docsStaticParams(paths) {\n  return paths.map((p) => ({ slug: p.split(\"/\").filter(Boolean) }));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "intro",
+              "guides/setup"
+            ]
+          ],
+          "expected": [
+            {
+              "slug": [
+                "intro"
+              ]
+            },
+            {
+              "slug": [
+                "guides",
+                "setup"
+              ]
+            }
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a/b/c"
+            ]
+          ],
+          "expected": [
+            {
+              "slug": [
+                "a",
+                "b",
+                "c"
+              ]
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              "/api/auth/"
+            ]
+          ],
+          "expected": [
+            {
+              "slug": [
+                "api",
+                "auth"
+              ]
+            }
+          ]
+        },
+        {
+          "args": [
+            [
+              "faq"
+            ]
+          ],
+          "expected": [
+            {
+              "slug": [
+                "faq"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "A route segment has all of these special files. Order them as Next.js nests them, from the outermost wrapper to the innermost.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Drag from outermost (top) to innermost (bottom).",
+      "items": [
+        {
+          "id": "layout",
+          "label": "layout.tsx"
+        },
+        {
+          "id": "template",
+          "label": "template.tsx"
+        },
+        {
+          "id": "error",
+          "label": "error.tsx (error boundary)"
+        },
+        {
+          "id": "loading",
+          "label": "loading.tsx (Suspense boundary)"
+        },
+        {
+          "id": "notfound",
+          "label": "not-found.tsx"
+        },
+        {
+          "id": "page",
+          "label": "page.tsx"
+        }
+      ],
+      "correctOrder": [
+        "layout",
+        "template",
+        "error",
+        "loading",
+        "notfound",
+        "page"
+      ],
+      "explanation": "Next.js renders layout > template > error boundary > Suspense (loading) > not-found boundary > page. That's why an error thrown in a layout is not caught by the error.tsx of the same segment."
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Review this client component that shows the weather for a city prop. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"use client\";",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "import { useEffect, useState } from \"react\";",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "export default function Weather({ city }: { city: string }) {",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "  const [data, setData] = useState<{ temp: number } | null>(null);",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  useEffect(() => {",
+          "issue": null
+        },
+        {
+          "id": "l6",
+          "text": "    fetch(`https://api.weather.example/v1?city=${city}&key=${process.env.NEXT_PUBLIC_WEATHER_SECRET}`)",
+          "issue": "NEXT_PUBLIC_ variables are inlined into the browser bundle, so the secret key is exposed. Call the API from the server (route handler or Server Component)."
+        },
+        {
+          "id": "l7",
+          "text": "      .then((r) => r.json())",
+          "issue": null
+        },
+        {
+          "id": "l8",
+          "text": "      .then(setData);",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  }, []);",
+          "issue": "city is missing from the dependency array, so the weather never refetches when the city changes."
+        },
+        {
+          "id": "l10",
+          "text": "  return <p>{data ? `${data.temp}°` : \"Loading...\"}</p>;",
+          "issue": null
+        },
+        {
+          "id": "l11",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "Both `app/shop/layout.tsx` and `app/shop/template.tsx` wrap the shop pages. What is the practical difference when the user navigates between `/shop/a` and `/shop/b`?",
+    "mcq": {
+      "options": [
+        "The layout keeps its state and DOM; the template is remounted with fresh state on each navigation",
+        "The template keeps its state; the layout is remounted on each navigation",
+        "Both are remounted on every navigation",
+        "Templates only run on the server, layouts only on the client"
+      ],
+      "correctIndex": 0,
+      "explanation": "Layouts persist across navigations between their child routes. A template gets a new key per route, so its children remount and effects run again, which is useful for enter animations or per-page logging.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You add `app/dashboard/error.tsx` but the build complains about it. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "`error.tsx` must be a Client Component, so it needs `\"use client\"`",
+        "`error.tsx` must be an async Server Component",
+        "`error.tsx` can only exist at the root of `app/`",
+        "`error.tsx` must export a `GET` function"
+      ],
+      "correctIndex": 0,
+      "explanation": "Error boundaries are a client-side React feature, so `error.tsx` must start with `\"use client\"`. It receives `error` and a `reset` function to retry rendering the segment.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "You need a JSON endpoint at `/api/products` in the App Router. Which setup is right?",
+    "mcq": {
+      "options": [
+        "`app/api/products/route.ts` exporting `async function GET(request)` that returns `Response.json(data)`",
+        "`app/api/products/page.tsx` returning JSON from the component",
+        "`app/api/products/route.ts` with a default-exported handler `(req, res) => res.json(data)`",
+        "Both `page.tsx` and `route.ts` in `app/api/products/`, one for GET and one for POST"
+      ],
+      "correctIndex": 0,
+      "explanation": "Route handlers live in `route.ts` and export one function per HTTP method using the Web `Request`/`Response` APIs. A `route.ts` and a `page.tsx` cannot sit in the same segment.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`matchCatchAll` supports `[param]`, catch-all `[...param]` (one or more segments) and optional catch-all `[[...param]]` (zero or more). A catch-all is always the last segment. It returns the params or `null`.\n\nIt treats `[[...slug]]` like `[...slug]`, so `/docs` doesn't match `/docs/[[...slug]]`. Fix it: with zero segments the optional param is simply left out (`{}`).",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "matchCatchAll",
+      "starterCode": "function matchCatchAll(pattern, path) {\n  const p = pattern.split(\"/\").filter(Boolean);\n  const s = path.split(\"/\").filter(Boolean);\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    const seg = p[i];\n    const catchAll = seg.match(/^\\[{1,2}\\.\\.\\.(\\w+)\\]{1,2}$/);\n    if (catchAll) {\n      const rest = s.slice(i);\n      if (rest.length === 0) return null;\n      params[catchAll[1]] = rest;\n      return params;\n    }\n    if (seg.startsWith(\"[\")) {\n      if (s[i] === undefined) return null;\n      params[seg.slice(1, -1)] = s[i];\n      continue;\n    }\n    if (seg !== s[i]) return null;\n  }\n  return p.length === s.length ? params : null;\n}",
+      "referenceSolution": "function matchCatchAll(pattern, path) {\n  const p = pattern.split(\"/\").filter(Boolean);\n  const s = path.split(\"/\").filter(Boolean);\n  const params = {};\n  for (let i = 0; i < p.length; i++) {\n    const seg = p[i];\n    const catchAll = seg.match(/^\\[{1,2}\\.\\.\\.(\\w+)\\]{1,2}$/);\n    if (catchAll) {\n      const rest = s.slice(i);\n      if (rest.length === 0) return seg.startsWith(\"[[\") ? params : null;\n      params[catchAll[1]] = rest;\n      return params;\n    }\n    if (seg.startsWith(\"[\")) {\n      if (s[i] === undefined) return null;\n      params[seg.slice(1, -1)] = s[i];\n      continue;\n    }\n    if (seg !== s[i]) return null;\n  }\n  return p.length === s.length ? params : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/docs/[...slug]",
+            "/docs/a/b"
+          ],
+          "expected": {
+            "slug": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/docs/[[...slug]]",
+            "/docs"
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            "/docs/[...slug]",
+            "/docs"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/docs/[[...slug]]",
+            "/docs/x"
+          ],
+          "expected": {
+            "slug": [
+              "x"
+            ]
+          }
+        },
+        {
+          "args": [
+            "/shop/[cat]/[...rest]",
+            "/shop/men/a/b"
+          ],
+          "expected": {
+            "cat": "men",
+            "rest": [
+              "a",
+              "b"
+            ]
+          }
+        },
+        {
+          "args": [
+            "/docs/[...slug]",
+            "/blog/a"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Your middleware runs only for paths in `matchers`. A plain matcher like `\"/admin\"` matches that exact path; one ending in `\"/:path*\"` like `\"/dashboard/:path*\"` matches `/dashboard` and anything below it. The current check lets `/administrator` and `/dashboardx` through. Fix `shouldRunMiddleware`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "shouldRunMiddleware",
+      "starterCode": "function shouldRunMiddleware(path, matchers) {\n  return matchers.some((m) => path.startsWith(m.replace(\"/:path*\", \"\")));\n}",
+      "referenceSolution": "function shouldRunMiddleware(path, matchers) {\n  return matchers.some((m) => {\n    if (m.endsWith(\"/:path*\")) {\n      const base = m.slice(0, -\"/:path*\".length);\n      return path === base || path.startsWith(base + \"/\");\n    }\n    return path === m;\n  });\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/dashboard/settings",
+            [
+              "/dashboard/:path*"
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/dashboard",
+            [
+              "/dashboard/:path*"
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "/dashboardx",
+            [
+              "/dashboard/:path*"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "/administrator",
+            [
+              "/admin"
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            "/admin",
+            [
+              "/dashboard/:path*",
+              "/admin"
+            ]
+          ],
+          "expected": true
+        },
+        {
+          "args": [
+            "/about",
+            []
+          ],
+          "expected": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "`applyRedirects(path, rules)` mimics `redirects()` in `next.config.js`: the first rule whose `source` matches wins. `:name` segments in `source` capture a value that must be substituted into `destination`. Next.js answers `308` for `permanent: true` and `307` otherwise. Return `{ destination, status }` or `null`. Fix the two bugs.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "applyRedirects",
+      "starterCode": "function applyRedirects(path, rules) {\n  for (const rule of rules) {\n    const src = rule.source.split(\"/\");\n    const seg = path.split(\"/\");\n    if (src.length !== seg.length) continue;\n    let ok = true;\n    src.forEach((s, i) => {\n      if (!s.startsWith(\":\") && s !== seg[i]) ok = false;\n    });\n    if (!ok) continue;\n    return { destination: rule.destination, status: rule.permanent ? 301 : 302 };\n  }\n  return null;\n}",
+      "referenceSolution": "function applyRedirects(path, rules) {\n  for (const rule of rules) {\n    const src = rule.source.split(\"/\");\n    const seg = path.split(\"/\");\n    if (src.length !== seg.length) continue;\n    const params = {};\n    let ok = true;\n    src.forEach((s, i) => {\n      if (s.startsWith(\":\")) params[s.slice(1)] = seg[i];\n      else if (s !== seg[i]) ok = false;\n    });\n    if (!ok) continue;\n    const destination = rule.destination.replace(/:(\\w+)/g, (m, name) => (name in params ? params[name] : m));\n    return { destination, status: rule.permanent ? 308 : 307 };\n  }\n  return null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/old-blog/hello",
+            [
+              {
+                "source": "/old-blog/:slug",
+                "destination": "/blog/:slug",
+                "permanent": true
+              }
+            ]
+          ],
+          "expected": {
+            "destination": "/blog/hello",
+            "status": 308
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/promo",
+            [
+              {
+                "source": "/promo",
+                "destination": "/sale",
+                "permanent": false
+              }
+            ]
+          ],
+          "expected": {
+            "destination": "/sale",
+            "status": 307
+          }
+        },
+        {
+          "args": [
+            "/about",
+            [
+              {
+                "source": "/old-blog/:slug",
+                "destination": "/blog/:slug",
+                "permanent": true
+              }
+            ]
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/u/7/posts",
+            [
+              {
+                "source": "/u/:id/posts",
+                "destination": "/users/:id?tab=posts",
+                "permanent": true
+              }
+            ]
+          ],
+          "expected": {
+            "destination": "/users/7?tab=posts",
+            "status": 308
+          }
+        },
+        {
+          "args": [
+            "/a",
+            [
+              {
+                "source": "/a",
+                "destination": "/first",
+                "permanent": false
+              },
+              {
+                "source": "/a",
+                "destination": "/second",
+                "permanent": true
+              }
+            ]
+          ],
+          "expected": {
+            "destination": "/first",
+            "status": 307
+          }
+        },
+        {
+          "args": [
+            "/x",
+            []
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Finish `parseFilters`, which turns a product page's `searchParams` into safe filters:\n- `q`: trimmed string, default `\"\"`\n- `page`: whole number ≥ 1, default `1`\n- `sort`: one of `\"newest\"`, `\"price-asc\"`, `\"price-desc\"`; anything else → `\"newest\"`\n- `tags`: from `tag`, which can be one string or an array; drop empty strings and duplicates, keep the first-seen order",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "parseFilters",
+      "starterCode": "type SearchParams = Record<string, string | string[] | undefined>;\n\nfunction parseFilters(sp: SearchParams) {\n  const q = typeof sp.q === \"string\" ? sp.q.trim() : \"\";\n  const n = parseInt(String(sp.page ?? \"\"), 10);\n  const page = Number.isInteger(n) && n >= 1 ? n : 1;\n  const sort = (sp.sort as string) || \"newest\";\n  const tags = Array.isArray(sp.tag) ? sp.tag : [];\n  return { q, page, sort, tags };\n}",
+      "referenceSolution": "type SearchParams = Record<string, string | string[] | undefined>;\nconst SORTS = [\"newest\", \"price-asc\", \"price-desc\"];\n\nfunction parseFilters(sp: SearchParams) {\n  const q = typeof sp.q === \"string\" ? sp.q.trim() : \"\";\n  const n = parseInt(String(sp.page ?? \"\"), 10);\n  const page = Number.isInteger(n) && n >= 1 ? n : 1;\n  const sort = typeof sp.sort === \"string\" && SORTS.includes(sp.sort) ? sp.sort : \"newest\";\n  const raw = sp.tag === undefined ? [] : Array.isArray(sp.tag) ? sp.tag : [sp.tag];\n  const tags = [...new Set(raw.filter((t) => t !== \"\"))];\n  return { q, page, sort, tags };\n}",
+      "sampleTests": [
+        {
+          "args": [
+            {
+              "q": " boots ",
+              "page": "2",
+              "sort": "price-asc",
+              "tag": [
+                "a",
+                "b"
+              ]
+            }
+          ],
+          "expected": {
+            "q": "boots",
+            "page": 2,
+            "sort": "price-asc",
+            "tags": [
+              "a",
+              "b"
+            ]
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {}
+          ],
+          "expected": {
+            "q": "",
+            "page": 1,
+            "sort": "newest",
+            "tags": []
+          }
+        },
+        {
+          "args": [
+            {
+              "sort": "drop table"
+            }
+          ],
+          "expected": {
+            "q": "",
+            "page": 1,
+            "sort": "newest",
+            "tags": []
+          }
+        },
+        {
+          "args": [
+            {
+              "tag": "sale"
+            }
+          ],
+          "expected": {
+            "q": "",
+            "page": 1,
+            "sort": "newest",
+            "tags": [
+              "sale"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "tag": [
+                "sale",
+                "",
+                "new",
+                "sale"
+              ]
+            }
+          ],
+          "expected": {
+            "q": "",
+            "page": 1,
+            "sort": "newest",
+            "tags": [
+              "sale",
+              "new"
+            ]
+          }
+        },
+        {
+          "args": [
+            {
+              "page": "-1",
+              "sort": "price-desc"
+            }
+          ],
+          "expected": {
+            "q": "",
+            "page": 1,
+            "sort": "price-desc",
+            "tags": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Pick a rendering strategy for each page of a shop built on the App Router.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "A shop has marketing pages, about 5,000 product pages whose prices a nightly job updates, and a signed-in account area.",
+      "steps": [
+        {
+          "id": "pricing",
+          "question": "`/pricing` changes a few times a year and shows nothing user-specific. How should it render?",
+          "options": [
+            "Static: prerendered at build time and served from the cache",
+            "Dynamic on every request with `export const dynamic = \"force-dynamic\"`",
+            "Render an empty shell and fetch the content in a `useEffect`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Nothing varies per request, so prerendering is fastest and cheapest."
+        },
+        {
+          "id": "product",
+          "question": "`/products/[id]` prices change once a night. How should the product pages render?",
+          "options": [
+            "Prerender (or render on first visit) and set `export const revalidate = 3600` so they refresh in the background",
+            "Force every product page to render dynamically on each request",
+            "Redeploy the whole site after every nightly price job"
+          ],
+          "correctIndex": 0,
+          "explanation": "Time-based revalidation (ISR) keeps pages cached and fast while picking up new prices within the interval."
+        },
+        {
+          "id": "account",
+          "question": "`/account/orders` reads the session cookie and lists that user's orders. What happens and what's right?",
+          "options": [
+            "Reading `cookies()` makes it render dynamically per request, which is correct for per-user data",
+            "Give it `revalidate = 60` so it is cached for all users for a minute",
+            "Use `generateStaticParams` to prerender one page per user"
+          ],
+          "correctIndex": 0,
+          "explanation": "Per-user pages must not be shared from a cache. Using cookies() opts the route into dynamic rendering."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "Review this server action used by an admin form to change a product's price. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that are problems.",
+      "segments": [
+        {
+          "id": "l1",
+          "text": "\"use server\";",
+          "issue": null
+        },
+        {
+          "id": "l2",
+          "text": "import { db } from \"@/lib/db\";",
+          "issue": null
+        },
+        {
+          "id": "l3",
+          "text": "import { revalidatePath } from \"next/cache\";",
+          "issue": null
+        },
+        {
+          "id": "l4",
+          "text": "export async function updatePrice(formData: FormData) {",
+          "issue": null
+        },
+        {
+          "id": "l5",
+          "text": "  // Only admins can see the form that calls this, so no auth check is needed here.",
+          "issue": "Server actions are reachable as public POST endpoints; check the session and role inside the action itself."
+        },
+        {
+          "id": "l6",
+          "text": "  const id = String(formData.get(\"id\"));",
+          "issue": null
+        },
+        {
+          "id": "l7",
+          "text": "  const price = Number(formData.get(\"price\"));",
+          "issue": "The price is not validated: NaN, negative or absurd values would be written straight to the database."
+        },
+        {
+          "id": "l8",
+          "text": "  await db.product.update({ where: { id }, data: { price } });",
+          "issue": null
+        },
+        {
+          "id": "l9",
+          "text": "  revalidatePath(\"/products\");",
+          "issue": null
+        },
+        {
+          "id": "l10",
+          "text": "}",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "`app/products/page.tsx` was being prerendered. After you read the user's currency from `cookies()` in it, the build reports the route as dynamic. Why?",
+    "mcq": {
+      "options": [
+        "Request-time APIs like `cookies()` and `headers()` depend on the incoming request, so the page cannot be prerendered once for everyone",
+        "Any Server Component that is `async` is always dynamic",
+        "`cookies()` is only available in Client Components, so Next.js fell back to client rendering",
+        "Reading cookies disables the data cache for the whole app"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using a request-time API opts that route into dynamic rendering. If only a small part needs the cookie, move it into its own component inside `<Suspense>` so the rest can still stream quickly.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A Server Component renders `<SearchBox onSearch={(q) => console.log(q)} />`, where `SearchBox` is a Client Component. What happens?",
+    "mcq": {
+      "options": [
+        "It errors: props passed from a Server to a Client Component must be serializable, and a plain function is not",
+        "It works; the function runs on the server whenever the user searches",
+        "It works; the function is copied into the client bundle",
+        "It works only if `SearchBox` is wrapped in `<Suspense>`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Props crossing the server/client boundary are serialized. Functions can't be, except Server Actions (`\"use server\"` functions), which are passed as references.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "A Client Component (`\"use client\"`) needs to show `<RecentOrders />`, an async Server Component that queries the database. What's the right way to compose them?",
+    "mcq": {
+      "options": [
+        "Render `<RecentOrders />` in a Server Component and pass it to the Client Component as `children` (or another prop)",
+        "Import `RecentOrders` directly inside the Client Component file",
+        "Add `\"use server\"` at the top of `RecentOrders` and import it in the client file",
+        "Call the database from the Client Component in a `useEffect` instead"
+      ],
+      "correctIndex": 0,
+      "explanation": "Anything imported into a client file becomes part of the client bundle. Passing a server-rendered element as `children` keeps it on the server while the client wrapper adds interactivity.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "When several routes match a URL, Next.js picks the most specific one. `matches` is correct; `resolveRoute` just returns the first match. Fix it: compare matching patterns segment by segment from the left, where a static segment beats `[param]`, which beats `[...catchAll]`, which beats `[[...optional]]`. Return `null` if nothing matches.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "resolveRoute",
+      "starterCode": "function matches(pattern, path) {\n  const p = pattern.split(\"/\").filter(Boolean);\n  const s = path.split(\"/\").filter(Boolean);\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(\"[[...\")) return true;\n    if (p[i].startsWith(\"[...\")) return s.length > i;\n    if (i >= s.length) return false;\n    if (!p[i].startsWith(\"[\") && p[i] !== s[i]) return false;\n  }\n  return p.length === s.length;\n}\n\nfunction resolveRoute(routes, path) {\n  return routes.find((r) => matches(r, path)) ?? null;\n}",
+      "referenceSolution": "function matches(pattern, path) {\n  const p = pattern.split(\"/\").filter(Boolean);\n  const s = path.split(\"/\").filter(Boolean);\n  for (let i = 0; i < p.length; i++) {\n    if (p[i].startsWith(\"[[...\")) return true;\n    if (p[i].startsWith(\"[...\")) return s.length > i;\n    if (i >= s.length) return false;\n    if (!p[i].startsWith(\"[\") && p[i] !== s[i]) return false;\n  }\n  return p.length === s.length;\n}\n\nfunction rank(segment) {\n  if (segment.startsWith(\"[[...\")) return 0;\n  if (segment.startsWith(\"[...\")) return 1;\n  if (segment.startsWith(\"[\")) return 2;\n  return 3;\n}\n\nfunction resolveRoute(routes, path) {\n  const scored = routes\n    .filter((r) => matches(r, path))\n    .map((r) => ({ r, score: r.split(\"/\").filter(Boolean).map(rank) }));\n  scored.sort((a, b) => {\n    const len = Math.max(a.score.length, b.score.length);\n    for (let i = 0; i < len; i++) {\n      const x = a.score[i] ?? -1;\n      const y = b.score[i] ?? -1;\n      if (x !== y) return y - x;\n    }\n    return 0;\n  });\n  return scored.length ? scored[0].r : null;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "/[...all]",
+              "/blog/[slug]",
+              "/blog/new"
+            ],
+            "/blog/new"
+          ],
+          "expected": "/blog/new"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "/[...all]",
+              "/blog/[slug]",
+              "/blog/new"
+            ],
+            "/blog/hello"
+          ],
+          "expected": "/blog/[slug]"
+        },
+        {
+          "args": [
+            [
+              "/[...all]",
+              "/blog/[slug]",
+              "/blog/new"
+            ],
+            "/x/y"
+          ],
+          "expected": "/[...all]"
+        },
+        {
+          "args": [
+            [
+              "/[...all]",
+              "/docs/[[...slug]]"
+            ],
+            "/docs"
+          ],
+          "expected": "/docs/[[...slug]]"
+        },
+        {
+          "args": [
+            [
+              "/blog/[...rest]",
+              "/blog/[slug]"
+            ],
+            "/blog/a"
+          ],
+          "expected": "/blog/[slug]"
+        },
+        {
+          "args": [
+            [
+              "/blog/[slug]"
+            ],
+            "/about"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [],
+            "/"
+          ],
+          "expected": null
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "`mergeMetadata(layers)` resolves `metadata` exports from the root layout down to the page, like Next.js:\n- a later layer's key **replaces** the earlier value; objects such as `openGraph` are **not** deep-merged\n- `title` as an object `{ default, template }` sets the title to `default` and remembers `template`; a later string `title` is inserted into the template's `%s`\n\nThe current code deep-merges objects, so a page's `openGraph` keeps its layout's images. Fix it.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "mergeMetadata",
+      "starterCode": "function mergeMetadata(layers) {\n  const result = {};\n  let template = null;\n  for (const layer of layers) {\n    for (const [key, value] of Object.entries(layer)) {\n      if (key === \"title\") {\n        if (typeof value === \"string\") result.title = template ? template.replace(\"%s\", value) : value;\n        else {\n          result.title = value.default;\n          if (value.template) template = value.template;\n        }\n      } else if (value && typeof value === \"object\" && !Array.isArray(value)) {\n        result[key] = { ...(result[key] || {}), ...value };\n      } else {\n        result[key] = value;\n      }\n    }\n  }\n  return result;\n}",
+      "referenceSolution": "function mergeMetadata(layers) {\n  const result = {};\n  let template = null;\n  for (const layer of layers) {\n    for (const [key, value] of Object.entries(layer)) {\n      if (key === \"title\") {\n        if (typeof value === \"string\") result.title = template ? template.replace(\"%s\", value) : value;\n        else {\n          result.title = value.default;\n          if (value.template) template = value.template;\n        }\n      } else {\n        result[key] = value;\n      }\n    }\n  }\n  return result;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "title": {
+                  "default": "Acme",
+                  "template": "%s | Acme"
+                },
+                "description": "Shop"
+              },
+              {
+                "title": "Shoes"
+              }
+            ]
+          ],
+          "expected": {
+            "title": "Shoes | Acme",
+            "description": "Shop"
+          }
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "openGraph": {
+                  "siteName": "Acme",
+                  "images": [
+                    "/og.png"
+                  ]
+                }
+              },
+              {
+                "openGraph": {
+                  "title": "Shoes"
+                }
+              }
+            ]
+          ],
+          "expected": {
+            "openGraph": {
+              "title": "Shoes"
+            }
+          }
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": {}
+        },
+        {
+          "args": [
+            [
+              {
+                "title": "About"
+              }
+            ]
+          ],
+          "expected": {
+            "title": "About"
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "description": "Root"
+              },
+              {
+                "description": "Page"
+              }
+            ]
+          ],
+          "expected": {
+            "description": "Page"
+          }
+        },
+        {
+          "args": [
+            [
+              {
+                "title": {
+                  "default": "Acme",
+                  "template": "%s · Acme"
+                },
+                "robots": {
+                  "index": true,
+                  "follow": true
+                }
+              },
+              {
+                "robots": {
+                  "index": false
+                }
+              }
+            ]
+          ],
+          "expected": {
+            "title": "Acme",
+            "robots": {
+              "index": false
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You wrap a data function with a persistent cache and need a key that is the same for equal arguments. `{ page: 2, category: \"shoes\" }` and `{ category: \"shoes\", page: 2 }` must produce the same key, but array order still matters. Fix `cacheKey` to sort object keys at every depth.",
+    "coding": {
+      "language": "typescript",
+      "mode": "function",
+      "functionName": "cacheKey",
+      "starterCode": "function cacheKey(name: string, args: unknown[]): string {\n  return name + \":\" + JSON.stringify(args);\n}",
+      "referenceSolution": "function stable(value: unknown): string {\n  if (Array.isArray(value)) return \"[\" + value.map(stable).join(\",\") + \"]\";\n  if (value && typeof value === \"object\") {\n    const obj = value as Record<string, unknown>;\n    return \"{\" + Object.keys(obj).sort().map((k) => JSON.stringify(k) + \":\" + stable(obj[k])).join(\",\") + \"}\";\n  }\n  return JSON.stringify(value);\n}\n\nfunction cacheKey(name: string, args: unknown[]): string {\n  return name + \":\" + stable(args);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "getProducts",
+            [
+              {
+                "category": "shoes",
+                "page": 2
+              }
+            ]
+          ],
+          "expected": "getProducts:[{\"category\":\"shoes\",\"page\":2}]"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "getProducts",
+            [
+              {
+                "page": 2,
+                "category": "shoes"
+              }
+            ]
+          ],
+          "expected": "getProducts:[{\"category\":\"shoes\",\"page\":2}]"
+        },
+        {
+          "args": [
+            "search",
+            [
+              {
+                "f": {
+                  "z": 1,
+                  "a": [
+                    2,
+                    1
+                  ]
+                }
+              }
+            ]
+          ],
+          "expected": "search:[{\"f\":{\"a\":[2,1],\"z\":1}}]"
+        },
+        {
+          "args": [
+            "getUser",
+            []
+          ],
+          "expected": "getUser:[]"
+        },
+        {
+          "args": [
+            "getUser",
+            [
+              "u1",
+              null
+            ]
+          ],
+          "expected": "getUser:[\"u1\",null]"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Product fetches are tagged `\"products\"`, `\"product:<id>\"`, `\"category:<category>\"` and, when present, `\"brand:<brand>\"`. After an edit you call `revalidateTag` for each tag in `tagsToRevalidate(before, after)`. It only uses the new product, so a product moved out of a category stays listed there. Fix it: include tags from both versions (`before` is `null` for a new product), no duplicates, sorted.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "tagsToRevalidate",
+      "starterCode": "function tagsFor(p) {\n  const tags = [\"products\", \"product:\" + p.id, \"category:\" + p.category];\n  if (p.brand) tags.push(\"brand:\" + p.brand);\n  return tags;\n}\n\nfunction tagsToRevalidate(before, after) {\n  return tagsFor(after).sort();\n}",
+      "referenceSolution": "function tagsFor(p) {\n  const tags = [\"products\", \"product:\" + p.id, \"category:\" + p.category];\n  if (p.brand) tags.push(\"brand:\" + p.brand);\n  return tags;\n}\n\nfunction tagsToRevalidate(before, after) {\n  const all = [...(before ? tagsFor(before) : []), ...tagsFor(after)];\n  return [...new Set(all)].sort();\n}",
+      "sampleTests": [
+        {
+          "args": [
+            null,
+            {
+              "id": 7,
+              "category": "shoes"
+            }
+          ],
+          "expected": [
+            "category:shoes",
+            "product:7",
+            "products"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            {
+              "id": 7,
+              "category": "shoes"
+            },
+            {
+              "id": 7,
+              "category": "boots"
+            }
+          ],
+          "expected": [
+            "category:boots",
+            "category:shoes",
+            "product:7",
+            "products"
+          ]
+        },
+        {
+          "args": [
+            {
+              "id": 1,
+              "category": "hats",
+              "brand": "acme"
+            },
+            {
+              "id": 1,
+              "category": "hats"
+            }
+          ],
+          "expected": [
+            "brand:acme",
+            "category:hats",
+            "product:1",
+            "products"
+          ]
+        },
+        {
+          "args": [
+            {
+              "id": 2,
+              "category": "a"
+            },
+            {
+              "id": 2,
+              "category": "a"
+            }
+          ],
+          "expected": [
+            "category:a",
+            "product:2",
+            "products"
+          ]
+        },
+        {
+          "args": [
+            {
+              "id": 3,
+              "category": "a"
+            },
+            {
+              "id": 3,
+              "category": "a",
+              "brand": "zed"
+            }
+          ],
+          "expected": [
+            "brand:zed",
+            "category:a",
+            "product:3",
+            "products"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-c4-5",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Locale middleware: `localeRedirect(pathname, acceptLanguage, locales, defaultLocale)` returns `null` when the path's **first segment** is already a supported locale. Otherwise it picks the first language in `Accept-Language` whose primary tag (`fr-FR` → `fr`, ignore `;q=`) is supported, falling back to `defaultLocale`, and returns `/<locale><pathname>` (`/` becomes `/<locale>`). Fix the two bugs: `/english-course` is treated as localised, and region tags never match.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "localeRedirect",
+      "starterCode": "function localeRedirect(pathname, acceptLanguage, locales, defaultLocale) {\n  if (locales.some((l) => pathname.startsWith(\"/\" + l))) return null;\n  const wanted = acceptLanguage\n    .split(\",\")\n    .map((part) => part.split(\";\")[0].trim().toLowerCase())\n    .filter(Boolean);\n  const locale = wanted.find((l) => locales.includes(l)) ?? defaultLocale;\n  return \"/\" + locale + (pathname === \"/\" ? \"\" : pathname);\n}",
+      "referenceSolution": "function localeRedirect(pathname, acceptLanguage, locales, defaultLocale) {\n  const first = pathname.split(\"/\")[1];\n  if (locales.includes(first)) return null;\n  const wanted = acceptLanguage\n    .split(\",\")\n    .map((part) => part.split(\";\")[0].trim().split(\"-\")[0].toLowerCase())\n    .filter(Boolean);\n  const locale = wanted.find((l) => locales.includes(l)) ?? defaultLocale;\n  return \"/\" + locale + (pathname === \"/\" ? \"\" : pathname);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/about",
+            "fr-FR,fr;q=0.9,en;q=0.8",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": "/fr/about"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/en/about",
+            "fr",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/",
+            "de-DE",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": "/en"
+        },
+        {
+          "args": [
+            "/english-course",
+            "fr",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": "/fr/english-course"
+        },
+        {
+          "args": [
+            "/fr",
+            "en",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            "/x",
+            "",
+            [
+              "en",
+              "fr"
+            ],
+            "en"
+          ],
+          "expected": "/en/x"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2.5,
+    "prompt": "Work through a stale-data bug on a blog built with the App Router.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The `/posts` list fetches with `fetch(url, { next: { tags: [\"posts\"] } })`. Editors can edit posts in your admin (a server action) and directly in a headless CMS.",
+      "steps": [
+        {
+          "id": "action",
+          "question": "After the server action saves an edited title and redirects to `/posts`, the list still shows the old title until the next deploy. What's the fix?",
+          "options": [
+            "Call `revalidateTag(\"posts\")` in the server action after saving, before redirecting",
+            "Add `\"use client\"` to the list page so it always fetches fresh data",
+            "Call `router.refresh()` in a `useEffect` on every render of the list",
+            "Change the fetch to `cache: \"force-cache\"`"
+          ],
+          "correctIndex": 0,
+          "explanation": "The cached fetch is tagged, so invalidating that tag in the action makes the next render refetch."
+        },
+        {
+          "id": "cms",
+          "question": "Edits made in the CMS never touch your app. How do you get them live quickly?",
+          "options": [
+            "Have the CMS call a webhook route handler that checks a shared secret and calls `revalidateTag(\"posts\")`",
+            "Set `revalidate = 1` on every page of the site",
+            "Ask editors to trigger a redeploy after each edit"
+          ],
+          "correctIndex": 0,
+          "explanation": "On-demand revalidation from a route handler keeps the cache long-lived and fresh exactly when content changes. The secret stops anyone else from purging your cache."
+        },
+        {
+          "id": "views",
+          "question": "A post page also shows a 'views today' counter that must be fresh on every request, while the article body can stay cached. Best approach?",
+          "options": [
+            "Keep the article fetch cached and render the counter in its own component that fetches with `cache: \"no-store\"`, wrapped in `<Suspense>`",
+            "Mark the whole site `force-dynamic` so everything is fresh",
+            "Compute the view count at build time in `generateStaticParams`"
+          ],
+          "correctIndex": 0,
+          "explanation": "Isolating the per-request data keeps the expensive article fetch cached and lets the rest of the page stream before the counter resolves."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A server action deletes a project. The delete button is only rendered for owners. Is the action safe without further checks?",
+    "mcq": {
+      "options": [
+        "No: the action is exposed as a POST endpoint anyone can call with a valid action ID, so it must check the session and ownership itself",
+        "Yes: server actions can only be invoked from the component that renders them",
+        "Yes: Next.js automatically re-checks the rendering conditions before running an action",
+        "Yes, as long as the file starts with `\"use server\"`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hiding a button is UI, not authorization. Treat every server action like a public API route: authenticate, authorize and validate input inside it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "A product page awaits a fast product query and a slow (2 s) reviews query before rendering anything. How do you let users see the product immediately?",
+    "mcq": {
+      "options": [
+        "Move the reviews fetch into a `<Reviews />` Server Component and wrap it in `<Suspense fallback={...}>` so the page streams and reviews arrive later",
+        "Fetch the reviews in a Client Component with `useEffect` and keep everything else the same",
+        "Add `export const revalidate = 0` to the page",
+        "Wrap the whole page in `template.tsx`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Suspense boundaries let the server send the shell and the product first, then stream the reviews HTML when ready, without a client-side fetch waterfall.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-nextjs-app-router-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-nextjs-app-router",
+    "trackId": null,
+    "stackId": null,
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "This Server Component takes about 3 seconds per request. The three calls don't depend on each other. What's the simplest fix?\n\n```tsx\nexport default async function Dashboard() {\n  const user = await getUser();     // 1 s\n  const stats = await getStats();   // 1 s\n  const alerts = await getAlerts(); // 1 s\n  return <View user={user} stats={stats} alerts={alerts} />;\n}\n```",
+    "mcq": {
+      "options": [
+        "Start them together with `await Promise.all([getUser(), getStats(), getAlerts()])`, cutting it to about 1 second",
+        "Convert the component to a Client Component so the fetches run in the browser",
+        "Add `loading.tsx`, which makes the fetches run in parallel",
+        "Wrap each `await` in its own `try/catch`"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sequential awaits create a request waterfall. Independent requests should start at the same time; `loading.tsx` only improves what the user sees while waiting, not the total time.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]

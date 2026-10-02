@@ -1,0 +1,1893 @@
+[
+  {
+    "id": "eng-aws-ec2-c1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "An EC2 disk alert reads one line of `df -h` output, e.g. `/dev/xvda1  8.0G  7.6G  400M  95% /`. Fix `usePercent` so it returns the **Use%** column as a number (`95`). Columns can be separated by several spaces.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "usePercent",
+      "starterCode": "function usePercent(line) {\n  const parts = line.split(\" \");\n  return Number(parts[4]);\n}",
+      "referenceSolution": "function usePercent(line) {\n  const parts = line.trim().split(/\\s+/);\n  return parseInt(parts[4], 10);\n}",
+      "sampleTests": [
+        {
+          "args": [
+            "/dev/xvda1  8.0G  7.6G  400M  95% /"
+          ],
+          "expected": 95
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "/dev/root 30G 12G 18G 40% /"
+          ],
+          "expected": 40
+        },
+        {
+          "args": [
+            "tmpfs        488M     0  488M   0% /dev/shm"
+          ],
+          "expected": 0
+        },
+        {
+          "args": [
+            "/dev/nvme1n1   100G  100G     0 100% /data"
+          ],
+          "expected": 100
+        },
+        {
+          "args": [
+            "  /dev/xvda1 8.0G 4.1G 3.9G 52% /"
+          ],
+          "expected": 52
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-c1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "coding",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Fix `ssh_open_to_world` so it returns `True` only when a rule opens **port 22** to the whole internet (`0.0.0.0/0` or `::/0`). Each rule is `{\"port\": int, \"cidr\": str}`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "ssh_open_to_world",
+      "starterCode": "def ssh_open_to_world(rules):\n    return any(r[\"cidr\"] == \"0.0.0.0/0\" for r in rules)",
+      "referenceSolution": "def ssh_open_to_world(rules):\n    return any(r[\"port\"] == 22 and r[\"cidr\"] in (\"0.0.0.0/0\", \"::/0\") for r in rules)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "port": 22,
+                "cidr": "0.0.0.0/0"
+              }
+            ]
+          ],
+          "expected": true
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "port": 443,
+                "cidr": "0.0.0.0/0"
+              }
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            []
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "port": 22,
+                "cidr": "203.0.113.10/32"
+              },
+              {
+                "port": 80,
+                "cidr": "0.0.0.0/0"
+              }
+            ]
+          ],
+          "expected": false
+        },
+        {
+          "args": [
+            [
+              {
+                "port": 80,
+                "cidr": "0.0.0.0/0"
+              },
+              {
+                "port": 22,
+                "cidr": "::/0"
+              }
+            ]
+          ],
+          "expected": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "These are the inbound rules of the security group on a public web server that talks to a database on the same instance. Mark the rules that should not be there.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the segments that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "HTTP 80 from 0.0.0.0/0",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "HTTPS 443 from 0.0.0.0/0",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "SSH 22 from 0.0.0.0/0",
+          "issue": "SSH open to the whole internet invites brute-force attempts; allow only your office/VPN IP or use Session Manager."
+        },
+        {
+          "id": "s4",
+          "text": "MySQL 3306 from 0.0.0.0/0",
+          "issue": "The database is only used locally; exposing 3306 to the internet is a common way databases get dumped."
+        },
+        {
+          "id": "s5",
+          "text": "HTTPS 443 from ::/0",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "SSH 22 from 203.0.113.10/32 (office)",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "Put the steps for launching your first EC2 instance and logging in, in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "Put the steps for launching your first EC2 instance and logging in, in order.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "Choose an instance type (for example t3.micro)"
+        },
+        {
+          "id": "r4",
+          "label": "Attach a security group that allows SSH from your IP"
+        },
+        {
+          "id": "r6",
+          "label": "Connect with `ssh -i key.pem ubuntu@<public-ip>`"
+        },
+        {
+          "id": "r1",
+          "label": "Pick an AMI (for example Ubuntu 24.04)"
+        },
+        {
+          "id": "r3",
+          "label": "Create or select a key pair and download the .pem file"
+        },
+        {
+          "id": "r5",
+          "label": "Launch the instance and wait for it to be running"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "The console wizard asks in roughly this order: image, size, access (key pair), network (security group), then launch. You can only SSH once the instance is running and has a public IP."
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "You just launched an EC2 instance in a public subnet. `ssh -i key.pem ubuntu@54.12.34.56` hangs and then says `Connection timed out`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You just launched an EC2 instance in a public subnet. `ssh -i key.pem ubuntu@54.12.34.56` hangs and then says `Connection timed out`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the most likely cause?",
+          "options": [
+            "The security group has no inbound rule for port 22 from your IP",
+            "The key file is wrong",
+            "The username should be root",
+            "The instance type is too small"
+          ],
+          "correctIndex": 0,
+          "explanation": "A timeout means packets never got an answer, which is a network block. A wrong key or user gives `Permission denied` instead."
+        },
+        {
+          "id": "q2",
+          "question": "You fix the rule and now see `WARNING: UNPROTECTED PRIVATE KEY FILE! Permissions 0644 for 'key.pem' are too open.` What do you run?",
+          "options": [
+            "`chmod 400 key.pem`",
+            "`chmod 777 key.pem`",
+            "`sudo ssh -i key.pem ubuntu@54.12.34.56`",
+            "Create a new instance"
+          ],
+          "correctIndex": 0,
+          "explanation": "SSH refuses private keys other users can read. `chmod 400` makes it readable by you only."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t1-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 1.5,
+    "prompt": "This user-data script runs when a new web server boots. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the segments that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "#!/bin/bash",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "apt-get update -y",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "apt-get install -y nginx",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE",
+          "issue": "Hard-coded access keys in user data are readable by anyone with describe access and from the metadata service; use an instance role."
+        },
+        {
+          "id": "s5",
+          "text": "chmod -R 777 /var/www",
+          "issue": "World-writable web root lets any process or user rewrite the site; give ownership to the web user instead."
+        },
+        {
+          "id": "s6",
+          "text": "systemctl enable --now nginx",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m1-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "What is the difference between **stopping** and **terminating** an EC2 instance with a default EBS root volume?",
+    "mcq": {
+      "options": [
+        "Stop keeps the instance and its root volume (you stop paying for compute); terminate deletes the instance and, by default, its root volume",
+        "Stop and terminate both delete the root volume",
+        "Terminate keeps the root volume; stop deletes it",
+        "Stop deletes the instance but keeps a snapshot automatically"
+      ],
+      "correctIndex": 0,
+      "explanation": "A stopped instance can be started again with its disk intact. Terminated instances are gone, and the root volume's `DeleteOnTermination` flag is true by default.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m1-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "Your instance's public IP changed after you stopped and started it, breaking a DNS record. What gives it a fixed public address?",
+    "mcq": {
+      "options": [
+        "An Elastic IP associated with the instance",
+        "A bigger instance type",
+        "Enabling detailed monitoring",
+        "A second security group"
+      ],
+      "correctIndex": 0,
+      "explanation": "Auto-assigned public IPs are released on stop. An Elastic IP stays allocated to your account until you release it.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m1-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 1,
+    "estMinutes": 1,
+    "prompt": "A security group allows inbound 443 and has the default outbound rule. A client's HTTPS request reaches the server. How does the response get back?",
+    "mcq": {
+      "options": [
+        "Security groups are stateful, so return traffic for an allowed connection is allowed automatically",
+        "You must add an inbound rule for ephemeral ports",
+        "You must add an outbound rule for port 443 to the client's IP",
+        "Responses are blocked unless a NACL allows them"
+      ],
+      "correctIndex": 0,
+      "explanation": "Security groups track connections; replies to allowed inbound traffic are always allowed out. NACLs are the stateless ones.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-c2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "Fix `pickInstanceType` so it returns the **name** of the cheapest type that has at least `needCpu` vCPUs **and** at least `needMem` GiB of memory, or `null` if none fits.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "pickInstanceType",
+      "starterCode": "function pickInstanceType(types, needCpu, needMem) {\n  const fits = types.filter((t) => t.vcpu >= needCpu);\n  if (!fits.length) return null;\n  fits.sort((a, b) => a.hourly - b.hourly);\n  return fits[0].name;\n}",
+      "referenceSolution": "function pickInstanceType(types, needCpu, needMem) {\n  const fits = types.filter((t) => t.vcpu >= needCpu && t.memGiB >= needMem);\n  if (!fits.length) return null;\n  fits.sort((a, b) => a.hourly - b.hourly);\n  return fits[0].name;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "t3.small",
+                "vcpu": 2,
+                "memGiB": 2,
+                "hourly": 0.0208
+              },
+              {
+                "name": "t3.medium",
+                "vcpu": 2,
+                "memGiB": 4,
+                "hourly": 0.0416
+              }
+            ],
+            2,
+            4
+          ],
+          "expected": "t3.medium"
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "name": "c6i.large",
+                "vcpu": 2,
+                "memGiB": 4,
+                "hourly": 0.085
+              },
+              {
+                "name": "r6i.large",
+                "vcpu": 2,
+                "memGiB": 16,
+                "hourly": 0.126
+              },
+              {
+                "name": "m6i.large",
+                "vcpu": 2,
+                "memGiB": 8,
+                "hourly": 0.096
+              }
+            ],
+            2,
+            8
+          ],
+          "expected": "m6i.large"
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "t3.micro",
+                "vcpu": 2,
+                "memGiB": 1,
+                "hourly": 0.0104
+              }
+            ],
+            4,
+            1
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [],
+            1,
+            1
+          ],
+          "expected": null
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "t3.large",
+                "vcpu": 2,
+                "memGiB": 8,
+                "hourly": 0.0832
+              },
+              {
+                "name": "t3.xlarge",
+                "vcpu": 4,
+                "memGiB": 16,
+                "hourly": 0.1664
+              }
+            ],
+            2,
+            8
+          ],
+          "expected": "t3.large"
+        },
+        {
+          "args": [
+            [
+              {
+                "name": "c6i.xlarge",
+                "vcpu": 4,
+                "memGiB": 8,
+                "hourly": 0.17
+              },
+              {
+                "name": "m6i.xlarge",
+                "vcpu": 4,
+                "memGiB": 16,
+                "hourly": 0.192
+              }
+            ],
+            4,
+            12
+          ],
+          "expected": "m6i.xlarge"
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-c2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "`disk_alerts` takes the full text of `df -h` (header line included) and a threshold. It should return the mount points (last column) whose Use% is **at or above** the threshold, in input order. Fix it.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "disk_alerts",
+      "starterCode": "def disk_alerts(df_text, threshold):\n    out = []\n    for line in df_text.strip().splitlines()[1:]:\n        cols = line.split()\n        if int(cols[4].rstrip(\"%\")) > threshold:\n            out.append(cols[5])\n    return out",
+      "referenceSolution": "def disk_alerts(df_text, threshold):\n    out = []\n    for line in df_text.strip().splitlines()[1:]:\n        cols = line.split()\n        if int(cols[4].rstrip(\"%\")) >= threshold:\n            out.append(cols[5])\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on\n/dev/xvda1 8.0G 7.6G 400M 95% /\n/dev/xvdf 50G 10G 40G 20% /data",
+            90
+          ],
+          "expected": [
+            "/"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on\n/dev/xvda1 8.0G 7.2G 800M 90% /\n/dev/xvdf 50G 46G 4G 92% /data",
+            90
+          ],
+          "expected": [
+            "/",
+            "/data"
+          ]
+        },
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on",
+            80
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on\ntmpfs 488M 0 488M 0% /dev/shm",
+            0
+          ],
+          "expected": [
+            "/dev/shm"
+          ]
+        },
+        {
+          "args": [
+            "Filesystem Size Used Avail Use% Mounted on\n/dev/root 30G 12G 18G 40% /",
+            80
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An app on EC2 only needs to **read** objects from the `acme-uploads` bucket. This is the policy attached to its role. Mark the lines that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the lines that grant more than the app needs.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "{ \"Version\": \"2012-10-17\",",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "\"Statement\": [{",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "\"Sid\": \"ReadUploads\",",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "\"Effect\": \"Allow\",",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "\"Action\": \"s3:*\",",
+          "issue": "Grants delete, put and bucket-policy changes; the app only needs `s3:GetObject` (and maybe `s3:ListBucket`)."
+        },
+        {
+          "id": "s6",
+          "text": "\"Resource\": \"*\"",
+          "issue": "Applies to every bucket in the account; scope it to `arn:aws:s3:::acme-uploads/*`."
+        },
+        {
+          "id": "s7",
+          "text": "}] }",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "An instance's 8 GB root EBS volume is almost full. Put the steps to grow it to 20 GB **without stopping the instance** in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "An instance's 8 GB root EBS volume is almost full. Put the steps to grow it to 20 GB **without stopping the instance** in order.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "Modify the volume size to 20 GB in the console or with `aws ec2 modify-volume`"
+        },
+        {
+          "id": "r4",
+          "label": "Grow the partition: `sudo growpart /dev/nvme0n1 1`"
+        },
+        {
+          "id": "r6",
+          "label": "Confirm the new size with `df -h`"
+        },
+        {
+          "id": "r1",
+          "label": "Snapshot the volume as a safety net"
+        },
+        {
+          "id": "r3",
+          "label": "Wait until the modification is in the `optimizing` or `completed` state"
+        },
+        {
+          "id": "r5",
+          "label": "Grow the filesystem: `sudo resize2fs /dev/nvme0n1p1` (or `xfs_growfs /` on XFS)"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "EBS can be resized online, but the OS does not see the space until you grow the partition and then the filesystem on it. The snapshot comes first so you can roll back."
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2,
+    "prompt": "At 3 a.m. the API on a single EC2 instance starts returning 500s. The logs say `No space left on device`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "At 3 a.m. the API on a single EC2 instance starts returning 500s. The logs say `No space left on device`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you run first to find what is using the space?",
+          "options": [
+            "`df -h` to see which filesystem is full, then `sudo du -sh /var/log/* | sort -h` to find the big directories",
+            "`top` to check CPU",
+            "Reboot the instance",
+            "`free -m` to check memory"
+          ],
+          "correctIndex": 0,
+          "explanation": "`df` tells you which mount is full; `du` narrows it to the culprit. Rebooting does not free disk."
+        },
+        {
+          "id": "q2",
+          "question": "You find `/var/log/app/app.log` is 6 GB and the app still has it open. What is the safest quick fix?",
+          "options": [
+            "`sudo truncate -s 0 /var/log/app/app.log` (after copying anything you need)",
+            "`rm /var/log/app/app.log`",
+            "`rm -rf /var/log`",
+            "Stop the instance and attach a bigger volume"
+          ],
+          "correctIndex": 0,
+          "explanation": "Deleting a file a process still holds open does not free the space until the process closes it. Truncating frees it immediately."
+        },
+        {
+          "id": "q3",
+          "question": "How do you stop this happening again?",
+          "options": [
+            "Set up logrotate for the app log and a CloudWatch alarm on disk usage",
+            "Turn off application logging",
+            "Run a nightly reboot",
+            "Move to a larger instance type"
+          ],
+          "correctIndex": 0,
+          "explanation": "Rotation caps log growth; the CloudWatch agent's disk metric plus an alarm warns you before users notice. Instance type does not change disk size."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t2-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.5,
+    "prompt": "This is a team runbook for deploying to the production EC2 server. Mark the steps that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the risky steps.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Connect with Session Manager or your personal SSH key.",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "If that fails, use the shared `prod-root.pem` key that is in the team chat.",
+          "issue": "A shared key posted in chat cannot be revoked per person and leaves no audit trail of who logged in."
+        },
+        {
+          "id": "s3",
+          "text": "Pull the release tag with `git fetch --tags && git checkout v1.4.2`.",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Put AWS access keys in `~/.aws/credentials` on the server so the app can reach S3.",
+          "issue": "Long-lived keys on disk leak easily; attach an IAM role (instance profile) and let the SDK fetch temporary credentials."
+        },
+        {
+          "id": "s5",
+          "text": "Restart the service with `sudo systemctl restart api`.",
+          "issue": null
+        },
+        {
+          "id": "s6",
+          "text": "Check `/health` returns 200 before closing the deploy ticket.",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m2-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "An instance in a **private** subnet needs to download packages from the internet but must not be reachable from it. What do you add?",
+    "mcq": {
+      "options": [
+        "A NAT gateway in a public subnet, with the private subnet's route table sending 0.0.0.0/0 to it",
+        "An Elastic IP on the private instance",
+        "An inbound security group rule for 0.0.0.0/0",
+        "An internet gateway route in the private subnet's route table"
+      ],
+      "correctIndex": 0,
+      "explanation": "A NAT gateway lets private instances start outbound connections while nothing outside can start one to them. A direct internet-gateway route would make the subnet public.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m2-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "What is the recommended way for code running on EC2 to get AWS credentials for S3?",
+    "mcq": {
+      "options": [
+        "Attach an IAM role through an instance profile; the SDK picks up temporary credentials automatically",
+        "Store an IAM user's access keys in environment variables",
+        "Commit the keys in a config file and restrict the repo",
+        "Use the account root user's keys"
+      ],
+      "correctIndex": 0,
+      "explanation": "Instance-profile credentials are short-lived and rotated automatically, and nothing secret is stored on disk or in the repo.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m2-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 2,
+    "estMinutes": 1,
+    "prompt": "A `t3.micro` running a CPU-heavy job at 100% becomes very slow after an hour. It is in **standard** credit mode. What is happening?",
+    "mcq": {
+      "options": [
+        "It used up its CPU credits and is now throttled to its baseline (about 10% of a vCPU)",
+        "The EBS volume ran out of IOPS",
+        "AWS is moving it to another host",
+        "The security group is rate-limiting traffic"
+      ],
+      "correctIndex": 0,
+      "explanation": "Burstable instances earn credits below baseline and spend them above it. With none left in standard mode, CPU drops to baseline. Use unlimited mode or a non-burstable family for steady load.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-c3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A target-tracking autoscaler keeps average CPU near `target`. Fix `desiredCapacity` so it returns `ceil(current * avgCpu / target)`, **clamped** to `[min, max]`.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "desiredCapacity",
+      "starterCode": "function desiredCapacity(current, avgCpu, target, min, max) {\n  return Math.ceil((current * avgCpu) / target);\n}",
+      "referenceSolution": "function desiredCapacity(current, avgCpu, target, min, max) {\n  const wanted = Math.ceil((current * avgCpu) / target);\n  return Math.min(max, Math.max(min, wanted));\n}",
+      "sampleTests": [
+        {
+          "args": [
+            4,
+            90,
+            60,
+            2,
+            10
+          ],
+          "expected": 6
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            4,
+            30,
+            60,
+            2,
+            10
+          ],
+          "expected": 2
+        },
+        {
+          "args": [
+            8,
+            100,
+            50,
+            2,
+            10
+          ],
+          "expected": 10
+        },
+        {
+          "args": [
+            3,
+            0,
+            50,
+            1,
+            5
+          ],
+          "expected": 1
+        },
+        {
+          "args": [
+            2,
+            55,
+            50,
+            2,
+            6
+          ],
+          "expected": 3
+        },
+        {
+          "args": [
+            5,
+            60,
+            60,
+            2,
+            10
+          ],
+          "expected": 5
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-c3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "coding",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Each security-group rule is `{\"id\", \"from\", \"to\", \"cidr\"}` (a port range). Fix `risky_rules` to return the ids of rules that open **any port not in `allowed_public`** to the world (`0.0.0.0/0` or `::/0`), in input order.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "risky_rules",
+      "starterCode": "def risky_rules(rules, allowed_public):\n    out = []\n    for r in rules:\n        if r[\"cidr\"] in (\"0.0.0.0/0\", \"::/0\") and r[\"from\"] not in allowed_public:\n            out.append(r[\"id\"])\n    return out",
+      "referenceSolution": "def risky_rules(rules, allowed_public):\n    out = []\n    for r in rules:\n        if r[\"cidr\"] not in (\"0.0.0.0/0\", \"::/0\"):\n            continue\n        allowed_in_range = sum(1 for p in set(allowed_public) if r[\"from\"] <= p <= r[\"to\"])\n        if allowed_in_range < r[\"to\"] - r[\"from\"] + 1:\n            out.append(r[\"id\"])\n    return out",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "from": 443,
+                "to": 443,
+                "cidr": "0.0.0.0/0"
+              },
+              {
+                "id": "b",
+                "from": 22,
+                "to": 22,
+                "cidr": "0.0.0.0/0"
+              }
+            ],
+            [
+              80,
+              443
+            ]
+          ],
+          "expected": [
+            "b"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "from": 80,
+                "to": 443,
+                "cidr": "0.0.0.0/0"
+              }
+            ],
+            [
+              80,
+              443
+            ]
+          ],
+          "expected": [
+            "a"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "from": 0,
+                "to": 65535,
+                "cidr": "::/0"
+              }
+            ],
+            [
+              443
+            ]
+          ],
+          "expected": [
+            "a"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "from": 22,
+                "to": 22,
+                "cidr": "10.0.0.0/16"
+              }
+            ],
+            []
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            [
+              443
+            ]
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "a",
+                "from": 80,
+                "to": 80,
+                "cidr": "0.0.0.0/0"
+              },
+              {
+                "id": "b",
+                "from": 443,
+                "to": 443,
+                "cidr": "::/0"
+              }
+            ],
+            [
+              80,
+              443
+            ]
+          ],
+          "expected": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "A web app runs in an Auto Scaling group behind an Application Load Balancer. Put the steps of a zero-downtime rollout of a new AMI in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "A web app runs in an Auto Scaling group behind an Application Load Balancer. Put the steps of a zero-downtime rollout of a new AMI in order.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "Create a new launch template version that uses it"
+        },
+        {
+          "id": "r4",
+          "label": "New instances pass the ALB target-group health checks and start taking traffic"
+        },
+        {
+          "id": "r6",
+          "label": "Watch error rates and latency; roll back to the previous template version if they rise"
+        },
+        {
+          "id": "r1",
+          "label": "Bake and test the new AMI"
+        },
+        {
+          "id": "r3",
+          "label": "Start an instance refresh with minimum healthy percentage at 90%"
+        },
+        {
+          "id": "r5",
+          "label": "Old instances are deregistered, connections drain, then they terminate"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "The template points the group at the new image, the refresh replaces a few instances at a time, and only healthy new targets receive traffic before old ones drain. Monitoring and the old template version are your rollback path."
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 1.5,
+    "prompt": "This is the config of an Auto Scaling group for a production web API behind an ALB. Mark the settings that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the segments that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "MinSize: 2",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "MaxSize: 8",
+          "issue": null
+        },
+        {
+          "id": "s3",
+          "text": "VPCZoneIdentifier: subnet-a (us-east-1a)",
+          "issue": "All instances in one Availability Zone; an AZ outage takes the whole API down. Use subnets in at least two AZs."
+        },
+        {
+          "id": "s4",
+          "text": "TargetGroupARNs: api-tg",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "HealthCheckType: EC2",
+          "issue": "EC2 checks only see if the VM is running; a hung app stays in service. Use `ELB` so failing target health checks replace the instance."
+        },
+        {
+          "id": "s6",
+          "text": "HealthCheckGracePeriod: 0",
+          "issue": "Instances are judged before the app has booted and can be killed in a loop; give it the app's start-up time."
+        },
+        {
+          "id": "s7",
+          "text": "LaunchTemplate: api-lt, Version: 7",
+          "issue": null
+        },
+        {
+          "id": "s8",
+          "text": "TerminationPolicies: OldestLaunchTemplate",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "Your app has a \"fetch image from URL\" feature. Logs show requests for `http://169.254.169.254/latest/meta-data/iam/security-credentials/api-role`.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your app has a \"fetch image from URL\" feature. Logs show requests for `http://169.254.169.254/latest/meta-data/iam/security-credentials/api-role`.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What is the attacker after?",
+          "options": [
+            "The temporary credentials of the instance's IAM role, through the metadata service (SSRF)",
+            "The instance's private IP address",
+            "The image cache",
+            "The SSH host key"
+          ],
+          "correctIndex": 0,
+          "explanation": "169.254.169.254 is the instance metadata service; that path returns the role's access key, secret and token."
+        },
+        {
+          "id": "q2",
+          "question": "Which instance-level setting blocks this exact request?",
+          "options": [
+            "Require IMDSv2 (`HttpTokens: required`), which needs a PUT-obtained token the simple GET cannot send",
+            "Turn on detailed monitoring",
+            "Move the instance to a private subnet",
+            "Add a security group rule blocking 169.254.169.254"
+          ],
+          "correctIndex": 0,
+          "explanation": "IMDSv2 requires a session token from a PUT with a custom header, which a typical SSRF cannot make. Security groups do not filter metadata traffic."
+        },
+        {
+          "id": "q3",
+          "question": "What limits the damage if credentials ever do leak?",
+          "options": [
+            "Give the role only the actions and resources the app needs",
+            "Rotate the SSH key",
+            "Enable termination protection",
+            "Use a bigger instance"
+          ],
+          "correctIndex": 0,
+          "explanation": "Least privilege means stolen credentials can do little. Also validate URLs in the fetch feature."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t3-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2,
+    "prompt": "The AWS bill is up 40%. Most of it is EC2.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "The AWS bill is up 40%. Most of it is EC2.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "Six `m5.xlarge` dev instances run 24/7 but are used only on weekdays, 9 to 7. What is the quickest saving?",
+          "options": [
+            "Stop them outside working hours on a schedule (for example with Instance Scheduler or an EventBridge rule)",
+            "Buy a 3-year Reserved Instance for each",
+            "Move them to Spot",
+            "Switch them to larger instances so tasks finish faster"
+          ],
+          "correctIndex": 0,
+          "explanation": "They are idle about 70% of the week. A schedule cuts that compute cost with no commitment."
+        },
+        {
+          "id": "q2",
+          "question": "Production has a steady baseline of 10 instances all year. How do you lower that cost?",
+          "options": [
+            "Cover the baseline with a Compute Savings Plan or Reserved Instances",
+            "Run production on Spot only",
+            "Stop production at night",
+            "Use On-Demand and accept the cost"
+          ],
+          "correctIndex": 0,
+          "explanation": "Commitments give large discounts for usage you know will be there; keep On-Demand or Spot for the variable part above it."
+        },
+        {
+          "id": "q3",
+          "question": "Nightly batch jobs can be retried if interrupted. Where should they run?",
+          "options": [
+            "Spot instances, with retries and several instance types allowed",
+            "Reserved instances",
+            "The production instances",
+            "Dedicated hosts"
+          ],
+          "correctIndex": 0,
+          "explanation": "Spot is much cheaper and a 2-minute interruption is fine for retryable work."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m3-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "An instance uses an **instance store** volume for a cache and an **EBS** volume for data. It is stopped and started. What survives?",
+    "mcq": {
+      "options": [
+        "The EBS data survives; the instance-store data is lost",
+        "Both survive",
+        "Neither survives",
+        "The instance-store data survives; EBS is reset"
+      ],
+      "correctIndex": 0,
+      "explanation": "Instance store lives on the physical host and is wiped when the instance stops. EBS is network storage that persists independently.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m3-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Instances pass EC2 status checks but the ALB marks every target unhealthy. The app works with `curl localhost:3000/health` on the box. What is the most likely cause?",
+    "mcq": {
+      "options": [
+        "The instances' security group does not allow traffic on port 3000 from the ALB's security group",
+        "The AMI is corrupted",
+        "The instance type is too small",
+        "The Elastic IP is missing"
+      ],
+      "correctIndex": 0,
+      "explanation": "Health checks come from the load balancer. If its security group is not allowed in on the app port, every check fails while local curl works.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m3-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 3,
+    "estMinutes": 1,
+    "prompt": "Why bake dependencies into a custom AMI instead of installing them in user data at boot, for an Auto Scaling group?",
+    "mcq": {
+      "options": [
+        "New instances start serving much faster and do not depend on package mirrors being up during a scale-out",
+        "User data cannot run shell scripts",
+        "AMIs are free to store",
+        "Custom AMIs disable the need for security groups"
+      ],
+      "correctIndex": 0,
+      "explanation": "Scale-outs happen under load, when slow or failing boot installs hurt most. The trade-off is maintaining an AMI build pipeline.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-c4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": null,
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Plan a rolling replacement. Each batch may take out of service at most `(100 - minHealthyPct)%` of the instances (rounded **down**, but at least 1). Fix `planBatches` to split `ids` into batches of that size, in order.",
+    "coding": {
+      "language": "javascript",
+      "mode": "function",
+      "functionName": "planBatches",
+      "starterCode": "function planBatches(ids, minHealthyPct) {\n  const size = Math.max(1, Math.ceil((ids.length * (100 - minHealthyPct)) / 100));\n  const out = [];\n  for (let i = 0; i < ids.length; i += size) out.push(ids.slice(i, i + size));\n  return out;\n}",
+      "referenceSolution": "function planBatches(ids, minHealthyPct) {\n  const size = Math.max(1, Math.floor((ids.length * (100 - minHealthyPct)) / 100));\n  const out = [];\n  for (let i = 0; i < ids.length; i += size) out.push(ids.slice(i, i + size));\n  return out;\n}",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            50
+          ],
+          "expected": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c",
+              "d",
+              "e",
+              "f",
+              "g",
+              "h",
+              "i",
+              "j"
+            ],
+            75
+          ],
+          "expected": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "e",
+              "f"
+            ],
+            [
+              "g",
+              "h"
+            ],
+            [
+              "i",
+              "j"
+            ]
+          ]
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c"
+            ],
+            90
+          ],
+          "expected": [
+            [
+              "a"
+            ],
+            [
+              "b"
+            ],
+            [
+              "c"
+            ]
+          ]
+        },
+        {
+          "args": [
+            [],
+            90
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              "a",
+              "b",
+              "c",
+              "d",
+              "e"
+            ],
+            70
+          ],
+          "expected": [
+            [
+              "a"
+            ],
+            [
+              "b"
+            ],
+            [
+              "c"
+            ],
+            [
+              "d"
+            ],
+            [
+              "e"
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-c4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "coding",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Clean up old AMIs. Each AMI is `{\"id\", \"created\"}` (ISO date string). Return the ids to deregister, sorted: everything **except** the `keep` newest and any id in `in_use`. Fix `amis_to_deregister`.",
+    "coding": {
+      "language": "python",
+      "mode": "function",
+      "functionName": "amis_to_deregister",
+      "starterCode": "def amis_to_deregister(amis, in_use, keep):\n    newest_first = sorted(amis, key=lambda a: a[\"created\"], reverse=True)\n    return sorted(a[\"id\"] for a in newest_first[keep:])",
+      "referenceSolution": "def amis_to_deregister(amis, in_use, keep):\n    newest_first = sorted(amis, key=lambda a: a[\"created\"], reverse=True)\n    used = set(in_use)\n    return sorted(a[\"id\"] for a in newest_first[keep:] if a[\"id\"] not in used)",
+      "sampleTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "ami-1",
+                "created": "2026-01-01"
+              },
+              {
+                "id": "ami-2",
+                "created": "2026-02-01"
+              },
+              {
+                "id": "ami-3",
+                "created": "2026-03-01"
+              }
+            ],
+            [],
+            2
+          ],
+          "expected": [
+            "ami-1"
+          ]
+        }
+      ],
+      "hiddenTests": [
+        {
+          "args": [
+            [
+              {
+                "id": "ami-1",
+                "created": "2026-01-01"
+              },
+              {
+                "id": "ami-2",
+                "created": "2026-02-01"
+              },
+              {
+                "id": "ami-3",
+                "created": "2026-03-01"
+              }
+            ],
+            [
+              "ami-1"
+            ],
+            1
+          ],
+          "expected": [
+            "ami-2"
+          ]
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "ami-a",
+                "created": "2025-05-01"
+              }
+            ],
+            [],
+            3
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [],
+            [
+              "ami-x"
+            ],
+            1
+          ],
+          "expected": []
+        },
+        {
+          "args": [
+            [
+              {
+                "id": "ami-c",
+                "created": "2025-01-01"
+              },
+              {
+                "id": "ami-b",
+                "created": "2025-02-01"
+              },
+              {
+                "id": "ami-a",
+                "created": "2025-03-01"
+              }
+            ],
+            [
+              "ami-b"
+            ],
+            0
+          ],
+          "expected": [
+            "ami-a",
+            "ami-c"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "A CI pipeline assumes this role to deploy new launch template versions and start instance refreshes. Mark the parts that are problems.",
+    "task": {
+      "kind": "spot",
+      "prompt": "Mark the segments that are problems.",
+      "segments": [
+        {
+          "id": "s1",
+          "text": "Trust policy: Principal is the GitHub OIDC provider `token.actions.githubusercontent.com`",
+          "issue": null
+        },
+        {
+          "id": "s2",
+          "text": "Trust condition: `sub` matches `repo:acme/*`",
+          "issue": "Any repository in the org (and any branch) can assume the deploy role; pin it to `repo:acme/api:ref:refs/heads/main` or the deploy environment."
+        },
+        {
+          "id": "s3",
+          "text": "Allow `ec2:CreateLaunchTemplateVersion` on the `api-lt` launch template",
+          "issue": null
+        },
+        {
+          "id": "s4",
+          "text": "Allow `autoscaling:StartInstanceRefresh` on the `api-asg` group",
+          "issue": null
+        },
+        {
+          "id": "s5",
+          "text": "Allow `iam:PassRole` on `*`",
+          "issue": "Lets CI attach any role (including admin) to instances it launches; restrict it to the app's instance role ARN."
+        },
+        {
+          "id": "s6",
+          "text": "Allow `ec2:Describe*` on `*`",
+          "issue": null
+        },
+        {
+          "id": "s7",
+          "text": "Max session duration: 1 hour",
+          "issue": null
+        }
+      ],
+      "askExplanation": false
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 1.5,
+    "prompt": "GuardDuty reports a crypto-miner on one instance in an Auto Scaling group. Put the response steps in order.",
+    "task": {
+      "kind": "rank",
+      "prompt": "GuardDuty reports a crypto-miner on one instance in an Auto Scaling group. Put the response steps in order.",
+      "items": [
+        {
+          "id": "r2",
+          "label": "Swap its security groups for a quarantine group with no inbound or outbound rules"
+        },
+        {
+          "id": "r4",
+          "label": "Snapshot its EBS volumes for forensics"
+        },
+        {
+          "id": "r6",
+          "label": "Fix the root cause, ship a clean AMI and terminate the compromised instance"
+        },
+        {
+          "id": "r1",
+          "label": "Detach the instance from the Auto Scaling group and deregister it from the target group (so it is not terminated or serving)"
+        },
+        {
+          "id": "r3",
+          "label": "Revoke the instance role's active sessions (deny tokens issued before now)"
+        },
+        {
+          "id": "r5",
+          "label": "Investigate with CloudTrail, VPC Flow Logs and the snapshot to find how it got in"
+        }
+      ],
+      "correctOrder": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "explanation": "Keep the evidence (do not let the ASG terminate it), cut it off from the network and AWS APIs, preserve the disk, then investigate and rebuild from a known-good image."
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "Your API runs in an Auto Scaling group across two Availability Zones with 4 instances (2 per AZ). Peak traffic needs 4 instances. One AZ goes down at peak.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "Your API runs in an Auto Scaling group across two Availability Zones with 4 instances (2 per AZ). Peak traffic needs 4 instances. One AZ goes down at peak.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What happens right away?",
+          "options": [
+            "Half the capacity is gone; the ASG starts launching replacements in the healthy AZ, which takes minutes",
+            "Traffic is unaffected because the ALB caches responses",
+            "The ASG pauses until the AZ recovers",
+            "All instances move to the other AZ instantly"
+          ],
+          "correctIndex": 0,
+          "explanation": "The ALB stops routing to the dead AZ, but new instances still need to boot and pass health checks."
+        },
+        {
+          "id": "q2",
+          "question": "How do you design so peak is survived without waiting for scale-out?",
+          "options": [
+            "Run enough capacity per AZ that the remaining AZs can carry peak alone (for example 3 AZs with 2 each, or 4 per AZ in two AZs)",
+            "Use bigger instances in a single AZ",
+            "Shorten the health check grace period",
+            "Add a second load balancer in the same AZ"
+          ],
+          "correctIndex": 0,
+          "explanation": "Static stability: provision so that losing one AZ still leaves peak capacity. Spreading across three AZs makes the overhead smaller."
+        },
+        {
+          "id": "q3",
+          "question": "The database is RDS Multi-AZ and fails over. Some app instances keep erroring for a long time afterwards. Why?",
+          "options": [
+            "They cached the old database IP or hold dead connections instead of reconnecting through the DNS endpoint",
+            "RDS failover deletes the data",
+            "Security groups reset on failover",
+            "The ALB needs restarting"
+          ],
+          "correctIndex": 0,
+          "explanation": "Failover flips the endpoint's DNS record. Clients must respect a short DNS TTL and have pools that drop broken connections."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-t4-4",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "task",
+    "difficulty": 4,
+    "estMinutes": 2,
+    "prompt": "You want to move the API fleet from `m6i` (x86) to `m7g` (Graviton, ARM) for better price-performance.",
+    "task": {
+      "kind": "scenario",
+      "prompt": "You want to move the API fleet from `m6i` (x86) to `m7g` (Graviton, ARM) for better price-performance.",
+      "steps": [
+        {
+          "id": "q1",
+          "question": "What do you check first?",
+          "options": [
+            "That every dependency, native module and container image has an arm64 build",
+            "That the security groups support ARM",
+            "That the VPC is in a Graviton-enabled Region only",
+            "That EBS volumes are re-created"
+          ],
+          "correctIndex": 0,
+          "explanation": "Pure JS/Python/Java usually runs as is; native extensions and single-arch images are what break."
+        },
+        {
+          "id": "q2",
+          "question": "How do you roll it out safely?",
+          "options": [
+            "Use a mixed-instances policy (or a second target group) to send a small share of traffic to Graviton instances, then increase it",
+            "Replace the whole fleet in one instance refresh",
+            "Switch over on Friday night when traffic is low and nobody is watching",
+            "Run both architectures in the same AMI"
+          ],
+          "correctIndex": 0,
+          "explanation": "A canary lets you compare errors and latency on real traffic before committing."
+        },
+        {
+          "id": "q3",
+          "question": "How do you judge the result?",
+          "options": [
+            "Cost per request (or per unit of work) at the same latency and error rate",
+            "CPU percentage alone",
+            "Number of instances alone",
+            "Boot time"
+          ],
+          "correctIndex": 0,
+          "explanation": "The goal is price-performance. Fewer or cheaper instances only matter if latency and errors hold."
+        }
+      ]
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m4-1",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "When would you choose a blue/green deployment (a second Auto Scaling group, then shift the ALB) over an in-place instance refresh?",
+    "mcq": {
+      "options": [
+        "When you need near-instant rollback by shifting traffic back to the untouched old fleet",
+        "When you want to use as few instances as possible during the deploy",
+        "When the app has no health check",
+        "When you deploy many times an hour and want the cheapest option"
+      ],
+      "correctIndex": 0,
+      "explanation": "Blue/green keeps the old fleet running, so rollback is a traffic switch. The cost is running two fleets for a while.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m4-2",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "After setting IMDSv2 with a hop limit of 1, containers on the instance (Docker bridge network) can no longer get AWS credentials. Why?",
+    "mcq": {
+      "options": [
+        "The extra network hop through the bridge exceeds the hop limit, so the token response never reaches the container",
+        "IMDSv2 does not support Linux containers",
+        "The instance role was removed",
+        "Containers need SSH keys to reach the metadata service"
+      ],
+      "correctIndex": 0,
+      "explanation": "The PUT response's IP TTL is the hop limit. Set it to 2 for containers, or better, give each container its own role (ECS task roles).",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  },
+  {
+    "id": "eng-aws-ec2-m4-3",
+    "departmentId": "engineering",
+    "skillId": "eng-aws-ec2",
+    "trackId": null,
+    "stackId": "stack-aws",
+    "type": "mcq",
+    "difficulty": 4,
+    "estMinutes": 1,
+    "prompt": "What is an Auto Scaling **lifecycle hook** on `Terminating` used for?",
+    "mcq": {
+      "options": [
+        "Pausing termination so the instance can drain work, ship logs or deregister before it is shut down",
+        "Preventing the group from ever terminating instances",
+        "Choosing which AMI new instances use",
+        "Increasing the group's maximum size"
+      ],
+      "correctIndex": 0,
+      "explanation": "The instance waits in `Terminating:Wait` until your code completes the action or the timeout passes.",
+      "snippet": null,
+      "snippetLanguage": null
+    }
+  }
+]
