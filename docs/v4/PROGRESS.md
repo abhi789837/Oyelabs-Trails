@@ -76,7 +76,7 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - [x] 9.1 Audit existing suspend/archive/delete; fill gaps
 - [x] 9.2 Export before delete, anonymised audit, last-superadmin guard
 - [ ] 9.3 Bulk actions on People; sessions revoked on every action
-- [ ] 9.4 Checkpoint + commit `feat(v4-p9)`
+- [x] 9.4 Checkpoint + commit `feat(v4-p9)`
 
 ## Phase 10: Polish, tests, deploy
 - [ ] 10.1 Test suite items (see spec)
@@ -103,3 +103,4 @@ Decisions: `docs/v4/DECISIONS.md`. Audit: `docs/v4/AUDIT.md`. Plan: `docs/v4/PLA
 - P4 committed: v4 sheet UI (navigator, one clock, Monaco + Run x3, runnable MCQ snippets, task components, "I don't know yet"), Monaco-aware proctoring whitelist with tests, report by skill. The same commit carries the server work already done for P5 (bank admin API, stats, fill job), P6 (router, batches, budget, usage), P8 (department-aware parts, catalog attach) and P9 (bulk actions, anonymised deletion), plus the admin bank/usage/routing pages and the PM/BD curricula; the per-phase commits that follow add what remains of each.
 - P5 committed: validated seed bank — engineering 37 skills (core + Java/Dart), PM all 85 skills (775 items), BD all 78 skills (707 items). Java grading retries a run that timed out with no output (busy-runner JVM start). A further 24 engineering major-stack skills are being seeded and land with Phase 7/10.
 - P8 committed: every department's path opens with Part 1 "Strengthen your current role" and Part 2 "AI-driven work for your role", then the remaining priorities in slider order (D6); gaps come from the v4 report with no model call; catalog modules and library-saved courses attach before any matching or generation (D7). Server logic landed in the P4 commit; this commit adds the module items on the admin Path tab and the learner Courses page.
+- P9 committed: bulk disable/activate/archive/restore/sign-out/delete with per-person results; delete is superadmin-only behind a typed `delete N`, offers exports first, never includes yourself or the last super admin; every status change revokes sessions; `user.deleted` and earlier audit rows about the person are anonymised; v4 tables and AI-call attribution are cleaned in the same transaction. Also in this commit: the admin v4 results view, the minimum-time-before-Finish setting card, and Rebuild all paths.

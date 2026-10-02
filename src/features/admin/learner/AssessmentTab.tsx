@@ -18,6 +18,7 @@ import { adminApi } from "../api";
 import { ApprovalBanner, approvalNote } from "../ApprovalGate";
 import { GenerationLog } from "../GenerationLog";
 import { AdaptivePath, type AdaptiveStep } from "./AdaptivePath";
+import { isV4Detail, useV4Details, V4Results } from "./V4Results";
 
 /** One served item, as `/api/admin/assessments/:id/answers` returns it. */
 interface AnsweredItem {
@@ -81,6 +82,7 @@ export function AssessmentTab({
   const [openId, setOpenId] = useState<string | null>(null);
   const [logId, setLogId] = useState<string | null>(null);
   const autoOpened = useRef(new Set<string>());
+  const v4 = useV4Details(assessments);
 
   /**
    * Cancels an assessment that has not been started.
@@ -210,6 +212,8 @@ export function AssessmentTab({
             // Past the approval gate: the learner can see it, so the admin should be able to see
             // what the learner sees without hunting for it.
             const released = assessment.approvedAt !== null || assessment.status === "ready";
+            const probe = v4[assessment.id];
+            const v4Detail = isV4Detail(probe) ? probe : null;
 
             return (
               <li key={assessment.id} className="rounded-md border">
@@ -247,15 +251,18 @@ export function AssessmentTab({
                   )}
 
                   <div className="ml-auto flex flex-wrap gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setLogId(logOpen ? null : assessment.id)}
-                      aria-expanded={logOpen}
-                    >
-                      <Terminal aria-hidden="true" />
-                      {logOpen ? "Hide log" : "Generation log"}
-                    </Button>
+                    {/* A v4 sitting is assembled from the bank, so there is no generation to log. */}
+                    {!v4Detail && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setLogId(logOpen ? null : assessment.id)}
+                        aria-expanded={logOpen}
+                      >
+                        <Terminal aria-hidden="true" />
+                        {logOpen ? "Hide log" : "Generation log"}
+                      </Button>
+                    )}
                     {generated + dropped > 0 &&
                       (released ? (
                         // Once it is with the learner, "what did I actually send?" is the first
@@ -286,7 +293,7 @@ export function AssessmentTab({
                         Delete
                       </Button>
                     )}
-                    {served > 0 && (
+                    {served > 0 && !v4Detail && (
                       <Button
                         variant="ghost"
                         size="sm"
@@ -312,10 +319,19 @@ export function AssessmentTab({
                   </div>
                 )}
 
-                {open && (
+                {open && !v4Detail && (
                   <div className="border-t px-4 py-5">
                     <AttemptAnswers assessmentId={assessment.id} />
                   </div>
+                )}
+
+                {v4Detail && (
+                  <div className="border-t px-4 py-5">
+                    <V4Results detail={v4Detail} assessmentId={assessment.id} />
+                  </div>
+                )}
+                {probe && typeof probe === "object" && "error" in probe && (
+                  <p className="border-t px-4 py-3 text-sm text-destructive">{probe.error}</p>
                 )}
               </li>
             );

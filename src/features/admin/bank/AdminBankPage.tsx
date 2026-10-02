@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import { InfoTip } from "../catalog/InfoTip";
 import { useCatalog } from "../catalog/useCatalog";
 import { bankApi, type BankListResponse } from "./api";
+import { AssessmentSettingsCard } from "./AssessmentSettingsCard";
 import { BankItemPreview } from "./BankItemPreview";
 import { CoverageTab } from "./CoverageTab";
 import { BANK_TYPE_LABELS, formatDiscrimination, formatMeanScore, parseItemJson, toEditableItem } from "./helpers";
@@ -333,6 +334,8 @@ export default function AdminBankPage() {
           </InfoTip>
         </div>
       </div>
+
+      <AssessmentSettingsCard className="mt-4" />
 
       {catalogError && <div className="mt-4"><FormAlert>{catalogError}</FormAlert></div>}
 

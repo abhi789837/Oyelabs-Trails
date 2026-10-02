@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Sparkles, Target } from "lucide-react";
 
 import type { MyEvaluation } from "@shared/assessment";
@@ -20,14 +21,26 @@ const LEVEL_WORDS = ["Just starting", "Beginner", "Getting there", "Solid", "Str
  * already strong in, and what the path starts with. Deliberately no overall percentage — a single
  * number turns a map of where to start into a grade.
  */
-export function SkillReport({ report, className }: { report: Report; className?: string }) {
+export function SkillReport({
+  report,
+  className,
+  title = "Where you are, skill by skill",
+  subtitle = "Levels run from 0 to 5. This is a starting point for your path, not a grade.",
+}: {
+  report: Report;
+  className?: string;
+  /** The admin view reuses this about someone else, so the copy can be overridden. */
+  title?: string;
+  subtitle?: string;
+}) {
+  const headingId = useId();
   return (
-    <section aria-labelledby="skill-report-heading" className={cn("rounded-lg border bg-surface", className)}>
+    <section aria-labelledby={headingId} className={cn("rounded-lg border bg-surface", className)}>
       <div className="border-b px-4 py-3 sm:px-5">
-        <h2 id="skill-report-heading" className="font-display text-base font-semibold">
-          Where you are, skill by skill
+        <h2 id={headingId} className="font-display text-base font-semibold">
+          {title}
         </h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">Levels run from 0 to 5. This is a starting point for your path, not a grade.</p>
+        <p className="mt-0.5 text-sm text-muted-foreground">{subtitle}</p>
       </div>
 
       <ul className="divide-y">

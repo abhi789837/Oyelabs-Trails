@@ -1,5 +1,7 @@
 import type { AssessmentSummary } from "@shared/assessment";
 import type {
+  BulkUserAction,
+  BulkUserResult,
   DeleteUserResponse,
   LearnerDetail,
   ListUsersResponse,
@@ -40,6 +42,18 @@ export const adminApi = {
    */
   deleteUser: (id: string, confirmUsername: string, reason?: string) =>
     api.del<DeleteUserResponse>(`/api/admin/users/${id}`, { confirmUsername, ...(reason ? { reason } : {}) }),
+
+  /** v4 bulk actions: one result per id, so one refusal never stops the rest. */
+  bulkUsers: (body: BulkUserAction) => api.post<{ results: BulkUserResult[] }>("/api/admin/users/bulk", body),
+
+  /** Superadmin: queue a path rebuild for every active learner. Progress is kept. */
+  rebuildAllPaths: () => api.post<{ queued: number }>("/api/admin/paths/rebuild-all"),
+
+  getAssessmentSettings: (signal?: AbortSignal) =>
+    api.get<{ minFinishMinutes: number | null }>("/api/admin/assessment-settings", signal),
+
+  saveAssessmentSettings: (minFinishMinutes: number | null) =>
+    api.put<{ minFinishMinutes: number | null }>("/api/admin/assessment-settings", { minFinishMinutes }),
 
   /** Their whole record as a JSON file. Offered before a deletion, and available on its own. */
   exportUserUrl: (id: string) => `/api/admin/users/${id}/export`,

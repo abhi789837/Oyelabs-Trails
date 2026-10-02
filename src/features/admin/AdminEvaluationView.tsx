@@ -59,6 +59,15 @@ export function AdminEvaluationView({ assessmentId, userId }: { assessmentId: st
   }
 
   const { result, model, createdAt } = data.evaluation;
+  /* A v4 sitting stores a `V4Result` here, which has none of the legacy fields below. Its report is
+     rendered with the attempt itself (`learner/V4Results`), so this view only says where to look. */
+  if ((result as { format?: string }).format === "v4") {
+    return (
+      <p className="text-sm text-muted-foreground">
+        This attempt uses the v4 format. Its skill report, raw score and every answer are shown with the attempt above.
+      </p>
+    );
+  }
   const integrityTone =
     result.integrity.assessment === "clean"
       ? "border-summit/40 bg-summit/6"

@@ -239,6 +239,8 @@ export const assessmentSummarySchema = z.object({
   attemptNo: z.number(),
   /** What this sitting is for, when a learner holds several. Null on anything issued without one. */
   label: z.string().nullable(),
+  /** v4 sittings are one bank-assembled sheet; `legacy` is the v3 adaptive format. */
+  format: z.enum(["v4", "legacy"]).default("legacy"),
   status: assessmentStatusSchema,
   createdAt: z.number(),
   startedAt: z.number().nullable(),

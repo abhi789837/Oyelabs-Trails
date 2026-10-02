@@ -46,6 +46,7 @@ export function summarise(
     userId: row.userId,
     attemptNo: row.attemptNo,
     label: row.label,
+    format: (row.config as { format?: string } | null)?.format === "v4" ? "v4" : "legacy",
     status: row.status,
     createdAt: row.createdAt,
     startedAt: row.startedAt,

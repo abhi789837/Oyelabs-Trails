@@ -406,7 +406,12 @@ export function DataTable<TRow>({
   }, [rows.length, loading]);
   /* Row-by-row past a dozen rows stops being polish: the last row of a 100-row page would arrive
      four seconds after the first. Beyond the cap the body fades in as one block instead. */
-  const staggerRows = shouldAnimate && rows.length <= MAX_STAGGERED_ROWS;
+  /* Frozen at the first animated render. Recomputing it flipped the rows' variants to `undefined`
+     on the next render (any selection), and motion then left every row at its hidden opacity 0. */
+  const staggerMode = useRef<boolean | null>(null);
+  if (shouldAnimate && staggerMode.current === null) staggerMode.current = rows.length <= MAX_STAGGERED_ROWS;
+  const staggerRows = staggerMode.current ?? false;
+  const bodyVariants = useMemo(() => (staggerRows ? stagger() : fadeUp), [staggerRows]);
 
   // ---------------------------------------------------------------------
   // Export
@@ -564,7 +569,7 @@ export function DataTable<TRow>({
                   ref={bodyRef}
                   initial={shouldAnimate ? "hidden" : false}
                   animate="visible"
-                  variants={staggerRows ? stagger() : fadeUp}
+                  variants={bodyVariants}
                   transition={transition.base}
                 >
                   {loading && rows.length === 0 ? (
