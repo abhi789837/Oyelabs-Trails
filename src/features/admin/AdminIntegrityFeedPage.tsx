@@ -179,9 +179,7 @@ export default function AdminIntegrityFeedPage() {
     <div className="px-4 py-8 sm:px-6">
       <h1 className="font-display text-2xl font-bold">Integrity events</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Every proctoring signal recorded, across everyone. Camera signals are probabilistic —
-        lighting, glasses and camera angle all cause false positives — so a flag is evidence to
-        weigh rather than a verdict. For one sitting in sequence, open that assessment's timeline.
+        Every proctoring signal, across everyone; a flag is evidence to weigh, not a verdict.
       </p>
 
       <div className="mt-6">

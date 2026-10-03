@@ -11,6 +11,7 @@ import { Command, CommandGroup, CommandInput, CommandItem, CommandList, CommandM
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Segmented } from "@/components/ui/segmented";
 import { Slider } from "@/components/ui/slider";
+import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import {
   addCaseGoal,
@@ -534,7 +535,15 @@ function GoalRows({
               >
                 <ArrowDown aria-hidden="true" />
               </RowButton>
-              <RowButton label={`Remove ${name}`} disabled={disabled} onClick={() => onChange(removeGoal(rows, row.key))}>
+              <RowButton
+                label={`Remove ${name}`}
+                disabled={disabled}
+                onClick={() => {
+                  const before = rows;
+                  onChange(removeGoal(rows, row.key));
+                  notify.undo(`Removed ${name}.`, { onUndo: () => onChange([...before]) });
+                }}
+              >
                 <X aria-hidden="true" />
               </RowButton>
             </div>

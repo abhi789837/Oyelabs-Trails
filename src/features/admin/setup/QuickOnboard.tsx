@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
 import { cn } from "@/lib/utils";
 import { GoalBox } from "./GoalBox";
-import { addSuggestedGoal, type GoalRow } from "./goals";
 import { goalsApi } from "./goalsApi";
+import { stateFromSuggestion, usernameFrom } from "./suggestion";
 import { initialSetupState, levelTarget, pickableSkills, toSaveRequest, withDepartmentDefaults, withGoals, type SetupState } from "./helpers";
 
 /**
@@ -21,38 +21,6 @@ import { initialSetupState, levelTarget, pickableSkills, toSaveRequest, withDepa
  * **Save & assign assessment** creates the account and issues the assessment. "Edit details" opens
  * the full Setup form with whatever is here.
  */
-
-/** "Priya Sharma" → "priya.sharma". */
-export function usernameFrom(name: string): string {
-  return name
-    .trim()
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, ".")
-    .replace(/^\.+|\.+$/g, "")
-    .slice(0, 32);
-}
-
-/** The setup a suggestion describes, as the Setup form's state. */
-export function stateFromSuggestion(suggestion: OnboardSuggestion, description: string, fallbackDepartment: string): SetupState {
-  const base = initialSetupState(null, suggestion.departmentId || fallbackDepartment);
-  const level = (suggestion.level ?? (suggestion.experienceBand ? levelFromExperience(suggestion.experienceBand) : null)) as Slider | null;
-  const rows = suggestion.goals.reduce<GoalRow[]>((acc, g) => addSuggestedGoal(acc, g), []);
-  return withGoals(
-    {
-      ...base,
-      trackId: suggestion.trackId,
-      stackIds: suggestion.stackIds,
-      experienceBand: suggestion.experienceBand,
-      level,
-      levelTouched: level !== null,
-      hoursPerWeek: suggestion.hoursPerWeek,
-      description,
-    },
-    rows,
-  );
-}
 
 export interface QuickOnboardProps {
   catalog: Catalog;
@@ -93,30 +61,46 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
   const update = (patch: Partial<SetupState>) => setState((s) => (s ? { ...s, ...patch } : s));
   const ids = { department: `${uid}-department`, goals: `${uid}-goals`, line: `${uid}-line` };
 
-  const suggest = async (event?: FormEvent) => {
-    event?.preventDefault();
-    if (suggesting || line.trim().length < 3) return;
+  /** Reads the line; returns the suggested setup (also shown), or null when Suggest failed. */
+  const fetchSuggestion = async (): Promise<SetupState | null> => {
     setSuggesting(true);
     setError(null);
     try {
       const { suggestion } = await goalsApi.suggest({ departmentId, description: line.trim(), ...(displayName.trim() ? { name: displayName.trim() } : {}) });
-      setState(stateFromSuggestion(suggestion, line.trim(), departmentId));
+      const next = stateFromSuggestion(suggestion, line.trim(), departmentId);
+      setState(next);
       setExtras(suggestion.extras);
       setSource(suggestion.source);
+      return next;
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "Suggest did not answer. Use Edit details to fill it in by hand.");
+      return null;
     } finally {
       setSuggesting(false);
     }
   };
 
+  const suggest = async (event?: FormEvent) => {
+    event?.preventDefault();
+    if (suggesting || line.trim().length < 3) return;
+    await fetchSuggestion();
+  };
+
+  /* Save & assign works straight from the line too (v4.3 P6): with nothing suggested yet, it
+     suggests first and saves what came back — one click for an admin who trusts the defaults. */
   const save = async () => {
-    if (!state || saving || !canSubmit) return;
+    if (saving || suggesting || !canSubmit) return;
+    let current = state;
+    if (!current) {
+      if (line.trim().length < 3) return;
+      current = await fetchSuggestion();
+      if (!current) return;
+    }
     setSaving(true);
     setError(null);
     setFields({});
     try {
-      await onSave(toSaveRequest(state, true));
+      await onSave(toSaveRequest(current, true));
     } catch (err) {
       setError(err instanceof Error && err.message ? err.message : "That didn't save. Try again.");
       const errFields = (err as { fields?: Record<string, string> }).fields;
@@ -327,7 +311,7 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="button" loading={saving} disabled={!state || !canSubmit || busy} onClick={() => void save()}>
+        <Button type="button" loading={saving} disabled={(!state && line.trim().length < 3) || !canSubmit || busy} onClick={() => void save()}>
           Save &amp; assign assessment
         </Button>
         <Button type="button" variant="outline" disabled={busy} onClick={editDetails}>

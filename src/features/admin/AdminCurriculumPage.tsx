@@ -204,7 +204,7 @@ export default function AdminCurriculumPage() {
       </div>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
         {rows.length} topics across {new Set(rows.map((r) => r.moduleId)).size} camps and {tracks.length} trails —
-        about {Math.round(minutes / 60)} hours of material. Opening one goes to the topic as a learner sees it.
+        about {Math.round(minutes / 60)} hours of material.
       </p>
 
       <VideoSettingsCard className="mt-4 max-w-2xl" />

@@ -110,9 +110,7 @@ export default function AdminCoursesPage() {
         <div>
           <h1 className="font-display text-2xl font-bold">Courses</h1>
           <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-            Written by you, not generated. For the things only this company knows — a process, a runbook, an
-            onboarding walkthrough. Lessons carry prose, a video and links; there is no quiz, so a learner marks each
-            one done themselves.
+            Your own courses for what only this company knows; learners mark each lesson done.
           </p>
         </div>
         <Button onClick={() => void handleCreate()}>

@@ -98,6 +98,7 @@ export function SetupTab({
           setReload((n) => n + 1);
           onSaved();
         }}
+        onDismissed={onSaved}
       />
       <SetupForm
         key={version}

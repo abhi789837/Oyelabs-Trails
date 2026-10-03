@@ -144,7 +144,7 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
         <ActionRow
           icon={<KeyRound className="h-4 w-4" aria-hidden="true" />}
           title="Reset password"
-          description="Generates a temporary password, shown to you once. Their current one stops working straight away and they choose a new one at the next sign-in."
+          description="A temporary password, shown once; the current one stops working."
           action={
             <Button
               variant="outline"
@@ -168,8 +168,8 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
           title={user.status === "active" ? "Disable account" : "Re-enable account"}
           description={
             user.status === "active"
-              ? "Signs them out everywhere and blocks sign-in. Their progress, plan and assessment history are kept."
-              : "Lets them sign in again with their existing password."
+              ? "Blocks sign-in; progress and history are kept."
+              : "They sign in again with their existing password."
           }
           action={
             <Button
@@ -186,7 +186,7 @@ export function AccountTab({ user, onChanged }: { user: UserSummary; onChanged: 
         <ActionRow
           icon={<LogOut className="h-4 w-4" aria-hidden="true" />}
           title="Revoke sessions"
-          description="Signs them out of every device without changing their password. Use this when a laptop goes missing."
+          description="Signs them out everywhere; the password stays."
           action={
             <Button
               variant="outline"

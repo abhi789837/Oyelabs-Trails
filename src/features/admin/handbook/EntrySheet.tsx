@@ -13,6 +13,7 @@ import {
 
 import { ApiRequestError } from "@/api/client";
 import { Field, FormAlert } from "@/components/form/Field";
+import { useConfirm } from "@/components/overlays";
 import { DetailSheet } from "@/components/overlays/DetailSheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -492,6 +493,7 @@ function SourcesField({ value, onChange, error }: { value: Source[]; onChange: (
 
 function TemplateFiles({ entry, onChanged }: { entry: HandbookEntry; onChanged: (entry: HandbookEntry) => void }) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const confirmDialog = useConfirm();
   const [busy, setBusy] = useState(false);
   const format = String((entry.data as { format?: string }).format ?? "docx");
 
@@ -514,6 +516,14 @@ function TemplateFiles({ entry, onChanged }: { entry: HandbookEntry; onChanged: 
   };
 
   const revert = async () => {
+    /* The uploaded file is deleted on the server, so there is nothing an Undo could put back. */
+    const ok = await confirmDialog({
+      title: `Remove your upload for ${String((entry.data as { name?: string }).name ?? entry.id)}?`,
+      body: "Learners get the generated file again. Your uploaded file is deleted.",
+      confirmLabel: "Remove upload",
+      variant: "destructive",
+    });
+    if (!ok) return;
     setBusy(true);
     try {
       const res = await handbookApi.revertUpload(entry.id);

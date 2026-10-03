@@ -48,11 +48,11 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 5.5 Tests + checkpoint + commit `feat(v4.3-p5)`
 
 ## Phase 6: Admin simplicity
-- [ ] 6.1 Learner page top bar: status, next action, one primary button
-- [ ] 6.2 Bulk onboarding by paste, with AI prefill in a review table
-- [ ] 6.3 Advanced sections, duplicate fields removed, help text kept to one line, search and filters, confirm and Undo
-- [ ] 6.4 Click counts before and after
-- [ ] 6.5 Checkpoint + commit `feat(v4.3-p6)`
+- [x] 6.1 Learner page top bar: status, next action, one primary button
+- [x] 6.2 Bulk onboarding by paste, with AI prefill in a review table
+- [x] 6.3 Advanced sections, duplicate fields removed, help text kept to one line, search and filters, confirm and Undo
+- [x] 6.4 Click counts before and after
+- [x] 6.5 Checkpoint + commit `feat(v4.3-p6)`
 
 ## Phase 7: Tests, deploy, report
 - [ ] 7.1 Unit and integration tests (the list in the brief)

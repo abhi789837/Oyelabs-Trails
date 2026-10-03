@@ -16,7 +16,7 @@ import {
 
 import { ApiRequestError } from "@/api/client";
 import { Field, FormAlert, TextField } from "@/components/form/Field";
-import { useConfirm, useFormDialog } from "@/components/overlays";
+import { useFormDialog } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +51,6 @@ export default function AdminDepartmentsPage() {
   const me = useCurrentUser();
   const isSuperadmin = me.role === "superadmin";
   const { catalog, error: loadError, refresh } = useCatalog();
-  const confirm = useConfirm();
   const formDialog = useFormDialog();
   const [searchParams, setSearchParams] = useSearchParams();
   const [error, setError] = useState<string | null>(null);
@@ -87,15 +86,17 @@ export default function AdminDepartmentsPage() {
   };
 
   /** Every mutation goes through here: one busy flag, one error line, and a catalog refresh after. */
-  const act = async (work: () => Promise<unknown>, success?: string) => {
+  const act = async (work: () => Promise<unknown>, success?: string): Promise<boolean> => {
     setBusy(true);
     setError(null);
     try {
       await work();
       await refresh();
       if (success) notify.success(success);
+      return true;
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "That didn't work.");
+      return false;
     } finally {
       setBusy(false);
     }
@@ -129,16 +130,13 @@ export default function AdminDepartmentsPage() {
     if (!existing) setParam("dept", saved.id);
   };
 
+  /* Archiving is reversible and nothing is lost, so it acts at once and offers Undo (v4.3 P6). */
   const archiveDepartment = async (target: Department) => {
-    const ok = await confirm({
-      title: target.archived ? `Restore ${target.name}?` : `Archive ${target.name}?`,
-      body: target.archived
-        ? "It comes back in every picker and filter."
-        : "It disappears from pickers and filters. People already in it keep their department, and you can restore it here.",
-      confirmLabel: target.archived ? "Restore" : "Archive",
-      variant: target.archived ? "default" : "destructive",
-    });
-    if (ok) void act(() => catalogApi.archiveDepartment(target.id, !target.archived), target.archived ? "Restored." : "Archived.");
+    if (target.archived) {
+      await act(() => catalogApi.archiveDepartment(target.id, false), "Restored.");
+      return;
+    }
+    if (await act(() => catalogApi.archiveDepartment(target.id, true))) notify.undo(`${target.name} archived.`, { onUndo: () => void act(() => catalogApi.archiveDepartment(target.id, false), "Restored.") });
   };
 
   const requestSkill = async () => {
@@ -356,7 +354,7 @@ interface PanelProps {
   department: Department;
   canEdit: boolean;
   busy: boolean;
-  act: (work: () => Promise<unknown>, success?: string) => Promise<void>;
+  act: (work: () => Promise<unknown>, success?: string) => Promise<boolean>;
   /** Re-reads the catalog after a dialog has saved. */
   refresh: () => Promise<void>;
   reorder: (table: CatalogTable, ids: readonly string[], index: number, delta: number) => void;
@@ -364,7 +362,6 @@ interface PanelProps {
 
 function TracksPanel({ catalog, department, canEdit, busy, act, refresh, reorder }: PanelProps) {
   const formDialog = useFormDialog();
-  const confirm = useConfirm();
   const [showArchived, setShowArchived] = useState(false);
   const all = catalog.tracks.filter((t) => t.departmentId === department.id);
   const rows = all.filter((t) => showArchived || !t.archived);
@@ -394,13 +391,8 @@ function TracksPanel({ catalog, department, canEdit, busy, act, refresh, reorder
   };
 
   const archive = async (track: JobTrack) => {
-    const ok = await confirm({
-      title: track.archived ? `Restore ${track.name}?` : `Archive ${track.name}?`,
-      body: track.archived ? undefined : "It stops being offered for new learners. Anyone already on it keeps it.",
-      confirmLabel: track.archived ? "Restore" : "Archive",
-      variant: track.archived ? "default" : "destructive",
-    });
-    if (ok) void act(() => catalogApi.archiveTrack(track.id, !track.archived));
+    const ok = await act(() => catalogApi.archiveTrack(track.id, !track.archived));
+    if (ok && !track.archived) notify.undo(`${track.name} archived.`, { onUndo: () => void act(() => catalogApi.archiveTrack(track.id, false), "Restored.") });
   };
 
   const ids = rows.map((t) => t.id);
@@ -440,7 +432,6 @@ function TracksPanel({ catalog, department, canEdit, busy, act, refresh, reorder
 
 function StacksPanel({ catalog, department, canEdit, busy, act, refresh, reorder }: PanelProps) {
   const formDialog = useFormDialog();
-  const confirm = useConfirm();
   const [showArchived, setShowArchived] = useState(false);
   const all = catalog.stacks.filter((s) => s.departmentId === department.id);
   const rows = all.filter((s) => showArchived || !s.archived);
@@ -502,13 +493,8 @@ function StacksPanel({ catalog, department, canEdit, busy, act, refresh, reorder
   };
 
   const archive = async (stack: StackOption) => {
-    const ok = await confirm({
-      title: stack.archived ? `Restore ${stack.name}?` : `Archive ${stack.name}?`,
-      body: stack.archived ? undefined : "It stops being offered in the Setup picker. Learners who already chose it keep it.",
-      confirmLabel: stack.archived ? "Restore" : "Archive",
-      variant: stack.archived ? "default" : "destructive",
-    });
-    if (ok) void act(() => catalogApi.archiveStack(stack.id, !stack.archived));
+    const ok = await act(() => catalogApi.archiveStack(stack.id, !stack.archived));
+    if (ok && !stack.archived) notify.undo(`${stack.name} archived.`, { onUndo: () => void act(() => catalogApi.archiveStack(stack.id, false), "Restored.") });
   };
 
   const ids = rows.map((s) => s.id);
@@ -554,7 +540,6 @@ function StacksPanel({ catalog, department, canEdit, busy, act, refresh, reorder
 
 function SkillsPanel({ catalog, department, canEdit, busy, act, refresh, reorder }: PanelProps) {
   const formDialog = useFormDialog();
-  const confirm = useConfirm();
   const [query, setQuery] = useState("");
   const [trackId, setTrackId] = useState<string | null>(null);
   const [status, setStatus] = useState<"active" | "archived">("active");
@@ -601,13 +586,9 @@ function SkillsPanel({ catalog, department, canEdit, busy, act, refresh, reorder
 
   const archive = async (skill: Skill) => {
     const restoring = skill.status === "archived";
-    const ok = await confirm({
-      title: restoring ? `Restore ${skill.name}?` : `Archive ${skill.name}?`,
-      body: restoring ? undefined : "It stops being offered in pickers. Learners who already target it keep it.",
-      confirmLabel: restoring ? "Restore" : "Archive",
-      variant: restoring ? "default" : "destructive",
-    });
-    if (ok) void act(() => catalogApi.setSkillStatus(skill.id, restoring ? "active" : "archived"));
+    const ok = await act(() => catalogApi.setSkillStatus(skill.id, restoring ? "active" : "archived"));
+    // Undo puts back an active skill; a pending one is re-requested from the picker instead.
+    if (ok && !restoring && skill.status === "active") notify.undo(`${skill.name} archived.`, { onUndo: () => void act(() => catalogApi.setSkillStatus(skill.id, "active"), "Restored.") });
   };
 
   return (

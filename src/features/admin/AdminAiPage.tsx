@@ -22,6 +22,7 @@ import { cn, formatTimestamp } from "@/lib/utils";
 import { AiCallsTable } from "./AiCallsTable";
 import { ModelRouting } from "./ModelRouting";
 import { ResearchSettings } from "./builder/ResearchSettings";
+import { InfoTip } from "./catalog/InfoTip";
 
 /**
  * Admin → AI connection (brief §8.1).
@@ -105,10 +106,7 @@ export default function AdminAiPage() {
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
           <div>
             <p className="font-medium">A development mock is standing in for a real provider</p>
-            <p className="mt-1 text-muted-foreground">
-              Generated assessments and plans are structurally valid and semantically meaningless. This never happens
-              in production, where a real credential is required.
-            </p>
+            <p className="mt-1 text-muted-foreground">Output is structurally valid but meaningless; production needs a real credential.</p>
           </div>
         </div>
       )}
@@ -116,8 +114,9 @@ export default function AdminAiPage() {
       {error && <div className="mt-6"><FormAlert>{error}</FormAlert></div>}
 
       <section className="mt-8" aria-labelledby="credentials-heading">
-        <h2 id="credentials-heading" className="text-lg font-semibold">
+        <h2 id="credentials-heading" className="flex items-center gap-1.5 text-lg font-semibold">
           Credentials
+          {status.credentials.length > 0 && <InfoTip label="About shared credentials">{SHARED_CREDENTIAL_NOTICE}</InfoTip>}
         </h2>
 
         {status.credentials.length === 0 ? (
@@ -126,7 +125,6 @@ export default function AdminAiPage() {
           </p>
         ) : (
           <>
-            <p className="mt-2 max-w-prose text-sm text-muted-foreground">{SHARED_CREDENTIAL_NOTICE}</p>
             <ul className="mt-4 space-y-3">
               {status.credentials.map((credential) => {
                 const active = status.settings.activeCredentialId === credential.id;
@@ -280,10 +278,7 @@ export default function AdminAiPage() {
             </table>
           </div>
         )}
-        <p className="mt-2 max-w-prose text-xs text-muted-foreground">
-          Counted from our own records. A shared credential cannot be attributed per person by the provider, so this
-          table is the only per-learner view of usage.
-        </p>
+        <p className="mt-2 max-w-prose text-xs text-muted-foreground">Counted from our own records.</p>
       </section>
 
       <ResearchSettings />
@@ -444,7 +439,7 @@ function AddCredentialForm({ onAdded }: { onAdded: () => Promise<void> }) {
           Save credential
         </Button>
         <p className="text-xs text-muted-foreground">
-          The credential is encrypted before it is stored and is never shown again — only its last four characters.
+          Stored encrypted; only its last four characters are shown again.
         </p>
       </form>
     </section>
@@ -485,13 +480,14 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
   };
 
   return (
-    <section className="mt-12" aria-labelledby="models-heading">
-      <h2 id="models-heading" className="text-lg font-semibold">
-        Legacy models (v3 assessments only)
-      </h2>
-      <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Only older v3 assessments read these; everything else follows Model routing above. Leave empty for the suggested model.
-      </p>
+    <details className="mt-12 rounded-md border" aria-labelledby="models-heading">
+      <summary className="cursor-pointer rounded-md px-4 py-2.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong">
+        <h2 id="models-heading" className="inline text-base font-semibold">
+          Advanced: legacy models and budget note
+        </h2>
+      </summary>
+      <div className="border-t px-4 pb-4">
+      <p className="mt-3 max-w-prose text-sm text-muted-foreground">Only v3 assessments read these; empty uses the suggested model.</p>
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div className="grid gap-4 sm:grid-cols-3">
@@ -514,7 +510,7 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
           label="Budget note"
           value={note}
           placeholder="e.g. $200/month cap set in the Console"
-          hint="A reminder for you. Nothing enforces it — set the real cap with your provider."
+          hint="A reminder only; set the real cap with your provider."
           onChange={(e) => setNote(e.target.value)}
         />
 
@@ -525,6 +521,7 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
           {saved && <span className="text-sm text-summit-strong">Saved</span>}
         </div>
       </form>
-    </section>
+      </div>
+    </details>
   );
 }

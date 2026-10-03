@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { StatusBadge, statusMeta } from "@/components/ui/status-badge";
 import { fadeUp, stagger, transition } from "@/lib/motion";
 import { cn, formatTimestamp } from "@/lib/utils";
+import { InfoTip } from "../catalog/InfoTip";
 
 interface IntegrityEvent {
   id: string;
@@ -99,10 +100,12 @@ export function IntegrityTimeline({ assessmentId }: { assessmentId: string }) {
         {data.summary.hard} hard · {data.summary.soft} soft · {data.events.length} recorded
       </p>
 
-      <p className="mt-4 max-w-prose text-sm text-muted-foreground">
-        A browser cannot block an OS screenshot, screen sharing, or a second device out of frame.
-        These are the traces it can see, and camera signals are probabilistic — lighting, glasses
-        and camera angle all cause false positives. Treat a flag as evidence to weigh, not a verdict.
+      <p className="mt-4 flex max-w-prose items-center gap-1 text-sm text-muted-foreground">
+        Treat a flag as evidence to weigh, not a verdict.
+        <InfoTip label="About integrity signals">
+          A browser cannot block an OS screenshot, screen sharing, or a second device out of frame. Camera signals are
+          probabilistic: lighting, glasses and camera angle all cause false positives.
+        </InfoTip>
       </p>
 
       {data.events.length === 0 ? (
@@ -287,8 +290,7 @@ function SnapshotLightbox({ event, onClose }: { event: IntegrityEvent | null; on
               className="mt-4 w-full rounded-md border"
             />
             <p className="mt-3 text-xs text-muted-foreground">
-              One frame, captured at the moment the signal fired. It is not continuous footage, and the camera signal
-              that produced it is probabilistic.
+              One frame, captured when the signal fired; not continuous footage.
             </p>
           </>
         )}

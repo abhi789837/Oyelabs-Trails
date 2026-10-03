@@ -196,8 +196,7 @@ export function AiCallsTable() {
         Every call
       </h2>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        One row per provider request. Prompts and responses are never stored, so what is here is the
-        metadata: which model, how many tokens, how long, and the redacted error if it failed.
+        One row per provider request: model, tokens, time and any redacted error (never the prompt).
       </p>
 
       <div className="mt-4">

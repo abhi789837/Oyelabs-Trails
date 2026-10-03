@@ -432,6 +432,18 @@ export function dismissSuggestion(db: Db, userId: string, suggestionId: string):
   db.update(schema.goalSuggestions).set({ status: "dismissed", decidedAt: now() }).where(eq(schema.goalSuggestions.id, suggestionId)).run();
 }
 
+/** Undo of a dismiss: a dismissed suggestion goes back to open. Anything else is left as it is. */
+export function restoreSuggestion(db: Db, userId: string, suggestionId: string): void {
+  const row = db
+    .select({ status: schema.goalSuggestions.status })
+    .from(schema.goalSuggestions)
+    .where(and(eq(schema.goalSuggestions.userId, userId), eq(schema.goalSuggestions.id, suggestionId)))
+    .get();
+  if (!row) throw notFound("No such suggestion.");
+  if (row.status !== "dismissed") return;
+  db.update(schema.goalSuggestions).set({ status: "open", decidedAt: null }).where(eq(schema.goalSuggestions.id, suggestionId)).run();
+}
+
 export function goalAsInput(goal: LearnerGoal): GoalInput {
   return {
     id: goal.id,

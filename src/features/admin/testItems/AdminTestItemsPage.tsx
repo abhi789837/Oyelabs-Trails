@@ -150,7 +150,7 @@ export default function AdminTestItemsPage() {
 
   const retire = async (row: TestItemRow) => {
     const done = await formDialog({
-      title: "Retire this item?",
+      title: `Retire item ${row.id}?`,
       description: "Retired items are not served. A replacement is written if the topic drops below its target.",
       submitLabel: "Retire item",
       destructive: true,
@@ -159,7 +159,7 @@ export default function AdminTestItemsPage() {
           <label htmlFor="tt-retire-reason" className="text-sm font-medium">
             Reason
           </label>
-          <input id="tt-retire-reason" name="reason" maxLength={300} disabled={pending} placeholder="e.g. Ambiguous wording" className="mt-1.5 h-9 w-full rounded-md border border-input bg-surface px-3 text-sm" />
+          <input id="tt-retire-reason" name="reason" maxLength={300} disabled={pending} placeholder="e.g. Ambiguous wording" className="mt-1.5 h-9 w-full rounded-md border border-input bg-surface px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong" />
         </div>
       ),
       onSubmit: async (form) => {
@@ -172,7 +172,11 @@ export default function AdminTestItemsPage() {
       },
     });
     if (done) {
-      notify.success("Retired.");
+      if (row.status === "active") {
+        notify.undo(`Retired ${row.id}.`, {
+          onUndo: () => void run(() => testItemsApi.restore(row.id), "Restored."),
+        });
+      } else notify.success("Retired.");
       await load();
     }
   };
@@ -312,8 +316,7 @@ export default function AdminTestItemsPage() {
           </p>
           <h1 className="text-2xl font-bold">Test items</h1>
           <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-            Each topic's test: the content file's questions and items written from the topic's own text. Only active items are served. Every item
-            must quote the passage it tests, be answerable from the topic, and not be answerable without it.
+            Each topic's test items; only active ones are served, and each quotes the passage it tests.
           </p>
         </div>
         {isSuperadmin && (

@@ -161,7 +161,17 @@ export default function AdminHandbookPage() {
     replace(result.entry);
     const confirmed = statusOf(result.entry) === "confirmed" && (!sheet.entry || statusOf(sheet.entry) !== "confirmed");
     const archivedChanged = sheet.entry && sheet.entry.archived !== result.entry.archived;
-    if (archivedChanged) notify.success(result.entry.archived ? "Archived. Learners no longer see it." : "Unarchived.");
+    if (archivedChanged && result.entry.archived) {
+      const archivedEntry = result.entry;
+      notify.undo(`${nameOf(archivedEntry)} archived. Learners no longer see it.`, {
+        onUndo: () => {
+          void handbookApi
+            .setArchived(archivedEntry.kind, archivedEntry.id, false)
+            .then((res) => replace(res.entry))
+            .catch((e: unknown) => notify.error(e instanceof ApiRequestError ? e.message : "Could not unarchive it."));
+        },
+      });
+    } else if (archivedChanged) notify.success("Unarchived.");
     else {
       const msg = savedMessage(result, confirmed);
       notify.success(msg.title, msg.description ? { description: msg.description } : undefined);
@@ -169,7 +179,7 @@ export default function AdminHandbookPage() {
     setSheet({ open: false, entry: null });
   };
 
-  const selectClass = "h-9 w-full rounded-md border border-input bg-surface px-2 text-sm";
+  const selectClass = "h-9 w-full rounded-md border border-input bg-surface px-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong";
   const hasCategory = kind === "term" || kind === "rule";
   const hasProjectType = kind !== "template";
   const label = KIND_LABELS[kind];
@@ -180,7 +190,7 @@ export default function AdminHandbookPage() {
         <div>
           <h1 className="text-2xl font-semibold">Handbook</h1>
           <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-            Oyelabs’ process terms, lifecycle stages, rules and templates. Courses, the glossary and assessment questions all read these, so a change here shows up everywhere.
+            Oyelabs’ process terms, stages, rules and templates; a change here shows up everywhere.
           </p>
         </div>
         <Button type="button" onClick={() => setSheet({ open: true, entry: null })}>

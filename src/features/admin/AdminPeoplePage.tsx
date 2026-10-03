@@ -141,10 +141,9 @@ export default function AdminPeoplePage() {
   /**
    * Moving an account between the three states.
    *
-   * Suspend and archive both sign the person out immediately, so both confirm; only suspend asks for
-   * the typed username, because from this table the rows look alike and suspending the wrong person
-   * locks them out of a machine they are working on right now. Archiving is reversible and sits under
-   * its own view, so a typed phrase there would be ceremony.
+   * Suspend confirms with the typed username, because from this table the rows look alike and
+   * suspending the wrong person locks them out of a machine they are working on right now. Archiving
+   * is fully reversible, so it acts at once and offers Undo instead of a dialog (v4.3 P6).
    *
    * Going back to `active` never confirms. Letting somebody in is not the dangerous direction.
    */
@@ -160,15 +159,6 @@ export default function AdminPeoplePage() {
         });
         if (!ok) return;
       }
-      if (next === "archived") {
-        const ok = await confirm({
-          title: `Remove ${user.displayName} from the programme?`,
-          body: "They are signed out and drop off this list, and their progress stops here. Nothing is deleted \u2014 you can find them under Archived and put them back at any point.",
-          confirmLabel: "Archive",
-        });
-        if (!ok) return;
-      }
-
       setBusyId(user.id);
       const previous = user.status;
       try {
@@ -369,7 +359,7 @@ export default function AdminPeoplePage() {
    * person skipped with the reason the server gave (yourself, the last super admin, not allowed).
    */
   const runBulk = useCallback(
-    async (targets: UserSummary[], action: BulkUserAction["action"], verb: string, confirmPhrase?: string) => {
+    async (targets: UserSummary[], action: BulkUserAction["action"], verb: string, confirmPhrase?: string): Promise<string[]> => {
       try {
         const { results } = await adminApi.bulkUsers({
           ids: targets.map((u) => u.id),
@@ -378,6 +368,7 @@ export default function AdminPeoplePage() {
         });
         const summary = summariseBulk(results, new Map(targets.map((u) => [u.id, u.displayName])), verb);
         notify[summary.tone](summary.message, summary.description ? { description: summary.description } : undefined);
+        return results.filter((r) => r.ok).map((r) => r.id);
       } catch (err) {
         notify.error(err instanceof ApiRequestError ? err.message : "That bulk action did not go through.");
         throw err;
@@ -469,13 +460,18 @@ export default function AdminPeoplePage() {
         run: async (rows: UserSummary[]): Promise<void> => {
           const targets = rows.filter((u) => !isStaff(u.role) && u.status !== "archived");
           if (targets.length === 0) nothing("Nothing to archive in that selection.");
-          const ok = await confirm({
-            title: `Remove ${targets.length} ${targets.length === 1 ? "person" : "people"} from the programme?`,
-            body: `${names(targets)} are signed out and drop off this list. Nothing is deleted — they move to Archived, and you can put them back at any point.`,
-            confirmLabel: `Archive ${targets.length}`,
-          });
-          if (!ok) throw new Error("cancelled");
-          await runBulk(targets, "archive", "Archived");
+          // Reversible: acts at once and offers Undo rather than a dialog.
+          const done = await runBulk(targets, "archive", "Archived");
+          if (done.length > 0) {
+            notify.undo(`${done.length} archived.`, {
+              onUndo: () => {
+                void adminApi
+                  .bulkUsers({ ids: done, action: "restore" })
+                  .then(() => load())
+                  .catch(() => setError("Could not put them back."));
+              },
+            });
+          }
         },
       },
       {

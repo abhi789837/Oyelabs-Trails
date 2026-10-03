@@ -20,6 +20,7 @@ import { GenerationLog } from "../GenerationLog";
 import { AdaptivePath, type AdaptiveStep } from "./AdaptivePath";
 import { describeIssued } from "../setup/issued";
 import { isV4Detail, useV4Details, V4Headline, V4Results } from "./V4Results";
+import { InfoTip } from "../catalog/InfoTip";
 
 /** One served item, as `/api/admin/assessments/:id/answers` returns it. */
 interface AnsweredItem {
@@ -189,7 +190,7 @@ export function AssessmentTab({
           <h2 className="text-lg font-semibold">Placement assessment</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             {assessments.length === 0
-              ? "None issued yet. Generating one reads the profile notes, so make sure they say what you know."
+              ? "None issued yet."
               : `${assessments.length} attempt${assessments.length === 1 ? "" : "s"}.`}
           </p>
         </div>
@@ -456,13 +457,14 @@ function AttemptAnswers({ assessmentId }: { assessmentId: string }) {
     <div className="space-y-8">
       {paths.length > 0 && (
         <section aria-labelledby={`path-${assessmentId}`}>
-          <h3 id={`path-${assessmentId}`} className="text-sm font-semibold">
+          <h3 id={`path-${assessmentId}`} className="flex items-center gap-1 text-sm font-semibold">
             The adaptive path
+            <InfoTip label="About the adaptive path">
+              A filled marker is a correct answer; a line that saws between two levels is an estimate the staircase kept
+              reversing on.
+            </InfoTip>
           </h3>
-          <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-            Each area's difficulty over the items it served. A filled marker is a correct answer; a
-            line that saws between two levels is an estimate the staircase kept reversing on.
-          </p>
+          <p className="mt-1 max-w-prose text-sm text-muted-foreground">Each area's difficulty over the items it served.</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {paths.map((path) => (
               <AdaptivePath key={path.area} area={path.area} steps={path.steps} />

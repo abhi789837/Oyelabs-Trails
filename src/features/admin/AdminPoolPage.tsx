@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
 import { ApprovalBanner, approvalNote } from "./ApprovalGate";
 import { GenerationLog } from "./GenerationLog";
+import { InfoTip } from "./catalog/InfoTip";
 
 /**
  * The one drop reason a person can author, mirrored from the server.
@@ -198,11 +199,11 @@ export default function AdminPoolPage() {
          * as the paper. It is not one, and saying so is cheaper than the confusion.
          */}
         <p className="mt-3 max-w-prose text-sm text-muted-foreground">
-          This is the <span className="font-medium text-foreground">pool</span>: everything the
-          generator wrote and the critic kept, which is what is <em>available</em> to serve — not a
-          fixed paper. Items are chosen adaptively as the learner answers, so they see a subset of
-          this. Each area climbs or drops in difficulty with their answers and stops once it has a
-          reading, so two people given this same pool are asked different questions.
+          Not a fixed paper: the learner is served an adaptive subset of this <span className="font-medium text-foreground">pool</span>.{" "}
+          <InfoTip label="About the pool">
+            Everything the generator wrote and the critic kept. Each area climbs or drops in difficulty with their answers and
+            stops once it has a reading, so two people given this pool are asked different questions.
+          </InfoTip>
           {servedSoFar > 0 && (
             <>
               {" "}

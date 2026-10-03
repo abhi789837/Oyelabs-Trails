@@ -18,7 +18,7 @@ import { skillGraphApi } from "./api";
 import { GraphView } from "./GraphView";
 import { SkillSelect } from "./SkillSelect";
 
-const selectClass = "h-10 rounded-md border border-input bg-surface px-3 text-sm";
+const selectClass = "h-10 rounded-md border border-input bg-surface px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong";
 const TYPE_LABEL: Record<SkillEdgeType, string> = { prerequisite: "prerequisite", recommended: "recommended" };
 /** Rows rendered before "Show all": Engineering has a few hundred edges. */
 const PAGE = 150;
@@ -44,6 +44,7 @@ export default function AdminSkillGraphPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<SkillEdgeType | "all">("all");
   const [showAll, setShowAll] = useState(false);
   const [depth, setDepth] = useState(2);
   const [draft, setDraft] = useState<{ from: string | null; to: string | null; type: SkillEdgeType }>({ from: null, to: null, type: "prerequisite" });
@@ -93,9 +94,11 @@ export default function AdminSkillGraphPage() {
   const edges = useMemo(() => graph?.edges ?? [], [graph]);
   const filtered = useMemo(() => {
     const q = normaliseSkillText(query);
-    const rows = q ? edges.filter((e) => normaliseSkillText(`${nameOf(e.from)} ${nameOf(e.to)}`).includes(q)) : edges;
+    const rows = edges.filter(
+      (e) => (typeFilter === "all" || e.type === typeFilter) && (!q || normaliseSkillText(`${nameOf(e.from)} ${nameOf(e.to)}`).includes(q)),
+    );
     return [...rows].sort((a, b) => nameOf(a.from).localeCompare(nameOf(b.from)) || nameOf(a.to).localeCompare(nameOf(b.to)));
-  }, [edges, query, nameOf]);
+  }, [edges, query, typeFilter, nameOf]);
   const shown = showAll ? filtered : filtered.slice(0, PAGE);
 
   const linked = useMemo(() => new Set(edges.flatMap((e) => [e.from, e.to])), [edges]);
@@ -154,7 +157,7 @@ export default function AdminSkillGraphPage() {
     <div className="px-4 py-8 sm:px-6">
       <h1 className="font-display text-2xl font-bold">Skill graph</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Which skills come before which: prerequisites order every learner's path, recommended links only suggest what's next.
+        Prerequisites order every learner's path; recommended links only suggest what's next.
         {!canEdit && " Only the superadmin can change them."}
       </p>
 
@@ -188,6 +191,16 @@ export default function AdminSkillGraphPage() {
           aria-label="Search links by skill"
           containerClassName="w-full sm:max-w-xs"
         />
+        <select
+          aria-label="Link type filter"
+          value={typeFilter}
+          onChange={(event) => setTypeFilter(event.target.value as SkillEdgeType | "all")}
+          className={selectClass}
+        >
+          <option value="all">All link types</option>
+          <option value="prerequisite">Prerequisites</option>
+          <option value="recommended">Recommended</option>
+        </select>
       </div>
 
       {error && (
@@ -238,7 +251,7 @@ export default function AdminSkillGraphPage() {
             )}
 
             {filtered.length === 0 ? (
-              <p className="mt-4 text-sm text-muted-foreground">{query ? "No link matches that search." : "This department has no links yet."}</p>
+              <p className="mt-4 text-sm text-muted-foreground">{query || typeFilter !== "all" ? "No link matches those filters." : "This department has no links yet."}</p>
             ) : (
               <ul className="mt-3 divide-y rounded-md border">
                 {shown.map((edge) => (
@@ -262,7 +275,7 @@ export default function AdminSkillGraphPage() {
                           aria-label={`Type of ${nameOf(edge.from)} → ${nameOf(edge.to)}`}
                           value={edge.type}
                           onChange={(event) => void setType(edge, event.target.value as SkillEdgeType)}
-                          className="h-8 rounded-md border border-input bg-surface px-2 font-mono text-xs"
+                          className="h-8 rounded-md border border-input bg-surface px-2 font-mono text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
                         >
                           <option value="prerequisite">prerequisite</option>
                           <option value="recommended">recommended</option>

@@ -253,9 +253,7 @@ export default function AdminGeneratedPage() {
         <div>
           <h1 className="font-display text-2xl font-bold">Generated courses</h1>
           <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-            Written by the AI for a gap no existing course covered. Each one was researched from
-            pages that were fetched and checked — nothing here cites a URL that did not resolve when
-            it was written.
+            Written by the AI for gaps no existing course covered, from sources checked at writing time.
           </p>
         </div>
         <Button variant="outline" onClick={() => void load()}>

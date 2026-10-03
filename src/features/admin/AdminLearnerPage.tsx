@@ -23,6 +23,7 @@ import { AccountTab } from "./learner/AccountTab";
 import { AssessmentTab } from "./learner/AssessmentTab";
 import { EvaluationTab } from "./learner/EvaluationTab";
 import { IntegrityTab } from "./learner/IntegrityTab";
+import { NextActionBar } from "./learner/NextActionBar";
 import { PathTab } from "./learner/PathTab";
 import { PlanTab } from "./learner/PlanTab";
 import { WeekTab } from "./learner/WeekTab";
@@ -82,6 +83,12 @@ export default function AdminLearnerPage() {
   const active: TabId = resolveTab(searchParams.get("tab"));
   const addSkill = searchParams.get("add");
   const [setupVersion, setSetupVersion] = useState(0);
+  /* v4.3 P6: bumped after anything changes, so the next-action bar re-reads; and the path/week
+     panels remount after the bar itself builds a path or publishes a week. */
+  const [actionVersion, setActionVersion] = useState(0);
+  const [pathVersion, setPathVersion] = useState(0);
+  const [weekVersion, setWeekVersion] = useState(0);
+  const bumpAction = useCallback(() => setActionVersion((v) => v + 1), []);
   const [visited, setVisited] = useState<Set<TabId>>(() => new Set<TabId>([active]));
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -164,7 +171,8 @@ export default function AdminLearnerPage() {
 
   const reloadDetail = useCallback(async () => {
     setDetail(await adminApi.getUser(userId));
-  }, [userId]);
+    bumpAction();
+  }, [userId, bumpAction]);
 
   const handleSetupSaved = useCallback(() => {
     setSetupVersion((v) => v + 1);
@@ -173,12 +181,36 @@ export default function AdminLearnerPage() {
 
   const reloadPlan = useCallback(async () => {
     setPlan(await api.get<PlanResponse>(`/api/admin/users/${userId}/plan`));
-  }, [userId]);
+    bumpAction();
+  }, [userId, bumpAction]);
 
   const reloadAssessments = useCallback(async () => {
     const result = await api.get<{ assessments: AssessmentSummary[] }>(`/api/admin/users/${userId}/assessments`);
     setAssessments(result.assessments);
-  }, [userId]);
+    bumpAction();
+  }, [userId, bumpAction]);
+
+  /** The bar's "open" buttons: switch tab, then bring the named section into view. */
+  const openFromBar = useCallback(
+    (tab: TabId, anchor?: string) => {
+      selectTab(tab);
+      if (!anchor) return;
+      const behavior: ScrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+      window.setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior, block: "start" }), 120);
+    },
+    [selectTab],
+  );
+
+  const handleBarChanged = useCallback(
+    (what: "account" | "assessments" | "path" | "week") => {
+      if (what === "account") void reloadDetail().catch(() => undefined);
+      if (what === "assessments") void reloadAssessments().catch(() => undefined);
+      if (what === "path") setPathVersion((v) => v + 1);
+      if (what === "week") setWeekVersion((v) => v + 1);
+      bumpAction();
+    },
+    [reloadDetail, reloadAssessments, bumpAction],
+  );
 
   const handleProfileSaved = useCallback(
     (profile: LearnerProfile) => setDetail((current) => (current ? { ...current, profile } : current)),
@@ -239,6 +271,8 @@ export default function AdminLearnerPage() {
           )}
         </div>
       </header>
+
+      <NextActionBar user={detail.user} refreshKey={`${actionVersion}:${active}`} onOpenTab={openFromBar} onChanged={handleBarChanged} />
 
       {error && (
         <div className="mt-6">
@@ -336,13 +370,13 @@ export default function AdminLearnerPage() {
                   displayName={detail.user.displayName}
                   onPromote={promote}
                   onOpenSetup={() => selectTab("setup")}
-                  refreshKey={setupVersion}
+                  refreshKey={setupVersion + pathVersion}
                 />
                 <section aria-labelledby="this-week-heading" className="border-t pt-8">
                   <h2 id="this-week-heading" className="mb-4 font-display text-lg font-semibold">
                     This week
                   </h2>
-                  <WeekTab userId={userId} displayName={detail.user.displayName} />
+                  <WeekTab key={weekVersion} userId={userId} displayName={detail.user.displayName} />
                 </section>
               </div>
             )}

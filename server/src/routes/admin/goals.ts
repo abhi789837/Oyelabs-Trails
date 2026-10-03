@@ -6,7 +6,7 @@ import { goalInterpretRequestSchema, onboardSuggestRequestSchema, saveGoalsReque
 import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { listOutcomes, searchOutcomes, toOutcomeOption } from "../../goals/outcomes";
-import { achieveGoal, addSuggestion, capstoneSummaries, dismissSuggestion, listGoals, listSuggestions, saveGoals } from "../../goals/repo";
+import { achieveGoal, addSuggestion, capstoneSummaries, dismissSuggestion, listGoals, listSuggestions, restoreSuggestion, saveGoals } from "../../goals/repo";
 import { interpretGoal, suggestOnboarding } from "../../goals/suggest";
 import { writeAudit } from "../../lib/audit";
 import { forbidden, notFound, parseOrThrow } from "../../lib/errors";
@@ -101,6 +101,15 @@ export async function registerAdminGoalRoutes(app: FastifyInstance): Promise<voi
     const { userId, id } = parseOrThrow(suggestionParams, request.params);
     loadLearner(userId, actor);
     dismissSuggestion(app.db, userId, id);
+    return { suggestions: listSuggestions(app.db, userId) };
+  });
+
+  /** v4.3 P6: Undo of a dismiss. */
+  app.post("/api/admin/users/:userId/goal-suggestions/:id/restore", async (request) => {
+    const actor = requireStaff(request);
+    const { userId, id } = parseOrThrow(suggestionParams, request.params);
+    loadLearner(userId, actor);
+    restoreSuggestion(app.db, userId, id);
     return { suggestions: listSuggestions(app.db, userId) };
   });
 }

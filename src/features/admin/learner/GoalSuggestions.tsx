@@ -14,7 +14,7 @@ const KIND_LABEL: Record<GoalSuggestion["kind"], string> = { "next-level": "next
  * v4.3 "Suggested next": next-level outcomes once a goal is achieved, and gaps the assessment found.
  * Nothing is added without the admin's click (unless they turned on auto-add in Advanced).
  */
-export function GoalSuggestions({ userId, onAdded }: { userId: string; onAdded: () => void }) {
+export function GoalSuggestions({ userId, onAdded, onDismissed }: { userId: string; onAdded: () => void; onDismissed?: () => void }) {
   const [suggestions, setSuggestions] = useState<GoalSuggestion[]>([]);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -40,6 +40,18 @@ export function GoalSuggestions({ userId, onAdded }: { userId: string; onAdded: 
       } else {
         const r = await goalsApi.dismissSuggestion(userId, s.id);
         setSuggestions(r.suggestions);
+        onDismissed?.();
+        notify.undo(`Dismissed ${s.title}.`, {
+          onUndo: () => {
+            void goalsApi
+              .restoreSuggestion(userId, s.id)
+              .then((res) => {
+                setSuggestions(res.suggestions);
+                onDismissed?.();
+              })
+              .catch(() => notify.error("Could not bring that suggestion back."));
+          },
+        });
       }
     } catch (err) {
       notify.error(err instanceof ApiRequestError ? err.message : "That didn't work. Try again.");

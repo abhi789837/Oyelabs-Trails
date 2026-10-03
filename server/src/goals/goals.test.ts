@@ -298,6 +298,21 @@ describe("suggestions", () => {
     expect(listSuggestions(ctx.db, learner.id).map((s) => s.id)).toEqual([first[1].id]);
   });
 
+  test("Undo of a dismiss (restore) puts the suggestion back as open; restoring an added one changes nothing", async () => {
+    const [a, b] = createSuggestions(ctx.db, learner.id, gapCandidates(ctx.db, learner.id, { skills: [weak("eng-docker", "Docker fundamentals", 1), weak("eng-sql", "SQL", 2)] }));
+    const url = (id: string, action: string) => `/api/admin/users/${learner.id}/goal-suggestions/${id}/${action}`;
+    await ctx.app.inject({ method: "POST", url: url(a.id, "dismiss"), ...as(admin) });
+    expect(listSuggestions(ctx.db, learner.id).map((s) => s.id)).toEqual([b.id]);
+    const res = await ctx.app.inject({ method: "POST", url: url(a.id, "restore"), ...as(admin) });
+    expect(res.statusCode).toBe(200);
+    expect((res.json().suggestions as { id: string }[]).map((s) => s.id).sort()).toEqual([a.id, b.id].sort());
+
+    await ctx.app.inject({ method: "POST", url: url(b.id, "add"), ...as(admin) });
+    await ctx.app.inject({ method: "POST", url: url(b.id, "restore"), ...as(admin) });
+    expect(listSuggestions(ctx.db, learner.id).map((s) => s.id)).toEqual([a.id]);
+    expect((await ctx.app.inject({ method: "POST", url: url("nope", "restore"), ...as(admin) })).statusCode).toBe(404);
+  });
+
   test("Add turns a suggestion into a goal and re-derives the priorities", async () => {
     const [s] = createSuggestions(ctx.db, learner.id, gapCandidates(ctx.db, learner.id, { skills: [weak("eng-docker", "Docker fundamentals", 1)] }));
     const res = await ctx.app.inject({ method: "POST", url: `/api/admin/users/${learner.id}/goal-suggestions/${s.id}/add`, ...as(admin) });

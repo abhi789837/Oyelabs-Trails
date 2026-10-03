@@ -200,8 +200,7 @@ export default function AdminAuditPage() {
     <div className="px-4 py-8 sm:px-6">
       <h1 className="font-display text-2xl font-bold">Audit log</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Every admin action, newest first. Entries record what changed rather than the new value, so
-        nothing here re-exposes a password or someone's notes.
+        Every admin action, newest first; passwords and notes are never recorded.
       </p>
 
       <div className="mt-6 flex flex-wrap gap-2">

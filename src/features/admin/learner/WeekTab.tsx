@@ -109,8 +109,7 @@ export function WeekTab({ userId, displayName }: { userId: string; displayName: 
             )}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Built from their priorities. Change the hours per week, the priorities or the skip list on the{" "}
-            <span className="font-medium">Setup</span> tab, then rebuild here.
+            Built from their goals; change hours or goals on <span className="font-medium">Setup</span>, then rebuild.
           </p>
         </div>
 
@@ -288,7 +287,7 @@ function WeekHistoryList({
     <section>
       <h3 className="font-display font-semibold">Past weeks</h3>
       <p className="mt-1 text-sm text-muted-foreground">
-        What {displayName} actually got through, week by week. A week that was rebuilt mid-week is not listed twice.
+        What {displayName} got through, week by week.
       </p>
       <ul className="mt-3 divide-y rounded-md border">
         {past.map((entry) => (

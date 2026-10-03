@@ -197,7 +197,7 @@ export default function AdminBankPage() {
             maxLength={300}
             disabled={pending}
             placeholder="e.g. Ambiguous wording"
-            className="mt-1.5 h-9 w-full rounded-md border border-input bg-surface px-3 text-sm"
+            className="mt-1.5 h-9 w-full rounded-md border border-input bg-surface px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
           />
         </div>
       ),
@@ -211,7 +211,16 @@ export default function AdminBankPage() {
       },
     });
     if (!done) return;
-    notify.success("Retired.");
+    if (row.status === "active") {
+      notify.undo(`Retired ${row.id}.`, {
+        onUndo: () => {
+          void bankApi
+            .setStatus(row.id, "active")
+            .then(() => load())
+            .catch((err: unknown) => notify.error(err instanceof ApiRequestError ? err.message : "Could not restore the item."));
+        },
+      });
+    } else notify.success("Retired.");
     await load();
   };
 
@@ -312,7 +321,7 @@ export default function AdminBankPage() {
     [skillName],
   );
 
-  const selectClass = "h-9 w-full rounded-md border border-input bg-surface px-2 text-sm";
+  const selectClass = "h-9 w-full rounded-md border border-input bg-surface px-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong";
 
   return (
     <div className="max-w-6xl px-4 py-8 sm:px-6">

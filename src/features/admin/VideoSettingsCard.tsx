@@ -60,17 +60,24 @@ export function VideoSettingsCard({ className }: { className?: string }) {
 
   return (
     <section aria-labelledby={`${id}-title`} className={className}>
-      <div className="rounded-md border bg-surface px-4 py-3">
-        <h2 id={`${id}-title`} className="text-sm font-semibold">
-          Topic videos
-        </h2>
+      {/* A site-wide setting changed rarely: collapsed, with the current choice in the summary. */}
+      <details className="rounded-md border bg-surface" open={(settings?.unplayable.length ?? 0) > 0 || undefined}>
+        <summary className="cursor-pointer rounded-md px-4 py-2.5 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong">
+          <h2 id={`${id}-title`} className="inline font-semibold">
+            Topic videos
+          </h2>
+          <span className="ml-2 text-muted-foreground">
+            {settings ? OPTIONS.find((o) => o.value === settings.lockMode)?.label : "…"}
+            {settings && settings.unplayable.length > 0 ? `, ${settings.unplayable.length} unplayable` : ""}
+          </span>
+        </summary>
+        <div className="border-t px-4 py-3">
         {loadError ? (
           <p className="mt-2 text-sm text-destructive">{loadError}</p>
         ) : (
           <>
-            <p id={`${id}-hint`} className="mt-1 max-w-prose text-xs text-muted-foreground">
-              A video counts as watched at 90% played; skipping ahead does not count. Topics a learner has already completed stay
-              completed either way.
+            <p id={`${id}-hint`} className="max-w-prose text-xs text-muted-foreground">
+              Watched means 90% played; completed topics stay completed.
             </p>
             <div className="mt-2">
               <Segmented
@@ -108,7 +115,8 @@ export function VideoSettingsCard({ className }: { className?: string }) {
             )}
           </>
         )}
-      </div>
+        </div>
+      </details>
     </section>
   );
 }

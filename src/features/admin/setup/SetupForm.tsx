@@ -108,6 +108,9 @@ export function SetupForm(props: SetupFormProps) {
   return <SetupFormInner {...props} catalog={catalog} />;
 }
 
+/** Server fields that live inside the Advanced disclosure: an error in any of them opens it. */
+const ADVANCED_FIELDS = ["advanced", "skip", "hoursPerWeek", "level"];
+
 function fieldError(fields: Record<string, string>, prefix: string): string | undefined {
   const key = Object.keys(fields).find((k) => k === prefix || k.startsWith(`${prefix}.`));
   return key ? fields[key] : undefined;
@@ -252,7 +255,7 @@ function SetupFormInner({
         {error && <FormAlert>{error}</FormAlert>}
         {leading?.(context)}
 
-        <Section title="Department and track" hint="Everything below is filtered to the department.">
+        <Section title="Department and track">
           <div className="space-y-4">
             <div>
               <p id={ids.department} className="mb-1.5 text-sm font-medium">
@@ -346,7 +349,7 @@ function SetupFormInner({
           />
         </Section>
 
-        <Section title="Experience and level">
+        <Section title="Experience">
           <div className="flex flex-wrap gap-x-10 gap-y-4">
             <div>
               <p id={ids.experience} className="mb-1.5 text-sm font-medium">
@@ -367,26 +370,6 @@ function SetupFormInner({
                 }
               />
               <FieldMessage error={fieldError(fields, "experienceBand")} />
-            </div>
-            <div>
-              <div className="mb-1.5 flex items-center gap-1">
-                <p id={ids.level} className="text-sm font-medium">
-                  Level
-                </p>
-                <InfoTip label="About level">
-                  1 is new to the work, 5 could teach it. It sets where the assessment opens, nothing more. Filled in
-                  from experience until you choose one.
-                </InfoTip>
-              </div>
-              <Segmented<`${SliderValue}`>
-                labelledBy={ids.level}
-                size="sm"
-                options={(["1", "2", "3", "4", "5"] as const).map((n) => ({ value: n, label: n }))}
-                value={state.level === null ? null : (String(state.level) as `${SliderValue}`)}
-                disabled={busy}
-                onChange={(n) => update({ level: Number(n) as SliderValue, levelTouched: true })}
-              />
-              <FieldMessage error={fieldError(fields, "level")} />
             </div>
           </div>
         </Section>
@@ -431,66 +414,93 @@ function SetupFormInner({
           </div>
         </Section>
 
-        <Section title="Don't include" hint="Never tested and never given a course." error={fieldError(fields, "skip")}>
-          <div className="space-y-3">
-            <SkillPicker
-              skills={skills}
-              track={trackRef}
-              selectedIds={state.skip}
-              otherIds={priorityIds}
-              otherLabel="priority"
-              triggerLabel="Add a skill to leave out"
-              disabled={busy}
-              onPick={(skill) => setState((s) => pickSkip(s, skill.id))}
-              onRequest={(query) => void requestSkill(query, "skip")}
-            />
-            {state.skip.length > 0 && (
-              <ul className="flex flex-wrap gap-1.5" aria-label="Left out">
-                {state.skip.map((id) => {
-                  const name = skillById.get(id)?.name ?? id;
-                  return (
-                    <li key={id}>
-                      <span className="inline-flex h-7 items-center gap-1 rounded-md border bg-surface-sunken/60 pl-2.5 pr-1 text-sm">
-                        {name}
-                        <button
-                          type="button"
-                          disabled={busy}
-                          onClick={() => update({ skip: state.skip.filter((s) => s !== id) })}
-                          className="inline-flex size-5 items-center justify-center rounded-sm text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-strong"
-                        >
-                          <X className="size-3.5" aria-hidden="true" />
-                          <span className="sr-only">Include {name} again</span>
-                        </button>
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
-        </Section>
-
-        <Field label="Hours per week" hint={hoursHint ?? "What their weekly plan is built to fit."} error={fieldError(fields, "hoursPerWeek")}>
-          {({ id, describedBy, invalid }) => (
-            <NumberInput
-              id={id}
-              aria-describedby={describedBy}
-              aria-invalid={invalid || undefined}
-              min={1}
-              max={60}
-              value={state.hoursPerWeek}
-              disabled={busy}
-              onChange={(hoursPerWeek) => update({ hoursPerWeek })}
-              containerClassName="w-32"
-            />
-          )}
-        </Field>
-
-        <details className="group rounded-md border" open={Object.keys(fields).some((k) => k.startsWith("advanced")) || undefined}>
+        <details
+          className="group rounded-md border"
+          open={Object.keys(fields).some((k) => ADVANCED_FIELDS.some((f) => k === f || k.startsWith(`${f}.`))) || undefined}
+        >
           <summary className="cursor-pointer rounded-md px-4 py-2.5 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong">
             Advanced settings
+            <span className="ml-2 font-normal text-muted-foreground">
+              {state.hoursPerWeek} h a week{state.skip.length > 0 ? `, ${state.skip.length} left out` : ""}
+            </span>
           </summary>
-          <div className="grid gap-5 border-t p-4 sm:grid-cols-2">
+          <div className="space-y-6 border-t p-4">
+            <Section title="Don't include" hint="Never tested and never given a course." error={fieldError(fields, "skip")}>
+              <div className="space-y-3">
+                <SkillPicker
+                  skills={skills}
+                  track={trackRef}
+                  selectedIds={state.skip}
+                  otherIds={priorityIds}
+                  otherLabel="priority"
+                  triggerLabel="Add a skill to leave out"
+                  disabled={busy}
+                  onPick={(skill) => setState((s) => pickSkip(s, skill.id))}
+                  onRequest={(query) => void requestSkill(query, "skip")}
+                />
+                {state.skip.length > 0 && (
+                  <ul className="flex flex-wrap gap-1.5" aria-label="Left out">
+                    {state.skip.map((id) => {
+                      const name = skillById.get(id)?.name ?? id;
+                      return (
+                        <li key={id}>
+                          <span className="inline-flex h-7 items-center gap-1 rounded-md border bg-surface-sunken/60 pl-2.5 pr-1 text-sm">
+                            {name}
+                            <button
+                              type="button"
+                              disabled={busy}
+                              onClick={() => update({ skip: state.skip.filter((s) => s !== id) })}
+                              className="inline-flex size-5 items-center justify-center rounded-sm text-muted-foreground hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-strong"
+                            >
+                              <X className="size-3.5" aria-hidden="true" />
+                              <span className="sr-only">Include {name} again</span>
+                            </button>
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            </Section>
+            <div className="flex flex-wrap items-start gap-x-10 gap-y-4">
+              <Field label="Hours per week" hint={hoursHint ?? "What their weekly plan is built to fit."} error={fieldError(fields, "hoursPerWeek")}>
+                {({ id, describedBy, invalid }) => (
+                  <NumberInput
+                    id={id}
+                    aria-describedby={describedBy}
+                    aria-invalid={invalid || undefined}
+                    min={1}
+                    max={60}
+                    value={state.hoursPerWeek}
+                    disabled={busy}
+                    onChange={(hoursPerWeek) => update({ hoursPerWeek })}
+                    containerClassName="w-32"
+                  />
+                )}
+              </Field>
+              <div>
+                <div className="mb-1.5 flex items-center gap-1">
+                  <p id={ids.level} className="text-sm font-medium">
+                    Level
+                  </p>
+                  <InfoTip label="About level">
+                    1 is new to the work, 5 could teach it. It sets where the assessment opens, nothing more. Filled in
+                    from experience until you choose one.
+                  </InfoTip>
+                </div>
+                <Segmented<`${SliderValue}`>
+                  labelledBy={ids.level}
+                  size="sm"
+                  options={(["1", "2", "3", "4", "5"] as const).map((n) => ({ value: n, label: n }))}
+                  value={state.level === null ? null : (String(state.level) as `${SliderValue}`)}
+                  disabled={busy}
+                  onChange={(n) => update({ level: Number(n) as SliderValue, levelTouched: true })}
+                />
+                <FieldMessage error={fieldError(fields, "level")} />
+              </div>
+            </div>
+          <div className="grid gap-5 sm:grid-cols-2">
             <CheckRow
               label="Weeks start on Monday"
               info="Off: a week starts the day it is planned. On: it starts on that week's Monday."
@@ -567,6 +577,7 @@ function SetupFormInner({
                 />
               )}
             </Field>
+          </div>
           </div>
         </details>
 

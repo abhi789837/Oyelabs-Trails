@@ -19,4 +19,5 @@ export const goalsApi = {
   addSuggestion: (userId: string, id: string) =>
     api.post<{ goal: LearnerGoal; goals: LearnerGoal[]; suggestions: GoalSuggestion[] }>(`/api/admin/users/${userId}/goal-suggestions/${id}/add`),
   dismissSuggestion: (userId: string, id: string) => api.post<{ suggestions: GoalSuggestion[] }>(`/api/admin/users/${userId}/goal-suggestions/${id}/dismiss`),
+  restoreSuggestion: (userId: string, id: string) => api.post<{ suggestions: GoalSuggestion[] }>(`/api/admin/users/${userId}/goal-suggestions/${id}/restore`),
 };

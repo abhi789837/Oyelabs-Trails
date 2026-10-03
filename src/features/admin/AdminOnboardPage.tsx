@@ -9,6 +9,7 @@ import { yearsFromBand, type SaveSetupRequest } from "@shared/setup";
 import { ApiRequestError } from "@/api/client";
 import { FormAlert, PasswordField, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
+import { Segmented } from "@/components/ui/segmented";
 import { useCurrentUser } from "@/features/auth/AuthProvider";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { notify } from "@/lib/toast";
@@ -18,6 +19,7 @@ import { useCatalog } from "./catalog/useCatalog";
 import { setupApi } from "./setup/api";
 import type { SetupState } from "./setup/helpers";
 import { describeIssued } from "./setup/issued";
+import { BulkOnboard } from "./setup/BulkOnboard";
 import { QuickOnboard } from "./setup/QuickOnboard";
 import { SetupForm, type SetupFormContext } from "./setup/SetupForm";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
@@ -37,6 +39,8 @@ import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
  * The username check runs against the roster the admin can already list, as a hint: the 409 on
  * submit is the real answer, and a dedicated "is this taken" endpoint would be a username oracle.
  */
+const NO_USERNAMES: ReadonlySet<string> = new Set();
+
 export default function AdminOnboardPage() {
   useDocumentTitle("Onboard a learner");
   const navigate = useNavigate();
@@ -55,8 +59,8 @@ export default function AdminOnboardPage() {
   /** The account from a submit whose setup save failed: retried without creating it again. */
   const [pendingUser, setPendingUser] = useState<UserSummary | null>(null);
   const [formKey, setFormKey] = useState(0);
-  /** v4.3: quick onboarding (the default) or the full Setup form ("Edit details"). */
-  const [mode, setMode] = useState<"quick" | "full">("quick");
+  /** v4.3: quick onboarding (the default), the full Setup form ("Edit details"), or bulk (P6). */
+  const [mode, setMode] = useState<"quick" | "full" | "bulk">("quick");
   const [seed, setSeed] = useState<{ state: SetupState; extras: SuggestedGoal[] } | null>(null);
   const { catalog, error: catalogError } = useCatalog();
 
@@ -248,10 +252,27 @@ export default function AdminOnboardPage() {
 
   return (
     <div className="max-w-6xl px-4 py-8 sm:px-6">
-      <h1 className="text-2xl font-bold">Onboard a learner</h1>
+      <h1 className="text-2xl font-bold">{mode === "bulk" ? "Onboard several learners" : "Onboard a learner"}</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        {mode === "quick" ? "One line about them, Suggest, then Save & assign." : "Creates the account and the setup their placement assessment is built from."}
+        {mode === "quick"
+          ? "One line about them, then Save & assign. Suggest first to review."
+          : mode === "bulk"
+            ? "Paste a list, Suggest all, review the table, then Create & assign all."
+            : "Creates the account and the setup their placement assessment is built from."}
       </p>
+      {mode !== "full" && role === "learner" && pendingUser === null && (
+        <Segmented
+          className="mt-4"
+          size="sm"
+          label="How many people"
+          options={[
+            { value: "quick", label: "One person" },
+            { value: "bulk", label: "Several people" },
+          ]}
+          value={mode}
+          onChange={(value) => setMode(value)}
+        />
+      )}
       {mode === "full" && pendingUser === null && (
         <Button
           type="button"
@@ -282,7 +303,22 @@ export default function AdminOnboardPage() {
       )}
 
       <div className="mt-8">
-        {mode === "quick" && role === "learner" ? (
+        {mode === "bulk" ? (
+          catalog ? (
+            <BulkOnboard
+              catalog={catalog}
+              taken={takenUsernames ?? NO_USERNAMES}
+              onCreated={(names) => setTakenUsernames((current) => (current ? new Set([...current, ...names.map((n) => n.toLowerCase())]) : current))}
+            />
+          ) : catalogError ? (
+            <FormAlert>{catalogError}</FormAlert>
+          ) : (
+            <p className="flex items-center gap-2 text-sm text-muted-foreground" role="status">
+              <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+              Loading departments and skills…
+            </p>
+          )
+        ) : mode === "quick" && role === "learner" ? (
           catalog ? (
             <QuickOnboard
               key={formKey}
