@@ -119,6 +119,11 @@ export interface PathStep {
   neededLevel: number;
   /** From the evaluation, or null when not measured. */
   mastery: number | null;
+  /**
+   * The scheduling rank it was placed with (rule 3a, as a slider value 1–5). Never increases along
+   * the path: anything that blocks a rank-5 skill inherits rank 5. The path builder bands parts on it.
+   */
+  rank: number;
 }
 
 export interface SkippedSkill {
@@ -376,7 +381,7 @@ export function orderPath(input: PathOrderInput): PathOrderResult {
     } else {
       reason = `${label(node.own)} goal ${goalName(id)}: you're at ${at} and it needs ${node.needed}/5.`;
     }
-    return { skillId: id, priority: label(node.labelValue), kind: node.kind, reason, blockedBy, neededLevel: node.needed, mastery: m };
+    return { skillId: id, priority: label(node.labelValue), kind: node.kind, reason, blockedBy, neededLevel: node.needed, mastery: m, rank: rank.get(id)! };
   });
 
   const missingLinks: MissingLink[] = scheduled
@@ -432,6 +437,7 @@ function continuation(
             blockedBy: needs.filter((n) => chosen.has(n)),
             neededLevel: t.goalLevel,
             mastery: Object.prototype.hasOwnProperty.call(input.mastery, id) ? input.mastery[id] : null,
+            rank: clampSlider(t.slider),
           });
         }
       }
@@ -473,4 +479,62 @@ export function expandGoalToSkills(goal: GoalForPath, edges: readonly SkillEdge[
     goalLevel: goal.goalLevel,
     ...(goal.label ? { goalLabel: goal.label } : {}),
   }));
+}
+
+/**
+ * Several goals as path targets, in the admin's goal order. Each goal is expanded with
+ * `expandGoalToSkills`; inside a goal the skills keep their learning order as a fraction of the
+ * goal's admin order (goal 1 → 1.000, 1.001, …). That is D2's "goal order, then skill order inside
+ * the goal", so two skills of one goal that no prerequisite edge orders (Node and databases in a
+ * Backend goal) still come in the order the goal lists them.
+ */
+export function goalsToTargets(goals: readonly GoalForPath[], edges: readonly SkillEdge[]): PathTarget[] {
+  return goals.flatMap((goal) =>
+    expandGoalToSkills(goal, edges).map((target, index) => ({ ...target, adminOrder: goal.adminOrder + Math.min(index, 999) / 1000 })),
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Mastery estimate (v4.3 Phase 2b)
+// ---------------------------------------------------------------------------
+
+export interface MasteryEstimate {
+  skillId: string;
+  level: number;
+  /** `measured` by the evaluation, or `inferred` from a measured skill that builds on it. */
+  source: "measured" | "inferred";
+}
+
+/** A measured skill at or above this implies its prerequisites (KST: a mastered skill's prerequisites are mastered). */
+export const INFER_FROM_LEVEL = 3;
+
+/**
+ * Mastery per skill, 0–5, from the evaluation's measured levels plus what they imply.
+ *
+ * - A measured level always wins.
+ * - An unmeasured skill that is a prerequisite (at any depth) of a skill measured at
+ *   `INFER_FROM_LEVEL` or above is inferred at `INFER_FROM_LEVEL`: someone who uses Node at 4/5 has a
+ *   working grasp of JavaScript. A low score implies nothing about the prerequisites, so they stay
+ *   unmeasured (and count as gaps on the path, D4).
+ */
+export function estimateMastery(measured: readonly { skillId: string; level: number | null }[], edges: readonly SkillEdge[]): { levels: Record<string, number>; estimates: MasteryEstimate[] } {
+  const levels: Record<string, number> = {};
+  const estimates: MasteryEstimate[] = [];
+  for (const m of measured) {
+    if (m.level == null || Object.prototype.hasOwnProperty.call(levels, m.skillId)) continue;
+    levels[m.skillId] = m.level;
+    estimates.push({ skillId: m.skillId, level: m.level, source: "measured" });
+  }
+  const prereq = edges.filter((e) => e.type === "prerequisite");
+  const inferred = new Set<string>();
+  for (const m of [...estimates].sort((a, b) => a.skillId.localeCompare(b.skillId))) {
+    if (m.level < INFER_FROM_LEVEL) continue;
+    for (const id of [...ancestorsClosure(prereq, [m.skillId])].sort()) {
+      if (Object.prototype.hasOwnProperty.call(levels, id) && !inferred.has(id)) continue;
+      levels[id] = INFER_FROM_LEVEL;
+      inferred.add(id);
+    }
+  }
+  for (const id of [...inferred].sort()) estimates.push({ skillId: id, level: levels[id], source: "inferred" });
+  return { levels, estimates };
 }

@@ -13,6 +13,7 @@ import { setupApi } from "../setup/api";
 import { describeIssued } from "../setup/issued";
 import { SetupForm } from "../setup/SetupForm";
 import { GoalSuggestions } from "./GoalSuggestions";
+import { LearnerGoals } from "./LearnerGoals";
 
 /**
  * The Setup tab: the one place a learner's department, track, priorities and settings are edited.
@@ -90,6 +91,7 @@ export function SetupTab({
 
   return (
     <div className="space-y-12">
+      <LearnerGoals userId={userId} refreshKey={reload + version} />
       <GoalSuggestions
         userId={userId}
         onAdded={() => {

@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/toast";
 import { builderApi } from "../builder/api";
 import { setupApi } from "../setup/api";
-import { PathByPriority } from "./PathByPriority";
+import { PathByPriority, PathInOrder } from "./PathByPriority";
 import { groupPath, pathCounts } from "./pathHelpers";
 import { ViewAsLearner } from "./ViewAsLearner";
 
@@ -131,6 +131,7 @@ export function PathTab({
             onPromote={onPromote}
             onOpenSetup={onOpenSetup}
           />
+          <PathInOrder path={path} />
         </>
       )}
 

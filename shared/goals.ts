@@ -189,6 +189,16 @@ export interface OutcomeOption {
   capstoneTitle: string;
 }
 
+/** v4.3: a goal's capstone as the admin's goal list shows it. */
+export interface CapstoneSummary {
+  title: string;
+  kind: "task" | "topic";
+  /** The task kind ("terminal", "roleplay"…), null for a topic capstone. */
+  taskKind: string | null;
+  /** Code cannot grade it (a role-play, a written answer, a form): the admin marks it achieved. */
+  manual: boolean;
+}
+
 /** What the learner sees of a goal: the outcome, whether it is achieved, and how to prove it. */
 export interface LearnerGoalView {
   id: string;

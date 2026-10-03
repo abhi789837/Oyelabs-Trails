@@ -1,4 +1,5 @@
-import type { ScoredGap } from "../../../shared/builder";
+import type { PartType, ScoredGap } from "../../../shared/builder";
+import type { PathStepKind } from "../../../shared/pathOrder";
 import type { Skill } from "../../../shared/catalog";
 import type { V4Result } from "../../../shared/assessmentV4";
 import type { DetectedGap } from "../../../shared/builder";
@@ -54,12 +55,18 @@ export function isTheorySkill(skill: Pick<Skill, "id" | "tags"> | null | undefin
 export interface PlannedItem {
   gap: ScoredGap;
   partNumber: number;
-  partType: "track" | "ai_dev" | "general";
+  partType: PartType;
   startLevel: StartLevel;
   targetSkill: string | null;
   skillId: string | null;
   /** What the assessment measured for this target (0-5), when it did. */
   assessedLevel?: number | null;
+  /** v4.3: what the goal path made of it (`goalPath.ts`). Absent on the v4.2 part orders. */
+  kind?: PathStepKind | "refresh" | "capstone";
+  /** v4.3: the path algorithm's one-line reason, stored as `path_items.reason` as is. */
+  reasonText?: string;
+  /** v4.3: a case goal's capstone, linked to `/goals/:goalId` instead of a course or module. */
+  capstone?: { goalId: string; title: string; topicId: string | null };
 }
 
 export interface V4PartsInput {

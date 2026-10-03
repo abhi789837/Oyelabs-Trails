@@ -2,6 +2,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import { newId } from "../lib/ids";
 
 import {
+  GOAL_ITEM_PREFIX,
   MATCH_CONFIDENCE_THRESHOLD,
   courseMatchSchema,
   gapAnalysisSchema,
@@ -33,6 +34,7 @@ import {
 } from "./repo";
 import { planParts } from "./parts";
 import { assertV4Order, gapsFromV4, isTheorySkill, orderV4Parts, type PlannedItem } from "./v4Parts";
+import { assertPathOrder, goalPathContext, planGoalPath } from "./goalPath";
 import type { V4Result } from "../../../shared/assessmentV4";
 import { getCatalog } from "../catalog/repo";
 import type { ContentStore } from "../content/store";
@@ -310,32 +312,60 @@ export async function runBuilder(
   const department = catalog.departments.find((d) => d.id === setup.departmentId);
   const track = catalog.tracks.find((t) => t.id === setup.trackId);
   const aiSkills = catalog.skills.filter((s) => s.isAiSkill && s.status === "active");
+  const refreshSkill = department
+    ? (catalog.skills.find((s) => s.status === "active" && s.departmentId === department.id && s.tags.includes("refresh") && !setup.skip.some((k) => k.skillId === s.id)) ?? null)
+    : null;
+
+  /* v4.3 (Phase 2c): the order comes from the learner's goals, the skill graph and the evaluation
+     (`shared/pathOrder.ts`, rules D4). Prerequisites from the graph replace the hard-coded
+     FOUNDATIONS refreshers of `priorityPath.ts`, which stay only for the fallback below. The v4.2
+     part order is kept for a learner with no goal or priority at all, where it still gives Part 1
+     "track foundations" and Part 2 AI, and for a department with no catalog. */
+  const goalCtx = department ? goalPathContext(db, input.userId, v4Result) : null;
+  const goalPlan =
+    goalCtx && goalCtx.targets.length > 0 ? planGoalPath(goalCtx, { gaps: scored, refreshSkill, assessmentFoundGaps: detected.length > 0 }) : null;
+  if (goalCtx && goalPlan) {
+    const problems = assertPathOrder(goalPlan.items, goalCtx.edges, goalPlan.order);
+    if (problems.length > 0) auditStep(db, { pathId, step: "parts", detail: { problems } });
+    auditStep(db, {
+      pathId,
+      step: "order",
+      detail: {
+        steps: goalPlan.order.steps.map((s) => ({ skillId: s.skillId, kind: s.kind, priority: s.priority, reason: s.reason })),
+        skipped: goalPlan.order.skipped,
+        missingLinks: goalPlan.order.missingLinks,
+        warnings: goalPlan.order.warnings,
+      },
+    });
+  }
+
+  /* v4 (D6) fallback: Part 1 "Strengthen your current role", Part 2 "AI-driven work for your role",
+     then the remaining priorities. */
   const defaultAiSkill =
     aiSkills.find((s) => s.stackIds.some((id) => setup.stackIds.includes(id))) ??
     aiSkills.find((s) => setup.trackId != null && s.trackIds.includes(setup.trackId)) ??
     aiSkills[0] ??
     null;
   const basicsNames = new Set((v4Result?.skills ?? []).filter((s) => s.group === "basics").map((s) => s.skillName.toLowerCase()));
-  const refreshSkill = department
-    ? (catalog.skills.find((s) => s.status === "active" && s.departmentId === department.id && s.tags.includes("refresh") && !setup.skip.some((k) => k.skillId === s.id)) ?? null)
-    : null;
-  const v4Items = department
-    ? orderV4Parts({
-        spine,
-        priorities: setup.priorities,
-        skills: skillsById,
-        trackId: setup.trackId,
-        trackName: track?.name ?? department.name,
-        departmentName: department.name,
-        stackIds: setup.stackIds,
-        ownTrackGaps: scored.filter((g) => !g.skipped && basicsNames.has(g.skill.toLowerCase())),
-        defaultAiSkill,
-        refreshSkill,
-        assessmentFoundGaps: detected.length > 0,
-        departmentId: department.id,
-      })
-    : null;
-  if (v4Items) {
+  const v4Items = goalPlan
+    ? goalPlan.items
+    : department
+      ? orderV4Parts({
+          spine,
+          priorities: setup.priorities,
+          skills: skillsById,
+          trackId: setup.trackId,
+          trackName: track?.name ?? department.name,
+          departmentName: department.name,
+          stackIds: setup.stackIds,
+          ownTrackGaps: scored.filter((g) => !g.skipped && basicsNames.has(g.skill.toLowerCase())),
+          defaultAiSkill,
+          refreshSkill,
+          assessmentFoundGaps: detected.length > 0,
+          departmentId: department.id,
+        })
+      : null;
+  if (v4Items && !goalPlan) {
     const problems = assertV4Order(v4Items, setup.priorities, {
       departmentId: department?.id,
       refreshSkillId: refreshSkill?.id ?? null,
@@ -380,8 +410,29 @@ export async function runBuilder(
     const gap = part.gap;
     const gapId = gapIds.get(gap.skill) ?? null;
     /* Short. The admin reads a list of targets, not a list of essays — the full evidence sits behind
-       an expander on the path tab, and a paragraph here just pushes the next target off the screen. */
-    const reason = shortReason(part, gap);
+       an expander on the path tab, and a paragraph here just pushes the next target off the screen.
+       v4.3: the goal path's own one-line reason, as the algorithm wrote it. */
+    const reason = part.reasonText ? part.reasonText.slice(0, 300) : shortReason(part, gap);
+
+    // v4.3: a case goal's capstone links to its page; a topic capstone must be in the library.
+    if (part.capstone) {
+      addPathItem(db, {
+        pathId,
+        courseId: null,
+        moduleId: `${GOAL_ITEM_PREFIX}${part.capstone.goalId}`,
+        skillId: null,
+        gapId: null,
+        position: position++,
+        source: "unlock",
+        reason,
+        partNumber: part.partNumber,
+        partType: part.partType,
+        targetSkill: part.targetSkill,
+        startLevel: null,
+      });
+      if (part.capstone.topicId && deps.content?.topicIndex.has(part.capstone.topicId)) ensureInPlan(db, deps.content, input.userId, [part.capstone.topicId]);
+      continue;
+    }
 
     setPathStatus(db, pathId, { status: "researching" });
     progress(`Looking for a course on ${gap.skill}`);

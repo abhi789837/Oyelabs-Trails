@@ -267,6 +267,8 @@ async function openOnboarding(admin: Page, spec: OnboardSpec, username: string):
   await admin.getByLabel(/^username/i).fill(username);
   await admin.getByLabel(/^full name/i).fill(`E2E v4.1 ${spec.department}`);
   await admin.getByRole("radiogroup", { name: "Department" }).getByRole("radio", { name: spec.department, exact: true }).click();
+  // v4.3: onboarding opens on quick onboarding; "Edit details" opens the full Setup form this script drives.
+  await admin.getByRole("button", { name: "Edit details" }).click();
   await admin.getByRole("radiogroup", { name: "Track" }).getByRole("radio", { name: spec.track }).click();
   await admin.getByRole("button", { name: /Choose (stacks|tools)/ }).click();
   await admin.getByRole("option", { name: spec.stack, exact: true }).click();
@@ -713,7 +715,10 @@ async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Chec
     const part1 = path.filter((i) => i.partNumber === 1);
     c.ok(part1.some((i) => sameSkill(i.targetSkill, "Client update meetings & presenting") || sameSkill(i.targetSkill, "Client management")), "client meetings/management is in Part 1");
     c.ok(part1.some((i) => sameSkill(i.targetSkill, "Excel for PMs")), "Excel for PMs is in Part 1");
-    const theory = path.map((i, index) => ({ i, index })).filter(({ i }) => sameSkill(i.targetSkill, "PM foundations and advanced theory") || /PM foundations and advanced theory/i.test(i.courseTitle));
+    /* v4.3 (D7): a critically weak core skill the admin did not set as a goal (Jira, Kanban: the
+       sheet's learner skips them) is a must-have early on the path, and its lessons live in the PM
+       foundations module; so the theory course is found by what it serves, not by the module title. */
+    const theory = path.map((i, index) => ({ i, index })).filter(({ i }) => sameSkill(i.targetSkill, "PM foundations and advanced theory"));
     c.ok(theory.length > 0, "PM foundations and advanced theory is on the path");
     if (theory.length) {
       const first = theory[0].index;
@@ -743,8 +748,9 @@ async function runEng(admin: Page, stamp: string): Promise<Checks> {
   try {
     step("onboard on /admin/onboard");
     await openOnboarding(admin, spec, username);
-    await admin.getByRole("button", { name: "Add a priority skill" }).click();
-    const search = admin.getByPlaceholder("Search by name, alias or tag");
+    // v4.3: priorities are goals now; a skill picked in the goal box is a skill goal at Medium.
+    await admin.getByRole("button", { name: "What should they be able to do?", exact: true }).click();
+    const search = admin.getByPlaceholder(/merge conflict/);
     for (const skill of ENG_SKILLS) {
       await search.fill(skill.name);
       const option = admin.getByRole("option").filter({ hasText: new RegExp(`^${escapeRegex(skill.name)}`) }).first();

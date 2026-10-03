@@ -1,5 +1,5 @@
 import type { ScoredGap } from "../../../../shared/builder";
-import type { LearnerPriorities } from "../../../../shared/builder";
+import type { LearnerPriorities, PartType } from "../../../../shared/builder";
 import type { PlanLane, PlanItemSource } from "../../../../shared/weeklyPlan";
 import type { TopicLevelValue } from "../../../../shared/enums";
 
@@ -46,7 +46,14 @@ export interface Candidate {
    * a curriculum topic, and for a course that is not on the path.
    */
   partNumber?: number;
-  partType?: "track" | "ai_dev" | "general";
+  partType?: PartType;
+  /**
+   * v4.3: where its path item sits on the path (`path_items.position`), so the week can follow the
+   * path order exactly, and the skill that item serves (`path_items.target_skill`). A missing-link
+   * refresher (`partType` "prerequisite") names the skill it unblocks there.
+   */
+  pathPosition?: number;
+  pathTarget?: string | null;
 }
 
 /** An item the previous week did not finish. */

@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import type { ItemResponseV4 } from "../../../shared/assessmentV4";
+import type { ItemResponseV4, V4Result } from "../../../shared/assessmentV4";
 import { trackBasics } from "../../../shared/catalog";
 import { combineFormScore, gradeFormChecks, wordCount, type FormTask, type WriteTask } from "../../../shared/tasks";
 import type { AiService } from "../ai/service";
@@ -14,7 +14,8 @@ import { notify, staffIds } from "../lib/notify";
 import { publishPlan } from "../plans/repo";
 import type { PolyglotDeps } from "../sandbox/polyglot";
 import { getSetup } from "../setup/repo";
-import { refreshSuggestions } from "../goals/repo";
+import { createSuggestions, refreshSuggestions } from "../goals/repo";
+import { analyseEvaluation, progressionCandidates, type EvaluationAnalysis } from "../builder/goalPath";
 import { gradeRoleplayItem } from "../roleplay/engine";
 import { computeResult, finalizeItems, itemsOf, keyOf } from "./v4";
 
@@ -222,10 +223,19 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
   // 3. The report, by skill.
   const setup = getSetup(db, assessment.userId);
   const sheet = itemsOf(db, assessmentId);
-  const result = {
-    ...computeResult(sheet, setup.priorities),
+  const base = computeResult(sheet, setup.priorities);
+  // v4.3 (Phase 2b): mastery per skill and the missing links, by the path-order rules (D4).
+  let analysis: EvaluationAnalysis | null = null;
+  try {
+    analysis = analyseEvaluation(db, assessment.userId, base);
+  } catch (error) {
+    deps.log?.(`path analysis failed for ${assessment.userId}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+  const result: V4Result = {
+    ...base,
     finishedSeconds: assessment.startedAt ? Math.round(((assessment.submittedAt ?? now()) - assessment.startedAt) / 1000) : null,
     estSeconds: sheet.reduce((s, i) => s + (i.estSeconds ?? 0), 0) || null,
+    ...(analysis ? { mastery: analysis.mastery, missingLinks: analysis.missingLinks, metGoals: analysis.metGoals } : {}),
   };
   db.insert(schema.evaluations).values({ id: newId(), assessmentId, result, model, createdAt: now() }).run();
 
@@ -259,6 +269,9 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
   // v4.3: newly found gaps (and next steps after achieved goals) as "Suggested next" for the admin.
   try {
     refreshSuggestions(db, assessment.userId, result);
+    // v4.3 (Phase 2d): no missing link and every goal met: the path continues the progression, and
+    // the admin is offered the next goals.
+    if (analysis?.noGap) createSuggestions(db, assessment.userId, progressionCandidates(analysis, new Map(catalogNames(db, setup.departmentId))));
   } catch (error) {
     deps.log?.(`goal suggestions failed for ${assessment.userId}: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -282,4 +295,8 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
     });
   }
   deps.log?.(`assessment ${assessmentId} (v4) evaluated: ${result.rawScore}% raw, ${result.skills.length} skills`);
+}
+
+function catalogNames(db: Db, departmentId: string): [string, string][] {
+  return getCatalog(db, { departmentId, includeArchived: true }).skills.map((s) => [s.id, s.name]);
 }

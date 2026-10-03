@@ -157,6 +157,44 @@ export interface V4Result {
   /** v4.1: "Finished in 31:40 (est. 29:00)". Seconds; null when not known. */
   finishedSeconds?: number | null;
   estSeconds?: number | null;
+  /**
+   * v4.3: mastery per skill (0–5), measured or inferred from a measured skill that builds on it
+   * (`estimateMastery` in shared/pathOrder.ts). Absent on results stored before v4.3.
+   */
+  mastery?: MasteryView[];
+  /** v4.3: prerequisites below the level the learner's goals need (D4). Absent before v4.3. */
+  missingLinks?: MissingLinkView[];
+  /** v4.3: goal skills already at the level their goal needs, so the path skips them. */
+  metGoals?: MetGoalView[];
+}
+
+export interface MasteryView {
+  skillId: string;
+  skillName: string;
+  level: number;
+  source: "measured" | "inferred";
+}
+
+/** "async JS 1/5 → needed 3/5 for Backend". */
+export interface MissingLinkView {
+  skillId: string;
+  skillName: string;
+  /** Null when the evaluation did not measure it (it counts as 0). */
+  mastery: number | null;
+  neededLevel: number;
+  /** The goal it is mainly needed for, as the admin named it. */
+  forGoal: string;
+  /** Names of the path skills it blocks, in path order. */
+  blocks: string[];
+}
+
+export interface MetGoalView {
+  skillId: string;
+  skillName: string;
+  mastery: number;
+  neededLevel: number;
+  /** Below 5/5: an advanced course is still on offer. */
+  optionalAdvanced: boolean;
 }
 
 /** Level 0–5 from a difficulty-weighted score: roughly "the hardest band you can reliably do". */

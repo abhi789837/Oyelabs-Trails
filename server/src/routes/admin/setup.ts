@@ -2,9 +2,9 @@ import { eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
-import { trackBasics } from "../../../../shared/catalog";
-import { planAssessmentMix, saveSetupRequestSchema, setupSchema, sortPriorities, type LearnerSetup } from "../../../../shared/setup";
+import { saveSetupRequestSchema, setupSchema, sortPriorities, type LearnerSetup } from "../../../../shared/setup";
 import { understandSetup } from "../../assessment/personalise/understand";
+import { blueprintMix } from "../../assessment/personalise/blueprint";
 import { issueAssessment } from "../../assessment/issue";
 import { requireStaff, staffOnly } from "../../auth/guards";
 import { getCatalog } from "../../catalog/repo";
@@ -18,9 +18,8 @@ const userParams = z.object({ userId: z.string().min(1).max(64) });
 
 /** The assessment the Setup screen promises in its summary card, from the same function the assembler uses. */
 export function previewMix(db: Db, setup: LearnerSetup) {
-  const catalog = getCatalog(db, { departmentId: setup.departmentId });
-  const basics = trackBasics(catalog, setup.departmentId, setup.trackId, setup.stackIds).map((s) => ({ skillId: s.id, skillName: s.name, slider: 0 }));
-  return planAssessmentMix(setup.priorities, basics);
+  // v4.3: the goal blueprint (goals, prerequisite probes, core skills), as the generator plans it.
+  return blueprintMix(db, getCatalog(db, { departmentId: setup.departmentId }), setup);
 }
 
 /**

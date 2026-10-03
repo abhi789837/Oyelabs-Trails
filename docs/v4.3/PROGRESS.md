@@ -14,18 +14,18 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 1.4 Quick onboarding screen (default on `/admin/onboard`); full Setup as "Edit details"
 - [x] 1.5 The "What should they be able to do?" box on Setup and quick onboarding (skill, case, text chips + slider)
 - [x] 1.6 Suggestions: at onboarding (+ Add), and "Suggested next" after the assessment and weekly (Add / Dismiss, auto-add toggle off by default)
-- [ ] 1.7 Goals drive the assessment (outcome tasks), course capstones and goal achievement — capstones + achievement done; assessment and path integration in 2.3–2.5
-- [ ] 1.8 Checkpoint + commit `feat(v4.3-p1)`
+- [x] 1.7 Goals drive the assessment (outcome tasks), course capstones and goal achievement
+- [x] 1.8 Checkpoint + commit `feat(v4.3-p1)`
 
 ## Phase 2: Missing links and proper progression
 - [x] 2.0 Research note (prerequisite graphs, progressions)
 - [x] 2.1 `skill_edges` table + seeded graph for every department + acyclic validation
 - [x] 2.2 Admin skill-graph page (list editor + read-only graph)
-- [ ] 2.3 Assessment blueprint covers goals + their immediate prerequisites + core role skills; output mastery 0–5 + missing links
-- [ ] 2.4 Priority-aware topological path order with must-have boosts, tie-breaks, skipping mastered skills, and a reason per step
-- [ ] 2.5 No-gap continuation; the weekly plan takes the next items in order (Do it now / Must know)
-- [ ] 2.6 Worked-example test and property tests
-- [ ] 2.7 Checkpoint + commit `feat(v4.3-p2)`
+- [x] 2.3 Assessment blueprint covers goals + their immediate prerequisites + core role skills; output mastery 0–5 + missing links
+- [x] 2.4 Priority-aware topological path order with must-have boosts, tie-breaks, skipping mastered skills, and a reason per step
+- [x] 2.5 No-gap continuation; the weekly plan takes the next items in order (Do it now / Must know)
+- [x] 2.6 Worked-example test and property tests
+- [x] 2.7 Checkpoint + commit `feat(v4.3-p2)`
 
 ## Phase 3: Continuous trail
 - [x] 3.1 Trail geometry module (waypoints from item order, Catmull-Rom → Bézier, desktop curve and mobile zig-zag)
@@ -41,11 +41,11 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 4.4 Tests + checkpoint + commit `feat(v4.3-p4)`
 
 ## Phase 5: Fair course tests
-- [ ] 5.1 Grounding source per topic (summary, sections, notes, transcript status)
-- [ ] 5.2 Generator (Sonnet 5.5) with citations and objectives + quality gates (relevance, answerability, not trivial, distractors, code, timing)
-- [ ] 5.3 Item calibration (pass rates, flags, auto-retire) + admin Course → Test items
-- [ ] 5.4 Background re-check of existing tests (retire + regenerate, counts)
-- [ ] 5.5 Tests + checkpoint + commit `feat(v4.3-p5)`
+- [x] 5.1 Grounding source per topic (summary, sections, notes, transcript status)
+- [x] 5.2 Generator (Sonnet 5.5) with citations and objectives + quality gates (relevance, answerability, not trivial, distractors, code, timing)
+- [x] 5.3 Item calibration (pass rates, flags, auto-retire) + admin Course → Test items
+- [x] 5.4 Background re-check job built (budget-capped, resumable); NOT yet run against real AI — Needs Abhishek
+- [x] 5.5 Tests + checkpoint + commit `feat(v4.3-p5)`
 
 ## Phase 6: Admin simplicity
 - [ ] 6.1 Learner page top bar: status, next action, one primary button

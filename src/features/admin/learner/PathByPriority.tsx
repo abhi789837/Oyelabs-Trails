@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronDown, CircleAlert, Plus, RotateCw } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import type { LearningPathView, PathItemView, SkillGapView } from "@shared/builder";
+import { PART_LABELS, type LearningPathView, type PathItemView, type SkillGapView } from "@shared/builder";
 import { SLIDER_LABELS, type Slider } from "@shared/setup";
 
 import { Badge } from "@/components/ui/badge";
@@ -245,6 +245,20 @@ function NoCourse({
 /** One course, its state, and its reason. Never more than a line and a half. */
 function CourseLine({ item, busy, compact }: { item: PathItemView; busy: boolean; compact?: boolean }) {
   const state = courseState(item, busy);
+  // v4.3: a goal's capstone: achieved once the learner passes it (or an admin marks it on Setup).
+  if (item.goalId) {
+    return (
+      <>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className={cn("font-medium", compact && "text-sm")}>{item.courseTitle}</span>
+          <Badge variant={item.goalAchieved ? "success" : "outline"} className="text-[11px]">
+            {item.goalAchieved ? "Goal achieved" : "Not passed yet"}
+          </Badge>
+        </div>
+        {item.reason && <p className="mt-1 text-sm text-muted-foreground">{truncateWords(item.reason)}</p>}
+      </>
+    );
+  }
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
@@ -338,6 +352,56 @@ function AlsoSuggested({ suggestions, onPromote }: { suggestions: readonly Skill
             </li>
           ))}
         </ul>
+      )}
+    </section>
+  );
+}
+
+/**
+ * v4.3: the path in the order the learner walks it, one line per step with the algorithm's reason.
+ * The rows above group by priority; this is where a missing link or a boosted must-have shows up
+ * in its place between them.
+ */
+export function PathInOrder({ path }: { path: LearningPathView | null }) {
+  const [open, setOpen] = useState(false);
+  const items = [...(path?.items ?? [])].sort((a, b) => (a.partNumber ?? 0) - (b.partNumber ?? 0) || a.position - b.position);
+  if (items.length === 0) return null;
+  const listId = "path-in-order";
+  return (
+    <section className="rounded-md border" aria-label="The path in order">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={listId}
+        className="flex w-full items-center gap-2 rounded-md px-4 py-3 text-left text-sm font-medium hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+      >
+        <ChevronDown className={cn("size-4 transition-transform motion-reduce:transition-none", open && "rotate-180")} aria-hidden="true" />
+        In the order they walk it ({items.length} step{items.length === 1 ? "" : "s"})
+      </button>
+      {open && (
+        <ol id={listId} className="divide-y border-t">
+          {items.map((item, index) => (
+            <li key={item.id} className="flex gap-3 px-4 py-2.5">
+              <span className="w-6 shrink-0 pt-0.5 text-right font-mono text-[11px] text-muted-foreground tabular">{index + 1}</span>
+              <div className="min-w-0 flex-1">
+                <p className="flex flex-wrap items-center gap-2 text-sm">
+                  <span className="font-medium">{item.courseTitle}</span>
+                  <span className="font-mono text-[10px] text-muted-foreground">
+                    Part {item.partNumber ?? 1}
+                    {item.partType ? ` · ${PART_LABELS[item.partType]}` : ""}
+                  </span>
+                  {item.goalId && (
+                    <Badge variant={item.goalAchieved ? "success" : "outline"} className="text-[10px]">
+                      {item.goalAchieved ? "Goal achieved" : "Not passed yet"}
+                    </Badge>
+                  )}
+                </p>
+                {item.reason && <p className="mt-0.5 text-xs text-muted-foreground">{item.reason}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
       )}
     </section>
   );

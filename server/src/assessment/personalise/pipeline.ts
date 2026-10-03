@@ -3,9 +3,10 @@ import { z } from "zod";
 
 import { bankItemSchema, codingSpecSchema, mcqSpecSchema, type BankItem } from "../../../../shared/bank";
 import type { Catalog } from "../../../../shared/catalog";
-import { REUSE_RATIO, type Personalisation, type Slot, type Understanding } from "../../../../shared/personalise";
+import { outcomeTaskVariant, REUSE_RATIO, type Personalisation, type Slot, type Understanding } from "../../../../shared/personalise";
 import { estimateSeconds, sizeProblems, SIZE_LIMITS, SLOT_FLOOR_SEC, TOTAL_MAX_SEC, TOTAL_MIN_SEC, type TimingConstants } from "../../../../shared/timing";
-import { taskSchema } from "../../../../shared/tasks";
+import { checkTask, taskSchema } from "../../../../shared/tasks";
+import { getOutcome } from "../../goals/outcomes";
 import { AiBudgetPausedError } from "../../ai/router";
 import type { AiService } from "../../ai/service";
 import { activeItems, citedRefs, seenItemIds, toColumns } from "../../bank/repo";
@@ -143,6 +144,13 @@ Handbook grounding (slots with "grounded": true, and any item about a process or
 - roleplay (subtype "roleplay"): task {kind "roleplay", prompt <= 25 words, scenarioId and personaId
   exactly as the slot gives them, maxTurns ${ASSESSMENT_ROLEPLAY_TURNS.min}-${ASSESSMENT_ROLEPLAY_TURNS.max}, brief <= 30 words (what to achieve), 2-4 rubric
   {label,points 1-3,description}, followUp false}. Keep it inside the slot's seconds (~25 s a reply).
+- outcome slots (with "outcome"): the item tests the practical goal itself as a task of the same kind
+  as outcome.model (its capstone, shortened). Write a new situation in the person's context (other
+  names, files and values), not a copy, and keep it inside the slot's seconds. terminal: {kind
+  "terminal", title, prompt, cwd, intro (what the terminal shows first), files (<= 3, e.g. a file with
+  conflict markers), steps 1-4 {id, goal, accept: 1-6 JS regex sources tested against the command
+  with whitespace collapsed, output}, fileChecks [{path, mustContain, mustNotContain}], explanation};
+  an empty answer must not pass.
 Only the field for the slot's type is non-null. Return {"items":[...]} for the slots given.`;
 
 /** v4.2: what a slot carries for handbook grounding: its suggested refs and role-play scenario. */
@@ -152,7 +160,13 @@ interface SlotGrounding {
   roleplay: { scenarioId: string; personaId: string } | null;
 }
 
-function slotLine(slot: Slot, language: string | null, grounding?: SlotGrounding) {
+/** v4.3: what an outcome slot carries: its case and the capstone, shortened, as the model. */
+export interface OutcomeModel {
+  title: string;
+  model: Record<string, unknown>;
+}
+
+function slotLine(slot: Slot, language: string | null, grounding?: SlotGrounding, outcome?: OutcomeModel) {
   return {
     slot: slot.index,
     skill: slot.skillName,
@@ -165,7 +179,40 @@ function slotLine(slot: Slot, language: string | null, grounding?: SlotGrounding
     ...(grounding?.grounded ? { grounded: true } : {}),
     ...(grounding?.refs.length ? { refs: grounding.refs } : {}),
     ...(grounding?.roleplay ? grounding.roleplay : {}),
+    ...(outcome ? { outcome: { caseId: slot.outcomeCaseId, title: outcome.title, model: outcome.model } } : {}),
   };
+}
+
+/** v4.3: the case and shortened capstone behind every outcome slot of a sheet. */
+export function outcomeModels(db: Db, slots: readonly Slot[]): Map<string, OutcomeModel> {
+  const out = new Map<string, OutcomeModel>();
+  for (const slot of slots) {
+    if (!slot.outcomeCaseId || out.has(slot.outcomeCaseId)) continue;
+    const outcome = getOutcome(db, slot.outcomeCaseId);
+    if (outcome?.capstone.kind === "task") out.set(slot.outcomeCaseId, { title: outcome.title, model: outcomeTaskVariant(outcome.capstone.task) });
+  }
+  return out;
+}
+
+/**
+ * v4.3: the fallback for an outcome slot nothing else filled: the case's capstone, shortened. A
+ * case goal is always tested as a task, with or without a model. Not stored in the bank.
+ */
+export function outcomeFallbackItem(slot: Slot, outcome: OutcomeModel, departmentId: string): BankItem | null {
+  const prompt = String(outcome.model.prompt ?? outcome.title);
+  const parsed = bankItemSchema.safeParse({
+    id: `outcome-${slot.outcomeCaseId}-${slot.index}`.toLowerCase().replace(/[^a-z0-9-]+/g, "-").slice(0, 90),
+    departmentId,
+    skillId: slot.skillId,
+    type: "task",
+    difficulty: Math.min(5, Math.max(1, slot.difficulty)),
+    estMinutes: Math.max(0.5, Math.min(6, slot.targetSec / 60)),
+    prompt,
+    task: outcome.model,
+    tags: ["outcome"],
+  });
+  if (!parsed.success || !parsed.data.task || checkTask(parsed.data.task).length > 0) return null;
+  return parsed.data;
 }
 
 type SkillLookup = ReadonlyMap<string, Catalog["skills"][number]>;
@@ -180,13 +227,15 @@ function groundingFor(slot: Slot, skills: SkillLookup, index: HandbookIndex): Sl
 }
 
 /** The user message of one generation call: the context, the slots and (when needed) the handbook. */
-function generationUser(context: unknown, group: readonly Slot[], skills: SkillLookup, index: HandbookIndex) {
+function generationUser(context: unknown, group: readonly Slot[], skills: SkillLookup, index: HandbookIndex, outcomes: ReadonlyMap<string, OutcomeModel> = new Map()) {
   const groundings = group.map((s) => groundingFor(s, skills, index));
   const refs = mergePicks(groundings.map((g) => g.refs));
   return JSON.stringify({
     context,
     ...(refs.length ? { handbook: refs.map((ref) => compactEntry(index.get(ref)!)) } : {}),
-    slots: group.map((s, i) => slotLine(s, skills.get(s.skillId)?.language ?? null, { ...groundings[i], refs: groundings[i].refs.filter((r) => refs.includes(r)) })),
+    slots: group.map((s, i) =>
+      slotLine(s, skills.get(s.skillId)?.language ?? null, { ...groundings[i], refs: groundings[i].refs.filter((r) => refs.includes(r)) }, s.outcomeCaseId ? outcomes.get(s.outcomeCaseId) : undefined),
+    ),
   });
 }
 
@@ -250,6 +299,7 @@ async function validateCandidate(
   grounding?: { index: HandbookIndex; processSkill: boolean },
 ): Promise<string[]> {
   const problems = [...sizeProblems(item)];
+  if (slot.outcomeCaseId && (item.task as { kind?: string } | null)?.kind !== slot.subtype) problems.push(`the outcome task must be a ${slot.subtype} task`);
   if (grounding) {
     problems.push(...groundingProblems({ skillId: slot.skillId, processSkill: grounding.processSkill, refs: item.handbookRefs ?? [], index: grounding.index, task: item.task, facts: candidate.facts }));
   }
@@ -348,6 +398,7 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
 
   const understanding = await understand(deps, userId, { assessmentId });
   const slots = understanding.slots;
+  const outcomes = outcomeModels(db, slots);
   const seen = seenItemIds(db, userId);
   const pool = activeItems(db, setup.departmentId).filter((i) => !seen.has(i.id) && !setup.skip.some((s) => s.skillId === i.skillId));
   const used = new Set<string>();
@@ -371,7 +422,9 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
 
   // 1. Reuse: the best-fitting bank items, up to the level's share, strongest matches first.
   const reuseCap = Math.round(slots.length * REUSE_RATIO[level]);
+  // An outcome slot is never filled from the bank here: it follows its case's capstone.
   const ranked = slots
+    .filter((slot) => !slot.outcomeCaseId)
     .map((slot) => {
       const item = bestFor(slot, pool, new Set(), understanding.themes, constants);
       return { slot, item, score: item ? (fitScore(slot, item, understanding.themes, constants) ?? 0) : -1 };
@@ -405,7 +458,7 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
           purpose: "item_generate",
           task: "item_generate",
           system: GENERATE_SYSTEM,
-          user: generationUser(contextOf(profile, understanding.themes), group, skillsById, handbook),
+          user: generationUser(contextOf(profile, understanding.themes), group, skillsById, handbook, outcomes),
           schema: generatedSchema,
           schemaName: "assessment_items",
           meta: { subjectUserId: userId, assessmentId },
@@ -468,9 +521,17 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
     if (report.fallbackReason) break;
   }
 
-  // 5. Whatever is still open comes from the bank (relaxing limits only as a last resort).
+  // 5. Whatever is still open comes from the bank (relaxing limits only as a last resort). An
+  //    outcome slot takes its case's shortened capstone first, so the goal is still tested as a task.
   for (const slot of slots) {
     if (chosen.has(slot.index)) continue;
+    const model = slot.outcomeCaseId ? outcomes.get(slot.outcomeCaseId) : undefined;
+    const fromCapstone = model ? outcomeFallbackItem(slot, model, setup.departmentId) : null;
+    if (fromCapstone) {
+      chosen.set(slot.index, { item: fromCapstone, origin: "fallback", bankItemId: null });
+      report.fromBankAfterFailures += 1;
+      continue;
+    }
     let item = bestFor(slot, pool, used, understanding.themes, constants) ?? bestFor(slot, pool, used, understanding.themes, constants, true);
     let filler = false;
     if (!item) {
@@ -531,7 +592,7 @@ export async function generateOne(deps: PersonaliseDeps, assessmentId: string, u
     purpose: "item_generate",
     task: "item_generate",
     system: GENERATE_SYSTEM,
-    user: generationUser(contextOf(profile, understanding.themes), [slot], skillsById, handbook),
+    user: generationUser(contextOf(profile, understanding.themes), [slot], skillsById, handbook, outcomeModels(deps.db, [slot])),
     schema: generatedSchema,
     schemaName: "assessment_items",
     maxOutputTokens: 1500,

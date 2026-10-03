@@ -564,17 +564,21 @@ describe("skill matching", () => {
   });
 });
 
-describe("the learning path's first two parts", () => {
-  test("fill the red lane before any detected gap", () => {
-    /* Part 1 strengthens the track they work in every day and Part 2 is building with AI in their
-       own stack. Everything else on the path is a specific gap standing on those two, so putting
-       them first is the order the path is in rather than a weighting applied on top of it. */
+describe("the learning path, in path order (v4.3)", () => {
+  /* The path is the decision about what comes first (goals, the skill graph, the evaluation). Parts
+     are priority bands along it: 1 Critical/High, 2 Medium, 3 Low. The week takes the next path
+     lessons that fit; Do it now holds the top ones, Must know the missing-link refreshers attached to
+     them, Medium and Low the rest by band. These replace the v4.2 rule "Parts 1 and 2 (track, then
+     AI) fill the red lane", which the goal path no longer produces. */
+  const onPath = (title: string, key: string, partNumber: number, pathPosition: number, extra: Partial<Candidate> = {}) =>
+    candidate({ title, key, order: 1_000_000 + pathPosition, partNumber, partType: "general", pathPosition, pathTarget: title, lessonId: key, courseId: `c-${key}`, ...extra });
+
+  test("Part 1 fills the red lane before any detected gap", () => {
     const candidates = [
-      candidate({ title: "Backend foundations lesson", key: "p1", order: 1_000_000, partNumber: 1, partType: "track", lessonId: "p1", courseId: "c1" }),
-      candidate({ title: "Prompting for Laravel", key: "p2", order: 1_000_001, partNumber: 2, partType: "ai_dev", lessonId: "p2", courseId: "c2" }),
+      onPath("Backend foundations lesson", "p1", 1, 0, { partType: "track" }),
+      onPath("Prompting for Laravel", "p2", 2, 1, { partType: "ai_dev" }),
       candidate({ title: "Kubernetes Pods", key: "k8s", order: 5, haystack: "kubernetes pods" }),
     ];
-
     const draft = buildWeek(
       input({
         candidates,
@@ -582,26 +586,71 @@ describe("the learning path's first two parts", () => {
         gaps: [gap({ skill: "Kubernetes" })],
       }),
     );
-
-    expect(draft.lanes.doNow.map(itemKey).slice(0, 2)).toEqual(["p1", "p2"]);
+    expect(draft.lanes.doNow.map(itemKey)[0]).toBe("p1");
+    // Part 2 is Medium: a path item, but not red.
+    expect(lane(draft, "p2")).toBe("medium");
   });
 
-  test("are ordered part 1 before part 2", () => {
+  test("follows the path's own order, not the trail's", () => {
     const candidates = [
-      candidate({ title: "AI lesson", key: "p2", order: 1_000_000, partNumber: 2, partType: "ai_dev", lessonId: "p2", courseId: "c2" }),
-      candidate({ title: "Track lesson", key: "p1", order: 1_000_001, partNumber: 1, partType: "track", lessonId: "p1", courseId: "c1" }),
+      onPath("Second step", "s2", 1, 1, { order: 3 }),
+      onPath("First step", "s1", 1, 0, { order: 9 }),
     ];
     const draft = buildWeek(input({ candidates }));
-    expect(draft.lanes.doNow.map(itemKey)).toEqual(["p1", "p2"]);
+    expect(draft.lanes.doNow.map(itemKey)).toEqual(["s1", "s2"]);
   });
 
-  test("part 3 and beyond are not forced into the red lane", () => {
-    // Those are ordinary gaps and take their turn with everything else.
+  test("with no Part 1 in the week, the first items still open it in red; the rest go by band", () => {
+    const candidates = [onPath("Medium one", "m1", 2, 0), onPath("Medium two", "m2", 2, 1), onPath("Medium three", "m3", 2, 2), onPath("Low one", "l1", 3, 3)];
+    const draft = buildWeek(input({ candidates }));
+    expect(draft.lanes.doNow.map(itemKey)).toEqual(["m1", "m2"]);
+    expect(lane(draft, "m3")).toBe("medium");
+    expect(lane(draft, "l1")).toBe("low");
+  });
+
+  test("Do it now holds at most four items; further Part 1 lessons wait in Medium", () => {
+    const candidates = Array.from({ length: 6 }, (_, i) => onPath(`High ${i}`, `h${i}`, 1, i, { minutes: 20 }));
+    const draft = buildWeek(input({ candidates }));
+    expect(draft.lanes.doNow.map(itemKey)).toEqual(["h0", "h1", "h2", "h3"]);
+    expect(lane(draft, "h4")).toBe("medium");
+  });
+
+  test("Must know holds the missing-link refreshers, and the item they unblock depends on them", () => {
     const candidates = [
-      candidate({ title: "Later part lesson", key: "p3", order: 1_000_000, partNumber: 3, partType: "general", lessonId: "p3", courseId: "c3" }),
+      onPath("Git basics", "git", 1, 0),
+      onPath("Promises refresher", "async-1", 1, 1, { partType: "prerequisite", pathTarget: "Node.js runtime", minutes: 25 }),
+      onPath("Async/await refresher", "async-2", 1, 2, { partType: "prerequisite", pathTarget: "Node.js runtime", minutes: 25 }),
+      onPath("Node.js runtime", "node", 1, 3, { pathTarget: "Node.js runtime" }),
     ];
     const draft = buildWeek(input({ candidates }));
-    expect(draft.lanes.doNow.map(itemKey)).not.toContain("p3");
+    expect(draft.lanes.doNow.map(itemKey)).toEqual(["git", "node"]);
+    expect(draft.lanes.mustKnow.map(itemKey)).toEqual(["async-1", "async-2"]);
+    const node = draft.lanes.doNow.find((i) => itemKey(i) === "node")!;
+    expect(node.dependsOn).toEqual(["async-1", "async-2"]);
+    expect(draft.lanes.mustKnow.every((i) => i.source === "prerequisite")).toBe(true);
+    // enforce keeps all of it: the dependencies point at Must know.
+    const { draft: enforced } = enforce({ draft, candidates, priorities: EMPTY_PRIORITIES });
+    expect(enforced.lanes.doNow.find((i) => itemKey(i) === "node")!.dependsOn).toEqual(["async-1", "async-2"]);
+  });
+
+  test("a missing link whose skill is not in this week, or too long to be a checklist item, goes by band", () => {
+    const candidates = [
+      onPath("Long refresher", "long", 1, 0, { partType: "prerequisite", pathTarget: "Express", minutes: 90 }),
+      onPath("Orphan refresher", "orphan", 2, 1, { partType: "prerequisite", pathTarget: "Not this week" }),
+      onPath("Express", "express", 1, 2, { pathTarget: "Express" }),
+    ];
+    const draft = buildWeek(input({ candidates }));
+    expect(lane(draft, "long")).toBe("medium");
+    expect(lane(draft, "orphan")).toBe("medium");
+    expect(draft.lanes.mustKnow.map(itemKey)).not.toContain("long");
+  });
+
+  test("the week stops at the budget; what does not fit is next week's", () => {
+    const candidates = Array.from({ length: 30 }, (_, i) => onPath(`Step ${i}`, `s${i}`, 1, i, { minutes: 60 }));
+    const draft = buildWeek(input({ candidates, budgetMinutes: 600 }));
+    expect(draftMinutes(draft.lanes)).toBeLessThanOrEqual(budgetCeiling(600));
+    expect(keys(draft)).toContain("s0");
+    expect(keys(draft)).not.toContain("s29");
   });
 
   test("a long part 1 cannot swallow the whole week", () => {

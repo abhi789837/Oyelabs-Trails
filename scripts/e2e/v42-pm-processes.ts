@@ -73,6 +73,8 @@ const PM_DEFAULTS: { name: string; slider: number }[] = [
 ];
 
 const LIFECYCLE = ["Custom project lifecycle", "White-label project lifecycle"];
+/** v4.3: graph prerequisites of the lifecycle courses (server/src/catalog/seed/edges.ts). */
+const LIFECYCLE_PREREQS = ["The SDLC in an agency"];
 const TERMS = "Project terminology mastery";
 const MEETINGS = "Handling every client meeting";
 
@@ -255,6 +257,8 @@ async function openOnboarding(admin: Page, username: string): Promise<void> {
   await admin.getByLabel(/^username/i).fill(username);
   await admin.getByLabel(/^full name/i).fill("E2E v4.2 Project Management");
   await admin.getByRole("radiogroup", { name: "Department" }).getByRole("radio", { name: "Project Management", exact: true }).click();
+  // v4.3: onboarding opens on quick onboarding; "Edit details" opens the full Setup form this script drives.
+  await admin.getByRole("button", { name: "Edit details" }).click();
   await admin.getByRole("radiogroup", { name: "Track" }).getByRole("radio", { name: /^Agile Delivery PM/ }).click();
   await admin.getByRole("button", { name: /Choose (stacks|tools)/ }).click();
   await admin.getByRole("option", { name: "Jira", exact: true }).click();
@@ -724,7 +728,13 @@ async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Chec
     const refreshAt = pathItems.findIndex((i) => /Improving your existing PM skills/i.test(`${i.courseTitle} ${i.targetSkill ?? ""}`) && !LIFECYCLE.some((n) => sameSkill(i.targetSkill, n)));
     if (refreshAt >= 0) c.ok(refreshAt === 0, `the diagnostic refresh opens the path (at ${refreshAt})`);
     else c.note("no diagnostic refresh on this path (the assessment found no gaps for it)");
-    const part1 = pathItems.filter((i) => i.partNumber === 1 && i.targetSkill);
+    /* v4.3 (D4, D7): the skill graph makes the agency SDLC a prerequisite of both lifecycle courses,
+       and a path never schedules a skill before its prerequisites, so when the SDLC is needed it comes
+       right before them. The process order is checked on the rest of Part 1. */
+    const part1 = pathItems.filter((i) => i.partNumber === 1 && i.targetSkill && !LIFECYCLE_PREREQS.some((n) => sameSkill(i.targetSkill, n)));
+    const prereqAt = pathItems.findIndex((i) => LIFECYCLE_PREREQS.some((n) => sameSkill(i.targetSkill, n)));
+    const firstLifecycleAt = pathItems.findIndex((i) => LIFECYCLE.some((n) => sameSkill(i.targetSkill, n)));
+    if (prereqAt >= 0) c.ok(prereqAt < firstLifecycleAt, `the lifecycle courses' prerequisite comes before them (${prereqAt} < ${firstLifecycleAt})`);
     const firstOf = (pred: (name: string) => boolean) => part1.findIndex((i) => pred(i.targetSkill!));
     const lifecycleAt = firstOf((n) => part1Rank(n) === 0);
     const termsAt = firstOf((n) => part1Rank(n) === 1);

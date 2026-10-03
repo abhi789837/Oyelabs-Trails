@@ -27,7 +27,7 @@ export const REUSE_RATIO: Record<Personalisation, number> = { high: 0.2, balance
 export const DESCRIPTION_MAX = 600;
 
 /** What the subtype of a hands-on slot may be. Coding for engineering; task kinds for everyone. */
-export const SLOT_SUBTYPES = ["code", "write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "mcq-code", "mcq-text"] as const;
+export const SLOT_SUBTYPES = ["code", "write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "terminal", "mcq-code", "mcq-text"] as const;
 export const slotSubtypeSchema = z.enum(SLOT_SUBTYPES);
 export type SlotSubtype = z.infer<typeof slotSubtypeSchema>;
 
@@ -43,6 +43,11 @@ export interface Slot {
   targetSec: number;
   /** A short scenario in the learner's own context, from the description. */
   hint: string;
+  /**
+   * v4.3: this slot tests a practical-case goal as a task ("resolve a merge conflict"): the case id.
+   * Its subtype is the case capstone's task kind, and the capstone is the model the item follows.
+   */
+  outcomeCaseId?: string;
 }
 
 /** What the model returns when it reads a setup (validated with zod before use). */
@@ -182,4 +187,82 @@ export function understandingKey(input: unknown): string {
   let h = 2166136261;
   for (let i = 0; i < text.length; i += 1) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
   return (h >>> 0).toString(36) + text.length.toString(36);
+}
+
+// ---------------------------------------------------------------------------
+// v4.3 Phase 2b: outcome slots for practical-case goals
+// ---------------------------------------------------------------------------
+
+/** An outcome task (a short terminal session, say) gets a longer slot than other hands-on work. */
+export const OUTCOME_SLOT_SEC = 180;
+/** At most this many case goals get an outcome slot, so the 25 stay a skills assessment. */
+export const MAX_OUTCOME_SLOTS = 2;
+
+export interface OutcomeCase {
+  caseId: string;
+  title: string;
+  /** The goal's skills, in goal order. The slot goes to one of them. */
+  skillIds: string[];
+  skillNames: Record<string, string>;
+  /** The capstone task's kind, which the slot's subtype copies (e.g. "terminal"). */
+  kind: SlotSubtype;
+}
+
+/**
+ * Turns one hands-on slot per practical-case goal into an outcome slot: the case's task kind, a
+ * longer time ceiling and the case id, so the generator writes a task modelled on the capstone.
+ * It takes a hands-on slot of one of the case's skills, or else the last plain hands-on slot (the
+ * lowest priority), moved to the case's first skill. Totals, the hands-on/MCQ split and the slot
+ * order never change.
+ */
+export function withOutcomeSlots(slots: readonly Slot[], cases: readonly OutcomeCase[]): Slot[] {
+  const out = slots.map((s) => ({ ...s }));
+  for (const kase of cases.slice(0, MAX_OUTCOME_SLOTS)) {
+    if (out.some((s) => s.outcomeCaseId === kase.caseId)) continue;
+    const free = (s: Slot) => s.type !== "mcq" && !s.outcomeCaseId;
+    const own = out.find((s) => free(s) && kase.skillIds.includes(s.skillId));
+    const slot = own ?? [...out].reverse().find(free);
+    if (!slot) continue;
+    if (!own) {
+      slot.skillId = kase.skillIds[0];
+      slot.skillName = kase.skillNames[kase.skillIds[0]] ?? kase.skillIds[0];
+    }
+    slot.type = "task";
+    slot.subtype = kase.kind;
+    slot.targetSec = OUTCOME_SLOT_SEC;
+    slot.hint = `Outcome: ${kase.title}`.slice(0, 160);
+    slot.outcomeCaseId = kase.caseId;
+  }
+  return out;
+}
+
+/** Whole sentences up to `max` words (cut mid-sentence only when the first is longer). */
+export function clipSentences(text: string, max: number): string {
+  const sentences = text.replace(/\s+/g, " ").trim().split(/(?<=[.!?])\s+/);
+  let out = "";
+  for (const sentence of sentences) {
+    const next = `${out} ${sentence}`.trim();
+    if (next.split(" ").length > max) break;
+    out = next;
+  }
+  return out || text.split(/\s+/).slice(0, max).join(" ");
+}
+
+/** The words of a short outcome task's question text. */
+export const OUTCOME_PROMPT_WORDS = 55;
+/** The commands a short terminal outcome task keeps (the capstone has the full session). */
+export const OUTCOME_TERMINAL_STEPS = 3;
+
+/**
+ * A compact version of a capstone task, sized for one assessment slot: the same situation and
+ * kind, a shorter brief and (for a terminal) the first few commands. Used as the model the
+ * generator follows, by the mock, and as the fallback item when generation fails, so a case goal
+ * is always tested as a task. The capstone itself stays the full, final test.
+ */
+export function outcomeTaskVariant(task: Readonly<Record<string, unknown>>): Record<string, unknown> {
+  const t: Record<string, unknown> = { ...task };
+  if (typeof t.title === "string") t.title = `Practice: ${t.title}`.slice(0, 120);
+  if (typeof t.prompt === "string") t.prompt = clipSentences(t.prompt, OUTCOME_PROMPT_WORDS);
+  if (t.kind === "terminal" && Array.isArray(t.steps)) t.steps = t.steps.slice(0, OUTCOME_TERMINAL_STEPS);
+  return t;
 }

@@ -164,6 +164,26 @@ export interface LearnerSetup {
 // The assessment mix — shared by the Setup summary and the assembler
 // ---------------------------------------------------------------------------
 
+/** v4.3: at most this many immediate prerequisites of Critical/High goals are probed. */
+export const MAX_PROBES = 3;
+
+/**
+ * v4.3 Phase 2b: the goal blueprint's mix. The focus/other split comes from the goal-derived
+ * priorities as before; the basics group is the prerequisite probes (immediate prerequisites of the
+ * Critical and High goals: the "missing link" candidates) followed by the role's core skills, and
+ * each of them gets at least one question. Same 25 items and 18/7 split.
+ */
+export function planBlueprintMix(priorities: readonly MixSkill[], core: readonly MixSkill[], probes: readonly MixSkill[] = []): AssessmentMix {
+  const seen = new Set(priorities.map((p) => p.skillId));
+  const basics: MixSkill[] = [];
+  for (const skill of [...probes.slice(0, MAX_PROBES), ...core]) {
+    if (seen.has(skill.skillId)) continue;
+    seen.add(skill.skillId);
+    basics.push({ ...skill, slider: 0 });
+  }
+  return planAssessmentMix(priorities, basics, ASSESSMENT_TOTAL, { basicsMin: basics.length });
+}
+
 export const ASSESSMENT_TOTAL = 25;
 export const ASSESSMENT_HANDS_ON = 18;
 export const ASSESSMENT_MCQ = 7;
@@ -213,7 +233,17 @@ export interface AssessmentMix {
  * - Lines come back in asking order: focus (slider order), then other, then basics.
  * - Hands-on vs multiple choice is 18:7 overall, MCQs spread one per skill, biggest first.
  */
-export function planAssessmentMix(priorities: readonly MixSkill[], basics: readonly MixSkill[], total = ASSESSMENT_TOTAL): AssessmentMix {
+export function planAssessmentMix(
+  priorities: readonly MixSkill[],
+  basics: readonly MixSkill[],
+  total = ASSESSMENT_TOTAL,
+  /**
+   * v4.3: `basicsMin` raises the basics share so that many basics each get a question (the goal
+   * blueprint's core skills plus prerequisite probes), taken from focus, then other, never below
+   * one question per listed priority.
+   */
+  options: { basicsMin?: number } = {},
+): AssessmentMix {
   const ordered = sortPriorities(priorities.map((p, position) => ({ ...p, position })));
   const groups: Record<MixGroup, MixSkill[]> = {
     focus: ordered.filter((p) => p.slider >= 4),
@@ -237,6 +267,18 @@ export function planAssessmentMix(priorities: readonly MixSkill[], basics: reado
     if (!receiver) continue;
     share[receiver] += share[group];
     share[group] = 0;
+  }
+
+  // v4.3: room for every basics skill the blueprint lists (core skills and prerequisite probes).
+  if (options.basicsMin && groups.basics.length > 0) {
+    let want = Math.min(options.basicsMin, groups.basics.length, total - groups.focus.length - groups.other.length) - share.basics;
+    while (want > 0) {
+      if (share.focus > groups.focus.length) share.focus -= 1;
+      else if (share.other > groups.other.length) share.other -= 1;
+      else break;
+      share.basics += 1;
+      want -= 1;
+    }
   }
 
   // Every listed skill gets one question: a short group borrows from basics (keeping one basics

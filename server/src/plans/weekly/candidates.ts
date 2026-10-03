@@ -1,6 +1,7 @@
 import { and, asc, eq, inArray } from "drizzle-orm";
 
 import type { EvaluationResult } from "../../../../shared/assessment";
+import { GOAL_ITEM_PREFIX, type PartType } from "../../../../shared/builder";
 import type { ContentStore } from "../../content/store";
 import { schema, type Db } from "../../db";
 import { latestPublishedPlan } from "../repo";
@@ -40,25 +41,47 @@ export interface Library {
  * lessons — and the weekly builder puts Parts 1 and 2 in "Do it now".
  */
 function currentPathParts(db: Db, userId: string) {
-  const rows = db
+  const rows = currentPathRows(db, userId);
+  const byModule = new Map<string, PathPlace>();
+  for (const row of rows) {
+    if (!row.moduleId || row.moduleId.startsWith(GOAL_ITEM_PREFIX)) continue;
+    const existing = byModule.get(row.moduleId);
+    // A module serving two parts counts as the earlier one.
+    if (!existing || (row.partNumber ?? 99) < (existing.partNumber ?? 99)) byModule.set(row.moduleId, placeOf(row));
+  }
+  return byModule;
+}
+
+type PathRow = ReturnType<typeof currentPathRows>[number];
+interface PathPlace {
+  partNumber: number | null;
+  partType: PartType | null;
+  position: number;
+  targetSkill: string | null;
+}
+
+const placeOf = (row: PathRow): PathPlace => ({ partNumber: row.partNumber, partType: row.partType, position: row.position, targetSkill: row.targetSkill });
+
+function currentPathRows(db: Db, userId: string) {
+  return db
     .select({
       courseId: schema.pathItems.courseId,
       moduleId: schema.pathItems.moduleId,
       partNumber: schema.pathItems.partNumber,
       partType: schema.pathItems.partType,
+      position: schema.pathItems.position,
+      targetSkill: schema.pathItems.targetSkill,
     })
     .from(schema.pathItems)
     .innerJoin(schema.learningPaths, eq(schema.learningPaths.id, schema.pathItems.pathId))
     .where(and(eq(schema.learningPaths.userId, userId), eq(schema.learningPaths.current, true)))
     .all();
-  const byModule = new Map<string, { partNumber: number | null; partType: "track" | "ai_dev" | "general" | null }>();
-  for (const row of rows) {
-    if (!row.moduleId) continue;
-    const existing = byModule.get(row.moduleId);
-    // A module serving two parts counts as the earlier one.
-    if (!existing || (row.partNumber ?? 99) < (existing.partNumber ?? 99)) byModule.set(row.moduleId, { partNumber: row.partNumber, partType: row.partType });
-  }
-  return byModule;
+}
+
+/** The candidate fields for a lesson whose module or course is on the path. */
+function pathFields(place: PathPlace | undefined): Pick<Candidate, "partNumber" | "partType" | "pathPosition" | "pathTarget"> {
+  if (!place || place.partNumber == null) return {};
+  return { partNumber: place.partNumber, partType: place.partType ?? undefined, pathPosition: place.position, pathTarget: place.targetSkill };
 }
 
 export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
@@ -102,9 +125,7 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
       groupId: location.moduleId,
       done: completedTopics.has(topicId),
       href: `/track/${location.trackId}/module/${location.moduleId}/topic/${topicId}`,
-      ...(partByModule.get(location.moduleId)?.partNumber != null
-        ? { partNumber: partByModule.get(location.moduleId)!.partNumber!, partType: partByModule.get(location.moduleId)!.partType ?? undefined }
-        : {}),
+      ...pathFields(partByModule.get(location.moduleId)),
     });
   }
 
@@ -168,20 +189,10 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
       /* Which part of the learning path each course belongs to. Read once here rather than per
          lesson: the weekly builder uses it to put Parts 1 and 2 in the red lane, and a join per
          lesson would be the same answer a hundred times. */
-      const partByCourse = new Map(
-        db
-          .select({
-            courseId: schema.pathItems.courseId,
-            partNumber: schema.pathItems.partNumber,
-            partType: schema.pathItems.partType,
-          })
-          .from(schema.pathItems)
-          .innerJoin(schema.learningPaths, eq(schema.learningPaths.id, schema.pathItems.pathId))
-          .where(and(eq(schema.learningPaths.userId, userId), eq(schema.learningPaths.current, true)))
-          .all()
-          .filter((row): row is typeof row & { courseId: string } => row.courseId !== null)
-          .map((row) => [row.courseId, { partNumber: row.partNumber, partType: row.partType }] as const),
-      );
+      const partByCourse = new Map<string, PathPlace>();
+      for (const row of currentPathRows(db, userId)) {
+        if (row.courseId && !partByCourse.has(row.courseId)) partByCourse.set(row.courseId, placeOf(row));
+      }
 
       /* Ordered the way the course reads: by course position, then section, then lesson. The absolute
          number does not matter — only that "earlier" means "earlier in the course", because that is
@@ -214,9 +225,7 @@ export function gatherLibrary({ db, content, userId }: LibraryInput): Library {
           groupId: lesson.courseId,
           done: doneLessons.has(lesson.id),
           href: `/courses/${lesson.courseId}`,
-          ...(part?.partNumber !== null && part?.partNumber !== undefined
-            ? { partNumber: part.partNumber, partType: part.partType ?? undefined }
-            : {}),
+          ...pathFields(part),
         });
       });
     }

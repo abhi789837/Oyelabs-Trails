@@ -5,6 +5,7 @@ import {
   asOutcome,
   deriveSkillPriorities,
   goalKey,
+  type CapstoneSummary,
   type GoalInput,
   type GoalSuggestion,
   type LearnerGoal,
@@ -291,6 +292,28 @@ export function learnerGoalViews(db: Db, userId: string): LearnerGoalView[] {
     };
   });
 }
+
+/**
+ * v4.3: each goal's capstone for the admin: what it is and whether code can grade it. A role-play,
+ * a written answer or a form needs a person (or an AI rubric that may be unavailable), so the admin
+ * marks those goals achieved by hand.
+ */
+export function capstoneSummaries(db: Db, userId: string): Record<string, CapstoneSummary> {
+  const goals = listGoals(db, userId);
+  if (goals.length === 0) return {};
+  const outcomes = listOutcomes(db, departmentOf(db, userId));
+  const out: Record<string, CapstoneSummary> = {};
+  for (const goal of goals) {
+    const outcome = capstoneOutcome(goal, outcomes, db);
+    if (!outcome) continue;
+    const taskKind = outcome.capstone.kind === "task" ? String(outcome.capstone.task.kind ?? "") : null;
+    out[goal.id] = { title: outcome.capstone.title, kind: outcome.capstone.kind, taskKind, manual: taskKind !== null && MANUAL_CAPSTONE_KINDS.includes(taskKind) };
+  }
+  return out;
+}
+
+/** Capstone task kinds code cannot grade on its own. */
+export const MANUAL_CAPSTONE_KINDS: readonly string[] = ["roleplay", "write", "form"];
 
 /** Marks a goal achieved (once) and suggests what comes next. Returns false when it already was. */
 export function achieveGoal(db: Db, userId: string, goalId: string): boolean {

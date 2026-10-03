@@ -174,24 +174,19 @@ export function buildWeek(input: BuildWeekInput): WeeklyPlanDraft {
     });
   }
 
-  // --- 2b. Parts 1 and 2 of the learning path -------------------------------
-  /* Before any detected gap. Part 1 strengthens the track they work in every day and Part 2 is
-     building with AI in their own stack; everything else on the path is a specific gap that stands
-     on those two. Putting them in the red lane is not a weighting — it is the order the path is in.
+  // --- 2b. The learning path, in its order (v4.3) ---------------------------
+  /* The path is already the decision about what comes first (goals, the skill graph and the
+     evaluation, see shared/pathOrder.ts), so the week takes the next path lessons in that order until
+     the hours run out, before any detected gap is considered. Then the lanes:
 
-     Taken in path order and capped by the same red-lane share as anything else, so a long Part 1
-     cannot swallow the whole week. What does not fit this week carries into the next one. */
-  const pathLessons = pool
-    .filter((c) => c.partNumber !== undefined && c.partNumber <= 2 && !used.has(c.key))
-    .sort((a, b) => (a.partNumber ?? 0) - (b.partNumber ?? 0) || a.order - b.order);
+     - Do it now: the top items, from Part 1 (Critical and High) when the week has any; otherwise
+       the first couple of items, so the week still opens with something red.
+     - Must know: the missing-link refreshers attached to an item this week, short enough to clear
+       first. The item they unblock lists them in `dependsOn`.
+     - Medium and Low: the rest, by the part's priority band (1–2 Medium, 3 Low).
 
-  for (const candidate of pathLessons) {
-    const reason =
-      candidate.partType === "track"
-        ? "Part 1 of your path: the ground your own track stands on"
-        : "Part 2 of your path: building with AI in your stack";
-    take(candidate, "do_now", reason, "admin_priority", { laneCap: doNowCap });
-  }
+     What does not fit this week is next week's start. */
+  pathWeek(pool, take, selections, { spent: () => spent, ceiling, doNowCap, mustKnowCap });
 
   // --- 3. The admin's list, then the assessment's findings ------------------
   /* `gaps` arrives ordered by `sortGaps`: admin-listed before AI-detected, then by score. That
@@ -299,6 +294,90 @@ export function buildWeek(input: BuildWeekInput): WeeklyPlanDraft {
 }
 
 /** Selections grouped into the four lanes, each in the order they were chosen. */
+type Take = (
+  candidate: Candidate,
+  lane: PlanLane,
+  reason: string,
+  source: WeeklyPlanItem["source"],
+  options?: { ignoreBudget?: boolean; laneCap?: number; pinned?: boolean },
+) => boolean;
+
+/** Path order: part (priority band), then the item's place on the path, then the trail. */
+export function pathOrder(a: Candidate, b: Candidate): number {
+  return (a.partNumber ?? 0) - (b.partNumber ?? 0) || (a.pathPosition ?? 0) - (b.pathPosition ?? 0) || a.order - b.order;
+}
+
+/** v4.3: the week's share of the learning path. See step 2b in `buildWeek`. */
+function pathWeek(
+  pool: readonly Candidate[],
+  take: Take,
+  selections: Selection[],
+  budget: { spent: () => number; ceiling: number; doNowCap: number; mustKnowCap: number },
+): void {
+  const taken = new Set(selections.map((s) => s.candidate.key));
+  const onPath = pool.filter((c) => c.partNumber !== undefined && !taken.has(c.key)).sort(pathOrder);
+  if (onPath.length === 0) return;
+
+  // 1. The next lessons in path order that fit the hours left.
+  let spent = budget.spent();
+  const week: Candidate[] = [];
+  for (const c of onPath) {
+    if (spent + c.minutes > budget.ceiling) continue;
+    week.push(c);
+    spent += c.minutes;
+  }
+
+  // 2. Lanes.
+  const isLink = (c: Candidate) => c.partType === "prerequisite";
+  const work = week.filter((c) => !isLink(c));
+  const hasPart1 = work.some((c) => c.partNumber === 1);
+  const lane = new Map<string, PlanLane>();
+  let doNowItems = selections.filter((s) => s.lane === "do_now").length;
+  let doNowMinutes = selections.filter((s) => s.lane === "do_now").reduce((sum, s) => sum + s.candidate.minutes, 0);
+  work.forEach((c, index) => {
+    const top = hasPart1 ? c.partNumber === 1 : index < DO_NOW_TARGET_ITEMS.min;
+    if (top && doNowItems < DO_NOW_TARGET_ITEMS.max && doNowMinutes + c.minutes <= budget.doNowCap) {
+      lane.set(c.key, "do_now");
+      doNowItems += 1;
+      doNowMinutes += c.minutes;
+    } else lane.set(c.key, (c.partNumber ?? 3) <= 2 ? "medium" : "low");
+  });
+  const dependentOf = (link: Candidate) => work.find((c) => link.pathTarget && c.pathTarget === link.pathTarget) ?? null;
+  let mustKnowItems = selections.filter((s) => s.lane === "must_know").length;
+  let mustKnowMinutes = selections.filter((s) => s.lane === "must_know").reduce((sum, s) => sum + s.candidate.minutes, 0);
+  for (const link of week.filter(isLink)) {
+    const fits = link.minutes <= MUST_KNOW_MINUTES.max && mustKnowItems < MUST_KNOW_MAX_ITEMS && mustKnowMinutes + link.minutes <= budget.mustKnowCap;
+    if (dependentOf(link) && fits) {
+      lane.set(link.key, "must_know");
+      mustKnowItems += 1;
+      mustKnowMinutes += link.minutes;
+    } else lane.set(link.key, (link.partNumber ?? 3) <= 2 ? "medium" : "low");
+  }
+
+  // 3. Taken in path order, so each lane keeps the path's order inside it. A refresher comes before
+  //    the item it unblocks, so its key waits in `pending` until that item is taken.
+  const pending = new Map<string, string[]>();
+  for (const c of week) {
+    const placed = lane.get(c.key)!;
+    const target = c.pathTarget ?? c.context;
+    if (isLink(c)) {
+      const dependent = dependentOf(c);
+      const reason = placed === "must_know" && dependent ? prerequisiteReason(dependent.title) : `Missing link for ${target}`;
+      if (take(c, placed, reason, "prerequisite") && placed === "must_know" && dependent) {
+        const owner = selections.find((s) => s.candidate.key === dependent.key);
+        if (owner) owner.dependsOn.push(c.key);
+        else pending.set(dependent.key, [...(pending.get(dependent.key) ?? []), c.key]);
+      }
+      continue;
+    }
+    const reason = placed === "do_now" ? `Top of your path: ${target}` : `Next on your path: ${target}`;
+    if (take(c, placed, reason, "admin_priority")) {
+      const owner = selections.find((s) => s.candidate.key === c.key)!;
+      owner.dependsOn.push(...(pending.get(c.key) ?? []));
+    }
+  }
+}
+
 function toLanes(selections: readonly Selection[]): WeeklyPlanLanes {
   const lanes: WeeklyPlanLanes = { doNow: [], mustKnow: [], medium: [], low: [] };
   for (const selection of selections) {

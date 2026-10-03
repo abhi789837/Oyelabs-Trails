@@ -44,3 +44,30 @@
   - Without a cap, a chapter topic that uses a 9-hour course could demand hours of watching.
   - A broken embed must not lock a topic forever. A learner could fake the unplayable report, which is an accepted risk on an internal platform.
   - Learners' existing progress stays intact.
+
+## D7. Topic tests live in `topic_test_items`; the content quiz is the seed and the fallback
+- **Decision:**
+  - At boot, static quiz questions are imported as `static` items. They keep their content question ids, so the served shape and stored attempts stay the same.
+  - Only `active` items are served. If a topic has no active items, its content quiz is served instead, so the topic can always be completed.
+  - Generated items need an exact quote from the topic's own passages.
+  - **Gates:**
+    - Hard: format, relevance, answerability and distractors.
+    - Soft: not trivial and size.
+  - The two answer-blind checks are separate Haiku calls, with and without the content, because a single call would already have read the content.
+  - **Calibration:** only a learner's first exposure counts, and staff attempts never do.
+    - **Flags:** more than 90% failing, or at least half of the strong learners failing.
+    - **Retiring:** a flagged item is auto-retired at 20 attempts, but never below 5 active items per topic.
+- **Why:**
+  - This follows the item-writing and answerability research in RESEARCH.md §5.
+  - It keeps existing learner progress intact.
+  - The re-check over all 8,772 items costs about $23–57, so it is budget-capped ($25 per run, resumable), and it has not been run against real AI yet.
+
+## D8. The goal path: blueprint, core skills, critically weak, parts (Phase 2b–2d)
+- **Blueprint (assessment).** The 25 slots cover the Critical/High goals (the focus group, from the derived priorities), up to three **prerequisite probes** (the immediate `prerequisite`-edge parents of Critical/High goal skills that are not goals themselves) and the role's **core skills**; probes and core skills share the basics group and each gets at least one question (`planBlueprintMix`). Each Critical/High practical-case goal (at most two) turns one hands-on slot into an **outcome slot** of its capstone's task kind (180 s), which the generator writes from the shortened capstone (`outcomeTaskVariant`); if generation fails, the shortened capstone itself is the item. 25 items, 18/7, 26–32 min and bank reuse are unchanged. The bank-only assembler (`assembleInto`, the fallback) keeps the v4.2 mix.
+- **Core skills** of the current role = `trackBasics` (beginner, non-AI skills of the department and track, stack-specific first, three). A measured core skill at 1/5 or below is critically weak, unless it is already a goal (then the admin's slider ranks it).
+- **Critically weak and important** (D4 rule 2 boost): AI skills (`isAiSkill`) measured at 1/5 or below when the team is moving to AI-driven delivery (the learner has a goal with an AI skill, or the department pre-selects an AI skill at Medium or above); PM lifecycle courses measured at 3/5 or below (the v4.2 rule); core skills at 1/5 or below that are not goals.
+- **Mastery.** Measured levels from the evaluation; an unmeasured prerequisite of a skill measured at 3/5 or more is inferred at 3/5 (KST). A low score implies nothing, so the prerequisite stays unmeasured and counts as 0 (D4). Stored on `evaluations.result` as `mastery`, `missingLinks` and `metGoals` (optional, backward compatible).
+- **Path.** `runBuilder` orders by `shared/pathOrder.ts` over the goals (expanded with `goalsToTargets`; inside a goal the skill order breaks ties), the DB graph and the mastery. Prerequisites from the graph replace the FOUNDATIONS refreshers, which remain only in the v4.2 fallback used when a learner has no goal or priority at all. The PM department's goals keep v4.2's process order (lifecycle, terminology, meetings) as the admin order. The diagnostic refresh still opens a path when the assessment found gaps.
+- **Parts are priority bands** along the path: Part 1 Critical/High (rank ≥ 4), Part 2 Medium, Part 3 Low/Optional. Ranks never increase along the path (a prerequisite inherits the rank of what it unblocks), so parts never go backwards. `partType` adds `prerequisite` (a missing link) and `capstone`.
+- **Capstones** of case goals are the last item of that goal's run on the path; the item stores `goal:<goalId>` in `path_items.module_id` (no column added) and links to `/goals/:goalId`.
+- **Week.** The week takes the next path lessons in path order that fit the hours; Do it now holds the top Part 1 items (at most four, half the week), Must know the short missing-link refreshers attached to an item in the week (that item `dependsOn` them), Medium and Low the rest by part.

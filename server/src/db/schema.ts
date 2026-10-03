@@ -825,7 +825,8 @@ export const pathItems = sqliteTable(
      * what they were.
      */
     partNumber: integer("part_number"),
-    partType: text("part_type").$type<"track" | "ai_dev" | "general">(),
+    /** v4.3 adds "prerequisite" (a missing link) and "capstone". Plain text, so no migration. */
+    partType: text("part_type").$type<"track" | "ai_dev" | "general" | "prerequisite" | "capstone">(),
     /**
      * The admin target this item serves, by name.
      *

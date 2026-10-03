@@ -288,15 +288,26 @@ export type PathStatus = z.infer<typeof pathStatusSchema>;
 export const pathItemSourceSchema = z.enum(["unlock", "reuse", "generated"]);
 export type PathItemSource = z.infer<typeof pathItemSourceSchema>;
 
-/** Part 1 is the learner's own track, part 2 AI-driven development, 3+ everything else. */
-export const partTypeSchema = z.enum(["track", "ai_dev", "general"]);
+/**
+ * What kind of step an item is. v4.2: the learner's own track, AI-driven development, everything
+ * else. v4.3 adds a missing-link refresher (`prerequisite`) and a goal's `capstone`.
+ */
+export const partTypeSchema = z.enum(["track", "ai_dev", "general", "prerequisite", "capstone"]);
 export type PartType = z.infer<typeof partTypeSchema>;
 
 export const PART_LABELS: Record<PartType, string> = {
   track: "Strengthen your track",
   ai_dev: "Building with AI",
   general: "Next",
+  prerequisite: "Missing link",
+  capstone: "Capstone",
 };
+
+/**
+ * v4.3: a capstone path item has no course or module; `path_items.module_id` holds this prefix and
+ * the goal id instead (no column was added for it), and the view links it to `/goals/:goalId`.
+ */
+export const GOAL_ITEM_PREFIX = "goal:";
 
 export interface PathItemView {
   id: string;
@@ -328,6 +339,9 @@ export interface PathItemView {
   moduleId?: string | null;
   skillId?: string | null;
   href?: string | null;
+  /** v4.3: set on a capstone item: the goal it proves, and whether it is achieved. */
+  goalId?: string | null;
+  goalAchieved?: boolean;
 }
 
 export interface LearningPathView {

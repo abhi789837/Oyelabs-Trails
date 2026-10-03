@@ -6,7 +6,7 @@ import { goalInterpretRequestSchema, onboardSuggestRequestSchema, saveGoalsReque
 import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { listOutcomes, searchOutcomes, toOutcomeOption } from "../../goals/outcomes";
-import { achieveGoal, addSuggestion, dismissSuggestion, listGoals, listSuggestions, saveGoals } from "../../goals/repo";
+import { achieveGoal, addSuggestion, capstoneSummaries, dismissSuggestion, listGoals, listSuggestions, saveGoals } from "../../goals/repo";
 import { interpretGoal, suggestOnboarding } from "../../goals/suggest";
 import { writeAudit } from "../../lib/audit";
 import { forbidden, notFound, parseOrThrow } from "../../lib/errors";
@@ -56,7 +56,7 @@ export async function registerAdminGoalRoutes(app: FastifyInstance): Promise<voi
     const actor = requireStaff(request);
     const { userId } = parseOrThrow(userParams, request.params);
     loadLearner(userId, actor);
-    return { goals: listGoals(app.db, userId), suggestions: listSuggestions(app.db, userId) };
+    return { goals: listGoals(app.db, userId), suggestions: listSuggestions(app.db, userId), capstones: capstoneSummaries(app.db, userId) };
   });
 
   /** Replaces the goals and re-derives the priorities from them. */
@@ -77,7 +77,7 @@ export async function registerAdminGoalRoutes(app: FastifyInstance): Promise<voi
     loadLearner(userId, actor);
     achieveGoal(app.db, userId, goalId);
     writeAudit(app.db, { actorId: actor.id, action: "learner.goal_achieved", targetType: "user", targetId: userId, details: { goalId } });
-    return { goals: listGoals(app.db, userId), suggestions: listSuggestions(app.db, userId) };
+    return { goals: listGoals(app.db, userId), suggestions: listSuggestions(app.db, userId), capstones: capstoneSummaries(app.db, userId) };
   });
 
   app.get("/api/admin/users/:userId/goal-suggestions", async (request) => {

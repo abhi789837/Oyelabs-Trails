@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AlertTriangle, Check, ChevronDown, RefreshCw, Shuffle, X } from "lucide-react";
 
 import type { AssessmentSummary } from "@shared/assessment";
-import type { ItemResponseV4 } from "@shared/assessmentV4";
+import type { ItemResponseV4, V4Result } from "@shared/assessmentV4";
 
 import { api, ApiRequestError } from "@/api/client";
 import { SkillReport } from "@/components/assessment/SkillReport";
@@ -146,6 +146,7 @@ export function V4Results({
           subtitle="What the learner sees: levels 0 to 5 by priority skill, with no overall percentage."
         />
       )}
+      {started && <PathFindings result={result} />}
 
       <dl className="grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Staff-only figures">
         <Stat label="Raw score" value={started ? `${result.rawScore}%` : "—"} />
@@ -441,4 +442,46 @@ function Response({ item, response }: { item: V4AdminItem; response: ItemRespons
   }
 
   return <p className="text-sm text-muted-foreground">The answer does not match this question type.</p>;
+}
+
+/**
+ * v4.3: what the evaluation means for the path. Missing links are prerequisites below the level
+ * their goals need ("Promises & async/await 1/5 → needed 3/5 for Backend"); met goals are skipped.
+ */
+function PathFindings({ result }: { result: V4Result }) {
+  const links = result.missingLinks ?? [];
+  const met = result.metGoals ?? [];
+  if (links.length === 0 && met.length === 0) return null;
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {links.length > 0 && (
+        <section aria-labelledby="missing-links-heading" className="rounded-md border border-trailmark/40 bg-trailmark/[0.05] px-3 py-2">
+          <h4 id="missing-links-heading" className="text-sm font-medium">
+            Missing links
+          </h4>
+          <ul className="mt-1 space-y-0.5 font-mono text-xs">
+            {links.map((link) => (
+              <li key={link.skillId}>
+                {link.skillName} {link.mastery == null ? "not measured" : `${link.mastery}/5`} → needed {link.neededLevel}/5 for {link.forGoal}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {met.length > 0 && (
+        <section aria-labelledby="met-goals-heading" className="rounded-md border px-3 py-2">
+          <h4 id="met-goals-heading" className="text-sm font-medium">
+            Already at the goal level
+          </h4>
+          <ul className="mt-1 space-y-0.5 font-mono text-xs text-muted-foreground">
+            {met.map((m) => (
+              <li key={m.skillId}>
+                {m.skillName} {m.mastery}/5 (goal {m.neededLevel}/5){m.optionalAdvanced ? " · advanced course optional" : ""}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  );
 }

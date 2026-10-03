@@ -23,7 +23,12 @@ import { computeTrail, estimateLabelHeight, pointAlong, type TrailWaypoint } fro
  * claim about which course each one covered.
  */
 
-const PART_VAR: Record<PartType, string> = { track: "--trailmark", ai_dev: "--ridge", general: "--basalt" };
+const PART_VAR: Record<PartType, string> = { track: "--trailmark", ai_dev: "--ridge", general: "--basalt", prerequisite: "--trailmark", capstone: "--summit" };
+
+/** v4.3: the path's one-line reason, in roughly the lines it takes under the title (11px text). */
+function reasonLines(reason: string, width: number): number {
+  return reason ? Math.max(1, Math.ceil((reason.length * 6.2) / Math.max(40, width))) : 0;
+}
 
 function partColor(part: PartType | null, alpha = 1): string {
   const cssVar = PART_VAR[part ?? "general"];
@@ -66,7 +71,7 @@ export function OverviewTrail({ path, week, history }: { path: LearningPathView;
         tone: m.partType ?? "general",
         done: m.topicCount > 0 && m.completedCount >= m.topicCount,
         labelHeight: (w: number) =>
-          estimateLabelHeight({ title: m.courseTitle, meta: `Part ${m.partNumber ?? 1}  ${m.completedCount}/${m.topicCount} lessons`, compact: true }, w),
+          estimateLabelHeight({ title: m.courseTitle, meta: `Part ${m.partNumber ?? 1}  ${m.completedCount}/${m.topicCount} lessons`, compact: true, extraLines: reasonLines(m.reason, w) }, w),
       })),
     });
   }, [milestones, width]);
@@ -228,9 +233,11 @@ function Milestone({
           <p className={cn("font-display text-[13px] font-semibold leading-snug", done && "text-muted-foreground")}>{item.courseTitle}</p>
         )}
         <p className="font-mono text-[11px] text-muted-foreground">
-          <span style={{ color: partColor(item.partType) }}>Part {item.partNumber ?? 1}</span> {item.completedCount}/{item.topicCount} lessons
+          <span style={{ color: partColor(item.partType) }}>Part {item.partNumber ?? 1}</span>{" "}
+          {item.goalId ? (item.goalAchieved ? "Goal achieved" : "Pass it to achieve the goal") : `${item.completedCount}/${item.topicCount} lessons`}
           {current && <span className="sr-only">, week {weekNumber} is working on this</span>}
         </p>
+        {item.reason && <p className="text-[11px] leading-snug text-muted-foreground">{item.reason}</p>}
       </div>
     </li>
   );

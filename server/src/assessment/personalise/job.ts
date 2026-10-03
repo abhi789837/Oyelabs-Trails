@@ -1,7 +1,5 @@
 import { eq } from "drizzle-orm";
 
-import { trackBasics } from "../../../../shared/catalog";
-import { planAssessmentMix } from "../../../../shared/setup";
 import { V4_MAX_MINUTES } from "../../../../shared/assessmentV4";
 import { getCatalog } from "../../catalog/repo";
 import * as schema from "../../db/schema";
@@ -10,6 +8,7 @@ import { now } from "../../lib/ids";
 import { notify, staffIds } from "../../lib/notify";
 import { getSetup } from "../../setup/repo";
 import { assembleInto, getMinFinishMinutes, storeItems, type V4Config } from "../v4";
+import { blueprintMix } from "./blueprint";
 import { personalise, type PersonaliseDeps, type PersonaliseReport } from "./pipeline";
 
 export interface PersonalisedConfig extends V4Config {
@@ -53,12 +52,11 @@ export function personaliseHandler(deps: PersonaliseDeps) {
       storeItems(db, assessmentId, picks);
       const setup = getSetup(db, assessment.userId);
       const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
-      const basics = trackBasics(catalog, setup.departmentId, setup.trackId, setup.stackIds).map((s) => ({ skillId: s.id, skillName: s.name, slider: 0 }));
       config = {
         format: "v4",
         departmentId: setup.departmentId,
         assessmentFormat: catalog.departments.find((d) => d.id === setup.departmentId)?.assessmentFormat ?? "coding",
-        mix: planAssessmentMix(setup.priorities, basics),
+        mix: blueprintMix(db, catalog, setup),
         minFinishMinutes: getMinFinishMinutes(db),
         maxMinutes: V4_MAX_MINUTES,
         shortfalls: [],

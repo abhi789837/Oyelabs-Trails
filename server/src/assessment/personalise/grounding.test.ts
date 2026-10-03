@@ -229,8 +229,15 @@ describe("grounded generation", () => {
     expect(report.generated).toBeGreaterThan(0);
 
     // Every generated process item is in the bank with its citations at the current versions.
+    // (v4.3: the goal blueprint also probes the goals' prerequisite, the agency SDLC, which is not a
+    // process skill, so only the process skills' generated items are counted here.)
     const rows = ctx.db.select().from(schema.questionBank).where(and(eq(schema.questionBank.source, "generated"), like(schema.questionBank.skillId, "pm-proc-%"))).all();
-    expect(rows.length).toBe(report.generated);
+    const generatedProcess = ctx.db
+      .select()
+      .from(schema.assessmentItems)
+      .where(and(eq(schema.assessmentItems.assessmentId, id), eq(schema.assessmentItems.origin, "generated"), like(schema.assessmentItems.area, "pm-proc-%")))
+      .all();
+    expect(rows.length).toBe(generatedProcess.length);
     const versions = new Map(ctx.db.select().from(schema.handbookEntries).all().map((e) => [`${e.kind}:${e.id}`, e.version]));
     for (const row of rows) {
       expect(row.handbookRefs.length).toBeGreaterThan(0);

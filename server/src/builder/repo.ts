@@ -2,7 +2,9 @@ import { and, asc, desc, eq } from "drizzle-orm";
 
 import {
   EMPTY_PRIORITIES,
+  GOAL_ITEM_PREFIX,
   type LearnerPriorities,
+  type PartType,
   type LearningPathView,
   type PathItemView,
   type PathStatus,
@@ -13,6 +15,7 @@ import { schema, type Db } from "../db";
 import { newId, now } from "../lib/ids";
 import type { ContentStore } from "../content/store";
 import { listSkillPriorities, listSkip, replaceSkipByNames, writeLegacyTargets } from "../setup/repo";
+import { learnerGoalViews } from "../goals/repo";
 import { sliderToPriority } from "../../../shared/setup";
 import type { BuiltCourse } from "./pipeline";
 import { isLevelBandedCamp, levelsFrom } from "./priorityPath";
@@ -209,7 +212,7 @@ export function addPathItem(
     reason: string;
     /** Which part of the path this is. Absent on a path built before parts existed. */
     partNumber?: number;
-    partType?: "track" | "ai_dev" | "general";
+    partType?: PartType;
     /** The admin target this serves, and where its course starts. */
     targetSkill?: string | null;
     startLevel?: "beginner" | "intermediate" | "advanced" | null;
@@ -253,7 +256,37 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
       .map((r) => r.topicId),
   );
 
+  const goals = new Map(
+    items.some((item) => item.moduleId?.startsWith(GOAL_ITEM_PREFIX)) ? learnerGoalViews(db, userId).map((g) => [g.id, g] as const) : [],
+  );
+
   const views: PathItemView[] = items.map((item) => {
+    // v4.3: a goal's capstone. Done once the goal is achieved (passing the capstone does that).
+    if (item.moduleId?.startsWith(GOAL_ITEM_PREFIX)) {
+      const goalId = item.moduleId.slice(GOAL_ITEM_PREFIX.length);
+      const goal = goals.get(goalId);
+      const achieved = goal?.status === "achieved";
+      return {
+        id: item.id,
+        courseId: null,
+        courseTitle: `Capstone: ${goal?.capstone?.title ?? goal?.outcome ?? "practice"}`,
+        position: item.position,
+        source: item.source,
+        reason: item.reason,
+        topicCount: 1,
+        completedCount: achieved ? 1 : 0,
+        available: Boolean(goal),
+        partNumber: item.partNumber,
+        partType: item.partType,
+        targetSkill: item.targetSkill,
+        startLevel: item.startLevel,
+        moduleId: null,
+        skillId: item.skillId,
+        href: goal ? `/goals/${goalId}` : null,
+        goalId,
+        goalAchieved: achieved,
+      };
+    }
     if (item.moduleId) {
       const found = content?.manifest.flatMap((track) => track.modules.map((m) => ({ track, m }))).find(({ m }) => m.id === item.moduleId);
       // v4.2: a level-banded camp counts only the topics from where this course starts.

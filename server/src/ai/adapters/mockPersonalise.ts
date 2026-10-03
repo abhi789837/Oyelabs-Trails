@@ -1,5 +1,5 @@
 import { classify, type DecisionAnswers } from "../../../../shared/decision";
-import { planAssessmentMix } from "../../../../shared/setup";
+import { planBlueprintMix } from "../../../../shared/setup";
 
 /**
  * TEST STAND-INS for the v4.1 personalised-assessment calls (`assessment_plan`,
@@ -29,6 +29,8 @@ interface PlanProfile {
   level?: number | null;
   priorities?: { id: string; name: string; slider: number }[];
   basics?: { id: string; name: string }[];
+  /** v4.3: prerequisite probes of the Critical/High goals. */
+  probes?: { id: string; name: string }[];
   description?: string;
 }
 
@@ -92,9 +94,10 @@ export function fixturePlan(userJson: string) {
   if (intent.length === 0) intent.push("Where they stand on the basics of their role");
 
   // The same mix the server computes, so every proposed slot survives `enforceBlueprint`.
-  const mix = planAssessmentMix(
+  const mix = planBlueprintMix(
     priorities.map((p) => ({ skillId: p.id, skillName: p.name, slider: p.slider })),
     (profile.basics ?? []).map((b) => ({ skillId: b.id, skillName: b.name, slider: 0 })),
+    (profile.probes ?? []).map((b) => ({ skillId: b.id, skillName: b.name, slider: 0 })),
   );
   const slots: { skillId: string; kind: "handsOn" | "mcq"; subtype: string; difficulty: number; hint: string }[] = [];
   const start = Math.min(4, Math.max(1, profile.level ?? 2));
@@ -142,6 +145,8 @@ interface ItemsRequest {
     refs?: string[];
     scenarioId?: string;
     personaId?: string;
+    /** v4.3: an outcome slot's case and its shortened capstone, the model to follow. */
+    outcome?: { caseId?: string; title: string; model: Record<string, unknown> };
   }[];
 }
 
@@ -563,7 +568,9 @@ export function fixtureGeneratedItems(userJson: string, keys: Map<string, number
     const local: Ctx = { ...ctx, theme: themes[slot.slot % Math.max(1, themes.length)] ?? ctx.theme };
     const language = slot.language ?? "javascript";
     let item: unknown = null;
-    if (slot.type === "coding") item = codingItem(slot.slot, language, local);
+    // v4.3: an outcome slot follows its case's capstone (already shortened to fit the slot).
+    if (slot.outcome?.model) item = { ...base(slot.slot, String(slot.outcome.model.prompt ?? slot.outcome.title), local), task: { ...slot.outcome.model } };
+    else if (slot.type === "coding") item = codingItem(slot.slot, language, local);
     else if (slot.type === "mcq") item = slot.subtype === "mcq-code" ? (mcqCodeItem(slot.slot, language, local, keys) ?? mcqTextItem(slot.slot, slot.skill, local, keys)) : mcqTextItem(slot.slot, slot.skill, local, keys);
     else if (slot.subtype === "write") item = writeItem(slot.slot, slot.skill, local);
     else if (slot.subtype === "excel") item = excelItem(slot.slot, local);
