@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { trailDepartment } from "@shared/catalog";
 import type { TopicLevelValue, TrackIdValue } from "@shared/enums";
@@ -193,7 +193,15 @@ export default function AdminCurriculumPage() {
 
   return (
     <div className="px-4 py-8 sm:px-6">
-      <h1 className="font-display text-2xl font-bold">Curriculum</h1>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <h1 className="font-display text-2xl font-bold">Curriculum</h1>
+        <Link
+          to="/admin/curriculum/test-items"
+          className="inline-flex h-8 items-center rounded-md border px-3 text-sm font-medium hover:bg-surface-sunken focus-visible:outline-2 focus-visible:outline-trailmark"
+        >
+          Test items
+        </Link>
+      </div>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
         {rows.length} topics across {new Set(rows.map((r) => r.moduleId)).size} camps and {tracks.length} trails —
         about {Math.round(minutes / 60)} hours of material. Opening one goes to the topic as a learner sees it.

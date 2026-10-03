@@ -212,6 +212,8 @@ export interface QuizQuestionResult {
   correct: boolean;
   correctIndices: number[];
   explanation: string;
+  /** v4.3: the topic section the item was written from ("From: <heading>"), when it cites one. */
+  source?: string;
 }
 
 export interface QuizAttemptResult {

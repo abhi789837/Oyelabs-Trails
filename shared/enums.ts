@@ -90,6 +90,10 @@ export const aiPurposeSchema = z.enum([
   "onboard_suggest",
   /** v4.3: a free-text goal read into an outcome, skills and a level. */
   "goal_interpret",
+  /** v4.3: writing grounded topic-test items from the topic's own text. */
+  "topic_test_write",
+  /** v4.3: the topic-test quality gates (relevance, blind answering). */
+  "topic_test_check",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 
@@ -158,6 +162,10 @@ export const jobTypeSchema = z.enum([
   "timing.calibrate",
   /** v4.2: re-checks one bank item against a handbook entry that changed. */
   "bank.revalidate",
+  /** v4.3: runs topic-test items through the quality gates, in resumable, budget-capped batches. */
+  "topic_tests.recheck",
+  /** v4.3: writes and gates replacement items for one topic that is below its target count. */
+  "topic_tests.fill",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 

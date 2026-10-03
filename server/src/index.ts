@@ -22,6 +22,7 @@ import { buildPathHandler } from "./jobs/handlers/buildPath";
 import { refineWeekHandler } from "./jobs/handlers/refineWeek";
 import { checkLinksHandler } from "./jobs/handlers/checkLinks";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
+import { fillHandler as topicTestFillHandler, recheckHandler as topicTestRecheckHandler, syncAllTopicTests } from "./topicTests/engine";
 import { JobWorker } from "./jobs/worker";
 import { publishGenerationLine } from "./routes/admin/live";
 import { createSandbox } from "./sandbox";
@@ -82,6 +83,8 @@ async function main(): Promise<void> {
       "bank.revalidate": bankRevalidateHandler({ db, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "assessment.personalise": personaliseHandler({ db, ai, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "ai.batch.poll": batchPollHandler({ db, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "topic_tests.recheck": topicTestRecheckHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });
@@ -141,6 +144,12 @@ async function main(): Promise<void> {
   process.on("SIGTERM", () => void shutdown("SIGTERM"));
 
   await app.listen({ port: env.port, host: env.host });
+
+  // v4.3: topic-test grounding and the static quiz import, in the background (idempotent). Serving
+  // and grading also do this lazily per topic, so nothing waits on it.
+  void syncAllTopicTests(db, content, (m) => console.log(`[oyelearn] ${m}`)).catch((error: unknown) =>
+    console.error("[oyelearn] topic test sync failed:", error instanceof Error ? error.message : error),
+  );
 
   // v4: install any missing code-runner languages in the background (first boot only).
   if (env.pistonUrl) void ensurePistonPackages(env.pistonUrl, (m) => console.log(`[oyelearn] ${m}`));

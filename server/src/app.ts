@@ -44,6 +44,7 @@ import { registerHealthRoutes } from "./routes/health";
 import { registerMeRoutes } from "./routes/me";
 import { registerTopicRoutes } from "./routes/topics";
 import { registerAdminVideoRoutes, registerVideoRoutes } from "./routes/videos";
+import { registerAdminTopicTestRoutes } from "./routes/admin/topicTests";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
 
@@ -213,6 +214,7 @@ export async function buildApp({
   await app.register(registerAdminRoleplayRoutes);
   await app.register(registerAdminHandbookRoutes);
   await app.register(registerAdminVideoRoutes);
+  await app.register(registerAdminTopicTestRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

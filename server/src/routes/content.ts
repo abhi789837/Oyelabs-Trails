@@ -6,6 +6,7 @@ import { requireActiveUser } from "../auth/guards";
 import { toServedModule } from "../content/filter";
 import { allowedTopicIdsFor } from "../plans/repo";
 import { notFound, parseOrThrow } from "../lib/errors";
+import { servedQuizFor } from "../topicTests/repo";
 
 export async function registerContentRoutes(app: FastifyInstance): Promise<void> {
   /**
@@ -26,6 +27,16 @@ export async function registerContentRoutes(app: FastifyInstance): Promise<void>
       includeKeys: user.role === "superadmin",
     });
     if (!served) throw notFound("That camp isn't part of your plan.");
+
+    // v4.3: a quiz is served from the topic's active test items, in the same shape as before.
+    const includeKeys = user.role === "superadmin";
+    for (const topic of served.topics) {
+      if (topic.challengeType !== "quiz") continue;
+      const authored = mod.topics.find((t) => t.id === topic.id);
+      if (!authored) continue;
+      const quiz = servedQuizFor(app.db, authored, includeKeys);
+      if (quiz) topic.quiz = quiz;
+    }
 
     return served;
   });

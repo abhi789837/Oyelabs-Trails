@@ -5,6 +5,7 @@ import { fixtureBlueprint, fixtureCritic, fixtureExplainItems, fixtureItems } fr
 import { fixtureGeneratedItems, fixtureMcqCheck, fixturePlan } from "./mockPersonalise";
 import { fixtureGoalInterpret, fixtureOnboardSuggest } from "./mockGoals";
 import { fixtureRoleplayReply, fixtureRoleplayScore } from "./mockRoleplay";
+import { fixtureTopicTestAnswer, fixtureTopicTestItems, fixtureTopicTestRelevance } from "./mockTopicTests";
 
 /**
  * A deterministic stand-in for a real provider, for development and tests only.
@@ -141,6 +142,12 @@ export class MockProvider implements AiProvider {
         return fixtureOnboardSuggest(request.system, request.user);
       case "goal_interpret":
         return fixtureGoalInterpret(request.system, request.user);
+      case "topic_test_items":
+        return fixtureTopicTestItems(request.user);
+      case "topic_test_relevance":
+        return fixtureTopicTestRelevance(request.user);
+      case "topic_test_answer":
+        return fixtureTopicTestAnswer(request.user);
       default:
         return undefined;
     }

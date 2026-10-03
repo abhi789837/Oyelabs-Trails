@@ -4,12 +4,15 @@ import { z } from "zod";
 import type { AttemptResult } from "../../../shared/content";
 import { attemptRequestSchema } from "../../../shared/content";
 import { requireActiveUser } from "../auth/guards";
-import { gradeCode, gradeQuiz } from "../content/grade";
+import { gradeCode } from "../content/grade";
 import { ERROR_CODES } from "../../../shared/api";
 import { badRequest, HttpError, notFound, parseOrThrow } from "../lib/errors";
 import { allowedTopicIdsFor } from "../plans/repo";
 import { recordAttempt } from "../progress/repo";
 import { topicVideosView } from "../videos/repo";
+import { isStaff } from "../../../shared/enums";
+import { calibrateAttempt, previouslyAnswered } from "../topicTests/calibrate";
+import { gradeTopicQuiz } from "../topicTests/repo";
 
 const paramsSchema = z.object({ topicId: z.string().min(1).max(120) });
 
@@ -55,7 +58,10 @@ export async function registerTopicRoutes(app: FastifyInstance): Promise<void> {
         if (topic.challengeType !== "quiz" || !topic.quiz?.length) {
           throw badRequest("This waypoint doesn't have a quiz.");
         }
-        const result = gradeQuiz(topic.quiz, body.answers);
+        // v4.3: graded against the stored test items (only active ones are served), and each
+        // item's result feeds calibration — first exposure only, never staff.
+        const { result, itemResults } = gradeTopicQuiz(app.db, topic, body.answers);
+        const seen = previouslyAnswered(app.db, user.id, topicId);
         recordAttempt(app.db, {
           userId: user.id,
           topicId,
@@ -64,6 +70,13 @@ export async function registerTopicRoutes(app: FastifyInstance): Promise<void> {
           passed: result.passed,
           answers: body.answers,
         });
+        if (!isStaff(user.role)) {
+          try {
+            calibrateAttempt(app.db, topic, itemResults, { skipServedIds: seen });
+          } catch (error) {
+            request.log.warn({ err: error }, "topic test calibration failed");
+          }
+        }
         return result;
       }
 
