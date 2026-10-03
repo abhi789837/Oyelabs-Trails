@@ -4,6 +4,7 @@ import type { TopicProgressValue } from "../../../shared/content";
 import type { AttemptKind } from "../../../shared/enums";
 import { schema, type Db } from "../db";
 import { newId, now } from "../lib/ids";
+import { achieveGoalsForTopic } from "../goals/repo";
 
 export function getProgress(db: Db, userId: string): Record<string, TopicProgressValue> {
   const rows = db.select().from(schema.topicProgress).where(eq(schema.topicProgress.userId, userId)).all();
@@ -92,6 +93,15 @@ export function recordAttempt(db: Db, input: RecordAttemptInput): TopicProgressV
       set: { ...next, updatedAt: timestamp },
     })
     .run();
+
+  // v4.3: a passed topic that is a goal's capstone achieves that goal.
+  if (input.passed) {
+    try {
+      achieveGoalsForTopic(db, input.userId, input.topicId);
+    } catch {
+      // Progress is recorded either way; achievement is a bonus, never a reason to fail the attempt.
+    }
+  }
 
   return next;
 }

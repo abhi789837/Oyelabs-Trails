@@ -5,9 +5,11 @@ import type { AttemptResult } from "../../../shared/content";
 import { attemptRequestSchema } from "../../../shared/content";
 import { requireActiveUser } from "../auth/guards";
 import { gradeCode, gradeQuiz } from "../content/grade";
-import { badRequest, notFound, parseOrThrow } from "../lib/errors";
+import { ERROR_CODES } from "../../../shared/api";
+import { badRequest, HttpError, notFound, parseOrThrow } from "../lib/errors";
 import { allowedTopicIdsFor } from "../plans/repo";
 import { recordAttempt } from "../progress/repo";
+import { topicVideosView } from "../videos/repo";
 
 const paramsSchema = z.object({ topicId: z.string().min(1).max(120) });
 
@@ -36,6 +38,18 @@ export async function registerTopicRoutes(app: FastifyInstance): Promise<void> {
       const found = app.content.getTopic(topicId);
       if (!found) throw notFound("That waypoint doesn't exist.");
       const { topic } = found;
+
+      // v4.3: in lock mode a topic's test waits until every video is watched. Never applies to a
+      // topic the learner already completed (a retry is still allowed) or to staff.
+      const videos = topicVideosView(app.db, app.content, user, topic);
+      if (videos.locked) {
+        const left = videos.total - videos.watchedCount;
+        throw new HttpError(
+          409,
+          ERROR_CODES.VIDEOS_UNWATCHED,
+          `Watch the ${left === 1 ? "last video" : `${left} remaining videos`} of this topic first (${videos.watchedCount} of ${videos.total} watched).`,
+        );
+      }
 
       if (body.kind === "quiz") {
         if (topic.challengeType !== "quiz" || !topic.quiz?.length) {

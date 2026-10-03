@@ -12,6 +12,7 @@ import { RoleplayTask } from "./RoleplayTask";
 import { ScenarioTask } from "./ScenarioTask";
 import { SimTask } from "./SimTask";
 import { SpotTask } from "./SpotTask";
+import { TerminalTask } from "./TerminalTask";
 import type { ResponseOf, TaskOf } from "./types";
 import { WriteTask } from "./WriteTask";
 
@@ -59,6 +60,9 @@ export function TaskView({ task, value, onChange, readOnly, answer, idPrefix, hi
       {task.kind === "roleplay" && (
         <RoleplayTask task={task} value={same("roleplay")} onChange={onChange} answer={review("roleplay")} assessment={assessment} {...common} />
       )}
+      {task.kind === "terminal" && (
+        <TerminalTask task={task} value={same("terminal")} onChange={onChange} answer={review("terminal")} {...common} />
+      )}
     </div>
   );
 }
@@ -89,5 +93,7 @@ export function hasTaskAnswer(value: TaskResponse | null): boolean {
       return Object.values(value.values).some((v) => v.trim() !== "");
     case "roleplay":
       return value.transcript.some((turn) => turn.role === "pm" && turn.text.trim() !== "");
+    case "terminal":
+      return value.commands.length > 0 || Object.keys(value.files).length > 0;
   }
 }

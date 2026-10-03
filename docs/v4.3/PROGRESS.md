@@ -8,13 +8,13 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 
 ## Phase 1: Two-click onboarding and practical priorities
 - [x] 1.0 Research note (outcomes, free text → skills)
-- [ ] 1.1 `learner_goals` table + shared schema (skill / case / text, outcome, skills, level, slider, order)
-- [ ] 1.2 Practical outcomes library: at least 40 per department, linked to skills, levels and a capstone
-- [ ] 1.3 AI: Suggest (quick onboarding prefill) + interpret free text → outcome, skills, level (Haiku, cached prompt, mock)
-- [ ] 1.4 Quick onboarding screen (default on `/admin/onboard`); full Setup as "Edit details"
-- [ ] 1.5 The "What should they be able to do?" box on Setup and quick onboarding (skill, case, text chips + slider)
-- [ ] 1.6 Suggestions: at onboarding (+ Add), and "Suggested next" after the assessment and weekly (Add / Dismiss, auto-add toggle off by default)
-- [ ] 1.7 Goals drive the assessment (outcome tasks), course capstones and goal achievement
+- [x] 1.1 `learner_goals` table + shared schema (skill / case / text, outcome, skills, level, slider, order)
+- [x] 1.2 Practical outcomes library: at least 40 per department, linked to skills, levels and a capstone
+- [x] 1.3 AI: Suggest (quick onboarding prefill) + interpret free text → outcome, skills, level (Haiku, cached prompt, mock)
+- [x] 1.4 Quick onboarding screen (default on `/admin/onboard`); full Setup as "Edit details"
+- [x] 1.5 The "What should they be able to do?" box on Setup and quick onboarding (skill, case, text chips + slider)
+- [x] 1.6 Suggestions: at onboarding (+ Add), and "Suggested next" after the assessment and weekly (Add / Dismiss, auto-add toggle off by default)
+- [ ] 1.7 Goals drive the assessment (outcome tasks), course capstones and goal achievement — capstones + achievement done; assessment and path integration in 2.3–2.5
 - [ ] 1.8 Checkpoint + commit `feat(v4.3-p1)`
 
 ## Phase 2: Missing links and proper progression
@@ -38,7 +38,7 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 4.1 `video_progress` table + API (seconds actually watched, last position, duration cache)
 - [x] 4.2 Player with the IFrame API: playlist sidebar, thumbnails, states, autoplay next with a 5 s countdown + cancel, a remembered preference
 - [x] 4.3 Topic lock until every video is watched (admin can relax it to a warning), "Videos x of y watched", leave prompt, course video totals
-- [ ] 4.4 Tests + checkpoint + commit `feat(v4.3-p4)`
+- [x] 4.4 Tests + checkpoint + commit `feat(v4.3-p4)`
 
 ## Phase 5: Fair course tests
 - [ ] 5.1 Grounding source per topic (summary, sections, notes, transcript status)

@@ -20,6 +20,9 @@ import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminBuilderRoutes } from "./routes/admin/builder";
 import { registerAdminCatalogRoutes } from "./routes/admin/catalog";
 import { registerAdminSetupRoutes } from "./routes/admin/setup";
+import { registerAdminGoalRoutes } from "./routes/admin/goals";
+import { registerGoalRoutes } from "./routes/goals";
+import { registerAdminSkillGraphRoutes } from "./routes/admin/skillGraph";
 import { registerAdminAssessmentV4Routes } from "./routes/admin/assessmentV4";
 import { registerAdminBankRoutes } from "./routes/admin/bank";
 import { registerAdminAiRoutingRoutes } from "./routes/admin/aiRouting";
@@ -40,6 +43,7 @@ import { registerAdminHandbookRoutes, registerHandbookRoutes } from "./routes/ha
 import { registerHealthRoutes } from "./routes/health";
 import { registerMeRoutes } from "./routes/me";
 import { registerTopicRoutes } from "./routes/topics";
+import { registerAdminVideoRoutes, registerVideoRoutes } from "./routes/videos";
 import type { CodeSandbox } from "./sandbox";
 import { PistonClient } from "./sandbox/polyglot";
 
@@ -185,8 +189,10 @@ export async function buildApp({
   await registerRoleplayRoutes(app);
   await registerHandbookRoutes(app);
   await registerTopicRoutes(app);
+  await registerVideoRoutes(app);
   await registerAssessmentRoutes(app);
   await registerAssessmentV4Routes(app);
+  await registerGoalRoutes(app);
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
@@ -199,11 +205,14 @@ export async function buildApp({
   await app.register(registerAdminOverviewRoutes);
   await app.register(registerAdminCatalogRoutes);
   await app.register(registerAdminSetupRoutes);
+  await app.register(registerAdminGoalRoutes);
+  await app.register(registerAdminSkillGraphRoutes);
   await app.register(registerAdminAssessmentV4Routes);
   await app.register(registerAdminBankRoutes);
   await app.register(registerAdminAiRoutingRoutes);
   await app.register(registerAdminRoleplayRoutes);
   await app.register(registerAdminHandbookRoutes);
+  await app.register(registerAdminVideoRoutes);
 
   await registerSpa(app, env, indexHtml, hasBuild);
 

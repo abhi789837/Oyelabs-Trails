@@ -7,6 +7,7 @@ import { TrailMap, type TrailWaypoint } from "@/components/trail/TrailMap";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { getModule, getTrack, moduleMinutes, moduleNeighbors, modulePath, topicPath } from "@/content";
+import { ModuleVideoSummary } from "@/features/videos/ModuleVideoSummary";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { summarizeModule } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
@@ -108,6 +109,7 @@ export default function ModulePage() {
                     <dd>{milestones} milestones</dd>
                   </div>
                 )}
+                <ModuleVideoSummary trackId={track.id} moduleId={module.id} />
               </dl>
             </div>
 

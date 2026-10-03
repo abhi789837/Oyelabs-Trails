@@ -1,7 +1,7 @@
 import type { ItemResponseV4, SheetItem, V4Result } from "@shared/assessmentV4";
 import type { Personalisation } from "@shared/personalise";
 import { parseRef } from "@shared/sheet";
-import type { LearnerTask, Task, TaskResponse } from "@shared/tasks";
+import { runTerminal, type LearnerTask, type Task, type TaskResponse } from "@shared/tasks";
 
 import { allocationTotals, allocKey } from "@/components/tasks/allocation";
 import { evaluateWithEntries, formatCellValue } from "@/components/tasks/sheetGrid";
@@ -172,6 +172,15 @@ export function summariseTaskResponse(task: LearnerTask, response: TaskResponse)
       if (task.kind !== "form") return Object.entries(response.values).filter(([, v]) => v.trim()).map(([k, v]) => `${k}: ${v}`);
       return task.fields.map((field) => `${field.label}: ${response.values[field.id]?.trim() || "blank"}`);
     }
+    case "terminal": {
+      const lines = response.commands.map((c) => `$ ${c}`);
+      if (task.kind === "terminal") {
+        const met = runTerminal(task, response.commands).met.length;
+        lines.unshift(`${met} of ${task.steps.length} steps done in ${response.commands.length} command${response.commands.length === 1 ? "" : "s"}.`);
+      }
+      lines.push(...Object.keys(response.files).map((path) => `Edited ${path}`));
+      return lines;
+    }
     case "roleplay": {
       const replies = response.transcript.filter((t) => t.role === "pm").length;
       const lines = [`${replies} repl${replies === 1 ? "y" : "ies"} in the conversation.`];
@@ -223,6 +232,11 @@ export function expectedTaskAnswer(task: Task): string[] {
       ];
     case "roleplay":
       return [`Brief: ${task.brief}`, ...task.rubric.map((r) => `${r.label} (${r.points} pt)`)];
+    case "terminal":
+      return [
+        ...task.steps.map((s, i) => `${i + 1}. ${s.goal} (accepts ${s.accept.map((a) => `/${a}/`).join(" or ")})`),
+        ...task.fileChecks.map((c) => `${c.path}: contains ${c.mustContain.join(", ") || "anything"}${c.mustNotContain.length ? `; not ${c.mustNotContain.join(", ")}` : ""}`),
+      ];
   }
 }
 

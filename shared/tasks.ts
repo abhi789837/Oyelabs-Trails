@@ -15,7 +15,7 @@ import { evaluateSheet, functionsIn, parseRef } from "./sheet";
  * assessment; course practice is formative and shows them after a check.
  */
 
-export const TASK_KINDS = ["write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay"] as const;
+export const TASK_KINDS = ["write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "terminal"] as const;
 export const taskKindSchema = z.enum(TASK_KINDS);
 export type TaskKind = z.infer<typeof taskKindSchema>;
 
@@ -31,6 +31,7 @@ export const TASK_KIND_LABELS: Record<TaskKind, string> = {
   categorize: "Categorise",
   form: "Fill the form",
   roleplay: "Client conversation",
+  terminal: "Terminal",
 };
 
 const text = (max: number) => z.string().trim().min(1).max(max);
@@ -284,6 +285,56 @@ export const roleplayTaskSchema = z.object({
   followUp: z.boolean().default(false),
 });
 
+// ---------------------------------------------------------------------------
+// v4.3: a simulated terminal (docs/v4.3/PLAN.md, D3)
+// ---------------------------------------------------------------------------
+
+/** Pass mark for a terminal task: met units / total units. */
+export const TERMINAL_PASS = 0.8;
+export const TERMINAL_UNKNOWN = "command not handled in this exercise";
+
+/**
+ * v4.3: Git, shell, Docker and deploy outcomes, practised in a scripted fake shell. There is no real
+ * shell: each step lists the regular expressions a correct command matches and what the terminal
+ * prints when it does. Optional files (a file with conflict markers, a Dockerfile) are edited in a
+ * small editor and checked by `fileChecks`. Graded by code (`gradeTerminal`).
+ */
+export const terminalTaskSchema = z.object({
+  kind: z.literal("terminal"),
+  title: text(120),
+  prompt: text(1500),
+  /** Shown in the prompt line, e.g. "~/shop-api (feature/cart)". */
+  cwd: text(80),
+  /** What the terminal shows first, e.g. `git status` output. */
+  intro: z.string().max(2000),
+  files: z.array(z.object({ path: text(120), content: z.string().max(4000) })).max(3).default([]),
+  steps: z
+    .array(
+      z.object({
+        id: text(40),
+        /** Shown to the learner only as a hint after a wrong command. */
+        goal: text(200),
+        /** Regular-expression sources, tested against the command with whitespace collapsed and trimmed. Case-sensitive. */
+        accept: z.array(text(300)).min(1).max(6),
+        /** Printed when the command is accepted. */
+        output: z.string().max(1500),
+      }),
+    )
+    .min(1)
+    .max(10),
+  fileChecks: z
+    .array(
+      z.object({
+        path: text(120),
+        mustContain: z.array(z.string().min(1).max(200)).max(10).default([]),
+        mustNotContain: z.array(z.string().min(1).max(200)).max(10).default([]),
+      }),
+    )
+    .max(6)
+    .default([]),
+  explanation: z.string().max(1500),
+});
+
 export const taskSchema = z.discriminatedUnion("kind", [
   writeTaskSchema,
   rankTaskSchema,
@@ -296,6 +347,7 @@ export const taskSchema = z.discriminatedUnion("kind", [
   categorizeTaskSchema,
   formTaskSchema,
   roleplayTaskSchema,
+  terminalTaskSchema,
 ]);
 export type Task = z.infer<typeof taskSchema>;
 export type WriteTask = z.infer<typeof writeTaskSchema>;
@@ -309,6 +361,7 @@ export type SimTask = z.infer<typeof simTaskSchema>;
 export type CategorizeTask = z.infer<typeof categorizeTaskSchema>;
 export type FormTask = z.infer<typeof formTaskSchema>;
 export type RoleplayTask = z.infer<typeof roleplayTaskSchema>;
+export type TerminalTask = z.infer<typeof terminalTaskSchema>;
 
 // ---------------------------------------------------------------------------
 // What the learner sees in an assessment (answers removed)
@@ -325,7 +378,12 @@ export type LearnerTask =
   | (Omit<SimTask, "rows" | "questions"> & { rows: { id: string; cells: string[] }[]; questions: { id: string; question: string; options: string[] }[] })
   | (Omit<CategorizeTask, "items" | "answer"> & { items: { id: string; text: string }[] })
   | (Omit<FormTask, "checks" | "sampleAnswer" | "rubric"> & { checks: { fieldId: string }[]; rubric: { label: string; points: number }[] })
-  | (Omit<RoleplayTask, "rubric"> & { rubric: { label: string; points: number }[] });
+  | (Omit<RoleplayTask, "rubric"> & { rubric: { label: string; points: number }[] })
+  /**
+   * The terminal keeps its steps: the fake shell answers each command in the browser, so it needs
+   * the patterns and outputs. What the file checks look for, and the explanation, stay hidden.
+   */
+  | (Omit<TerminalTask, "fileChecks" | "explanation"> & { fileChecks: { path: string }[] });
 
 /** Deterministic shuffle so a rank task never starts in its answer order. */
 function rotate<T>(items: readonly T[], seed: number): T[] {
@@ -386,6 +444,17 @@ export function toLearnerTask(task: Task, seed = 1): LearnerTask {
         followUp: task.followUp,
         rubric: task.rubric.map((r) => ({ label: r.label, points: r.points })),
       };
+    case "terminal":
+      return {
+        kind: "terminal",
+        title: task.title,
+        prompt: task.prompt,
+        cwd: task.cwd,
+        intro: task.intro,
+        files: task.files,
+        steps: task.steps,
+        fileChecks: task.fileChecks.map((c) => ({ path: c.path })),
+      };
   }
 }
 
@@ -409,6 +478,12 @@ export const taskResponseSchema = z.discriminatedUnion("kind", [
     sessionId: z.string().max(80),
     transcript: z.array(z.object({ role: z.enum(["pm", "client"]), text: z.string().max(2000) })).max(20),
     followUpEmail: z.string().max(4000).optional(),
+  }),
+  z.object({
+    kind: z.literal("terminal"),
+    commands: z.array(z.string().max(300)).max(40),
+    /** Edited file contents by path; a file left out keeps the task's starting content. */
+    files: z.record(z.string().max(120), z.string().max(4000)).default({}),
   }),
 ]);
 export type TaskResponse = z.infer<typeof taskResponseSchema>;
@@ -452,6 +527,10 @@ export function gradeTask(task: Task, response: TaskResponse | null): TaskGrade 
       return gradeCategorize(task, (response as Extract<TaskResponse, { kind: "categorize" }>).picks);
     case "form":
       return gradeFormChecks(task, (response as Extract<TaskResponse, { kind: "form" }>).values);
+    case "terminal": {
+      const r = response as Extract<TaskResponse, { kind: "terminal" }>;
+      return gradeTerminal(task, r.commands, r.files);
+    }
     case "rank": {
       const order = (response as Extract<TaskResponse, { kind: "rank" }>).order;
       let points = 0;
@@ -573,6 +652,7 @@ export function checkTask(task: Task): string[] {
     });
   }
   if (task.kind === "categorize") problems.push(...checkCategorize(task));
+  if (task.kind === "terminal") problems.push(...checkTerminal(task));
   if (task.kind === "form") problems.push(...checkForm(task));
   if (task.kind === "roleplay") {
     const labels = task.rubric.map((r) => r.label.toLowerCase());
@@ -827,5 +907,111 @@ function checkForm(task: FormTask): string[] {
   for (const key of Object.keys(task.sampleAnswer)) if (!fields.has(key)) problems.push(`form: sample answer for unknown field ${key}`);
   const sample = gradeFormChecks(task, task.sampleAnswer);
   if (sample.checks && sample.checks.score !== 1) problems.push(`form: the sample answer fails its own checks (${sample.detail.filter((d) => !d.endsWith("correct")).join("; ").slice(0, 160)})`);
+  return problems;
+}
+
+// ---------------------------------------------------------------------------
+// v4.3: the terminal
+// ---------------------------------------------------------------------------
+
+/** What a pattern is tested against: trimmed, with runs of whitespace collapsed to one space. */
+export function normaliseCommand(command: string): string {
+  return command.trim().replace(/\s+/g, " ");
+}
+
+const regexCache = new Map<string, RegExp | null>();
+function compilePattern(source: string): RegExp | null {
+  if (!regexCache.has(source)) {
+    let re: RegExp | null = null;
+    try {
+      re = new RegExp(source);
+    } catch {
+      re = null;
+    }
+    if (regexCache.size > 500) regexCache.clear();
+    regexCache.set(source, re);
+  }
+  return regexCache.get(source) ?? null;
+}
+
+/** Whether a command satisfies one step (any of its patterns). An invalid pattern never matches. */
+export function commandMatches(step: { accept: readonly string[] }, command: string): boolean {
+  const normalised = normaliseCommand(command);
+  if (!normalised) return false;
+  return step.accept.some((source) => compilePattern(source)?.test(normalised) ?? false);
+}
+
+export interface TerminalRun {
+  /** One entry per command, in order: the step it met (null for a wrong one) and what to print. */
+  lines: { command: string; stepId: string | null; output: string }[];
+  /** Steps met, in order. */
+  met: string[];
+  /** The next step to do, or null when every step is met. */
+  nextStepId: string | null;
+}
+
+/**
+ * Plays commands through the script, exactly as the grader does: the next unmet step is met by the
+ * first later command matching one of its patterns, so steps are met strictly in order and wrong
+ * commands in between cost nothing. Anything else prints TERMINAL_UNKNOWN. The browser terminal uses
+ * this too, so what the learner sees is what is graded.
+ */
+export function runTerminal(task: { steps: readonly { id: string; accept: readonly string[]; output: string }[] }, commands: readonly string[]): TerminalRun {
+  const lines: TerminalRun["lines"] = [];
+  const met: string[] = [];
+  let at = 0;
+  for (const command of commands) {
+    const step = task.steps[at];
+    if (step && commandMatches(step, command)) {
+      met.push(step.id);
+      lines.push({ command, stepId: step.id, output: step.output });
+      at += 1;
+    } else {
+      lines.push({ command, stepId: null, output: TERMINAL_UNKNOWN });
+    }
+  }
+  return { lines, met, nextStepId: task.steps[at]?.id ?? null };
+}
+
+/** One file check: every `mustContain` present and no `mustNotContain` present. */
+export function fileCheckPasses(check: { mustContain: readonly string[]; mustNotContain: readonly string[] }, content: string): boolean {
+  return check.mustContain.every((s) => content.includes(s)) && !check.mustNotContain.some((s) => content.includes(s));
+}
+
+/**
+ * Steps met (in order) plus file checks passed, over all of them; passes at TERMINAL_PASS. A file
+ * the learner did not touch keeps the task's starting content.
+ */
+export function gradeTerminal(task: TerminalTask, commands: readonly string[], files: Record<string, string> = {}): TaskGrade {
+  const run = runTerminal(task, commands);
+  const met = new Set(run.met);
+  const detail: string[] = task.steps.map((step, i) => `Step ${i + 1}: ${met.has(step.id) ? "done" : `not done (${step.goal})`}`);
+  let units = run.met.length;
+  for (const check of task.fileChecks) {
+    const content = files[check.path] ?? task.files.find((f) => f.path === check.path)?.content ?? "";
+    const ok = fileCheckPasses(check, content);
+    if (ok) units += 1;
+    detail.push(`${check.path}: ${ok ? "correct" : "not right yet"}`);
+  }
+  const wrong = run.lines.filter((l) => l.stepId === null).length;
+  if (wrong) detail.push(`${wrong} command${wrong === 1 ? "" : "s"} not needed`);
+  const total = task.steps.length + task.fileChecks.length;
+  return { score: round(total ? units / total : 0), detail };
+}
+
+function checkTerminal(task: TerminalTask): string[] {
+  const problems: string[] = [];
+  const ids = task.steps.map((s) => s.id);
+  if (new Set(ids).size !== ids.length) problems.push("terminal: duplicate step ids");
+  for (const step of task.steps) {
+    for (const source of step.accept) if (!compilePattern(source)) problems.push(`terminal: step ${step.id} has an invalid pattern ${source.slice(0, 60)}`);
+  }
+  const paths = task.files.map((f) => f.path);
+  if (new Set(paths).size !== paths.length) problems.push("terminal: duplicate file paths");
+  for (const check of task.fileChecks) {
+    if (!paths.includes(check.path)) problems.push(`terminal: file check on unknown file ${check.path}`);
+    if (check.mustContain.length === 0 && check.mustNotContain.length === 0) problems.push(`terminal: the check on ${check.path} checks nothing`);
+  }
+  if ((gradeTerminal(task, [], {}).score ?? 0) >= TERMINAL_PASS) problems.push("terminal: an empty answer already passes");
   return problems;
 }

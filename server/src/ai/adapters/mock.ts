@@ -3,6 +3,7 @@ import { toProviderJsonSchema } from "../jsonSchema";
 import { AiOutputError, type AiProvider, type GenerateJsonRequest, type GenerateJsonResult } from "../types";
 import { fixtureBlueprint, fixtureCritic, fixtureExplainItems, fixtureItems } from "./mockFixtures";
 import { fixtureGeneratedItems, fixtureMcqCheck, fixturePlan } from "./mockPersonalise";
+import { fixtureGoalInterpret, fixtureOnboardSuggest } from "./mockGoals";
 import { fixtureRoleplayReply, fixtureRoleplayScore } from "./mockRoleplay";
 
 /**
@@ -136,6 +137,10 @@ export class MockProvider implements AiProvider {
         return fixtureRoleplayReply(request.user);
       case "roleplay_score":
         return fixtureRoleplayScore(request.user);
+      case "onboard_suggest":
+        return fixtureOnboardSuggest(request.system, request.user);
+      case "goal_interpret":
+        return fixtureGoalInterpret(request.system, request.user);
       default:
         return undefined;
     }

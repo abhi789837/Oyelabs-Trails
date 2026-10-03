@@ -50,6 +50,8 @@ export const SIZE_LIMITS = {
 /** v4.2: seconds per form field to fill, and per typed role-play reply. */
 export const FORM_FIELD_SEC = 20;
 export const ROLEPLAY_TURN_SEC = 25;
+/** v4.3: seconds per terminal command to recall and type. */
+export const TERMINAL_COMMAND_SEC = 15;
 
 export function words(text: string): number {
   return text.replace(/```[\s\S]*?```/g, " ").trim() ? text.replace(/```[\s\S]*?```/g, " ").trim().split(/\s+/).length : 0;
@@ -100,6 +102,8 @@ export interface ItemShape {
   turns: number;
   /** v4.2: items to categorise (~8 s each, counted as decisions). */
   categorizeItems: number;
+  /** v4.3: terminal commands to type (~15 s each). */
+  commands: number;
 }
 
 export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq" | "task">): ItemShape {
@@ -119,6 +123,7 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
     formFields: 0,
     turns: 0,
     categorizeItems: 0,
+    commands: 0,
   };
   if (item.coding) {
     shape.starterLines = lines(item.coding.starterCode);
@@ -186,6 +191,16 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
         shape.turns = Number(t.maxTurns ?? 0);
         shape.extraWords = words(String(t.brief ?? ""));
         break;
+      case "terminal": {
+        // The intro is terminal output to read; files are code to read, and each checked file is
+        // an edit (resolving a conflict is a couple of lines).
+        const files = (t.files as { content: string }[] | undefined) ?? [];
+        shape.commands = ((t.steps as unknown[] | undefined) ?? []).length;
+        shape.extraWords = words(String(t.intro ?? ""));
+        shape.readCodeLines += files.reduce((sum, f) => sum + lines(f.content), 0);
+        shape.changedLines = ((t.fileChecks as unknown[] | undefined) ?? []).length * 2;
+        break;
+      }
     }
   }
   return shape;
@@ -196,7 +211,7 @@ export function estimateSeconds(item: Pick<BankItem, "type" | "prompt" | "coding
   const s = shapeOf(item);
   const reading = ((s.promptWords + s.extraWords) / c.readWpm) * 60 + (s.readCodeLines + s.starterLines + s.snippetLines) * c.codeLineSec;
   const work =
-    s.changedLines * c.writeLineSec + s.cells * c.cellSec + (s.writeWords / c.writeWpm) * 60 + s.decisions * 8 + s.rankItems * 3 + s.formFields * FORM_FIELD_SEC + s.turns * ROLEPLAY_TURN_SEC;
+    s.changedLines * c.writeLineSec + s.cells * c.cellSec + (s.writeWords / c.writeWpm) * 60 + s.decisions * 8 + s.rankItems * 3 + s.formFields * FORM_FIELD_SEC + s.turns * ROLEPLAY_TURN_SEC + s.commands * TERMINAL_COMMAND_SEC;
   return Math.round(reading + work + c.thinkSec);
 }
 

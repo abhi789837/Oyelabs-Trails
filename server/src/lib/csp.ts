@@ -17,6 +17,8 @@ import fs from "node:fs";
  *   ~130-host list from embeds.generated.ts on every build. A framed document cannot reach into
  *   this page, so the exposure is that a reference URL could load an unexpected site — which the
  *   content quality gate already checks.
+ * - `script-src https://www.youtube.com` — v4.3: the YouTube IFrame Player API (`/iframe_api`, which
+ *   loads its widget script from the same host), so the topic playlist can track watching.
  * - The `index.html` theme bootstrap stays inline (it must run before first paint to avoid a
  *   light/dark flash), so it is allowed by its SHA-256 hash rather than by `'unsafe-inline'`.
  */
@@ -42,7 +44,7 @@ export function buildCsp({ indexHtmlPath }: CspOptions = {}): Record<string, str
 
   return {
     "default-src": ["'self'"],
-    "script-src": ["'self'", "'wasm-unsafe-eval'", ...scriptHashes],
+    "script-src": ["'self'", "'wasm-unsafe-eval'", "https://www.youtube.com", ...scriptHashes],
     "style-src": ["'self'", "'unsafe-inline'"],
     "font-src": ["'self'", "data:"],
     // YouTube thumbnails, canvas snapshots (blob:) and inlined SVGs (data:).

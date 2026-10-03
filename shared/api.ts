@@ -32,6 +32,8 @@ export const ERROR_CODES = {
   CONFLICT: "conflict",
   RATE_LIMITED: "rate_limited",
   LOCKED: "locked",
+  /** v4.3: the topic test is locked until every video of the topic is watched (409). */
+  VIDEOS_UNWATCHED: "videos_unwatched",
   AI_NOT_CONFIGURED: "ai_not_configured",
   AI_OUTPUT_INVALID: "ai_output_invalid",
   INTERNAL: "internal",

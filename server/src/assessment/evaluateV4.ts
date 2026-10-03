@@ -14,6 +14,7 @@ import { notify, staffIds } from "../lib/notify";
 import { publishPlan } from "../plans/repo";
 import type { PolyglotDeps } from "../sandbox/polyglot";
 import { getSetup } from "../setup/repo";
+import { refreshSuggestions } from "../goals/repo";
 import { gradeRoleplayItem } from "../roleplay/engine";
 import { computeResult, finalizeItems, itemsOf, keyOf } from "./v4";
 
@@ -254,6 +255,13 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
 
   db.update(schema.assessments).set({ status: "completed" }).where(eq(schema.assessments.id, assessmentId)).run();
   enqueue(db, { type: "path.build", payload: { userId: assessment.userId, assessmentId } });
+
+  // v4.3: newly found gaps (and next steps after achieved goals) as "Suggested next" for the admin.
+  try {
+    refreshSuggestions(db, assessment.userId, result);
+  } catch (error) {
+    deps.log?.(`goal suggestions failed for ${assessment.userId}: ${error instanceof Error ? error.message : String(error)}`);
+  }
 
   notify(db, {
     recipientId: assessment.userId,

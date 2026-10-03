@@ -723,6 +723,8 @@ export const learnerPriorities = sqliteTable("learner_priorities", {
   /** v4.1: the AI's reading of the admin's setup + description, and the hash of the input it read. */
   understanding: text("understanding", { mode: "json" }).$type<unknown>(),
   understandingHash: text("understanding_hash"),
+  /** v4.3: add suggested next goals without the admin's click (Advanced; off by default). */
+  autoAddSuggestions: integer("auto_add_suggestions", { mode: "boolean" }).notNull().default(false),
   updatedBy: text("updated_by"),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -1417,4 +1419,189 @@ export const roleplaySessions = sqliteTable(
     index("roleplay_sessions_created_idx").on(t.createdAt),
     uniqueIndex("roleplay_sessions_item_idx").on(t.assessmentId, t.itemId),
   ],
+);
+
+// ---------------------------------------------------------------------------
+// v4.3: goals and practical outcomes (shared/goals.ts)
+// ---------------------------------------------------------------------------
+
+/**
+ * The department's library of practical outcomes ("Resolve a merge conflict and open a clean PR").
+ * Seeded from server/src/goals/seed/; an admin may edit. `capstone` is the practice task that
+ * proves the outcome, and passing it marks a goal achieved.
+ */
+export const practicalOutcomes = sqliteTable(
+  "practical_outcomes",
+  {
+    id: text("id").primaryKey(),
+    departmentId: text("department_id").notNull(),
+    title: text("title").notNull(),
+    /** The "can do" statement: "Can resolve a merge conflict and open a clean pull request." */
+    statement: text("statement").notNull(),
+    skillIds: text("skill_ids", { mode: "json" }).$type<string[]>().notNull(),
+    /** 1-5, on the same scale as mastery. */
+    level: integer("level").notNull(),
+    aliases: text("aliases", { mode: "json" }).$type<string[]>().notNull(),
+    capstone: text("capstone", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    status: text("status").$type<"active" | "archived">().notNull().default("active"),
+    position: integer("position").notNull().default(0),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("practical_outcomes_dept_idx").on(t.departmentId, t.position)],
+);
+
+/**
+ * One "What should they be able to do?" entry: a catalog skill, a practical case, or a free-text
+ * goal the AI interpreted. The skill priorities (learner_skill_priorities) are derived from these.
+ */
+export const learnerGoals = sqliteTable(
+  "learner_goals",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").$type<"skill" | "case" | "text">().notNull(),
+    /** What the admin picked or typed. */
+    originalText: text("original_text").notNull(),
+    outcome: text("outcome").notNull(),
+    skillIds: text("skill_ids", { mode: "json" }).$type<string[]>().notNull(),
+    targetLevel: integer("target_level").notNull(),
+    caseId: text("case_id"),
+    slider: integer("slider").notNull(),
+    position: integer("position").notNull().default(0),
+    status: text("status").$type<"active" | "achieved">().notNull().default("active"),
+    achievedAt: integer("achieved_at"),
+    source: text("source").$type<"admin" | "suggested" | "auto">().notNull().default("admin"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("learner_goals_user_idx").on(t.userId, t.position)],
+);
+
+/** "Suggested next" goals: added or dismissed by the admin, or auto-added when they allow it. */
+export const goalSuggestions = sqliteTable(
+  "goal_suggestions",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    kind: text("kind").$type<"next-level" | "gap" | "progression">().notNull(),
+    title: text("title").notNull(),
+    outcome: text("outcome").notNull(),
+    skillIds: text("skill_ids", { mode: "json" }).$type<string[]>().notNull(),
+    targetLevel: integer("target_level").notNull(),
+    caseId: text("case_id"),
+    reason: text("reason").notNull(),
+    status: text("status").$type<"open" | "added" | "dismissed">().notNull().default("open"),
+    createdAt: integer("created_at").notNull(),
+    decidedAt: integer("decided_at"),
+  },
+  (t) => [index("goal_suggestions_user_idx").on(t.userId, t.status)],
+);
+
+// ---------------------------------------------------------------------------
+// v4.3: the skill graph (shared/skillGraph.ts)
+// ---------------------------------------------------------------------------
+
+/** from_skill must be learned before (prerequisite), or helps before (recommended), to_skill. */
+export const skillEdges = sqliteTable(
+  "skill_edges",
+  {
+    fromSkill: text("from_skill").notNull(),
+    toSkill: text("to_skill").notNull(),
+    type: text("type").$type<"prerequisite" | "recommended">().notNull(),
+    /** Null = seeded; otherwise the admin who added or edited it. */
+    updatedBy: text("updated_by"),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.fromSkill, t.toSkill] }), index("skill_edges_to_idx").on(t.toSkill)],
+);
+
+// ---------------------------------------------------------------------------
+// v4.3: video watch tracking (shared/video.ts)
+// ---------------------------------------------------------------------------
+
+/**
+ * One learner's progress on one video of one topic. `ranges` are the merged [start, end] second
+ * intervals actually played, so seeking ahead never counts; `watchedSeconds` is their total.
+ */
+export const videoProgress = sqliteTable(
+  "video_progress",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    topicId: text("topic_id").notNull(),
+    videoId: text("video_id").notNull(),
+    ranges: text("ranges", { mode: "json" }).$type<[number, number][]>().notNull(),
+    watchedSeconds: real("watched_seconds").notNull().default(0),
+    lastPosition: real("last_position").notNull().default(0),
+    durationSeconds: real("duration_seconds"),
+    completedAt: integer("completed_at"),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.topicId, t.videoId] }), index("video_progress_user_topic_idx").on(t.userId, t.topicId)],
+);
+
+/** Video durations: from the YouTube Data API when a key is set, else as the player reports them. */
+export const videoMeta = sqliteTable("video_meta", {
+  videoId: text("video_id").primaryKey(),
+  durationSeconds: real("duration_seconds").notNull(),
+  source: text("source").$type<"data-api" | "player">().notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+/** Small per-user preferences that must follow the learner across devices (autoplay next). */
+export const userPrefs = sqliteTable("user_prefs", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  data: text("data", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+// ---------------------------------------------------------------------------
+// v4.3: grounded, calibrated topic tests (shared/topicTests.ts)
+// ---------------------------------------------------------------------------
+
+/**
+ * What a topic teaches, as numbered passages the question writer may cite: the summary, sections,
+ * key points and notes, plus each video's transcript status ("not used for questions" when none).
+ */
+export const topicGrounding = sqliteTable("topic_grounding", {
+  topicId: text("topic_id").primaryKey(),
+  content: text("content", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+  hash: text("hash").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+/**
+ * One test item for a topic. `origin` static = imported from the content file's quiz; generated =
+ * written by the grounded generator. Only `active` items are served. The counters drive calibration.
+ */
+export const topicTestItems = sqliteTable(
+  "topic_test_items",
+  {
+    id: text("id").primaryKey(),
+    topicId: text("topic_id").notNull(),
+    origin: text("origin").$type<"static" | "generated">().notNull(),
+    /** Static items: the quiz question id in the content file. */
+    sourceId: text("source_id"),
+    status: text("status").$type<"active" | "flagged" | "retired" | "draft">().notNull(),
+    item: text("item", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    gates: text("gates", { mode: "json" }).$type<Record<string, unknown>>(),
+    groundingHash: text("grounding_hash"),
+    attempts: integer("attempts").notNull().default(0),
+    passes: integer("passes").notNull().default(0),
+    /** Attempts by learners in the top band for this topic, and how many of those got it wrong. */
+    strongAttempts: integer("strong_attempts").notNull().default(0),
+    strongFails: integer("strong_fails").notNull().default(0),
+    flagReason: text("flag_reason"),
+    retiredReason: text("retired_reason"),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("topic_test_items_topic_idx").on(t.topicId, t.status), uniqueIndex("topic_test_items_source_idx").on(t.topicId, t.sourceId)],
 );

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { LoaderCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import type { UserSummary } from "@shared/admin";
+import type { SuggestedGoal } from "@shared/goals";
 import { yearsFromBand, type SaveSetupRequest } from "@shared/setup";
 
 import { ApiRequestError } from "@/api/client";
@@ -12,13 +14,19 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { adminApi } from "./api";
+import { useCatalog } from "./catalog/useCatalog";
 import { setupApi } from "./setup/api";
+import type { SetupState } from "./setup/helpers";
 import { describeIssued } from "./setup/issued";
+import { QuickOnboard } from "./setup/QuickOnboard";
 import { SetupForm, type SetupFormContext } from "./setup/SetupForm";
 import { TemporaryPasswordNotice } from "./TemporaryPasswordNotice";
 
 /**
- * Onboarding (v4 Phase 3): the account, then the same Setup form the learner page uses.
+ * Onboarding. v4.3: quick onboarding first (name, username, department, one line → Suggest → Save &
+ * assign); "Edit details" opens the full Setup form below with what was suggested.
+ *
+ * v4 Phase 3: the account, then the same Setup form the learner page uses.
  *
  * Two calls, in an order that matters. The account is created with `issueAssessment: false`, then
  * the setup is saved with `assign` — so the assessment is built from the setup that was just saved,
@@ -47,6 +55,10 @@ export default function AdminOnboardPage() {
   /** The account from a submit whose setup save failed: retried without creating it again. */
   const [pendingUser, setPendingUser] = useState<UserSummary | null>(null);
   const [formKey, setFormKey] = useState(0);
+  /** v4.3: quick onboarding (the default) or the full Setup form ("Edit details"). */
+  const [mode, setMode] = useState<"quick" | "full">("quick");
+  const [seed, setSeed] = useState<{ state: SetupState; extras: SuggestedGoal[] } | null>(null);
+  const { catalog, error: catalogError } = useCatalog();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -69,6 +81,9 @@ export default function AdminOnboardPage() {
     setPassword("");
     setPendingUser(null);
     setFormKey((k) => k + 1);
+    setMode("quick");
+    setSeed(null);
+    setRole("learner");
   };
 
   const createAccount = useCallback(
@@ -235,8 +250,22 @@ export default function AdminOnboardPage() {
     <div className="max-w-6xl px-4 py-8 sm:px-6">
       <h1 className="text-2xl font-bold">Onboard a learner</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Creates the account and the setup their placement assessment is built from.
+        {mode === "quick" ? "One line about them, Suggest, then Save & assign." : "Creates the account and the setup their placement assessment is built from."}
       </p>
+      {mode === "full" && pendingUser === null && (
+        <Button
+          type="button"
+          variant="link"
+          className="mt-2 h-auto px-0"
+          onClick={() => {
+            setMode("quick");
+            setRole("learner");
+            setFormKey((k) => k + 1);
+          }}
+        >
+          Back to quick onboarding
+        </Button>
+      )}
 
       {created && (
         <TemporaryPasswordNotice
@@ -253,10 +282,47 @@ export default function AdminOnboardPage() {
       )}
 
       <div className="mt-8">
-        {role === "learner" ? (
+        {mode === "quick" && role === "learner" ? (
+          catalog ? (
+            <QuickOnboard
+              key={formKey}
+              catalog={catalog}
+              username={username}
+              displayName={displayName}
+              onUsername={setUsername}
+              onDisplayName={setDisplayName}
+              usernameError={usernameTaken ? "That username is already taken." : undefined}
+              accountLocked={pendingUser !== null}
+              canSubmit={canSubmit}
+              onSave={saveLearner}
+              onEditDetails={(state, extras) => {
+                setSeed({ state, extras });
+                setMode("full");
+              }}
+              onCreateAdmin={
+                mayCreateStaff
+                  ? () => {
+                      setRole("admin");
+                      setMode("full");
+                    }
+                  : undefined
+              }
+            />
+          ) : catalogError ? (
+            <FormAlert>{catalogError}</FormAlert>
+          ) : (
+            <p className="flex items-center gap-2 text-sm text-muted-foreground" role="status">
+              <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+              Loading departments and skills…
+            </p>
+          )
+        ) : role === "learner" ? (
           <SetupForm
             key={formKey}
             initial={null}
+            seed={seed?.state ?? null}
+            extras={seed?.extras}
+            extrasLabel="Suggested from your description"
             onSave={saveLearner}
             primaryLabel={pendingUser ? "Save setup & assign assessment" : "Create & assign assessment"}
             secondaryLabel={pendingUser ? "Save setup" : "Create"}

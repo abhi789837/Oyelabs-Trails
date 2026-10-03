@@ -24,6 +24,7 @@ import ClassifyPage from "@/features/handbook/ClassifyPage";
 import FlashcardsPage from "@/features/handbook/FlashcardsPage";
 import GlossaryPage from "@/features/handbook/GlossaryPage";
 import RoleplayPracticePage from "@/features/roleplay/RoleplayPracticePage";
+import CapstonePage from "@/features/goals/CapstonePage";
 
 /** How often to re-check an assessment the server is still working on. */
 const ASSESSMENT_POLL_MS = 30_000;
@@ -136,6 +137,8 @@ function AnimatedRoutes() {
           <Route path="tools/classify" element={<ClassifyPage />} />
           <Route path="practice/roleplay" element={<RoleplayPracticePage />} />
           <Route path="report/:trackId" element={<CertificatePage />} />
+          {/* v4.3: a goal's capstone task. */}
+          <Route path="goals/:goalId" element={<CapstonePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </motion.div>

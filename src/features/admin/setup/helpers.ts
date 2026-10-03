@@ -13,6 +13,8 @@ import {
   type Slider,
 } from "@shared/setup";
 
+import { addSkillGoal, derivePriorityRows, dropSkillGoals, rowsFromSaved, toGoalInputs, type GoalRow } from "./goals";
+
 /**
  * The Setup form's state and the pure rules over it, kept apart from the component so the sort,
  * the moves and the exclusivity between the two pickers are tested without a React tree.
@@ -33,7 +35,13 @@ export interface SetupState {
   level: Slider | null;
   /** True once the admin picked a level by hand; until then it follows experience. */
   levelTouched: boolean;
+  /**
+   * Derived from `goals` (v4.3, D2) and kept in step by `withGoals`: the summary, the mix preview and
+   * the understanding read it, exactly as the server's derived priorities.
+   */
   priorities: PriorityRow[];
+  /** v4.3: the "What should they be able to do?" rows: skills, practical cases and free-text goals. */
+  goals: GoalRow[];
   skip: string[];
   hoursPerWeek: number | null;
   advanced: SetupAdvanced;
@@ -43,7 +51,7 @@ export interface SetupState {
   prefilledFrom?: string | null;
 }
 
-export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced" };
+export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced", autoAddSuggestions: false };
 
 export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment: string): SetupState {
   if (!setup) {
@@ -55,12 +63,15 @@ export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment
       level: null,
       levelTouched: false,
       priorities: [],
+      goals: [],
       skip: [],
       hoursPerWeek: DEFAULT_HOURS_PER_WEEK,
       advanced: DEFAULT_ADVANCED,
       description: "",
     };
   }
+  const skip = setup.skip.map((s) => s.skillId);
+  const goals = rowsFromSaved(setup.goals, setup.priorities, setup.level);
   return {
     departmentId: setup.departmentId,
     trackId: setup.trackId,
@@ -69,8 +80,9 @@ export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment
     level: setup.level,
     // A saved level is the admin's, even when it happens to equal the experience default.
     levelTouched: setup.level !== null,
-    priorities: sortPriorities(setup.priorities).map((p, index) => ({ skillId: p.skillId, slider: p.slider, position: index })),
-    skip: setup.skip.map((s) => s.skillId),
+    priorities: derivePriorityRows(goals, skip),
+    goals,
+    skip,
     hoursPerWeek: setup.hoursPerWeek,
     advanced: { ...DEFAULT_ADVANCED, ...setup.advanced },
     description: setup.description ?? "",
@@ -90,8 +102,14 @@ export function toSaveRequest(state: SetupState, assign: boolean): SaveSetupRequ
     hoursPerWeek: state.hoursPerWeek ?? DEFAULT_HOURS_PER_WEEK,
     advanced: state.advanced,
     description: state.description,
+    goals: toGoalInputs(state.goals),
     assign,
   };
+}
+
+/** Replaces the goal rows and re-derives the priorities from them. */
+export function withGoals(state: SetupState, goals: GoalRow[]): SetupState {
+  return { ...state, goals, priorities: derivePriorityRows(goals, state.skip) };
 }
 
 /**
@@ -177,17 +195,15 @@ export function movePriority(rows: readonly PriorityRow[], skillId: string, delt
   );
 }
 
-/** A skill is a priority or skipped, never both: picking it in one list takes it out of the other. */
+/** A skill is a goal or skipped, never both: picking it in one list takes it out of the other. */
 export function pickPriority(state: SetupState, skillId: string, slider: Slider = DEFAULT_SLIDER): SetupState {
-  return { ...state, priorities: addPriority(state.priorities, skillId, slider), skip: state.skip.filter((id) => id !== skillId) };
+  const skip = state.skip.filter((id) => id !== skillId);
+  return withGoals({ ...state, skip }, addSkillGoal(state.goals, skillId, slider));
 }
 
 export function pickSkip(state: SetupState, skillId: string): SetupState {
-  return {
-    ...state,
-    priorities: removePriority(state.priorities, skillId),
-    skip: state.skip.includes(skillId) ? state.skip : [...state.skip, skillId],
-  };
+  const skip = state.skip.includes(skillId) ? state.skip : [...state.skip, skillId];
+  return withGoals({ ...state, skip }, dropSkillGoals(state.goals, skillId));
 }
 
 // ---------------------------------------------------------------------------
@@ -201,14 +217,17 @@ export function pickSkip(state: SetupState, skillId: string): SetupState {
 export function changeDepartment(state: SetupState, catalog: Catalog, departmentId: string): SetupState {
   if (departmentId === state.departmentId) return state;
   const inDept = (id: string) => catalog.skills.some((s) => s.id === id && s.departmentId === departmentId);
-  return {
-    ...state,
-    departmentId,
-    trackId: catalog.tracks.some((t) => t.id === state.trackId && t.departmentId === departmentId) ? state.trackId : null,
-    stackIds: state.stackIds.filter((id) => catalog.stacks.some((s) => s.id === id && s.departmentId === departmentId)),
-    priorities: state.priorities.filter((p) => inDept(p.skillId)),
-    skip: state.skip.filter(inDept),
-  };
+  return withGoals(
+    {
+      ...state,
+      departmentId,
+      trackId: catalog.tracks.some((t) => t.id === state.trackId && t.departmentId === departmentId) ? state.trackId : null,
+      stackIds: state.stackIds.filter((id) => catalog.stacks.some((s) => s.id === id && s.departmentId === departmentId)),
+      skip: state.skip.filter(inDept),
+    },
+    // Cases belong to a department too; a goal survives only when every skill it needs does.
+    state.goals.filter((g) => g.skillIds.every(inDept)),
+  );
 }
 
 /**
@@ -217,7 +236,7 @@ export function changeDepartment(state: SetupState, catalog: Catalog, department
  * one pick, and leaves out skills the admin put under "Don't include".
  */
 export function withDepartmentDefaults(state: SetupState, catalog: Catalog): SetupState {
-  if (state.priorities.length > 0) return state;
+  if (state.priorities.length > 0 || state.goals.length > 0) return state;
   const skip = new Set(state.skip);
   const defaults = pickableSkills(catalog, state.departmentId)
     .filter((s) => s.status === "active" && isSlider(s.defaultSlider) && !skip.has(s.id))
@@ -225,11 +244,8 @@ export function withDepartmentDefaults(state: SetupState, catalog: Catalog): Set
     .sort((a, b) => b.slider - a.slider || a.index - b.index)
     .slice(0, MAX_PRIORITIES);
   if (defaults.length === 0) return state;
-  return {
-    ...state,
-    priorities: defaults.map((d, position) => ({ skillId: d.skill.id, slider: d.slider, position })),
-    prefilledFrom: state.departmentId,
-  };
+  const goals = defaults.reduce<GoalRow[]>((rows, d) => addSkillGoal(rows, d.skill.id, d.slider, levelTarget(state.level)), []);
+  return { ...withGoals(state, goals), prefilledFrom: state.departmentId };
 }
 
 /** The department switch with defaults: an empty list after the switch gets the new department's. */
@@ -237,6 +253,11 @@ export function changeDepartmentWithDefaults(state: SetupState, catalog: Catalog
   if (departmentId === state.departmentId) return state;
   const next = changeDepartment(state, catalog, departmentId);
   return withDepartmentDefaults({ ...next, prefilledFrom: null }, catalog);
+}
+
+/** A skill goal's target when nobody chose one: a step above their level, else Intermediate. */
+export function levelTarget(level: number | null): number {
+  return level ? Math.min(5, Math.max(2, level + 1)) : 3;
 }
 
 function isSlider(value: number | null | undefined): value is Slider {

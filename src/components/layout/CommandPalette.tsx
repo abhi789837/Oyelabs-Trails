@@ -129,6 +129,7 @@ function buildActions(role: Role | undefined, context: "learner" | "admin"): Com
     entry("action:admin-integrity", "Integrity events", "/admin/integrity", "Every proctoring signal, across everyone"),
     entry("action:admin-audit", "Audit log", "/admin/audit", "Everything anyone changed"),
     entry("action:admin-curriculum", "Curriculum", "/admin/curriculum", "Every topic, filterable"),
+    entry("action:admin-skill-graph", "Skill graph", "/admin/skill-graph", "Which skills come before which"),
     entry("action:admin-courses", "Courses", "/admin/courses", "Write an internal process by hand"),
     ...handbook,
   ];

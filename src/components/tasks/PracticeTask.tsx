@@ -1,7 +1,7 @@
 import { useId, useState } from "react";
 import { CircleCheck, RotateCcw } from "lucide-react";
 
-import { gradeTask, TASK_KIND_LABELS, type Task, type TaskResponse } from "@shared/tasks";
+import { fileCheckPasses, gradeTask, runTerminal, TASK_KIND_LABELS, type Task, type TaskResponse } from "@shared/tasks";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -167,6 +167,11 @@ function hintFor(task: Task, value: TaskResponse | null): string[] {
         lines.push(`${right} of ${task.questions.length} questions right`);
       }
       return lines;
+    }
+    case "terminal": {
+      const t = value as Extract<TaskResponse, { kind: "terminal" }>;
+      const met = runTerminal(task, t.commands).met.length;
+      return [`${met} of ${task.steps.length} steps done${task.fileChecks.length ? `, ${task.fileChecks.filter((c) => fileCheckPasses(c, t.files[c.path] ?? task.files.find((f) => f.path === c.path)?.content ?? "")).length} of ${task.fileChecks.length} files right` : ""}`];
     }
     case "categorize": {
       const picks = (value as Extract<TaskResponse, { kind: "categorize" }>).picks;

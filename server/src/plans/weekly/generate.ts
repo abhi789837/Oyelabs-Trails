@@ -30,6 +30,7 @@ import {
   weekDates,
 } from "./repo";
 import type { BuildWeekInput, CarriedItem } from "./types";
+import { refreshSuggestions } from "../../goals/repo";
 
 /**
  * Producing a week, end to end.
@@ -339,6 +340,15 @@ export async function ensureWeek(deps: GenerateDeps, userId: string, nowMs = Dat
      The model's pass is queued instead, and improves the week in place a moment later. Somebody who
      never comes back still had a working week; somebody who reloads gets the better one. */
   const result = await generateWeek(deps, { userId, nowMs, advance: current !== null, rulesOnly: true });
+
+  // v4.3: the weekly "Suggested next" refresh rides on the new week (rules only, no model call).
+  if (result.planId) {
+    try {
+      refreshSuggestions(deps.db, userId);
+    } catch (error) {
+      deps.log?.(`goal suggestions failed for ${userId}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
 
   if (result.planId && deps.ai.isConfigured()) {
     enqueue(deps.db, { type: "week.refine", payload: { userId, planId: result.planId } });

@@ -3,10 +3,10 @@ import { LoaderCircle, X } from "lucide-react";
 
 import type { Catalog, Skill } from "@shared/catalog";
 import { DESCRIPTION_MAX, PERSONALISATION_LABELS, PERSONALISATION_LEVELS, type Personalisation } from "@shared/personalise";
+import { MAX_GOALS, type SuggestedGoal } from "@shared/goals";
 import {
   EXPERIENCE_BANDS,
   EXPERIENCE_LABELS,
-  MAX_PRIORITIES,
   levelFromExperience,
   type ExperienceBand,
   type LearnerSetup,
@@ -31,23 +31,22 @@ import {
   focusNames,
   hoursPerDayHint,
   initialSetupState,
+  levelTarget,
   listNames,
-  movePriority,
   pickableSkills,
   pickPriority,
   pickSkip,
   previewMix,
-  removePriority,
   sameSetup,
-  setSlider,
   toSaveRequest,
   toUnderstandRequest,
   understandingKey,
   understandingReady,
   withDepartmentDefaults,
+  withGoals,
   type SetupState,
 } from "./helpers";
-import { PriorityRows } from "./PriorityRows";
+import { GoalBox } from "./GoalBox";
 import { SkillPicker } from "./SkillPicker";
 import { StackPicker } from "./StackPicker";
 import { UnderstandingPanel, useUnderstanding } from "./UnderstandingPanel";
@@ -78,6 +77,13 @@ export interface SetupFormProps {
   onAddHandled?: () => void;
   /** Whether to say "Unsaved changes" — meaningful for an existing learner only. */
   showDirty?: boolean;
+  /** v4.3: a new learner's state to start from (quick onboarding's "Edit details"). */
+  seed?: SetupState | null;
+  /** v4.3: onboarding's "Suggested for ..." goals, each with + Add. */
+  extras?: readonly SuggestedGoal[];
+  extrasLabel?: string;
+  /** Reports every change, so a parent (quick onboarding) can keep what was edited here. */
+  onStateChange?: (state: SetupState) => void;
 }
 
 /**
@@ -120,6 +126,10 @@ function SetupFormInner({
   onAddHandled,
   showDirty,
   userId,
+  seed,
+  extras,
+  extrasLabel,
+  onStateChange,
 }: SetupFormProps & { catalog: Catalog }) {
   const formDialog = useFormDialog();
   const uid = useId();
@@ -127,7 +137,10 @@ function SetupFormInner({
   const fallbackDepartment = departments[0]?.id ?? "engineering";
   const baseline = useMemo(() => initialSetupState(initial, fallbackDepartment), [initial, fallbackDepartment]);
   // A new learner starts from their department's suggested priorities (v4.1); a saved setup is never touched.
-  const [state, setState] = useState<SetupState>(() => (initial ? baseline : withDepartmentDefaults(baseline, catalog)));
+  const [state, setState] = useState<SetupState>(() => (initial ? baseline : (seed ?? withDepartmentDefaults(baseline, catalog))));
+  useEffect(() => {
+    onStateChange?.(state);
+  }, [state, onStateChange]);
   const [pending, setPending] = useState<"save" | "assign" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
@@ -138,6 +151,7 @@ function SetupFormInner({
   const track = tracks.find((t) => t.id === state.trackId) ?? null;
   const stacks = catalog.stacks.filter((s) => s.departmentId === state.departmentId && !s.archived);
   const skills = useMemo(() => pickableSkills(catalog, state.departmentId), [catalog, state.departmentId]);
+  const skillNames = useMemo(() => new Map(catalog.skills.map((s) => [s.id, s.name])), [catalog]);
   const skillById = useMemo(() => new Map(catalog.skills.map((s) => [s.id, s])), [catalog]);
   const mix = useMemo(() => previewMix(state, catalog), [state, catalog]);
   const focus = useMemo(() => focusNames(state, catalog), [state, catalog]);
@@ -222,6 +236,7 @@ function SetupFormInner({
     level: `${uid}-level`,
     description: `${uid}-description`,
     descriptionCount: `${uid}-description-count`,
+    goals: `${uid}-goals`,
     personalisation: `${uid}-personalisation`,
   };
   const descriptionLength = state.description.length;
@@ -377,55 +392,42 @@ function SetupFormInner({
         </Section>
 
         <Section
-          title="Priorities"
-          hint="Pick skills, then set how much each matters. Rows sort themselves."
+          title="What should they be able to do?"
+          titleId={ids.goals}
+          hint="Skills, practical cases or your own words. Each gets a slider."
           info={
             <>
-              Critical and High are <strong>Do it now</strong>: each gets a course on the path and about 60% of the
-              assessment, asked first. Medium, Low and Optional share the rest. Arrows reorder skills that share a
-              level.
+              Critical and High are <strong>Do it now</strong>: their skills get a course on the path and about 60% of the
+              assessment, asked first. Each skill takes the highest slider of any goal that needs it.
             </>
           }
-          error={fieldError(fields, "priorities")}
+          error={fieldError(fields, "goals") ?? fieldError(fields, "priorities")}
           aside={
             <span className="font-mono text-[11px] text-muted-foreground tabular">
-              {state.priorities.length}/{MAX_PRIORITIES}
+              {state.goals.length}/{MAX_GOALS}
             </span>
           }
         >
           <div className="space-y-3">
-            <SkillPicker
-              skills={skills}
-              track={trackRef}
-              selectedIds={priorityIds}
-              otherIds={state.skip}
-              otherLabel="left out"
-              triggerLabel="Add a priority skill"
-              disabled={busy || state.priorities.length >= MAX_PRIORITIES}
-              onPick={(skill) => setState((s) => pickPriority(s, skill.id))}
-              onRequest={(query) => void requestSkill(query, "priority")}
-            />
-            {state.priorities.length === 0 ? (
-              <p className="rounded-md border border-dashed px-4 py-5 text-center text-sm text-muted-foreground">
-                No priorities yet. The assessment then covers their track basics only.
-              </p>
-            ) : (
-              <>
-                {state.prefilledFrom === state.departmentId && (
-                  <p className="text-xs text-muted-foreground">
-                    Suggested defaults for {department?.name ?? "this department"} — adjust any slider.
-                  </p>
-                )}
-                <PriorityRows
-                  rows={state.priorities}
-                  skills={skillById}
-                  disabled={busy}
-                  onSlider={(skillId, slider) => setState((s) => ({ ...s, priorities: setSlider(s.priorities, skillId, slider) }))}
-                  onMove={(skillId, delta) => setState((s) => ({ ...s, priorities: movePriority(s.priorities, skillId, delta) }))}
-                  onRemove={(skillId) => setState((s) => ({ ...s, priorities: removePriority(s.priorities, skillId) }))}
-                />
-              </>
+            {state.prefilledFrom === state.departmentId && state.goals.length > 0 && (
+              <p className="text-xs text-muted-foreground">Suggested defaults for {department?.name ?? "this department"}: adjust any slider.</p>
             )}
+            <GoalBox
+              departmentId={state.departmentId}
+              skills={skills}
+              skillNames={skillNames}
+              track={trackRef}
+              rows={state.goals}
+              skip={state.skip}
+              onChange={(goals) => setState((s) => withGoals(s, goals))}
+              onRequestSkill={(query) => void requestSkill(query, "priority")}
+              extras={extras}
+              extrasLabel={extrasLabel}
+              userId={userId}
+              disabled={busy}
+              labelId={ids.goals}
+              defaultTarget={levelTarget(state.level)}
+            />
           </div>
         </Section>
 
@@ -495,6 +497,13 @@ function SetupFormInner({
               checked={state.advanced.weekStartsMonday}
               disabled={busy}
               onChange={(weekStartsMonday) => update({ advanced: { ...state.advanced, weekStartsMonday } })}
+            />
+            <CheckRow
+              label="Add suggested goals automatically"
+              info="Off: suggested next goals wait for your Add. On: they are added as soon as they are found."
+              checked={state.advanced.autoAddSuggestions}
+              disabled={busy}
+              onChange={(autoAddSuggestions) => update({ advanced: { ...state.advanced, autoAddSuggestions } })}
             />
             <CheckRow
               label="Auto-publish generated courses"

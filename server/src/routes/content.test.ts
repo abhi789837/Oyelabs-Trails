@@ -11,6 +11,7 @@ import {
   type Session,
   type TestContext,
 } from "../test/harness";
+import { setVideoLockMode } from "../videos/repo";
 
 let ctx: TestContext;
 let admin: Session;
@@ -26,6 +27,8 @@ beforeEach(async () => {
   ctx = await createTestApp();
   admin = await adminSession(ctx);
   learner = await activeLearner(ctx, admin);
+  // These tests are about grading. The v4.3 video lock (on by default) has its own tests in videos.test.ts.
+  setVideoLockMode(ctx.db, "warn");
 });
 
 afterEach(async () => {

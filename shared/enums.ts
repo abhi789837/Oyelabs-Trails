@@ -86,6 +86,10 @@ export const aiPurposeSchema = z.enum([
   "roleplay",
   /** v4.2: scoring a finished role-play against its rubric. */
   "roleplay_score",
+  /** v4.3: quick onboarding's Suggest, from a one-line description. */
+  "onboard_suggest",
+  /** v4.3: a free-text goal read into an outcome, skills and a level. */
+  "goal_interpret",
 ]);
 export type AiPurpose = z.infer<typeof aiPurposeSchema>;
 

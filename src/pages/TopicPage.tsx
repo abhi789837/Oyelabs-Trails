@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { LoaderCircle } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
@@ -11,10 +11,13 @@ import { TopicInteractive } from "@/features/handbook/TopicInteractive";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { ReferenceList } from "@/components/trail/ReferenceList";
 import { TopicStatusBadge } from "@/components/trail/TopicStatusBadge";
-import { VideoPlayer } from "@/components/trail/VideoPlayer";
+import { VideoPlaylist, type VideoPlaylistHandle } from "@/components/trail/VideoPlaylist";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDepartment } from "@/features/auth/AuthProvider";
+import { LeaveTopicPrompt } from "@/features/videos/LeaveTopicPrompt";
+import { useTopicVideos, type TopicVideos } from "@/features/videos/useTopicVideos";
+import { VideoGate } from "@/features/videos/VideoGate";
 import { findTopic, modulePath, topicNeighbors, topicPath, type ModuleMeta, type TopicMeta, type TrackMeta } from "@/content";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useModuleContent } from "@/hooks/useModuleContent";
@@ -53,6 +56,15 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
   const { prev, next } = topicNeighbors(meta.id);
   const index = module.topics.findIndex((t) => t.id === meta.id);
   const accent = accentClasses[track.accentToken];
+  const videos = useTopicVideos(meta.id);
+  const playlistRef = useRef<VideoPlaylistHandle>(null);
+  const videoState = videos.data;
+  const remainingVideos = videoState && !videoState.exempt ? videoState.total - videoState.watchedCount : 0;
+  // "Played this visit" decides whether closing the tab asks first; opening a topic alone never does.
+  const watchedNow = useMemo(() => videoState?.videos.reduce((sum, v) => sum + v.watchedSeconds, 0) ?? null, [videoState]);
+  const watchedAtOpen = useRef<number | null>(null);
+  if (watchedAtOpen.current === null && watchedNow !== null) watchedAtOpen.current = watchedNow;
+  const playedThisVisit = watchedNow !== null && watchedAtOpen.current !== null && watchedNow > watchedAtOpen.current;
 
   useEffect(() => {
     markInProgress(meta.id);
@@ -85,6 +97,11 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
           <Badge variant="outline">{formatMinutes(meta.estMinutes)}</Badge>
           {meta.isMilestone && <Badge variant="default">Milestone</Badge>}
           <TopicStatusBadge progress={progress} />
+          {videoState && videoState.total > 0 && (
+            <Badge variant="outline" className={cn(videoState.watchedCount === videoState.total && "border-summit/60 text-summit-strong")}>
+              Videos {videoState.watchedCount} of {videoState.total} watched
+            </Badge>
+          )}
         </div>
       </header>
 
@@ -104,7 +121,7 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
         </div>
       )}
 
-      {topic && <TopicBody topic={topic} />}
+      {topic && <TopicBody topic={topic} videos={videos} playlistRef={playlistRef} />}
 
       {topic?.sopCount ? <SopBlocks topicId={topic.id} /> : null}
 
@@ -145,10 +162,14 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
               : `${(topic.codeChallenge?.visibleTests.length ?? 0) + (topic.codeChallenge?.hiddenTestCount ?? 0)} tests, including hidden ones. Every test must pass to complete this topic.`}
           </p>
           <div className="mt-6">
-            <ChallengeRunner topic={topic} />
+            <VideoGate videos={videoState} onWatch={(key) => playlistRef.current?.play(key)}>
+              <ChallengeRunner topic={topic} />
+            </VideoGate>
           </div>
         </section>
       )}
+
+      <LeaveTopicPrompt remaining={remainingVideos} playedThisVisit={playedThisVisit} />
 
       <nav aria-label="Topic navigation" className="mt-14 grid max-w-3xl gap-3 border-t pt-8 sm:grid-cols-2">
         {prev ? (
@@ -180,11 +201,19 @@ function hasChallenge(topic: ServedTopic): boolean {
   return topic.challengeType === "quiz" ? Boolean(topic.quiz?.length) : Boolean(topic.codeChallenge);
 }
 
-function TopicBody({ topic }: { topic: ServedTopic }) {
+function TopicBody({
+  topic,
+  videos,
+  playlistRef,
+}: {
+  topic: ServedTopic;
+  videos: TopicVideos;
+  playlistRef: RefObject<VideoPlaylistHandle | null>;
+}) {
   return (
     <>
-      <section aria-label="Video" className="mt-8">
-        <VideoPlayer video={topic.video} alternates={topic.alternateVideos} />
+      <section aria-label="Videos" className="mt-8">
+        <VideoPlaylist ref={playlistRef} topicId={topic.id} videos={videos} fallback={{ video: topic.video, alternates: topic.alternateVideos }} />
       </section>
 
       <section aria-labelledby="summary-heading" className="mt-10 max-w-3xl">

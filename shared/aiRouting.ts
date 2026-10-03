@@ -30,6 +30,8 @@ export const AI_TASKS = [
   "verify",
   "roleplay",
   "roleplay_score",
+  "onboard_suggest",
+  "goal_interpret",
 ] as const;
 export const aiTaskSchema = z.enum(AI_TASKS);
 export type AiTask = z.infer<typeof aiTaskSchema>;
@@ -68,6 +70,8 @@ export const TASK_DEFAULTS: Record<AiTask, TaskDefault> = {
   verify: { label: "Credential check", model: HAIKU, maxTokens: 64, urgent: true, batch: false, note: "" },
   roleplay: { label: "Role-play: the AI client's replies", model: HAIKU, maxTokens: 300, urgent: false, batch: false, note: "One short call per learner message; capped monthly" },
   roleplay_score: { label: "Role-play: rubric scoring", model: HAIKU, maxTokens: 900, urgent: false, batch: false, note: "One call per finished conversation" },
+  onboard_suggest: { label: "Quick onboarding: Suggest", model: HAIKU, maxTokens: 900, urgent: true, batch: false, note: "One call per Suggest; the catalog prompt is cached" },
+  goal_interpret: { label: "Reading a free-text goal", model: HAIKU, maxTokens: 300, urgent: true, batch: false, note: "One small call per typed goal; cached prompt" },
 };
 
 /** Calls that predate task types are routed by their purpose. */
@@ -106,6 +110,10 @@ export function taskForPurpose(purpose: AiPurpose): AiTask {
       return "roleplay";
     case "roleplay_score":
       return "roleplay_score";
+    case "onboard_suggest":
+      return "onboard_suggest";
+    case "goal_interpret":
+      return "goal_interpret";
   }
 }
 

@@ -19,6 +19,7 @@ import type { Db } from "../db";
 import * as schema from "../db/schema";
 import { badRequest } from "../lib/errors";
 import { now } from "../lib/ids";
+import { listGoals, saveGoals, syncSkillGoalsFromPriorities, validateGoals } from "../goals/repo";
 
 /**
  * The admin's priorities and skip list, as rows (v4 Phase 3).
@@ -132,8 +133,10 @@ export function getSetup(db: Db, userId: string): LearnerSetup {
       courseCap: settings?.courseCap ?? 5,
       autoPublish: settings?.autoPublish ?? false,
       personalisation: settings?.personalisation ?? "balanced",
+      autoAddSuggestions: settings?.autoAddSuggestions ?? false,
     },
     description: profile?.adminNotes ?? "",
+    goals: listGoals(db, userId),
   };
 }
 
@@ -150,8 +153,11 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
   }
   const stackIds = input.stackIds.filter((id) => catalog.stacks.some((s) => s.id === id && s.departmentId === department.id));
   const byId = new Map(catalog.skills.map((s) => [s.id, s]));
-  const wrong = [...input.priorities.map((p) => p.skillId), ...input.skip].find((id) => byId.get(id)?.departmentId !== department.id);
+  // v4.3: with goals, the priorities are derived from them (D2) and the sent priorities are ignored.
+  const sentPriorities = input.goals ? [] : input.priorities;
+  const wrong = [...sentPriorities.map((p) => p.skillId), ...input.skip].find((id) => byId.get(id)?.departmentId !== department.id);
   if (wrong) throw badRequest("A selected skill is not in this department's catalog.", { priorities: `Unknown skill ${wrong}` });
+  if (input.goals) validateGoals(db, department.id, input.goals);
 
   const at = now();
   db.transaction((tx) => {
@@ -187,6 +193,7 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
       courseCap: input.advanced.courseCap,
       autoPublish: input.advanced.autoPublish,
       personalisation: input.advanced.personalisation,
+      autoAddSuggestions: input.advanced.autoAddSuggestions,
       updatedBy: actorId,
       updatedAt: at,
     };
@@ -196,12 +203,18 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
       .run();
   });
 
-  replacePriorities(
-    db,
-    userId,
-    input.priorities.map((p) => ({ skillId: p.skillId, skillName: byId.get(p.skillId)!.name, slider: p.slider })),
-    input.skip.map((id) => ({ skillId: id, skillName: byId.get(id)!.name })),
-  );
+  const skip = input.skip.map((id) => ({ skillId: id, skillName: byId.get(id)!.name }));
+  if (input.goals) {
+    saveGoals(db, userId, input.goals, { departmentId: department.id, skip });
+  } else {
+    replacePriorities(
+      db,
+      userId,
+      input.priorities.map((p) => ({ skillId: p.skillId, skillName: byId.get(p.skillId)!.name, slider: p.slider })),
+      skip,
+    );
+    syncSkillGoalsFromPriorities(db, userId, listSkillPriorities(db, userId), input.level);
+  }
   return getSetup(db, userId);
 }
 
@@ -256,6 +269,8 @@ export function writeLegacyTargets(
             return { skillId: skill.id, skillName: skill.name };
           });
   replacePriorities(db, userId, priorities, skip);
+  // v4.3: keep the goal box in step with what the legacy endpoint wrote.
+  syncSkillGoalsFromPriorities(db, userId, listSkillPriorities(db, userId), null);
 }
 
 /** Replaces only the skip list (by free-text names), keeping every slider exactly as it is. */

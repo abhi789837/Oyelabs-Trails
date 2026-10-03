@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { allTopics, findTopic, modulePath, topicPath, trackMinutes, trackTopics, useTracks, type TrackMeta } from "@/content";
 import { useDepartment } from "@/features/auth/AuthProvider";
+import { GoalsCard } from "@/features/goals/GoalsCard";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { summarizeModule, summarizeTrack } from "@/hooks/useTrackProgress";
 import { accentClasses } from "@/lib/accent";
@@ -53,6 +54,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      <GoalsCard />
       {(department.id === "pm" || department.id === "bd") && <ClassifyCard />}
       {department.id === "pm" && <RoleplayCard />}
 

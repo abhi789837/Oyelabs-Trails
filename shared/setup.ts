@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { goalInputSchema, MAX_GOALS, type LearnerGoal } from "./goals";
+
 /**
  * The admin's Setup screen (v4 Phase 3): one model for who a learner is and what they are for.
  *
@@ -103,6 +105,8 @@ export const setupAdvancedSchema = z.object({
   autoPublish: z.boolean().default(false),
   /** v4.1: how much of the assessment the AI writes fresh (see shared/personalise.ts). */
   personalisation: z.enum(["high", "balanced", "low"]).default("balanced"),
+  /** v4.3: add "Suggested next" goals without the admin's click. Off by default. */
+  autoAddSuggestions: z.boolean().default(false),
 });
 export type SetupAdvanced = z.infer<typeof setupAdvancedSchema>;
 
@@ -119,12 +123,18 @@ export const setupSchema = z.object({
     .default([]),
   skip: z.array(z.string().min(1).max(80)).max(MAX_PRIORITIES).default([]),
   hoursPerWeek: z.number().int().min(1).max(60).default(DEFAULT_HOURS_PER_WEEK),
-  advanced: setupAdvancedSchema.default({ weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced" }),
+  advanced: setupAdvancedSchema.default({ weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced", autoAddSuggestions: false }),
   /**
    * v4.1: "About this person and what you want" — the admin's own words, which the AI reads to plan
    * the assessment. Stored as the profile's notes. Omitted = leave the notes as they are.
    */
   description: z.string().max(2000).optional(),
+  /**
+   * v4.3: the "What should they be able to do?" entries. When present, the skill priorities are
+   * derived from them (D2) and `priorities` is ignored. Omitted = a v4.2 client: `priorities` is
+   * saved as before and becomes the learner's skill goals.
+   */
+  goals: z.array(goalInputSchema).max(MAX_GOALS).optional(),
 });
 export type SetupInput = z.infer<typeof setupSchema>;
 
@@ -146,6 +156,8 @@ export interface LearnerSetup {
   hoursPerWeek: number;
   advanced: SetupAdvanced;
   description: string;
+  /** v4.3: the goals the priorities are derived from, in order. */
+  goals: LearnerGoal[];
 }
 
 // ---------------------------------------------------------------------------

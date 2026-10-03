@@ -12,6 +12,7 @@ import { adminApi } from "../api";
 import { setupApi } from "../setup/api";
 import { describeIssued } from "../setup/issued";
 import { SetupForm } from "../setup/SetupForm";
+import { GoalSuggestions } from "./GoalSuggestions";
 
 /**
  * The Setup tab: the one place a learner's department, track, priorities and settings are edited.
@@ -43,17 +44,23 @@ export function SetupTab({
   const profileRef = useRef(profile);
   profileRef.current = profile;
 
+  /* Bumped after a suggestion is added: the goals changed on the server, so the form reloads. */
+  const [reload, setReload] = useState(0);
+
   useEffect(() => {
     const controller = new AbortController();
     setupApi
       .get(userId, controller.signal)
-      .then((result) => setSetup(result.setup))
+      .then((result) => {
+        setSetup(result.setup);
+        setVersion((v) => v + 1);
+      })
       .catch((err: unknown) => {
         if (controller.signal.aborted) return;
         setError(err instanceof ApiRequestError ? err.message : "Could not load their setup.");
       });
     return () => controller.abort();
-  }, [userId]);
+  }, [userId, reload]);
 
   const save = useCallback(
     async (request: SaveSetupRequest) => {
@@ -83,6 +90,13 @@ export function SetupTab({
 
   return (
     <div className="space-y-12">
+      <GoalSuggestions
+        userId={userId}
+        onAdded={() => {
+          setReload((n) => n + 1);
+          onSaved();
+        }}
+      />
       <SetupForm
         key={version}
         initial={setup}

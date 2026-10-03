@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import { Check, Eye, EyeOff } from "lucide-react";
 
 import type { BankItemRow } from "@shared/bank";
-import { TASK_KIND_LABELS, toLearnerTask, type Task } from "@shared/tasks";
+import { TASK_KIND_LABELS, toLearnerTask, type Task, type TaskResponse, type TerminalTask } from "@shared/tasks";
 
 import { CodeBlock, RichText } from "@/components/content/RichText";
 import { TaskView } from "@/components/tasks/TaskView";
@@ -317,6 +317,8 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
     case "categorize":
     case "form":
       return <InteractivePreview task={task} showAnswer={showAnswer} />;
+    case "terminal":
+      return <TerminalPreview task={task} showAnswer={showAnswer} />;
     case "roleplay":
       return (
         <>
@@ -340,6 +342,35 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
         </>
       );
   }
+}
+
+/**
+ * v4.3: the terminal, live, so the admin can type through it; with the answer shown, each step's
+ * accepted patterns and the file checks.
+ */
+function TerminalPreview({ task, showAnswer }: { task: TerminalTask; showAnswer: boolean }) {
+  const [value, setValue] = useState<TaskResponse | null>(null);
+  return (
+    <>
+      <Block title="As the learner sees it">
+        <TaskView task={toLearnerTask(task)} value={value} onChange={setValue} answer={showAnswer ? task : null} idPrefix="bank-preview-terminal" hidePrompt />
+      </Block>
+      {showAnswer && (
+        <Block title="Accepted commands">
+          <ol className="space-y-1.5">
+            {task.steps.map((step, i) => (
+              <li key={step.id} className="rounded-md border px-3 py-2">
+                <span className="font-medium">
+                  {i + 1}. {step.goal}
+                </span>
+                <p className="mt-1 break-all font-mono text-xs text-muted-foreground">{step.accept.map((a) => `/${a}/`).join("  or  ")}</p>
+              </li>
+            ))}
+          </ol>
+        </Block>
+      )}
+    </>
+  );
 }
 
 /**

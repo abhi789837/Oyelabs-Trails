@@ -6,10 +6,13 @@ import Database from "better-sqlite3";
 import { drizzle, type BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
+import { ensureSkillEdgesSeed } from "../catalog/graph";
 import { ensureCatalogSeed } from "../catalog/repo";
 import { applyDepartmentDefaults, applyV42PmDefaults, migrateLegacyPriorities } from "../setup/repo";
 import { ensureBankSeed } from "../bank/repo";
 import { ensureHandbookSeed } from "../handbook/repo";
+import { ensureOutcomeSeed } from "../goals/outcomes";
+import { migrateV43Goals } from "../goals/repo";
 import type { Env } from "../env";
 import * as schema from "./schema";
 
@@ -68,6 +71,8 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
     migrate(db, { migrationsFolder: migrationsFolder() });
     // Seed rows are inserted only when absent, so this never undoes an admin's edit.
     ensureCatalogSeed(db);
+    // v4.3 skill graph: catalog prerequisites plus the seed progressions; never re-adds a deleted edge.
+    ensureSkillEdgesSeed(db);
     // Once per database: v3 targets and must-have lists become slider rows.
     migrateLegacyPriorities(db);
     // v4.2 handbook: before the bank, so seed items can cite the entries' current versions.
@@ -79,6 +84,10 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
     applyDepartmentDefaults(db);
     // v4.2: process academy defaults for PM skills and untouched PM learners (once).
     applyV42PmDefaults(db);
+    // v4.3: the practical-outcomes library (upserted; invalid entries are logged and skipped), then
+    // every existing priority becomes a skill goal (once).
+    ensureOutcomeSeed(db);
+    migrateV43Goals(db);
   }
   return { db, sqlite };
 }

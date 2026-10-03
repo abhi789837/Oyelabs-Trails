@@ -32,7 +32,7 @@ const base = {
   priorities: [] as { skillId: string; slider: 1 | 2 | 3 | 4 | 5 }[],
   skip: [] as string[],
   hoursPerWeek: 12,
-  advanced: { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced" as const },
+  advanced: { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced" as const, autoAddSuggestions: false },
 };
 
 function anySkills(n: number, departmentId = "engineering"): string[] {
