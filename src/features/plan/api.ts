@@ -1,4 +1,4 @@
-import type { MoveItemRequest, PlanLane, WeekResponse } from "@shared/weeklyPlan";
+import type { MoveItemRequest, PlanLane, WeekResponse, WeekView } from "@shared/weeklyPlan";
 
 import { api } from "@/api/client";
 
@@ -14,6 +14,10 @@ export const weekApi = {
 
   /** "Plan my next week now." Refused with a 400 while the blocking lanes are outstanding. */
   planNext: () => api.post<WeekResponse>("/api/me/week/next"),
+
+  /** One past week, read-only, for the small trail under "Past weeks". */
+  byId: (weekId: string, signal?: AbortSignal) =>
+    api.get<{ week: WeekView }>(`/api/me/week/${encodeURIComponent(weekId)}`, signal),
 };
 
 /** The admin's overrides. Every one of them is written to the audit log server-side. */

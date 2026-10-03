@@ -143,8 +143,16 @@ export function reconcile(db: Db, userId: string, planId: string): ItemRow[] {
  * Resolved server-side rather than on the client because the client would need the whole course table
  * and the whole curriculum manifest to do it, and one of those it is not allowed to have.
  */
-export function weekView(db: Db, content: ContentStore, userId: string, row: WeekRow): WeekView {
-  const items = reconcile(db, userId, row.id);
+export function weekView(
+  db: Db,
+  content: ContentStore,
+  userId: string,
+  row: WeekRow,
+  options: { reconcile?: boolean } = {},
+): WeekView {
+  /* A past week is read as it was left (`reconcile: false`): reconciling would rewrite its
+     statuses from today's progress and change the "11/12 done" its history row reports. */
+  const items = options.reconcile === false ? itemsOf(db, row.id) : reconcile(db, userId, row.id);
   const { lessonCount } = gatherLibrary({ db, content, userId });
 
   const lessonIds = items.map((item) => item.lessonId).filter((id): id is string => id !== null);

@@ -430,3 +430,28 @@ describe("the read path never waits on a model", () => {
     expect(refines).toHaveLength(1);
   });
 });
+
+describe("reading a past week (v4.3 trail history)", () => {
+  test("returns the learner's own past week as it was left, and nobody else's", async () => {
+    const { week } = await getWeek();
+    const blocking = week!.items.filter((item) => item.lane === "do_now" || item.lane === "must_know");
+    for (const item of blocking) completeTopic(item.topicId!);
+    const next = await ctx.app.inject({ method: "POST", url: "/api/me/week/next", ...as(learner.session), payload: {} });
+    expect(next.statusCode).toBe(200);
+
+    // Something from week 1 finished after it closed must not rewrite week 1.
+    const later = week!.items.find((item) => item.lane === "low" || item.lane === "medium");
+    if (later) completeTopic(later.topicId!);
+
+    const res = await ctx.app.inject({ method: "GET", url: `/api/me/week/${week!.id}`, ...as(learner.session) });
+    expect(res.statusCode).toBe(200);
+    const past = (res.json() as { week: WeekResponse["week"] }).week!;
+    expect(past.weekNumber).toBe(1);
+    expect(past.items.length).toBe(week!.items.length);
+    expect(past.items.filter((item) => item.status === "done").length).toBe(blocking.length);
+
+    const other = await activeLearner(ctx, admin, "arjun.mehta");
+    const theirs = await ctx.app.inject({ method: "GET", url: `/api/me/week/${week!.id}`, ...as(other.session) });
+    expect(theirs.statusCode).toBe(404);
+  });
+});

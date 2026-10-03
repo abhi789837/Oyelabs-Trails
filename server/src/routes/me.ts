@@ -8,7 +8,7 @@ import type { EvaluationResult, MyEvaluation } from "../../../shared/assessment"
 import type { ManifestResponse, ProgressResponse } from "../../../shared/content";
 import { markInProgressRequestSchema } from "../../../shared/content";
 import type { NotificationsResponse } from "../../../shared/notifications";
-import type { WeekResponse } from "../../../shared/weeklyPlan";
+import type { WeekResponse, WeekView } from "../../../shared/weeklyPlan";
 import { isWeekComplete } from "../../../shared/weeklyPlan";
 import { requireActiveUser } from "../auth/guards";
 import { filterManifest } from "../content/filter";
@@ -20,7 +20,7 @@ import { now } from "../lib/ids";
 import { listNotifications, markAllRead, unreadCount } from "../lib/notify";
 import { allowedTopicIdsFor, latestPublishedPlan } from "../plans/repo";
 import { generateWeek, ensureWeek } from "../plans/weekly/generate";
-import { activeWeek, weekHistory, weekView } from "../plans/weekly/repo";
+import { activeWeek, weekById, weekHistory, weekView } from "../plans/weekly/repo";
 import { getProgress, markInProgress } from "../progress/repo";
 
 export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
@@ -236,6 +236,20 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
     }
 
     return { week: weekView(app.db, app.content, user.id, row), history: weekHistory(app.db, user.id), reason: null };
+  });
+
+  /**
+   * One past week, read-only, for the small trail in "Past weeks".
+   *
+   * Only the learner's own, and not a superseded row (history never lists those). Read without
+   * reconciling, so it shows the week as it was left.
+   */
+  app.get("/api/me/week/:weekId", async (request): Promise<{ week: WeekView }> => {
+    const user = requireActiveUser(request);
+    const { weekId } = parseOrThrow(z.object({ weekId: z.string().min(1).max(64) }), request.params);
+    const row = weekById(app.db, weekId);
+    if (!row || row.userId !== user.id || row.status === "superseded") throw notFound("No such week.");
+    return { week: weekView(app.db, app.content, user.id, row, { reconcile: row.status === "active" }) };
   });
 
   /**

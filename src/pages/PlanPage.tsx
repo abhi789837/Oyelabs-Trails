@@ -13,6 +13,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { MyEvaluation } from "@shared/assessment";
+import type { LearningPathView } from "@shared/builder";
 import {
   LANE_ORDER,
   formatRange,
@@ -35,7 +36,8 @@ import { weekApi } from "@/features/plan/api";
 import { LANE_META } from "@/features/plan/laneMeta";
 import { Lanes } from "@/features/plan/Lanes";
 import { SummitCelebration } from "@/features/plan/SummitCelebration";
-import { LaneLegend, WeekTrail } from "@/features/plan/WeekTrail";
+import { OverviewTrail } from "@/features/plan/OverviewTrail";
+import { LaneLegend, WeekTrail, type NextWeekLink } from "@/features/plan/WeekTrail";
 import { WeekSkeleton } from "@/features/plan/WeekSkeleton";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { fadeUp } from "@/lib/motion";
@@ -78,6 +80,7 @@ export default function PlanPage() {
 
   const [response, setResponse] = useState<WeekResponse | null>(null);
   const [evaluation, setEvaluation] = useState<MyEvaluation | null>(null);
+  const [path, setPath] = useState<LearningPathView | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [planning, setPlanning] = useState(false);
@@ -86,11 +89,13 @@ export default function PlanPage() {
   const [view, setView] = useStoredView<"trail" | "list">("oyelearn.plan.view", "trail", ["trail", "list"]);
 
   const load = useCallback(async (signal?: AbortSignal) => {
-    const [week, evaluationResult] = await Promise.all([
+    const [week, evaluationResult, pathResult] = await Promise.all([
       weekApi.mine(signal),
       api.get<{ evaluation: MyEvaluation | null }>("/api/me/evaluation", signal),
+      // The overview trail is a nice-to-have: a path that fails to load must not take the week with it.
+      api.get<{ path: LearningPathView | null }>("/api/me/path", signal).catch(() => ({ path: null })),
     ]);
-    return { week, evaluation: evaluationResult.evaluation };
+    return { week, evaluation: evaluationResult.evaluation, path: pathResult.path };
   }, []);
 
   useEffect(() => {
@@ -102,6 +107,7 @@ export default function PlanPage() {
         if (!alive) return;
         setResponse(result.week);
         setEvaluation(result.evaluation);
+        setPath(result.path);
       } catch (err) {
         if (!alive || controller.signal.aborted) return;
         setError(err instanceof ApiRequestError ? err.message : "Could not load your plan.");
@@ -235,7 +241,7 @@ export default function PlanPage() {
       </section>
 
       <ComingUp week={week} />
-      <Roadmap week={week} />
+      <Roadmap week={week} path={path} history={response?.history ?? []} />
       <WeekHistory week={week} history={response?.history ?? []} />
     </div>
   );
@@ -405,36 +411,78 @@ function ComingUp({ week }: { week: WeekView }) {
   );
 }
 
-/** The long view. This is where the 450-word paragraph went. */
-function Roadmap({ week }: { week: WeekView }) {
+/**
+ * The long view: the whole route as one trail of milestones, with this week marked on it, and the
+ * long narrative (the old 450-word paragraph) behind a disclosure underneath.
+ */
+function Roadmap({ week, path, history }: { week: WeekView; path: LearningPathView | null; history: WeekResponse["history"] }) {
   const [open, setOpen] = useState(false);
-  if (!week.roadmapNarrative.trim()) return null;
+  const hasRoute = path !== null && path.items.length > 0;
+  const hasNarrative = week.roadmapNarrative.trim() !== "";
+  if (!hasRoute && !hasNarrative) return null;
 
   return (
-    <section className="mx-auto max-w-5xl px-4 pb-4 sm:px-8">
-      <Disclosure
-        open={open}
-        onToggle={() => setOpen((value) => !value)}
-        icon={<MapIcon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
-        label="Long-term roadmap"
-        hint="Where this week sits in the months ahead"
-        id="roadmap"
-      >
-        <div className="mt-3 max-w-prose space-y-3 text-sm leading-relaxed text-muted-foreground">
-          {week.roadmapNarrative.split(/\n{2,}/).map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
+    <section aria-labelledby="route-heading" className="mx-auto max-w-5xl px-4 pb-4 sm:px-8">
+      {hasRoute && (
+        <div className="mb-4 rounded-lg border px-4 pb-2 pt-4">
+          <h2 id="route-heading" className="font-display font-semibold">
+            Your whole route
+          </h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            Every course on your path, in order. Week {week.weekNumber} is marked where it is working now.
+          </p>
+          <div className="mt-3">
+            <OverviewTrail path={path} week={week} history={history} />
+          </div>
         </div>
-      </Disclosure>
+      )}
+      {hasNarrative && (
+        <Disclosure
+          open={open}
+          onToggle={() => setOpen((value) => !value)}
+          icon={<MapIcon className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />}
+          label="Long-term roadmap"
+          hint="Where this week sits in the months ahead"
+          id="roadmap"
+        >
+          <div className="mt-3 max-w-prose space-y-3 text-sm leading-relaxed text-muted-foreground">
+            {week.roadmapNarrative.split(/\n{2,}/).map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
+          </div>
+        </Disclosure>
+      )}
     </section>
   );
 }
 
-/** Past weeks, as "Week 1 · 11/12 done". */
+/**
+ * Past weeks, as "Week 1 · 11/12 done". Each row opens that week as its own small, read-only trail,
+ * fetched the first time it is opened.
+ */
 function WeekHistory({ week, history }: { week: WeekView; history: WeekResponse["history"] }) {
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState<Record<string, WeekView | "error">>({});
   const past = history.filter((entry) => entry.id !== week.id);
+
+  const show = (id: string) => {
+    setExpanded((current) => (current === id ? null : id));
+    if (loaded[id]) return;
+    weekApi
+      .byId(id)
+      .then((result) => setLoaded((value) => ({ ...value, [id]: result.week })))
+      .catch(() => setLoaded((value) => ({ ...value, [id]: "error" })));
+  };
+
   if (past.length === 0) return <div className="pb-16" />;
+
+  /** The week after `n`: the current one (an in-page link) or another past one (opens it here). */
+  const nextOf = (weekNumber: number): NextWeekLink | null => {
+    if (week.weekNumber === weekNumber + 1) return { label: `Next: week ${week.weekNumber}`, href: "#week-heading" };
+    const following = past.find((entry) => entry.weekNumber === weekNumber + 1);
+    return following ? { label: `Next: week ${following.weekNumber}`, onClick: () => show(following.id) } : null;
+  };
 
   return (
     <section className="mx-auto max-w-5xl px-4 pb-16 sm:px-8">
@@ -447,17 +495,46 @@ function WeekHistory({ week, history }: { week: WeekView; history: WeekResponse[
         id="history"
       >
         <ul className="mt-3 divide-y rounded-md border">
-          {past.map((entry) => (
-            <li key={entry.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2.5">
-              <span className="font-medium">Week {entry.weekNumber}</span>
-              <span className="font-mono text-[11px] text-muted-foreground tabular">
-                {entry.doneCount}/{entry.totalCount} done
-              </span>
-              <span className="ml-auto font-mono text-[11px] text-muted-foreground">
-                {formatRange(entry.startDate, entry.endDate)}
-              </span>
-            </li>
-          ))}
+          {past.map((entry) => {
+            const isOpen = expanded === entry.id;
+            const data = loaded[entry.id];
+            return (
+              <li key={entry.id}>
+                <button
+                  type="button"
+                  onClick={() => show(entry.id)}
+                  aria-expanded={isOpen}
+                  aria-controls={`past-week-${entry.id}`}
+                  className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2.5 text-left transition-colors duration-[120ms] hover:bg-surface-sunken/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-trailmark"
+                >
+                  <span className="font-medium">Week {entry.weekNumber}</span>
+                  <span className="font-mono text-[11px] text-muted-foreground tabular">
+                    {entry.doneCount}/{entry.totalCount} done
+                  </span>
+                  <span className="ml-auto font-mono text-[11px] text-muted-foreground">
+                    {formatRange(entry.startDate, entry.endDate)}
+                  </span>
+                  <ChevronDown
+                    className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200", isOpen && "rotate-180")}
+                    aria-hidden="true"
+                  />
+                </button>
+                {isOpen && (
+                  <div id={`past-week-${entry.id}`} className="border-t px-3 pb-3 pt-2">
+                    {data === undefined ? (
+                      <p role="status" className="py-4 text-sm text-muted-foreground">
+                        Loading week {entry.weekNumber}…
+                      </p>
+                    ) : data === "error" ? (
+                      <p className="py-4 text-sm text-muted-foreground">Could not load this week.</p>
+                    ) : (
+                      <WeekTrail week={data} compact next={nextOf(entry.weekNumber)} />
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </Disclosure>
     </section>
