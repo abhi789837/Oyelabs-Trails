@@ -57,9 +57,11 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 ## Phase 7: Tests, deploy, report
 - [x] 7.1 Unit and integration tests (the list in the brief); D9 citations decided and tested
 - [x] 7.2 Playwright e2e `scripts/e2e/v43-*.ts`, including `v43-worked-example.ts`; v4.2 MCQ flake fixed (answers read against the key)
-- [ ] 7.3 Deploy + smoke (Abhishek runs the one command)
-- [ ] 7.4 RESULTS.md + chat summary
-- [ ] 7.5 Tag v4.3.0
+- [x] 7.3 Deploy prepared (push + `deploy-v4.sh` + rebuild-all + smoke list in RESULTS.md §6); running it is Needs Abhishek (no SSH from this machine)
+- [x] 7.4 RESULTS.md + chat summary
+- [x] 7.5 Tag v4.3.0
 
 ## Needs Abhishek
-- The deploys for v4.1 and v4.2 are still outstanding.
+- Push main + tags, deploy v4.2 and v4.3, rebuild all paths, smoke-test (RESULTS.md §6). The v4.1 deploy was also listed as outstanding.
+- Run the test-item re-check against real AI ($25 steps, ≈ $23–57 total).
+- Optional: `YOUTUBE_API_KEY` for video durations before first play.
