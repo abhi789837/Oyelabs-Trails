@@ -338,6 +338,8 @@ interface V4AdminItemLite {
   origin: "bank" | "generated" | "fallback" | null;
   estSeconds?: number;
   task?: LearnerTaskLite;
+  /** The key, in the learner's (shuffled) option order. */
+  answer?: { correctIndex?: number } | null;
 }
 
 interface V4Detail {
@@ -695,7 +697,23 @@ async function runPm(browser: Browser, admin: Page, stamp: string): Promise<Chec
     if (categorize >= 0) plan.push({ index: categorize, run: () => answerCategorize(page, sheet[categorize], categorize, c) });
     if (roleplay >= 0) plan.push({ index: roleplay, run: () => answerRoleplay(page, sheet[roleplay], roleplay, c) });
     const mcq = sheet.findIndex((i) => i.type === "mcq");
-    if (mcq >= 0) plan.push({ index: mcq, run: async () => void (await article(page).locator('input[type="radio"]').first().check()) });
+    if (mcq >= 0) {
+      /* Deterministic: the learner picks a WRONG option, read against the key from the admin detail.
+         Ticking "the first option" made the result depend on where the shuffle put the key, so a
+         lifecycle question sometimes came out right, the learner "knew" the lifecycle and it left
+         Part 1 (the v4.2 flake). A wrong answer keeps the assertion meaningful and stable. */
+      const keyIndex = detail.items.find((i) => i.id === sheet[mcq].id)?.answer?.correctIndex;
+      c.ok(typeof keyIndex === "number", `admin detail gives the MCQ's key (${keyIndex})`);
+      c.fact(`MCQ at ${mcq} (${detail.items.find((i) => i.id === sheet[mcq].id)?.skillName}): answered wrong on purpose (key ${keyIndex})`);
+      plan.push({
+        index: mcq,
+        run: async () => {
+          const radios = article(page).locator('input[type="radio"]');
+          const n = await radios.count();
+          await radios.nth(((keyIndex ?? 0) + 1) % n).check();
+        },
+      });
+    }
     plan.sort((a, b) => a.index - b.index);
     for (const entry of plan) {
       await goTo(page, entry.index, total);

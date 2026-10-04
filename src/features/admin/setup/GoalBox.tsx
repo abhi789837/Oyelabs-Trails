@@ -2,7 +2,7 @@ import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "re
 import { ArrowDown, ArrowUp, Check, LoaderCircle, Pencil, Plus, Search, Sparkles, X } from "lucide-react";
 
 import type { Skill } from "@shared/catalog";
-import { MAX_GOALS, TARGET_LEVEL_LABELS, type GoalInterpretation, type OutcomeOption, type SuggestedGoal } from "@shared/goals";
+import { asOutcome, MAX_GOALS, TARGET_LEVEL_LABELS, type GoalInterpretation, type OutcomeOption, type SuggestedGoal } from "@shared/goals";
 import { SLIDER_LABELS, SLIDER_VALUES, type Slider as SliderValue } from "@shared/setup";
 
 import { ApiRequestError } from "@/api/client";
@@ -312,7 +312,7 @@ function PendingGoal({
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState<GoalInterpretation | null>(pending.reading);
   useEffect(() => {
-    setDraft(pending.reading ?? (pending.busy ? null : { outcome: `Can ${pending.text}.`.slice(0, 300), skillIds: [], targetLevel: 3, caseId: null }));
+    setDraft(pending.reading ?? (pending.busy ? null : { outcome: asOutcome(pending.text), skillIds: [], targetLevel: 3, caseId: null }));
     setEditing(!pending.busy && !pending.reading);
   }, [pending]);
 

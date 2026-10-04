@@ -243,6 +243,12 @@ export interface RecheckCounts {
   dropped: number;
   /** Kept active although they failed, because retiring them would leave too few. */
   keptBelowMinimum: number;
+  /**
+   * Failed with no passage of the topic supporting them, where retiring would leave too few: set to
+   * `flagged` (not served) rather than kept live, so every active item cites its passage (D9).
+   * Optional: runs stored before D9 do not have it.
+   */
+  withdrawnUncited?: number;
   codeChecked: number;
   codeFailed: number;
   errors: number;

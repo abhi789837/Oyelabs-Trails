@@ -382,6 +382,15 @@ async function run(admin: Page, stamp: string, c: Checks): Promise<void> {
     await shot(page, "05-camp-totals");
 
     await admin.goto(`${BASE}/admin/curriculum`, { waitUntil: "domcontentloaded" });
+    // v4.3 Phase 6 collapsed this rarely changed site-wide setting into a <details> section.
+    const summary = admin.locator("summary", { hasText: "Topic videos" });
+    await summary.waitFor({ timeout: 20_000 });
+    const summaryText = await poll("the video settings to load", 15_000, async () => {
+      const text = (await summary.textContent()) ?? "";
+      return text.includes("…") ? null : text;
+    }, 300).catch(() => "");
+    c.ok(/Lock the test/.test(summaryText), `the collapsed section's summary shows the current choice ("${summaryText.trim()}")`);
+    await summary.click();
     const lockRadio = admin.getByRole("radio", { name: /Lock the test/ });
     const lockVisible = await lockRadio.waitFor({ timeout: 20_000 }).then(() => true).catch(() => false);
     c.ok(lockVisible && (await lockRadio.getAttribute("aria-checked")) === "true", "admin curriculum: the lock switch shows Lock the test");

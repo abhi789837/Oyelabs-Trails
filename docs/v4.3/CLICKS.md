@@ -93,3 +93,31 @@ The script also checks two more things:
 - a bulk learner's page shows a next action with at most one button.
 
 The v4.2 count was walked by hand from `pre-v4.3`.
+
+## The worked example, end to end (`scripts/e2e/v43-worked-example.ts`)
+
+**Typed:** the full name and the one line.
+
+**Default path: 2 clicks**, which the script checks is no more than 3.
+1. **Suggest**
+2. **Save & assign assessment**
+
+**Bringing the goals to the brief's worked example: 19 clicks, counted separately.**
+- **What the mock Suggest proposes:** Git fundamentals at Critical, plus Node runtime, Node streams, Prompting for code and Context files at High.
+- **What the worked example needs:** Git Critical, Backend High, AI-driven development Medium. Getting there takes these clicks:
+
+| Change | Clicks |
+|--------|--------|
+| Remove Node streams | 1 |
+| Add the GitHub PR workflow and set it to Critical | 3 (picker, option, slider) |
+| Add Express, SQL, auth and deploy, each at High | 4 × 3 |
+| Move Prompting for code to Medium | 1 |
+| Move Context files to Medium | 1 |
+| Add Reusable workflows from the suggested chip | 1 (it starts at Medium) |
+
+A slider counts as one click on its thumb. The keys pressed after that click are not counted.
+
+**A free-text goal: 3 clicks.**
+1. The goal picker.
+2. "Use … as a goal".
+3. **Add goal**, after the interpretation chip shows.

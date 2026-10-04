@@ -355,6 +355,7 @@ export default function AdminTestItemsPage() {
               <p className="mt-1 text-muted-foreground">
                 Checked {runState.counts.checked}, retired {runState.counts.retired}, regenerated {runState.counts.regenerated}, dropped{" "}
                 {runState.counts.dropped}, kept to hold the minimum {runState.counts.keptBelowMinimum}
+                {runState.counts.withdrawnUncited ? `, withdrawn with no supporting passage ${runState.counts.withdrawnUncited}` : ""}
                 {runState.counts.codeChecked ? `, code solutions checked ${runState.counts.codeChecked} (${runState.counts.codeFailed} failing)` : ""}.
                 {runState.lastError ? ` Last error: ${runState.lastError}` : ""}
               </p>

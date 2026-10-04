@@ -55,8 +55,8 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] 6.5 Checkpoint + commit `feat(v4.3-p6)`
 
 ## Phase 7: Tests, deploy, report
-- [ ] 7.1 Unit and integration tests (the list in the brief)
-- [ ] 7.2 Playwright e2e `scripts/e2e/v43-*.ts`
+- [x] 7.1 Unit and integration tests (the list in the brief); D9 citations decided and tested
+- [x] 7.2 Playwright e2e `scripts/e2e/v43-*.ts`, including `v43-worked-example.ts`; v4.2 MCQ flake fixed (answers read against the key)
 - [ ] 7.3 Deploy + smoke (Abhishek runs the one command)
 - [ ] 7.4 RESULTS.md + chat summary
 - [ ] 7.5 Tag v4.3.0

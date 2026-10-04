@@ -71,3 +71,23 @@
 - **Parts are priority bands** along the path: Part 1 Critical/High (rank ≥ 4), Part 2 Medium, Part 3 Low/Optional. Ranks never increase along the path (a prerequisite inherits the rank of what it unblocks), so parts never go backwards. `partType` adds `prerequisite` (a missing link) and `capstone`.
 - **Capstones** of case goals are the last item of that goal's run on the path; the item stores `goal:<goalId>` in `path_items.module_id` (no column added) and links to `/goals/:goalId`.
 - **Week.** The week takes the next path lessons in path order that fit the hours; Do it now holds the top Part 1 items (at most four, half the week), Must know the short missing-link refreshers attached to an item in the week (that item `dependsOn` them), Medium and Low the rest by part.
+
+## D9. When a test item must cite its passage
+- **The rule:** every active item cites a passage of its own topic, and code checks the quote. This holds for generated items from the moment they go live. It holds for static items once the re-check has reached their topic.
+- **Generated items:**
+  - An item goes live only after its citation passes `citationProblem`, which checks for an exact quote from a passage of this topic.
+  - If the content changes and the quote is no longer there, the item is retired.
+- **Static items before the re-check:**
+  - These are the imported content questions. They are active, so topics stay completable and learners' progress stays intact (D7).
+  - They have no citation yet.
+  - The result shows **"Source: awaiting re-check"** in place of "From: <section>". The flag for this is `QuizQuestionResult.sourcePending`.
+  - The content-quiz fallback, used for a topic with no active items at all, is labelled the same way.
+- **Static items after the re-check:**
+  - An item that passes keeps the checker's proposed citation, and code verifies it.
+  - Every failing item is retired while retiring it keeps the topic at its minimum.
+  - Below the minimum, the item is kept live only if it still cites a supporting passage. If no passage supports it, it goes to `flagged`, which is never served, and is not left active. The run counts these as `withdrawnUncited`, so an admin can review, edit or restore them under Test items.
+  - Restoring an item is an explicit admin override, and that item then shows "awaiting re-check".
+- **Why:**
+  - The brief asks that every active item cite its passage. Keeping an unsupported item live just to hold the size minimum would break that rule in exactly the case the relevance gate exists for.
+  - Labelling static items honestly, rather than hiding them, keeps v4.2 progress and tests working until the paid re-check is run.
+- **Tested in** `server/src/topicTests/topicTests.test.ts`, the two "D9" tests, and in the e2e `scripts/e2e/v43-worked-example.ts`, which runs a mock re-check for one topic.

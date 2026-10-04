@@ -273,6 +273,37 @@ describe("properties over random DAGs", () => {
     expect(orderPath({ targets, mastery: {}, edges }).steps.map((s) => s.skillId).slice(0, 2)).toEqual(["b", "a"]);
   });
 
+  it("applies the tie-breaks in the specified order: rank, boost, admin order, unblocks most, id", () => {
+    // Admin order wins over unblocking more: "late" unblocks two, "early" none, both rank 3.
+    const byAdmin: PathTarget[] = [
+      { skillId: "early", slider: 3, adminOrder: 0, goalLevel: 3 },
+      { skillId: "late", slider: 3, adminOrder: 1, goalLevel: 3 },
+      { skillId: "x", slider: 3, adminOrder: 1, goalLevel: 3 },
+      { skillId: "y", slider: 3, adminOrder: 1, goalLevel: 3 },
+    ];
+    const adminFirst = orderPath({ targets: byAdmin, mastery: {}, edges: [p("late", "x"), p("late", "y")] }).steps.map((s) => s.skillId);
+    expect(adminFirst[0]).toBe("early");
+    expect(adminFirst.indexOf("late")).toBeLessThan(adminFirst.indexOf("x"));
+
+    // A boosted must-have wins over admin order at equal rank (D4 rule 2 ahead of rule 3).
+    const boostTargets: PathTarget[] = [
+      { skillId: "first-goal", slider: 4, adminOrder: 0, goalLevel: 3 },
+      { skillId: "weak-goal", slider: 4, adminOrder: 5, goalLevel: 3 },
+    ];
+    const boosted = orderPath({ targets: boostTargets, mastery: { "weak-goal": 1 }, edges: [], criticallyWeak: ["weak-goal"] });
+    expect(boosted.steps.map((s) => s.skillId)).toEqual(["weak-goal", "first-goal"]);
+    expect(boosted.steps[0].kind).toBe("must-have");
+    // Without the flag, admin order decides.
+    expect(orderPath({ targets: boostTargets, mastery: { "weak-goal": 1 }, edges: [] }).steps.map((s) => s.skillId)).toEqual(["first-goal", "weak-goal"]);
+
+    // Rank beats everything below it: a High goal with the latest admin order still goes first.
+    const byRank: PathTarget[] = [
+      { skillId: "medium", slider: 3, adminOrder: 0, goalLevel: 3 },
+      { skillId: "high", slider: 4, adminOrder: 9, goalLevel: 3 },
+    ];
+    expect(orderPath({ targets: byRank, mastery: {}, edges: [] }).steps.map((s) => s.skillId)[0]).toBe("high");
+  });
+
   it("continues the progression whenever there is no gap and somewhere to go", () => {
     let checked = 0;
     for (const c of cases) {

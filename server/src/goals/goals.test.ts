@@ -197,6 +197,22 @@ describe("free-text goals", () => {
     expect(r.interpretation.targetLevel).toBe(3);
   });
 
+  for (const mode of ["ai", "rules"] as const) {
+    test(`a free-text line that matches a case links to that case's capstone (${mode})`, async () => {
+      await setUp(mode === "rules" ? { noAi: true } : {});
+      const r = await interpret("should be able to resolve a merge conflict on their own");
+      expect(r.source).toBe(mode);
+      const interp = r.interpretation;
+      expect(interp.caseId).toBe("test-merge-conflict");
+      expect(interp.skillIds.length).toBeGreaterThan(0);
+      expect(interp.targetLevel).toBeGreaterThanOrEqual(1);
+      // Saved as the goal box saves it, the goal carries the case's capstone to the learner.
+      const [g] = saveGoals(ctx.db, learner.id, [goal({ type: "text", originalText: "should be able to resolve a merge conflict on their own", outcome: interp.outcome, skillIds: interp.skillIds, targetLevel: interp.targetLevel, caseId: interp.caseId })]);
+      const list = await ctx.app.inject({ method: "GET", url: "/api/me/goals", ...as(learner.session) });
+      expect(list.json().goals.find((x: { id: string }) => x.id === g.id)).toMatchObject({ capstone: { kind: "task", title: "The cart conflict" } });
+    });
+  }
+
   test("says so when nothing links (and the AI's unknown skill is refused)", async () => {
     await setUp();
     const r = await interpret("sing in the office choir");

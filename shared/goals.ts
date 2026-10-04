@@ -134,7 +134,13 @@ export function goalKey(skillIds: readonly string[], targetLevel: number): strin
 
 /** "Can resolve a merge conflict" from "resolve a merge conflict"; already-"Can" text is kept. */
 export function asOutcome(text: string): string {
-  const t = text.trim().replace(/\s+/g, " ").replace(/[.]+$/, "");
+  const t = text
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/[.]+$/, "")
+    // "should be able to fix…", "they must be able to fix…", "needs to fix…" read as "Can fix…".
+    .replace(/^(?:(?:he|she|they|the learner|this person)\s+)?(?:(?:should|must|will|needs? to|has to|have to)\s+)?(?:be\s+)?able\s+to\s+/i, "")
+    .replace(/^(?:(?:he|she|they|the learner|this person)\s+)?(?:should|must|needs? to|has to|have to)\s+/i, "");
   if (!t) return t;
   if (/^can\b/i.test(t)) return `${t.charAt(0).toUpperCase()}${t.slice(1)}.`.slice(0, 300);
   return `Can ${t.charAt(0).toLowerCase()}${t.slice(1)}.`.slice(0, 300);

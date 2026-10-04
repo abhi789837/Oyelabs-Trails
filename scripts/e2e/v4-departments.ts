@@ -260,7 +260,9 @@ async function onboard(admin: Page, spec: DeptSpec, username: string, c: Checks)
   await admin.getByLabel(/^full name/i).fill(`E2E ${spec.department}`);
 
   await admin.getByRole("radiogroup", { name: "Department" }).getByRole("radio", { name: spec.department, exact: true }).click();
-  const track = admin.getByRole("radiogroup", { name: "Track" }).getByRole("radio", { name: spec.track });
+  // v4.3: onboarding opens on quick onboarding; "Edit details" opens the full Setup form this script drives.
+  await admin.getByRole("button", { name: "Edit details" }).click();
+  const track =admin.getByRole("radiogroup", { name: "Track" }).getByRole("radio", { name: spec.track });
   await track.click();
   c.ok((await track.getAttribute("aria-checked")) === "true", `track ${spec.track.source} selected`);
 
@@ -272,25 +274,36 @@ async function onboard(admin: Page, spec: DeptSpec, username: string, c: Checks)
 
   await admin.getByRole("radiogroup", { name: "Experience (years)" }).getByRole("radio", { name: spec.experience }).click();
 
-  // Priorities: three skills through the picker, then their sliders.
-  await admin.getByRole("button", { name: "Add a priority skill" }).click();
-  const search = admin.getByPlaceholder("Search by name, alias or tag");
+  // Priorities: three skills through the goal box (v4.3: skills, cases and free text in one picker),
+  // then their sliders. A department default may already hold a skill; the slider is set either way.
   for (const skill of spec.skills) {
-    await search.fill(skill.name);
-    const option = admin.getByRole("option").filter({ hasText: new RegExp(`^${escapeRegex(skill.name)}`) }).first();
-    await option.waitFor({ timeout: 10_000 });
-    await option.click();
-  }
-  await admin.keyboard.press("Escape");
-
-  for (const skill of spec.skills) {
-    // Every pick lands at Medium (3); Right arrow raises it one step.
-    for (let i = 3; i < skill.slider; i += 1) {
-      const thumb = admin.getByRole("slider", { name: `${skill.name} priority` });
-      await thumb.focus();
-      await thumb.press("ArrowRight");
+    const thumb = admin.getByRole("slider", { name: `${skill.name} priority`, exact: true });
+    if ((await thumb.count()) === 0) {
+      // The results re-render while the department's cases load, so the option may not be stable:
+      // reopen the picker when it closed, and click without waiting for stability.
+      for (let attempt = 0; attempt < 4 && (await thumb.count()) === 0; attempt += 1) {
+        const input = admin.getByPlaceholder(/Git, “merge conflict”/);
+        // A skill pick leaves the picker open for the next one, so always search afresh.
+        if (!(await input.isVisible().catch(() => false))) {
+          await admin.locator("button", { hasText: "Add a skill, a practical case, or type a goal" }).first().click();
+          await input.waitFor({ timeout: 5_000 });
+        }
+        await input.fill(skill.name);
+        const option = admin.getByRole("option").filter({ hasText: new RegExp(`^${escapeRegex(skill.name)}`) }).first();
+        await option.waitFor({ timeout: 10_000 });
+        await option.click({ force: true, timeout: 5_000 }).catch(() => undefined);
+        await thumb.waitFor({ timeout: 2_000 }).catch(() => undefined);
+      }
+      await thumb.waitFor({ timeout: 5_000 });
     }
-    const value = await admin.getByRole("slider", { name: `${skill.name} priority` }).getAttribute("aria-valuetext");
+    if (await admin.getByPlaceholder(/Git, “merge conflict”/).isVisible().catch(() => false)) {
+      await admin.keyboard.press("Escape");
+      await admin.getByPlaceholder(/Git, “merge conflict”/).waitFor({ state: "hidden", timeout: 5_000 });
+    }
+    await thumb.focus();
+    await thumb.press("Home");
+    for (let i = 1; i < skill.slider; i += 1) await thumb.press("ArrowRight");
+    const value = await thumb.getAttribute("aria-valuetext");
     c.ok(value === SLIDER_LABEL[skill.slider], `${skill.name} slider reads ${SLIDER_LABEL[skill.slider]} (got ${value})`);
   }
   await shot(admin, spec.key, "01-onboard-filled");
@@ -654,6 +667,7 @@ interface PathItem {
   partNumber: number | null;
   targetSkill: string | null;
   moduleId?: string | null;
+  partType?: string | null;
   reason: string;
 }
 
@@ -723,7 +737,14 @@ async function checkPath(admin: Page, userId: string, spec: DeptSpec, c: Checks)
   const extras = data.gaps.filter((g) => !g.skipped && !priorityNames.some((n) => sameSkill(g.skill, n)));
   const general = items.filter((i) => (i.partNumber ?? 0) >= 3);
   c.ok(general.every((i) => priorityNames.some((n) => sameSkill(i.targetSkill, n))), "every Part 3+ item serves an admin priority");
-  const leaked = items.filter((i) => i.targetSkill && !priorityNames.some((n) => sameSkill(i.targetSkill, n)) && extras.some((g) => sameSkill(i.targetSkill, g.skill)));
+  /* v4.3 (D4, D8): the path algorithm itself may add a skill that is no priority: a graph
+     prerequisite of one (a missing link, partType "prerequisite") or a core skill the evaluation
+     found critically weak (a boosted must-have, "Moved up: the evaluation found …"). Those are the
+     algorithm's own steps with a reason, not an AI-found gap leaking in, so they are reported. */
+  const algorithmStep = (i: PathItem) => i.partType === "prerequisite" || /^(Moved up: the evaluation found|Before )/.test(i.reason);
+  const added = items.filter((i) => i.targetSkill && !priorityNames.some((n) => sameSkill(i.targetSkill, n)) && algorithmStep(i));
+  if (added.length) c.note(`path steps the algorithm added: ${[...new Set(added.map((i) => `${i.targetSkill} (${i.partType ?? "-"}: ${i.reason})`))].join("; ")}`);
+  const leaked = items.filter((i) => i.targetSkill && !priorityNames.some((n) => sameSkill(i.targetSkill, n)) && extras.some((g) => sameSkill(i.targetSkill, g.skill)) && !algorithmStep(i));
   c.ok(leaked.length === 0, `no AI-found gap became a path target${leaked.length ? ` (${leaked.map((l) => l.targetSkill).join(", ")})` : ""}`);
   const also = admin.getByRole("button", { name: /Also suggested by the assessment/ });
   if (extras.length > 0) {

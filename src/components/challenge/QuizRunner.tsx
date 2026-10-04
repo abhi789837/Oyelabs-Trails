@@ -172,11 +172,15 @@ export function QuizRunner({ topic, questions }: { topic: ServedTopic; questions
                   {graded && (
                     <div className="mt-3 rounded-md border-l-2 border-basalt/40 bg-surface-sunken/40 px-3 py-2">
                       <RichText text={graded.explanation} className="text-sm text-muted-foreground" />
-                      {graded.source && (
-                        <p className="mt-1.5 text-xs text-muted-foreground">
+                      {graded.source ? (
+                        <p className="mt-1.5 text-xs text-muted-foreground" data-testid="quiz-source">
                           From: <span className="font-medium text-foreground">{graded.source}</span>
                         </p>
-                      )}
+                      ) : graded.sourcePending ? (
+                        <p className="mt-1.5 text-xs text-muted-foreground" data-testid="quiz-source-pending">
+                          Source: awaiting re-check
+                        </p>
+                      ) : null}
                     </div>
                   )}
                 </fieldset>

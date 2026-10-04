@@ -25,6 +25,7 @@ import type { CodeSandbox } from "../sandbox";
 import { applyPendingRetirements } from "./calibrate";
 import { keyIsLongest, runGates, type GateCandidate } from "./gates";
 import { writeItems } from "./generate";
+import { citationProblem } from "./grounding";
 import { activeCount, ensureTopicTests, minimumFor, payloadOf, retireRow, targetFor, topicRows } from "./repo";
 
 /**
@@ -136,7 +137,7 @@ export async function fillTopic(deps: TopicTestDeps, topic: AuthoredTopic, need:
 // ---------------------------------------------------------------------------
 
 export function emptyCounts(): RecheckCounts {
-  return { topics: 0, checked: 0, retired: 0, regenerated: 0, dropped: 0, keptBelowMinimum: 0, codeChecked: 0, codeFailed: 0, errors: 0 };
+  return { topics: 0, checked: 0, retired: 0, regenerated: 0, dropped: 0, keptBelowMinimum: 0, withdrawnUncited: 0, codeChecked: 0, codeFailed: 0, errors: 0 };
 }
 
 function solutionsDir(): string | null {
@@ -187,6 +188,7 @@ export async function recheckTopic(deps: TopicTestDeps, topic: AuthoredTopic, co
 
   // Record gate results; static items that passed keep the checker's citation and rationales.
   const at = now();
+  const cites = new Map<string, boolean>();
   for (const r of rows) {
     const outcome = outcomes.get(r.id)!;
     const payload = payloadOf(r);
@@ -195,6 +197,7 @@ export async function recheckTopic(deps: TopicTestDeps, topic: AuthoredTopic, co
       ...(outcome.proposedCitation && !payload.citation ? { citation: outcome.proposedCitation } : {}),
       ...(outcome.proposedRationales && !payload.distractorRationales ? { distractorRationales: outcome.proposedRationales } : {}),
     };
+    cites.set(r.id, citationProblem(grounding, next.citation) === null);
     deps.db
       .update(schema.topicTestItems)
       .set({ item: next as unknown as Record<string, unknown>, gates: outcome.gates as unknown as Record<string, unknown>, groundingHash: grounding.passagesHash, updatedAt: at })
@@ -218,6 +221,15 @@ export async function recheckTopic(deps: TopicTestDeps, topic: AuthoredTopic, co
     if (activeCount(deps.db, topic.id) - 1 >= minimumFor(topic)) {
       retireRow(deps.db, r.id, reason);
       counts.retired += 1;
+    } else if (!cites.get(r.id)) {
+      // D9: an item no passage of this topic supports is never kept live to hold the minimum, so after
+      // a re-check every active item cites its passage. It is withdrawn for review, not deleted.
+      deps.db
+        .update(schema.topicTestItems)
+        .set({ status: "flagged", flagReason: `${reason} (no passage of this topic supports it, so it is not served)`.slice(0, 500), updatedAt: now() })
+        .where(eq(schema.topicTestItems.id, r.id))
+        .run();
+      counts.withdrawnUncited = (counts.withdrawnUncited ?? 0) + 1;
     } else {
       deps.db.update(schema.topicTestItems).set({ flagReason: `${reason} (kept to hold the minimum)`.slice(0, 500), updatedAt: now() }).where(eq(schema.topicTestItems.id, r.id)).run();
       counts.keptBelowMinimum += 1;

@@ -274,7 +274,9 @@ export function gradeTopicQuiz(db: Db, topic: AuthoredTopic, answers: Record<str
   const answered = new Set(Object.keys(answers));
   const rows = all.filter((r) => r.status === "active" || answered.has(servedIdOf(r)));
   if (rows.length === 0) {
-    return { result: gradeQuiz(topic.quiz ?? [], answers), itemResults: [] };
+    const result = gradeQuiz(topic.quiz ?? [], answers);
+    result.perQuestion = result.perQuestion.map((entry) => ({ ...entry, sourcePending: true }));
+    return { result, itemResults: [] };
   }
   const result = gradeQuiz(rows.map(toAuthored), answers);
   const byServed = new Map(rows.map((r) => [servedIdOf(r), r]));
@@ -282,7 +284,7 @@ export function gradeTopicQuiz(db: Db, topic: AuthoredTopic, answers: Record<str
   result.perQuestion = result.perQuestion.map((entry) => {
     const citation = payloadOf(byServed.get(entry.id)!).citation;
     const heading = citation ? headings.get(citation.passageId) : undefined;
-    return heading ? { ...entry, source: heading } : entry;
+    return heading ? { ...entry, source: heading } : { ...entry, sourcePending: true };
   });
   return {
     result,

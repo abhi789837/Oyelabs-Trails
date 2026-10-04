@@ -214,6 +214,11 @@ export interface QuizQuestionResult {
   explanation: string;
   /** v4.3: the topic section the item was written from ("From: <heading>"), when it cites one. */
   source?: string;
+  /**
+   * v4.3 D9: true when the item cites nothing yet: a static item the re-check has not reached (or the
+   * content-quiz fallback). The result says "Source: awaiting re-check" instead of a section.
+   */
+  sourcePending?: boolean;
 }
 
 export interface QuizAttemptResult {

@@ -8,7 +8,7 @@ import { schema } from "../db";
 import { activeLearner, adminSession, as, createTestApp, publishPlanFor, type Session, type TestContext } from "../test/harness";
 import { setVideoLockMode } from "../videos/repo";
 import { calibrateAttempt } from "./calibrate";
-import { estimateCost, fillTopic, getRun } from "./engine";
+import { emptyCounts, estimateCost, fillTopic, getRun, recheckTopic } from "./engine";
 import { codeGates, formatProblems, runGates, type GateCandidate } from "./gates";
 import { buildGrounding, citationProblem } from "./grounding";
 import { activeCount, ensureTopicTests, payloadOf, resetTopicTestMemo, servedIdOf, topicRows } from "./repo";
@@ -374,6 +374,77 @@ describe("re-check job", () => {
     const summary = await ctx.app.inject({ method: "GET", url: "/api/admin/topic-tests/summary", ...as(admin) });
     expect(summary.json().run.status).toBe("done");
     expect(summary.json().estimate.totalUsd).toBeGreaterThan(0);
+  });
+
+  test("D9: every active item cites its passage: generated always, static once the re-check reaches them", async () => {
+    const t = topic();
+    const g = ensureTopicTests(ctx.db, t);
+    const learner = await activeLearner(ctx, admin);
+    await publishPlanFor(ctx, admin, learner.id, [QUIZ_TOPIC]);
+    const answerAll = async () => {
+      const served = await ctx.app.inject({ method: "GET", url: `/api/content/modules/${QUIZ_MODULE.trackId}/${QUIZ_MODULE.moduleId}`, ...as(learner.session) });
+      const quiz = served.json().topics.find((x: { id: string }) => x.id === QUIZ_TOPIC).quiz as { id: string }[];
+      const res = await ctx.app.inject({ method: "POST", url: `/api/topics/${QUIZ_TOPIC}/attempt`, ...as(learner.session), payload: { kind: "quiz", answers: Object.fromEntries(quiz.map((q) => [q.id, [0]])) } });
+      return { quiz, perQuestion: res.json().perQuestion as { id: string; source?: string; sourcePending?: boolean }[] };
+    };
+
+    // Before the re-check: the imported static items are active, cite nothing, and say so.
+    const before = topicRows(ctx.db, QUIZ_TOPIC, ["active"]);
+    expect(before.length).toBe(t.quiz!.length);
+    expect(before.every((r) => r.origin === "static" && !payloadOf(r).citation && r.gates === null)).toBe(true);
+    const first = await answerAll();
+    expect(first.perQuestion.every((q) => q.sourcePending === true && q.source === undefined)).toBe(true);
+
+    // The re-check (mock AI) for this one topic.
+    await ctx.app.inject({ method: "POST", url: "/api/admin/topic-tests/recheck", ...as(admin), payload: { kind: "topic", id: QUIZ_TOPIC } });
+    await ctx.drainJobs();
+    expect(getRun(ctx.db)!.status).toBe("done");
+
+    // After: every active item, static or generated, has a citation that code verifies against this
+    // topic's own passages, and has passed the gates.
+    const after = topicRows(ctx.db, QUIZ_TOPIC, ["active"]);
+    expect(after.length).toBeGreaterThanOrEqual(5);
+    for (const row of after) {
+      expect(citationProblem(g, payloadOf(row).citation)).toBeNull();
+      expect((row.gates as { passed: boolean }).passed).toBe(true);
+    }
+    // And the learner sees "From: <section>" on every served question, never "awaiting re-check".
+    const headings = new Set(g.passages.map((p) => p.heading));
+    const second = await answerAll();
+    expect(second.quiz.length).toBe(after.length);
+    for (const q of second.perQuestion) {
+      expect(q.sourcePending).toBeUndefined();
+      expect(headings.has(q.source!)).toBe(true);
+    }
+  });
+
+  test("D9: a failing item with no supporting passage is withdrawn (flagged), never kept live to hold the minimum", async () => {
+    const t = topic();
+    ensureTopicTests(ctx.db, t);
+    // The writer returns nothing, so no replacement can land and every failure would be "kept".
+    const ai = new Proxy(ctx.ai, {
+      get(target, prop, receiver) {
+        if (prop !== "generateJson") return Reflect.get(target, prop, receiver);
+        return (req: { task?: string }) =>
+          req.task === "topic_test_write" ? Promise.resolve({ data: { items: [] }, usage: null }) : target.generateJson(req as never);
+      },
+    });
+    const counts = emptyCounts();
+    await recheckTopic({ db: ctx.db, ai, content: ctx.content, sandbox: ctx.app.sandbox }, t, counts);
+    const g = ensureTopicTests(ctx.db, t);
+    const rows = topicRows(ctx.db, QUIZ_TOPIC);
+    const active = rows.filter((r) => r.status === "active");
+    for (const row of active) expect(citationProblem(g, payloadOf(row).citation)).toBeNull();
+    const withdrawn = rows.filter((r) => r.status === "flagged");
+    expect(counts.withdrawnUncited).toBe(withdrawn.length);
+    for (const row of withdrawn) {
+      expect(citationProblem(g, payloadOf(row).citation)).not.toBeNull();
+      expect(row.flagReason).toMatch(/no passage of this topic supports it/);
+    }
+    // The mock checker supports none of this topic's hand-written static items: half are retired down
+    // to the minimum, the rest are withdrawn rather than kept live.
+    expect(counts.keptBelowMinimum).toBe(0);
+    expect(withdrawn.length).toBeGreaterThan(0);
   });
 
   test("stops at the budget cap and can resume", async () => {
