@@ -51,7 +51,7 @@ export function personaliseHandler(deps: PersonaliseDeps) {
       if (picks.length === 0) throw new Error("nothing could be generated or found in the bank");
       storeItems(db, assessmentId, picks);
       const setup = getSetup(db, assessment.userId);
-      const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
+      const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
       config = {
         format: "v4",
         departmentId: setup.departmentId,

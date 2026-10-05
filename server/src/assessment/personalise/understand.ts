@@ -102,7 +102,7 @@ export function profileFromSetup(
 
 export function profileFor(db: Db, userId: string, catalog?: Catalog): { setup: LearnerSetup; profile: ProfileInput; catalog: Catalog } {
   const setup = getSetup(db, userId);
-  const cat = catalog ?? getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
+  const cat = catalog ?? getCatalog(db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
   return { setup, catalog: cat, profile: profileFromSetup(cat, setup, setup.description, blueprintInputs(db, cat, setup)) };
 }
 
@@ -146,7 +146,7 @@ export async function understandSetup(
   input: { setup: Pick<LearnerSetup, "departmentId" | "trackId" | "stackIds" | "experienceBand" | "level" | "priorities" | "skip"> & Pick<BlueprintSetup, "goals">; description: string },
   options: { force?: boolean; userId?: string; assessmentId?: string } = {},
 ): Promise<{ understanding: Understanding; key: string }> {
-  const catalog = getCatalog(deps.db, { departmentId: input.setup.departmentId, includeArchived: true });
+  const catalog = getCatalog(deps.db, { departmentId: input.setup.departmentId, includeArchived: true, withAreas: true });
   const blueprint = blueprintInputs(deps.db, catalog, input.setup);
   const profile = profileFromSetup(catalog, input.setup, input.description, blueprint);
   const key = understandingKey(profile);
@@ -155,7 +155,7 @@ export async function understandSetup(
 
   const setup = input.setup;
   // v4.3 (Phase 2b): the goals, their prerequisite probes and the role's core skills.
-  const mix = planBlueprintMix(setup.priorities, blueprint.core, blueprint.probes);
+  const mix = planBlueprintMix(setup.priorities, blueprint.core, blueprint.probes, blueprint.intents);
   const names = new Map<string, string>([
     ...setup.priorities.map((p) => [p.skillId, p.skillName] as const),
     ...profile.basics.map((b) => [b.id, b.name] as const),
@@ -222,7 +222,7 @@ export async function understand(
 ): Promise<Understanding> {
   const setup = getSetup(deps.db, userId);
   const stored = deps.db.select().from(schema.learnerPriorities).where(eq(schema.learnerPriorities.userId, userId)).get();
-  const catalog = getCatalog(deps.db, { departmentId: setup.departmentId, includeArchived: true });
+  const catalog = getCatalog(deps.db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
   const key = understandingKey(profileFromSetup(catalog, setup, setup.description, blueprintInputs(deps.db, catalog, setup)));
   if (!options.force && stored?.understandingHash === key && stored.understanding) {
     const cached = stored.understanding as Understanding;

@@ -9,16 +9,18 @@ import { now } from "../lib/ids";
 import BD_OUTCOMES from "./seed/bd";
 import ENGINEERING_OUTCOMES from "./seed/engineering";
 import PM_OUTCOMES from "./seed/pm";
+import SOFT_OUTCOMES from "./seed/soft";
 
 /**
  * The practical-outcomes library ("Resolve a merge conflict and open a clean PR"), per department.
  *
- * Seeds live in ./seed/{engineering,pm,bd}.ts. At boot each entry is validated — the schema, its
+ * Seeds live in ./seed/{engineering,pm,bd,soft}.ts (v4.4: `soft` is an area; its cases are offered to
+ * every department through `listUsableOutcomes`). At boot each entry is validated — the schema, its
  * skills against the department's catalog, its capstone (a task `checkTask` accepts, or a topic id)
  * — and upserted by id. An invalid entry is skipped with a warning; boot never fails on a seed.
  */
 
-export const OUTCOME_SEEDS: readonly unknown[] = [...(ENGINEERING_OUTCOMES as unknown[]), ...(PM_OUTCOMES as unknown[]), ...(BD_OUTCOMES as unknown[])];
+export const OUTCOME_SEEDS: readonly unknown[] = [...(ENGINEERING_OUTCOMES as unknown[]), ...(PM_OUTCOMES as unknown[]), ...(BD_OUTCOMES as unknown[]), ...(SOFT_OUTCOMES as unknown[])];
 
 export interface SeedReport {
   upserted: number;
@@ -128,6 +130,22 @@ export function listOutcomes(db: Db, departmentId: string): PracticalOutcome[] {
     .orderBy(asc(schema.practicalOutcomes.position))
     .all()
     .map(toOutcome);
+}
+
+/**
+ * v4.4: the cases a learner in `departmentId` can be given: their own department's, then every area
+ * department's (Soft skills), in that order. For an area department itself, just its own cases.
+ */
+export function listUsableOutcomes(db: Db, departmentId: string): PracticalOutcome[] {
+  const areas = db
+    .select({ id: schema.departments.id })
+    .from(schema.departments)
+    .where(eq(schema.departments.kind, "area"))
+    .orderBy(asc(schema.departments.position))
+    .all()
+    .map((d) => d.id)
+    .filter((id) => id !== departmentId);
+  return [departmentId, ...areas].flatMap((id) => listOutcomes(db, id));
 }
 
 export function getOutcome(db: Db, id: string): PracticalOutcome | null {

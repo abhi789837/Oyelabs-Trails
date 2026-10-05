@@ -10,6 +10,9 @@
 # The app listens on 127.0.0.1:8787 and Caddy terminates TLS in front of it (Caddyfile.example).
 # The code runner (Piston) is on an internal network only the app can reach; nothing new is
 # published on any interface.
+#
+# v4.4: speech-to-text (whisper) is on its own internal network with no internet access, so its
+# model is downloaded once, before the first start:  scripts/deploy/whisper-model.sh
 
 services:
   oyelearn:
@@ -32,6 +35,9 @@ services:
       PORT: "8787"
       PISTON_URL: http://piston:2000
       PISTON_RUN_TIMEOUT_MS: "5000"
+      # v4.4: Speak answers are transcribed here. Unset it to turn transcription off
+      # (recordings are still kept and marked "unavailable").
+      STT_BASE_URL: http://whisper:8080
     ports:
       # Bound to loopback on purpose: Caddy is the only thing that should reach it.
       - "127.0.0.1:8787:8787"
@@ -41,6 +47,7 @@ services:
     networks:
       - default
       - code_net
+      - stt_net
     depends_on:
       - piston
     healthcheck:
@@ -85,11 +92,68 @@ services:
       driver: json-file
       options: { max-size: "10m", max-file: "3" }
 
+  # v4.4: speech-to-text for Speak answers (docs/v4.4/research/whisper-benchmark.md).
+  # whisper.cpp's server, rebuilt from the upstream image for portable CPUs (the published image
+  # is compiled for its CI runner's CPU and crashes with SIGILL elsewhere; see the Dockerfile).
+  # OpenAI-shaped endpoint: POST /v1/audio/transcriptions. `--convert` runs ffmpeg so WebM/Ogg/MP4
+  # from browsers is accepted. No published port and an `internal` network: only the app can
+  # reach it, and it has no internet access, so the model is pre-seeded into `whisper-models` by
+  # scripts/deploy/whisper-model.sh (the `whisper-model` service below).
+  whisper:
+    build: ./scripts/deploy/whisper
+    image: oyelearn-whisper:latest
+    restart: unless-stopped
+    command:
+      - >-
+        [ -s /models/ggml-base.en.bin ] || { echo "whisper: model missing. Run scripts/deploy/whisper-model.sh"; sleep 60; exit 1; };
+        exec whisper-server --host 0.0.0.0 --port 8080 -m /models/ggml-base.en.bin -t 3
+        --convert --inference-path /v1/audio/transcriptions
+    networks:
+      - stt_net
+    volumes:
+      - whisper-models:/models:ro
+    tmpfs:
+      # --convert writes a WAV per request here.
+      - /tmp:size=256m
+    read_only: true
+    cpus: "3.0"
+    mem_limit: 1g
+    pids_limit: 256
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # One-shot model download into the `whisper-models` volume. Not started by `up` (profile);
+  # run through scripts/deploy/whisper-model.sh. On the default network, so it has internet.
+  whisper-model:
+    image: oyelearn-whisper:latest
+    profiles: ["setup"]
+    user: "0:0"
+    restart: "no"
+    networks:
+      - default
+    volumes:
+      - whisper-models:/models
+    command: ["exec download-model.sh"]
+
 networks:
   code_net: {}
+  # Internal: no route out. Only `oyelearn` and `whisper` are on it.
+  stt_net:
+    internal: true
 
 volumes:
   oyelearn-data:
     driver: local
   piston-packages:
+    driver: local
+  whisper-models:
     driver: local

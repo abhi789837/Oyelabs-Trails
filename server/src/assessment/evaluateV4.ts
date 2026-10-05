@@ -240,7 +240,7 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
   db.insert(schema.evaluations).values({ id: newId(), assessmentId, result, model, createdAt: now() }).run();
 
   // 4. The library: the modules behind every priority, then the track basics. Skipped skills never.
-  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
+  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
   const skillById = new Map(catalog.skills.map((s) => [s.id, s]));
   const skipped = new Set(setup.skip.map((s) => s.skillId));
   const modules = [
@@ -298,5 +298,5 @@ export async function evaluateV4(deps: EvaluateV4Deps, assessmentId: string): Pr
 }
 
 function catalogNames(db: Db, departmentId: string): [string, string][] {
-  return getCatalog(db, { departmentId, includeArchived: true }).skills.map((s) => [s.id, s.name]);
+  return getCatalog(db, { departmentId, includeArchived: true, withAreas: true }).skills.map((s) => [s.id, s.name]);
 }

@@ -31,7 +31,7 @@ export function ensureCatalogSeed(db: Db): void {
   db.transaction((tx) => {
     for (const d of SEED_DEPARTMENTS) {
       tx.insert(schema.departments)
-        .values({ ...d, createdAt: at })
+        .values({ ...d, kind: d.kind ?? "role", createdAt: at })
         .onConflictDoNothing()
         .run();
     }
@@ -80,6 +80,7 @@ const toDepartment = (r: DepartmentRow): Department => ({
   practiceNoun: r.practiceNoun,
   position: r.position,
   archived: r.archivedAt != null,
+  kind: r.kind ?? "role",
 });
 
 const toTrack = (r: TrackRow): JobTrack => ({
@@ -127,19 +128,26 @@ export interface CatalogOptions {
   /** Archived rows are hidden from pickers but shown on the departments admin page. */
   includeArchived?: boolean;
   departmentId?: string;
+  /**
+   * v4.4: with `departmentId`, also the area departments (Soft skills) and their skills, which a
+   * learner in any department can use. For learner-side readers: goals, the test, the path.
+   */
+  withAreas?: boolean;
 }
 
 export function getCatalog(db: Db, options: CatalogOptions = {}): Catalog {
-  const keep = <T extends { archived: boolean; departmentId?: string; id: string }>(row: T, dept: string) =>
-    (options.includeArchived || !row.archived) && (!options.departmentId || dept === options.departmentId);
-
-  const departments = db
+  const allDepartments = db
     .select()
     .from(schema.departments)
     .orderBy(asc(schema.departments.position), asc(schema.departments.name))
     .all()
-    .map(toDepartment)
-    .filter((d) => keep(d, d.id));
+    .map(toDepartment);
+  const areaIds = new Set(options.withAreas ? allDepartments.filter((d) => d.kind === "area").map((d) => d.id) : []);
+  const inScope = (dept: string) => !options.departmentId || dept === options.departmentId || areaIds.has(dept);
+  const keep = <T extends { archived: boolean; departmentId?: string; id: string }>(row: T, dept: string) =>
+    (options.includeArchived || !row.archived) && inScope(dept);
+
+  const departments = allDepartments.filter((d) => keep(d, d.id));
   const tracks = db
     .select()
     .from(schema.tracks)
@@ -160,7 +168,7 @@ export function getCatalog(db: Db, options: CatalogOptions = {}): Catalog {
     .orderBy(asc(schema.skills.position), asc(schema.skills.name))
     .all()
     .map(toSkill)
-    .filter((s) => (options.includeArchived || s.status !== "archived") && (!options.departmentId || s.departmentId === options.departmentId));
+    .filter((s) => (options.includeArchived || s.status !== "archived") && inScope(s.departmentId));
   return { departments, tracks, stacks, skills };
 }
 
@@ -187,7 +195,7 @@ export function slugId(prefix: string, name: string, taken: (id: string) => bool
   return id;
 }
 
-const SKILL_PREFIX: Record<string, string> = { engineering: "eng", pm: "pm", bd: "bd" };
+const SKILL_PREFIX: Record<string, string> = { engineering: "eng", pm: "pm", bd: "bd", soft: "ss" };
 const skillPrefix = (departmentId: string) => SKILL_PREFIX[departmentId] ?? departmentId;
 
 function nextPosition(rows: { position: number }[]): number {

@@ -79,6 +79,7 @@ const registry: { [K in StatusKind]: Record<StatusKinds[K], Entry> } = {
     running: { label: "Running", tone: "progress" },
     done: { label: "Done", tone: "success" },
     failed: { label: "Failed", tone: "danger" },
+    waiting_setup: { label: "Waiting for setup", tone: "outline" },
   },
   item: {
     pool: { label: "In pool", tone: "outline" },

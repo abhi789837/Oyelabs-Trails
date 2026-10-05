@@ -228,4 +228,24 @@ export const registry: TrackEntry[] = [
       { id: "bd-ai", name: "AI-Powered Business Development", idPrefix: "bd-x-ai-" },
     ],
   },
+  // v4.4: the Soft skills area. One camp per soft skill (catalog `ss-*` → `soft-*`), usable by every
+  // department; each camp is one full lesson with a hands-on practice.
+  {
+    id: "soft",
+    name: "Soft skills",
+    tagline: "Speaking, writing and working with people: the skills every engineer, PM and BD person uses daily.",
+    accentToken: "alpenglow",
+    modules: [
+      { id: "soft-spoken-english", name: "Spoken English at work", idPrefix: "soft-english-" },
+      { id: "soft-workplace-writing", name: "Workplace writing (email, chat, docs)", idPrefix: "soft-writing-" },
+      { id: "soft-explain-simply", name: "Explaining technical work simply", idPrefix: "soft-explain-" },
+      { id: "soft-standup-updates", name: "Stand-ups and status updates", idPrefix: "soft-standup-" },
+      { id: "soft-client-team-communication", name: "Client and team communication", idPrefix: "soft-comms-" },
+      { id: "soft-listening-questions", name: "Listening and asking good questions", idPrefix: "soft-listening-" },
+      { id: "soft-presenting-demoing", name: "Presenting and demoing", idPrefix: "soft-demo-" },
+      { id: "soft-ownership-time", name: "Ownership and time management", idPrefix: "soft-ownership-" },
+      { id: "soft-feedback", name: "Giving and receiving feedback", idPrefix: "soft-feedback-" },
+      { id: "soft-teamwork", name: "Teamwork and collaboration", idPrefix: "soft-teamwork-" },
+    ],
+  },
 ];

@@ -30,8 +30,8 @@ function skill(id: string, departmentId: string, defaultSlider: number | null, e
 
 const catalog = {
   departments: [
-    { id: "engineering", name: "Engineering", slug: "engineering", icon: "code", colour: "#000000", assessmentFormat: "coding", practiceNoun: "Sandbox", position: 0, archived: false },
-    { id: "pm", name: "Project Management", slug: "pm", icon: "box", colour: "#000000", assessmentFormat: "tasks", practiceNoun: "Task workspace", position: 1, archived: false },
+    { id: "engineering", name: "Engineering", slug: "engineering", icon: "code", colour: "#000000", assessmentFormat: "coding", practiceNoun: "Sandbox", position: 0, archived: false, kind: "role" },
+    { id: "pm", name: "Project Management", slug: "pm", icon: "box", colour: "#000000", assessmentFormat: "tasks", practiceNoun: "Task workspace", position: 1, archived: false, kind: "role" },
   ],
   tracks: [],
   stacks: [],

@@ -20,7 +20,11 @@ export function stateFromSuggestion(suggestion: OnboardSuggestion, description: 
       level,
       levelTouched: level !== null,
       hoursPerWeek: suggestion.hoursPerWeek,
+      advanced: suggestion.deadlineWeeks ? { ...base.advanced, deadlineWeeks: suggestion.deadlineWeeks } : base.advanced,
       description,
+      intents: suggestion.intents ?? [],
+      unsure: suggestion.unsure ?? [],
+      intentsFor: description,
     },
     rows,
   );

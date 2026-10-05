@@ -51,8 +51,8 @@ export function addTextGoal(rows: readonly GoalRow[], text: string, reading: Goa
 export function addSuggestedGoal(rows: readonly GoalRow[], goal: SuggestedGoal | Omit<GoalInput, "id">): GoalRow[] {
   if (goal.caseId && rows.some((r) => r.caseId === goal.caseId)) return [...rows];
   if (goal.type === "skill" && goal.skillIds.length === 1) return addSkillGoal(rows, goal.skillIds[0], goal.slider, goal.targetLevel);
-  const { type, originalText, outcome, skillIds, targetLevel, caseId, slider } = goal;
-  return append(rows, { type, originalText, outcome, skillIds, targetLevel, caseId, slider });
+  const { type, originalText, outcome, skillIds, targetLevel, caseId, slider, intentId } = goal;
+  return append(rows, { type, originalText, outcome, skillIds, targetLevel, caseId, slider, ...(intentId ? { intentId } : {}) });
 }
 
 export function updateGoal(rows: readonly GoalRow[], key: string, patch: Partial<Pick<GoalRow, "slider" | "skillIds" | "targetLevel" | "outcome">>): GoalRow[] {
@@ -108,6 +108,7 @@ export function rowsFromSaved(goals: readonly LearnerGoal[] | undefined, priorit
       slider: g.slider,
       position,
       status: g.status,
+      ...(g.intentId ? { intentId: g.intentId } : {}),
     }));
   }
   const target = level ? Math.min(5, Math.max(2, level + 1)) : 3;
@@ -125,6 +126,7 @@ export function toGoalInputs(rows: readonly GoalRow[]): GoalInput[] {
     targetLevel: r.targetLevel,
     caseId: r.caseId,
     slider: r.slider,
+    ...(r.intentId ? { intentId: r.intentId } : {}),
   }));
 }
 

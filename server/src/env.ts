@@ -31,6 +31,13 @@ const rawSchema = z.object({
    */
   PISTON_URL: z.string().url().optional(),
   PISTON_RUN_TIMEOUT_MS: z.coerce.number().int().positive().default(3000),
+  /**
+   * v4.4: the speech-to-text server (whisper.cpp, OpenAI-shaped). Internal network only.
+   * Unset = a deterministic mock transcript in development and tests; in production, recordings
+   * are kept but marked "unavailable" for transcription.
+   */
+  STT_BASE_URL: z.string().url().optional(),
+  STT_TIMEOUT_MS: z.coerce.number().int().positive().default(120_000),
   /** Where the SPA build lives, served in production. */
   CLIENT_DIST: z.string().default("./dist"),
   /** Where build-server-content.mjs writes module JSON. */
@@ -53,9 +60,13 @@ export type Env = {
   devUnsafeRunner: boolean;
   pistonUrl: string | null;
   pistonRunTimeoutMs: number;
+  sttBaseUrl: string | null;
+  sttTimeoutMs: number;
   clientDist: string;
   serverContentDir: string;
   snapshotsDir: string;
+  /** v4.4: encrypted Speak recordings, one directory per user. */
+  audioDir: string;
   backupsDir: string;
   dbPath: string;
 };
@@ -116,9 +127,12 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     devUnsafeRunner: raw.DEV_UNSAFE_RUNNER,
     pistonUrl: raw.PISTON_URL ?? null,
     pistonRunTimeoutMs: raw.PISTON_RUN_TIMEOUT_MS,
+    sttBaseUrl: raw.STT_BASE_URL ? raw.STT_BASE_URL.replace(/\/+$/, "") : null,
+    sttTimeoutMs: raw.STT_TIMEOUT_MS,
     clientDist: path.resolve(raw.CLIENT_DIST),
     serverContentDir: path.resolve(raw.SERVER_CONTENT_DIR),
     snapshotsDir: path.join(dataDir, "snapshots"),
+    audioDir: path.join(dataDir, "audio"),
     backupsDir: path.join(dataDir, "backups"),
     dbPath: path.join(dataDir, "oyelearn.db"),
   };

@@ -130,7 +130,10 @@ describe("Suggest", () => {
     expect(s.level).toBe(2);
     expect(s.hoursPerWeek).toBe(15);
     expect(s.stackIds).toContain("stack-react");
-    expect(s.trackId).toBe("backend");
+    // v4.4: the setup track is the current role (its basics are the core skills); "doing backend" is a role-move goal.
+    expect(s.trackId).toBe("frontend");
+    expect(s.intents.map((i) => i.type)).toEqual(["current_role", "improve_area", "move_role", "improve_area"]);
+    expect(s.unsure).toEqual([]);
     const git = s.goals.find((g) => g.skillIds.includes("eng-git"));
     expect(git?.slider).toBe(5);
     expect(s.goals[0].slider).toBe(5);

@@ -24,6 +24,7 @@ import { checkLinksHandler } from "./jobs/handlers/checkLinks";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { fillHandler as topicTestFillHandler, recheckHandler as topicTestRecheckHandler, syncAllTopicTests } from "./topicTests/engine";
 import { JobWorker } from "./jobs/worker";
+import { transcribeHandler } from "./speech/transcribeJob";
 import { publishGenerationLine } from "./routes/admin/live";
 import { createSandbox } from "./sandbox";
 
@@ -31,6 +32,7 @@ async function main(): Promise<void> {
   const env = loadEnv();
   fs.mkdirSync(env.dataDir, { recursive: true });
   fs.mkdirSync(env.snapshotsDir, { recursive: true });
+  fs.mkdirSync(env.audioDir, { recursive: true });
   fs.mkdirSync(env.backupsDir, { recursive: true });
 
   const { db, sqlite } = openDb(env);
@@ -85,6 +87,7 @@ async function main(): Promise<void> {
       "ai.batch.poll": batchPollHandler({ db, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "topic_tests.recheck": topicTestRecheckHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "speech.transcribe": transcribeHandler({ db, env, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });

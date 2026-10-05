@@ -5,7 +5,7 @@ import { z } from "zod";
 import { goalInterpretRequestSchema, onboardSuggestRequestSchema, saveGoalsRequestSchema } from "../../../../shared/goals";
 import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
-import { listOutcomes, searchOutcomes, toOutcomeOption } from "../../goals/outcomes";
+import { listUsableOutcomes, searchOutcomes, toOutcomeOption } from "../../goals/outcomes";
 import { achieveGoal, addSuggestion, capstoneSummaries, dismissSuggestion, listGoals, listSuggestions, restoreSuggestion, saveGoals } from "../../goals/repo";
 import { interpretGoal, suggestOnboarding } from "../../goals/suggest";
 import { writeAudit } from "../../lib/audit";
@@ -30,11 +30,11 @@ export async function registerAdminGoalRoutes(app: FastifyInstance): Promise<voi
     return user;
   };
 
-  /** The department's practical cases for the goal box's picker, best match first. */
+  /** The department's practical cases (plus every area's, v4.4) for the goal box's picker, best match first. */
   app.get("/api/admin/outcomes", async (request) => {
     requireStaff(request);
     const query = parseOrThrow(z.object({ departmentId: z.string().min(1).max(48), q: z.string().max(120).default("") }), request.query);
-    return { outcomes: searchOutcomes(listOutcomes(app.db, query.departmentId), query.q).map(toOutcomeOption) };
+    return { outcomes: searchOutcomes(listUsableOutcomes(app.db, query.departmentId), query.q).map(toOutcomeOption) };
   });
 
   /** Quick onboarding: one line in, the whole setup pre-filled out. One Haiku call, rules without AI. */

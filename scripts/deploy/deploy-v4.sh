@@ -34,6 +34,9 @@ fi
 echo "== 3. build and restart"
 git pull --ff-only
 docker compose build
+# v4.4: the speech model, before whisper starts (it has no internet). Idempotent: an intact
+# model already in the volume is kept.
+docker compose --profile setup run --rm whisper-model
 docker compose up -d
 
 echo "== 4. code runner"

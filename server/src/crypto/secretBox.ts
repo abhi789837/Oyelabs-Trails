@@ -48,3 +48,30 @@ export function hint(plaintext: string): string {
   const trimmed = plaintext.trim();
   return trimmed.length <= 4 ? "…".padEnd(5, "•") : `…${trimmed.slice(-4)}`;
 }
+
+/**
+ * v4.4: binary variant for recorded audio at rest.
+ *
+ * Layout: `iv (12) | tag (16) | ciphertext`, one self-contained blob per file, so a file can be
+ * decrypted with nothing but the master key. Same key and algorithm as `seal`: a tampered or
+ * truncated file fails the GCM tag check instead of returning altered audio.
+ */
+const TAG_BYTES = 16;
+
+export function sealBuffer(plaintext: Buffer, key: Buffer): Buffer {
+  if (key.length !== 32) throw new Error("The master key must be 32 bytes.");
+  const iv = crypto.randomBytes(IV_BYTES);
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+  const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+  return Buffer.concat([iv, cipher.getAuthTag(), ciphertext]);
+}
+
+export function openBuffer(sealed: Buffer, key: Buffer): Buffer {
+  if (key.length !== 32) throw new Error("The master key must be 32 bytes.");
+  if (sealed.length < IV_BYTES + TAG_BYTES) throw new Error("The sealed data is too short.");
+  const iv = sealed.subarray(0, IV_BYTES);
+  const tag = sealed.subarray(IV_BYTES, IV_BYTES + TAG_BYTES);
+  const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
+  decipher.setAuthTag(tag);
+  return Buffer.concat([decipher.update(sealed.subarray(IV_BYTES + TAG_BYTES)), decipher.final()]);
+}

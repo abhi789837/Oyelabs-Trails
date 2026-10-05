@@ -190,7 +190,7 @@ export async function runBuilder(
   const v4Result = input.evaluation && "format" in input.evaluation && input.evaluation.format === "v4" ? input.evaluation : null;
   const legacyEvaluation = v4Result ? null : (input.evaluation as EvaluationResult | null);
   const setup = getSetup(db, input.userId);
-  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
+  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
   const skillsById = new Map(catalog.skills.map((s) => [s.id, s]));
   const stored = getPriorities(db, input.userId);
   const focus = getFocus(db, input.userId);
@@ -335,6 +335,8 @@ export async function runBuilder(
         skipped: goalPlan.order.skipped,
         missingLinks: goalPlan.order.missingLinks,
         warnings: goalPlan.order.warnings,
+        // v4.4: each description intent's place on the path, or why it has none.
+        intents: goalPlan.intents.lines,
       },
     });
   }

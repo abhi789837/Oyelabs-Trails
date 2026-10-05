@@ -19,6 +19,7 @@ import AdminCurriculumPage from "@/features/admin/AdminCurriculumPage";
 import AdminTestItemsPage from "@/features/admin/testItems/AdminTestItemsPage";
 import AdminDepartmentsPage from "@/features/admin/catalog/AdminDepartmentsPage";
 import AdminSkillGraphPage from "@/features/admin/graph/AdminSkillGraphPage";
+import AdminSkillGroupsPage from "@/features/admin/groups/AdminSkillGroupsPage";
 import AdminIntegrityFeedPage from "@/features/admin/AdminIntegrityFeedPage";
 import AdminIntegrityPage from "@/features/admin/AdminIntegrityPage";
 import AdminLivePage from "@/features/admin/AdminLivePage";
@@ -87,6 +88,7 @@ export default function App() {
                   <Route path="curriculum" element={<AdminCurriculumPage />} />
                   <Route path="curriculum/test-items" element={<AdminTestItemsPage />} />
                   <Route path="skill-graph" element={<AdminSkillGraphPage />} />
+                  <Route path="skill-groups" element={<AdminSkillGroupsPage />} />
                   <Route path="courses" element={<AdminCoursesPage />} />
                   <Route path="courses/:courseId" element={<AdminCourseEditorPage />} />
                   <Route path="generated" element={<AdminGeneratedPage />} />

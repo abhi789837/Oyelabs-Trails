@@ -6,7 +6,7 @@ import { SEED_DEPARTMENTS, SEED_SKILLS, SEED_STACKS, SEED_TRACKS } from "./index
 import type { SkillLevelBand } from "./types";
 
 const LEVELS: SkillLevelBand[] = ["beginner", "intermediate", "advanced", "expert"];
-const SKILL_PREFIX: Record<string, string> = { engineering: "eng-", pm: "pm-", bd: "bd-" };
+const SKILL_PREFIX: Record<string, string> = { engineering: "eng-", pm: "pm-", bd: "bd-", soft: "ss-" };
 const STACK_PREFIX: Record<string, string> = { engineering: "stack-", pm: "pm-tool-", bd: "bd-tool-" };
 const ENGINEERING_TRACK_IDS = ["frontend", "backend", "fullstack", "mobile", "devops", "ai-ml"];
 const MIN_SKILLS: Record<string, number> = { engineering: 160, pm: 60, bd: 60 };
@@ -32,8 +32,9 @@ describe("catalog seed", () => {
     expect(dupes).toEqual([]);
   });
 
-  it("defines the three departments", () => {
-    expect(SEED_DEPARTMENTS.map((d) => d.id)).toEqual(["engineering", "pm", "bd"]);
+  it("defines the three role departments and the soft-skills area", () => {
+    expect(SEED_DEPARTMENTS.map((d) => d.id)).toEqual(["engineering", "pm", "bd", "soft"]);
+    expect(SEED_DEPARTMENTS.filter((d) => d.kind === "area").map((d) => d.id)).toEqual(["soft"]);
     const eng = SEED_DEPARTMENTS.find((d) => d.id === "engineering")!;
     expect(eng.assessmentFormat).toBe("coding");
     expect(eng.colour).toBe("#2067D3");
@@ -41,7 +42,7 @@ describe("catalog seed", () => {
       expect(d.assessmentFormat).toBe("tasks");
       expect(d.practiceNoun).toBe("Task workspace");
     }
-    expect(new Set(SEED_DEPARTMENTS.map((d) => d.colour.toLowerCase())).size).toBe(3);
+    expect(new Set(SEED_DEPARTMENTS.map((d) => d.colour.toLowerCase())).size).toBe(4);
   });
 
   it("prefixes tracks and stacks by department", () => {
@@ -97,7 +98,7 @@ describe("catalog seed", () => {
   it("maps content modules to real ids", () => {
     const pmBd = (dept: string, level: SkillLevelBand) => `${dept}-${level}`;
     for (const s of SEED_SKILLS) {
-      if (s.departmentId === "engineering") {
+      if (s.departmentId === "engineering" || s.departmentId === "soft") {
         for (const m of s.contentModules) expect(REGISTRY_MODULE_IDS.has(m), `${s.id} -> ${m}`).toBe(true);
       } else {
         // AI-for-your-role skills point at the department's dedicated AI camp.
@@ -109,7 +110,7 @@ describe("catalog seed", () => {
   });
 
   it("meets the per-department minimums", () => {
-    for (const d of SEED_DEPARTMENTS) {
+    for (const d of SEED_DEPARTMENTS.filter((x) => x.kind !== "area")) {
       const own = SEED_SKILLS.filter((s) => s.departmentId === d.id);
       expect(own.length, d.id).toBeGreaterThanOrEqual(MIN_SKILLS[d.id]!);
       expect(own.some((s) => s.isAiSkill), d.id).toBe(true);
@@ -137,5 +138,28 @@ describe("catalog seed", () => {
       const n = SEED_SKILLS.filter((s) => s.trackIds.includes(t.id)).length;
       expect(n, t.id).toBeGreaterThanOrEqual(8);
     }
+  });
+
+  it("seeds the ten soft skills with the fixed ids, no default slider and no AI flag (v4.4)", () => {
+    const soft = SEED_SKILLS.filter((s) => s.departmentId === "soft");
+    expect(soft.map((s) => s.id)).toEqual([
+      "ss-spoken-english",
+      "ss-workplace-writing",
+      "ss-explain-simply",
+      "ss-standup-updates",
+      "ss-client-team-communication",
+      "ss-listening-questions",
+      "ss-presenting-demoing",
+      "ss-ownership-time",
+      "ss-feedback",
+      "ss-teamwork",
+    ]);
+    for (const s of soft) {
+      expect(s.defaultSlider, s.id).toBeUndefined();
+      expect(s.isAiSkill, s.id).toBe(false);
+      expect(s.contentModules, s.id).toEqual([s.id.replace(/^ss-/, "soft-")]);
+      expect(s.aliases.length, s.id).toBeGreaterThan(3);
+    }
+    expect(SEED_SKILLS.find((s) => s.id === "ss-spoken-english")!.aliases).toEqual(expect.arrayContaining(["english", "spoken english"]));
   });
 });

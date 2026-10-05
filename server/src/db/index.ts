@@ -11,6 +11,7 @@ import { ensureCatalogSeed } from "../catalog/repo";
 import { applyDepartmentDefaults, applyV42PmDefaults, migrateLegacyPriorities } from "../setup/repo";
 import { ensureBankSeed } from "../bank/repo";
 import { ensureHandbookSeed } from "../handbook/repo";
+import { ensureBundleSeed } from "../goals/bundles";
 import { ensureOutcomeSeed } from "../goals/outcomes";
 import { migrateV43Goals } from "../goals/repo";
 import type { Env } from "../env";
@@ -88,6 +89,9 @@ export function openDb(env: Env, options: OpenDbOptions = {}): { db: Db; sqlite:
     // every existing priority becomes a skill goal (once).
     ensureOutcomeSeed(db);
     migrateV43Goals(db);
+    // v4.4: skill groups ("full stack" for a frontend dev, "soft skills"…); only missing ids are
+    // inserted, so admin edits survive.
+    ensureBundleSeed(db);
   }
   return { db, sqlite };
 }

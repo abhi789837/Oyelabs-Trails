@@ -3,11 +3,77 @@ import { calibrateTiming } from "../bank/calibrate";
 import { recomputeBankStats } from "../bank/stats";
 import path from "node:path";
 
-import { and, eq, isNotNull, lt } from "drizzle-orm";
+import { and, eq, isNotNull, isNull, lt } from "drizzle-orm";
 
 import { schema, type Db } from "../db";
 import type { Env } from "../env";
 import { now } from "../lib/ids";
+import { deleteRecordingAudio } from "../speech/store";
+
+/**
+ * v4.4: Speak recordings expire too (app_meta `audio.retention_days`, default 30).
+ *
+ * The audio file goes; the row, transcript and metrics stay, because the answer is still part of
+ * the assessment record after the voice itself is gone.
+ */
+export const AUDIO_RETENTION_KEY = "audio.retention_days";
+export const AUDIO_RETENTION_DEFAULT_DAYS = 30;
+export const AUDIO_RETENTION_MAX_DAYS = 3650;
+
+export function getAudioRetentionDays(db: Db): number {
+  const row = db.select().from(schema.appMeta).where(eq(schema.appMeta.key, AUDIO_RETENTION_KEY)).get();
+  const days = row ? Number(row.value) : NaN;
+  return Number.isInteger(days) && days >= 1 && days <= AUDIO_RETENTION_MAX_DAYS ? days : AUDIO_RETENTION_DEFAULT_DAYS;
+}
+
+export function setAudioRetentionDays(db: Db, days: number): void {
+  const value = String(days);
+  db.insert(schema.appMeta)
+    .values({ key: AUDIO_RETENTION_KEY, value, updatedAt: now() })
+    .onConflictDoUpdate({ target: schema.appMeta.key, set: { value, updatedAt: now() } })
+    .run();
+}
+
+export interface AudioRetentionResult {
+  filesDeleted: number;
+  rowsMarked: number;
+  errors: string[];
+}
+
+export function runAudioRetention(db: Db, env: Env, nowMs = now()): AudioRetentionResult {
+  const cutoff = nowMs - getAudioRetentionDays(db) * 24 * 60 * 60 * 1000;
+  const result: AudioRetentionResult = { filesDeleted: 0, rowsMarked: 0, errors: [] };
+
+  const expired = db
+    .select()
+    .from(schema.audioRecordings)
+    .where(and(isNull(schema.audioRecordings.audioDeletedAt), lt(schema.audioRecordings.createdAt, cutoff)))
+    .all();
+
+  for (const recording of expired) {
+    try {
+      if (deleteRecordingAudio(db, env, recording)) result.filesDeleted += 1;
+      result.rowsMarked += 1;
+    } catch (error) {
+      result.errors.push(`${recording.id}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  // Tidy up per-user directories left empty.
+  try {
+    if (fs.existsSync(env.audioDir)) {
+      for (const entry of fs.readdirSync(env.audioDir, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+        const dir = path.join(env.audioDir, entry.name);
+        if (fs.readdirSync(dir).length === 0) fs.rmdirSync(dir);
+      }
+    }
+  } catch (error) {
+    result.errors.push(`Could not tidy audio directories: ${error instanceof Error ? error.message : String(error)}`);
+  }
+
+  return result;
+}
 
 /**
  * Snapshot retention (brief §10.6).
@@ -157,6 +223,15 @@ export function startDailyMaintenance(options: MaintenanceOptions): () => void {
         options.log?.(
           `snapshot retention: ${retention.filesDeleted} file(s) deleted, ${retention.rowsCleared} row(s) cleared${
             retention.errors.length ? `, ${retention.errors.length} error(s)` : ""
+          }`,
+        );
+      }
+
+      const audio = runAudioRetention(options.db, options.env);
+      if (audio.rowsMarked > 0 || audio.errors.length > 0) {
+        options.log?.(
+          `audio retention: ${audio.filesDeleted} file(s) deleted, ${audio.rowsMarked} recording(s) marked${
+            audio.errors.length ? `, ${audio.errors.length} error(s)` : ""
           }`,
         );
       }

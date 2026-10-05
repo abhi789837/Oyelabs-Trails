@@ -1,10 +1,11 @@
 // v2 curriculum model: tracks are made of modules ("camps"), modules of topics.
 import type { TopicHandbookRefs, TopicInteractive, TopicSection } from "@shared/content";
+import type { SpeakPractice } from "@shared/softSkills";
 import type { Task } from "@shared/tasks";
 
 export type ChallengeType = "code" | "quiz";
 export type TopicLevel = "beginner" | "intermediate" | "advanced" | "expert";
-export type TrackId = "frontend" | "backend" | "fullstack" | "ai-driven" | "php" | "mobile" | "devops" | "pm" | "bd";
+export type TrackId = "frontend" | "backend" | "fullstack" | "ai-driven" | "php" | "mobile" | "devops" | "pm" | "bd" | "soft";
 
 /**
  * `glacier` extends the brief's tokens: the brief assigns `ridge` to both Full-Stack and
@@ -98,6 +99,11 @@ export interface Topic {
    * challenge is still the quiz — so answers ship with it and are revealed after a check.
    */
   practice?: Task;
+  /**
+   * v4.4: a spoken practice (soft skills). Phase 3's Speak recorder plays it; until then `practice`
+   * carries the same task in writing (`speak.writtenFallback`).
+   */
+  speak?: SpeakPractice;
   /**
    * v4.1: Oyelabs-specific procedures nobody outside the company can know (Keka settings, meeting
    * and email templates). Shown as "[Oyelabs SOP – admin to fill]" blocks until an admin fills them.

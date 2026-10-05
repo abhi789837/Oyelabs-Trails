@@ -1,4 +1,4 @@
-import { Bot, Briefcase, ClipboardList, Cloud, Layers, LayoutTemplate, Server, Smartphone, SquareCode, type LucideIcon } from "lucide-react";
+import { Bot, Briefcase, ClipboardList, Cloud, Layers, LayoutTemplate, MessagesSquare, Server, Smartphone, SquareCode, type LucideIcon } from "lucide-react";
 
 import type { TopicLevel, TrackId } from "@/types/curriculum";
 
@@ -12,6 +12,7 @@ export const trackIcons: Record<TrackId, LucideIcon> = {
   devops: Cloud,
   pm: ClipboardList,
   bd: Briefcase,
+  soft: MessagesSquare,
 };
 
 /** Short code used in certificate IDs and compact labels. */
@@ -25,6 +26,7 @@ export const trackCodes: Record<TrackId, string> = {
   devops: "DV",
   pm: "PM",
   bd: "BD",
+  soft: "SS",
 };
 
 export const levelLabels: Record<TopicLevel, string> = {

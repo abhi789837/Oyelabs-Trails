@@ -17,6 +17,8 @@ import { blueprintHandler } from "../assessment/blueprintJob";
 import { evaluateHandler } from "../assessment/evaluateJob";
 import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
 import { JobWorker } from "../jobs/worker";
+import { transcribeHandler } from "../speech/transcribeJob";
+import type { SttClient } from "../speech/stt";
 import { bankFillHandler } from "../bank/fillJob";
 import { bankRevalidateHandler } from "../handbook/revalidate";
 import { personaliseHandler } from "../assessment/personalise/job";
@@ -63,7 +65,7 @@ function databaseTemplate(env: Env): Buffer {
  * Each call gets its own throwaway data directory, because `loadEnv` writes a dev master key and
  * session secret there; sharing one would let tests leak state into each other.
  */
-export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}, options: { noAi?: boolean; provider?: MockProvider } = {}): Promise<TestContext> {
+export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}, options: { noAi?: boolean; provider?: MockProvider; stt?: SttClient } = {}): Promise<TestContext> {
   const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), "oyelearn-test-"));
   const env = loadEnv({
     NODE_ENV: "test",
@@ -110,6 +112,7 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}, 
       "path.build": buildPathHandler({ db, env, ai, content }),
       "topic_tests.recheck": topicTestRecheckHandler({ db, ai, content, sandbox, batchDelayMs: 0 }),
       "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox }),
+      "speech.transcribe": transcribeHandler({ db, env, stt: options.stt }),
     },
   });
 

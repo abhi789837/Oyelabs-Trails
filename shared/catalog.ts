@@ -40,7 +40,15 @@ export interface Department {
   practiceNoun: string;
   position: number;
   archived: boolean;
+  /**
+   * v4.4: "role" = a department people are hired into; "area" = a cross-department skill area (Soft
+   * skills). An area is never a learner's own department; its skills are usable by everyone.
+   */
+  kind: DepartmentKind;
 }
+
+export const DEPARTMENT_KINDS = ["role", "area"] as const;
+export type DepartmentKind = (typeof DEPARTMENT_KINDS)[number];
 
 export interface JobTrack {
   id: string;
@@ -192,6 +200,44 @@ export function searchSkills(skills: readonly Skill[], query: string): Skill[] {
   return scored.sort((a, b) => b.score - a.score || a.index - b.index).map((entry) => entry.skill);
 }
 
+// ---------------------------------------------------------------------------
+// v4.4: area departments (Soft skills) — skills usable across departments
+// ---------------------------------------------------------------------------
+
+/**
+ * Ids of the area departments known to every process without a DB read. The soft-skills area is
+ * seeded with id `soft`; any department row with `kind: "area"` also counts when it is passed in.
+ */
+export const KNOWN_AREA_DEPARTMENT_IDS: readonly string[] = ["soft"];
+
+/**
+ * True when a department is an area (its skills are usable by every department). Accepts the row
+ * (preferred: honours the admin-set `kind`) or a bare id (falls back to the known ids, plus any
+ * departments passed as `departments`).
+ */
+export function isAreaDepartment(departmentOrId: Pick<Department, "id" | "kind"> | string | null | undefined, departments?: readonly Pick<Department, "id" | "kind">[]): boolean {
+  if (departmentOrId == null) return false;
+  if (typeof departmentOrId !== "string") return departmentOrId.kind === "area";
+  const row = departments?.find((d) => d.id === departmentOrId);
+  if (row) return row.kind === "area";
+  return KNOWN_AREA_DEPARTMENT_IDS.includes(departmentOrId);
+}
+
+/**
+ * Can a learner in `departmentId` have this skill as a goal, test probe, path step or picker item?
+ * Yes when the skill is from their department or from an area department (soft skills).
+ */
+export function skillUsableBy(skill: Pick<Skill, "departmentId">, departmentId: string, departments?: readonly Pick<Department, "id" | "kind">[]): boolean {
+  return skill.departmentId === departmentId || isAreaDepartment(skill.departmentId, departments);
+}
+
+/** The skills a learner in `departmentId` may use: their own department's, then every area's. */
+export function usableSkills(skills: readonly Skill[], departmentId: string, departments?: readonly Pick<Department, "id" | "kind">[]): Skill[] {
+  const own = skills.filter((s) => s.departmentId === departmentId);
+  const area = skills.filter((s) => s.departmentId !== departmentId && isAreaDepartment(s.departmentId, departments));
+  return [...own, ...area];
+}
+
 /** The single best catalog match for a free-text skill name, or null. Used by migrations. */
 export function matchSkillByText(skills: readonly Skill[], text: string): Skill | null {
   const q = normaliseSkillText(text);
@@ -204,7 +250,7 @@ export function matchSkillByText(skills: readonly Skill[], text: string): Skill 
  * Which department a *content trail* belongs to. Every trail before v4 is engineering; the PM and
  * BD trails arrive in Phase 7. Unknown trails default to engineering rather than vanishing.
  */
-const TRAIL_DEPARTMENT: Record<string, string> = { pm: "pm", bd: "bd" };
+const TRAIL_DEPARTMENT: Record<string, string> = { pm: "pm", bd: "bd", soft: "soft" };
 export function trailDepartment(trailId: string): string {
   return TRAIL_DEPARTMENT[trailId] ?? "engineering";
 }

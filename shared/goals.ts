@@ -66,16 +66,22 @@ export const goalInterpretationSchema = z.object({
 });
 export type GoalInterpretation = z.infer<typeof goalInterpretationSchema>;
 
+/** v4.4: a goal may link this many skills (raised from 6 for skill-group goals). */
+export const MAX_GOAL_SKILLS = 12;
+
 export const goalInputSchema = z.object({
   /** Present when editing an existing goal. */
   id: z.string().max(40).optional(),
   type: goalTypeSchema,
   originalText: text(300),
   outcome: text(300),
-  skillIds: z.array(text(80)).min(1).max(6),
+  /** v4.4: up to 12 (a skill group such as the ten soft skills is one goal). */
+  skillIds: z.array(text(80)).min(1).max(MAX_GOAL_SKILLS),
   targetLevel: targetLevelSchema,
   caseId: z.string().max(80).nullable().default(null),
   slider: z.number().int().min(1).max(5),
+  /** v4.4: the description intent (shared/intents.ts) this goal was built from. */
+  intentId: z.string().max(16).nullable().optional(),
 });
 export type GoalInput = z.infer<typeof goalInputSchema>;
 
@@ -170,11 +176,17 @@ export interface OnboardSuggestion {
   experienceBand: import("./setup").ExperienceBand | null;
   level: number | null;
   hoursPerWeek: number;
+  /** v4.4: from a constraint intent ("in 3 months"), else null. */
+  deadlineWeeks?: number | null;
   /** Ranked, highest slider first. */
   goals: GoalInput[];
   /** "Suggested for a Frontend dev with your description": each with + Add. */
   extras: SuggestedGoal[];
   source: "ai" | "rules";
+  /** v4.4: every intent read from the description, each quoting its exact phrase. */
+  intents: import("./intents").Intent[];
+  /** v4.4: phrases nothing covered: Save stays blocked until each is answered. */
+  unsure: import("./intents").Unsure[];
 }
 
 export interface GoalInterpretResult {

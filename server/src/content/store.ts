@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import type { SpeakPractice } from "../../../shared/softSkills";
 import type { Task } from "../../../shared/tasks";
 import path from "node:path";
 
@@ -69,6 +70,8 @@ export interface AuthoredTopic {
   codeChallenge?: AuthoredCodeChallenge;
   /** v4: PM/BD practice task (shared/tasks.ts). */
   practice?: Task;
+  /** v4.4: a spoken practice (shared/softSkills.ts); not served until Phase 3 wires the recorder. */
+  speak?: SpeakPractice;
   /** v4.1: company procedures an admin fills in (routes/sop.ts). */
   sop?: { title: string; prompt: string }[];
   /** v4.2: a handbook tool shown after the summary (decision tool or flashcards). */

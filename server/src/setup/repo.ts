@@ -1,6 +1,7 @@
 import { asc, eq } from "drizzle-orm";
 
-import { matchSkillByText, skillInputSchema, type Skill } from "../../../shared/catalog";
+import { isAreaDepartment, matchSkillByText, skillInputSchema, skillUsableBy, type Skill } from "../../../shared/catalog";
+import { intentSchema, unresolvedPhrase, unsureMessage, type Intent } from "../../../shared/intents";
 import {
   experienceBandFromYears,
   priorityToSlider,
@@ -137,7 +138,19 @@ export function getSetup(db: Db, userId: string): LearnerSetup {
     },
     description: profile?.adminNotes ?? "",
     goals: listGoals(db, userId),
+    intents: storedIntents(settings?.intents),
   };
+}
+
+/** The saved intents, re-validated (a bad row reads as none rather than failing the page). */
+export function storedIntents(value: unknown): Intent[] {
+  if (!Array.isArray(value)) return [];
+  const out: Intent[] = [];
+  for (const raw of value) {
+    const parsed = intentSchema.safeParse(raw);
+    if (parsed.success) out.push(parsed.data);
+  }
+  return out;
 }
 
 /**
@@ -148,6 +161,11 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
   const catalog = getCatalog(db, { includeArchived: true });
   const department = catalog.departments.find((d) => d.id === input.departmentId);
   if (!department) throw badRequest("Pick a department.", { departmentId: "Unknown department" });
+  if (isAreaDepartment(department)) throw badRequest("Pick the department they work in.", { departmentId: `${department.name} is a skill area, not a department` });
+  // v4.4: never save while a phrase of the description is unanswered (an open Unsure, or intents
+  // that leave a phrase uncovered). The same plain message everywhere.
+  const open = unresolvedPhrase(input);
+  if (open) throw badRequest(unsureMessage(open), { unsure: open });
   if (input.trackId && !catalog.tracks.some((t) => t.id === input.trackId && t.departmentId === department.id)) {
     throw badRequest("That track is not in this department.", { trackId: "Unknown track" });
   }
@@ -155,9 +173,15 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
   const byId = new Map(catalog.skills.map((s) => [s.id, s]));
   // v4.3: with goals, the priorities are derived from them (D2) and the sent priorities are ignored.
   const sentPriorities = input.goals ? [] : input.priorities;
-  const wrong = [...sentPriorities.map((p) => p.skillId), ...input.skip].find((id) => byId.get(id)?.departmentId !== department.id);
+  const usable = (id: string) => {
+    const skill = byId.get(id);
+    return skill != null && skillUsableBy(skill, department.id, catalog.departments);
+  };
+  const wrong = [...sentPriorities.map((p) => p.skillId), ...input.skip].find((id) => !usable(id));
   if (wrong) throw badRequest("A selected skill is not in this department's catalog.", { priorities: `Unknown skill ${wrong}` });
   if (input.goals) validateGoals(db, department.id, input.goals);
+  const badIntent = (input.intents ?? []).flatMap((i) => i.skillIds).find((id) => !usable(id));
+  if (badIntent) throw badRequest("A phrase was linked to a skill this department cannot use.", { intents: `Unknown skill ${badIntent}` });
 
   const at = now();
   db.transaction((tx) => {
@@ -185,7 +209,13 @@ export function saveSetup(db: Db, userId: string, input: SetupInput, actorId: st
     tx.insert(schema.learnerProfiles).values(profile).onConflictDoUpdate({ target: schema.learnerProfiles.userId, set: profile }).run();
 
     const existing = tx.select().from(schema.learnerPriorities).where(eq(schema.learnerPriorities.userId, userId)).get();
+    // v4.4: the description and the intents read from it. Intents sent → saved; not sent → kept
+    // while the description is unchanged, cleared when it changed (they no longer quote it).
+    const description = input.description !== undefined ? input.description : (existing?.description || current?.adminNotes || "");
+    const intents = input.intents !== undefined ? input.intents : description === (existing?.description ?? "") ? (existing?.intents ?? null) : null;
     const settings = {
+      description,
+      intents,
       targetRole: existing?.targetRole ?? trackName ?? "",
       hoursPerWeek: input.hoursPerWeek,
       weekStartsMonday: input.advanced.weekStartsMonday,

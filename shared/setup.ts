@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { goalInputSchema, MAX_GOALS, type LearnerGoal } from "./goals";
+import { intentsFieldsSchema, type Intent } from "./intents";
 
 /**
  * The admin's Setup screen (v4 Phase 3): one model for who a learner is and what they are for.
@@ -135,6 +136,12 @@ export const setupSchema = z.object({
    * saved as before and becomes the learner's skill goals.
    */
   goals: z.array(goalInputSchema).max(MAX_GOALS).optional(),
+  /**
+   * v4.4: the intents Suggest read from `description` (each quoting its phrase), and any Unsure
+   * still open. A save with an open Unsure, or with intents that leave a phrase of the description
+   * uncovered, is refused (400). Omitted = keep the saved intents when the description is unchanged.
+   */
+  ...intentsFieldsSchema.shape,
 });
 export type SetupInput = z.infer<typeof setupSchema>;
 
@@ -158,6 +165,8 @@ export interface LearnerSetup {
   description: string;
   /** v4.3: the goals the priorities are derived from, in order. */
   goals: LearnerGoal[];
+  /** v4.4: the intents read from the description (empty before v4.4 or without Suggest). */
+  intents: Intent[];
 }
 
 // ---------------------------------------------------------------------------
@@ -173,7 +182,7 @@ export const MAX_PROBES = 3;
  * Critical and High goals: the "missing link" candidates) followed by the role's core skills, and
  * each of them gets at least one question. Same 25 items and 18/7 split.
  */
-export function planBlueprintMix(priorities: readonly MixSkill[], core: readonly MixSkill[], probes: readonly MixSkill[] = []): AssessmentMix {
+export function planBlueprintMix(priorities: readonly MixSkill[], core: readonly MixSkill[], probes: readonly MixSkill[] = [], intents: readonly IntentSlotGroup[] = []): AssessmentMix {
   const seen = new Set(priorities.map((p) => p.skillId));
   const basics: MixSkill[] = [];
   for (const skill of [...probes.slice(0, MAX_PROBES), ...core]) {
@@ -181,7 +190,46 @@ export function planBlueprintMix(priorities: readonly MixSkill[], core: readonly
     seen.add(skill.skillId);
     basics.push({ ...skill, slider: 0 });
   }
-  return planAssessmentMix(priorities, basics, ASSESSMENT_TOTAL, { basicsMin: basics.length });
+  return ensureIntentSlots(planAssessmentMix(priorities, basics, ASSESSMENT_TOTAL, { basicsMin: basics.length }), intents);
+}
+
+/**
+ * v4.4: one description intent and the skills that can stand for it in the test, best first
+ * (current_role: the core skills). `group` is where a new line goes when one has to be added.
+ */
+export interface IntentSlotGroup {
+  intentId: string;
+  skills: MixSkill[];
+  group: MixGroup;
+}
+
+/**
+ * v4.4 guarantee, enforced in code: every intent of the description gets at least one question on
+ * one of its skills. An intent with none takes one question from the biggest line (never below
+ * one, so nothing else loses its only question), on its first skill. The total (25), the hands-on
+ * and multiple-choice totals (18/7) and MAX_PER_SKILL are unchanged.
+ */
+export function ensureIntentSlots(mix: AssessmentMix, intents: readonly IntentSlotGroup[]): AssessmentMix {
+  if (intents.length === 0) return mix;
+  const lines = mix.lines.map((l) => ({ ...l }));
+  for (const intent of intents) {
+    if (intent.skills.length === 0) continue;
+    if (lines.some((l) => l.count > 0 && intent.skills.some((s) => s.skillId === l.skillId))) continue;
+    const donor = [...lines].filter((l) => l.count > 1).sort((a, b) => b.count - a.count || b.handsOn - a.handsOn)[0];
+    if (!donor) continue;
+    donor.count -= 1;
+    const handsOn = donor.handsOn > 0;
+    if (handsOn) donor.handsOn -= 1;
+    else donor.mcq -= 1;
+    const skill = intent.skills[0]!;
+    const line: MixLine = { skillId: skill.skillId, skillName: skill.skillName, group: intent.group, count: 1, handsOn: handsOn ? 1 : 0, mcq: handsOn ? 0 : 1 };
+    // Asking order: focus, other, basics. The new line goes at the end of its group.
+    const order: MixGroup[] = ["focus", "other", "basics"];
+    const at = lines.findIndex((l) => order.indexOf(l.group) > order.indexOf(intent.group));
+    if (at < 0) lines.push(line);
+    else lines.splice(at, 0, line);
+  }
+  return { ...mix, lines };
 }
 
 export const ASSESSMENT_TOTAL = 25;

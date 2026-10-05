@@ -19,7 +19,7 @@ const userParams = z.object({ userId: z.string().min(1).max(64) });
 /** The assessment the Setup screen promises in its summary card, from the same function the assembler uses. */
 export function previewMix(db: Db, setup: LearnerSetup) {
   // v4.3: the goal blueprint (goals, prerequisite probes, core skills), as the generator plans it.
-  return blueprintMix(db, getCatalog(db, { departmentId: setup.departmentId }), setup);
+  return blueprintMix(db, getCatalog(db, { departmentId: setup.departmentId, withAreas: true }), setup);
 }
 
 /**
@@ -45,7 +45,7 @@ export async function registerAdminSetupRoutes(app: FastifyInstance): Promise<vo
   app.post("/api/admin/setup/understand", async (request) => {
     requireStaff(request);
     const body = parseOrThrow(setupSchema.extend({ force: z.boolean().default(false), userId: z.string().max(64).optional() }), request.body);
-    const catalog = getCatalog(app.db, { departmentId: body.departmentId, includeArchived: true });
+    const catalog = getCatalog(app.db, { departmentId: body.departmentId, includeArchived: true, withAreas: true });
     const byId = new Map(catalog.skills.map((s) => [s.id, s]));
     const priorities = sortPriorities(
       body.priorities.filter((p) => byId.has(p.skillId)).map((p, position) => ({ skillId: p.skillId, skillName: byId.get(p.skillId)!.name, slider: p.slider, position })),

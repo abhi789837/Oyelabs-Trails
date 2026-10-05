@@ -12,6 +12,11 @@ export interface SeedDepartment {
   assessmentFormat: AssessmentFormat;
   position: number;
   practiceNoun: string; // "Code" | "Task workspace"
+  /**
+   * v4.4: "area" = never a learner's own department, but its skills are usable by learners in every
+   * department (the soft-skills area). Omitted = "role".
+   */
+  kind?: "role" | "area";
 }
 
 export interface SeedTrack {

@@ -20,6 +20,7 @@ import { registerAdminAiRoutes } from "./routes/admin/ai";
 import { registerAdminBuilderRoutes } from "./routes/admin/builder";
 import { registerAdminCatalogRoutes } from "./routes/admin/catalog";
 import { registerAdminSetupRoutes } from "./routes/admin/setup";
+import { registerAdminBundleRoutes } from "./routes/admin/bundles";
 import { registerAdminGoalRoutes } from "./routes/admin/goals";
 import { registerGoalRoutes } from "./routes/goals";
 import { registerAdminSkillGraphRoutes } from "./routes/admin/skillGraph";
@@ -41,6 +42,7 @@ import { registerSopRoutes } from "./routes/sop";
 import { registerAdminRoleplayRoutes, registerRoleplayRoutes } from "./routes/roleplay";
 import { registerAdminHandbookRoutes, registerHandbookRoutes } from "./routes/handbook";
 import { registerHealthRoutes } from "./routes/health";
+import { registerSpeechRoutes } from "./routes/speech";
 import { registerMeRoutes } from "./routes/me";
 import { registerTopicRoutes } from "./routes/topics";
 import { registerAdminVideoRoutes, registerVideoRoutes } from "./routes/videos";
@@ -155,7 +157,8 @@ export async function buildApp({
 
   await app.register(fastifyCookie, { secret: env.sessionSecret });
 
-  // Only the proctoring snapshot route uses multipart, so the limits are sized for one JPEG.
+  // The defaults are sized for one proctoring JPEG. The v4.4 recording upload raises them for
+  // its own request only (`request.parts({ limits })` in routes/speech.ts).
   await app.register(fastifyMultipart, {
     limits: { fileSize: BODY_LIMIT_SNAPSHOT, files: 1, fields: 4, fieldSize: 16 * 1024 },
   });
@@ -196,6 +199,7 @@ export async function buildApp({
   await registerAssessmentRoutes(app);
   await registerAssessmentV4Routes(app);
   await registerGoalRoutes(app);
+  await registerSpeechRoutes(app);
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
@@ -209,6 +213,7 @@ export async function buildApp({
   await app.register(registerAdminCatalogRoutes);
   await app.register(registerAdminSetupRoutes);
   await app.register(registerAdminGoalRoutes);
+  await app.register(registerAdminBundleRoutes);
   await app.register(registerAdminSkillGraphRoutes);
   await app.register(registerAdminAssessmentV4Routes);
   await app.register(registerAdminBankRoutes);

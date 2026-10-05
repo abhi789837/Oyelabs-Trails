@@ -319,6 +319,22 @@ export const assessmentItems = sqliteTable(
     activeMs: integer("active_ms").notNull().default(0),
     /** v4.1: where it came from: reused from the bank, generated for this learner, or the fallback. */
     origin: text("origin").$type<"bank" | "generated" | "fallback">(),
+    /**
+     * v4.4 scoring (shared/scoring.ts): the grader's 0..1 before the verdict, kept so a re-score or a
+     * switch between `full` and `partial` modes never needs the grader again.
+     */
+    rawScore: real("raw_score"),
+    /** v4.4: "did the answer do the job". Null until graded. */
+    verdict: text("verdict").$type<"full" | "not_yet">(),
+    /** v4.4: one plain line, e.g. which edge tests failed on an otherwise full answer. */
+    verdictNote: text("verdict_note"),
+    /** v4.4: every earlier score, pushed by `scoring.rescore` before it recomputes. */
+    scoreHistory: text("score_history", { mode: "json" }).$type<{ score: number | null; mode: string; at: number }[]>(),
+    /** v4.4: the learner asked for a review (see `review_requests`), and how it ended. */
+    reviewStatus: text("review_status").$type<"requested" | "upheld" | "overridden">(),
+    reviewNote: text("review_note"),
+    reviewedBy: text("reviewed_by"),
+    reviewedAt: integer("reviewed_at"),
   },
   (t) => [
     index("assessment_items_assessment_idx").on(t.assessmentId),
@@ -725,6 +741,19 @@ export const learnerPriorities = sqliteTable("learner_priorities", {
   understandingHash: text("understanding_hash"),
   /** v4.3: add suggested next goals without the admin's click (Advanced; off by default). */
   autoAddSuggestions: integer("auto_add_suggestions", { mode: "boolean" }).notNull().default(false),
+  /** v4.4: the admin's one-line description of this person, which the intents were read from. */
+  description: text("description").notNull().default(""),
+  /**
+   * v4.4: the saved `Intent[]` (shared/intents.ts) plus how each Unsure phrase was resolved. Kept so
+   * every goal can be traced back to the exact words it came from, and re-shown on edit.
+   */
+  intents: text("intents", { mode: "json" }).$type<unknown>(),
+  /**
+   * v4.4: per-learner override of the global `builder.auto_publish` setting (default on). Null =
+   * follow the global setting. A separate column rather than reusing `auto_publish`, whose
+   * NOT NULL false default cannot express "no override".
+   */
+  autoPublishOverride: text("auto_publish_override").$type<"on" | "off">(),
   updatedBy: text("updated_by"),
   updatedAt: integer("updated_at").notNull(),
 });
@@ -878,6 +907,17 @@ export const generatedCourses = sqliteTable(
     approvedBy: text("approved_by"),
     approvedAt: integer("approved_at"),
     createdAt: integer("created_at").notNull(),
+    /**
+     * v4.4: visible to every learner (the shared library), not only the one it was built for. The
+     * existing `skill` column is the skill it teaches; no separate skill id is stored.
+     */
+    library: integer("library", { mode: "boolean" }).notNull().default(false),
+    /** v4.4: the department it was built for, so the library can be filtered. Null = any. */
+    departmentId: text("department_id"),
+    /** v4.4: one plain line saying why the review failed, shown under "Needs a look". */
+    reviewReason: text("review_reason"),
+    /** v4.4: how many times "Fix automatically" regenerated the failed parts. */
+    fixAttempts: integer("fix_attempts").notNull().default(0),
   },
   (t) => [
     index("generated_courses_skill_idx").on(t.skill, t.scope),
@@ -1137,6 +1177,12 @@ export const departments = sqliteTable("departments", {
   position: integer("position").notNull().default(0),
   archivedAt: integer("archived_at"),
   createdAt: integer("created_at").notNull(),
+  /**
+   * v4.4: a `role` department is something a person is hired into; an `area` department ("Soft
+   * skills") is never chosen as a learner's department, but its skills are usable by learners in
+   * any department (`skillUsableBy` in shared/catalog.ts).
+   */
+  kind: text("kind").$type<"role" | "area">().notNull().default("role"),
 });
 
 /**
@@ -1474,6 +1520,8 @@ export const learnerGoals = sqliteTable(
     status: text("status").$type<"active" | "achieved">().notNull().default("active"),
     achievedAt: integer("achieved_at"),
     source: text("source").$type<"admin" | "suggested" | "auto">().notNull().default("admin"),
+    /** v4.4: the `Intent.id` this goal was built from, so a goal's origin phrase can be shown. */
+    intentId: text("intent_id"),
     createdAt: integer("created_at").notNull(),
     updatedAt: integer("updated_at").notNull(),
   },
@@ -1605,4 +1653,95 @@ export const topicTestItems = sqliteTable(
     updatedAt: integer("updated_at").notNull(),
   },
   (t) => [index("topic_test_items_topic_idx").on(t.topicId, t.status), uniqueIndex("topic_test_items_source_idx").on(t.topicId, t.sourceId)],
+);
+
+// ---------------------------------------------------------------------------
+// v4.4: bundles, Speak recordings and score reviews
+// ---------------------------------------------------------------------------
+
+/**
+ * A named set of skills that one phrase in an admin's description stands for ("move to the full
+ * stack" means the backend progression). A table rather than code so admins can edit phrases and
+ * skills; seeded rows have `updatedBy` null. The skill graph still decides the final order.
+ */
+export const skillBundles = sqliteTable("skill_bundles", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  /** Null = usable in any department. */
+  departmentId: text("department_id"),
+  /** [] = any current track; ["frontend"] = only when the learner's current role is frontend. */
+  fromTrackIds: text("from_track_ids", { mode: "json" }).$type<string[]>().notNull().default([]),
+  /** Lower-case trigger phrases matched against the description. */
+  phrases: text("phrases", { mode: "json" }).$type<string[]>().notNull().default([]),
+  /** Ordered catalog skill ids. */
+  skillIds: text("skill_ids", { mode: "json" }).$type<string[]>().notNull().default([]),
+  targetLevel: integer("target_level").notNull().default(3),
+  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  updatedBy: text("updated_by"),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+/**
+ * One spoken answer to a Speak item (an assessment item or topic practice). The audio itself is an
+ * AES-256-GCM file under `DATA_DIR/audio` (`encPath` is relative to it), never a blob in SQLite,
+ * and is deleted after `audio.retention_days`; the transcript and metrics are kept.
+ */
+export const audioRecordings = sqliteTable(
+  "audio_recordings",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    assessmentId: text("assessment_id"),
+    itemId: text("item_id"),
+    /** Set for topic practice instead of an assessment item. */
+    topicId: text("topic_id"),
+    mime: text("mime").notNull(),
+    bytes: integer("bytes").notNull(),
+    durationSec: real("duration_sec"),
+    encPath: text("enc_path").notNull(),
+    transcript: text("transcript"),
+    /** Word timings from the transcriber: [{ w, start, end }]. */
+    words: text("words", { mode: "json" }).$type<{ w: string; start: number; end: number }[]>(),
+    /** Derived from the word timings. */
+    metrics: text("metrics", { mode: "json" }).$type<{ wpm: number; pauses: number; longestPauseSec: number; fillers: number }>(),
+    sttStatus: text("stt_status").$type<"pending" | "done" | "failed" | "unavailable">().notNull().default("pending"),
+    sttError: text("stt_error"),
+    createdAt: integer("created_at").notNull(),
+    /** Set by the retention job when the audio file is removed. */
+    audioDeletedAt: integer("audio_deleted_at"),
+  },
+  (t) => [
+    index("audio_recordings_user_idx").on(t.userId),
+    index("audio_recordings_item_idx").on(t.assessmentId, t.itemId),
+    index("audio_recordings_created_idx").on(t.createdAt),
+  ],
+);
+
+/**
+ * A learner asking for one graded answer to be looked at again. An override counts as a pass, goes
+ * in the audit log and feeds calibration. `refId` is an assessment item id or a topic test item id,
+ * depending on `source`.
+ */
+export const reviewRequests = sqliteTable(
+  "review_requests",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    source: text("source").$type<"assessment_item" | "topic_item">().notNull(),
+    refId: text("ref_id").notNull(),
+    /** The topic attempt it came from, for `topic_item` reviews. */
+    attemptId: text("attempt_id"),
+    status: text("status").$type<"open" | "upheld" | "overridden">().notNull().default("open"),
+    learnerNote: text("learner_note").notNull().default(""),
+    createdAt: integer("created_at").notNull(),
+    resolvedBy: text("resolved_by"),
+    resolvedAt: integer("resolved_at"),
+    /** The admin's one-line answer, shown to the learner. */
+    resolution: text("resolution"),
+  },
+  (t) => [index("review_requests_status_idx").on(t.status, t.createdAt), index("review_requests_user_idx").on(t.userId)],
 );

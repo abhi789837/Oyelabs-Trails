@@ -12,6 +12,7 @@ import {
   type LearnerGoalView,
   type PracticalOutcome,
 } from "../../../shared/goals";
+import { isAreaDepartment, skillUsableBy } from "../../../shared/catalog";
 import { sortPriorities, type PriorityEntry, type Slider } from "../../../shared/setup";
 import { getCatalog } from "../catalog/repo";
 import type { Db } from "../db";
@@ -19,7 +20,7 @@ import * as schema from "../db/schema";
 import { badRequest, notFound } from "../lib/errors";
 import { newId, now } from "../lib/ids";
 import { departmentOf, listSkip, replacePriorities } from "../setup/repo";
-import { getOutcome, listOutcomes } from "./outcomes";
+import { getOutcome, listUsableOutcomes } from "./outcomes";
 
 /**
  * v4.3 goals: what the admin edits ("What should they be able to do?"), and the one place the skill
@@ -44,6 +45,7 @@ function toGoal(row: GoalRow): LearnerGoal {
     status: row.status,
     achievedAt: row.achievedAt,
     source: row.source,
+    intentId: row.intentId ?? null,
   };
 }
 
@@ -100,15 +102,17 @@ export function writeDerivedPriorities(db: Db, userId: string, goals: readonly P
  * skill to an engineer.
  */
 export function validateGoals(db: Db, departmentId: string, goals: readonly GoalInput[]): GoalInput[] {
-  const skills = new Map(getCatalog(db, { departmentId, includeArchived: true }).skills.map((s) => [s.id, s]));
+  // v4.4: a learner may also have skills from an area department (soft skills) as goals.
+  const catalog = getCatalog(db, { includeArchived: true });
+  const skills = new Map(catalog.skills.filter((s) => skillUsableBy(s, departmentId, catalog.departments)).map((s) => [s.id, s]));
   const out: GoalInput[] = [];
   const seen = new Set<string>();
   goals.forEach((goal, index) => {
-    const wrong = goal.skillIds.find((id) => skills.get(id)?.departmentId !== departmentId);
+    const wrong = goal.skillIds.find((id) => !skills.has(id));
     if (wrong) throw badRequest("A goal links a skill that is not in this department's catalog.", { [`goals.${index}.skillIds`]: `Unknown skill ${wrong}` });
     if (goal.caseId) {
       const outcome = getOutcome(db, goal.caseId);
-      if (!outcome || outcome.departmentId !== departmentId) throw badRequest("A goal links a case that is not in this department's library.", { [`goals.${index}.caseId`]: `Unknown case ${goal.caseId}` });
+      if (!outcome || (outcome.departmentId !== departmentId && !isAreaDepartment(outcome.departmentId, catalog.departments))) throw badRequest("A goal links a case that is not in this department's library.", { [`goals.${index}.caseId`]: `Unknown case ${goal.caseId}` });
     }
     const key = `${goal.type}:${goal.caseId ?? ""}:${goalKey(goal.skillIds, goal.targetLevel)}:${goal.outcome.toLowerCase()}`;
     if (seen.has(key)) return;
@@ -156,6 +160,7 @@ export function saveGoals(
           status: same ? before.status : "active",
           achievedAt: same ? before.achievedAt : null,
           source: before?.source ?? options.source ?? "admin",
+          intentId: goal.intentId ?? null,
           createdAt: at,
           updatedAt: at,
         })
@@ -274,7 +279,7 @@ export function capstoneOutcome(goal: Pick<LearnerGoal, "caseId" | "skillIds" | 
 export function learnerGoalViews(db: Db, userId: string): LearnerGoalView[] {
   const goals = listGoals(db, userId);
   if (goals.length === 0) return [];
-  const outcomes = listOutcomes(db, departmentOf(db, userId));
+  const outcomes = listUsableOutcomes(db, departmentOf(db, userId));
   const names = new Map(getCatalog(db, { includeArchived: true }).skills.map((s) => [s.id, s.name]));
   return goals.map((goal) => {
     const outcome = capstoneOutcome(goal, outcomes, db);
@@ -301,7 +306,7 @@ export function learnerGoalViews(db: Db, userId: string): LearnerGoalView[] {
 export function capstoneSummaries(db: Db, userId: string): Record<string, CapstoneSummary> {
   const goals = listGoals(db, userId);
   if (goals.length === 0) return {};
-  const outcomes = listOutcomes(db, departmentOf(db, userId));
+  const outcomes = listUsableOutcomes(db, departmentOf(db, userId));
   const out: Record<string, CapstoneSummary> = {};
   for (const goal of goals) {
     const outcome = capstoneOutcome(goal, outcomes, db);
@@ -330,7 +335,7 @@ export function achieveGoal(db: Db, userId: string, goalId: string): boolean {
 export function achieveGoalsForTopic(db: Db, userId: string, topicId: string): string[] {
   const goals = listGoals(db, userId).filter((g) => g.status === "active");
   if (goals.length === 0) return [];
-  const outcomes = listOutcomes(db, departmentOf(db, userId));
+  const outcomes = listUsableOutcomes(db, departmentOf(db, userId));
   const achieved: string[] = [];
   for (const goal of goals) {
     const outcome = capstoneOutcome(goal, outcomes, db);
@@ -462,7 +467,7 @@ export function goalAsInput(goal: LearnerGoal): GoalInput {
  * above it, most shared skills first), or the same skills one level up.
  */
 export function nextLevelCandidates(db: Db, userId: string, goal: LearnerGoal): SuggestionCandidate[] {
-  const outcomes = listOutcomes(db, departmentOf(db, userId));
+  const outcomes = listUsableOutcomes(db, departmentOf(db, userId));
   const higher = outcomes
     .filter((o) => o.id !== goal.caseId && o.level > goal.targetLevel && o.skillIds.some((id) => goal.skillIds.includes(id)))
     .map((o) => ({ o, overlap: o.skillIds.filter((id) => goal.skillIds.includes(id)).length }))
@@ -484,7 +489,7 @@ export function nextLevelCandidates(db: Db, userId: string, goal: LearnerGoal): 
  */
 export function gapCandidates(db: Db, userId: string, result: Pick<V4Result, "skills">): SuggestionCandidate[] {
   const skipped = new Set(listSkip(db, userId).map((s) => s.skillId));
-  const outcomes = listOutcomes(db, departmentOf(db, userId));
+  const outcomes = listUsableOutcomes(db, departmentOf(db, userId));
   const goals = listGoals(db, userId);
   // A weak skill a goal already aims above is the admin's plan already, not a new gap.
   const planned = (skillId: string, level: number) => goals.some((g) => g.skillIds.includes(skillId) && g.targetLevel > level + 1);

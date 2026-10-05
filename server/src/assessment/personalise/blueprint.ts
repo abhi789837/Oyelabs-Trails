@@ -1,7 +1,8 @@
-import { trackBasics, type Catalog } from "../../../../shared/catalog";
+import { skillUsableBy, trackBasics, type Catalog } from "../../../../shared/catalog";
 import type { GoalInput } from "../../../../shared/goals";
+import { intentSkillIds, promisedIntents, type Intent } from "../../../../shared/intents";
 import { OUTCOME_SLOT_SEC, outcomeTaskVariant, SLOT_SUBTYPES, type OutcomeCase, type SlotSubtype } from "../../../../shared/personalise";
-import { planBlueprintMix, MAX_PROBES, type AssessmentMix, type LearnerSetup, type MixSkill } from "../../../../shared/setup";
+import { planBlueprintMix, MAX_PROBES, type AssessmentMix, type IntentSlotGroup, type LearnerSetup, type MixSkill } from "../../../../shared/setup";
 import { immediatePrerequisites } from "../../../../shared/skillGraph";
 import { estimateSeconds } from "../../../../shared/timing";
 import { getSkillEdges } from "../../catalog/graph";
@@ -21,18 +22,26 @@ import { getOutcome } from "../../goals/outcomes";
  * - **Outcome slots**: each Critical/High practical-case goal (at most two) gets one hands-on slot
  *   that tests the outcome as a task, modelled on the case's capstone (`withOutcomeSlots`).
  *
+ * - **Intents** (v4.4): every intent of the admin's description (except constraints) gets at
+ *   least one question on one of its skills; a current role stands for its core skills
+ *   (`ensureIntentSlots`).
+ *
  * The 25 items, the 18/7 split, the time window and bank reuse are unchanged; probes and core
  * skills share the basics group (`planBlueprintMix`).
  */
 
 export type BlueprintSetup = Pick<LearnerSetup, "departmentId" | "trackId" | "stackIds" | "priorities" | "skip"> & {
   goals?: readonly (Pick<GoalInput, "type" | "skillIds" | "caseId" | "slider"> & { status?: "active" | "achieved" })[];
+  /** v4.4: the description's intents; each must reach the test. */
+  intents?: readonly Intent[];
 };
 
 export interface BlueprintInputs {
   core: MixSkill[];
   probes: MixSkill[];
   cases: OutcomeCase[];
+  /** v4.4: per intent, the skills that can carry its question (see `ensureIntentSlots`). */
+  intents: IntentSlotGroup[];
 }
 
 export function blueprintInputs(db: Db, catalog: Catalog, setup: BlueprintSetup): BlueprintInputs {
@@ -47,7 +56,8 @@ export function blueprintInputs(db: Db, catalog: Catalog, setup: BlueprintSetup)
     for (const id of immediatePrerequisites(edges, priority.skillId).sort()) {
       const skill = skills.get(id);
       if (!skill || skill.status !== "active" || skipped.has(id) || prioritised.has(id) || probes.some((p) => p.skillId === id)) continue;
-      if (skill.departmentId !== setup.departmentId) continue;
+      // v4.4: soft skills (an area department) are usable by every department.
+      if (!skillUsableBy(skill, setup.departmentId, catalog.departments)) continue;
       probes.push({ skillId: id, skillName: skill.name, slider: 0 });
     }
   }
@@ -71,11 +81,22 @@ export function blueprintInputs(db: Db, catalog: Catalog, setup: BlueprintSetup)
     cases.push({ caseId: outcome.id, title: outcome.title, skillIds, skillNames: Object.fromEntries(skillIds.map((id) => [id, skills.get(id)!.name])), kind });
   }
 
-  return { core, probes: probes.slice(0, MAX_PROBES), cases };
+  // v4.4: each intent's candidate skills, in its own order, known, active, usable and not skipped.
+  const coreIds = core.map((c) => c.skillId);
+  const intents: IntentSlotGroup[] = promisedIntents(setup.intents ?? []).map((intent) => ({
+    intentId: intent.id,
+    group: intent.type === "current_role" ? "basics" : intent.slider >= 4 ? "focus" : "other",
+    skills: intentSkillIds(intent, coreIds)
+      .map((id) => skills.get(id))
+      .filter((s): s is NonNullable<typeof s> => s != null && s.status === "active" && !skipped.has(s.id) && skillUsableBy(s, setup.departmentId, catalog.departments))
+      .map((s) => ({ skillId: s.id, skillName: s.name, slider: intent.slider })),
+  }));
+
+  return { core, probes: probes.slice(0, MAX_PROBES), cases, intents };
 }
 
-/** The 25-slot mix for a setup: goals, prerequisite probes and core skills. */
+/** The 25-slot mix for a setup: goals, prerequisite probes, core skills, and one question per intent. */
 export function blueprintMix(db: Db, catalog: Catalog, setup: BlueprintSetup): AssessmentMix {
-  const { core, probes } = blueprintInputs(db, catalog, setup);
-  return planBlueprintMix(setup.priorities, core, probes);
+  const { core, probes, intents } = blueprintInputs(db, catalog, setup);
+  return planBlueprintMix(setup.priorities, core, probes, intents);
 }

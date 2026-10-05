@@ -5,7 +5,7 @@ import type { LearnerGoalView } from "../../../shared/goals";
 import { gradeTask, taskResponseSchema, taskSchema, TERMINAL_PASS, toLearnerTask, type LearnerTask, type Task } from "../../../shared/tasks";
 import { gradeForm, gradeWritten } from "../assessment/evaluateV4";
 import { requireActiveUser } from "../auth/guards";
-import { listOutcomes } from "../goals/outcomes";
+import { listUsableOutcomes } from "../goals/outcomes";
 import { achieveGoal, capstoneOutcome, getGoal, learnerGoalViews } from "../goals/repo";
 import { badRequest, notFound, parseOrThrow } from "../lib/errors";
 import { departmentOf } from "../setup/repo";
@@ -41,7 +41,7 @@ export async function registerGoalRoutes(app: FastifyInstance): Promise<void> {
   const findCapstone = (userId: string, goalId: string) => {
     const goal = getGoal(app.db, userId, goalId);
     if (!goal) throw notFound("No such goal.");
-    const outcome = capstoneOutcome(goal, listOutcomes(app.db, departmentOf(app.db, userId)), app.db);
+    const outcome = capstoneOutcome(goal, listUsableOutcomes(app.db, departmentOf(app.db, userId)), app.db);
     if (!outcome) throw notFound("This goal has no capstone yet.");
     const view = learnerGoalViews(app.db, userId).find((g) => g.id === goalId)!;
     return { goal, view, outcome };

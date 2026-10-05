@@ -35,12 +35,12 @@ async function login(role: "superadmin" | "admin" | "learner"): Promise<string> 
 }
 
 describe("catalog", () => {
-  it("seeds three departments with their tracks at boot", async () => {
+  it("seeds three departments and the soft-skills area with their tracks at boot", async () => {
     const cookie = await login("superadmin");
     const res = await ctx.app.inject({ method: "GET", url: "/api/admin/catalog", headers: { cookie } });
     expect(res.statusCode).toBe(200);
     const catalog = res.json() as Catalog;
-    expect(catalog.departments.map((d) => d.id)).toEqual(["engineering", "pm", "bd"]);
+    expect(catalog.departments.map((d) => d.id)).toEqual(["engineering", "pm", "bd", "soft"]);
     expect(catalog.tracks.filter((t) => t.departmentId === "engineering").map((t) => t.id)).toEqual(
       expect.arrayContaining(["frontend", "backend", "fullstack", "mobile", "devops", "ai-ml"]),
     );

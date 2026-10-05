@@ -10,10 +10,13 @@ import { FormAlert, TextField } from "@/components/form/Field";
 import { Button } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
 import { cn } from "@/lib/utils";
+import { unsureMessage } from "@shared/intents";
+
 import { GoalBox } from "./GoalBox";
 import { goalsApi } from "./goalsApi";
+import { IntentList } from "./IntentList";
 import { stateFromSuggestion, usernameFrom } from "./suggestion";
-import { initialSetupState, levelTarget, pickableSkills, toSaveRequest, withDepartmentDefaults, withGoals, type SetupState } from "./helpers";
+import { answerUnsure, initialSetupState, levelTarget, openUnsure, pickableSkills, toSaveRequest, withDepartmentDefaults, withGoals, type SetupState } from "./helpers";
 
 /**
  * Quick onboarding (v4.3), the default on /admin/onboard: name, username, department and one line
@@ -40,7 +43,7 @@ export interface QuickOnboardProps {
 
 export function QuickOnboard({ catalog, username, displayName, onUsername, onDisplayName, usernameError, accountLocked, canSubmit, onSave, onEditDetails, onCreateAdmin }: QuickOnboardProps) {
   const uid = useId();
-  const departments = useMemo(() => catalog.departments.filter((d) => !d.archived), [catalog]);
+  const departments = useMemo(() => catalog.departments.filter((d) => !d.archived && d.kind !== "area"), [catalog]);
   const [departmentId, setDepartmentId] = useState(departments[0]?.id ?? "engineering");
   const [usernameTouched, setUsernameTouched] = useState(false);
   const [line, setLine] = useState("");
@@ -96,6 +99,11 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
       current = await fetchSuggestion();
       if (!current) return;
     }
+    // v4.4: a phrase nobody placed blocks the save until the admin picks an option.
+    if (openUnsure(current) > 0) {
+      setError(unsureMessage(current.unsure![0]!.phrase));
+      return;
+    }
     setSaving(true);
     setError(null);
     setFields({});
@@ -116,6 +124,7 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
   };
 
   const busy = suggesting || saving;
+  const unanswered = state ? openUnsure(state) : 0;
   const changeDepartment = (id: string) => {
     if (id === departmentId) return;
     setDepartmentId(id);
@@ -285,6 +294,18 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
             </ul>
           </div>
 
+          {state.intents && state.intentsFor === line.trim() && (
+            <IntentList
+              intents={state.intents}
+              unsure={state.unsure ?? []}
+              disabled={busy}
+              onAnswer={(index, option) => {
+                setError(null);
+                setState((s) => (s ? answerUnsure(s, index, option) : s));
+              }}
+            />
+          )}
+
           <div>
             <p id={ids.goals} className="font-display text-base font-semibold">
               What should they be able to do?
@@ -311,9 +332,10 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="button" loading={saving} disabled={(!state && line.trim().length < 3) || !canSubmit || busy} onClick={() => void save()}>
+        <Button type="button" loading={saving} disabled={(!state && line.trim().length < 3) || !canSubmit || busy || unanswered > 0} onClick={() => void save()}>
           Save &amp; assign assessment
         </Button>
+        {unanswered > 0 && <span className="text-sm text-muted-foreground">Answer the question{unanswered > 1 ? "s" : ""} above first.</span>}
         <Button type="button" variant="outline" disabled={busy} onClick={editDetails}>
           Edit details
         </Button>

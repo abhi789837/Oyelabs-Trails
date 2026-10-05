@@ -1,4 +1,4 @@
-import { matchSkillByText, searchSkills, trackBasics, type Catalog, type Skill } from "@shared/catalog";
+import { matchSkillByText, searchSkills, skillUsableBy, trackBasics, type Catalog, type Skill } from "@shared/catalog";
 import {
   DEFAULT_HOURS_PER_WEEK,
   DEFAULT_SLIDER,
@@ -13,7 +13,9 @@ import {
   type Slider,
 } from "@shared/setup";
 
-import { addSkillGoal, derivePriorityRows, dropSkillGoals, rowsFromSaved, toGoalInputs, type GoalRow } from "./goals";
+import { intentsToGoals, resolveUnsure, type Intent, type Unsure, type UnsureOption } from "@shared/intents";
+
+import { addSkillGoal, addSuggestedGoal, derivePriorityRows, dropSkillGoals, rowsFromSaved, toGoalInputs, type GoalRow } from "./goals";
 
 /**
  * The Setup form's state and the pure rules over it, kept apart from the component so the sort,
@@ -49,6 +51,12 @@ export interface SetupState {
   description: string;
   /** UI only: the department whose suggested defaults filled the priorities, for the note under them. */
   prefilledFrom?: string | null;
+  /** v4.4: what Suggest read from the description, each quoting its words. */
+  intents?: Intent[];
+  /** v4.4: phrases Suggest could not place; Save waits until each is answered. */
+  unsure?: Unsure[];
+  /** v4.4: the description the intents were read from. Editing the description sets them aside. */
+  intentsFor?: string;
 }
 
 export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced", autoAddSuggestions: false };
@@ -86,7 +94,34 @@ export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment
     hoursPerWeek: setup.hoursPerWeek,
     advanced: { ...DEFAULT_ADVANCED, ...setup.advanced },
     description: setup.description ?? "",
+    intents: setup.intents ?? [],
+    unsure: [],
+    intentsFor: setup.description ?? "",
   };
+}
+
+/** v4.4: the intents still describe the description as it is now (it was not edited since). */
+export function intentsCurrent(state: Pick<SetupState, "description" | "intentsFor" | "intents" | "unsure">): boolean {
+  return state.intentsFor !== undefined && state.intentsFor.trim() === state.description.trim() && ((state.intents?.length ?? 0) > 0 || (state.unsure?.length ?? 0) > 0);
+}
+
+/** v4.4: how many phrases still need an answer before Save. */
+export function openUnsure(state: Pick<SetupState, "description" | "intentsFor" | "intents" | "unsure">): number {
+  return intentsCurrent(state) ? (state.unsure?.length ?? 0) : 0;
+}
+
+/**
+ * v4.4: the admin picked an option for an Unsure phrase. It becomes an intent (or a left-out
+ * phrase), and a goal when it names skills.
+ */
+export function answerUnsure(state: SetupState, index: number, option: UnsureOption): SetupState {
+  const unsure = state.unsure ?? [];
+  const question = unsure[index];
+  if (!question) return state;
+  const intent = resolveUnsure(question, option, state.intents ?? []);
+  const next = { ...state, intents: [...(state.intents ?? []), intent], unsure: unsure.filter((_, i) => i !== index) };
+  const goal = intentsToGoals([intent]).goals[0];
+  return goal ? withGoals(next, addSuggestedGoal(state.goals, goal)) : next;
 }
 
 /** The request body. Priorities go in display order, which the server's stable sort keeps. */
@@ -103,6 +138,8 @@ export function toSaveRequest(state: SetupState, assign: boolean): SaveSetupRequ
     advanced: state.advanced,
     description: state.description,
     goals: toGoalInputs(state.goals),
+    // v4.4: only while they still quote this description (the server checks they cover it).
+    ...(intentsCurrent(state) ? { intents: state.intents ?? [], unsure: state.unsure ?? [] } : {}),
     assign,
   };
 }
@@ -216,7 +253,8 @@ export function pickSkip(state: SetupState, skillId: string): SetupState {
  */
 export function changeDepartment(state: SetupState, catalog: Catalog, departmentId: string): SetupState {
   if (departmentId === state.departmentId) return state;
-  const inDept = (id: string) => catalog.skills.some((s) => s.id === id && s.departmentId === departmentId);
+  // v4.4: soft skills (an area department) belong to every department and survive the switch.
+  const inDept = (id: string) => catalog.skills.some((s) => s.id === id && skillUsableBy(s, departmentId, catalog.departments));
   return withGoals(
     {
       ...state,
@@ -239,7 +277,7 @@ export function withDepartmentDefaults(state: SetupState, catalog: Catalog): Set
   if (state.priorities.length > 0 || state.goals.length > 0) return state;
   const skip = new Set(state.skip);
   const defaults = pickableSkills(catalog, state.departmentId)
-    .filter((s) => s.status === "active" && isSlider(s.defaultSlider) && !skip.has(s.id))
+    .filter((s) => s.departmentId === state.departmentId && s.status === "active" && isSlider(s.defaultSlider) && !skip.has(s.id))
     .map((s, index) => ({ skill: s, slider: s.defaultSlider as Slider, index }))
     .sort((a, b) => b.slider - a.slider || a.index - b.index)
     .slice(0, MAX_PRIORITIES);
@@ -268,11 +306,16 @@ function isSlider(value: number | null | undefined): value is Slider {
 // The picker
 // ---------------------------------------------------------------------------
 
-/** Skills the picker may offer: this department's, active or pending. */
+/**
+ * Skills the picker may offer: this department's, active or pending, then (v4.4) the area
+ * departments' (soft skills), which every department can use. They show under their own area.
+ */
 export function pickableSkills(catalog: Catalog | null, departmentId: string): Skill[] {
-  return (catalog?.skills ?? []).filter(
-    (s) => s.departmentId === departmentId && (s.status === "active" || s.status === "pending"),
-  );
+  const live = (catalog?.skills ?? []).filter((s) => s.status === "active" || s.status === "pending");
+  return [
+    ...live.filter((s) => s.departmentId === departmentId),
+    ...live.filter((s) => s.departmentId !== departmentId && skillUsableBy(s, departmentId, catalog?.departments)),
+  ];
 }
 
 export interface PickerGroup {

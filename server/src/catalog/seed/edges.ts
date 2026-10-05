@@ -131,4 +131,19 @@ const BD: SkillEdge[] = [
   ]),
 ];
 
-export const SEED_SKILL_EDGES: SkillEdge[] = [...ENGINEERING, ...PM, ...BD];
+// v4.4 Soft skills (docs/v4.4/PLAN.md): speaking English comes before the spoken skills that depend
+// on it; writing, listening and explaining make the later skills go better but never block them.
+const SOFT: SkillEdge[] = [
+  ...prerequisite([
+    ["ss-spoken-english", "ss-standup-updates"],
+    ["ss-spoken-english", "ss-presenting-demoing"],
+    ["ss-spoken-english", "ss-client-team-communication"],
+  ]),
+  ...recommended([
+    ["ss-workplace-writing", "ss-client-team-communication"],
+    ["ss-listening-questions", "ss-client-team-communication"],
+    ["ss-explain-simply", "ss-presenting-demoing"],
+  ]),
+];
+
+export const SEED_SKILL_EDGES: SkillEdge[] = [...ENGINEERING, ...PM, ...BD, ...SOFT];

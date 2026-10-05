@@ -134,7 +134,11 @@ export type TopicStatus = z.infer<typeof topicStatusSchema>;
 export const attemptKindSchema = z.enum(["quiz", "code"]);
 export type AttemptKind = z.infer<typeof attemptKindSchema>;
 
-export const jobStatusSchema = z.enum(["queued", "running", "done", "failed"]);
+/**
+ * `waiting_setup` (v4.4): parked until AI or research is configured; saving those settings wakes
+ * every waiting job. The worker never claims it.
+ */
+export const jobStatusSchema = z.enum(["queued", "running", "done", "failed", "waiting_setup"]);
 export type JobStatus = z.infer<typeof jobStatusSchema>;
 
 export const jobTypeSchema = z.enum([
@@ -166,6 +170,14 @@ export const jobTypeSchema = z.enum([
   "topic_tests.recheck",
   /** v4.3: writes and gates replacement items for one topic that is below its target count. */
   "topic_tests.fill",
+  /** v4.4: transcribes one Speak recording. Rate-limited to one at a time. */
+  "speech.transcribe",
+  /** v4.4: recomputes verdicts and scores after a scoring-mode change (resumable). */
+  "scoring.rescore",
+  /** v4.4: builds one course for a learner's skill or case gap. */
+  "course.generate",
+  /** v4.4: the daily deletion of audio files older than `audio.retention_days`. */
+  "audio.retention",
 ]);
 export type JobType = z.infer<typeof jobTypeSchema>;
 
@@ -175,7 +187,7 @@ export type JobType = z.infer<typeof jobTypeSchema>;
  * lists match, so adding a track in one place without the other fails the test run rather than
  * drifting silently. Adding a track means editing both, plus registry.ts and track-meta.ts.
  */
-export const TRACK_IDS = ["frontend", "backend", "fullstack", "ai-driven", "php", "mobile", "devops", "pm", "bd"] as const;
+export const TRACK_IDS = ["frontend", "backend", "fullstack", "ai-driven", "php", "mobile", "devops", "pm", "bd", "soft"] as const;
 export const trackIdSchema = z.enum(TRACK_IDS);
 export type TrackIdValue = (typeof TRACK_IDS)[number];
 

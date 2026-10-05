@@ -54,8 +54,8 @@ function skill(id: string, overrides: Partial<Skill> = {}): Skill {
 
 const catalog: Catalog = {
   departments: [
-    { id: "engineering", name: "Engineering", slug: "engineering", icon: "code", colour: "#000000", assessmentFormat: "coding", practiceNoun: "Sandbox", position: 0, archived: false },
-    { id: "pm", name: "Product", slug: "pm", icon: "box", colour: "#000000", assessmentFormat: "tasks", practiceNoun: "Task workspace", position: 1, archived: false },
+    { id: "engineering", name: "Engineering", slug: "engineering", icon: "code", colour: "#000000", assessmentFormat: "coding", practiceNoun: "Sandbox", position: 0, archived: false, kind: "role" },
+    { id: "pm", name: "Product", slug: "pm", icon: "box", colour: "#000000", assessmentFormat: "tasks", practiceNoun: "Task workspace", position: 1, archived: false, kind: "role" },
   ],
   tracks: [
     { id: "backend", departmentId: "engineering", name: "Backend", description: "", position: 0, archived: false },

@@ -302,8 +302,19 @@ for (const { track, entry, file, mod } of loaded) {
     } else err(w, `challengeType must be "quiz" or "code"`);
 
     // v4: the non-engineering trails replace code challenges with a hands-on practice task.
-    const needsPractice = topic.trackId === "pm" || topic.trackId === "bd";
-    if (needsPractice && !topic.practice) err(w, "PM/BD topics need a practice task");
+    // v4.4: soft-skills topics need one too (a written task today; `speak` adds a spoken one).
+    const needsPractice = topic.trackId === "pm" || topic.trackId === "bd" || topic.trackId === "soft";
+    if (needsPractice && !topic.practice) err(w, "PM/BD/soft-skills topics need a practice task");
+    if (topic.speak !== undefined) {
+      const s = topic.speak;
+      if (s?.kind !== "speak") err(w, 'speak.kind must be "speak"');
+      if (!s?.title?.trim() || !s?.prompt?.trim() || s.prompt.length > 600) err(w, "speak needs a title and a prompt of at most 600 chars");
+      if (!["team", "client", "manager", "interview"].includes(s?.audience)) err(w, "speak.audience must be team/client/manager/interview");
+      if (s?.prepSec !== 20) err(w, "speak.prepSec must be 20");
+      if (!(Number.isInteger(s?.maxSec) && s.maxSec >= 60 && s.maxSec <= 90)) err(w, "speak.maxSec must be 60–90");
+      if (!Array.isArray(s?.lookFor) || s.lookFor.length < 2 || s.lookFor.length > 5) err(w, "speak.lookFor needs 2–5 entries");
+      if (!s?.writtenFallback?.trim() || !s?.explanation?.trim()) err(w, "speak needs a writtenFallback and an explanation");
+    }
     if (topic.practice) {
       const parsed = taskSchema.safeParse(topic.practice);
       if (!parsed.success) err(w, `practice task is invalid: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join(".")} ${i.message}`).join("; ")}`);

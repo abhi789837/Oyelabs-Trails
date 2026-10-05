@@ -39,7 +39,7 @@ const cellInput =
 export function BulkOnboard({ catalog, taken, onCreated }: { catalog: Catalog; taken: ReadonlySet<string>; onCreated: (usernames: string[]) => void }) {
   const uid = useId();
   const confirm = useConfirm();
-  const departments = useMemo(() => catalog.departments.filter((d) => !d.archived).map((d) => ({ id: d.id, name: d.name })), [catalog]);
+  const departments = useMemo(() => catalog.departments.filter((d) => !d.archived && d.kind !== "area").map((d) => ({ id: d.id, name: d.name })), [catalog]);
   const defaultDepartment = departments[0]?.id ?? "engineering";
   const [text, setText] = useState("");
   const [rows, setRows] = useState<BulkRow[] | null>(null);

@@ -13205,5 +13205,349 @@ export const manifest: TrackMeta[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "soft",
+    "name": "Soft skills",
+    "tagline": "Speaking, writing and working with people: the skills every engineer, PM and BD person uses daily.",
+    "accentToken": "alpenglow",
+    "modules": [
+      {
+        "id": "soft-spoken-english",
+        "trackId": "soft",
+        "name": "Spoken English at work",
+        "description": "Speaking English clearly at work: being understood on the first try, simple structure for every answer, checking understanding, and the phrases that keep a call moving. Your English level is about how easily people understand you, never your accent.",
+        "refs": [
+          {
+            "label": "Council of Europe: CEFR Companion Volume (2020, PDF)",
+            "url": "https://rm.coe.int/common-european-framework-of-reference-for-languages-learning-teaching/16809ea0d4",
+            "kind": "spec",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "British Council LearnEnglish: Business English",
+            "url": "https://learnenglish.britishcouncil.org/business-english",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-english-clear-at-work",
+            "moduleId": "soft-spoken-english",
+            "trackId": "soft",
+            "title": "Speaking English clearly at work",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-workplace-writing",
+        "trackId": "soft",
+        "name": "Workplace writing (email, chat, docs)",
+        "description": "Writing that gets read and acted on: the bottom line first, a subject line that says the action, active voice, short words, and a calm tone even when the other side is angry.",
+        "refs": [
+          {
+            "label": "Digital.gov: Writing for understanding (plain language)",
+            "url": "https://digital.gov/guides/plain-language/writing",
+            "kind": "spec",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "Harvard Business Review: How to Write Email with Military Precision",
+            "url": "https://hbr.org/2016/11/how-to-write-email-with-military-precision",
+            "kind": "article",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-writing-bottom-line-first",
+            "moduleId": "soft-workplace-writing",
+            "trackId": "soft",
+            "title": "Email, chat and docs that get read",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-explain-simply",
+        "trackId": "soft",
+        "name": "Explaining technical work simply",
+        "description": "Explaining technical work to people who do not share your background: start from what they need, lead with the impact, swap jargon for everyday words and comparisons, and check they understood.",
+        "refs": [
+          {
+            "label": "Google Technical Writing One: Audience",
+            "url": "https://developers.google.com/tech-writing/one/audience",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "Lucid: How to explain technical ideas to a non-technical audience",
+            "url": "https://www.lucid.co/blog/how-to-explain-technical-ideas-to-a-non-technical-audience",
+            "kind": "article",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-explain-for-your-audience",
+            "moduleId": "soft-explain-simply",
+            "trackId": "soft",
+            "title": "Explaining for your audience",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-standup-updates",
+        "trackId": "soft",
+        "name": "Stand-ups and status updates",
+        "description": "The daily stand-up and the written status update: done, next and blockers, tied to the sprint goal, kept short, with side topics parked for afterwards.",
+        "refs": [
+          {
+            "label": "Atlassian: Stand-ups for agile teams",
+            "url": "https://www.atlassian.com/agile/scrum/standups",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "The Scrum Guide (Daily Scrum)",
+            "url": "https://scrumguides.org/scrum-guide.html",
+            "kind": "spec",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-standup-done-next-blockers",
+            "moduleId": "soft-standup-updates",
+            "trackId": "soft",
+            "title": "A clear stand-up update in 60 seconds",
+            "level": "intermediate",
+            "estMinutes": 25,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-client-team-communication",
+        "trackId": "soft",
+        "name": "Client and team communication",
+        "description": "Talking with clients and teammates so that nobody is surprised: agree how and when you communicate, give bad news early with a plan, stay calm in hard conversations, and confirm decisions in writing.",
+        "refs": [
+          {
+            "label": "Atlassian Team Playbook: Stakeholder Communications Plan",
+            "url": "https://www.atlassian.com/team-playbook/plays/stakeholder-communications-plan",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "GitLab Handbook: Communication",
+            "url": "https://handbook.gitlab.com/handbook/communication/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-comms-no-surprises",
+            "moduleId": "soft-client-team-communication",
+            "trackId": "soft",
+            "title": "No surprises: talking with clients and teammates",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-listening-questions",
+        "trackId": "soft",
+        "name": "Listening and asking good questions",
+        "description": "Active listening and good questions: paying full attention, reflecting back what you heard, asking open and follow-up questions, and clarifying a request before you estimate or build it.",
+        "refs": [
+          {
+            "label": "Mind Tools: Active Listening",
+            "url": "https://www.mindtools.com/az4wxv7/active-listening",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "Harvard Business Review: What Great Listeners Actually Do",
+            "url": "https://hbr.org/2016/07/what-great-listeners-actually-do",
+            "kind": "article",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "Harvard Business Review: The Surprising Power of Questions",
+            "url": "https://hbr.org/2018/05/the-surprising-power-of-questions",
+            "kind": "article",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-listening-clarify-first",
+            "moduleId": "soft-listening-questions",
+            "trackId": "soft",
+            "title": "Listen, reflect back, then ask",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-presenting-demoing",
+        "trackId": "soft",
+        "name": "Presenting and demoing",
+        "description": "Presenting work and demoing features: one clear idea, built for the audience, shown through the user's journey, rehearsed, and ending with a clear ask.",
+        "refs": [
+          {
+            "label": "Atlassian: Sprint reviews",
+            "url": "https://www.atlassian.com/agile/scrum/sprint-reviews",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "Harvard Business Review: How to Give a Killer Presentation",
+            "url": "https://hbr.org/2013/06/how-to-give-a-killer-presentation",
+            "kind": "article",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-demo-show-the-value",
+            "moduleId": "soft-presenting-demoing",
+            "trackId": "soft",
+            "title": "Demo a feature so the value is obvious",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-ownership-time",
+        "trackId": "soft",
+        "name": "Ownership and time management",
+        "description": "Owning your work end to end: one clear owner for every task, promises you can keep, early warnings when they slip, and a simple way to decide what to do first.",
+        "refs": [
+          {
+            "label": "Mind Tools: Eisenhower's Urgent/Important Principle",
+            "url": "https://www.mindtools.com/al1e0k5/eisenhowers-urgentimportant-principle/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "GitLab Handbook: Directly Responsible Individuals",
+            "url": "https://handbook.gitlab.com/handbook/people-group/directly-responsible-individuals/",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-ownership-own-the-outcome",
+            "moduleId": "soft-ownership-time",
+            "trackId": "soft",
+            "title": "Own the outcome, protect your time",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-feedback",
+        "trackId": "soft",
+        "name": "Giving and receiving feedback",
+        "description": "Feedback that helps: Situation, Behaviour, Impact (SBI), asking about intent, kind and specific code review comments, and receiving feedback without getting defensive.",
+        "refs": [
+          {
+            "label": "Center for Creative Leadership: Closing the gap between intent and impact (SBII)",
+            "url": "https://www.ccl.org/articles/leading-effectively-articles/closing-the-gap-between-intent-vs-impact-sbii/",
+            "kind": "article",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "Mind Tools: Situation-Behavior-Impact Feedback Tool",
+            "url": "https://www.mindtools.com/ay86376/situation-behavior-impact-feedback-tool",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-feedback-sbi",
+            "moduleId": "soft-feedback",
+            "trackId": "soft",
+            "title": "Feedback with SBI: situation, behaviour, impact",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      },
+      {
+        "id": "soft-teamwork",
+        "trackId": "soft",
+        "name": "Teamwork and collaboration",
+        "description": "What makes teams work: psychological safety, dependability, clear roles and working agreements, and the everyday habits of a good teammate on a project that changes every few months.",
+        "refs": [
+          {
+            "label": "Google re:Work: Understand team effectiveness",
+            "url": "https://rework.withgoogle.com/intl/en/guides/understand-team-effectiveness",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          },
+          {
+            "label": "Atlassian Team Playbook: Working Agreements",
+            "url": "https://www.atlassian.com/team-playbook/plays/working-agreements",
+            "kind": "docs",
+            "verifiedAt": "2026-10-05T10:00:00Z"
+          }
+        ],
+        "available": true,
+        "topics": [
+          {
+            "id": "soft-teamwork-safety-and-agreements",
+            "moduleId": "soft-teamwork",
+            "trackId": "soft",
+            "title": "Psychological safety and working agreements",
+            "level": "intermediate",
+            "estMinutes": 30,
+            "challengeType": "quiz",
+            "challengeSize": 9
+          }
+        ]
+      }
+    ]
   }
 ];

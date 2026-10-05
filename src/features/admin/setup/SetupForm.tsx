@@ -26,13 +26,16 @@ import { catalogApi } from "../catalog/api";
 import { InfoTip } from "../catalog/InfoTip";
 import { refreshCatalog, useCatalog } from "../catalog/useCatalog";
 import {
+  answerUnsure,
   changeDepartmentWithDefaults,
   findSkillToAdd,
   focusNames,
   hoursPerDayHint,
   initialSetupState,
+  intentsCurrent,
   levelTarget,
   listNames,
+  openUnsure,
   pickableSkills,
   pickPriority,
   pickSkip,
@@ -47,6 +50,7 @@ import {
   type SetupState,
 } from "./helpers";
 import { GoalBox } from "./GoalBox";
+import { IntentList } from "./IntentList";
 import { SkillPicker } from "./SkillPicker";
 import { StackPicker } from "./StackPicker";
 import { UnderstandingPanel, useUnderstanding } from "./UnderstandingPanel";
@@ -136,7 +140,7 @@ function SetupFormInner({
 }: SetupFormProps & { catalog: Catalog }) {
   const formDialog = useFormDialog();
   const uid = useId();
-  const departments = useMemo(() => catalog.departments.filter((d) => !d.archived), [catalog]);
+  const departments = useMemo(() => catalog.departments.filter((d) => !d.archived && d.kind !== "area"), [catalog]);
   const fallbackDepartment = departments[0]?.id ?? "engineering";
   const baseline = useMemo(() => initialSetupState(initial, fallbackDepartment), [initial, fallbackDepartment]);
   // A new learner starts from their department's suggested priorities (v4.1); a saved setup is never touched.
@@ -211,8 +215,10 @@ function SetupFormInner({
     notify.success(skill.status === "pending" ? `${skill.name} requested and added.` : `${skill.name} added.`);
   };
 
+  // v4.4: a phrase of the description nobody placed blocks Save until it is answered.
+  const unanswered = openUnsure(state);
   const submit = async (assign: boolean) => {
-    if (pending || !canSubmit) return;
+    if (pending || !canSubmit || unanswered > 0) return;
     setPending(assign ? "assign" : "save");
     setError(null);
     setFields({});
@@ -329,6 +335,14 @@ function SetupFormInner({
             <p className="mt-1 text-xs text-trailmark-strong">Over {DESCRIPTION_MAX} characters: shorter reads better.</p>
           )}
           <FieldMessage error={descriptionError} />
+          {intentsCurrent(state) && (
+            <div className="mt-3">
+              <IntentList intents={state.intents ?? []} unsure={state.unsure ?? []} disabled={busy} onAnswer={(index, option) => setState((s) => answerUnsure(s, index, option))} />
+            </div>
+          )}
+          {!intentsCurrent(state) && (state.intents?.length ?? 0) > 0 && (
+            <p className="mt-2 text-xs text-muted-foreground">You changed the description, so what we understood from the old one is set aside. Your goals below stay as they are.</p>
+          )}
         </div>
 
         <UnderstandingPanel state={understanding} ready={ready} className="lg:hidden" />
@@ -598,7 +612,7 @@ function SetupFormInner({
         skipCount={state.skip.length}
         dirty={showDirty ? dirty : false}
         pending={pending}
-        canSubmit={canSubmit}
+        canSubmit={canSubmit && unanswered === 0}
         primaryLabel={primaryLabel}
         secondaryLabel={secondaryLabel}
         onSubmit={(assign) => void submit(assign)}

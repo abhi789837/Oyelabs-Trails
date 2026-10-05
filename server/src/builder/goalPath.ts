@@ -2,6 +2,7 @@ import type { MasteryView, MetGoalView, MissingLinkView, V4Result } from "../../
 import type { ScoredGap } from "../../../shared/builder";
 import { trackBasics, type Catalog, type Skill } from "../../../shared/catalog";
 import { asOutcome, type LearnerGoal, type PracticalOutcome } from "../../../shared/goals";
+import { intentCoverage, intentSkillIds, type IntentCoverage } from "../../../shared/intents";
 import {
   estimateMastery,
   goalsToTargets,
@@ -19,7 +20,7 @@ import { getSkillEdges } from "../catalog/graph";
 import { getCatalog } from "../catalog/repo";
 import type { Db } from "../db";
 import { capstoneOutcome, defaultTargetLevel, type SuggestionCandidate } from "../goals/repo";
-import { listOutcomes } from "../goals/outcomes";
+import { listUsableOutcomes } from "../goals/outcomes";
 import { getSetup } from "../setup/repo";
 import { startLevelFor } from "./priorityPath";
 import { PM_LIFECYCLE_SKILL_IDS, isWeak, pmPart1Rank, type PlannedItem } from "./v4Parts";
@@ -85,11 +86,11 @@ function goalLabel(goal: LearnerGoal, names: ReadonlyMap<string, string>, outcom
  */
 export function goalPathContext(db: Db, userId: string, result: Pick<V4Result, "skills"> | null): GoalPathContext {
   const setup = getSetup(db, userId);
-  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
+  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
   const skillsById = new Map(catalog.skills.map((s) => [s.id, s]));
   const names = new Map(catalog.skills.map((s) => [s.id, s.name]));
   const edges = getSkillEdges(db);
-  const outcomes = listOutcomes(db, setup.departmentId);
+  const outcomes = listUsableOutcomes(db, setup.departmentId);
   const skipped = new Set(setup.skip.map((s) => s.skillId));
   const measured = new Map((result?.skills ?? []).filter((s) => s.level != null).map((s) => [s.skillId, s.level!]));
 
@@ -205,6 +206,11 @@ function synthetic(skill: string, summary: string, severity = 0.6): ScoredGap {
 export interface GoalPathPlan {
   items: PlannedItem[];
   order: PathOrderResult;
+  /**
+   * v4.4: every intent of the description on the path, or the reason it is not ("Already strong:
+   * scored 5/5"). Stored with the order in the path's audit, next to the per-step reasons.
+   */
+  intents: IntentCoverage;
 }
 
 /**
@@ -262,6 +268,38 @@ export function planGoalPath(
     });
   }
 
+  // v4.4 guarantee: every intent of the description has a path item, or a reason it needs none.
+  // An intent left without either gets its weakest skill as a step at the end of the path (never
+  // before its prerequisites, which are earlier when they are on the path at all).
+  const intents = ctx.setup.intents ?? [];
+  const core = coreSkillIds(ctx.catalog, ctx.setup);
+  const skipped = new Set(ctx.setup.skip.map((s) => s.skillId));
+  const pathSkills = () => items.map((i) => i.skillId).filter((id): id is string => id != null);
+  for (const id of intentCoverage(intents, [], pathSkills(), ctx.input.mastery, { coreSkillIds: core }).missingPath) {
+    const intent = intents.find((i) => i.id === id)!;
+    const level = (skillId: string) => ctx.input.mastery[skillId] ?? 0;
+    const pick = intentSkillIds(intent, core)
+      .filter((skillId) => ctx.skillsById.has(skillId) && !skipped.has(skillId))
+      .map((skillId, index) => ({ skillId, index }))
+      .sort((a, b) => level(a.skillId) - level(b.skillId) || a.index - b.index)[0]?.skillId;
+    if (!pick) continue;
+    const skill = ctx.skillsById.get(pick);
+    const skillName = name(pick);
+    const measured = ctx.input.mastery[pick] ?? null;
+    const reasonText = `From the description, "${intent.phrase}": ${intent.statement.replace(/\.$/, "")}.`.slice(0, 300);
+    items.push({
+      gap: gapFor(skillName) ?? synthetic(skillName, reasonText, 1),
+      partNumber: Math.max(items.at(-1)?.partNumber ?? 1, partForRank(intent.slider || 3)),
+      partType: skill?.isAiSkill ? "ai_dev" : ownTrack(skill) ? "track" : "general",
+      startLevel: startLevelFor(measured),
+      targetSkill: skillName,
+      skillId: pick,
+      assessedLevel: measured,
+      kind: "target",
+      reasonText,
+    });
+  }
+
   // Capstones: a case goal (or a text goal read as a case) ends with its practice, which proves it.
   for (const g of ctx.goals) {
     const goal = g.goal;
@@ -287,7 +325,7 @@ export function planGoalPath(
     });
   }
 
-  return { items, order };
+  return { items, order, intents: intentCoverage(intents, [], pathSkills(), ctx.input.mastery, { coreSkillIds: core }) };
 }
 
 /**

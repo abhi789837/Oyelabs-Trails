@@ -103,7 +103,7 @@ export function setMinFinishMinutes(db: Db, minutes: number | null): void {
  */
 export function assembleInto(db: Db, assessmentId: string, userId: string): V4Config {
   const setup = getSetup(db, userId);
-  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true });
+  const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
   const department = catalog.departments.find((d) => d.id === setup.departmentId);
   const skills = new Map(catalog.skills.map((s) => [s.id, s]));
   const basics = trackBasics(catalog, setup.departmentId, setup.trackId, setup.stackIds).map((s) => ({ skillId: s.id, skillName: s.name, slider: 0 }));
