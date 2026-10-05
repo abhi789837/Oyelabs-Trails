@@ -1,0 +1,108 @@
+/*
+ * Tailwind names for the v5 tokens.
+ *
+ * Imported by `src/index.css` (the single Tailwind entry), because Tailwind only builds utilities
+ * from one theme. Everything here is `@theme inline` and uses **new names only**, so:
+ * - no theme variable is added to `:root`, and no existing utility changes;
+ * - a utility such as `bg-surface-1` compiles to `rgb(var(--v5-surface-1))`, which is undefined
+ *   (so the declaration is ignored) everywhere except inside `[data-ui="v5"]` (see tokens.css).
+ * The old UI never uses these class names, so its CSS output is unchanged apart from the new
+ * utilities v5 files use.
+ */
+@theme inline {
+  --color-surface-0: rgb(var(--v5-surface-0));
+  --color-surface-1: rgb(var(--v5-surface-1));
+  --color-surface-2: rgb(var(--v5-surface-2));
+  --color-surface-3: rgb(var(--v5-surface-3));
+  --color-sunken: rgb(var(--v5-sunken));
+
+  --color-fg-1: rgb(var(--v5-fg-1));
+  --color-fg-2: rgb(var(--v5-fg-2));
+  --color-fg-3: rgb(var(--v5-fg-3));
+  --color-line-1: rgb(var(--v5-line-1));
+  --color-line-2: rgb(var(--v5-line-2));
+  --color-focus: rgb(var(--v5-focus));
+  --color-scrim: rgb(var(--v5-scrim));
+
+  --color-brand: rgb(var(--v5-brand));
+  --color-brand-fg: rgb(var(--v5-brand-fg));
+  --color-on-brand: rgb(var(--v5-on-brand));
+  --color-brand-soft: rgb(var(--v5-brand-soft));
+
+  /* `success` and `warning` already exist (old UI); tokens.css repoints them inside the scope. */
+  --color-success-fg: rgb(var(--v5-success-fg));
+  --color-on-success: rgb(var(--v5-on-success));
+  --color-success-soft: rgb(var(--v5-success-soft));
+  --color-warning-fg: rgb(var(--v5-warning-fg));
+  --color-on-warning: rgb(var(--v5-on-warning));
+  --color-warning-soft: rgb(var(--v5-warning-soft));
+
+  --color-danger: rgb(var(--v5-danger));
+  --color-danger-fg: rgb(var(--v5-danger-fg));
+  --color-on-danger: rgb(var(--v5-on-danger));
+  --color-danger-soft: rgb(var(--v5-danger-soft));
+  --color-info: rgb(var(--v5-info));
+  --color-info-fg: rgb(var(--v5-info-fg));
+  --color-on-info: rgb(var(--v5-on-info));
+  --color-info-soft: rgb(var(--v5-info-soft));
+  --color-neutral: rgb(var(--v5-neutral));
+  --color-neutral-fg: rgb(var(--v5-neutral-fg));
+  --color-on-neutral: rgb(var(--v5-on-neutral));
+  --color-neutral-soft: rgb(var(--v5-neutral-soft));
+
+  --color-lane-now: rgb(var(--v5-lane-now));
+  --color-lane-now-fg: rgb(var(--v5-lane-now-fg));
+  --color-lane-now-soft: rgb(var(--v5-lane-now-soft));
+  --color-on-lane-now: rgb(var(--v5-on-lane-now));
+  --color-lane-must: rgb(var(--v5-lane-must));
+  --color-lane-must-fg: rgb(var(--v5-lane-must-fg));
+  --color-lane-must-soft: rgb(var(--v5-lane-must-soft));
+  --color-on-lane-must: rgb(var(--v5-on-lane-must));
+  --color-lane-medium: rgb(var(--v5-lane-medium));
+  --color-lane-medium-fg: rgb(var(--v5-lane-medium-fg));
+  --color-lane-medium-soft: rgb(var(--v5-lane-medium-soft));
+  --color-on-lane-medium: rgb(var(--v5-on-lane-medium));
+  --color-lane-low: rgb(var(--v5-lane-low));
+  --color-lane-low-fg: rgb(var(--v5-lane-low-fg));
+  --color-lane-low-soft: rgb(var(--v5-lane-low-soft));
+  --color-on-lane-low: rgb(var(--v5-on-lane-low));
+
+  /* Type scale. Body 16px; the article measure is 68ch (inside the 65–75ch range). */
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.125rem;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.375rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.75rem;
+  --text-h4: 1.0625rem;
+  --text-h4--line-height: 1.5rem;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.75rem;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 2rem;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h1: 2rem;
+  --text-h1--line-height: 2.5rem;
+  --text-h1--letter-spacing: -0.02em;
+  --text-display: clamp(2.125rem, 1.6rem + 2.2vw, 2.75rem);
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.03em;
+  --container-article: 68ch;
+
+  /* Density sizes are NOT theme keys: adding --spacing-* keys changes tailwindcss-animate's
+     default slide distance in the old UI. Use `h-(--v5-control-h)`, `p-(--v5-card-pad)` etc. */
+
+  --radius-control: var(--v5-radius-control);
+  --radius-card: var(--v5-radius-card);
+  --radius-sheet: var(--v5-radius-sheet);
+
+  --shadow-e1: var(--v5-shadow-1);
+  --shadow-e2: var(--v5-shadow-2);
+  --shadow-e3: var(--v5-shadow-3);
+
+  --ease-enter: var(--v5-ease-out);
+  --ease-exit: var(--v5-ease-in);
+  --ease-move: var(--v5-ease-in-out);
+}

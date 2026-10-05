@@ -1,0 +1,136 @@
+import { Navigate, Route, Routes } from "react-router-dom";
+import { MotionConfig } from "motion/react";
+import { OverlayProvider } from "@/components/overlays";
+import { TooltipProvider } from "@/components/ui/tooltip";
+
+import { AppShell } from "@/components/layout/AppShell";
+import { AdminLayout } from "@/features/admin/AdminLayout";
+import AdminAiPage from "@/features/admin/AdminAiPage";
+import AdminAuditPage from "@/features/admin/AdminAuditPage";
+import AdminReviewsPage from "@/features/admin/reviews/ReviewRequests";
+import AdminSopPage from "@/features/admin/AdminSopPage";
+import AdminHandbookPage from "@/features/admin/handbook/AdminHandbookPage";
+import AdminBankPage from "@/features/admin/bank/AdminBankPage";
+import AdminAiUsagePage from "@/features/admin/usage/AdminAiUsagePage";
+import AdminCourseEditorPage from "@/features/admin/courses/AdminCourseEditorPage";
+import AdminCoursesPage from "@/features/admin/courses/AdminCoursesPage";
+import AdminGeneratedPage from "@/features/admin/builder/AdminGeneratedPage";
+import AdminCurriculumPage from "@/features/admin/AdminCurriculumPage";
+import AdminTestItemsPage from "@/features/admin/testItems/AdminTestItemsPage";
+import AdminDepartmentsPage from "@/features/admin/catalog/AdminDepartmentsPage";
+import AdminSkillGraphPage from "@/features/admin/graph/AdminSkillGraphPage";
+import AdminSkillGroupsPage from "@/features/admin/groups/AdminSkillGroupsPage";
+import AdminIntegrityFeedPage from "@/features/admin/AdminIntegrityFeedPage";
+import AdminIntegrityPage from "@/features/admin/AdminIntegrityPage";
+import AdminLivePage from "@/features/admin/AdminLivePage";
+import AdminOnboardPage from "@/features/admin/AdminOnboardPage";
+import AdminOverviewPage from "@/features/admin/AdminOverviewPage";
+import AdminPeoplePage from "@/features/admin/AdminPeoplePage";
+import AdminPoolPage from "@/features/admin/AdminPoolPage";
+import {
+  RequireAuth,
+  RequireStaff,
+  RequireSuperadmin,
+} from "@/features/auth/guards";
+import AssessmentPage from "@/features/assessment/AssessmentPage";
+import { CurriculumProvider } from "@/features/curriculum/CurriculumProvider";
+import AdminLearnerPage from "@/features/admin/AdminLearnerPage";
+
+/**
+ * The old (pre-v5) route tree, moved here verbatim from App.tsx in v5 Phase 0 so it can be
+ * lazy-loaded: App.tsx now picks this or `src/v5/app/V5App` from the ui_v5 flag, and a v5 learner
+ * must not download every old page. Behaviour is unchanged — these are descendant routes under
+ * App's `*`, so `admin`, `assessment` and `*` resolve exactly as `/admin`, `/assessment` and `/*`
+ * did. `/login` and `/change-password` stay in App.tsx, shared by both designs.
+ */
+export default function LegacyRoutes() {
+  return (
+    <MotionConfig reducedMotion="user">
+      <TooltipProvider delayDuration={150}>
+        <OverlayProvider>
+          <Routes>
+            <Route
+              path="admin"
+              element={
+                <RequireStaff>
+                  <CurriculumProvider>
+                    <AdminLayout />
+                  </CurriculumProvider>
+                </RequireStaff>
+              }
+            >
+              <Route index element={<AdminOverviewPage />} />
+              <Route path="people" element={<AdminPeoplePage />} />
+              <Route path="onboard" element={<AdminOnboardPage />} />
+              <Route path="departments" element={<AdminDepartmentsPage />} />
+              <Route path="people/:userId" element={<AdminLearnerPage />} />
+              {/* The one page inside the console that an admin does not get. */}
+              <Route
+                path="ai"
+                element={
+                  <RequireSuperadmin>
+                    <AdminAiPage />
+                  </RequireSuperadmin>
+                }
+              />
+              <Route path="question-bank" element={<AdminBankPage />} />
+              <Route path="ai-usage" element={<AdminAiUsagePage />} />
+              <Route path="live" element={<AdminLivePage />} />
+              <Route path="audit" element={<AdminAuditPage />} />
+              <Route path="reviews" element={<AdminReviewsPage />} />
+              <Route path="sop" element={<AdminSopPage />} />
+              <Route path="handbook" element={<AdminHandbookPage />} />
+              <Route path="integrity" element={<AdminIntegrityFeedPage />} />
+              <Route path="curriculum" element={<AdminCurriculumPage />} />
+              <Route
+                path="curriculum/test-items"
+                element={<AdminTestItemsPage />}
+              />
+              <Route path="skill-graph" element={<AdminSkillGraphPage />} />
+              <Route path="skill-groups" element={<AdminSkillGroupsPage />} />
+              <Route path="courses" element={<AdminCoursesPage />} />
+              <Route
+                path="courses/:courseId"
+                element={<AdminCourseEditorPage />}
+              />
+              <Route path="generated" element={<AdminGeneratedPage />} />
+              <Route
+                path="assessments/:assessmentId"
+                element={<AdminPoolPage />}
+              />
+              <Route
+                path="assessments/:assessmentId/integrity"
+                element={<AdminIntegrityPage />}
+              />
+              <Route path="*" element={<Navigate to="/admin" replace />} />
+            </Route>
+
+            {/* The assessment is fullscreen and proctored: no sidebar, no top bar, no way out. */}
+            <Route
+              path="assessment"
+              element={
+                <RequireAuth>
+                  <CurriculumProvider>
+                    <AssessmentPage />
+                  </CurriculumProvider>
+                </RequireAuth>
+              }
+            />
+
+            {/* Everything else is the learner-facing app, which brings its own shell. */}
+            <Route
+              path="*"
+              element={
+                <RequireAuth>
+                  <CurriculumProvider>
+                    <AppShell />
+                  </CurriculumProvider>
+                </RequireAuth>
+              }
+            />
+          </Routes>
+        </OverlayProvider>
+      </TooltipProvider>
+    </MotionConfig>
+  );
+}

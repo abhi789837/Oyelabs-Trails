@@ -1,5 +1,5 @@
 import type { SessionUser } from "@shared/auth";
-import { isStaff } from "@shared/enums";
+import { isStaffRole as isStaff } from "@shared/uiFlag";
 
 /**
  * Where a signed-in person belongs right now (brief §6).

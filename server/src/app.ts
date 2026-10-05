@@ -45,6 +45,7 @@ import { registerHealthRoutes } from "./routes/health";
 import { registerSpeechRoutes } from "./routes/speech";
 import { registerReviewRoutes } from "./routes/reviews";
 import { registerMeRoutes } from "./routes/me";
+import { registerUiRoutes } from "./routes/ui";
 import { registerTopicRoutes } from "./routes/topics";
 import { registerAdminVideoRoutes, registerVideoRoutes } from "./routes/videos";
 import { registerAdminTopicTestRoutes } from "./routes/admin/topicTests";
@@ -191,6 +192,7 @@ export async function buildApp({
   await registerHealthRoutes(app);
   await registerAuthRoutes(app);
   await registerMeRoutes(app);
+  await registerUiRoutes(app);
   await registerContentRoutes(app);
   await registerSopRoutes(app);
   await registerRoleplayRoutes(app);

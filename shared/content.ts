@@ -190,7 +190,7 @@ export const servedModuleParamsSchema = z.object({
 // ---------------------------------------------------------------------------
 
 /** Quizzes pass at 80%; code challenges only pass when every test passes. Enforced server-side. */
-export const QUIZ_PASS_THRESHOLD = 80;
+export { QUIZ_PASS_THRESHOLD } from "./contentConstants";
 
 /**
  * Answers are sent as *original* option indices, not the shuffled positions the learner saw.

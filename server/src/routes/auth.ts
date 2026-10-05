@@ -19,6 +19,7 @@ import type { Env } from "../env";
 import { writeAudit } from "../lib/audit";
 import { badRequest, locked, parseOrThrow, unauthenticated } from "../lib/errors";
 import { now } from "../lib/ids";
+import { effectiveUiV5For } from "./ui";
 
 function cookieOptions(env: Env, maxAgeMs: number) {
   return {
@@ -63,6 +64,7 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
       department: department
         ? { id: department.id, name: department.name, assessmentFormat: department.assessmentFormat, practiceNoun: department.practiceNoun }
         : null,
+      ...(user ? { ui: { v5: effectiveUiV5For(app.db, user.id) } } : {}),
     };
   });
 
@@ -129,7 +131,7 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
       setSessionCookie(reply, env, session.token, session.expiresAt);
       writeAudit(app.db, { actorId: row.id, action: "auth.login", targetType: "user", targetId: row.id, details: { ip: request.ip } });
 
-      return { user: toSessionUser({ ...row, lastLoginAt: current }) } satisfies MeResponse;
+      return { user: toSessionUser({ ...row, lastLoginAt: current }), ui: { v5: effectiveUiV5For(app.db, row.id) } } satisfies MeResponse;
     },
   );
 
@@ -178,7 +180,7 @@ export async function registerAuthRoutes(app: FastifyInstance): Promise<void> {
 
       writeAudit(app.db, { actorId: row.id, action: "auth.password_changed", targetType: "user", targetId: row.id });
 
-      return { user: toSessionUser({ ...row, mustChangePassword: false }) } satisfies MeResponse;
+      return { user: toSessionUser({ ...row, mustChangePassword: false }), ui: { v5: effectiveUiV5For(app.db, row.id) } } satisfies MeResponse;
     },
   );
 }

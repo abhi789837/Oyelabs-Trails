@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 import type { AttemptResult, ProgressResponse, TopicProgressValue } from "@shared/content";
-import { QUIZ_PASS_THRESHOLD } from "@shared/content";
+import { QUIZ_PASS_THRESHOLD } from "@shared/contentConstants";
 
 import { api, ApiRequestError } from "@/api/client";
 

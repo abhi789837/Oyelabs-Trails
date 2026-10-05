@@ -1,4 +1,5 @@
-import { ERROR_CODES, type ApiError, type ErrorCode } from "@shared/api";
+import type { ApiError } from "@shared/api";
+import { ERROR_CODES, type ErrorCode } from "@shared/apiCodes";
 
 /**
  * The one place the SPA talks to the server.

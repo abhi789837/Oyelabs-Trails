@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { roleSchema, userStatusSchema } from "./enums";
+import { meUiSchema } from "./ui";
 
 /** Brief §6: minimum 10 characters, and not the username or a common password. */
 export const PASSWORD_MIN_LENGTH = 10;
@@ -62,6 +63,8 @@ export const meResponseSchema = z.object({
   user: sessionUserSchema.nullable(),
   /** Absent for staff without a profile, and on responses from servers older than v4. */
   department: sessionDepartmentSchema.nullable().optional(),
+  /** v5: which design this user gets (docs/v5/PLAN.md, "The ui_v5 flag"). Absent with no user. */
+  ui: meUiSchema.optional(),
 });
 export type MeResponse = z.infer<typeof meResponseSchema>;
 

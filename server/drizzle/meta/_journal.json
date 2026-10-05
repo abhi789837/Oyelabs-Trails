@@ -176,6 +176,13 @@
       "when": 1791194797086,
       "tag": "0024_v44_intents_soft_speak_scoring",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "6",
+      "when": 1791222021864,
+      "tag": "0025_v5_learner_experience",
+      "breakpoints": true
     }
   ]
 }

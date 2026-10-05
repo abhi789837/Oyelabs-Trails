@@ -8,6 +8,12 @@ interface AuthState {
   user: SessionUser | null;
   /** The signed-in person's department, for wording. Null for staff without one, or before v4. */
   department: SessionDepartment | null;
+  /**
+   * v5: which design the server says this person gets (`ui.v5` on /api/auth/me). Null when signed
+   * out, or for a moment after sign-in on an older server. The staff `?ui=` override is applied
+   * on top of this in `src/v5/app/designFlag.ts`, not here.
+   */
+  uiV5: boolean | null;
   /** True until the first /api/auth/me has settled, so guards do not redirect prematurely. */
   loading: boolean;
   /** Set when the session could not be loaded at all (server down), not when simply signed out. */
@@ -23,6 +29,7 @@ const AuthContext = createContext<AuthState | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [department, setDepartment] = useState<SessionDepartment | null>(null);
+  const [uiV5, setUiV5] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,11 +38,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const me = await api.get<MeResponse>("/api/auth/me", signal);
       setUser(me.user);
       setDepartment(me.department ?? null);
+      setUiV5(me.ui?.v5 ?? null);
       setError(null);
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
       setUser(null);
       setDepartment(null);
+      setUiV5(null);
       setError(err instanceof ApiRequestError ? err.message : "Could not reach the server.");
     } finally {
       setLoading(false);
@@ -52,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const result = await api.post<MeResponse>("/api/auth/login", credentials);
     if (!result.user) throw new Error("Signed in but no account came back.");
     setUser(result.user);
+    setUiV5(result.ui?.v5 ?? null);
     setError(null);
     // The login response carries no department; /me does. Not awaited: wording can follow a beat
     // behind, the redirect should not wait on it.
@@ -59,7 +69,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     else
       void api
         .get<MeResponse>("/api/auth/me")
-        .then((me) => setDepartment(me.department ?? null))
+        .then((me) => {
+          setDepartment(me.department ?? null);
+          if (me.ui) setUiV5(me.ui.v5);
+        })
         .catch(() => undefined);
     return result.user;
   }, []);
@@ -71,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Clear locally even if the request failed: the intent was to sign out.
       setUser(null);
       setDepartment(null);
+      setUiV5(null);
     }
   }, []);
 
@@ -78,12 +92,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const result = await api.post<MeResponse>("/api/auth/change-password", { currentPassword, newPassword });
     if (!result.user) throw new Error("Password changed but no account came back.");
     setUser(result.user);
+    if (result.ui) setUiV5(result.ui.v5);
     return result.user;
   }, []);
 
   const value = useMemo<AuthState>(
-    () => ({ user, department, loading, error, signIn, signOut, changePassword, refresh: () => load() }),
-    [user, department, loading, error, signIn, signOut, changePassword, load],
+    () => ({ user, department, uiV5, loading, error, signIn, signOut, changePassword, refresh: () => load() }),
+    [user, department, uiV5, loading, error, signIn, signOut, changePassword, load],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

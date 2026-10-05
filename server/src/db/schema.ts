@@ -456,8 +456,21 @@ export const certificates = sqliteTable(
     planId: text("plan_id"),
     averageScore: integer("average_score"),
     issuedAt: integer("issued_at").notNull(),
+    // v5 (migration 0025). The table already existed, so v5 extends it rather than adding a second
+    // certificates table: `learner_name` is the holder name, and old rows are track certificates.
+    // Course and goal certificates set `trackId` to the course's or goal's track ("" when none).
+    /** What the certificate is for. Old rows default to "track". */
+    kind: text("kind").$type<"track" | "course" | "goal">().notNull().default("track"),
+    /** The track, course or goal id. Old rows are backfilled from track_id by migration 0025. */
+    refId: text("ref_id").notNull().default(""),
+    /** The title printed on the certificate ("Backend", "Docker in practice", ...). */
+    title: text("title").notNull().default(""),
+    /** A hash over holder, kind, ref, title and issue time, so /verify can show tampering. */
+    hash: text("hash"),
+    /** Set when an admin revokes it; /verify then says so instead of showing it as valid. */
+    revokedAt: integer("revoked_at"),
   },
-  (t) => [index("certificates_user_idx").on(t.userId)],
+  (t) => [index("certificates_user_idx").on(t.userId), uniqueIndex("certificates_user_kind_ref_idx").on(t.userId, t.kind, t.refId)],
 );
 
 // ---------------------------------------------------------------------------
@@ -1744,4 +1757,255 @@ export const reviewRequests = sqliteTable(
     resolution: text("resolution"),
   },
   (t) => [index("review_requests_status_idx").on(t.status, t.createdAt), index("review_requests_user_idx").on(t.userId)],
+);
+
+// ---------------------------------------------------------------------------
+// v5: the learner experience (docs/v5/PLAN.md, "Schema for migration 0025")
+// ---------------------------------------------------------------------------
+
+/**
+ * One spaced-repetition card (FSRS) for one learner. Cards are made from things the learner has
+ * already met (a quiz item they answered, a glossary term, a mistake, a topic key point), so the
+ * review queue never teaches anything new. `refId` points at that source; the unique index makes
+ * card creation idempotent, so the same quiz item can be offered again without a duplicate.
+ *
+ * `fsrs` is the whole ts-fsrs `Card` (stability, difficulty, reps, lapses, state, ...) stored as
+ * JSON rather than one column per field: the scheduler owns that shape and it changes between
+ * ts-fsrs versions. `due` is lifted out of it into its own column because "what is due now" is the
+ * query that runs on every Today load, and it needs the (user_id, due) index.
+ */
+export const reviewCards = sqliteTable(
+  "review_cards",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    source: text("source").$type<"quiz_item" | "glossary" | "mistake" | "topic_point">().notNull(),
+    refId: text("ref_id").notNull(),
+    topicId: text("topic_id"),
+    /** What the card shows, already reduced to plain parts (prompt, options, code...). */
+    front: text("front", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    back: text("back", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    /** The ts-fsrs Card. Typed loosely here; server/src/v5/review validates it with zod. */
+    fsrs: text("fsrs", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    due: integer("due").notNull(),
+    suspended: integer("suspended", { mode: "boolean" }).notNull().default(false),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [uniqueIndex("review_cards_source_idx").on(t.userId, t.source, t.refId), index("review_cards_due_idx").on(t.userId, t.due)],
+);
+
+/**
+ * Every rating given to a review card. Kept (not folded into the card) so FSRS parameters can be
+ * re-fitted per learner later, and so "cards reviewed this week" is a count, not a guess.
+ */
+export const reviewLogs = sqliteTable(
+  "review_logs",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    cardId: text("card_id")
+      .notNull()
+      .references(() => reviewCards.id, { onDelete: "cascade" }),
+    /** 1 Again, 2 Hard, 3 Good, 4 Easy. */
+    rating: integer("rating").notNull(),
+    /** The ts-fsrs ReviewLog. */
+    review: text("review", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    reviewedAt: integer("reviewed_at").notNull(),
+  },
+  (t) => [index("review_logs_user_idx").on(t.userId, t.reviewedAt), index("review_logs_card_idx").on(t.cardId)],
+);
+
+/**
+ * XP awards, one row per award. The unique (user_id, kind, ref_id) index is the idempotency key:
+ * finishing the same step twice, or a retried request, inserts nothing the second time
+ * (`on conflict do nothing`). A learner's total is a SUM over this table, never a stored counter
+ * that could drift. See shared/xp.ts for the amounts.
+ */
+export const xpEvents = sqliteTable(
+  "xp_events",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    kind: text("kind").notNull(),
+    refId: text("ref_id").notNull(),
+    xp: integer("xp").notNull(),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [uniqueIndex("xp_events_award_idx").on(t.userId, t.kind, t.refId), index("xp_events_user_created_idx").on(t.userId, t.createdAt)],
+);
+
+/**
+ * The weekly streak, one row per learner. Weekly rather than daily on purpose: people learn
+ * around client work, and a daily streak punishes one busy Tuesday. Weeks are ISO weeks
+ * ("YYYY-Www"). One freeze arrives each month (`freezeMonth` records which month the current
+ * allowance belongs to) and is spent automatically on a missed week.
+ */
+export const weeklyStreaks = sqliteTable("weekly_streaks", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  current: integer("current").notNull().default(0),
+  best: integer("best").notNull().default(0),
+  lastMetWeek: text("last_met_week"),
+  freezesLeft: integer("freezes_left").notNull().default(1),
+  freezeMonth: text("freeze_month"),
+  history: text("history", { mode: "json" }).$type<{ week: string; met: boolean; frozen: boolean }[]>().notNull().default([]),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+/**
+ * Where a learner is inside one lesson (watch, read, do, check), so the lesson player resumes on
+ * any device at the right step and the right second of the right video. Separate from
+ * topic_progress, which records only the outcome; this is the in-between state.
+ */
+export const lessonState = sqliteTable(
+  "lesson_state",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    topicId: text("topic_id").notNull(),
+    step: text("step").$type<"watch" | "read" | "do" | "check">().notNull().default("watch"),
+    stepDone: text("step_done", { mode: "json" })
+      .$type<{ watch: boolean; read: boolean; do: boolean; check: boolean }>()
+      .notNull()
+      .default({ watch: false, read: false, do: false, check: false }),
+    videoId: text("video_id"),
+    positionSec: real("position_sec"),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.topicId] })],
+);
+
+/** A learner's own notes on a lesson, optionally pinned to a moment in one of its videos. */
+export const lessonNotes = sqliteTable(
+  "lesson_notes",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    topicId: text("topic_id").notNull(),
+    videoId: text("video_id"),
+    atSec: real("at_sec"),
+    body: text("body").notNull(),
+    createdAt: integer("created_at").notNull(),
+    updatedAt: integer("updated_at").notNull(),
+  },
+  (t) => [index("lesson_notes_user_topic_idx").on(t.userId, t.topicId)],
+);
+
+/**
+ * A learner saying something is wrong with a lesson: a broken video, a wrong answer key, a dead
+ * link. It goes to the admin inbox. `resolvedBy` is a plain id, not a foreign key, so the record
+ * survives the admin's account being deleted.
+ */
+export const problemReports = sqliteTable(
+  "problem_reports",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    topicId: text("topic_id").notNull(),
+    step: text("step"),
+    message: text("message").notNull(),
+    status: text("status").$type<"open" | "resolved">().notNull().default("open"),
+    createdAt: integer("created_at").notNull(),
+    resolvedBy: text("resolved_by"),
+    resolvedAt: integer("resolved_at"),
+  },
+  (t) => [index("problem_reports_status_idx").on(t.status, t.createdAt), index("problem_reports_topic_idx").on(t.topicId)],
+);
+
+/**
+ * Questions asked of the in-lesson tutor and the answers given, with the passages cited. Kept so
+ * the learner can scroll back, so a thumbs-down can be reviewed, and so the per-user daily limit
+ * is a count over (user_id, created_at).
+ */
+export const tutorMessages = sqliteTable(
+  "tutor_messages",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    topicId: text("topic_id").notNull(),
+    step: text("step"),
+    question: text("question").notNull(),
+    answer: text("answer").notNull(),
+    citations: text("citations", { mode: "json" }).$type<unknown[]>().notNull().default([]),
+    /** -1 unhelpful, 0 not rated, 1 helpful. */
+    rating: integer("rating").notNull().default(0),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [index("tutor_messages_user_created_idx").on(t.userId, t.createdAt)],
+);
+
+/**
+ * A short message from an admin, shown on learners' Today screens. `audience` is resolved at read
+ * time (everyone, some departments, or named people), so a new hire still sees announcements that
+ * are live. `createdBy` becomes null if the admin is deleted; the announcement stays.
+ */
+export const announcements = sqliteTable(
+  "announcements",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    audience: text("audience", { mode: "json" }).$type<{ all?: true; departmentIds?: string[]; userIds?: string[] }>().notNull(),
+    pinned: integer("pinned", { mode: "boolean" }).notNull().default(false),
+    createdBy: text("created_by").references(() => users.id, { onDelete: "set null" }),
+    createdAt: integer("created_at").notNull(),
+    expiresAt: integer("expires_at"),
+  },
+  (t) => [index("announcements_created_idx").on(t.createdAt)],
+);
+
+/**
+ * Every published version of a course or topic, so an admin edit can be compared and rolled back,
+ * and so a certificate can say which version the learner finished. `createdBy` is a plain id.
+ */
+export const contentVersions = sqliteTable(
+  "content_versions",
+  {
+    id: text("id").primaryKey(),
+    entityType: text("entity_type").$type<"course" | "topic">().notNull(),
+    entityId: text("entity_id").notNull(),
+    version: integer("version").notNull(),
+    data: text("data", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+    createdBy: text("created_by"),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => [uniqueIndex("content_versions_entity_idx").on(t.entityType, t.entityId, t.version)],
+);
+
+/**
+ * Outgoing email, written here first and sent by a job. A table rather than a direct SMTP call so
+ * a failed send is retried and visible, and so dev and tests (no SMTP configured) record `skipped`
+ * mail that can be read back instead of silently dropping it.
+ */
+export const emailOutbox = sqliteTable(
+  "email_outbox",
+  {
+    id: text("id").primaryKey(),
+    toUserId: text("to_user_id").references(() => users.id, { onDelete: "cascade" }),
+    toAddress: text("to_address").notNull(),
+    kind: text("kind").notNull(),
+    subject: text("subject").notNull(),
+    html: text("html").notNull(),
+    text: text("text").notNull(),
+    status: text("status").$type<"queued" | "sent" | "failed" | "skipped">().notNull().default("queued"),
+    error: text("error"),
+    createdAt: integer("created_at").notNull(),
+    sentAt: integer("sent_at"),
+  },
+  (t) => [index("email_outbox_status_idx").on(t.status, t.createdAt), index("email_outbox_user_idx").on(t.toUserId)],
 );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Compass, LogOut, Moon, Route, ShieldCheck, Sun } from "lucide-react";
+import { Compass, LogOut, Moon, Route, ShieldCheck, Sparkles, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { Avatar } from "@/components/ui/avatar";
@@ -17,6 +17,7 @@ import { isStaff } from "@shared/enums";
 
 import { useAuth } from "@/features/auth/AuthProvider";
 import { useUiStore } from "@/store/uiStore";
+import { chooseDesign } from "@/v5/app/designFlag";
 
 /**
  * Who you are signed in as, and the two things you can do about it.
@@ -30,7 +31,7 @@ import { useUiStore } from "@/store/uiStore";
  * is the profile, and it says everything the account holds.
  */
 export function UserMenu({ context = "learner" }: { context?: "learner" | "admin" }) {
-  const { user, signOut } = useAuth();
+  const { user, signOut, uiV5 } = useAuth();
   const navigate = useNavigate();
   const theme = useUiStore((s) => s.theme);
   const toggleTheme = useUiStore((s) => s.toggleTheme);
@@ -112,6 +113,14 @@ export function UserMenu({ context = "learner" }: { context?: "learner" | "admin
         </DropdownMenuRadioGroup>
 
         <DropdownMenuSeparator />
+
+        {/* v5 Phase 0: an opt-in to the new design, only while this person does not have it. */}
+        {uiV5 === false && (
+          <DropdownMenuItem onSelect={() => void chooseDesign(true, context === "admin" ? "/admin" : "/learn").catch(() => undefined)}>
+            <Sparkles aria-hidden="true" />
+            Try the new design
+          </DropdownMenuItem>
+        )}
 
         <DropdownMenuItem tone="danger" onSelect={() => void handleSignOut()}>
           <LogOut aria-hidden="true" />

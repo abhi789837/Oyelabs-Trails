@@ -1,0 +1,454 @@
+/*
+ * Oyelearn v5 design tokens.
+ *
+ * Scoped: nothing here applies unless an ancestor (normally <html>) carries `data-ui="v5"`.
+ * `useV5Root()` sets that attribute; the old UI never does, so it cannot see these values.
+ * This file is imported only from `src/v5/design/index.ts`, which only v5 code imports, so
+ * Vite puts it in the lazy v5 CSS chunk rather than the main stylesheet.
+ *
+ * Colours are bare RGB channels ("R G B") like the old tokens, so `rgb(var(--x) / 0.5)` works.
+ * Tailwind names for them live in `theme.css` (imported by `src/index.css`) and resolve through
+ * these variables, so the same class is light or dark depending on where it sits.
+ *
+ * Theme switching:
+ * - light: `[data-ui="v5"]` itself, or any `.v5-light` inside it (a forced-light preview);
+ * - dark:  `[data-ui="v5"].dark` (the app's class strategy), or any `.dark` inside it.
+ * v5 components never use Tailwind's `dark:` variant: the tokens carry the theme, which is what
+ * lets `/design` show a light and a dark preview side by side.
+ *
+ * `src/v5/design/tokens.test.ts` parses the two marked blocks below and checks every pair the
+ * components render (text 4.5:1, large text and UI marks 3:1). Keep the markers.
+ */
+
+/* tokens:light */
+[data-ui="v5"],
+[data-ui="v5"] .v5-light {
+  /* Elevation: 0 page, 1 card, 2 raised (menu, popover), 3 overlay (dialog, sheet). */
+  --v5-surface-0: 244 246 249;
+  --v5-surface-1: 255 255 255;
+  --v5-surface-2: 255 255 255;
+  --v5-surface-3: 255 255 255;
+  --v5-sunken: 234 238 243;
+
+  --v5-fg-1: 17 24 39;
+  --v5-fg-2: 71 81 98;
+  --v5-fg-3: 96 106 122;
+  --v5-line-1: 224 228 235;
+  --v5-line-2: 130 140 156;
+  --v5-focus: 32 103 211;
+
+  /* Oyelabs blue. Fill is brand-600 #2067D3; text-safe shade is brand-700. */
+  --v5-brand: 32 103 211;
+  --v5-brand-fg: 24 86 180;
+  --v5-on-brand: 255 255 255;
+  --v5-brand-soft: 234 242 253;
+
+  --v5-success: 21 128 82;
+  --v5-success-fg: 19 111 71;
+  --v5-on-success: 255 255 255;
+  --v5-success-soft: 230 245 237;
+
+  --v5-warning: 184 110 11;
+  --v5-warning-fg: 146 84 14;
+  --v5-on-warning: 13 17 23;
+  --v5-warning-soft: 253 242 224;
+
+  --v5-danger: 200 48 44;
+  --v5-danger-fg: 176 36 33;
+  --v5-on-danger: 255 255 255;
+  --v5-danger-soft: 253 236 235;
+
+  --v5-info: 12 114 140;
+  --v5-info-fg: 12 102 126;
+  --v5-on-info: 255 255 255;
+  --v5-info-soft: 229 244 248;
+
+  /* The Low lane's grey (basalt). */
+  --v5-neutral: 107 114 128;
+  --v5-neutral-fg: 84 92 107;
+  --v5-on-neutral: 255 255 255;
+  --v5-neutral-soft: 238 240 243;
+
+  --v5-scrim: 9 12 17;
+
+  --v5-shadow-1: 0 1px 2px rgb(16 24 40 / 0.06), 0 1px 3px rgb(16 24 40 / 0.08);
+  --v5-shadow-2: 0 2px 4px -2px rgb(16 24 40 / 0.06), 0 6px 16px -4px rgb(16 24 40 / 0.12);
+  --v5-shadow-3: 0 20px 48px -12px rgb(16 24 40 / 0.28);
+  color-scheme: light;
+}
+
+/* tokens:dark */
+[data-ui="v5"].dark,
+[data-ui="v5"] .dark {
+  --v5-surface-0: 13 17 23;
+  --v5-surface-1: 22 27 35;
+  --v5-surface-2: 30 36 46;
+  --v5-surface-3: 38 45 57;
+  --v5-sunken: 9 12 17;
+
+  --v5-fg-1: 236 239 244;
+  --v5-fg-2: 168 177 192;
+  --v5-fg-3: 143 153 170;
+  --v5-line-1: 42 49 61;
+  --v5-line-2: 112 123 142;
+  --v5-focus: 95 147 227;
+
+  --v5-brand: 95 147 227;
+  --v5-brand-fg: 148 187 244;
+  --v5-on-brand: 13 17 23;
+  --v5-brand-soft: 22 38 64;
+
+  --v5-success: 56 176 121;
+  --v5-success-fg: 104 206 152;
+  --v5-on-success: 13 17 23;
+  --v5-success-soft: 17 44 32;
+
+  --v5-warning: 226 160 72;
+  --v5-warning-fg: 240 186 112;
+  --v5-on-warning: 13 17 23;
+  --v5-warning-soft: 50 36 16;
+
+  --v5-danger: 239 112 104;
+  --v5-danger-fg: 248 144 136;
+  --v5-on-danger: 13 17 23;
+  --v5-danger-soft: 56 22 24;
+
+  --v5-info: 74 186 214;
+  --v5-info-fg: 118 206 230;
+  --v5-on-info: 13 17 23;
+  --v5-info-soft: 15 41 51;
+
+  --v5-neutral: 123 132 150;
+  --v5-neutral-fg: 168 177 192;
+  --v5-on-neutral: 13 17 23;
+  --v5-neutral-soft: 34 40 50;
+
+  --v5-scrim: 0 0 0;
+
+  --v5-shadow-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --v5-shadow-2: 0 2px 4px -2px rgb(0 0 0 / 0.5), 0 8px 20px -6px rgb(0 0 0 / 0.55);
+  --v5-shadow-3: 0 24px 56px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+
+/*
+ * Derived tokens. Re-declared on every element that sets a theme, because a custom property that
+ * points at another one is resolved where it is declared: declaring these once on <html> would
+ * freeze the light values into a dark preview below it.
+ */
+[data-ui="v5"],
+[data-ui="v5"] .v5-light,
+[data-ui="v5"] .dark {
+  /* Lanes (v4.3 meaning, see features/plan/laneMeta.ts): Do it now = danger, Must know = brand,
+     Medium = warning (the trail's amber), Low = neutral grey. */
+  --v5-lane-now: var(--v5-danger);
+  --v5-lane-now-fg: var(--v5-danger-fg);
+  --v5-lane-now-soft: var(--v5-danger-soft);
+  --v5-on-lane-now: var(--v5-on-danger);
+  --v5-lane-must: var(--v5-brand);
+  --v5-lane-must-fg: var(--v5-brand-fg);
+  --v5-lane-must-soft: var(--v5-brand-soft);
+  --v5-on-lane-must: var(--v5-on-brand);
+  --v5-lane-medium: var(--v5-warning);
+  --v5-lane-medium-fg: var(--v5-warning-fg);
+  --v5-lane-medium-soft: var(--v5-warning-soft);
+  --v5-on-lane-medium: var(--v5-on-warning);
+  --v5-lane-low: var(--v5-neutral);
+  --v5-lane-low-fg: var(--v5-neutral-fg);
+  --v5-lane-low-soft: var(--v5-neutral-soft);
+  --v5-on-lane-low: var(--v5-on-neutral);
+
+  /* The old semantic names, pointed at v5 values inside the scope only, so a reused old
+     component (the admin DataTable, a Radix popover) picks up the v5 look. */
+  --background: var(--v5-surface-0);
+  --foreground: var(--v5-fg-1);
+  --surface: var(--v5-surface-1);
+  --surface-sunken: var(--v5-sunken);
+  --border: var(--v5-line-1);
+  --input: var(--v5-line-2);
+  --muted-foreground: var(--v5-fg-2);
+  --primary: var(--v5-brand);
+  --primary-strong: var(--v5-brand-fg);
+  --primary-foreground: var(--v5-on-brand);
+  --ring: var(--v5-focus);
+  /* Old @theme aliases are resolved once on :root; re-declare them here so a reused old component
+     follows a nested light/dark pane too. */
+  --color-background: rgb(var(--v5-surface-0));
+  --color-foreground: rgb(var(--v5-fg-1));
+  --color-surface: rgb(var(--v5-surface-1));
+  --color-surface-sunken: rgb(var(--v5-sunken));
+  --color-card: rgb(var(--v5-surface-1));
+  --color-card-foreground: rgb(var(--v5-fg-1));
+  --color-muted: rgb(var(--v5-sunken));
+  --color-muted-foreground: rgb(var(--v5-fg-2));
+  --color-secondary: rgb(var(--v5-sunken));
+  --color-secondary-foreground: rgb(var(--v5-fg-1));
+  --color-accent: rgb(var(--v5-sunken));
+  --color-accent-foreground: rgb(var(--v5-fg-1));
+  --color-border: rgb(var(--v5-line-1));
+  --color-input: rgb(var(--v5-line-2));
+  --color-ring: rgb(var(--v5-focus));
+  --color-primary: rgb(var(--v5-brand));
+  --color-primary-strong: rgb(var(--v5-brand-fg));
+  --color-primary-foreground: rgb(var(--v5-on-brand));
+  --color-success: rgb(var(--v5-success));
+  --color-success-strong: rgb(var(--v5-success-fg));
+  --color-success-foreground: rgb(var(--v5-on-success));
+  --color-warning: rgb(var(--v5-warning));
+  --color-warning-strong: rgb(var(--v5-warning-fg));
+  --color-warning-foreground: rgb(var(--v5-on-warning));
+
+  color: rgb(var(--v5-fg-1));
+}
+
+/* Fonts, spacing, radius and motion do not change with the theme. */
+[data-ui="v5"] {
+  /* Sora stays the display face (loaded globally for the old UI already). */
+  --font-sans: "Geist Variable", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --v5-font-display: Sora, ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion. Keep in step with motion.ts (motion.test.ts compares them). */
+  --v5-dur-1: 120ms;
+  --v5-dur-2: 200ms;
+  --v5-dur-3: 320ms;
+  --v5-dur-4: 500ms;
+  --v5-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --v5-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --v5-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --v5-ease-emphasis: cubic-bezier(0.3, 1.3, 0.5, 1);
+
+  --v5-radius-control: 0.5rem;
+  --v5-radius-card: 0.75rem;
+  --v5-radius-sheet: 1rem;
+}
+
+/* Density. Comfortable is the default; `data-density="compact"` on any ancestor tightens it.
+   Compact controls stay at 32px, above the 24px WCAG 2.2 target minimum. */
+[data-ui="v5"],
+[data-ui="v5"] [data-density="comfortable"] {
+  --v5-control-h: 2.5rem;
+  --v5-row-h: 3rem;
+  --v5-card-pad: 1.25rem;
+  --v5-gap: 1rem;
+}
+[data-ui="v5"][data-density="compact"],
+[data-ui="v5"] [data-density="compact"] {
+  --v5-control-h: 2rem;
+  --v5-row-h: 2.25rem;
+  --v5-card-pad: 0.75rem;
+  --v5-gap: 0.625rem;
+}
+
+[data-ui="v5"] body {
+  background-color: rgb(var(--v5-surface-0));
+  color: rgb(var(--v5-fg-1));
+  font-feature-settings: normal;
+}
+
+[data-ui="v5"] :focus-visible {
+  outline: 2px solid rgb(var(--v5-focus));
+  outline-offset: 2px;
+}
+
+/* The learner can force reduced motion in Me → Settings even when the OS does not ask for it. */
+[data-ui="v5"][data-motion="reduce"] *,
+[data-ui="v5"][data-motion="reduce"] *::before,
+[data-ui="v5"][data-motion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+@keyframes v5-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.v5-skeleton {
+  background-color: rgb(var(--v5-sunken));
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(var(--v5-surface-1) / 0.55) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: v5-shimmer 1.6s var(--v5-ease-in-out) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .v5-skeleton {
+    animation: none;
+  }
+}
+
+/* Article typography for ReadingView. Plain CSS so long-form content does not need classes. */
+.v5-article {
+  max-width: 68ch;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: rgb(var(--v5-fg-1));
+}
+.v5-article > * + * {
+  margin-top: 1em;
+}
+.v5-article h2,
+.v5-article h3 {
+  font-family: var(--v5-font-display);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2em;
+}
+.v5-article h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+.v5-article h3 {
+  font-size: 1.25rem;
+}
+.v5-article a {
+  color: rgb(var(--v5-brand-fg));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.v5-article ul,
+.v5-article ol {
+  padding-left: 1.25em;
+}
+.v5-article ul {
+  list-style: disc;
+}
+.v5-article ol {
+  list-style: decimal;
+}
+.v5-article li + li {
+  margin-top: 0.35em;
+}
+.v5-article code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: rgb(var(--v5-sunken));
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+}
+.v5-article pre {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: rgb(var(--editor));
+  color: rgb(var(--editor-foreground));
+  border-radius: var(--v5-radius-card);
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+.v5-article pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+.v5-article blockquote {
+  border-left: 3px solid rgb(var(--v5-line-2));
+  padding-left: 1em;
+  color: rgb(var(--v5-fg-2));
+}
+
+/* Overlay motion. Radix keeps a closing element mounted until its animation ends, so the exit
+   keyframes run too. Reduced motion flattens them (media query above, data-motion="reduce"). */
+@keyframes v5-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes v5-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes v5-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+@keyframes v5-pop-out {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+@keyframes v5-from-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes v5-to-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes v5-from-bottom {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes v5-to-bottom {
+  to {
+    transform: translateY(100%);
+  }
+}
+.v5-scrim[data-state="open"] {
+  animation: v5-fade-in var(--v5-dur-2) var(--v5-ease-out);
+}
+.v5-scrim[data-state="closed"] {
+  animation: v5-fade-out var(--v5-dur-1) var(--v5-ease-in);
+}
+.v5-dialog[data-state="open"] {
+  animation: v5-pop-in var(--v5-dur-2) var(--v5-ease-out);
+}
+.v5-dialog[data-state="closed"] {
+  animation: v5-pop-out var(--v5-dur-1) var(--v5-ease-in);
+}
+.v5-sheet-right[data-state="open"] {
+  animation: v5-from-right var(--v5-dur-3) var(--v5-ease-out);
+}
+.v5-sheet-right[data-state="closed"] {
+  animation: v5-to-right var(--v5-dur-2) var(--v5-ease-in);
+}
+.v5-sheet-bottom[data-state="open"] {
+  animation: v5-from-bottom var(--v5-dur-3) var(--v5-ease-out);
+}
+.v5-sheet-bottom[data-state="closed"] {
+  animation: v5-to-bottom var(--v5-dur-2) var(--v5-ease-in);
+}
+@media (prefers-reduced-motion: reduce) {
+  .v5-scrim,
+  .v5-dialog,
+  .v5-sheet-right,
+  .v5-sheet-bottom {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Theme-specific images (the logo): render both, show the one that matches the nearest theme. */
+[data-ui="v5"] .v5-only-dark {
+  display: none;
+}
+[data-ui="v5"].dark .v5-only-dark,
+[data-ui="v5"] .dark .v5-only-dark {
+  display: revert;
+}
+[data-ui="v5"].dark .v5-only-light,
+[data-ui="v5"] .dark .v5-only-light {
+  display: none;
+}
+[data-ui="v5"] .v5-light .v5-only-light {
+  display: revert;
+}
+[data-ui="v5"] .v5-light .v5-only-dark {
+  display: none;
+}

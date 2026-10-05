@@ -6,16 +6,16 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [x] v4.4 finished: Phase 7 tests, RESULTS.md, tag `v4.4.0` (deploy = Needs Abhishek)
 - [x] Checkpoint tag `pre-v5`
 - [x] 0.1 Research (extend the brief's table; verified links; library status, licences, alternatives) → `RESEARCH.md`
-- [ ] 0.2 Baseline: screenshots + click counts of the current UI (learner open → inside next step; admin onboard+send; approve review)
-- [ ] 0.3 `ui_v5` feature flag (per user + global) and the v5 route shell, old UI untouched
+- [x] 0.2 Baseline: screenshots + click counts of the current UI (learner open → inside next step; admin onboard+send; approve review)
+- [x] 0.3 `ui_v5` feature flag (per user + global) and the v5 route shell, old UI untouched
 
 ## Phase 1: Design system v2 and `/design`
-- [ ] 1.1 Tokens: brand 50–950, semantic, lanes, surfaces (light/dark), Sora + body + mono fonts, type scale, spacing, radius, shadows, motion, density
-- [ ] 1.2 Libraries installed and lazy-loaded per the research
-- [ ] 1.3 Components (shell, nav, cards, tiles, progress, trail, lane chip, skill meter, streak, XP, states, toasts, dialogs, sheets, palette, table, status line, lesson parts, tutor panel, flashcard, certificate preview)
-- [ ] 1.4 `/design` living style guide (admins only)
-- [ ] 1.5 Performance budgets enforced (size-limit, Lighthouse CI config)
-- [ ] 1.6 Gates + commit `feat(v5-p1)`
+- [x] 1.1 Tokens: brand 50–950, semantic, lanes, surfaces (light/dark), Sora + body + mono fonts, type scale, spacing, radius, shadows, motion, density
+- [x] 1.2 Libraries installed and lazy-loaded per the research
+- [x] 1.3 Components (shell, nav, cards, tiles, progress, trail, lane chip, skill meter, streak, XP, states, toasts, dialogs, sheets, palette, table, status line, lesson parts, tutor panel, flashcard, certificate preview)
+- [x] 1.4 `/design` living style guide (admins only)
+- [x] 1.5 Performance budgets enforced (size-limit, Lighthouse CI config)
+- [x] 1.6 Gates + commit `feat(v5-p1)`
 
 ## Phase 2: Learner home "Today" (`/learn`)
 - [ ] 2.1 Hero Continue (exact step + video position), this week mini trail, goal ring, weekly streak with freezes
@@ -76,3 +76,4 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md` and researc
 - [ ] 9.6 RESULTS.md + chat summary; tag `v5.0.0`
 
 ## Needs Abhishek
+- Lighthouse CI is configured (`npm run lhci`, `lighthouserc.cjs`) but needs a running server and a staff login (`LHCI_BASE_URL`, `LHCI_USERNAME`, `LHCI_PASSWORD`); it runs in Phase 9 locally.
