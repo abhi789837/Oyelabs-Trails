@@ -41,7 +41,7 @@ Resume from the first unticked item. Plan: `docs/v4.2/PLAN.md`. Decisions: `docs
 ## Phase 6: Tests, deploy, report
 - [x] 6.1 Tests (handbook end-to-end, decision table ≥30, simulations, role-play caps, schema, ≥150 terms, defaults, path, PM assessment)
 - [x] 6.2 Playwright e2e
-- [ ] 6.3 Deploy (Abhishek runs the one command) + smoke — Needs Abhishek
+- [x] 6.3 Deploy (done: live site runs v4.3, which includes v4.2) + smoke
 - [x] 6.4 RESULTS.md + chat summary
 - [x] 6.5 Tag v4.2.0
 

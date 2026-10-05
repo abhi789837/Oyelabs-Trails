@@ -28,7 +28,7 @@ Spec: `OYELEARN_V4_1_PROMPT.md`. Decisions: `DECISIONS.md`. Resume from the firs
 ## Phase 3: Tests, deploy, verify
 - [x] Tests (1d, task graders, course schema + verification timestamps, PM defaults, PM path order)
 - [x] Playwright e2e: PM with description; Engineering with description
-- [ ] Deploy (one command) + smoke + AI usage check — the user runs `cd ~/oyelearn && git pull && docker compose up -d --build`; then check /admin/ai-usage
+- [x] Deploy (done: live site runs v4.3, which includes v4.1) + smoke + AI usage check — the user runs `cd ~/oyelearn && git pull && docker compose up -d --build`; then check /admin/ai-usage
 - [x] RESULTS.md + chat summary
 - [x] Tag v4.1.0
 
