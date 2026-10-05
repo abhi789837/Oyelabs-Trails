@@ -204,7 +204,8 @@ export function phraseCandidates(cat: RulesCatalog, phrase: string, currentTrack
   }
   for (const s of cat.skills) {
     const names = [s.name, ...s.aliases].map((n) => padded(n).trim()).filter((n) => n.length >= 3 || /[+#]/.test(n));
-    const hit = names.filter((n) => hay.includes(` ${n} `)).sort((x, y) => y.length - x.length)[0];
+    // A plural in the phrase still finds the singular name ("proposals" → the alias "proposal").
+    const hit = names.filter((n) => hay.includes(` ${n} `) || (/[a-z]$/.test(n) && !n.endsWith("s") && hay.includes(` ${n}s `))).sort((x, y) => y.length - x.length)[0];
     const exact = hit != null;
     const score = hit != null ? span(hit) : wordOverlap(phrase, [s.name, ...s.aliases].join(" "));
     if (score > 0) out.push({ option: { label: s.name, skillIds: [s.id] }, statement: `Get better at ${s.name}`, score, exact });
@@ -219,11 +220,18 @@ export function phraseCandidates(cat: RulesCatalog, phrase: string, currentTrack
   return out.sort((a, b) => Number(b.exact) - Number(a.exact) || b.score - a.score || (a.option.bundleId ? -1 : 0) - (b.option.bundleId ? -1 : 0));
 }
 
-/** The admin's options for a phrase: the 1-2 best candidates, then "Leave it out". */
+/**
+ * The admin's options for a phrase: the 2 best candidates, then "Leave it out". Strong matches
+ * (a third of the words or more) come first; weaker near matches only fill the gap, so the admin
+ * still gets 2–3 choices for a phrase the catalog barely knows.
+ */
 export function unsureFor(cat: RulesCatalog, phrase: string, currentTrackId: string | null, extra: UnsureOption[] = []): Unsure {
   const seen = new Set<string>();
   const options: UnsureOption[] = [];
-  for (const option of [...extra, ...phraseCandidates(cat, phrase, currentTrackId).filter((c) => c.score >= 0.34).map((c) => c.option)]) {
+  const candidates = phraseCandidates(cat, phrase, currentTrackId);
+  const strong = candidates.filter((c) => c.score >= 0.34);
+  const near = candidates.filter((c) => c.score < 0.34);
+  for (const option of [...extra, ...strong.map((c) => c.option), ...near.map((c) => c.option)]) {
     const key = option.bundleId ?? option.caseId ?? option.skillIds.join("+");
     if (seen.has(key) || options.length >= 2) continue;
     seen.add(key);

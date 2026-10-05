@@ -437,3 +437,73 @@ page's status line, hand-marking spoken answers, plain errors.
   code only under "Show details". Used in quick onboarding, the onboard page, SetupForm, Setup tab,
   Path tab, the plan card's preview, ListenAndMark, the generated-courses page and research settings;
   the next-action bar's toasts use `plainError().message`.
+
+## Phase 7
+
+Tests and the end-to-end check (7.1–7.2).
+
+- **Bug: the bulk e2e's third row was blocked, not a wrong label.** "Sales lead who should write
+  proposals" (BD) was one phrase: `descriptionPhrases` did not split on "who", so the role was lost
+  and the whole line became an Unsure, which (rightly, by P6's rule) kept the row out of "Looks good
+  — send the tests (3)". Fixes: `who` is a clause separator (shared/intents.ts); skill names/aliases
+  match a plural in the text ("proposals" → alias "proposal") in the rules' `matchPhrases` and in
+  `phraseCandidates`. Result: current role "Sales lead" + "write proposals" → Proposals & SOWs.
+- **Bug: an ambiguous alias silently picked one skill.** "… and also handle the zorblax pipeline"
+  was read as Node streams at Most important. "pipeline" is an alias of Node streams and MongoDB
+  aggregation pipeline, and the rules' `matchPhrases` kept whichever came first. Fixes, in the intent
+  rules' direct skill match (server/src/goals/rules.ts):
+  - a tie goes to the candidate the words point at more strongly (written as is beats a folded
+    plural; the skill's own name beats an alias), else to neither ("weak on Excel" → Excel for PMs,
+    not Spreadsheets for PMs, as in v4.3; "weak on pipelines" → CI/CD);
+  - a named skill counts only when its words are at least half of the phrase's meaningful words, so
+    "handle the zorblax pipeline" (1 of 3) is not read as pipelines alone.
+  The coverage check then asks: "We weren't sure what you meant by 'handle the zorblax pipeline'".
+  Its only option is "Leave it out": P1's threshold drops candidates under 1/3 overlap.
+  A first version dropped every tie and made "weak on Excel" a question; v43-clicks caught it.
+- **New unit tests:** 'who' split (shared/intents.test.ts); the bulk line and the plural alias, the
+  tied alias incl. Excel and pipelines (server/src/goals/intents.test.ts); default retention 29 days kept / 31 days deleted
+  (server/src/routes/speech.test.ts). The brief's list was otherwise already covered: intent
+  coverage (shared + server intents tests), scoring (shared/scoring.test.ts,
+  server/src/assessment/scoring.test.ts), speak incl. retention (speech.test.ts), auto-publish
+  (builder/autoCourse.test.ts incl. the exact "We added N new course(s) …" notice), copy guide
+  (src/features/admin/copyGuide.test.ts). Unit tests: 1,975 (was 1,971).
+- **v43-worked-example:** goals from the line are one row per phrase since P1 ("weak on Git",
+  "doing backend" = the 9-skill full-stack group, "AI-driven work" = the AI group). The script now
+  opens "Change something" as a counted adjustment, adjusts those rows (+ the GitHub workflow skill
+  goal), finds the free-text goal by its text, and asks for ≥ 3 of the 5 worked-example backend
+  skills on the sheet (a question per goal is the v4.4 promise; eng-paas-deploy was not asked and
+  counts as 0, still on the path). Clicks: default 2; adjustments 5; free-text goal 3.
+- **v44-reference-case.ts (port 8804).** Notes on honesty:
+  - Camera calibration can't pass with a fake camera, so consent/start go through the API with
+    the learner's session (as v43); microphone permission is sent as granted.
+  - Fake mic: a 16 kHz SAPI WAV via `--use-file-for-fake-audio-capture`.
+  - Auto courses: the superadmin empties `ss-teamwork`'s course list (a real catalog edit) so one
+    skill has no course. The card lists it under new courses; the path shows it "being made",
+    `waiting_setup`, with the plain "web search isn't connected" line and next action
+    `courses-waiting`. Publishing can't happen in e2e (no web search; the mock AI has no
+    course_plan/course_write fixtures), so publish + the notice text are asserted by
+    autoCourse.test.ts (real job, stubbed search/AI), not here.
+  - Copy scan: visible text + aria-labels of /admin/onboard (plan card; also "assessment"/"intent"
+    there), the learner page's assessment and path tabs, /admin/reviews. Skipped as data, not copy:
+    mono text (ids), pre-wrapped blocks (questions, answers, transcripts), form fields. 0 hits.
+- **Reference case facts (mock AI):** current role "Frontend engineer · about 1 year"; want 1
+  "Become a full-stack developer" (Most important), want 2 "Get better at soft skills for engineers"
+  (Important, includes ss-spoken-english). Test checks: Frontend basics used every day | The first
+  steps of backend work | Spoken English (2 short recordings), work emails and how they handle
+  everyday team situations | JavaScript fundamentals and Promises & async/await. Test mix (25):
+  mcq 7, coding 4, scenario 4, write 4, rank 3, speak 2, spot 1. Clicks after typing: 2. Verdicts:
+  5 Full marks / 20 Not yet, all 0/1; the good email in its own words got Full marks; the
+  recording showed a transcript and English level B1. First 8 path items: eng-js-execution-context
+  (JavaScript Core), eng-http, eng-node-runtime, eng-express, eng-rest-api-design (×2 modules),
+  eng-sql, eng-auth-sessions-jwt; all 7 full-stack steps in learning order; 7 soft skills on the
+  path (spoken English is not: both spoken answers got Full marks). Review: 1 admin click; the
+  learner's notification reads "Your answer now has full marks".
+- **Real Whisper (Task C):** model downloaded into a throwaway volume, the image run with
+  `-p 127.0.0.1:18080:8080`, the e2e run with `STT_BASE_URL`: the SAPI recording was transcribed
+  for real ("Hi team, quick update. Yesterday I finished the login page…"), evaluation finished 4 s
+  after hand-in (2 s with the mock). Container stopped and volume removed afterwards.
+- **v42-pm-processes** once aborted on a `networkidle` wait for a page that frames teamgantt.com
+  (third-party frame errors); it passed on rerun. Not changed.
+
+### Phase 7 follow-up (main session)
+- **Unsure options are always 2 plus "Leave it out" when the catalog has any near match.** Strong matches (≥ 1/3 of the phrase's words) come first; weaker near matches fill the gap. "handle the zorblax pipeline" now offers Node streams, MongoDB aggregation pipeline, Leave it out. A phrase with no overlap at all still offers only "Leave it out" (there is nothing honest to suggest).

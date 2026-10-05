@@ -1,7 +1,7 @@
 import { matchBundles, type SkillBundle } from "../../../shared/bundles";
 import { normaliseSkillText } from "../../../shared/catalog";
 import { asOutcome, type GoalInput, type GoalInterpretation, type SuggestedGoal } from "../../../shared/goals";
-import { descriptionPhrases, intentsToGoals, normaliseDescription, type DescriptionPhrase, type Intent } from "../../../shared/intents";
+import { descriptionPhrases, intentsToGoals, normaliseDescription, phraseWords, type DescriptionPhrase, type Intent } from "../../../shared/intents";
 import { EXPERIENCE_LABELS, experienceBandFromYears, levelFromExperience, type ExperienceBand } from "../../../shared/setup";
 
 /**
@@ -101,30 +101,55 @@ interface Match {
   id: string;
   start: number;
   length: number;
+  /** How strongly the words point at this candidate: 2 = written as is (not a folded plural), +1 = in its own name. */
+  rank: number;
 }
 
-/** Longest-first, non-overlapping matches of any of each candidate's phrases in `text`. */
-function matchPhrases(text: string, candidates: readonly { id: string; phrases: readonly string[] }[]): string[] {
+/**
+ * Longest-first, non-overlapping matches of any of each candidate's phrases in `text`.
+ *
+ * With `dropTies`, words that match two candidates go to the one they point at more strongly:
+ * written as is beats a folded plural ("pipelines" is CI/CD's alias, not MongoDB aggregation
+ * pipeline's name in the plural), then the candidate's own name beats an alias ("excel": Excel for
+ * PMs, not Spreadsheets for PMs). When nothing separates them, neither is picked: the words stay
+ * claimed and the caller asks instead.
+ * `matched` collects the words that were matched.
+ */
+function matchPhrases(
+  text: string,
+  candidates: readonly { id: string; phrases: readonly string[] }[],
+  options: { dropTies?: boolean; matched?: string[] } = {},
+): string[] {
   const hay = padded(text);
   const found: Match[] = [];
   for (const c of candidates) {
+    const name = c.phrases[0] ? padded(c.phrases[0]) : "";
     for (const phrase of c.phrases) {
       const p = normaliseSkillText(phrase);
       if (p.length < 2 || (p.length < 3 && !/[+#]/.test(p))) continue;
-      let at = hay.indexOf(` ${p} `);
-      while (at >= 0) {
-        found.push({ id: c.id, start: at + 1, length: p.length });
-        at = hay.indexOf(` ${p} `, at + 1);
+      // A plural in the text matches the singular phrase ("proposals" → "proposal").
+      for (const form of /[a-z]$/.test(p) && !p.endsWith("s") ? [p, `${p}s`] : [p]) {
+        let at = hay.indexOf(` ${form} `);
+        while (at >= 0) {
+          found.push({ id: c.id, start: at + 1, length: form.length, rank: (form === p ? 2 : 0) + (name.includes(` ${p} `) ? 1 : 0) });
+          at = hay.indexOf(` ${form} `, at + 1);
+        }
       }
     }
   }
-  found.sort((a, b) => b.length - a.length || a.start - b.start);
+  found.sort((a, b) => b.length - a.length || b.rank - a.rank || a.start - b.start);
   const taken: [number, number][] = [];
   const ids: { id: string; start: number }[] = [];
   for (const m of found) {
     const end = m.start + m.length;
     if (taken.some(([s, e]) => m.start < e && end > s)) continue;
     taken.push([m.start, end]);
+    if (options.dropTies) {
+      const tied = found.filter((o) => o.id !== m.id && o.start === m.start && o.length === m.length);
+      // `m` sorts first; it wins only when it points at the words more strongly than every other.
+      if (tied.some((o) => o.rank >= m.rank)) continue;
+    }
+    options.matched?.push(hay.slice(m.start, end));
     if (!ids.some((x) => x.id === m.id)) ids.push({ id: m.id, start: m.start });
   }
   return ids.sort((a, b) => a.start - b.start).map((x) => x.id);
@@ -367,7 +392,13 @@ export function rulesIntents(cat: RulesCatalog, description: string): RulesInten
       add({ phrase: p.text, type: "case", statement: kase.statement, skillIds: kase.skillIds, caseId: kase.id, targetLevel: kase.level, slider });
       continue;
     }
-    const direct = matchPhrases(p.text, skillPhrases(cat)).filter((id) => !used.has(id));
+    // A named skill counts only when its words are at least half of what the phrase says: "handle
+    // the zorblax pipeline" is not about pipelines alone, so it is asked about instead.
+    const matchedWords: string[] = [];
+    const named = matchPhrases(p.text, skillPhrases(cat), { dropTies: true, matched: matchedWords });
+    const said = phraseWords(p.text);
+    const known = new Set(phraseWords(matchedWords.join(" ")));
+    const direct = said.length > 0 && said.filter((w) => known.has(w)).length / said.length < 0.5 ? [] : named.filter((id) => !used.has(id));
     if (direct.length) {
       direct.forEach((id) => used.add(id));
       add({

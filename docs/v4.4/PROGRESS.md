@@ -49,8 +49,8 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md`, research i
 - [x] 6.5 Checkpoint + commit `feat(v4.4-p6)`
 
 ## Phase 7: Tests, deploy, report
-- [ ] 7.1 Unit and integration tests (the brief's list)
-- [ ] 7.2 Reference-case e2e `scripts/e2e/v44-reference-case.ts`
+- [x] 7.1 Unit and integration tests (the brief's list)
+- [x] 7.2 Reference-case e2e `scripts/e2e/v44-reference-case.ts`
 - [ ] 7.3 Deploy (Whisper container, backup) + smoke — Abhishek runs it
 - [ ] 7.4 RESULTS.md + chat summary
 - [ ] 7.5 Tag v4.4.0

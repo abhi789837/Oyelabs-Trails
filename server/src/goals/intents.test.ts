@@ -225,6 +225,43 @@ describe("nothing is dropped silently", () => {
     expect(checked.intents.map((i) => i.id)).toEqual(["i1", "i2", "i3", "i4"]);
   });
 
+  test("a role and a want joined by 'who' are read separately; a plural finds the singular alias (v4.4 P7)", async () => {
+    await setUp();
+    // Found by the bulk e2e: the whole line was one phrase, so the role was lost and the row was
+    // blocked on a question about all of it.
+    const s = await suggest("Sales lead who should write proposals", "bd");
+    expect(s.unsure).toEqual([]);
+    expect(s.intents.map((i) => [i.type, i.phrase])).toEqual([
+      ["current_role", "Sales lead"],
+      ["improve_area", "write proposals"],
+    ]);
+    expect(s.intents[1]!.skillIds).toContain("bd-proposals-sows");
+    // Without the AI the rules read it the same way; alone, "write proposals" is mapped by code.
+    await ctx.close();
+    await setUp({ noAi: true });
+    expect((await suggest("Sales lead who should write proposals", "bd")).unsure).toEqual([]);
+    const alone = await suggest("write proposals", "bd");
+    expect(alone.unsure).toEqual([]);
+    expect(alone.intents[0]).toMatchObject({ phrase: "write proposals", autoMapped: true, skillIds: ["bd-proposals-sows"] });
+  });
+
+  test("words that name two skills equally are asked about, not given to one of them (v4.4 P7)", async () => {
+    await setUp();
+    // "pipeline" is an alias of both Node streams and MongoDB aggregation; the rules used to pick
+    // the first, so "zorblax" was silently read as Node streams at Most important.
+    const description = `${REFERENCE} and also handle the zorblax pipeline`;
+    const s = await suggest(description);
+    expect(s.intents.map((i) => i.type)).toEqual(["current_role", "move_role", "improve_area"]);
+    expect(s.unsure.map((u) => u.phrase)).toEqual(["handle the zorblax pipeline"]);
+    expect(s.goals.some((g) => g.skillIds.includes("eng-node-streams"))).toBe(false);
+    // A word written as an alias beats the same word as a folded plural of another skill's name.
+    expect((await suggest("weak on pipelines")).intents[0]).toMatchObject({ phrase: "weak on pipelines", skillIds: ["eng-ci-cd"] });
+    // A skill whose own name holds the word beats one that has it only as an alias.
+    const pm = await suggest("New PM from client services, weak on Excel and client calls", "pm");
+    expect(pm.unsure).toEqual([]);
+    expect(pm.intents.find((i) => i.phrase === "weak on Excel")?.skillIds).toEqual(["pm-excel-for-pms"]);
+  });
+
   test("a PM learner can have soft skills; an area is never a learner's department", async () => {
     await setUp({ noAi: true });
     const s = await suggest("project manager, 3 years, improve the soft skills", "pm");

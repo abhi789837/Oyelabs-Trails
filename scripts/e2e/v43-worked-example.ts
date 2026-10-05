@@ -5,11 +5,12 @@
  *   npx tsx scripts/e2e/v43-worked-example.ts
  *
  * 1. Quick onboarding: the superadmin types a name and one line ("Frontend dev, 2 yrs React, weak on
- *    Git, we want him doing backend + AI-driven work"), presses Suggest and Save & assign. The default
+ *    Git, we want him doing backend + AI-driven work"), presses Suggest and "Looks good — send the test". The default
  *    path is counted and must be ≤ 3 clicks after typing. Before saving, the goals are brought to the
  *    worked example (Git Critical, Backend High, AI-driven development Medium) in the goal box; those
- *    adjustment clicks are counted and reported separately, because the mock Suggest proposes a
- *    slightly different set (Git Critical, Node and AI goals at High).
+ *    adjustment clicks ("Change something" opens the editor in v4.4) are counted and reported
+ *    separately, because the mock Suggest proposes a slightly different set (v4.4: one row per phrase,
+ *    "weak on Git" Critical, "doing backend" and "AI-driven work" High).
  * 2. A free-text goal ("should be able to fix production bugs on our Laravel projects without help")
  *    is typed into the goal box and its interpretation chip is checked before it is added.
  * 3. The learner takes the assessment through the real UI. MCQs are answered against the key (read
@@ -89,6 +90,8 @@ const EXPECTED_ORDER = [
   "eng-ai-context-files",
   "eng-ai-reusable-skills",
 ];
+/** v4.4: the goal rows Suggest makes from the line, named by the phrase they quote. */
+const ROW = { git: "weak on Git", backend: "doing backend", ai: "AI-driven work" } as const;
 const SLIDER_LABEL: Record<number, string> = { 1: "Optional", 2: "Low", 3: "Medium", 4: "High", 5: "Critical" };
 
 // ---------------------------------------------------------------------------
@@ -292,55 +295,44 @@ async function onboard(admin: Page, c: Checks): Promise<{ userId: string; userna
   await admin.goto(`${BASE}/admin/onboard`, { waitUntil: "networkidle" });
   await admin.getByRole("radiogroup", { name: "Department" }).waitFor({ timeout: 20_000 });
 
-  // ---- The default path: type, Suggest, Save & assign. ----
+  // ---- The default path: type, Suggest, Looks good — send the test. ----
   const defaults = new ClickCounter();
+  const adjust = new ClickCounter();
   step("type the name and the one line, press Suggest");
   await admin.getByLabel("Full name").fill("Arjun Mehta");
   await admin.getByLabel("Describe them in one line").fill(LINE);
   await defaults.click(admin.getByRole("button", { name: "Suggest", exact: true }), "Suggest");
-  await admin.getByRole("region", { name: /^Here's the plan/ }).waitFor({ timeout: 30_000 });
-  // v4.4 P6: the editor sits behind "Change something"; this script inspects it (not a default-path click).
-  await admin.getByRole("button", { name: "Change something" }).click();
+  const card = admin.getByRole("region", { name: /^Here's the plan/ });
+  await card.waitFor({ timeout: 30_000 });
+  c.fact(`plan card: ${((await card.innerText()) ?? "").replace(/\s+/g, " ").slice(0, 400)}`);
+  // v4.4 P6: the goal editor sits behind "Change something"; opening it is an adjustment click.
+  await adjust.click(admin.getByRole("button", { name: "Change something" }), "Change something");
   await admin.getByRole("region", { name: "Change the plan" }).waitFor({ timeout: 10_000 });
-  await goalSlider(admin, NAMES["eng-git"]).waitFor({ timeout: 15_000 });
+  // v4.4 P1: goals from the description are one row per thing said, named by its exact phrase and
+  // holding its skills (a skill group for "doing backend" and "AI-driven work").
+  await goalSlider(admin, ROW.git).waitFor({ timeout: 15_000 });
   const suggested: string[] = [];
-  for (const [id, name] of Object.entries(NAMES)) {
+  for (const name of [...Object.values(ROW), ...Object.values(NAMES)]) {
     const v = await sliderOf(admin, name);
-    if (v) suggested.push(`${id}=${v}`);
+    if (v) suggested.push(`"${name}"=${v}`);
   }
   c.fact(`Suggest proposed: ${suggested.join(", ")}`);
-  c.ok((await sliderOf(admin, NAMES["eng-git"])) === "Critical", "Suggest puts Git fundamentals at Critical");
+  c.ok((await sliderOf(admin, ROW.git)) === "Critical", `Suggest puts "${ROW.git}" (Git fundamentals) at Critical`);
   await shot(admin, "01-suggested");
 
   // ---- Adjustments to the worked example (counted separately). ----
   step("bring the goals to the worked example: Git Critical, Backend High, AI-driven Medium");
-  const adjust = new ClickCounter();
-  // Not part of the worked example.
-  for (const extra of ["eng-node-streams"]) {
-    if (await sliderOf(admin, NAMES[extra])) await adjust.click(admin.getByRole("button", { name: `Remove ${NAMES[extra]}`, exact: true }), `remove ${NAMES[extra]}`);
-  }
-  // Git: fundamentals and the PR workflow, both Critical.
+  // Git: fundamentals (the "weak on Git" row) and the PR workflow, both Critical.
+  if ((await sliderOf(admin, ROW.git)) !== "Critical") await setSlider(admin, adjust, ROW.git, 5);
   if (!(await sliderOf(admin, NAMES["eng-github-flow"]))) await addSkillGoal(admin, adjust, NAMES["eng-github-flow"], "GitHub pull request");
   if ((await sliderOf(admin, NAMES["eng-github-flow"])) !== "Critical") await setSlider(admin, adjust, NAMES["eng-github-flow"], 5);
-  // Backend: Node → Express → SQL → auth → deploy, all High.
-  const searches: Record<string, string> = { "eng-node-runtime": "Node.js runtime", "eng-express": "Express.js", "eng-sql": "SQL fundamentals", "eng-auth-sessions-jwt": "Authentication: sessions", "eng-paas-deploy": "Deploying to Vercel" };
-  for (const id of BACKEND) {
-    if (!(await sliderOf(admin, NAMES[id]))) await addSkillGoal(admin, adjust, NAMES[id], searches[id]);
-    if ((await sliderOf(admin, NAMES[id])) !== "High") await setSlider(admin, adjust, NAMES[id], 4);
-  }
-  // AI-driven development: prompting → context files → reusable workflows, all Medium.
-  for (const id of AI) {
-    if (!(await sliderOf(admin, NAMES[id]))) {
-      const chip = admin.getByRole("list", { name: "Suggested goals" }).getByRole("button", { name: new RegExp(`^${NAMES[id].replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`) });
-      if (await chip.count()) await adjust.click(chip.first(), `+ ${NAMES[id]} (suggested)`);
-      else await addSkillGoal(admin, adjust, NAMES[id], NAMES[id].split(" ")[0]);
-      await goalSlider(admin, NAMES[id]).waitFor({ timeout: 5_000 });
-    }
-    if ((await sliderOf(admin, NAMES[id])) !== "Medium") await setSlider(admin, adjust, NAMES[id], 3);
-  }
-  for (const id of GIT) c.ok((await sliderOf(admin, NAMES[id])) === "Critical", `${NAMES[id]} is Critical in the goal box`);
-  for (const id of BACKEND) c.ok((await sliderOf(admin, NAMES[id])) === "High", `${NAMES[id]} is High in the goal box`);
-  for (const id of AI) c.ok((await sliderOf(admin, NAMES[id])) === "Medium", `${NAMES[id]} is Medium in the goal box`);
+  // Backend: the full-stack group (Node → Express → SQL → auth → deploy and its joins), High.
+  if ((await sliderOf(admin, ROW.backend)) !== "High") await setSlider(admin, adjust, ROW.backend, 4);
+  // AI-driven development: the AI group (prompting → context files → reusable workflows …), Medium.
+  if ((await sliderOf(admin, ROW.ai)) !== "Medium") await setSlider(admin, adjust, ROW.ai, 3);
+  c.ok((await sliderOf(admin, ROW.git)) === "Critical" && (await sliderOf(admin, NAMES["eng-github-flow"])) === "Critical", "Git rows are Critical in the goal box");
+  c.ok((await sliderOf(admin, ROW.backend)) === "High", `"${ROW.backend}" is High in the goal box`);
+  c.ok((await sliderOf(admin, ROW.ai)) === "Medium", `"${ROW.ai}" is Medium in the goal box`);
   await shot(admin, "02-worked-example-goals");
 
   // ---- 2. A free-text goal (counted separately). ----
@@ -360,7 +352,7 @@ async function onboard(admin: Page, c: Checks): Promise<{ userId: string; userna
   await textRow.waitFor({ timeout: 5_000 });
   c.ok(/Laravel/i.test((await textRow.textContent()) ?? ""), "the added goal row shows its interpretation (Laravel)");
 
-  // ---- Save & assign: the default path's last click. ----
+  // ---- Looks good — send the test: the default path's last click. ----
   await defaults.click(admin.getByRole("button", { name: "Looks good — send the test" }), "Looks good — send the test");
   const notice = admin.getByRole("status").filter({ hasText: "Account created for Arjun Mehta" });
   await notice.waitFor({ timeout: 30_000 });
@@ -382,7 +374,8 @@ async function onboard(admin: Page, c: Checks): Promise<{ userId: string; userna
   c.ok(GIT.every((id) => sliderFor(id) === 5), `saved: Git goals Critical (${GIT.map(sliderFor).join(",")})`);
   c.ok(BACKEND.every((id) => sliderFor(id) === 4), `saved: Backend goals High (${BACKEND.map(sliderFor).join(",")})`);
   c.ok(AI.every((id) => sliderFor(id) === 3), `saved: AI-driven goals Medium (${AI.map(sliderFor).join(",")})`);
-  const textGoal = setup.goals.find((g) => g.type === "text");
+  // v4.4: the rows read from the line are text goals too; the free-text goal is the one quoting it.
+  const textGoal = setup.goals.find((g) => g.type === "text" && g.originalText === FREE_TEXT);
   c.ok(textGoal && textGoal.skillIds.some((id) => id.startsWith("eng-laravel")), `saved: the free-text goal reads as ${textGoal?.skillIds.join(", ")} at ${textGoal?.targetLevel}/5, outcome "${textGoal?.outcome}"`);
   c.ok(textGoal && /^Can fix production bugs/.test(textGoal.outcome), `the free-text outcome reads naturally ("${textGoal?.outcome}")`);
   c.fact(`saved goals: ${setup.goals.map((g) => `${g.type}:${g.skillIds.join("+")}@${g.slider}`).join(" | ")}`);
@@ -509,7 +502,13 @@ async function takeAssessment(browser: Browser, admin: Page, who: { userId: stri
   const asked = new Map<string, number>();
   for (const i of before.items) asked.set(i.skillId, (asked.get(i.skillId) ?? 0) + 1);
   c.fact(`sheet: ${[...asked].map(([id, n]) => `${id}×${n}`).join(", ")}`);
-  c.ok(GIT.concat(BACKEND).every((id) => asked.has(id)), "the sheet covers every Critical/High goal skill");
+  // v4.4: "doing backend" is one goal holding the 9-skill full-stack group, so the sheet promises a
+  // question per goal (intent), not per skill; skills it leaves out count as 0 (D4) on the path.
+  c.ok(GIT.every((id) => asked.has(id)), "the sheet asks about both Critical Git skills");
+  const backendAsked = BACKEND.filter((id) => asked.has(id));
+  c.ok(backendAsked.length >= 3, `the sheet asks about the High backend goal (${backendAsked.length}/${BACKEND.length} of the worked example's backend skills)`);
+  const notAsked = BACKEND.filter((id) => !asked.has(id));
+  if (notAsked.length) c.note(`backend skills not asked (unmeasured = 0, still on the path): ${notAsked.join(", ")}`);
   c.ok(AI.some((id) => asked.has(id)), "the sheet asks about the AI-driven goals");
 
   const learnerCtx = await browser.newContext({ viewport: { width: 1440, height: 900 }, permissions: ["camera", "microphone"] });

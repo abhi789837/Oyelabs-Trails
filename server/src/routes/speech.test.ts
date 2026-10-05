@@ -189,6 +189,23 @@ describe("speech recordings", () => {
     }
   });
 
+  it("by default keeps audio for 30 days: 29 days old is kept, 31 days old is deleted", async () => {
+    const { assessmentId, itemId } = seedAssessment(ctx, learner.id);
+    const { recordingId } = (await upload(learner.session, { assessmentId, itemId })).json();
+    await ctx.drainJobs();
+    expect(getAudioRetentionDays(ctx.db)).toBe(30);
+    const file = audioFilePath(ctx.env, getRecording(ctx.db, recordingId)!.encPath);
+
+    ctx.db.update(schema.audioRecordings).set({ createdAt: now() - 29 * 86_400_000 }).where(eq(schema.audioRecordings.id, recordingId)).run();
+    expect(runAudioRetention(ctx.db, ctx.env).rowsMarked).toBe(0);
+    expect(fs.existsSync(file)).toBe(true);
+
+    ctx.db.update(schema.audioRecordings).set({ createdAt: now() - 31 * 86_400_000 }).where(eq(schema.audioRecordings.id, recordingId)).run();
+    expect(runAudioRetention(ctx.db, ctx.env)).toMatchObject({ filesDeleted: 1, rowsMarked: 1 });
+    expect(fs.existsSync(file)).toBe(false);
+    expect(getRecording(ctx.db, recordingId)!.transcript).toBe(MOCK_TRANSCRIPT);
+  });
+
   it("deletes audio after the retention period and keeps the transcript", async () => {
     const { assessmentId, itemId } = seedAssessment(ctx, learner.id);
     const { recordingId } = (await upload(learner.session, { assessmentId, itemId })).json();

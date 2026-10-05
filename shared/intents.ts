@@ -183,12 +183,13 @@ export interface DescriptionPhrase {
 
 /**
  * Splits the description into its meaningful phrases: clauses on `,` `;` `.` `and also` `also`
- * `and` `but` `plus` `+` `&` `while`, each with leading filler removed. A clause with no content
+ * `and` `but` `plus` `+` `&` `while` `who`, each with leading filler removed. A clause with no content
  * word left ("and he should") is not a phrase.
  */
 export function descriptionPhrases(description: string): DescriptionPhrase[] {
   const d = normaliseDescription(description);
-  const separators = /[,;\n]|\.(?=\s|$)|\s\+\s|\s&\s|\band also\b|\balso\b|\band\b|\bbut\b|\bplus\b|\bwhile\b/gi;
+  // "who" starts a new clause: "Sales lead who should write proposals" is a role, then a want.
+  const separators = /[,;\n]|\.(?=\s|$)|\s\+\s|\s&\s|\band also\b|\balso\b|\band\b|\bbut\b|\bplus\b|\bwhile\b|\bwho\b/gi;
   const out: DescriptionPhrase[] = [];
   let from = 0;
   const push = (start: number, end: number) => {

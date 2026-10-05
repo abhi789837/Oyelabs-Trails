@@ -36,6 +36,12 @@ describe("descriptionPhrases", () => {
   test("a clause with only filler is not a phrase", () => {
     expect(descriptionPhrases("and he should, also").map((p) => p.text)).toEqual([]);
   });
+
+  test("'who' starts a new clause: the role, then what they should do (v4.4 P7)", () => {
+    const phrases = descriptionPhrases("Sales lead who should write proposals");
+    expect(phrases.map((p) => p.text)).toEqual(["Sales lead", "write proposals"]);
+    expect(phrases[1]!.clause).toBe("should write proposals");
+  });
 });
 
 describe("groundPhrase", () => {
