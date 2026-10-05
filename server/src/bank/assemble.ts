@@ -1,4 +1,5 @@
 import type { BankItem } from "../../../shared/bank";
+import { MAX_SPEAK_SLOTS } from "../../../shared/personalise";
 import type { AssessmentMix, MixGroup } from "../../../shared/setup";
 
 /**
@@ -91,12 +92,20 @@ export function assemble(input: AssembleInput): Assembled {
     return (input.seen.has(item.id) ? 100 : 0) + (band < 0 ? 50 : band) + jitter.get(item.id)!;
   };
 
+  // v4.4: at most MAX_SPEAK_SLOTS spoken answers on one sheet.
+  let speakTaken = 0;
+  const isSpeak = (item: BankItem) => (item.task as { kind?: string } | null)?.kind === "speak";
   const take = (skillId: string | null, type: BankItem["type"], count: number): BankItem[] => {
     if (count <= 0) return [];
-    const candidates = eligible
-      .filter((item) => !used.has(item.id) && item.type === type && (skillId == null || item.skillId === skillId))
-      .sort((a, b) => rank(a) - rank(b))
-      .slice(0, count);
+    const candidates: BankItem[] = [];
+    for (const item of eligible.filter((i) => !used.has(i.id) && i.type === type && (skillId == null || i.skillId === skillId)).sort((a, b) => rank(a) - rank(b))) {
+      if (candidates.length >= count) break;
+      if (isSpeak(item)) {
+        if (speakTaken >= MAX_SPEAK_SLOTS) continue;
+        speakTaken += 1;
+      }
+      candidates.push(item);
+    }
     for (const item of candidates) used.add(item.id);
     return candidates;
   };

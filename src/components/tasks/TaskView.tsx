@@ -1,4 +1,4 @@
-import type { LearnerTask, Task, TaskResponse } from "@shared/tasks";
+import { speakAnswered, type LearnerTask, type Task, type TaskResponse } from "@shared/tasks";
 
 import { RichText } from "@/components/content/RichText";
 
@@ -11,6 +11,7 @@ import { RankTask } from "./RankTask";
 import { RoleplayTask } from "./RoleplayTask";
 import { ScenarioTask } from "./ScenarioTask";
 import { SimTask } from "./SimTask";
+import { SpeakTask } from "./SpeakTask";
 import { SpotTask } from "./SpotTask";
 import { TerminalTask } from "./TerminalTask";
 import type { ResponseOf, TaskOf } from "./types";
@@ -63,6 +64,9 @@ export function TaskView({ task, value, onChange, readOnly, answer, idPrefix, hi
       {task.kind === "terminal" && (
         <TerminalTask task={task} value={same("terminal")} onChange={onChange} answer={review("terminal")} {...common} />
       )}
+      {task.kind === "speak" && (
+        <SpeakTask task={task} value={same("speak")} onChange={onChange} answer={review("speak")} assessment={assessment} {...common} />
+      )}
     </div>
   );
 }
@@ -95,5 +99,7 @@ export function hasTaskAnswer(value: TaskResponse | null): boolean {
       return value.transcript.some((turn) => turn.role === "pm" && turn.text.trim() !== "");
     case "terminal":
       return value.commands.length > 0 || Object.keys(value.files).length > 0;
+    case "speak":
+      return speakAnswered(value);
   }
 }

@@ -36,5 +36,9 @@ export function fixtureRoleplayScore(userJson: string) {
   return {
     dimensions: (input.rubric ?? []).map((r) => ({ index: r.index, score: Math.max(0, r.points - 1), evidence: quote })),
     tips: ["Ask what is driving the client's request before you talk about process.", "Close with an owner and a date for the next step."],
+    // v4.4: a PM who said anything substantial did the job (one point short on each line is style).
+    met: first.trim().split(/\s+/).length >= 6,
+    reason: first.trim() ? "You gave the client a clear answer and a next step." : "You did not reply to the client.",
+    tip: "Close with an owner and a date for the next step.",
   };
 }

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "ss-client-team-communication-t3-1",
+    "departmentId": "soft",
+    "skillId": "ss-client-team-communication",
+    "type": "task",
+    "difficulty": 3,
+    "estMinutes": 2.5,
+    "prompt": "Explain a two-day delay to the client on a short call.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "speak",
+      "title": "Explain a two-day delay to the client",
+      "prompt": "The release planned for Wednesday will be two days late because testing found a payment bug. Tell the client on a short call.",
+      "audience": "client",
+      "prepSec": 20,
+      "maxSec": 90,
+      "lookFor": [
+        "Says the new date first",
+        "One plain reason, without blaming anyone",
+        "What you are doing about it",
+        "What the client can expect next, and when"
+      ],
+      "writtenFallback": "Write what you would say to the client about the two-day delay.",
+      "explanation": "Lead with the new date, give one plain reason, say what you are doing, and promise the next update with a time. No jargon, no blame."
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  },
+  {
+    "id": "ss-client-team-communication-t2-2",
+    "departmentId": "soft",
+    "skillId": "ss-client-team-communication",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.3,
+    "prompt": "A client asks for a new feature on a call, just before release. Make the calls.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "scenario",
+      "prompt": "On a weekly call, the client asks for a new export feature to be added before Friday's release.",
+      "steps": [
+        {
+          "id": "s1",
+          "question": "What do you say first?",
+          "options": [
+            "Thank them, note it, and say you will check the impact and reply by tomorrow",
+            "Agree to add it, so the client stays happy",
+            "Say no, because the scope is fixed"
+          ],
+          "correctIndex": 0,
+          "explanation": "Capture it and promise a clear answer, without committing yet."
+        },
+        {
+          "id": "s2",
+          "question": "The team says it needs three days. What do you tell the client?",
+          "options": [
+            "Give the two options: release Friday without it, or Monday with it",
+            "Add it quietly and release late",
+            "Tell them the team is too slow"
+          ],
+          "correctIndex": 0,
+          "explanation": "Give the client the choice with the facts."
+        },
+        {
+          "id": "s3",
+          "question": "After the call, what goes out?",
+          "options": [
+            "A short email with the options and the decision you need, by when",
+            "Nothing until they ask again",
+            "A long technical document about the export"
+          ],
+          "correctIndex": 0,
+          "explanation": "Put the decision in writing, with a date."
+        }
+      ]
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  }
+]

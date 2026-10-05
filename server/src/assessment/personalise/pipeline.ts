@@ -5,6 +5,7 @@ import { bankItemSchema, codingSpecSchema, mcqSpecSchema, type BankItem } from "
 import type { Catalog } from "../../../../shared/catalog";
 import { outcomeTaskVariant, REUSE_RATIO, type Personalisation, type Slot, type Understanding } from "../../../../shared/personalise";
 import { estimateSeconds, sizeProblems, SIZE_LIMITS, SLOT_FLOOR_SEC, TOTAL_MAX_SEC, TOTAL_MIN_SEC, type TimingConstants } from "../../../../shared/timing";
+import { isSoftSkillId } from "../../../../shared/softSkills";
 import { checkTask, taskSchema } from "../../../../shared/tasks";
 import { getOutcome } from "../../goals/outcomes";
 import { AiBudgetPausedError } from "../../ai/router";
@@ -103,7 +104,8 @@ Hard limits (items over them are rejected):
   mode "function" (javascript/typescript/python/php): tests {"args":[...],"expected":...} plain JSON;
   mode "program" (java/dart): tests {"stdin":"...","expected":"stdout"}; class Main for java;
   mode "sql" (SQLite): tests {"setup":"CREATE...;INSERT...;","expected":[{row}]}, always ORDER BY;
-  1-2 sampleTests, 3-5 hiddenTests incl. an edge case; no randomness, clocks or network;
+  1-2 sampleTests, 3-5 hiddenTests incl. an edge case; mark every test "tier": "core" (the job itself;
+  at least 2 core) or "edge" (a boundary case: empty input, zero, huge values); no randomness, clocks or network;
 - mcq: exactly 4 options of <= ${SIZE_LIMITS.optionWords} words, one correctIndex, an explanation; never refer to positions.
   "mcq-code": put <= ${SIZE_LIMITS.snippetLines} lines in snippet + snippetLanguage. If the question asks what the code
   prints, set answerIsOutput true and make the correct option exactly the printed output with lines
@@ -128,6 +130,16 @@ Hard limits (items over them are rejected):
   "checks" [{fieldId,expected}] only on number/select/text fields with one right answer (e.g. the RAG
   status or a total); 1-3 rubric {label,points 1-3,description}; "sampleAnswer" for every field that
   passes every check); write may set variant "email" or "explain";
+  speak (an answer said out loud): {kind "speak", title <= 10 words, prompt <= 60 words (the
+  situation and what to say), audience team|client|manager|interview, prepSec 20, maxSec 60-90,
+  lookFor 2-5 short lines a good answer covers, writtenFallback (the same task in writing: "Write
+  what you would say ..."), explanation (what a strong answer does)}; it must be sayable in 60-90 s;
+- soft-skill slots ("soft": true) are everyday work situations in the person's context: speak
+  (a stand-up update, explaining a 2-day delay to a client, introducing yourself and your last
+  project), write (an email or chat message; "rewrite for tone": put the blunt or messy original in
+  "sourceText" (<= 60 words) and ask for a rewrite that keeps the facts; "explain simply": variant
+  "explain"), rank ("put this update in order": 4-6 parts of an update or a day's tasks) or scenario
+  (2-3 steps of a feedback, teamwork or listening situation). Plain words, no trick answers;
 - tags: 1-4 short context tags (e.g. "international clients", "Laravel").
 Handbook grounding (slots with "grounded": true, and any item about a process or a term):
 - "handbook" is the company's process handbook: ground truth. Use its definitions, Oyelabs meanings
@@ -176,6 +188,7 @@ function slotLine(slot: Slot, language: string | null, grounding?: SlotGrounding
     seconds: slot.targetSec,
     ...(slot.type === "coding" || slot.subtype === "mcq-code" ? { language: language ?? "javascript" } : {}),
     hint: slot.hint || undefined,
+    ...(isSoftSkillId(slot.skillId) ? { soft: true } : {}),
     ...(grounding?.grounded ? { grounded: true } : {}),
     ...(grounding?.refs.length ? { refs: grounding.refs } : {}),
     ...(grounding?.roleplay ? grounding.roleplay : {}),
@@ -400,7 +413,8 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
   const slots = understanding.slots;
   const outcomes = outcomeModels(db, slots);
   const seen = seenItemIds(db, userId);
-  const pool = activeItems(db, setup.departmentId).filter((i) => !seen.has(i.id) && !setup.skip.some((s) => s.skillId === i.skillId));
+  // v4.4: soft-skill items live under the "soft" area department; the sheet's own skills bring them in.
+  const pool = activeItems(db, setup.departmentId, slots.map((s) => s.skillId)).filter((i) => !seen.has(i.id) && !setup.skip.some((s) => s.skillId === i.skillId));
   const used = new Set<string>();
 
   const report: PersonaliseReport = {
@@ -616,6 +630,6 @@ export async function generateOne(deps: PersonaliseDeps, assessmentId: string, u
 export function swapCandidate(db: Db, userId: string, departmentId: string, slot: Slot, exclude: ReadonlySet<string>): BankItem | null {
   const constants = timingConstants(db);
   const seen = seenItemIds(db, userId);
-  const pool = activeItems(db, departmentId).filter((i) => !seen.has(i.id) && !exclude.has(i.id));
+  const pool = activeItems(db, departmentId, [slot.skillId]).filter((i) => !seen.has(i.id) && !exclude.has(i.id));
   return bestFor(slot, pool, new Set(), [], constants) ?? bestFor(slot, pool, new Set(), [], constants, true);
 }

@@ -18,6 +18,7 @@ import { evaluateHandler } from "../assessment/evaluateJob";
 import { verifyCredentialHandler } from "../jobs/handlers/verifyCredential";
 import { JobWorker } from "../jobs/worker";
 import { transcribeHandler } from "../speech/transcribeJob";
+import { rescoreHandler } from "../assessment/rescoreJob";
 import type { SttClient } from "../speech/stt";
 import { bankFillHandler } from "../bank/fillJob";
 import { bankRevalidateHandler } from "../handbook/revalidate";
@@ -113,6 +114,7 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}, 
       "topic_tests.recheck": topicTestRecheckHandler({ db, ai, content, sandbox, batchDelayMs: 0 }),
       "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox }),
       "speech.transcribe": transcribeHandler({ db, env, stt: options.stt }),
+      "scoring.rescore": rescoreHandler({ db }),
     },
   });
 

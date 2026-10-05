@@ -186,6 +186,11 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
               <p className="rounded-md border bg-surface-sunken/50 px-3 py-2 whitespace-pre-wrap">{task.context}</p>
             </Block>
           )}
+          {task.sourceText && (
+            <Block title="Message to rewrite">
+              <p className="rounded-md border bg-surface-sunken/50 px-3 py-2 whitespace-pre-wrap">{task.sourceText}</p>
+            </Block>
+          )}
           <p className="text-muted-foreground">Word limit: {task.wordLimit}</p>
           <Block title="Rubric">
             <ul className="space-y-1.5">
@@ -319,6 +324,29 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
       return <InteractivePreview task={task} showAnswer={showAnswer} />;
     case "terminal":
       return <TerminalPreview task={task} showAnswer={showAnswer} />;
+    case "speak":
+      return (
+        <>
+          <p className="font-mono text-xs text-muted-foreground">
+            {task.title} · to {task.audience} · {task.prepSec} s to get ready, up to {task.maxSec} s speaking
+          </p>
+          <Block title="A good answer covers">
+            <ul className="list-disc space-y-1 pl-5">
+              {task.lookFor.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </Block>
+          <Block title="If there is no microphone">
+            <p>{task.writtenFallback}</p>
+          </Block>
+          {showAnswer && (
+            <Block title="What a strong answer does">
+              <p>{task.explanation}</p>
+            </Block>
+          )}
+        </>
+      );
     case "roleplay":
       return (
         <>

@@ -270,7 +270,11 @@ describe("role-play in an assessment", () => {
     await c.drainJobs();
 
     const graded = c.db.select().from(schema.assessmentItems).where(and(eq(schema.assessmentItems.id, target.id), eq(schema.assessmentItems.assessmentId, assessmentId))).get()!;
-    expect(graded.score).toBe(0.5);
+    // v4.4: the scorer's 0..1 is kept as the raw score; this scripted scorer gives no `met`, so the
+    // rubric share decides (0.5 < 0.7): Not yet, stored as 0 in full-marks mode.
+    expect(graded.rawScore).toBe(0.5);
+    expect(graded.verdict).toBe("not_yet");
+    expect(graded.score).toBe(0);
     expect(graded.aiFeedback).toBe("Lead with the new date.");
     const stored = graded.response as { task: { sessionId: string; transcript: { text: string }[] } };
     expect(stored.task.sessionId).toBe(session.id);

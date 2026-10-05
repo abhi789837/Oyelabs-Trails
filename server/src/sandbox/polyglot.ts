@@ -2,6 +2,7 @@ import { transform } from "sucrase";
 
 import type { CodingMode, CodeTest, FunctionTest, ProgramTest, SqlTest } from "../../../shared/bank";
 import type { SandboxLanguage } from "../../../shared/catalog";
+import { looselyEqual } from "../../../shared/scoring";
 import { deepEqual, formatValue } from "./compare";
 import type { CodeSandbox, SandboxRunResult, SandboxTestOutcome } from "./types";
 
@@ -262,12 +263,15 @@ export async function runTests(deps: PolyglotDeps, request: CodeRunRequest): Pro
       const actual = (response.run?.stdout ?? "").replace(/\r\n/g, "\n").trimEnd();
       const expected = test.expected.replace(/\r\n/g, "\n").trimEnd();
       const stderr = (response.run?.stderr ?? "").trim();
+      // v4.4: printed output matches leniently: whitespace runs, trailing spaces and number formats
+      // ("2.50" vs "2.5", "1,000" vs "1000") never make a right answer wrong.
+      const passed = looselyEqual(actual, expected);
       outcomes.push({
         index,
-        passed: actual === expected,
+        passed,
         expected,
         actual,
-        ...(actual !== expected && stderr ? { error: stderr.split("\n").slice(-3).join("\n") } : {}),
+        ...(!passed && stderr ? { error: stderr.split("\n").slice(-3).join("\n") } : {}),
       });
     }
     return finish(outcomes, tests.length, { timedOut });

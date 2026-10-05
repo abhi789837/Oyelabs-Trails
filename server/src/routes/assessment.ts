@@ -67,6 +67,11 @@ interface StoredConfig {
   writtenSection?: boolean;
 }
 
+/** v4: how many questions, and (v4.4) whether any is a Speak question, which needs the microphone. */
+function v4SheetFacts(items: { key: unknown }[]): { itemCount: number; hasSpeak: boolean } {
+  return { itemCount: items.length, hasSpeak: items.some((i) => (i.key as { task?: { kind?: string } } | null)?.task?.kind === "speak") };
+}
+
 export async function registerAssessmentRoutes(app: FastifyInstance): Promise<void> {
   /** The assessment this learner should be taking, if any. Drives the §12 funnel. */
   app.get("/api/me/assessment", async (request): Promise<{ assessment: MyAssessment | null }> => {
@@ -104,7 +109,7 @@ export async function registerAssessmentRoutes(app: FastifyInstance): Promise<vo
         hardLimit: HARD_LIMIT,
         timeLimitMinutes: isV4(row) ? V4_MAX_MINUTES : (config.timeLimitMinutes ?? DEFAULT_TIME_LIMIT_MIN),
         format: isV4(row) ? "v4" : "legacy",
-        ...(isV4(row) ? { itemCount: itemsOf(app.db, row.id).length } : {}),
+        ...(isV4(row) ? v4SheetFacts(itemsOf(app.db, row.id)) : {}),
       },
     };
   });

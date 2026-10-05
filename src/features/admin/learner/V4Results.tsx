@@ -6,6 +6,7 @@ import type { ItemResponseV4, V4Result } from "@shared/assessmentV4";
 
 import { api, ApiRequestError } from "@/api/client";
 import { SkillReport } from "@/components/assessment/SkillReport";
+import { SpeakReview } from "./SpeakReview";
 import { RichText } from "@/components/content/RichText";
 import { useConfirm } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
@@ -266,8 +267,12 @@ function QuestionCard({
     }
   };
   const response: ItemResponseV4 | null = item.response ?? item.draft;
-  const score = formatItemScore(item.score, item.state);
-  const feedback = describeFeedback(item.feedback);
+  const score = formatItemScore(item.score, item.state, item.verdict);
+  const feedback = [
+    ...describeFeedback(item.feedback),
+    ...(item.verdictNote && !(item.feedback ?? "").includes(item.verdictNote) ? [item.verdictNote] : []),
+    ...(item.reviewStatus === "overridden" ? ["Full marks given after a review."] : item.reviewStatus === "requested" ? ["The learner asked for a review."] : []),
+  ];
   const tone =
     item.score === null ? "text-muted-foreground" : item.score >= 0.5 ? "text-summit-strong" : "text-destructive";
 
@@ -414,6 +419,10 @@ function Response({ item, response }: { item: V4AdminItem; response: ItemRespons
         </pre>
       </>
     );
+  }
+
+  if ("task" in response && item.type === "task" && response.task.kind === "speak") {
+    return <SpeakReview response={response.task} feedback={item.feedback} />;
   }
 
   if ("task" in response && item.type === "task") {

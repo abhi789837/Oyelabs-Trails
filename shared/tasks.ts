@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { CLASSIFICATIONS, OUTCOMES } from "./decision";
 import { evaluateSheet, functionsIn, parseRef } from "./sheet";
+import { SPEAK_AUDIENCES } from "./softSkills";
 
 /**
  * Hands-on task types for the departments that do not write code (v4 Phase 7).
@@ -15,7 +16,7 @@ import { evaluateSheet, functionsIn, parseRef } from "./sheet";
  * assessment; course practice is formative and shows them after a check.
  */
 
-export const TASK_KINDS = ["write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "terminal"] as const;
+export const TASK_KINDS = ["write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "terminal", "speak"] as const;
 export const taskKindSchema = z.enum(TASK_KINDS);
 export type TaskKind = z.infer<typeof taskKindSchema>;
 
@@ -32,6 +33,7 @@ export const TASK_KIND_LABELS: Record<TaskKind, string> = {
   form: "Fill the form",
   roleplay: "Client conversation",
   terminal: "Terminal",
+  speak: "Speak",
 };
 
 const text = (max: number) => z.string().trim().min(1).max(max);
@@ -50,6 +52,11 @@ export const writeTaskSchema = z.object({
   prompt: text(1500),
   /** Optional context the learner is responding to: a client email, a ticket, a call transcript. */
   context: z.string().max(3000).default(""),
+  /**
+   * v4.4: a message the learner rewrites ("rewrite this for the client, keep the facts"), shown
+   * above the answer box. Absent for every other write task.
+   */
+  sourceText: z.string().trim().min(1).max(1500).optional(),
   wordLimit: z.number().int().min(20).max(600),
   rubric: z.array(rubricCriterionSchema).min(2).max(6),
   /** A strong answer, for practice feedback and for calibrating the grader. */
@@ -67,6 +74,11 @@ export const rankTaskSchema = z.object({
   items: z.array(z.object({ id: text(40), label: text(240) })).min(3).max(8),
   /** Item ids, first = top. */
   correctOrder: z.array(text(40)).min(3).max(8),
+  /**
+   * v4.4: other orders that are equally right (e.g. two independent steps either way round). Each
+   * lists every item id once. Any of them gets full marks.
+   */
+  acceptOrders: z.array(z.array(text(40)).min(3).max(8)).max(6).optional(),
   explanation: z.string().max(1500).default(""),
 });
 
@@ -335,6 +347,32 @@ export const terminalTaskSchema = z.object({
   explanation: z.string().max(1500),
 });
 
+// ---------------------------------------------------------------------------
+// v4.4: Speak (docs/v4.4/PLAN.md, "Speak")
+// ---------------------------------------------------------------------------
+
+/** Seconds to get ready before the recording starts (skippable with "I'm ready"). */
+export const SPEAK_PREP_SEC = 20;
+
+/**
+ * v4.4: answer out loud: a stand-up update, explaining a delay to a client, introducing yourself.
+ * The recording is transcribed on the server and graded by a model for whether it does the job and
+ * how easily a listener follows it (never accent). `writtenFallback` is the same task in writing, for
+ * a learner with no microphone or one who said no to it.
+ */
+export const speakTaskSchema = z.object({
+  kind: z.literal("speak"),
+  title: text(120),
+  prompt: text(600),
+  audience: z.enum(SPEAK_AUDIENCES),
+  prepSec: z.literal(SPEAK_PREP_SEC),
+  maxSec: z.number().int().min(60).max(90),
+  /** What a good answer covers, 2–5 plain lines. Shown to the learner and the grader. */
+  lookFor: z.array(text(200)).min(2).max(5),
+  writtenFallback: text(1500),
+  explanation: text(1500),
+});
+
 export const taskSchema = z.discriminatedUnion("kind", [
   writeTaskSchema,
   rankTaskSchema,
@@ -348,6 +386,7 @@ export const taskSchema = z.discriminatedUnion("kind", [
   formTaskSchema,
   roleplayTaskSchema,
   terminalTaskSchema,
+  speakTaskSchema,
 ]);
 export type Task = z.infer<typeof taskSchema>;
 export type WriteTask = z.infer<typeof writeTaskSchema>;
@@ -362,6 +401,7 @@ export type CategorizeTask = z.infer<typeof categorizeTaskSchema>;
 export type FormTask = z.infer<typeof formTaskSchema>;
 export type RoleplayTask = z.infer<typeof roleplayTaskSchema>;
 export type TerminalTask = z.infer<typeof terminalTaskSchema>;
+export type SpeakTask = z.infer<typeof speakTaskSchema>;
 
 // ---------------------------------------------------------------------------
 // What the learner sees in an assessment (answers removed)
@@ -383,7 +423,9 @@ export type LearnerTask =
    * The terminal keeps its steps: the fake shell answers each command in the browser, so it needs
    * the patterns and outputs. What the file checks look for, and the explanation, stay hidden.
    */
-  | (Omit<TerminalTask, "fileChecks" | "explanation"> & { fileChecks: { path: string }[] });
+  | (Omit<TerminalTask, "fileChecks" | "explanation"> & { fileChecks: { path: string }[] })
+  /** v4.4: everything but the explanation; `lookFor` is shown like a write task's criteria. */
+  | Omit<SpeakTask, "explanation">;
 
 /** Deterministic shuffle so a rank task never starts in its answer order. */
 function rotate<T>(items: readonly T[], seed: number): T[] {
@@ -395,7 +437,7 @@ function rotate<T>(items: readonly T[], seed: number): T[] {
 export function toLearnerTask(task: Task, seed = 1): LearnerTask {
   switch (task.kind) {
     case "write":
-      return { kind: "write", prompt: task.prompt, context: task.context, wordLimit: task.wordLimit, ...(task.variant && task.variant !== "general" ? { variant: task.variant } : {}), rubric: task.rubric.map((c) => ({ label: c.label })) };
+      return { kind: "write", prompt: task.prompt, context: task.context, ...(task.sourceText ? { sourceText: task.sourceText } : {}), wordLimit: task.wordLimit, ...(task.variant && task.variant !== "general" ? { variant: task.variant } : {}), rubric: task.rubric.map((c) => ({ label: c.label })) };
     case "rank":
       return { kind: "rank", prompt: task.prompt, items: rotate(task.items, seed) };
     case "calculate":
@@ -455,6 +497,17 @@ export function toLearnerTask(task: Task, seed = 1): LearnerTask {
         steps: task.steps,
         fileChecks: task.fileChecks.map((c) => ({ path: c.path })),
       };
+    case "speak":
+      return {
+        kind: "speak",
+        title: task.title,
+        prompt: task.prompt,
+        audience: task.audience,
+        prepSec: task.prepSec,
+        maxSec: task.maxSec,
+        lookFor: task.lookFor,
+        writtenFallback: task.writtenFallback,
+      };
   }
 }
 
@@ -485,6 +538,18 @@ export const taskResponseSchema = z.discriminatedUnion("kind", [
     /** Edited file contents by path; a file left out keeps the task's starting content. */
     files: z.record(z.string().max(120), z.string().max(4000)).default({}),
   }),
+  /**
+   * v4.4: a recording (uploaded first, to POST /api/recordings) or, with no microphone, the typed
+   * answer to `writtenFallback`. `reRecorded`: the learner used their one re-record.
+   */
+  z.object({
+    kind: z.literal("speak"),
+    recordingId: z.string().min(1).max(64).optional(),
+    durationSec: z.number().min(0).max(600).optional(),
+    fallbackText: z.string().max(4000).optional(),
+    usedFallback: z.boolean().default(false),
+    reRecorded: z.boolean().default(false),
+  }),
 ]);
 export type TaskResponse = z.infer<typeof taskResponseSchema>;
 
@@ -501,7 +566,14 @@ export interface TaskGrade {
 }
 
 /** Kinds whose final score needs a model (a rubric or a conversation). */
-export const AI_GRADED_KINDS: readonly TaskKind[] = ["write", "form", "roleplay"];
+export const AI_GRADED_KINDS: readonly TaskKind[] = ["write", "form", "roleplay", "speak"];
+
+/** v4.4: whether a Speak response holds an answer: a recording, or typed text when the mic was not used. */
+export function speakAnswered(response: Extract<TaskResponse, { kind: "speak" }> | null | undefined): boolean {
+  if (!response) return false;
+  if (response.usedFallback) return Boolean(response.fallbackText?.trim());
+  return Boolean(response.recordingId);
+}
 
 export function wordCount(value: string): number {
   return value.trim() ? value.trim().split(/\s+/).length : 0;
@@ -518,11 +590,14 @@ export function wordCount(value: string): number {
  *   which is the point: "find the issues" is not "highlight the document".
  */
 export function gradeTask(task: Task, response: TaskResponse | null): TaskGrade {
-  if (!response || response.kind !== task.kind) return { score: AI_GRADED_KINDS.includes(task.kind) && task.kind !== "form" ? null : 0, detail: ["No answer"] };
+  // A Speak item with nothing recorded or typed is simply unanswered: 0, nothing to wait for.
+  if (!response || response.kind !== task.kind) return { score: AI_GRADED_KINDS.includes(task.kind) && task.kind !== "form" && task.kind !== "speak" ? null : 0, detail: ["No answer"] };
   switch (task.kind) {
     case "write":
     case "roleplay":
       return { score: null, detail: [] };
+    case "speak":
+      return speakAnswered(response as Extract<TaskResponse, { kind: "speak" }>) ? { score: null, detail: [] } : { score: 0, detail: ["No answer"] };
     case "categorize":
       return gradeCategorize(task, (response as Extract<TaskResponse, { kind: "categorize" }>).picks);
     case "form":
@@ -533,6 +608,9 @@ export function gradeTask(task: Task, response: TaskResponse | null): TaskGrade 
     }
     case "rank": {
       const order = (response as Extract<TaskResponse, { kind: "rank" }>).order;
+      // v4.4: an equally valid order from the key is fully right.
+      const accepted = (task.acceptOrders ?? []).some((key) => key.length === order.length && key.every((id, i) => order[i] === id));
+      if (accepted) return { score: 1, detail: ["An accepted order."] };
       let points = 0;
       const detail: string[] = [];
       task.correctOrder.forEach((id, index) => {
@@ -617,6 +695,9 @@ export function checkTask(task: Task): string[] {
     const ids = task.items.map((i) => i.id);
     if (new Set(ids).size !== ids.length) problems.push("rank: duplicate item ids");
     if (task.correctOrder.length !== ids.length || !task.correctOrder.every((id) => ids.includes(id))) problems.push("rank: correctOrder must list every item once");
+    for (const alt of task.acceptOrders ?? []) {
+      if (alt.length !== ids.length || new Set(alt).size !== alt.length || !alt.every((id) => ids.includes(id))) problems.push("rank: each accepted order must list every item once");
+    }
   }
   if (task.kind === "scenario") {
     task.steps.forEach((step) => {
@@ -654,6 +735,11 @@ export function checkTask(task: Task): string[] {
   if (task.kind === "categorize") problems.push(...checkCategorize(task));
   if (task.kind === "terminal") problems.push(...checkTerminal(task));
   if (task.kind === "form") problems.push(...checkForm(task));
+  if (task.kind === "speak") {
+    const lines = task.lookFor.map((l) => l.toLowerCase());
+    if (new Set(lines).size !== lines.length) problems.push("speak: duplicate lookFor lines");
+  }
+  if (task.kind === "write" && task.sourceText && task.context && task.sourceText.trim() === task.context.trim()) problems.push("write: sourceText repeats the context");
   if (task.kind === "roleplay") {
     const labels = task.rubric.map((r) => r.label.toLowerCase());
     if (new Set(labels).size !== labels.length) problems.push("roleplay: duplicate rubric labels");

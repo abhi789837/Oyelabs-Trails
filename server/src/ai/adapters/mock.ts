@@ -5,6 +5,8 @@ import { fixtureBlueprint, fixtureCritic, fixtureExplainItems, fixtureItems } fr
 import { fixtureGeneratedItems, fixtureMcqCheck, fixturePlan } from "./mockPersonalise";
 import { fixtureGoalInterpret, fixtureOnboardSuggest } from "./mockGoals";
 import { fixtureRoleplayReply, fixtureRoleplayScore } from "./mockRoleplay";
+import { fixtureSpeakGrade } from "./mockSpeak";
+import { fixtureRubricGrade } from "./mockScoring";
 import { fixtureTopicTestAnswer, fixtureTopicTestItems, fixtureTopicTestRelevance } from "./mockTopicTests";
 
 /**
@@ -138,6 +140,8 @@ export class MockProvider implements AiProvider {
         return fixtureRoleplayReply(request.user);
       case "roleplay_score":
         return fixtureRoleplayScore(request.user);
+      case "rubric_grade":
+        return fixtureRubricGrade(request.user);
       case "onboard_suggest":
         return fixtureOnboardSuggest(request.system, request.user);
       case "goal_interpret":
@@ -148,6 +152,8 @@ export class MockProvider implements AiProvider {
         return fixtureTopicTestRelevance(request.user);
       case "topic_test_answer":
         return fixtureTopicTestAnswer(request.user);
+      case "speak_grade":
+        return fixtureSpeakGrade(request.user);
       default:
         return undefined;
     }

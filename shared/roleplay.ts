@@ -405,6 +405,10 @@ export interface RoleplayScore {
   /** 0..1 */
   pct: number;
   tips: string[];
+  /** v4.4: the scorer's met / not-yet verdict, one-line reason and tip (absent on older scores). */
+  met?: boolean;
+  reason?: string;
+  tip?: string;
 }
 
 export type PublicPersona = Omit<RoleplayPersona, "hiddenConcern">;

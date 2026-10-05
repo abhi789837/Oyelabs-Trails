@@ -218,6 +218,7 @@ export default function AssessmentPage() {
     return (
       <PreFlight
         assessmentId={assessment.id}
+        needsMicrophone={Boolean(assessment.hasSpeak)}
         busy={starting}
         error={startError}
         onCancel={() => navigate("/plan")}

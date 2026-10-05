@@ -151,6 +151,11 @@ export async function registerAdminAssessmentV4Routes(app: FastifyInstance): Pro
           bankItemId: item.bankItemId,
           response: item.response ?? null,
           score: item.score,
+          // v4.4: Full marks / Not yet, the grader's own 0..1, the note and any review.
+          rawScore: item.rawScore,
+          verdict: item.verdict ?? null,
+          verdictNote: item.verdictNote ?? null,
+          reviewStatus: item.reviewStatus ?? null,
           feedback: item.aiFeedback,
           origin: item.origin ?? null,
           activeMs: item.activeMs,

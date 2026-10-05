@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, ne } from "drizzle-orm";
 
 import { bankItemSchema, type BankItem, type BankItemRow, type BankStatus } from "../../../shared/bank";
 import type { Db } from "../db";
@@ -181,13 +181,22 @@ export function fromRow(row: Row): BankItemRow {
 }
 
 /** Every active item of a department: the assembler's whole universe. */
-export function activeItems(db: Db, departmentId: string): BankItemRow[] {
-  return db
-    .select()
-    .from(schema.questionBank)
-    .where(and(eq(schema.questionBank.departmentId, departmentId), eq(schema.questionBank.status, "active"), eq(schema.questionBank.flaggedSlow, false)))
-    .all()
-    .map(fromRow);
+/**
+ * Active items of a department. v4.4: `otherSkillIds` also brings in items of those skills from
+ * any other department, for skills a learner may use across departments (the soft-skills area).
+ */
+export function activeItems(db: Db, departmentId: string, otherSkillIds: Iterable<string> = []): BankItemRow[] {
+  const extra = [...new Set(otherSkillIds)];
+  const live = and(eq(schema.questionBank.status, "active"), eq(schema.questionBank.flaggedSlow, false));
+  const own = db.select().from(schema.questionBank).where(and(eq(schema.questionBank.departmentId, departmentId), live)).all();
+  const others = extra.length
+    ? db
+        .select()
+        .from(schema.questionBank)
+        .where(and(inArray(schema.questionBank.skillId, extra), ne(schema.questionBank.departmentId, departmentId), live))
+        .all()
+    : [];
+  return [...own, ...others].map(fromRow);
 }
 
 /** Bank items this learner has already been served, in any earlier sitting. */

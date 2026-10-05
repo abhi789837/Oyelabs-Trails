@@ -43,7 +43,7 @@ function seedAssessment(ctx: TestContext, userId: string, status: "in_progress" 
   ctx.db.insert(schema.assessments).values({ id: assessmentId, userId, status, attemptNo: ++attemptNo, createdAt: now() } as typeof schema.assessments.$inferInsert).run();
   ctx.db
     .insert(schema.assessmentItems)
-    .values({ id: itemId, assessmentId, area: "Communication", difficulty: 2, kind: "explain", topicIds: [], payload: {}, key: {} } as typeof schema.assessmentItems.$inferInsert)
+    .values({ id: itemId, assessmentId, area: "Communication", difficulty: 2, kind: "explain", topicIds: [], payload: {}, key: { type: "task", task: { kind: "speak" } } } as typeof schema.assessmentItems.$inferInsert)
     .run();
   return { assessmentId, itemId };
 }
@@ -114,7 +114,7 @@ describe("speech recordings", () => {
   });
 
   it("accepts a topic practice recording", async () => {
-    const topicId = ctx.content.orderedTopicIds[0]!;
+    const topicId = ctx.content.orderedTopicIds.find((id) => ctx.content.speakPractice(id))!;
     const res = await upload(learner.session, { topicId });
     expect(res.statusCode, res.body).toBe(201);
     expect(getRecording(ctx.db, res.json().recordingId)!.topicId).toBe(topicId);
@@ -173,7 +173,7 @@ describe("speech recordings", () => {
     try {
       const a = await adminSession(local);
       const l = await activeLearner(local, a);
-      const topicId = local.content.orderedTopicIds[0]!;
+      const topicId = local.content.orderedTopicIds.find((id) => local.content.speakPractice(id))!;
       const res = await local.app.inject({ method: "POST", url: "/api/recordings", ...as(l.session), ...multipart({ topicId }, { mime: "audio/webm", data: fakeWebm() }) });
       const { recordingId } = res.json();
       // Retries with backoff; force each retry to be due now.

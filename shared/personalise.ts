@@ -27,7 +27,7 @@ export const REUSE_RATIO: Record<Personalisation, number> = { high: 0.2, balance
 export const DESCRIPTION_MAX = 600;
 
 /** What the subtype of a hands-on slot may be. Coding for engineering; task kinds for everyone. */
-export const SLOT_SUBTYPES = ["code", "write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "terminal", "mcq-code", "mcq-text"] as const;
+export const SLOT_SUBTYPES = ["code", "write", "rank", "calculate", "scenario", "spot", "excel", "allocate", "sim", "categorize", "form", "roleplay", "terminal", "speak", "mcq-code", "mcq-text"] as const;
 export const slotSubtypeSchema = z.enum(SLOT_SUBTYPES);
 export type SlotSubtype = z.infer<typeof slotSubtypeSchema>;
 
@@ -97,10 +97,13 @@ export function enforceBlueprint(input: {
   format: "coding" | "tasks";
   /** Difficulties in the order the learner should meet them (from the assembler). */
   difficultyOrder: readonly number[];
-  defaultHandsOn: (skillId: string) => SlotSubtype;
+  /** `nth`: which of the skill's hands-on slots this is (soft skills rotate their kinds). */
+  defaultHandsOn: (skillId: string, nth?: number) => SlotSubtype;
   defaultMcq: (skillId: string) => SlotSubtype;
   /** v4.2: whether a skill may use a subtype (role-play only for meeting and client skills). */
   allowSubtype?: (skillId: string, subtype: SlotSubtype) => boolean;
+  /** v4.4: what a Speak slot becomes once MAX_SPEAK_SLOTS are used (default "write"). */
+  afterSpeakCap?: (skillId: string) => SlotSubtype;
 }): Slot[] {
   const skip = new Set(input.skip);
   const start = input.difficultyOrder[0] ?? 2;
@@ -108,6 +111,7 @@ export function enforceBlueprint(input: {
   const clamp = (d: number) => (band.has(d) ? d : Math.min(Math.max(d, Math.min(...band)), Math.max(...band)));
   const slots: Slot[] = [];
   const usable = input.proposed.filter((p) => !skip.has(p.skillId));
+  let speakSlots = 0;
 
   for (const line of shiftTowardEmphasis(input.mix.lines, usable)) {
     if (skip.has(line.skillId)) continue;
@@ -117,13 +121,19 @@ export function enforceBlueprint(input: {
     const name = input.skillNames.get(line.skillId) ?? line.skillName;
     for (let i = 0; i < line.handsOn; i += 1) {
       const p = handsOnProposals[i];
-      let subtype: SlotSubtype = p?.subtype ?? input.defaultHandsOn(line.skillId);
+      let subtype: SlotSubtype = p?.subtype ?? input.defaultHandsOn(line.skillId, i);
       // A coding department's hands-on is code unless the model chose a task kind; a task
       // department never gets a code slot.
-      if (input.format === "tasks" && subtype === "code") subtype = input.defaultHandsOn(line.skillId);
-      if (input.allowSubtype && !input.allowSubtype(line.skillId, subtype)) subtype = input.defaultHandsOn(line.skillId);
-      // A short client conversation (2-3 typed replies) gets a longer slot than other hands-on work.
-      const targetSec = subtype === "roleplay" ? ROLEPLAY_SLOT_SEC : 80;
+      if (input.format === "tasks" && subtype === "code") subtype = input.defaultHandsOn(line.skillId, i);
+      if (input.allowSubtype && !input.allowSubtype(line.skillId, subtype)) subtype = input.defaultHandsOn(line.skillId, i);
+      // v4.4: at most MAX_SPEAK_SLOTS spoken answers per assessment; the rest are written.
+      if (subtype === "speak") {
+        if (speakSlots >= MAX_SPEAK_SLOTS) subtype = input.afterSpeakCap?.(line.skillId) ?? "write";
+        else speakSlots += 1;
+      }
+      // A short client conversation (2-3 typed replies) and a spoken answer (prepare, speak, listen
+      // back) get longer slots than other hands-on work.
+      const targetSec = subtype === "roleplay" ? ROLEPLAY_SLOT_SEC : subtype === "speak" ? SPEAK_SLOT_SEC : 80;
       slots.push({ index: 0, skillId: line.skillId, skillName: name, group: line.group, type: subtype === "code" ? "coding" : "task", subtype, difficulty: clamp(p?.difficulty ?? start), targetSec, hint: p?.hint ?? "" });
     }
     for (let i = 0; i < line.mcq; i += 1) {
@@ -137,6 +147,11 @@ export function enforceBlueprint(input: {
 
 /** v4.2: a mini role-play's slot (2-3 replies of ~25 s, plus reading the brief). */
 export const ROLEPLAY_SLOT_SEC = 100;
+
+/** v4.4: a Speak item's slot: 20 s to prepare, up to 90 s speaking, a listen back. Counted as hands-on. */
+export const SPEAK_SLOT_SEC = 150;
+/** v4.4: at most this many Speak items per assessment. */
+export const MAX_SPEAK_SLOTS = 2;
 
 /** At most this many hands-on slots move toward what the description stresses. */
 export const EMPHASIS_SHIFT_MAX = 3;

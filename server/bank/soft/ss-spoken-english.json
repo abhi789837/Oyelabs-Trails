@@ -1,0 +1,63 @@
+[
+  {
+    "id": "ss-spoken-english-t2-1",
+    "departmentId": "soft",
+    "skillId": "ss-spoken-english",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2.5,
+    "prompt": "Introduce yourself to a new client team and describe your last project.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "speak",
+      "title": "Introduce yourself and your last project",
+      "prompt": "You join a call with a new client team. Introduce yourself, then describe your last project and the part you built.",
+      "audience": "client",
+      "prepSec": 20,
+      "maxSec": 90,
+      "lookFor": [
+        "Your role and experience in a sentence or two",
+        "What the last project did, for whom",
+        "What you built or owned",
+        "One result or thing you learned"
+      ],
+      "writtenFallback": "Write how you would introduce yourself and your last project to the new client team.",
+      "explanation": "A strong answer is short and in order: who you are, what the project did, your part, one result. Simple sentences are fine; being easy to follow is what counts."
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  },
+  {
+    "id": "ss-spoken-english-t1-2",
+    "departmentId": "soft",
+    "skillId": "ss-spoken-english",
+    "type": "task",
+    "difficulty": 1,
+    "estMinutes": 2.5,
+    "prompt": "Tell your lead what you worked on today, as you would at the end of the day.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "speak",
+      "title": "Tell your lead about your day",
+      "prompt": "It is the end of the day. Tell your lead what you worked on, what is left, and if you need anything from them.",
+      "audience": "manager",
+      "prepSec": 20,
+      "maxSec": 90,
+      "lookFor": [
+        "What you worked on",
+        "What is left for tomorrow",
+        "Anything you need from them"
+      ],
+      "writtenFallback": "Write what you would tell your lead about your day.",
+      "explanation": "Three short parts in order: done, left, need. Plain words are best."
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  }
+]

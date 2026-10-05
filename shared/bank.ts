@@ -31,9 +31,14 @@ export type BankStatus = z.infer<typeof bankStatusSchema>;
 export const codingModeSchema = z.enum(["function", "program", "sql"]);
 export type CodingMode = z.infer<typeof codingModeSchema>;
 
-export const functionTestSchema = z.object({ args: z.array(z.unknown()), expected: z.unknown() });
-export const programTestSchema = z.object({ stdin: z.string().max(20_000).default(""), expected: z.string().max(20_000) });
-export const sqlTestSchema = z.object({ setup: z.string().max(20_000), expected: z.array(z.record(z.string(), z.unknown())) });
+/**
+ * v4.4: `tier` says whether a test is core (the job itself; all must pass for full marks) or edge (a
+ * boundary case; a miss becomes a feedback note). Untiered tests are core.
+ */
+const tier = z.enum(["core", "edge"]).optional();
+export const functionTestSchema = z.object({ args: z.array(z.unknown()), expected: z.unknown(), tier });
+export const programTestSchema = z.object({ stdin: z.string().max(20_000).default(""), expected: z.string().max(20_000), tier });
+export const sqlTestSchema = z.object({ setup: z.string().max(20_000), expected: z.array(z.record(z.string(), z.unknown())), tier });
 
 export type FunctionTest = z.infer<typeof functionTestSchema>;
 export type ProgramTest = z.infer<typeof programTestSchema>;

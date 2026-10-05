@@ -97,6 +97,8 @@ export function toServedTopic(topic: AuthoredTopic, includeKeys: boolean): Serve
     ...(topic.quiz ? { quiz: topic.quiz.map((q) => toServedQuestion(q, includeKeys)) } : {}),
     ...(topic.codeChallenge ? { codeChallenge: toServedChallenge(topic.codeChallenge, includeKeys) } : {}),
     ...(topic.practice ? { practice: topic.practice } : {}),
+    // v4.4: the spoken practice (formative, so served whole like `practice`).
+    ...(topic.speak ? { speak: topic.speak } : {}),
     ...(topic.sop?.length ? { sopCount: topic.sop.length } : {}),
     ...(topic.interactive ? { interactive: topic.interactive } : {}),
     ...(topic.sections?.length ? { sections: topic.sections } : {}),

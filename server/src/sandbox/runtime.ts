@@ -32,6 +32,10 @@ function format(value) {
 
 function deepEqual(a, b) {
   if (a === b || (a !== a && b !== b)) return true; // NaN equals NaN here
+  // v4.4: 0.1 + 0.2 is 0.3. Relative 1e-9, the same tolerance as the other languages' compare.
+  if (typeof a === "number" && typeof b === "number" && isFinite(a) && isFinite(b)) {
+    return Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
+  }
   if (typeof a !== "object" || typeof b !== "object" || a === null || b === null) return false;
   if (Array.isArray(a) !== Array.isArray(b)) return false;
   if (a instanceof Date || b instanceof Date) {

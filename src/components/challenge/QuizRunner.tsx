@@ -13,6 +13,7 @@ import { seededOrder } from "@/lib/shuffle";
 import { cn, preferredScrollBehavior } from "@/lib/utils";
 import { useProgressStore } from "@/store/progressStore";
 import { ChallengeResult } from "./ChallengeResult";
+import { RequestReview } from "./RequestReview";
 
 type Answer = number[];
 
@@ -181,6 +182,9 @@ export function QuizRunner({ topic, questions }: { topic: ServedTopic; questions
                           Source: awaiting re-check
                         </p>
                       ) : null}
+                      {!graded.correct && graded.itemId && result?.attemptId && (
+                        <RequestReview className="mt-2" source="topic_item" refId={graded.itemId} attemptId={result.attemptId} />
+                      )}
                     </div>
                   )}
                 </fieldset>

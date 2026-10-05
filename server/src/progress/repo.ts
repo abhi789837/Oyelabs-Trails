@@ -51,6 +51,8 @@ export interface RecordAttemptInput {
   passed: boolean;
   answers?: unknown;
   code?: string | null;
+  /** v4.4: the attempt's id, when the caller needs it (a review request refers to it). */
+  id?: string;
 }
 
 /**
@@ -65,7 +67,7 @@ export function recordAttempt(db: Db, input: RecordAttemptInput): TopicProgressV
 
   db.insert(schema.topicAttempts)
     .values({
-      id: newId(),
+      id: input.id ?? newId(),
       userId: input.userId,
       topicId: input.topicId,
       kind: input.kind,

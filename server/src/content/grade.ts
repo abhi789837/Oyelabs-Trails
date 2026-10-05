@@ -5,6 +5,7 @@ import type {
   QuizQuestionResult,
 } from "../../../shared/content";
 import { QUIZ_PASS_THRESHOLD } from "../../../shared/content";
+import { verdictFor, type ScoringMode } from "../../../shared/scoring";
 import type { CodeSandbox } from "../sandbox";
 import { correctIndicesOf, visibleTestCount } from "./filter";
 import type { AuthoredCodeChallenge, AuthoredQuizQuestion } from "./store";
@@ -54,6 +55,7 @@ export async function gradeCode(
   challenge: AuthoredCodeChallenge,
   code: string,
   sandbox: CodeSandbox,
+  mode: ScoringMode = "partial",
 ): Promise<CodeAttemptResult> {
   const run = await sandbox.run({
     code,
@@ -96,15 +98,33 @@ export async function gradeCode(
 
   const passedCount = results.filter((r) => r.passed).length;
   const total = results.length;
+  const allPassed = total > 0 && passedCount === total;
+
+  // v4.4 full-marks mode: every core test must pass; a missed edge test is a note, not a fail.
+  // Partial mode keeps the old bar (every test, hidden ones included).
+  let passed = allPassed;
+  const notes: string[] = [];
+  if (mode === "full" && !run.compileError) {
+    const verdict = verdictFor({
+      kind: "code",
+      outcomes: results.map((r) => ({ passed: r.passed, tier: r.isEdgeCase ? "edge" : "core", label: r.hidden ? undefined : r.description })),
+    });
+    passed = verdict?.full ?? false;
+    if (passed) {
+      for (const r of results) {
+        if (r.isEdgeCase && !r.passed) notes.push(r.hidden ? "A hidden edge case did not pass. Check empty, very large and unusual inputs." : `Edge case not handled yet: ${r.description}.`);
+      }
+    }
+  }
 
   return {
     kind: "code",
-    score: total === 0 ? 0 : Math.round((passedCount / total) * 100),
-    // Every test, including the hidden ones. This is the only bar for a code topic.
-    passed: total > 0 && passedCount === total,
+    score: total === 0 ? 0 : passed && mode === "full" ? 100 : Math.round((passedCount / total) * 100),
+    passed,
     passedCount,
     total,
     results,
+    ...(notes.length ? { notes } : {}),
     ...(run.compileError ? { compileError: run.compileError } : {}),
     ...(run.timedOut ? { timedOut: true as const } : {}),
   };

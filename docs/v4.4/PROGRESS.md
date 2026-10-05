@@ -22,17 +22,17 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md`, research i
 
 ## Phase 3: Speak and communication items
 - [x] 3.1 Whisper container (internal, rate-limited) + transcription client + speed measured
-- [ ] 3.2 Speak item: prep 20 s, speak 60–90 s, one re-record, MediaRecorder upload, metrics, rubric → English level + pass
-- [ ] 3.3 Mic consent on the consent screen; written fallback flagged for admin; encrypted audio, admin-only, 30-day deletion job
-- [ ] 3.4 Other soft-skill item types (write, rewrite tone, explain simply, order the update, scenario); timing 2.5 min, ≤2 Speak
-- [ ] 3.5 Checkpoint + commit `feat(v4.4-p3)`
+- [x] 3.2 Speak item: prep 20 s, speak 60–90 s, one re-record, MediaRecorder upload, metrics, rubric → English level + pass
+- [x] 3.3 Mic consent on the consent screen; written fallback flagged for admin; encrypted audio, admin-only, 30-day deletion job
+- [x] 3.4 Other soft-skill item types (write, rewrite tone, explain simply, order the update, scenario); timing 2.5 min, ≤2 Speak
+- [x] 3.5 Checkpoint + commit `feat(v4.4-p3)`
 
 ## Phase 4: Full marks when the answer is good
-- [ ] 4.1 Full / Not yet model for every item kind; core vs edge tests; lenient compare; grader instructions
-- [ ] 4.2 Skill levels from the full/not-yet pattern
-- [ ] 4.3 Request review + admin override to Full (logged, feeds calibration)
-- [ ] 4.4 Re-score job (history kept, counts reported) + Advanced setting Full-or-not-yet / Partial credit
-- [ ] 4.5 Checkpoint + commit `feat(v4.4-p4)`
+- [x] 4.1 Full / Not yet model for every item kind; core vs edge tests; lenient compare; grader instructions
+- [x] 4.2 Skill levels from the full/not-yet pattern
+- [x] 4.3 Request review + admin override to Full (logged, feeds calibration)
+- [x] 4.4 Re-score job (history kept, counts reported) + Advanced setting Full-or-not-yet / Partial credit
+- [x] 4.5 Checkpoint + commit `feat(v4.4-p4)`
 
 ## Phase 5: Missing courses are created automatically
 - [ ] 5.1 Gap detection on path build → generate → review → publish to the library + assign (auto-publish ON)

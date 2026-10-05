@@ -30,6 +30,46 @@ export function isSoftSkillId(id: string): id is SoftSkillId {
   return (SOFT_SKILL_IDS as readonly string[]).includes(id);
 }
 
+// ---------------------------------------------------------------------------
+// Assessment items for soft skills (Phase 3b)
+// ---------------------------------------------------------------------------
+
+/** The hands-on kinds a soft-skill question may be. */
+export const SOFT_TASK_KINDS = ["speak", "write", "rank", "scenario"] as const;
+export type SoftTaskKind = (typeof SOFT_TASK_KINDS)[number];
+
+/**
+ * What each soft skill is tested with, in the order its hands-on questions take them: speaking
+ * skills are spoken first; writing is an email or a "rewrite this for tone"; explaining simply is
+ * written; a stand-up can also be "put the update in order" (rank); judgement skills are a scenario.
+ * The assessment caps Speak at two questions, so a third falls through to the next kind here.
+ */
+export const SOFT_SKILL_TASK_KINDS: Record<SoftSkillId, readonly SoftTaskKind[]> = {
+  "ss-spoken-english": ["speak", "write"],
+  "ss-standup-updates": ["speak", "rank", "write"],
+  "ss-presenting-demoing": ["speak", "rank"],
+  "ss-client-team-communication": ["speak", "write", "scenario"],
+  "ss-workplace-writing": ["write"],
+  "ss-explain-simply": ["write"],
+  "ss-listening-questions": ["write", "scenario"],
+  "ss-ownership-time": ["rank", "scenario"],
+  "ss-feedback": ["write", "scenario"],
+  "ss-teamwork": ["scenario", "write"],
+};
+
+/** The kind for a soft skill's `nth` hands-on question (0-based), or null for a skill that is not soft. */
+export function softTaskKindFor(skillId: string, nth = 0): SoftTaskKind | null {
+  if (!isSoftSkillId(skillId)) return null;
+  const kinds = SOFT_SKILL_TASK_KINDS[skillId];
+  return kinds[nth % kinds.length]!;
+}
+
+/** The first non-Speak kind for a soft skill (when the Speak cap is reached). */
+export function softWrittenKindFor(skillId: string): SoftTaskKind {
+  if (!isSoftSkillId(skillId)) return "write";
+  return SOFT_SKILL_TASK_KINDS[skillId].find((k) => k !== "speak") ?? "write";
+}
+
 export const ENGLISH_LEVELS = ["below A2", "A2", "B1", "B2", "C1"] as const;
 export type EnglishLevel = (typeof ENGLISH_LEVELS)[number];
 
@@ -115,6 +155,10 @@ export const ENGLISH_LEVEL_DESCRIPTORS: Record<EnglishLevel, EnglishLevelDescrip
     clarity: "Easy to understand throughout; any accent does not affect understanding.",
   },
 };
+
+/** What the Speak grader can return: it never says "below A2" (that answer is simply "not yet"). */
+export const GRADED_ENGLISH_LEVELS = ["A2", "B1", "B2", "C1"] as const;
+export type GradedEnglishLevel = (typeof GRADED_ENGLISH_LEVELS)[number];
 
 /** The one-line plain descriptor for a 0–5 Spoken English level. */
 export function englishLevelSummary(level0to5: number): string {

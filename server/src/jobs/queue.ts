@@ -134,6 +134,20 @@ export function countByStatus(db: Db) {
     .all();
 }
 
+/**
+ * v4.4: thrown by a handler that cannot run yet (an evaluation waiting for a transcription). The
+ * worker puts the job back for `delayMs` without counting an attempt; it is not a failure.
+ */
+export class JobDeferredError extends Error {
+  constructor(
+    readonly delayMs: number,
+    message = "Waiting for something else to finish first.",
+  ) {
+    super(message);
+    this.name = "JobDeferredError";
+  }
+}
+
 /** Puts a claimed job back in the queue for later without counting it as an attempt. */
 export function deferJob(db: Db, id: string, delayMs: number): void {
   db.update(schema.jobs)

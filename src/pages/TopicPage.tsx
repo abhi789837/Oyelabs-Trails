@@ -4,6 +4,7 @@ import { Link, Navigate, useParams } from "react-router-dom";
 
 import { ChallengeRunner } from "@/components/challenge/ChallengeRunner";
 import { PRACTICE_CHECKS, PracticeTask } from "@/components/tasks/PracticeTask";
+import { SpeakPracticeSection } from "@/components/tasks/SpeakPracticeSection";
 import { RichText } from "@/components/content/RichText";
 import { SopBlocks } from "@/features/curriculum/SopBlocks";
 import { HandbookCards } from "@/features/handbook/HandbookCards";
@@ -135,6 +136,20 @@ function TopicScreen({ track, module, meta }: { track: TrackMeta; module: Module
           </p>
           <div className="mt-6">
             <PracticeTask task={topic.practice} />
+          </div>
+        </section>
+      )}
+
+      {topic?.speak && (
+        <section aria-labelledby="speak-practice-heading" className="mt-14 max-w-3xl border-t pt-8">
+          <h2 id="speak-practice-heading" className="text-xl font-semibold">
+            Say it out loud
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Record your answer and get advice on how it lands. No microphone? Type it instead.
+          </p>
+          <div className="mt-6">
+            <SpeakPracticeSection topicId={topic.id} practice={topic.speak} />
           </div>
         </section>
       )}

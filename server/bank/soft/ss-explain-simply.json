@@ -1,0 +1,45 @@
+[
+  {
+    "id": "ss-explain-simply-t2-1",
+    "departmentId": "soft",
+    "skillId": "ss-explain-simply",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.2,
+    "prompt": "The client asks why the release needs a staging environment first. Explain it simply.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "variant": "explain",
+      "prompt": "Write one or two sentences the client would understand.",
+      "context": "Client: Why can't you just put it live straight away? It seems like extra work.",
+      "wordLimit": 25,
+      "rubric": [
+        {
+          "id": "correct",
+          "label": "Explains staging correctly",
+          "description": "A private copy of the app where changes are tested first.",
+          "weight": 1
+        },
+        {
+          "id": "plain",
+          "label": "Plain words, no jargon",
+          "description": "No terms like environment parity or pipeline.",
+          "weight": 1
+        },
+        {
+          "id": "why",
+          "label": "Says why it protects them",
+          "description": "Customers never see a bug that testing would have caught.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Staging is a private copy of your app where we test changes first, so your customers never see a bug we could have caught."
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  }
+]

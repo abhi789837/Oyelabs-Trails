@@ -11,6 +11,7 @@ import {
   type Understanding,
 } from "../../../../shared/personalise";
 import { planBlueprintMix, type LearnerSetup } from "../../../../shared/setup";
+import { isSoftSkillId, SOFT_SKILL_TASK_KINDS, SOFT_TASK_KINDS, softTaskKindFor, softWrittenKindFor } from "../../../../shared/softSkills";
 import type { AiService } from "../../ai/service";
 import { difficultyOrder } from "../../bank/assemble";
 import { getCatalog } from "../../catalog/repo";
@@ -41,7 +42,7 @@ Return JSON:
   clients", "Laravel", "Keka timesheets", "delayed release").
 - slots: 25 proposed questions, 18 handsOn and 7 mcq. Use only skill ids given. Put more slots on
   what the description stresses, within the priorities. subtype: for handsOn "code" (engineering)
-  or a task kind (write, rank, calculate, scenario, spot, excel, allocate, sim, categorize, form, roleplay;
+  or a task kind (write, rank, calculate, scenario, spot, excel, allocate, sim, categorize, form, roleplay, speak;
   categorize and form suit PM skills: classifying requests, gap analysis, CRs, minutes, status); for mcq "mcq-code"
   or "mcq-text". difficulty 1-5 fitting the level. hint: one short scenario line in the person's
   own context (max 20 words).
@@ -56,7 +57,14 @@ goals (async JavaScript before Node, say): ask about each, so the plan can tell 
 gap in the goal itself. "basics" are the core skills of their current role, asked at their level.
 "cases" are practical goals ("resolve a merge conflict and open a PR"): for each, propose one handsOn
 slot on one of its skillIds with subtype = the case's "kind" (e.g. "terminal" for a simulated shell),
-so the outcome itself is tested as a task, and say the case in the hint.`;
+so the outcome itself is tested as a task, and say the case in the hint.
+Soft skills (ids starting "ss-") are tested with: speak (an answer said out loud, for
+ss-spoken-english, ss-standup-updates, ss-presenting-demoing, ss-client-team-communication: a
+stand-up update, explaining a 2-day delay to a client, introducing yourself and your last project,
+a 60-second demo intro), write (an email or a chat message; "rewrite this message for tone";
+"explain this simply" for ss-explain-simply), rank ("put this update in order", a busy day's
+priorities) and scenario (feedback, teamwork, listening). At most 2 speak slots in the whole
+assessment; they take about 150 seconds each. Never give a soft skill code, spot, excel or sim.`;
 
 export interface ProfileInput {
   department: string;
@@ -110,12 +118,25 @@ export function profileFor(db: Db, userId: string, catalog?: Catalog): { setup: 
 export function subtypeDefaults(catalog: Catalog, format: "coding" | "tasks") {
   const skills = new Map(catalog.skills.map((s) => [s.id, s]));
   return {
-    handsOn: (skillId: string): SlotSubtype => {
+    handsOn: (skillId: string, nth = 0): SlotSubtype => {
+      // v4.4: soft skills rotate through the kinds that suit them (speak, write, rank, scenario).
+      const soft = softTaskKindFor(skillId, nth);
+      if (soft) return soft;
       if (format === "coding") return skills.get(skillId)?.language ? "code" : "spot";
       return "scenario";
     },
     mcq: (skillId: string): SlotSubtype => (format === "coding" && skills.get(skillId)?.language ? "mcq-code" : "mcq-text"),
   };
+}
+
+/**
+ * v4.4: a soft skill takes only the kinds that suit it (Speak only where speaking is the skill);
+ * Speak is never used for any other skill.
+ */
+export function softSubtypeAllowed(skillId: string, subtype: SlotSubtype): boolean {
+  if (!isSoftSkillId(skillId)) return subtype !== "speak";
+  if (subtype === "speak") return SOFT_SKILL_TASK_KINDS[skillId].includes("speak");
+  return (SOFT_TASK_KINDS as readonly string[]).includes(subtype);
 }
 
 /**
@@ -206,7 +227,8 @@ export async function understandSetup(
     defaultHandsOn: defaults.handsOn,
     defaultMcq: defaults.mcq,
     // A terminal task is only ever an outcome slot, which follows its case's capstone.
-    allowSubtype: (skillId, subtype) => subtype !== "terminal" && (subtype !== "roleplay" || allowsRoleplay(skillId)),
+    allowSubtype: (skillId, subtype) => subtype !== "terminal" && (subtype !== "roleplay" || allowsRoleplay(skillId)) && softSubtypeAllowed(skillId, subtype),
+    afterSpeakCap: softWrittenKindFor,
   });
   // Each Critical/High practical-case goal is tested once as a task, modelled on its capstone.
   const slots = withOutcomeSlots(enforced, blueprint.cases);

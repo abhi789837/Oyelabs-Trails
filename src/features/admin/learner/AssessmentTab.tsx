@@ -21,6 +21,7 @@ import { AdaptivePath, type AdaptiveStep } from "./AdaptivePath";
 import { describeIssued } from "../setup/issued";
 import { isV4Detail, useV4Details, V4Headline, V4Results } from "./V4Results";
 import { InfoTip } from "../catalog/InfoTip";
+import { ReviewRequestsList } from "../reviews/ReviewRequests";
 
 /** One served item, as `/api/admin/assessments/:id/answers` returns it. */
 interface AnsweredItem {
@@ -210,6 +211,13 @@ export function AssessmentTab({
         <div className="mt-4">
           <FormAlert>{error}</FormAlert>
         </div>
+      )}
+
+      {assessments.length > 0 && (
+        <details className="mt-6 rounded-md border px-4 py-3">
+          <summary className="cursor-pointer text-sm font-medium">Review requests</summary>
+          <ReviewRequestsList userId={userId} className="mt-3" />
+        </details>
       )}
 
       {assessments.length > 0 && (

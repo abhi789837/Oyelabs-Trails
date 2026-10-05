@@ -20,7 +20,7 @@ import type { AiService } from "../ai/service";
 import { EVALUATION_TIMEOUT_MS } from "../ai/types";
 import type { ContentStore } from "../content/store";
 import { schema, type Db } from "../db";
-import { enqueue, type Job } from "../jobs/queue";
+import { enqueue, JobDeferredError, type Job } from "../jobs/queue";
 import { newId, now } from "../lib/ids";
 import { notify, staffIds } from "../lib/notify";
 import { publishPlan } from "../plans/repo";
@@ -76,6 +76,8 @@ export function evaluateHandler(deps: EvaluateDeps) {
       try {
         await evaluateV4({ ...deps, sandbox: deps.sandbox, piston: deps.piston ?? null }, assessmentId);
       } catch (error) {
+        // v4.4: waiting for a spoken answer's transcript is not a failure; the worker retries later.
+        if (error instanceof JobDeferredError) throw error;
         const message = error instanceof Error ? error.message : String(error);
         db.update(schema.assessments).set({ status: "failed", terminatedReason: message.slice(0, 500) }).where(eq(schema.assessments.id, assessmentId)).run();
         throw error;

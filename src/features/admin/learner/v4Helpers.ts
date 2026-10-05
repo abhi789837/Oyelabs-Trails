@@ -20,6 +20,11 @@ export type V4AdminItem = SheetItem & {
   score: number | null;
   /** Grader notes: rubric feedback as text, or the auto-grader's detail as JSON. */
   feedback: string | null;
+  /** v4.4: "full" (Full marks) or "not_yet"; null while it waits for a grade. */
+  verdict?: "full" | "not_yet" | null;
+  verdictNote?: string | null;
+  rawScore?: number | null;
+  reviewStatus?: "requested" | "upheld" | "overridden" | null;
   answer: { correctIndex: number; explanation: string } | { task: Task } | null;
   /** v4.1: the designed time for this item, seconds (from the payload). */
   estSeconds?: number | null;
@@ -59,8 +64,13 @@ export interface V4Detail {
   items: V4AdminItem[];
 }
 
-/** "75%", "pending" for a submitted item still waiting on a grade, "not submitted" otherwise. */
-export function formatItemScore(score: number | null, state: SheetItem["state"]): string {
+/**
+ * "Full marks" / "Not yet" when the item has a verdict (v4.4), else "75%"; "pending" for a submitted
+ * item still waiting on a grade, "not submitted" otherwise.
+ */
+export function formatItemScore(score: number | null, state: SheetItem["state"], verdict?: "full" | "not_yet" | null): string {
+  if (verdict === "full") return "Full marks";
+  if (verdict === "not_yet") return "Not yet";
   if (score === null) return state === "submitted" ? "pending" : "not submitted";
   return `${Math.round(Math.max(0, Math.min(1, score)) * 100)}%`;
 }
@@ -91,8 +101,40 @@ export function describeFeedback(feedback: string | null): string[] {
   if (detail.timedOut === true) lines.push("The run timed out.");
   if (typeof detail.runnerUnavailable === "string") lines.push(`Not graded: ${detail.runnerUnavailable}`);
   if (detail.mismatched === true) lines.push("The answer did not match the question type.");
+  if (typeof detail.reason === "string" && detail.reason && !Array.isArray(detail.lines)) lines.push(detail.reason);
+  if (typeof detail.tip === "string" && detail.tip) lines.push(`Tip: ${detail.tip}`);
   if (Array.isArray(detail.lines)) lines.push(...detail.lines.map(String));
+  // v4.4 Speak: the grader's one-line reason and tip (the panel shows the rest).
+  if (detail.needsListen === true) lines.push("Needs a listen: the recording could not be turned into text, so it was not marked.");
+  if (typeof detail.reason === "string" && detail.reason) lines.push(detail.reason);
+  if (typeof detail.tip === "string" && detail.tip) lines.push(`Tip: ${detail.tip}`);
   return lines.length ? lines : [feedback.trim()];
+}
+
+/** v4.4: the Speak grader's stored result (ai_feedback JSON), or null for anything else. */
+export function parseSpeakFeedback(feedback: string | null): {
+  met?: boolean;
+  englishLevel?: string;
+  reason?: string;
+  tip?: string;
+  needsListen?: boolean;
+  mode?: "spoken" | "typed";
+} | null {
+  if (!feedback) return null;
+  try {
+    const parsed = JSON.parse(feedback) as Record<string, unknown>;
+    if (!parsed || typeof parsed !== "object" || parsed.kind !== "speak") return null;
+    return {
+      ...(typeof parsed.met === "boolean" ? { met: parsed.met } : {}),
+      ...(typeof parsed.englishLevel === "string" ? { englishLevel: parsed.englishLevel } : {}),
+      ...(typeof parsed.reason === "string" ? { reason: parsed.reason } : {}),
+      ...(typeof parsed.tip === "string" ? { tip: parsed.tip } : {}),
+      ...(parsed.needsListen === true ? { needsListen: true } : {}),
+      ...(parsed.mode === "spoken" || parsed.mode === "typed" ? { mode: parsed.mode } : {}),
+    };
+  } catch {
+    return null;
+  }
 }
 
 /** What the learner did on a task, one short line per part. */
@@ -188,6 +230,11 @@ export function summariseTaskResponse(task: LearnerTask, response: TaskResponse)
       if (response.followUpEmail?.trim()) lines.push(`Follow-up email: ${response.followUpEmail.trim()}`);
       return lines;
     }
+    case "speak": {
+      if (response.usedFallback) return ["Typed instead of spoken.", ...(response.fallbackText?.trim() ? [response.fallbackText.trim()] : [])];
+      if (!response.recordingId) return ["Nothing was recorded."];
+      return [`Spoken answer${response.durationSec ? `, ${Math.round(response.durationSec)} s` : ""}${response.reRecorded ? ", re-recorded once" : ""}.`];
+    }
   }
 }
 
@@ -237,6 +284,8 @@ export function expectedTaskAnswer(task: Task): string[] {
         ...task.steps.map((s, i) => `${i + 1}. ${s.goal} (accepts ${s.accept.map((a) => `/${a}/`).join(" or ")})`),
         ...task.fileChecks.map((c) => `${c.path}: contains ${c.mustContain.join(", ") || "anything"}${c.mustNotContain.length ? `; not ${c.mustNotContain.join(", ")}` : ""}`),
       ];
+    case "speak":
+      return [`For: ${task.audience}`, ...task.lookFor.map((l) => `• ${l}`)];
   }
 }
 

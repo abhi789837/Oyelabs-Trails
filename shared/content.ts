@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { TermCategory } from "./handbook";
+import type { SpeakPractice } from "./softSkills";
 import type { Task } from "./tasks";
 
 import { topicLevelSchema, trackIdSchema, type TopicLevelValue, type TrackIdValue } from "./enums";
@@ -141,6 +142,8 @@ export interface ServedTopic {
    * whole, answers included — the learner sees them after checking, as with any worked exercise.
    */
   practice?: Task;
+  /** v4.4: a spoken practice on a soft-skills topic (record, then advice). Never gates completion. */
+  speak?: SpeakPractice;
   /** v4.1: how many Oyelabs SOP blocks the topic has; their text comes from /api/content/topics/:id/sop. */
   sopCount?: number;
   /** v4.2: a handbook tool rendered after the summary. */
@@ -209,6 +212,8 @@ export type AttemptRequest = z.infer<typeof attemptRequestSchema>;
 
 export interface QuizQuestionResult {
   id: string;
+  /** v4.4: the stored test item, for "Request review" on a wrong answer. */
+  itemId?: string;
   correct: boolean;
   correctIndices: number[];
   explanation: string;
@@ -228,6 +233,8 @@ export interface QuizAttemptResult {
   correctCount: number;
   total: number;
   perQuestion: QuizQuestionResult[];
+  /** v4.4: the recorded attempt, for review requests. */
+  attemptId?: string;
 }
 
 export interface CodeTestResult {
@@ -250,6 +257,13 @@ export interface CodeAttemptResult {
   results: CodeTestResult[];
   compileError?: string;
   timedOut?: boolean;
+  /**
+   * v4.4: in full-marks mode a challenge passes when every core test passes; each missed edge test
+   * becomes one plain note here instead of costing the pass.
+   */
+  notes?: string[];
+  /** v4.4: the recorded attempt, for review requests. */
+  attemptId?: string;
 }
 
 export type AttemptResult = QuizAttemptResult | CodeAttemptResult;

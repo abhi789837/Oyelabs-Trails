@@ -43,6 +43,13 @@ export function WriteTask({ task, value, onChange, readOnly, answer, idPrefix }:
         </figure>
       )}
 
+      {task.sourceText && (
+        <figure className="rounded-md border border-trailmark/40 bg-trailmark/[0.05] px-4 py-3">
+          <figcaption className="mb-1.5 font-mono text-xs text-muted-foreground">The message to rewrite</figcaption>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed">{task.sourceText}</p>
+        </figure>
+      )}
+
       <div>
         <p className="text-sm font-medium">A strong answer covers</p>
         <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">

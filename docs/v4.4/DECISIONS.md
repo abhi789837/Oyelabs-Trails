@@ -167,3 +167,137 @@ Whisper container, transcription, audio storage and retention.
   Lucid returns 403 (bot wall) to curl; both were loaded in the research pass and kept. `content:embeds`
   gets 403 from rm.coe.int (the CEFR PDF), which loads in a browser. None of the soft readings can be
   framed except hbr.org, ccl.org, GitLab, Scrum Guide and re:Work; the rest use the link card.
+
+## Phase 4
+
+- **Verdict layer.** `shared/scoring.ts`: `verdictFor(input)` takes a discriminated input
+  (`unanswered | mcq | code{outcomes,compileError} | task{task,response,raw,met,tip,checkScore}`)
+  rather than four positional args, so it can be built from stored rows (`verdictInputFor` in
+  `server/src/assessment/scoring.ts`) and the re-score never calls a grader. Returns null while an
+  answer waits for its grader. `scoreFor(mode, verdict, raw)`: 0/1 in full mode, raw in partial mode.
+  The verdict (Full marks / Not yet) is stored in both modes; only `score` differs.
+- **Per kind.** calculate = raw 1 (every field in tolerance); rank = exact or any `acceptOrders`
+  (new optional field on rank tasks, checked as full permutations; `gradeTask` also scores an accepted
+  order 1); terminal = `TERMINAL_PASS`; other deterministic kinds ≥ `MET_THRESHOLD` 0.8. AI-graded
+  (`AI_GRADED_KINDS` plus `speak`, and any kind whose `ai_feedback` JSON has a boolean `met`) = `met`;
+  a form also needs its exact checks ≥ 0.8. Rows without `met` (pre-v4.4): rubric share ≥ 0.7
+  (`LEGACY_MET_THRESHOLD`; for forms `ai_score/100`, the rubric part).
+- **Code tiers.** Bank tests take optional `tier: "core"|"edge"` (all three test schemas); content uses
+  `isEdgeCase`. Untiered = core; a key with only edge tests counts every test. Graded code stores
+  `tests: [{passed, tier}]` in `ai_feedback` so a re-score needs no re-run; older rows know only
+  passed/total and count all as core. `GENERATE_SYSTEM` and `BANK_FILL_SYSTEM` now ask for a tier on
+  every test (≥ 2 core); the personalise mock marks its empty-list test edge.
+- **Lenient compare.** `looselyEqual` (trim + collapse whitespace, numbers within relative 1e-9 and
+  across formats "1,000"/"2.50", token by token inside text, key order ignored, arrays ordered;
+  "1,5" is not a number). Used for **program-mode stdout** (Piston), where exactness of spacing and
+  number format is never the point. Function and SQL modes keep structural compare (key order already
+  ignored); the JS runtime (`runtime.ts`) and the browser runner now compare numbers within 1e-9 like
+  `compare.ts`. Strings in function mode stay exact on purpose: trim/whitespace challenges exist.
+- **Assessment flow.** `submitItem` → `applyVerdict` (raw_score, score, verdict, verdict_note) and
+  bank stats count the stored (verdict) score. `evaluateV4` graders now write `raw_score` and JSON
+  `ai_feedback` `{met, reason, tip, ...}`; a generic step 2c applies verdicts to every locked item still
+  without one (so P3b's speak step is covered with no special case) and counts it in bank stats (AI-graded
+  answers were not counted before). `computeResult`/`levelFrom` unchanged (levels from 0/1 × difficulty).
+- **Grader prompts.** `RUBRIC_SYSTEM` is a met/not-yet judge: observations → criteria (kept for partial
+  mode) → met → reason → tip, the brief's sentence verbatim (`FULL_MARKS_RULE`), three anchors incl. a
+  borderline met. New fields are optional in the schema so an older or partial reply still parses
+  (fallback: rubric share ≥ 0.7). Roleplay `SCORE_SYSTEM` gets the same sentence and optional
+  `met/reason/tip` (`RoleplayScore` gains them). Mocks: new `rubric_grade` fixture (`mockScoring.ts`:
+  covers a rubric line when it shares a content-word stem with it; met at ≥ half the lines, ≥ 5 words),
+  roleplay mock returns `met`. The roleplay test whose scripted scorer gives no `met` now expects
+  raw 0.5 → Not yet → score 0.
+- **Topic tests.** `gradeCode(..., mode)`: in full mode a challenge passes when every core test passes
+  (score shown 100), missed edge tests become `notes` (hidden ones described without data). Partial mode
+  keeps "every test". Quizzes unchanged. Results now carry `attemptId`, and quiz questions `itemId`
+  (the topic test item row) for review requests. Content validation (`topicTests/engine.ts`) still uses
+  the strict bar (reference solutions must pass everything).
+- **Reviews.** `POST/GET /api/review-requests`, `GET /api/admin/review-requests?status=&userId=`,
+  `POST /api/admin/review-requests/:id/decision {override|uphold, note}` (staff). Refs: assessment item
+  id; topic test item id + attemptId (quiz); **topic id + attemptId for a code challenge** (no item row
+  exists). Only your own Not-yet answer, one open request per (learner, source, ref). Override: item
+  full/1/`overridden`, bank `scoreSum += 1 - old`, `recomputeEvaluation` (new evaluations row only when a
+  level changed on the learner's latest assessment, which makes the path stale through the existing
+  "a newer evaluation" rule; otherwise updated in place), audit `review.overridden`, learner notified.
+  Topic override: item `passes + 1` (calibration), attempt re-graded with overridden questions right,
+  topic completed if it now passes (goal achievement too). Staff get a `review.requested` notification.
+- **Learner UI.** "Request review" on wrong quiz answers and failed code attempts (topic tests), then
+  "Review requested". Learners never see assessment items one by one (only levels), so there is no
+  learner button for assessment items; the API supports it. Showing past questions would leak bank
+  items, so I did not add an item list for learners.
+- **Admin UI.** "Review requests" page (`/admin/reviews`, nav under Assessments) and the same list,
+  filtered, in a collapsed section of the learner's assessment tab: question, answer, why Not yet,
+  **Give full marks** / **Keep "Not yet"** with an optional note. Item list shows Full marks / Not yet.
+  Scoring setting: Advanced `<details>` in the assessment settings card (question bank page),
+  superadmin only, with "Check past answers again" and the last report in plain words.
+- **Re-score.** `scoring.rescore` (`rescoreJob.ts`): batches of 200 by item id, progress in app_meta
+  `scoring.rescore.progress` (resumes after a crash; restarts if the mode changed mid-run), pushes
+  `{score, mode, at}` (mode = last run's mode, or "legacy" for pre-verdict rows) then re-applies;
+  overrides stay full; recomputes touched results; report in `scoring.rescore.report`
+  `{items, changed, resultsChanged, topicAttempts: 0, topicChanged: 0, mode, at}`. Topic attempts are
+  not re-scored (no per-test record is stored and re-running learner code in bulk isn't worth it).
+  Boot enqueues it once (`scoring.rescore.boot_v44` guard, in `index.ts`, not the test harness).
+  `PUT /api/admin/settings/scoring` (superadmin, audited) re-queues it on change;
+  `GET/POST /api/admin/scoring/rescore` shows / starts it. No bank-stat recompute on re-score.
+- **Schema:** no new columns needed.
+
+## Phase 3b
+
+The Speak item, the other soft-skill item kinds, and the Speak grader.
+
+- **`speak` task kind** (`shared/tasks.ts`): PLAN's shape (`prepSec` is the literal 20, `SPEAK_PREP_SEC`;
+  audience reuses `SPEAK_AUDIENCES` from `shared/softSkills.ts`). The learner sees everything but
+  `explanation`; `lookFor` is shown like a write task's criteria ("A good answer covers"). In
+  `AI_GRADED_KINDS`. `gradeTask` → null when there is a recording or typed text (`speakAnswered`),
+  **0 for no answer** (unlike write: nothing to wait for). `checkTask`: duplicate lookFor lines.
+- **`write.sourceText`** (optional, ≤1500): the "rewrite for tone" original, shown above the answer
+  box and in the admin preview; counted in `shapeOf` reading time.
+- **Slots.** `SLOT_SUBTYPES` + `speak`; `enforceBlueprint` caps Speak at `MAX_SPEAK_SLOTS = 2` per sheet
+  (model proposals included); a third falls to `afterSpeakCap` (the skill's first non-speak kind).
+  Speak slots get `SPEAK_SLOT_SEC = 150` and count as hands-on. `defaultHandsOn(skillId, nth)` now
+  takes the slot's index so soft skills rotate kinds (`SOFT_SKILL_TASK_KINDS` in softSkills.ts:
+  speaking skills speak first; writing = write; explain simply = write `explain`; stand-up/presenting/
+  ownership can be rank; feedback/teamwork/listening scenario). `softSubtypeAllowed`: soft skills only
+  speak/write/rank/scenario, Speak only for the four speaking skills, never Speak elsewhere.
+- **Timing:** `shapeOf` sets `speakSec`; `estimateSeconds` returns exactly 150 for a Speak item.
+- **Prompts:** UNDERSTAND and GENERATE list speak with guidance (stand-up, 2-day delay to a client,
+  intro + last project, demo opening; lookFor 2–5; writtenFallback). Soft slots carry `soft: true`.
+- **Bank across departments.** Soft items live under department `soft`. `activeItems(db, dept,
+  otherSkillIds)` also returns other departments' items for the sheet's own skills (pipeline, swap,
+  bank assembly). Bank assembly caps Speak at 2 too. Seeds: `server/bank/soft/` (5 files, 9 items:
+  4 speak, 2 write incl. one rewrite-for-tone, 1 explain, 1 rank "order the update", 1 scenario),
+  validated.
+- **Mock:** the plan proposes soft kinds for `ss-*`; the item writer makes valid speak / soft write
+  (rewrite, email, explain, review comment) / rank / scenario items for soft slots. The reference case
+  yields 1–2 Speak and ≥1 write item (test).
+- **Grader** `server/src/speech/grade.ts`, AI task `grade_speak` (Haiku, urgent, 700 tokens), schema
+  `speak_grade`, mock `mockSpeak.ts` (by answer length; "NOT YET" forces not met). Calls use purpose
+  `grade_written` (no new `AiPurpose`) with task `grade_speak`. Prompt: the brief's full-marks
+  sentence, "being understood" as the measure, accent and transcription slips never judged, metrics
+  advice-only, observations → 6 criteria 0–3 → met → English level (A2–C1) → reason → tip, three
+  anchors incl. a borderline pass. `met` = task, clarity, audience ≥ 2 (model decides). Stored score
+  = met ? 1 : rubric fraction (fluency left out for typed answers); `rawScore` the same; aiFeedback
+  JSON `{kind:"speak", mode, met, englishLevel, reason, tip, criteria, recordingId?, metrics?,
+  usedFallback?, needsListen?}` so Phase 4's verdict layer reads `met`.
+- **evaluateV4:** step 1b defers the job (`JobDeferredError` in jobs/queue.ts; the worker calls
+  `deferJob`, 15 s; `evaluateJob` rethrows it without failing the sitting) while a Speak recording is
+  `pending`, for up to 10 min from the recording's creation. Step 2a `gradeSpeakItems`. The recording
+  must belong to the learner, sitting and item. Failed / unavailable / still pending after 10 min →
+  "needs a listen": score stays null (pending, not a fail), aiFeedback `needsListen`, and staff get
+  `assessment.speak_needs_listen` in plain words. Marking it by hand is Phase 4's override.
+- **Upload route** now checks the item is a Speak question (400) and not yet submitted (409); a topic
+  upload needs the topic to have a speak practice (400). The 3a tests were adjusted for that.
+- **Consent:** `CONSENT_POLICY_VERSION = "2026-10-proctoring-v2-microphone"`; the consent text explains
+  the microphone (only on speaking questions, recordings up to 30 days by default, admins only,
+  text kept, typing allowed). `MyAssessment.hasSpeak` drives PreFlight's `needsMicrophone`: the mic is
+  asked separately after the camera (a "no" never blocks), its track stopped at once, and
+  `permissions.microphone` records the real answer.
+- **Client:** `SpeakTask.tsx` (`SpeakRecorder`: prompt + audience, 20 s prep with "I'm ready",
+  timer + level meter, Stop, listen back, one re-record, upload, "Type your answer instead"; aria-live
+  announcements at start / 10 s left / end; reduced motion drops the pulse and meter transition).
+  Pure helpers in `speakRecorder.ts` (mime order webm/opus → ogg/opus → mp4, plain mic errors).
+  Admin: `SpeakReview.tsx` (player or "Recording deleted after 30 days", what they said, English
+  level, met, approximate fluency numbers, "Typed instead of spoken", "Needs a listen"); reason and
+  tip in the Feedback box.
+- **Topic practice:** `speak` is now served on topics; TopicPage "Say it out loud" section;
+  `POST /api/topics/:topicId/speak-feedback` (pending while transcribing; never returns audio or the
+  transcript; advice only, never gates completion, like the existing practice).

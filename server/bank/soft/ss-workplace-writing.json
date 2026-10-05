@@ -1,0 +1,87 @@
+[
+  {
+    "id": "ss-workplace-writing-t2-1",
+    "departmentId": "soft",
+    "skillId": "ss-workplace-writing",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.3,
+    "prompt": "Rewrite this chat message to a client so it is polite and clear. Keep every fact.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "prompt": "Rewrite the message for the client. Keep the facts, lose the blame.",
+      "sourceText": "not our fault. your API was down all morning so nothing got tested. we'll see tomorrow maybe.",
+      "wordLimit": 25,
+      "rubric": [
+        {
+          "id": "facts",
+          "label": "Keeps the facts",
+          "description": "Says their API was down this morning and testing could not run.",
+          "weight": 1
+        },
+        {
+          "id": "tone",
+          "label": "Polite, no blame",
+          "description": "States the cause as a fact, without blaming the client.",
+          "weight": 1
+        },
+        {
+          "id": "next",
+          "label": "Gives a clear next step",
+          "description": "Says when testing will run and when they will hear back.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Your API was down this morning, so testing couldn't run. We'll retest first thing tomorrow and update you by noon."
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  },
+  {
+    "id": "ss-workplace-writing-t2-2",
+    "departmentId": "soft",
+    "skillId": "ss-workplace-writing",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.3,
+    "prompt": "Email the client: Thursday's demo has to move to Friday. Ask them to confirm.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "write",
+      "variant": "email",
+      "prompt": "Write the body of the email.",
+      "context": "The demo was booked for Thursday at 3 pm. Friday at 3 pm is free on our side.",
+      "wordLimit": 25,
+      "rubric": [
+        {
+          "id": "change",
+          "label": "States the change",
+          "description": "Says the demo moves from Thursday to Friday.",
+          "weight": 1
+        },
+        {
+          "id": "time",
+          "label": "Gives the new time",
+          "description": "Gives Friday at 3 pm.",
+          "weight": 1
+        },
+        {
+          "id": "ask",
+          "label": "Asks them to confirm",
+          "description": "Ends with a clear request to confirm.",
+          "weight": 1
+        }
+      ],
+      "sampleAnswer": "Hi Sam, we need to move Thursday's demo to Friday at 3 pm. Could you confirm that works for you?"
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  }
+]

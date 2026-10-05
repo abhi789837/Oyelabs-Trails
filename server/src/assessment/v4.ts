@@ -30,6 +30,7 @@ import { conflict } from "../lib/errors";
 import { newId, now } from "../lib/ids";
 import { runSnippet, runTests, SandboxUnavailableError, type PolyglotDeps } from "../sandbox/polyglot";
 import { getSetup } from "../setup/repo";
+import { applyVerdict, countBankScore, getScoringMode, tieredTests } from "./scoring";
 
 /**
  * The v4 assessment (Phase 4): assembled from the bank at issue time, served as one sheet, timed by
@@ -113,7 +114,7 @@ export function assembleInto(db: Db, assessmentId: string, userId: string): V4Co
   const result = assemble({
     format,
     mix,
-    pool: activeItems(db, setup.departmentId),
+    pool: activeItems(db, setup.departmentId, mix.lines.map((l) => l.skillId)),
     stackIds: setup.stackIds,
     skip: setup.skip.map((s) => s.skillId),
     seen: seenItemIds(db, userId),
@@ -126,7 +127,7 @@ export function assembleInto(db: Db, assessmentId: string, userId: string): V4Co
   }
 
   // v4.1: the 25 are balanced to land in 26–32 minutes by swapping bank items of the same skill.
-  const pool = activeItems(db, setup.departmentId);
+  const pool = activeItems(db, setup.departmentId, mix.lines.map((l) => l.skillId));
   const balanced = balanceTiming(
     result.items.map(({ item, skillId, group }) => ({ item, skillId, group, origin: "bank" as const, swappable: true })),
     pool.filter((p) => !seenItemIds(db, userId).has(p.id)),
@@ -384,7 +385,9 @@ export async function gradeResponse(deps: PolyglotDeps, key: ItemKeyV4, response
     try {
       const result = await runTests(deps, { language: c.language, mode: c.mode, functionName: c.functionName, code: response.code, tests: parseTests(c.mode, c.hiddenTests) as CodeTest[] });
       const score = result.total ? result.passedCount / result.total : 0;
-      return { score, detail: { passed: result.passedCount, total: result.total, compileError: result.compileError ?? null, timedOut: result.timedOut } };
+      // v4.4: which tests passed, by tier, so the verdict (and any later re-score) needs no re-run.
+      const tests = tieredTests(c.hiddenTests, result.outcomes);
+      return { score, detail: { passed: result.passedCount, total: result.total, compileError: result.compileError ?? null, timedOut: result.timedOut, tests } };
     } catch (error) {
       if (error instanceof SandboxUnavailableError) return { score: null, detail: { runnerUnavailable: error.message } };
       throw error;
@@ -408,19 +411,15 @@ export async function submitItem(app: { db: Db } & PolyglotDeps, item: ItemRow, 
   if (locked.changes === 0) return;
 
   const key = item.key as ItemKeyV4;
-  const { score, detail } = await gradeResponse(app, key, response);
-  app.db
-    .update(schema.assessmentItems)
-    .set({ score, autoScore: score == null ? null : Math.round(score), aiFeedback: detail ? JSON.stringify(detail).slice(0, 2000) : null })
-    .where(eq(schema.assessmentItems.id, item.id))
-    .run();
-  if (score != null && item.bankItemId) {
-    app.db
-      .update(schema.questionBank)
-      .set({ timesScored: sql`${schema.questionBank.timesScored} + 1`, scoreSum: sql`${schema.questionBank.scoreSum} + ${score}` })
-      .where(eq(schema.questionBank.id, item.bankItemId))
-      .run();
-  }
+  const { score: raw, detail } = await gradeResponse(app, key, response);
+  // v4.4: the grader's 0..1 is kept as `raw_score`; the stored score is the verdict's (full mode)
+  // or the raw score (partial mode). AI-graded tasks (raw null) get theirs in evaluateV4.
+  const applied = applyVerdict(
+    app.db,
+    { ...item, response, rawScore: raw, score: null, verdict: null, aiFeedback: detail ? JSON.stringify(detail).slice(0, 4000) : null },
+    getScoringMode(app.db),
+  );
+  countBankScore(app.db, item.bankItemId, applied.score);
 }
 
 /** Submits every item still open, with whatever draft it has. The deadline and Finish both end here. */

@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Library,
   ListChecks,
+  MessageSquareReply,
   Network,
   Radio,
   ScrollText,
@@ -71,6 +72,7 @@ const groups: SectionGroup[] = [
     items: [
       { to: "/admin/live", end: false, label: "Live", icon: Radio },
       { to: "/admin/integrity", end: false, label: "Integrity events", icon: ShieldAlert },
+      { to: "/admin/reviews", end: false, label: "Review requests", icon: MessageSquareReply },
     ],
   },
   {

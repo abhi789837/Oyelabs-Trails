@@ -8,6 +8,7 @@ import { schema } from "../db";
 import { enqueue } from "../jobs/queue";
 import { badRequest, conflict, HttpError, notFound, parseOrThrow } from "../lib/errors";
 import { AUDIO_RETENTION_MAX_DAYS, getAudioRetentionDays, setAudioRetentionDays } from "../maintenance/retention";
+import { gradeSpeak } from "../speech/grade";
 import {
   baseMime,
   getRecording,
@@ -40,6 +41,27 @@ const uploadFields = z
   });
 
 const retentionBody = z.object({ days: z.number().int().min(1).max(AUDIO_RETENTION_MAX_DAYS) });
+
+const topicParams = z.object({ topicId: z.string().min(1).max(200) });
+const practiceBody = z
+  .object({ recordingId: z.string().min(1).max(64).optional(), fallbackText: z.string().trim().min(1).max(4000).optional() })
+  .refine((v) => Boolean(v.recordingId) !== Boolean(v.fallbackText), { message: "Send either a recording or a typed answer." });
+
+/** What topic practice feedback looks like to the learner. Advice only: it never gates the topic. */
+export type SpeakPracticeFeedback =
+  | { status: "pending" }
+  | { status: "unavailable"; message: string }
+  | {
+      status: "done";
+      feedback: {
+        met: boolean;
+        englishLevel: string;
+        reason: string;
+        tip: string;
+        mode: "spoken" | "typed";
+        metrics: { wpm: number; pauses: number; longestPauseSec: number; fillers: number } | null;
+      };
+    };
 
 /** The multipart envelope around a 6 MB file and a few short fields. */
 const UPLOAD_BODY_LIMIT = MAX_AUDIO_BYTES + 64 * 1024;
@@ -99,13 +121,18 @@ export async function registerSpeechRoutes(app: FastifyInstance): Promise<void> 
         if (!assessment || assessment.userId !== user.id) throw notFound("No such assessment.");
         if (assessment.status !== "in_progress") throw conflict("This assessment is not in progress, so a recording cannot be added.");
         const item = app.db
-          .select({ id: schema.assessmentItems.id })
+          .select({ id: schema.assessmentItems.id, key: schema.assessmentItems.key, lockedAt: schema.assessmentItems.lockedAt })
           .from(schema.assessmentItems)
           .where(and(eq(schema.assessmentItems.id, target.itemId!), eq(schema.assessmentItems.assessmentId, assessment.id)))
           .get();
         if (!item) throw notFound("No such question in this assessment.");
+        // v4.4 Phase 3b: only a Speak question takes a recording, and only while it is open.
+        if ((item.key as { task?: { kind?: string } } | null)?.task?.kind !== "speak") throw badRequest("This question doesn't take a recording.");
+        if (item.lockedAt) throw conflict("This question is already submitted, so a recording cannot be added.");
       } else if (!app.content.hasTopic(target.topicId!)) {
         throw notFound("No such topic.");
+      } else if (!app.content.speakPractice(target.topicId!)) {
+        throw badRequest("This topic has no speaking practice.");
       }
 
       const recording = await saveRecording(app.db, app.env, {
@@ -131,6 +158,51 @@ export async function registerSpeechRoutes(app: FastifyInstance): Promise<void> 
     if (!recording || recording.userId !== user.id) throw notFound("No such recording.");
     return { recordingId: recording.id, sttStatus: recording.sttStatus };
   });
+
+  /**
+   * v4.4 Phase 3b: feedback on a topic's spoken practice (or the typed stand-in). Pending while the
+   * recording is still being turned into text; the client polls the status route, then asks here.
+   * The transcript and audio are not sent back, only the advice.
+   */
+  app.post(
+    "/api/topics/:topicId/speak-feedback",
+    { config: { rateLimit: { max: 20, timeWindow: "1 minute", keyGenerator: (request: FastifyRequest) => request.currentUser?.id ?? request.ip } } },
+    async (request): Promise<SpeakPracticeFeedback> => {
+      const user = requireActiveUser(request);
+      const { topicId } = parseOrThrow(topicParams, request.params);
+      const body = parseOrThrow(practiceBody, request.body);
+      const practice = app.content.speakPractice(topicId);
+      if (!practice) throw notFound("This topic has no speaking practice.");
+      const noAi = { status: "unavailable" as const, message: "Feedback isn't switched on yet. Compare your answer with the checklist above." };
+
+      let input: Parameters<typeof gradeSpeak>[1];
+      if (body.fallbackText) {
+        input = { task: practice, mode: "typed", text: body.fallbackText };
+      } else {
+        const recording = getRecording(app.db, body.recordingId!);
+        if (!recording || recording.userId !== user.id || recording.topicId !== topicId) throw notFound("No such recording.");
+        if (recording.sttStatus === "pending") return { status: "pending" };
+        if (recording.sttStatus !== "done" || recording.transcript == null) {
+          return { status: "unavailable", message: "We couldn't turn your recording into text this time. Try again, or type your answer instead." };
+        }
+        input = { task: practice, mode: "spoken", text: recording.transcript, metrics: recording.metrics ?? null, durationSec: recording.durationSec };
+      }
+      if (!app.ai.isConfigured()) return noAi;
+      const graded = await gradeSpeak(app.ai, input, { subjectUserId: user.id });
+      if (!graded) return noAi;
+      return {
+        status: "done",
+        feedback: {
+          met: graded.met,
+          englishLevel: graded.englishLevel,
+          reason: graded.reason,
+          tip: graded.tip,
+          mode: graded.mode,
+          metrics: input.mode === "spoken" ? (input.metrics ?? null) : null,
+        },
+      };
+    },
+  );
 
   app.get("/api/admin/recordings/:id", async (request) => {
     requireStaff(request);

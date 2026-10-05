@@ -298,7 +298,7 @@ export type AssessmentStatusResponse = z.infer<typeof assessmentStatusResponseSc
  * agreed to. A stored consent at an older version does not count and the learner is asked again —
  * the only honest behaviour when the thing they said yes to has changed.
  */
-export const CONSENT_POLICY_VERSION = "2026-09-proctoring-v1";
+export const CONSENT_POLICY_VERSION = "2026-10-proctoring-v2-microphone";
 
 /**
  * Which permissions were actually granted, as facts rather than promises.
@@ -455,6 +455,8 @@ export interface MyAssessment {
   format?: "v4" | "legacy";
   /** v4: how many questions are on the sheet. */
   itemCount?: number;
+  /** v4.4: the sheet has a Speak question, so the pre-flight asks for the microphone too. */
+  hasSpeak?: boolean;
 }
 
 // ---------------------------------------------------------------------------

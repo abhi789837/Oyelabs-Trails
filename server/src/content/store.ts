@@ -229,6 +229,11 @@ export class ContentStore {
     return this.topicIndex.has(topicId);
   }
 
+  /** v4.4: a soft-skills topic's spoken practice, or null when it has none. */
+  speakPractice(topicId: string): SpeakPractice | null {
+    return this.getTopic(topicId)?.topic.speak ?? null;
+  }
+
   /** Drops unknown ids and sorts the rest into curriculum trail order within each module. */
   orderTopicIds(topicIds: string[]): string[] {
     const known = [...new Set(topicIds)].filter((id) => this.topicIndex.has(id));

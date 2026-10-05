@@ -1,5 +1,6 @@
 import { classify, type DecisionAnswers } from "../../../../shared/decision";
 import { planBlueprintMix } from "../../../../shared/setup";
+import { isSoftSkillId, SOFT_SKILL_TASK_KINDS } from "../../../../shared/softSkills";
 
 /**
  * TEST STAND-INS for the v4.1 personalised-assessment calls (`assessment_plan`,
@@ -61,6 +62,8 @@ const CODE_LIKE = /php|laravel|eloquent|javascript|typescript|react|node|express
 
 /** Hands-on kinds a plan proposes for a skill, by what the skill is about. Empty = let the rules pick. */
 function handsOnKinds(skillName: string, format: "coding" | "tasks", skillId = ""): string[] {
+  // v4.4: soft skills are spoken, written, ordered or a scenario, in any department.
+  if (isSoftSkillId(skillId)) return [...SOFT_SKILL_TASK_KINDS[skillId]];
   if (format === "coding") return CODE_LIKE.test(skillName) ? ["code"] : [];
   // v4.2 process skills: classify requests, fill the CR form, and (meetings) a short client role-play.
   if (skillId === "pm-proc-meetings") return ["roleplay", "categorize", "form"];
@@ -147,6 +150,8 @@ interface ItemsRequest {
     personaId?: string;
     /** v4.3: an outcome slot's case and its shortened capstone, the model to follow. */
     outcome?: { caseId?: string; title: string; model: Record<string, unknown> };
+    /** v4.4: a soft-skill slot. */
+    soft?: boolean;
   }[];
 }
 
@@ -226,12 +231,12 @@ function codingItem(slot: number, language: string, ctx: Ctx) {
       functionName: spec.fn,
       starterCode: spec.starter,
       referenceSolution: spec.reference,
-      sampleTests: [{ args: [["failed", "ok", "failed"]], expected: 2 }],
+      sampleTests: [{ args: [["failed", "ok", "failed"]], expected: 2, tier: "core" }],
       hiddenTests: [
-        { args: [[]], expected: 0 },
-        { args: [["ok", "ok"]], expected: 0 },
-        { args: [["failed"]], expected: 1 },
-        { args: [["ok", "failed", "ok", "failed", "failed"]], expected: 3 },
+        { args: [[]], expected: 0, tier: "edge" },
+        { args: [["ok", "ok"]], expected: 0, tier: "core" },
+        { args: [["failed"]], expected: 1, tier: "core" },
+        { args: [["ok", "failed", "ok", "failed", "failed"]], expected: 3, tier: "core" },
       ],
     },
   };
@@ -457,6 +462,175 @@ function scenarioItem(slot: number, ctx: Ctx) {
 }
 
 // ---------------------------------------------------------------------------
+// v4.4: soft-skill items (speak, write incl. "rewrite for tone" and "explain simply", rank, scenario)
+// ---------------------------------------------------------------------------
+
+function speakItem(slot: number, skill: string, ctx: Ctx) {
+  const s = skill.toLowerCase();
+  const spec = /client/.test(s)
+    ? {
+        title: "Explain a two-day delay to the client",
+        prompt: `Your ${ctx.theme} release will be two days late because testing found a payment bug. Tell the client on a short call.`,
+        audience: "client",
+        lookFor: ["Says the new date first", "One plain reason, no blame", "What you are doing about it", "What the client should expect next"],
+        fallback: "Write what you would say to the client about the two-day delay.",
+      }
+    : /stand-?up|status/.test(s)
+      ? {
+          title: "Give your stand-up update",
+          prompt: `Give your stand-up update for today on the ${ctx.theme} work: what you finished, what you are doing next and anything blocking you.`,
+          audience: "team",
+          lookFor: ["What you finished yesterday", "What you will do today", "Any blocker, with who can help"],
+          fallback: "Write the stand-up update you would give today.",
+        }
+      : /present|demo/.test(s)
+        ? {
+            title: "Open a short demo",
+            prompt: `You are about to demo the new ${ctx.theme} feature to the team. Say how you would open the demo in under a minute.`,
+            audience: "team",
+            lookFor: ["Who the feature is for", "The problem it solves", "What you will show, in order"],
+            fallback: "Write how you would open the demo.",
+          }
+        : {
+            title: "Introduce yourself and your last project",
+            prompt: `Introduce yourself to a new client team and describe your last project, including the ${ctx.theme} part you worked on.`,
+            audience: "interview",
+            lookFor: ["Your role and experience in one or two sentences", "What the last project did", "What you built or owned", "One result or thing you learned"],
+            fallback: "Write how you would introduce yourself and your last project.",
+          };
+  return {
+    ...base(slot, spec.prompt, ctx),
+    task: {
+      kind: "speak",
+      title: spec.title,
+      prompt: spec.prompt,
+      audience: spec.audience,
+      prepSec: 20,
+      maxSec: 90,
+      lookFor: spec.lookFor,
+      writtenFallback: spec.fallback,
+      explanation: "A strong answer leads with the main point, keeps to what the listener needs and ends with a clear next step.",
+    },
+  };
+}
+
+const softRubric = (items: [string, string][]) => items.map(([id, label]) => ({ id, label, description: label, weight: 1 }));
+
+function softWriteItem(slot: number, skill: string, ctx: Ctx) {
+  const s = skill.toLowerCase();
+  if (/explain/.test(s)) {
+    return {
+      ...base(slot, `The client asks why the ${ctx.theme} release needs a staging environment first. Explain it simply.`, ctx),
+      task: {
+        kind: "write",
+        variant: "explain",
+        prompt: "Write one or two sentences the client would understand.",
+        context: "Client: Why can't you just put it live straight away?",
+        wordLimit: 20,
+        rubric: softRubric([["correct", "Explains staging correctly"], ["plain", "Plain words, no jargon"], ["why", "Says why it protects them"]]),
+        sampleAnswer: "Staging is a private copy of your app where we test changes first, so your customers never see a bug.",
+      },
+    };
+  }
+  if (/writing/.test(s) && slot % 2 === 0) {
+    return {
+      ...base(slot, `Rewrite this chat message to a client about the ${ctx.theme} work so it is polite and clear. Keep every fact.`, ctx),
+      task: {
+        kind: "write",
+        prompt: "Rewrite the message for the client.",
+        sourceText: "not our fault. your API was down all morning so nothing got tested. we'll see tomorrow maybe.",
+        wordLimit: 20,
+        rubric: softRubric([["facts", "Keeps the facts"], ["tone", "Polite, no blame"], ["next", "Gives a clear next step"]]),
+        sampleAnswer: "Your API was down this morning, so testing paused. We'll retest first thing tomorrow and update you by noon.",
+      },
+    };
+  }
+  if (/writing|client/.test(s)) {
+    return {
+      ...base(slot, `Email the client: the ${ctx.theme} demo moves from Thursday to Friday. Ask them to confirm.`, ctx),
+      task: {
+        kind: "write",
+        variant: "email",
+        prompt: "Write the body of the email.",
+        context: "The demo was booked for Thursday 3 pm. Friday 3 pm is free on our side.",
+        wordLimit: 20,
+        rubric: softRubric([["change", "States the change"], ["time", "Gives the new time"], ["ask", "Asks them to confirm"]]),
+        sampleAnswer: "Hi Sam, we need to move Thursday's demo to Friday at 3 pm. Could you confirm that works?",
+      },
+    };
+  }
+  return {
+    ...base(slot, `A teammate's ${ctx.theme} pull request has no tests. Write a short, kind review comment.`, ctx),
+    task: {
+      kind: "write",
+      prompt: "Write the comment.",
+      context: "The change adds a discount rule to checkout. It has no tests.",
+      wordLimit: 20,
+      rubric: softRubric([["specific", "Names what is missing"], ["kind", "Kind and direct"], ["ask", "Makes a clear ask"]]),
+      sampleAnswer: "Nice, clear change. Could you add a test for the discount rule, including the zero-total case?",
+    },
+  };
+}
+
+function softRankItem(slot: number, skill: string, ctx: Ctx) {
+  if (/ownership|time/i.test(skill)) {
+    return {
+      ...base(slot, `A busy morning on the ${ctx.theme} project. Put these in the order you should do them.`, ctx),
+      task: {
+        kind: "rank",
+        prompt: "First at the top.",
+        items: [
+          { id: "a", label: "Fix the bug blocking checkout for live users" },
+          { id: "b", label: "Reply to the client who asked for a status today" },
+          { id: "c", label: "Review a teammate's pull request due tomorrow" },
+          { id: "d", label: "Tidy up old branches" },
+        ],
+        correctOrder: ["a", "b", "c", "d"],
+        explanation: "Live users first, then today's promise, then tomorrow's work, then housekeeping.",
+      },
+    };
+  }
+  return {
+    ...base(slot, `Put your ${ctx.theme} status update in the best order for the client.`, ctx),
+    task: {
+      kind: "rank",
+      prompt: "First at the top.",
+      items: [
+        { id: "a", label: "Overall: on track for the 14th" },
+        { id: "b", label: "Done this week: login and the payments page" },
+        { id: "c", label: "Risk: the provider's keys are late" },
+        { id: "d", label: "What we need from you: the keys by Friday" },
+      ],
+      correctOrder: ["a", "b", "c", "d"],
+      explanation: "Lead with the headline, then progress, then the risk, then the ask.",
+    },
+  };
+}
+
+function softScenarioItem(slot: number, ctx: Ctx) {
+  return {
+    ...base(slot, `A teammate on the ${ctx.theme} project missed two deadlines this sprint. Make the calls.`, ctx),
+    task: {
+      kind: "scenario",
+      prompt: "A teammate keeps missing deadlines.",
+      steps: [
+        { id: "s1", question: "What do you do first?", options: ["Ask them privately what is getting in the way", "Raise it in the team stand-up", "Do their work yourself"], correctIndex: 0, explanation: "Start with a private, curious question." },
+        { id: "s2", question: "They say the task was unclear. What next?", options: ["Agree what done looks like and a check-in date", "Tell them to try harder", "Move the task to someone else at once"], correctIndex: 0, explanation: "Make it clear and agree a check-in." },
+        { id: "s3", question: "How do you give the feedback?", options: ["Describe what happened and its effect, then ask", "Say they are unreliable", "Wait for the review cycle"], correctIndex: 0, explanation: "Specific behaviour and impact, then a question." },
+      ],
+    },
+  };
+}
+
+function softItem(slot: number, skill: string, subtype: string, ctx: Ctx) {
+  if (subtype === "speak") return speakItem(slot, skill, ctx);
+  if (subtype === "write") return softWriteItem(slot, skill, ctx);
+  if (subtype === "rank") return softRankItem(slot, skill, ctx);
+  if (subtype === "scenario") return softScenarioItem(slot, ctx);
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // v4.2: handbook-grounded process items (categorize with facts, the CR form, a mini role-play)
 // ---------------------------------------------------------------------------
 
@@ -570,6 +744,7 @@ export function fixtureGeneratedItems(userJson: string, keys: Map<string, number
     let item: unknown = null;
     // v4.3: an outcome slot follows its case's capstone (already shortened to fit the slot).
     if (slot.outcome?.model) item = { ...base(slot.slot, String(slot.outcome.model.prompt ?? slot.outcome.title), local), task: { ...slot.outcome.model } };
+    else if (slot.soft && slot.type === "task") item = softItem(slot.slot, slot.skill, slot.subtype, local);
     else if (slot.type === "coding") item = codingItem(slot.slot, language, local);
     else if (slot.type === "mcq") item = slot.subtype === "mcq-code" ? (mcqCodeItem(slot.slot, language, local, keys) ?? mcqTextItem(slot.slot, slot.skill, local, keys)) : mcqTextItem(slot.slot, slot.skill, local, keys);
     else if (slot.subtype === "write") item = writeItem(slot.slot, slot.skill, local);

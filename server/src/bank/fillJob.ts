@@ -56,7 +56,8 @@ Rules:
   (plain JSON). "program" mode: {"stdin":"...","expected":"stdout"}. "sql" mode (SQLite):
   {"setup":"CREATE...;INSERT...;","expected":[{row}]} with ORDER BY for determinism.
   starterCode must FAIL at least one hidden test; referenceSolution must pass ALL tests.
-  1-2 sampleTests, 3-6 hiddenTests including an edge case. No randomness, clocks or network.
+  1-2 sampleTests, 3-6 hiddenTests including an edge case. Mark every test "tier": "core" (the job
+  itself; at least 2 core) or "edge" (a boundary case: empty input, zero, huge values). No randomness, clocks or network.
 - mcq: 3-5 options, one correctIndex, an explanation; options are shuffled, never refer to positions.
   Put code the learner can run in "snippet" with "snippetLanguage".
 - task: one of rank/calculate/scenario/spot (or write only when asked), per the schema.

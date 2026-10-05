@@ -25,6 +25,7 @@ import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
 import { fillHandler as topicTestFillHandler, recheckHandler as topicTestRecheckHandler, syncAllTopicTests } from "./topicTests/engine";
 import { JobWorker } from "./jobs/worker";
 import { transcribeHandler } from "./speech/transcribeJob";
+import { ensureBootRescore, rescoreHandler } from "./assessment/rescoreJob";
 import { publishGenerationLine } from "./routes/admin/live";
 import { createSandbox } from "./sandbox";
 
@@ -88,10 +89,13 @@ async function main(): Promise<void> {
       "topic_tests.recheck": topicTestRecheckHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "speech.transcribe": transcribeHandler({ db, env, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "scoring.rescore": rescoreHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
     },
     log: (message, detail) => console.log(`[oyelearn] ${message}`, detail ?? ""),
   });
   worker.start();
+  // v4.4: re-score stored answers once after the scoring update (queued, never inline).
+  if (ensureBootRescore(db)) console.log("[oyelearn] queued a one-time re-score of stored answers");
 
   // Deadlines and missing heartbeats are noticed on a fixed cadence, not through the queue: a
   // backlog must not delay the checks that notice a stuck test.

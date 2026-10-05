@@ -394,7 +394,14 @@ export async function scoreSession(deps: RoleplayDeps, row: SessionRow): Promise
     });
     const total = dimensions.reduce((s, d) => s + d.score, 0);
     const max = dimensions.reduce((s, d) => s + d.points, 0);
-    score = { dimensions, total, max, pct: max ? Math.round((total / max) * 1000) / 1000 : 0, tips: result.data.tips.slice(0, 3) };
+    score = {
+      dimensions,
+      total,
+      max,
+      pct: max ? Math.round((total / max) * 1000) / 1000 : 0,
+      tips: result.data.tips.slice(0, 3),
+      ...(typeof result.data.met === "boolean" ? { met: result.data.met, reason: result.data.reason ?? "", tip: result.data.tip ?? result.data.tips[0] ?? "" } : {}),
+    };
   }
 
   db.update(schema.roleplaySessions)
@@ -419,7 +426,7 @@ export async function scoreSession(deps: RoleplayDeps, row: SessionRow): Promise
 export async function gradeRoleplayItem(
   deps: RoleplayDeps,
   input: { assessmentId: string; itemId: string; userId: string; followUpEmail?: string },
-): Promise<{ score: number | null; feedback: string; sessionId: string | null; transcript: RoleplayLine[]; followUpEmail: string | null }> {
+): Promise<{ score: number | null; feedback: string; sessionId: string | null; transcript: RoleplayLine[]; followUpEmail: string | null; met?: boolean; reason?: string; tip?: string }> {
   const { db } = deps;
   const row = db
     .select()
@@ -435,5 +442,10 @@ export async function gradeRoleplayItem(
   const out = { sessionId: fresh.id, transcript: fresh.transcript, followUpEmail: fresh.followUpEmail };
   // Scripted mode, or scoring failed: the score cannot be known yet and the item stays pending.
   if (!score) return { ...out, score: null, feedback: "" };
-  return { ...out, score: score.pct, feedback: score.tips.join(" ").slice(0, 400) };
+  return {
+    ...out,
+    score: score.pct,
+    feedback: score.tips.join(" ").slice(0, 400),
+    ...(typeof score.met === "boolean" ? { met: score.met, reason: score.reason, tip: score.tip } : {}),
+  };
 }

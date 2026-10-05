@@ -14,6 +14,7 @@ import { runVisibleTests, RUN_TIMEOUT_MS, type LocalRunOutcome } from "@/lib/cod
 import { cn, preferredScrollBehavior } from "@/lib/utils";
 import { useProgressStore } from "@/store/progressStore";
 import { ChallengeResult } from "./ChallengeResult";
+import { RequestReview } from "./RequestReview";
 import { CodeEditor } from "./CodeEditor";
 
 interface CodeRunnerProps {
@@ -211,6 +212,21 @@ export function CodeRunner({ topic, challenge }: CodeRunnerProps) {
                   </li>
                 ))}
             </ul>
+
+            {result.notes && result.notes.length > 0 && (
+              <div className="mt-3 rounded-md border border-ridge/40 bg-ridge/6 px-3 py-2 text-sm" data-testid="code-notes">
+                <p className="font-medium">Full marks. Worth a look:</p>
+                <ul className="mt-1 list-disc space-y-0.5 pl-5 text-muted-foreground">
+                  {result.notes.map((note, i) => (
+                    <li key={i}>{note}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {!result.passed && result.attemptId && !result.compileError && (
+              <RequestReview className="mt-3" source="topic_item" refId={topic.id} attemptId={result.attemptId} />
+            )}
 
             {result.results.some((r) => r.hidden && r.passed) && (
               <Button variant="ghost" size="sm" className="mt-2" onClick={() => setShowHidden((v) => !v)}>

@@ -39,7 +39,7 @@ export const ChallengeResult = forwardRef<HTMLDivElement, ChallengeResultProps>(
   const { next } = topicNeighbors(topic.id);
   const accent = accentClasses[track.accentToken];
   const requirement =
-    topic.challengeType === "quiz" ? `You need ${QUIZ_PASS_THRESHOLD}% to pass.` : "Every test needs to pass.";
+    topic.challengeType === "quiz" ? `You need ${QUIZ_PASS_THRESHOLD}% to pass.` : "Every main test needs to pass.";
 
   const passMessage = trackDone.isComplete
     ? `That finishes the ${track.name} trail. Your certificate is ready.`

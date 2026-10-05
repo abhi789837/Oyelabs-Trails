@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AdminLayout } from "@/features/admin/AdminLayout";
 import AdminAiPage from "@/features/admin/AdminAiPage";
 import AdminAuditPage from "@/features/admin/AdminAuditPage";
+import AdminReviewsPage from "@/features/admin/reviews/ReviewRequests";
 import AdminSopPage from "@/features/admin/AdminSopPage";
 import AdminHandbookPage from "@/features/admin/handbook/AdminHandbookPage";
 import AdminBankPage from "@/features/admin/bank/AdminBankPage";
@@ -82,6 +83,7 @@ export default function App() {
                   <Route path="ai-usage" element={<AdminAiUsagePage />} />
                   <Route path="live" element={<AdminLivePage />} />
                   <Route path="audit" element={<AdminAuditPage />} />
+                  <Route path="reviews" element={<AdminReviewsPage />} />
                   <Route path="sop" element={<AdminSopPage />} />
                   <Route path="handbook" element={<AdminHandbookPage />} />
                   <Route path="integrity" element={<AdminIntegrityFeedPage />} />

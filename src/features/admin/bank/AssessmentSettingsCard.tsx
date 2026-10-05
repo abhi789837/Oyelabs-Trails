@@ -8,6 +8,8 @@ import { notify } from "@/lib/toast";
 import { adminApi } from "../api";
 import { InfoTip } from "../catalog/InfoTip";
 import { formatMinFinish, MAX_MIN_FINISH_MINUTES, parseMinFinish } from "./assessmentSettings";
+import { ScoringSettings } from "./ScoringSettings";
+import { useCurrentUser } from "@/features/auth/AuthProvider";
 
 /**
  * The one assessment-wide setting: a minimum time before a learner may press Finish. Off by
@@ -15,6 +17,7 @@ import { formatMinFinish, MAX_MIN_FINISH_MINUTES, parseMinFinish } from "./asses
  */
 export function AssessmentSettingsCard({ className }: { className?: string }) {
   const id = useId();
+  const me = useCurrentUser();
   const [saved, setSaved] = useState<number | null | undefined>(undefined);
   const [text, setText] = useState("");
   const [saving, setSaving] = useState(false);
@@ -108,6 +111,7 @@ export function AssessmentSettingsCard({ className }: { className?: string }) {
             )}
           </form>
         )}
+        {me.role === "superadmin" && <ScoringSettings />}
       </div>
     </section>
   );

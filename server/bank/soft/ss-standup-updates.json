@@ -1,0 +1,86 @@
+[
+  {
+    "id": "ss-standup-updates-t2-1",
+    "departmentId": "soft",
+    "skillId": "ss-standup-updates",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 2.5,
+    "prompt": "Give your stand-up update for today.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "speak",
+      "title": "Give your stand-up update",
+      "prompt": "Give today's stand-up update: yesterday you finished the login API, today you start the password reset screen, and you are waiting for the email service keys.",
+      "audience": "team",
+      "prepSec": 20,
+      "maxSec": 90,
+      "lookFor": [
+        "What you finished",
+        "What you are doing today",
+        "The blocker, and who can help"
+      ],
+      "writtenFallback": "Write the stand-up update you would give.",
+      "explanation": "Under a minute: done, next, blocked (with a name). Details go after the stand-up."
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  },
+  {
+    "id": "ss-standup-updates-t2-2",
+    "departmentId": "soft",
+    "skillId": "ss-standup-updates",
+    "type": "task",
+    "difficulty": 2,
+    "estMinutes": 1.2,
+    "prompt": "Put the parts of this stand-up update in the best order.",
+    "coding": null,
+    "mcq": null,
+    "task": {
+      "kind": "rank",
+      "prompt": "You have about thirty seconds at stand-up. Put these parts of your update in the order you would say them, first at the top.",
+      "items": [
+        {
+          "id": "done",
+          "label": "Yesterday I finished the checkout page and merged it to the main branch"
+        },
+        {
+          "id": "today",
+          "label": "Today I am starting the order history screen for the customer app"
+        },
+        {
+          "id": "blocker",
+          "label": "I am blocked on the payment sandbox keys from the client"
+        },
+        {
+          "id": "ask",
+          "label": "Priya, could you chase the client for those keys after the stand-up?"
+        },
+        {
+          "id": "detail",
+          "label": "If anyone wants the details of the checkout refactor, ask me afterwards"
+        },
+        {
+          "id": "handover",
+          "label": "That is all from me, so over to Sam for his update on the admin panel"
+        }
+      ],
+      "correctOrder": [
+        "done",
+        "today",
+        "blocker",
+        "ask",
+        "detail",
+        "handover"
+      ],
+      "explanation": "Done, today, blocker, then the ask with a name; long details wait until after the stand-up."
+    },
+    "tags": [
+      "soft skills"
+    ],
+    "stackId": null
+  }
+]

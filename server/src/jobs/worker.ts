@@ -1,7 +1,7 @@
 import type { JobType } from "../../../shared/enums";
 import { AiBudgetPausedError } from "../ai/router";
 import type { Db } from "../db";
-import { claimNext, completeJob, deferJob, failJob, requeueAllRunning, type Job } from "./queue";
+import { claimNext, completeJob, deferJob, failJob, JobDeferredError, requeueAllRunning, type Job } from "./queue";
 
 /** How long a job paused by the AI budget waits before trying again. */
 const BUDGET_RETRY_MS = 6 * 60 * 60 * 1000;
@@ -79,6 +79,13 @@ export class JobWorker {
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           // v4: over the monthly AI budget is not a failure; the job waits and tries again later.
+          // v4.4: a handler that has to wait (an evaluation waiting for a transcription).
+          if (error instanceof JobDeferredError) {
+            deferJob(this.options.db, job.id, error.delayMs);
+            this.options.log?.(`job ${job.type} deferred: ${message}`, { id: job.id });
+            processed += 1;
+            continue;
+          }
           if (error instanceof AiBudgetPausedError) {
             deferJob(this.options.db, job.id, BUDGET_RETRY_MS);
             this.options.log?.(`job ${job.type} paused: AI budget reached`, { id: job.id });

@@ -52,6 +52,11 @@ export const FORM_FIELD_SEC = 20;
 export const ROLEPLAY_TURN_SEC = 25;
 /** v4.3: seconds per terminal command to recall and type. */
 export const TERMINAL_COMMAND_SEC = 15;
+/**
+ * v4.4: a Speak item, whatever its wording: 20 s to prepare, up to 90 s speaking, the listen back
+ * and the upload. A fixed time, because the recording's length, not the reading, sets it.
+ */
+export const SPEAK_ITEM_SEC = 150;
 
 export function words(text: string): number {
   return text.replace(/```[\s\S]*?```/g, " ").trim() ? text.replace(/```[\s\S]*?```/g, " ").trim().split(/\s+/).length : 0;
@@ -104,6 +109,8 @@ export interface ItemShape {
   categorizeItems: number;
   /** v4.3: terminal commands to type (~15 s each). */
   commands: number;
+  /** v4.4: a Speak item's fixed time (SPEAK_ITEM_SEC); 0 for everything else. */
+  speakSec: number;
 }
 
 export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq" | "task">): ItemShape {
@@ -124,6 +131,7 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
     turns: 0,
     categorizeItems: 0,
     commands: 0,
+    speakSec: 0,
   };
   if (item.coding) {
     shape.starterLines = lines(item.coding.starterCode);
@@ -140,7 +148,7 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
     switch (t.kind) {
       case "write":
         shape.writeWords = Number(t.wordLimit ?? 0);
-        shape.extraWords = words(String(t.context ?? ""));
+        shape.extraWords = words(String(t.context ?? "")) + words(String(t.sourceText ?? ""));
         break;
       case "rank":
         shape.rankItems = (t.items as unknown[]).length;
@@ -201,6 +209,10 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
         shape.changedLines = ((t.fileChecks as unknown[] | undefined) ?? []).length * 2;
         break;
       }
+      case "speak":
+        shape.speakSec = SPEAK_ITEM_SEC;
+        shape.extraWords = ((t.lookFor as string[] | undefined) ?? []).reduce((s, l) => s + words(l), 0);
+        break;
     }
   }
   return shape;
@@ -209,6 +221,7 @@ export function shapeOf(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq
 /** Seconds, from the formula in §1c. Deterministic. */
 export function estimateSeconds(item: Pick<BankItem, "type" | "prompt" | "coding" | "mcq" | "task">, c: TimingConstants = DEFAULT_TIMING): number {
   const s = shapeOf(item);
+  if (s.speakSec) return s.speakSec;
   const reading = ((s.promptWords + s.extraWords) / c.readWpm) * 60 + (s.readCodeLines + s.starterLines + s.snippetLines) * c.codeLineSec;
   const work =
     s.changedLines * c.writeLineSec + s.cells * c.cellSec + (s.writeWords / c.writeWpm) * 60 + s.decisions * 8 + s.rankItems * 3 + s.formFields * FORM_FIELD_SEC + s.turns * ROLEPLAY_TURN_SEC + s.commands * TERMINAL_COMMAND_SEC;

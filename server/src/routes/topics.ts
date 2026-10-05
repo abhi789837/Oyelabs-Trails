@@ -13,6 +13,8 @@ import { topicVideosView } from "../videos/repo";
 import { isStaff } from "../../../shared/enums";
 import { calibrateAttempt, previouslyAnswered } from "../topicTests/calibrate";
 import { gradeTopicQuiz } from "../topicTests/repo";
+import { getScoringMode } from "../assessment/scoring";
+import { newId } from "../lib/ids";
 
 const paramsSchema = z.object({ topicId: z.string().min(1).max(120) });
 
@@ -62,7 +64,12 @@ export async function registerTopicRoutes(app: FastifyInstance): Promise<void> {
         // item's result feeds calibration — first exposure only, never staff.
         const { result, itemResults } = gradeTopicQuiz(app.db, topic, body.answers);
         const seen = previouslyAnswered(app.db, user.id, topicId);
+        const attemptId = newId();
+        result.attemptId = attemptId;
+        const rowIds = new Map(itemResults.map((r) => [r.servedId, r.rowId]));
+        result.perQuestion = result.perQuestion.map((q) => (rowIds.has(q.id) ? { ...q, itemId: rowIds.get(q.id) } : q));
         recordAttempt(app.db, {
+          id: attemptId,
           userId: user.id,
           topicId,
           kind: "quiz",
@@ -83,8 +90,10 @@ export async function registerTopicRoutes(app: FastifyInstance): Promise<void> {
       if (topic.challengeType !== "code" || !topic.codeChallenge) {
         throw badRequest("This waypoint doesn't have a coding challenge.");
       }
-      const result = await gradeCode(topic.codeChallenge, body.code, app.sandbox);
+      const result = await gradeCode(topic.codeChallenge, body.code, app.sandbox, getScoringMode(app.db));
+      result.attemptId = newId();
       recordAttempt(app.db, {
+        id: result.attemptId,
         userId: user.id,
         topicId,
         kind: "code",

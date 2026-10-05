@@ -58,14 +58,22 @@ export interface PreFlightProps {
   /** The server's own message when starting failed, shown with a retry. */
   error?: string | null;
   onCancel: () => void;
+  /**
+   * v4.4: the sheet has a Speak question, so the microphone is asked for too. Saying no is fine:
+   * those questions then let the learner type the answer instead.
+   */
+  needsMicrophone?: boolean;
 }
 
-export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error = null }: PreFlightProps) {
+export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error = null, needsMicrophone = false }: PreFlightProps) {
   const reduceMotion = useReducedMotion();
   const [step, setStep] = useState<Step>("consent");
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [requesting, setRequesting] = useState(false);
+  /** v4.4: whether the microphone was allowed (only asked when the sheet has a Speak question). */
+  const [micGranted, setMicGranted] = useState(false);
+  const [micNote, setMicNote] = useState<string | null>(null);
   const [sample, setSample] = useState<CalibrationSample | null>(null);
   const [calibration, setCalibration] = useState<CalibrationPose | null>(null);
   const [tonePlayed, setTonePlayed] = useState(false);
@@ -90,6 +98,19 @@ export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error
         video: { width: 640, height: 480, facingMode: "user" },
       });
       setStream(granted);
+      if (needsMicrophone) {
+        /* Asked separately, so a "no" to the microphone never blocks the camera. The track is
+           stopped at once: the Speak question opens the microphone again only while recording. */
+        try {
+          const mic = await navigator.mediaDevices.getUserMedia({ audio: true });
+          setMicGranted(mic.getAudioTracks().some((t) => t.readyState === "live"));
+          mic.getTracks().forEach((t) => t.stop());
+          setMicNote(null);
+        } catch {
+          setMicGranted(false);
+          setMicNote("The microphone is off. That's fine: on the speaking questions you can type your answer instead.");
+        }
+      }
       setStep("camera");
     } catch (error) {
       setCameraError(
@@ -100,7 +121,7 @@ export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error
     } finally {
       setRequesting(false);
     }
-  }, []);
+  }, [needsMicrophone]);
 
   // Preview + calibration, live for as long as the camera step is on screen.
   useEffect(() => {
@@ -137,7 +158,7 @@ export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error
        `requestFullscreen` can resolve without the document actually being fullscreen. */
     const permissions: ConsentPermissions = {
       camera: stream.getVideoTracks().some((track) => track.readyState === "live"),
-      microphone: stream.getAudioTracks().some((track) => track.readyState === "live"),
+      microphone: micGranted || stream.getAudioTracks().some((track) => track.readyState === "live"),
       fullscreen: document.fullscreenElement !== null,
       // Not a browser permission: it is the thing being agreed to, and the engine starts it on the
       // next screen. True here means "they were told and said yes", which is what consent is.
@@ -146,7 +167,7 @@ export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error
 
     handedOverRef.current = true;
     onReady(calibration, stream, permissions);
-  }, [busy, calibration, onReady, stream]);
+  }, [busy, calibration, micGranted, onReady, stream]);
 
   const blocked = environment.coarsePointer || environment.narrowViewport;
   const index = STEPS.findIndex((s) => s.id === step);
@@ -174,9 +195,16 @@ export function PreFlight({ assessmentId, onReady, onCancel, busy = false, error
           <ConsentStep
             error={cameraError}
             busy={requesting}
+            needsMicrophone={needsMicrophone}
             onAgree={() => void requestCamera()}
             onCancel={onCancel}
           />
+        )}
+
+        {micNote && step !== "consent" && (
+          <p role="status" className="mb-4 rounded-md border border-basalt/40 bg-surface-sunken px-3 py-2 text-sm text-muted-foreground">
+            {micNote}
+          </p>
         )}
 
         {step === "camera" && (
@@ -357,11 +385,13 @@ function StepActions({
 function ConsentStep({
   error,
   busy,
+  needsMicrophone,
   onAgree,
   onCancel,
 }: {
   error: string | null;
   busy: boolean;
+  needsMicrophone: boolean;
   onAgree: () => void;
   onCancel: () => void;
 }) {
@@ -397,6 +427,16 @@ function ConsentStep({
           an operating-system screenshot or a screen-sharing tool, and cannot see a second device
           out of the camera&rsquo;s view. It records the traces it can, and a person reviews them. A
           warning is evidence for that person, never an automatic verdict.
+        </p>
+        <p>
+          <strong className="font-semibold">The microphone is used only for speaking questions.</strong>{" "}
+          {needsMicrophone
+            ? "This assessment has one or two. We'll ask for your microphone next. "
+            : "This assessment has none, so we won't ask for it. "}
+          It records only while you press record on a speaking question. The recording is turned
+          into text, kept for up to 30 days by default, and only admins can listen to it. The text
+          is kept with your results. If you say no to the microphone, you can type those answers
+          instead.
         </p>
         <p>Three warnings end the assessment. Your answers up to that point are still evaluated.</p>
       </div>

@@ -43,6 +43,7 @@ import { registerAdminRoleplayRoutes, registerRoleplayRoutes } from "./routes/ro
 import { registerAdminHandbookRoutes, registerHandbookRoutes } from "./routes/handbook";
 import { registerHealthRoutes } from "./routes/health";
 import { registerSpeechRoutes } from "./routes/speech";
+import { registerReviewRoutes } from "./routes/reviews";
 import { registerMeRoutes } from "./routes/me";
 import { registerTopicRoutes } from "./routes/topics";
 import { registerAdminVideoRoutes, registerVideoRoutes } from "./routes/videos";
@@ -200,6 +201,7 @@ export async function buildApp({
   await registerAssessmentV4Routes(app);
   await registerGoalRoutes(app);
   await registerSpeechRoutes(app);
+  await registerReviewRoutes(app);
   // Registered as plugins so their superadmin preHandler is encapsulated to those routes only.
   await app.register(registerAdminUserRoutes);
   await app.register(registerAdminPlanRoutes);
