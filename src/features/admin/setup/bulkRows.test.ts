@@ -68,4 +68,18 @@ describe("bulk rows", () => {
 
     expect(credentialsCsv(rows, "https://learn.example.com/")).toBe("Name,Username,Temporary password,Sign in\nA One,a.one,pw-1,https://learn.example.com/login");
   });
+
+  test("v4.4 P6: an open 'not sure' question blocks the row until it is answered in its plan", async () => {
+    const { answerUnsure } = await import("./helpers");
+    const description = "Frontend dev, weak on Git";
+    const unsure = [{ phrase: "weak on Git", options: [{ label: "Git", skillIds: ["eng-git"] }, { label: "Leave it out", skillIds: [], leaveOut: true }] }];
+    let rows = rowsFromText(`Priya Sharma, Engineering, ${description}`, DEPTS, "engineering", new Set());
+    rows = rows.map((r) => withSuggestion(r, { suggestion: { ...SUGGESTION, intents: [], unsure } as OnboardSuggestion }));
+    expect(rowErrors(rows, new Set())[0]!.unsure).toMatch(/Answer the question/);
+    expect(readyRows(rows, rowErrors(rows, new Set()))).toEqual([]);
+
+    rows = rows.map((r) => ({ ...r, state: answerUnsure(r.state!, 0, unsure[0]!.options[0]!) }));
+    expect(rowErrors(rows, new Set())[0]).toEqual({});
+    expect(readyRows(rows, rowErrors(rows, new Set()))).toHaveLength(1);
+  });
 });

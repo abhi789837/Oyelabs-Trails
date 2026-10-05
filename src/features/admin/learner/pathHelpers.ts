@@ -23,7 +23,7 @@ export function truncateWords(text: string, max = 20): string {
   return `${words.slice(0, max).join(" ").replace(/[,;:.!?-]+$/, "")}…`;
 }
 
-export type CourseState = "matched" | "module" | "reused" | "generated" | "generating" | "needs_review";
+export type CourseState = "matched" | "module" | "reused" | "generated" | "generating" | "needs_review" | "waiting_setup" | "not_made";
 
 export const COURSE_STATE_LABELS: Record<CourseState, string> = {
   matched: "matched",
@@ -32,6 +32,8 @@ export const COURSE_STATE_LABELS: Record<CourseState, string> = {
   generated: "generated",
   generating: "generating",
   needs_review: "needs review",
+  waiting_setup: "waiting for setup",
+  not_made: "couldn't be made",
 };
 
 /** v4: a curriculum module attached in place of a course. It has no course id, and that is fine. */
@@ -44,7 +46,12 @@ export function isModuleItem(item: Pick<PathItemView, "moduleId">): boolean {
  * run is busy, and waiting for a human once it has stopped. A curriculum module is always a match:
  * it was attached from the skill catalog, so it is never generating, removed or failed.
  */
-export function courseState(item: Pick<PathItemView, "source" | "available" | "moduleId">, pathBusy: boolean): CourseState {
+export function courseState(item: Pick<PathItemView, "source" | "available" | "moduleId" | "creating">, pathBusy: boolean): CourseState {
+  // v4.4: a course still being made in the background (`course.generate`).
+  if (item.creating === "working") return "generating";
+  if (item.creating === "held") return "needs_review";
+  if (item.creating === "waiting_setup") return "waiting_setup";
+  if (item.creating === "failed") return "not_made";
   if (isModuleItem(item)) return "module";
   if (item.source === "unlock") return "matched";
   if (item.source === "reuse") return "reused";

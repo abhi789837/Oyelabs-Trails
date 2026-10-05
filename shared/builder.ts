@@ -271,6 +271,49 @@ export function reviewPasses(review: CourseReview): boolean {
 }
 
 // ---------------------------------------------------------------------------
+// v4.4 (Phase 5): courses made automatically
+// ---------------------------------------------------------------------------
+
+/** `app_meta` key: publish a new course that passes its quality check. Absent = on. */
+export const AUTO_PUBLISH_KEY = "builder.auto_publish";
+/** How many times "Fix automatically" may rewrite a course before a person has to edit it. */
+export const MAX_FIX_ATTEMPTS = 2;
+
+/** What each check means, in words an admin reads in one line. Weakest first wins. */
+const REVIEW_REASON: Record<(typeof REVIEW_CRITERIA)[number], string> = {
+  accuracy: "Some facts may be wrong",
+  depth: "The lessons are too thin",
+  gapCoverage: "It doesn't teach what the learner is missing",
+  linkQuality: "Some of its sources are weak",
+  testQuality: "The quiz questions are too easy or unclear",
+  noFiller: "It has too much filler",
+};
+
+/** One plain line saying why a course failed its quality check. */
+export function plainReviewReason(review: CourseReview): string {
+  const weakest = [...REVIEW_CRITERIA].sort((a, b) => review[a] - review[b])[0];
+  const lessons = review.weakTopics.length;
+  const where = lessons > 0 ? ` in ${lessons} lesson${lessons === 1 ? "" : "s"}` : "";
+  return `${REVIEW_REASON[weakest]}${where}.`;
+}
+
+/**
+ * The admin's notice when new courses reach the library for one learner, e.g. "We added 3 new
+ * courses to the library for Rahul: A, B, C. They're also available to everyone now."
+ */
+export function coursesAddedMessage(learnerName: string, titles: readonly string[]): string {
+  const n = titles.length;
+  const head = `We added ${n} new course${n === 1 ? "" : "s"} to the library for ${learnerName}: ${titles.join(", ")}.`;
+  return `${head} ${n === 1 ? "It's" : "They're"} also available to everyone now.`;
+}
+
+/** The notice shown while a new course waits for the AI or web search to be connected. */
+export function setupNeededMessage(problem: string, count = 1): string {
+  const what = count === 1 ? "the course" : `${count} courses`;
+  return `We couldn't create ${what} because ${problem}. We'll finish automatically after it's set up.`;
+}
+
+// ---------------------------------------------------------------------------
 // What the UI reads
 // ---------------------------------------------------------------------------
 
@@ -309,6 +352,21 @@ export const PART_LABELS: Record<PartType, string> = {
  */
 export const GOAL_ITEM_PREFIX = "goal:";
 
+/**
+ * v4.4: a path item whose course is still being made. `path_items.module_id` holds this prefix and
+ * the course key ("skill:<id>", "case:<id>" or "name:<skill>") until the course is ready, then the
+ * item gets its `course_id`.
+ */
+export const NEW_COURSE_ITEM_PREFIX = "newcourse:";
+
+/** True for a `module_id` that is a marker (capstone or a course being made), not a real module. */
+export function isMarkerModuleId(moduleId: string | null | undefined): boolean {
+  return Boolean(moduleId && (moduleId.startsWith(GOAL_ITEM_PREFIX) || moduleId.startsWith(NEW_COURSE_ITEM_PREFIX)));
+}
+
+/** Where a course being made is: working, waiting for setup, held for a look, or it could not be made. */
+export type CreatingState = "working" | "waiting_setup" | "held" | "failed";
+
 export interface PathItemView {
   id: string;
   courseId: string | null;
@@ -342,6 +400,8 @@ export interface PathItemView {
   /** v4.3: set on a capstone item: the goal it proves, and whether it is achieved. */
   goalId?: string | null;
   goalAchieved?: boolean;
+  /** v4.4: set while this item's course is still being made (see `NEW_COURSE_ITEM_PREFIX`). */
+  creating?: CreatingState | null;
 }
 
 export interface LearningPathView {
@@ -356,6 +416,8 @@ export interface LearningPathView {
    * provider" banner next to a "nothing needed a course" message on the same screen.
    */
   notice: string | null;
+  /** v4.4: set while a new course waits for the AI or web search to be connected (one plain line). */
+  setupNeeded?: string | null;
   createdAt: number;
   completedAt: number | null;
   items: PathItemView[];

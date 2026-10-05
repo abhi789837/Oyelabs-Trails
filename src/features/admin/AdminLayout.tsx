@@ -84,7 +84,7 @@ const groups: SectionGroup[] = [
       { to: "/admin/curriculum", end: false, label: "Curriculum", icon: Library },
       { to: "/admin/skill-graph", end: false, label: "Skill graph", icon: Network },
       { to: "/admin/skill-groups", end: false, label: "Skill groups", icon: Boxes },
-      { to: "/admin/question-bank", end: false, label: "Question bank", icon: ListChecks },
+      { to: "/admin/question-bank", end: false, label: "Question library", icon: ListChecks },
       { to: "/admin/courses", end: false, label: "Courses", icon: BookOpen },
       { to: "/admin/sop", end: false, label: "Company SOPs", icon: ClipboardList },
       { to: "/admin/handbook", end: false, label: "Handbook", icon: BookMarked },

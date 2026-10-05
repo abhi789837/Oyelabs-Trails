@@ -123,7 +123,7 @@ export function assembleInto(db: Db, assessmentId: string, userId: string): V4Co
     seed: assessmentId,
   });
   if (result.items.length === 0) {
-    throw conflict("The question bank has no items for this department yet. Seed or approve some under Admin → Question bank.");
+    throw conflict("The question library has no questions for this department yet. Add or approve some under Admin → Question library.");
   }
 
   // v4.1: the 25 are balanced to land in 26–32 minutes by swapping bank items of the same skill.

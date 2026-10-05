@@ -45,7 +45,7 @@ type TabId = (typeof TABS)[number]["id"];
  * `q` (prompt text or id).
  */
 export default function AdminBankPage() {
-  useDocumentTitle("Question bank");
+  useDocumentTitle("Question library");
   const formDialog = useFormDialog();
   const { catalog, error: catalogError } = useCatalog();
   const { query, setQuery } = useTableQueryState();
@@ -114,7 +114,7 @@ export default function AdminBankPage() {
         setError(null);
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") return;
-        setError(err instanceof ApiRequestError ? err.message : "Could not load the question bank.");
+        setError(err instanceof ApiRequestError ? err.message : "Could not load the question library.");
       } finally {
         setLoading(false);
       }
@@ -327,7 +327,7 @@ export default function AdminBankPage() {
     <div className="max-w-6xl px-4 py-8 sm:px-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">Question bank</h1>
+          <h1 className="text-2xl font-bold">Question library</h1>
           <p className="mt-1 max-w-prose text-sm text-muted-foreground">
             Validated items that assessments are assembled from, with how each one has performed.
           </p>
@@ -378,7 +378,7 @@ export default function AdminBankPage() {
             </dl>
           </div>
 
-          <div role="tablist" aria-label="Question bank views" className="mt-6 flex gap-1 border-b">
+          <div role="tablist" aria-label="Question library views" className="mt-6 flex gap-1 border-b">
             {TABS.map((t) => {
               const selected = t.id === tab;
               return (
@@ -459,10 +459,10 @@ export default function AdminBankPage() {
                   onRetry={() => void load()}
                   noun="item"
                   searchPlaceholder="Search prompt or id"
-                  caption="Question bank items for the selected department."
+                  caption="Questions in the library for the selected department."
                   emptyState={{
                     title: "No items here",
-                    body: "Nothing in the bank matches these filters. The Coverage tab can queue a gap fill.",
+                    body: "No question in the library matches these filters. The Coverage tab can ask the AI to fill the gap.",
                   }}
                   renderDetail={(row) => <BankItemPreview item={row} skillName={skillName(row.skillId)} />}
                   detailTitle={(row) => skillName(row.skillId)}

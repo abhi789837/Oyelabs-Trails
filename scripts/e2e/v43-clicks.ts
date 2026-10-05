@@ -6,10 +6,10 @@
  *   npm run build                         # once; this serves dist/ + dist-server/
  *   npx tsx scripts/e2e/v43-clicks.ts
  *
- * 1. Quick, default department: type name + one line, Save & assign. Expect 1 click.
- * 2. Quick, another department, reviewing the suggestion first: department, Suggest, Save & assign.
+ * 1. Quick, default department: type name + one line, Suggest, Looks good. Expect 2 clicks.
+ * 2. Quick, another department, reviewing the plan first: department, Suggest, Looks good.
  *    Expect 3 clicks.
- * 3. Bulk, 3 people: Several people, Suggest all, Create & assign all, Copy all. Expect 4 clicks
+ * 3. Bulk, 3 people: Several people, Suggest all, Looks good — send the tests, Copy all. Expect 4 clicks
  *    (3 without the password handover).
  * 4. The learner page shows the next action with one primary button.
  *
@@ -113,7 +113,9 @@ async function main(): Promise<void> {
     const one = await counted(async () => {
       await page.getByLabel("Full name").fill("Priya Sharma");
       await page.getByLabel("Describe them in one line").fill("Frontend dev, 2 yrs React, weak on Git, we want him doing backend + AI-driven work");
-      await click(page.getByRole("button", { name: "Save & assign assessment" }));
+      // v4.4 P6: Suggest, then the plan card's "Looks good — send the test".
+      await click(page.getByRole("button", { name: "Suggest", exact: true }));
+      await click(page.getByRole("button", { name: "Looks good — send the test" }));
       await page.getByRole("status").filter({ hasText: "Account created for Priya Sharma" }).waitFor({ timeout: 30_000 });
     });
     ok(one.clicks <= 3, `quick onboarding took ${one.clicks} click(s) after typing (target ≤ 3)`);
@@ -124,8 +126,8 @@ async function main(): Promise<void> {
       await click(page.getByRole("radiogroup", { name: "Department" }).getByRole("radio", { name: "Project Management", exact: true }));
       await page.getByLabel("Describe them in one line").fill("New PM from client services, weak on Excel and client calls");
       await click(page.getByRole("button", { name: "Suggest", exact: true }));
-      await page.getByRole("region", { name: "Suggested setup" }).waitFor({ timeout: 30_000 });
-      await click(page.getByRole("button", { name: "Save & assign assessment" }));
+      await page.getByRole("region", { name: /^Here's the plan/ }).waitFor({ timeout: 30_000 });
+      await click(page.getByRole("button", { name: "Looks good — send the test" }));
       await page.getByRole("status").filter({ hasText: "Account created for Ravi Kumar" }).waitFor({ timeout: 30_000 });
     });
     ok(two.clicks <= 3, `quick onboarding with department and review took ${two.clicks} click(s) (target ≤ 3)`);
@@ -144,8 +146,8 @@ async function main(): Promise<void> {
           ].join("\n"),
         );
       await click(page.getByRole("button", { name: "Suggest all" }));
-      await page.getByRole("button", { name: /Create & assign all \(3\)/ }).waitFor({ timeout: 60_000 });
-      await click(page.getByRole("button", { name: /Create & assign all/ }));
+      await page.getByRole("button", { name: /Looks good — send the tests \(3\)/ }).waitFor({ timeout: 60_000 });
+      await click(page.getByRole("button", { name: /Looks good — send the tests/ }));
       await page.getByRole("button", { name: /Copy all \(3\)/ }).waitFor({ timeout: 60_000 });
       await click(page.getByRole("button", { name: /Copy all/ }));
     });

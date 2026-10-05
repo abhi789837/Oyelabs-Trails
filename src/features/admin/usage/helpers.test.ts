@@ -38,7 +38,7 @@ describe("fillDays", () => {
 
 describe("taskLabel", () => {
   it("labels known tasks and falls back for purposes", () => {
-    expect(taskLabel("bank_fill")).toBe("Filling gaps in the question bank");
+    expect(taskLabel("bank_fill")).toBe("Filling gaps in the question library");
     expect(taskLabel("gap_analysis")).toBe("gap analysis");
   });
 });

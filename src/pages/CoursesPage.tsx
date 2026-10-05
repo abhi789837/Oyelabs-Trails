@@ -199,7 +199,7 @@ function PathOrder({ path }: { path: LearningPathView }) {
                 {/* Said plainly rather than hidden: a learner can see what is coming, and why it
                     is not open yet. */}
                 {item.moduleId && <Badge variant="outline">Matched · curriculum module</Badge>}
-                {!item.available && !item.moduleId && <Badge variant="outline">waiting to be checked over</Badge>}
+                {!item.available && !item.moduleId && <Badge variant="outline">{item.creating ? "being created" : "waiting to be checked over"}</Badge>}
                 <span className="ml-auto font-mono text-[11px] text-muted-foreground tabular">
                   {item.completedCount}/{item.topicCount}
                 </span>

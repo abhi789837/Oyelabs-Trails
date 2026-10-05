@@ -63,7 +63,7 @@ export function flagCitingItems(db: Db, ai: AiService, kind: HandbookKind, id: s
         recipientId,
         kind: "handbook.revalidate",
         title: `${name} changed`,
-        body: `${n} question-bank item${n === 1 ? "" : "s"} cite${n === 1 ? "s" : ""} ${name}, which changed. Review them in the question bank.`,
+        body: `${n} question${n === 1 ? "" : "s"} in the library use${n === 1 ? "s" : ""} ${name}, which changed. Review them in the question library.`,
         link: "/admin/question-bank?status=draft",
       });
     }
@@ -128,7 +128,7 @@ export function bankRevalidateHandler(deps: RevalidateDeps) {
       notify(db, {
         recipientId,
         kind: "handbook.revalidate",
-        title: `Bank item ${item.id} needs a review`,
+        title: `Question ${item.id} needs a review`,
         body: `It may no longer agree with ${name}, which changed. ${result.data.reason}`.slice(0, 900),
         link: "/admin/question-bank?status=draft",
       });

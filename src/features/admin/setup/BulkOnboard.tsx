@@ -1,10 +1,11 @@
-import { useId, useMemo, useState } from "react";
+import { Fragment, useEffect, useId, useMemo, useState } from "react";
 import { Check, ClipboardCopy, LoaderCircle, Sparkles, Trash2, X } from "lucide-react";
 
 import type { BulkOnboardResult } from "@shared/bulkOnboard";
 import { MAX_BULK_ROWS } from "@shared/bulkOnboard";
 import type { Catalog } from "@shared/catalog";
 import type { OnboardSuggestion } from "@shared/goals";
+import type { OnboardPreview } from "@shared/onboardPreview";
 import type { Slider } from "@shared/setup";
 
 import { api, ApiRequestError } from "@/api/client";
@@ -14,7 +15,9 @@ import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { goalsApi } from "./goalsApi";
-import { withGoals } from "./helpers";
+import { answerUnsure, openUnsure, withGoals } from "./helpers";
+import { PlanCard } from "./PlanCard";
+import { previewKey, previewRequest, setWantedPriority } from "./planSummary";
 import { sortedGoals } from "./goals";
 import { applyResults, credentialsCsv, readyRows, rowErrors, rowsFromText, toBulkRequest, withSuggestion, type BulkRow } from "./bulkRows";
 
@@ -76,7 +79,7 @@ export function BulkOnboard({ catalog, taken, onCreated }: { catalog: Catalog; t
       setRows(start.map((r) => (byKey.has(r.key) ? withSuggestion(r, byKey.get(r.key) ?? {}) : { ...r, status: "new" })));
     } catch (err) {
       setRows(start.map((r) => ({ ...r, status: "new" })));
-      setError(err instanceof ApiRequestError ? err.message : "Suggest did not answer. Try again.");
+      setError(err instanceof ApiRequestError ? err.message : "Suggest didn't answer. Try again.");
     } finally {
       setBusy(null);
     }
@@ -111,7 +114,7 @@ export function BulkOnboard({ catalog, taken, onCreated }: { catalog: Catalog; t
       if (ok.length) notify.success(`${ok.length} ${ok.length === 1 ? "person" : "people"} created and assigned. Copy their passwords now: they are shown once.`);
       if (failed) notify.error(`${failed} ${failed === 1 ? "row" : "rows"} not created. Fix the highlighted fields and press Create again.`);
       const noAssessment = ok.filter((r) => r.issueError).length;
-      if (noAssessment) notify.info(`${noAssessment} created without an assessment. Their learner page offers Assign assessment.`);
+      if (noAssessment) notify.info(`${noAssessment} created without a test. Open their learner page to send one.`);
     } catch (err) {
       setError(err instanceof ApiRequestError ? err.message : "Nothing was created. Try again.");
     } finally {
@@ -221,7 +224,7 @@ export function BulkOnboard({ catalog, taken, onCreated }: { catalog: Catalog; t
 
           <div className="flex flex-wrap items-center gap-3">
             <Button type="button" disabled={ready.length === 0 || busy !== null} loading={busy === "create"} onClick={() => void createAll()}>
-              Create &amp; assign all{ready.length ? ` (${ready.length})` : ""}
+              Looks good — send the tests{ready.length ? ` (${ready.length})` : ""}
             </Button>
             {created.length > 0 && (
               <Button type="button" variant="outline" onClick={() => void copyAll()}>
@@ -279,8 +282,29 @@ function BulkRowView({
       </p>
     ) : null;
   const invalid = (field: string) => (errors[field] ? { "aria-invalid": true as const, "aria-describedby": `${id}-${field}` } : {});
+  const questions = state ? openUnsure(state) : 0;
+  // v4.4 P6: each row's plan, the same card as one person's (compact); open when it has a question.
+  const [planOpen, setPlanOpen] = useState(false);
+  const showPlan = Boolean(state) && !done && (planOpen || questions > 0);
+  const [preview, setPreview] = useState<{ key: string; preview: OnboardPreview | null; error: unknown } | null>(null);
+  const key = state ? previewKey(state) : null;
+  useEffect(() => {
+    if (!showPlan || !state || !key || preview?.key === key) return;
+    let live = true;
+    const timer = window.setTimeout(() => {
+      goalsApi
+        .preview(previewRequest(state))
+        .then((r) => live && setPreview({ key, preview: r.preview, error: null }))
+        .catch((err: unknown) => live && setPreview({ key, preview: null, error: err }));
+    }, 300);
+    return () => {
+      live = false;
+      window.clearTimeout(timer);
+    };
+  }, [showPlan, key]);
 
   return (
+    <Fragment>
     <tr className={cn("border-b align-top last:border-b-0", done && "bg-summit/[0.05]", row.status === "failed" && "bg-destructive/[0.04]")}>
       <td className="px-3 py-2">
         <input aria-label={`Name, line ${row.line}`} value={row.name} disabled={locked} onChange={(e) => onChange({ name: e.target.value })} className={cellInput} {...invalid("name")} />
@@ -413,10 +437,15 @@ function BulkRowView({
             {done && (
               <p className="mt-1 inline-flex items-center gap-1 text-xs text-summit-strong">
                 <Check className="size-3.5" aria-hidden="true" />
-                {row.issueError ? "Created. Assessment not issued." : "Created and assigned"}
+                {row.issueError ? "Created. The test wasn't sent yet." : "Created and test sent"}
               </p>
             )}
             {row.status === "failed" && errors.row && <p className="mt-1 text-xs text-destructive">{errors.row}</p>}
+            {!done && (
+              <Button type="button" variant="link" size="sm" className="h-auto px-0 text-xs" aria-expanded={showPlan} disabled={questions > 0} onClick={() => setPlanOpen((o) => !o)}>
+                {questions > 0 ? `${questions} question${questions === 1 ? "" : "s"} to answer below` : showPlan ? "Hide the plan" : "Show the plan"}
+              </Button>
+            )}
           </td>
         </>
       )}
@@ -434,5 +463,24 @@ function BulkRowView({
         )}
       </td>
     </tr>
+    {showPlan && state && (
+      <tr className="border-b">
+        <td colSpan={8} className="px-3 pb-3">
+          <PlanCard
+            compact
+            displayName={row.name}
+            state={state}
+            catalog={catalog}
+            preview={preview?.key === key ? preview.preview : null}
+            previewError={preview?.key === key ? preview.error : null}
+            previewLoading={preview?.key !== key}
+            disabled={locked}
+            onPriority={(item, choice) => onChange((r) => (r.state ? { ...r, state: setWantedPriority(r.state, item, choice) } : r))}
+            onAnswer={(index, option) => onChange((r) => (r.state ? { ...r, state: answerUnsure(r.state, index, option) } : r))}
+          />
+        </td>
+      </tr>
+    )}
+    </Fragment>
   );
 }

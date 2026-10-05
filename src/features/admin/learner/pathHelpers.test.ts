@@ -73,6 +73,11 @@ describe("courseState", () => {
     expect(courseState({ source: "generated", available: true }, false)).toBe("generated");
     expect(courseState({ source: "generated", available: false }, true)).toBe("generating");
     expect(courseState({ source: "generated", available: false }, false)).toBe("needs_review");
+    // v4.4: a course being made in the background, whatever the run's own status.
+    expect(courseState({ source: "generated", available: false, creating: "working" }, false)).toBe("generating");
+    expect(courseState({ source: "generated", available: false, creating: "waiting_setup" }, false)).toBe("waiting_setup");
+    expect(courseState({ source: "generated", available: false, creating: "held" }, true)).toBe("needs_review");
+    expect(courseState({ source: "generated", available: false, creating: "failed" }, false)).toBe("not_made");
   });
 });
 

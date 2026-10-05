@@ -19,6 +19,7 @@ import { batchPollHandler } from "./ai/batches";
 import { ensurePistonPackages } from "./sandbox/pistonSetup";
 import { enqueue } from "./jobs/queue";
 import { buildPathHandler } from "./jobs/handlers/buildPath";
+import { courseGenerateHandler, wakeIfReady } from "./builder/autoCourse";
 import { refineWeekHandler } from "./jobs/handlers/refineWeek";
 import { checkLinksHandler } from "./jobs/handlers/checkLinks";
 import { verifyCredentialHandler } from "./jobs/handlers/verifyCredential";
@@ -80,6 +81,7 @@ async function main(): Promise<void> {
       }),
       "assessment.evaluate": evaluateHandler({ db, ai, content, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "path.build": buildPathHandler({ db, env, ai, content, log: (m) => console.log(`[oyelearn] ${m}`) }),
+      "course.generate": courseGenerateHandler({ db, env, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "links.check": checkLinksHandler({ db, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "week.refine": refineWeekHandler({ db, content, ai, log: (m) => console.log(`[oyelearn] ${m}`) }),
       "bank.fill": bankFillHandler({ db, ai, sandbox, piston: app.piston, log: (m) => console.log(`[oyelearn] ${m}`) }),
@@ -123,6 +125,20 @@ async function main(): Promise<void> {
   }, WEEK_MS);
   linkCheck.unref?.();
 
+  /* v4.4: new courses waiting for the AI or web search wake when the settings are saved; this also
+     catches setup that arrives another way (an env key, a restored database). */
+  const wakeCourses = () => {
+    try {
+      const woken = wakeIfReady({ db, env, ai });
+      if (woken > 0) console.log(`[oyelearn] ${woken} new course(s) can be made now`);
+    } catch (error) {
+      console.error("[oyelearn] could not wake waiting courses:", error instanceof Error ? error.message : error);
+    }
+  };
+  wakeCourses();
+  const courseWake = setInterval(wakeCourses, 5 * 60 * 1000);
+  courseWake.unref?.();
+
   // Snapshot retention and the nightly backup (brief §10.6, §15).
   const stopMaintenance = startDailyMaintenance({
     db,
@@ -136,6 +152,7 @@ async function main(): Promise<void> {
     try {
       clearInterval(sweeper);
       clearInterval(linkCheck);
+      clearInterval(courseWake);
       stopMaintenance();
       await worker.stop();
       await app.close();

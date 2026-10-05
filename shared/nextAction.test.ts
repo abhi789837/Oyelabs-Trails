@@ -34,7 +34,7 @@ describe("nextAction", () => {
   });
 
   test("no assessment: assign it", () => {
-    expect(at({ assessment: null })).toMatchObject({ kind: "assign", title: "Assessment ready to send.", button: { action: "assign" } });
+    expect(at({ assessment: null })).toMatchObject({ kind: "assign", title: "Plan ready · send the test", button: { action: "assign" } });
   });
 
   test("the assessment lifecycle", () => {
@@ -48,12 +48,12 @@ describe("nextAction", () => {
   });
 
   test("a released assessment: a new invite before first sign-in, otherwise wait", () => {
-    expect(at({ assessment: { status: "ready" }, mustChangePassword: true })).toMatchObject({ kind: "invite", title: "Awaiting first sign-in.", button: { action: "invite" } });
+    expect(at({ assessment: { status: "ready" }, mustChangePassword: true })).toMatchObject({ kind: "invite", title: "Test sent · waiting for them to sign in", button: { action: "invite" } });
     expect(at({ assessment: { status: "ready" } })).toMatchObject({ kind: "waiting", button: null });
   });
 
   test("evaluated: build when there is no path, review while it builds, rebuild after a failure", () => {
-    expect(at({ path: null })).toMatchObject({ kind: "build", button: { action: "build", label: "Build path" } });
+    expect(at({ path: null })).toMatchObject({ kind: "build", button: { action: "build", label: "Build the path" } });
     expect(at({ path: { status: "writing", createdAt: 200, needsReview: 0 } })).toMatchObject({ kind: "review-evaluation", button: { tab: "assessment" } });
     expect(at({ path: { status: "failed", createdAt: 200, needsReview: 0 } })).toMatchObject({ kind: "build-failed", button: { action: "build" } });
     expect(at({ path: { status: "budget_reached", createdAt: 200, needsReview: 0 } }).title).toContain("budget");
@@ -66,7 +66,7 @@ describe("nextAction", () => {
   });
 
   test("a path older than the goals, the graph or the evaluation needs a rebuild", () => {
-    expect(at({ setupChangedAt: 300 })).toMatchObject({ kind: "rebuild", button: { action: "build", label: "Rebuild path" } });
+    expect(at({ setupChangedAt: 300 })).toMatchObject({ kind: "rebuild", button: { action: "build", label: "Rebuild the path" } });
     expect(at({ graphChangedAt: 300 }).title).toContain("skill graph");
     expect(at({ evaluationAt: 300 }).title).toContain("newer evaluation");
     // Equal timestamps are not stale.
@@ -96,5 +96,34 @@ describe("nextAction", () => {
 describe("staleReason", () => {
   test("no path is never stale", () => {
     expect(staleReason({ path: null, setupChangedAt: 999, graphChangedAt: 999, evaluationAt: 999 })).toBeNull();
+  });
+});
+
+describe("v4.4 P6: plain status lines and the new kinds", () => {
+  test("names the learner while the test waits", () => {
+    expect(at({ assessment: { status: "ready" }, name: "Rahul Verma" }).title).toBe("Test sent · waiting for Rahul");
+    expect(at({ assessment: { status: "ready" } }).title).toBe("Test sent · waiting for them");
+    expect(at({ path: null }).title).toBe("Test done · plan ready");
+  });
+
+  test("a spoken answer that needs a listen comes before the path, even while marking", () => {
+    expect(at({ speakToListen: 1 })).toMatchObject({ kind: "listen", title: "Needs a listen: 1 spoken answer", button: { action: "open", tab: "assessment", anchor: "needs-listen" } });
+    expect(at({ assessment: { status: "evaluating" }, speakToListen: 2 }).title).toBe("Needs a listen: 2 spoken answers");
+    expect(at({ path: null, speakToListen: 1 }).kind).toBe("listen");
+  });
+
+  test("open review requests come next", () => {
+    expect(at({ openReviews: 2, name: "Rahul" })).toMatchObject({ kind: "reviews", title: "Rahul asked us to check 2 answers again", button: { anchor: "review-requests" } });
+  });
+
+  test("new courses being created, or waiting for setup with a Connect it button", () => {
+    expect(at({ courses: { creating: 2, waitingSetup: 0, problem: null } })).toMatchObject({ kind: "courses-creating", title: "2 new courses being created (about 6 min)", tone: "waiting", button: null });
+    expect(at({ courses: { creating: 1, waitingSetup: 1, problem: "the web search isn't connected" } })).toMatchObject({
+      kind: "courses-waiting",
+      tone: "blocked",
+      title: "1 new course waiting: the web search isn't connected. We'll finish them on our own after.",
+      button: { action: "link", label: "Connect it", to: "/admin/ai" },
+    });
+    expect(at({ courses: { creating: 0, waitingSetup: 0, problem: null } }).kind).toBe("on-track");
   });
 });

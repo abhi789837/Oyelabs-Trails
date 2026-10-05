@@ -155,3 +155,33 @@ export function deferJob(db: Db, id: string, delayMs: number): void {
     .where(eq(schema.jobs.id, id))
     .run();
 }
+
+/**
+ * v4.4: thrown by a handler that cannot start until something is set up (the AI or the web search
+ * for `course.generate`). The worker parks the job in `waiting_setup` with this plain message; it
+ * never runs again until `wakeWaitingJobs` puts it back in the queue.
+ */
+export class JobWaitingSetupError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "JobWaitingSetupError";
+  }
+}
+
+/** Parks a claimed job until setup is fixed, without counting an attempt. */
+export function parkJob(db: Db, id: string, reason: string): void {
+  db.update(schema.jobs)
+    .set({ status: "waiting_setup", lockedAt: null, lastError: reason.slice(0, 2000), attempts: sql`max(${schema.jobs.attempts} - 1, 0)` })
+    .where(eq(schema.jobs.id, id))
+    .run();
+}
+
+/** Puts every job of this type that waits for setup back in the queue. Returns how many. */
+export function wakeWaitingJobs(db: Db, type: JobType): number {
+  const result = db
+    .update(schema.jobs)
+    .set({ status: "queued", runAfter: now(), lastError: null })
+    .where(and(eq(schema.jobs.type, type), eq(schema.jobs.status, "waiting_setup")))
+    .run();
+  return result.changes ?? 0;
+}

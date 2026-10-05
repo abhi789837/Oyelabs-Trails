@@ -102,7 +102,7 @@ export function WeekTab({ userId, displayName }: { userId: string; displayName: 
               <>
                 {formatRange(week.startDate, week.endDate)} <span aria-hidden="true">·</span>{" "}
                 {formatMinutes(week.plannedMinutes)} planned against a {formatMinutes(week.budgetMinutes)} budget{" "}
-                <span aria-hidden="true">·</span> shaped by {week.source === "ai" ? "the model" : week.source === "admin" ? "an admin" : "the rules"}
+                <span aria-hidden="true">·</span> shaped by {week.source === "ai" ? "the AI" : week.source === "admin" ? "an admin" : "the rules"}
               </>
             ) : (
               (response?.reason ?? "It is built the first time they open their plan.")

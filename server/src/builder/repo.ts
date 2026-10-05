@@ -1,8 +1,11 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 
 import {
   EMPTY_PRIORITIES,
   GOAL_ITEM_PREFIX,
+  NEW_COURSE_ITEM_PREFIX,
+  setupNeededMessage,
+  type CreatingState,
   type LearnerPriorities,
   type PartType,
   type LearningPathView,
@@ -17,7 +20,7 @@ import type { ContentStore } from "../content/store";
 import { listSkillPriorities, listSkip, replaceSkipByNames, writeLegacyTargets } from "../setup/repo";
 import { learnerGoalViews } from "../goals/repo";
 import { sliderToPriority } from "../../../shared/setup";
-import type { BuiltCourse } from "./pipeline";
+import type { BuiltCourse, BuiltTopic } from "./pipeline";
 import { isLevelBandedCamp, levelsFrom } from "./priorityPath";
 
 /** The statuses a generated course can hold. Mirrors the column's own union. */
@@ -260,7 +263,32 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
     items.some((item) => item.moduleId?.startsWith(GOAL_ITEM_PREFIX)) ? learnerGoalViews(db, userId).map((g) => [g.id, g] as const) : [],
   );
 
+  const waitingProblems: string[] = [];
   const views: PathItemView[] = items.map((item) => {
+    // v4.4: a course still being made. Never openable, and never shows a held course's title.
+    if (item.moduleId?.startsWith(NEW_COURSE_ITEM_PREFIX)) {
+      const info = creatingInfo(db, item.moduleId.slice(NEW_COURSE_ITEM_PREFIX.length));
+      if (info.state === "waiting_setup") waitingProblems.push(info.problem ?? "the web search isn't connected");
+      return {
+        id: item.id,
+        courseId: null,
+        courseTitle: info.skill ?? item.targetSkill ?? "New course",
+        position: item.position,
+        source: item.source,
+        reason: item.reason,
+        topicCount: 0,
+        completedCount: 0,
+        available: false,
+        partNumber: item.partNumber,
+        partType: item.partType,
+        targetSkill: item.targetSkill,
+        startLevel: item.startLevel,
+        moduleId: null,
+        skillId: item.skillId,
+        href: null,
+        creating: info.state,
+      };
+    }
     // v4.3: a goal's capstone. Done once the goal is achieved (passing the capstone does that).
     if (item.moduleId?.startsWith(GOAL_ITEM_PREFIX)) {
       const goalId = item.moduleId.slice(GOAL_ITEM_PREFIX.length);
@@ -353,16 +381,75 @@ export function currentPath(db: Db, userId: string, content?: ContentStore): Lea
     };
   });
 
+  const setupNeeded = waitingProblems.length > 0 ? setupNeededMessage(waitingProblems[0], waitingProblems.length) : null;
   return {
     id: row.id,
     status: row.status,
     progressNote: row.progressNote,
     failureReason: row.failureReason,
-    notice: row.notice,
+    notice: setupNeeded ?? row.notice,
+    setupNeeded,
     createdAt: row.createdAt,
     completedAt: row.completedAt,
     items: views,
   };
+}
+
+/** The `course.generate` jobs still to finish (queued, running or waiting for setup). */
+export const ACTIVE_JOB_STATUSES = ["queued", "running", "waiting_setup"] as const;
+
+export interface CourseJobPayload {
+  mode?: "generate" | "fix";
+  key: string;
+  skill: string;
+  skillId?: string | null;
+  caseId?: string | null;
+  userId: string;
+  departmentId?: string | null;
+  reason?: string;
+  targetRole?: string;
+  level?: number;
+  courseId?: string;
+}
+
+/** The `course.generate` jobs for a course key, newest first, in any status. */
+export function courseJobs(db: Db, key: string) {
+  return db
+    .select()
+    .from(schema.jobs)
+    .where(eq(schema.jobs.type, "course.generate"))
+    .orderBy(desc(schema.jobs.createdAt))
+    .all()
+    .filter((job) => (job.payload as CourseJobPayload | null)?.key === key);
+}
+
+/** The auto-course key a generated course was made for (stored with its review), if any. */
+export function autoKeyOf(reviewDetail: unknown): string | null {
+  const key = (reviewDetail as { autoKey?: unknown } | null)?.autoKey;
+  return typeof key === "string" ? key : null;
+}
+
+/**
+ * Where a course being made for this key is. A job still to finish wins; then a course held for a
+ * look; then a job that gave up.
+ */
+export function creatingInfo(db: Db, key: string): { state: CreatingState; skill: string | null; problem: string | null } {
+  const jobs = courseJobs(db, key);
+  const active = jobs.find((job) => (ACTIVE_JOB_STATUSES as readonly string[]).includes(job.status));
+  const skill = (jobs[0]?.payload as CourseJobPayload | undefined)?.skill ?? null;
+  if (active) {
+    return active.status === "waiting_setup"
+      ? { state: "waiting_setup", skill, problem: active.lastError }
+      : { state: "working", skill, problem: null };
+  }
+  const held = db
+    .select({ reviewDetail: schema.generatedCourses.reviewDetail, skill: schema.generatedCourses.skill })
+    .from(schema.generatedCourses)
+    .where(inArray(schema.generatedCourses.status, ["needs_review", "pending_review"]))
+    .all()
+    .find((row) => autoKeyOf(row.reviewDetail) === key);
+  if (held) return { state: "held", skill: skill ?? held.skill, problem: null };
+  return { state: jobs.length > 0 ? "failed" : "working", skill, problem: null };
 }
 
 // ---------------------------------------------------------------------------
@@ -376,6 +463,9 @@ export interface PersistInput {
   autoPublish: boolean;
   /** v4: the id the model calls were attributed to while writing. */
   courseId?: string;
+  /** v4.4: stored with the review so the course can be found again (duplicates, Fix automatically). */
+  extraDetail?: Record<string, unknown>;
+  departmentId?: string | null;
 }
 
 /**
@@ -425,52 +515,9 @@ export function persistCourse(db: Db, input: PersistInput): { courseId: string; 
     section.topics.forEach((topic, topicIndex) => {
       const topicId = newId();
       db.insert(schema.courseTopics)
-        .values({
-          id: topicId,
-          sectionId,
-          courseId,
-          title: topic.title,
-          body: renderBody(topic.written.summary, topic.written.keyConcepts),
-          videoId: topic.written.videoId,
-          videoTitle: topic.videoTitle,
-          links: topic.written.references.map((reference) => ({ label: reference.label, url: reference.url })),
-          practice: topic.written.practice,
-          test: topic.written.test,
-          estMinutes: topic.estMinutes,
-          position: topicIndex,
-        })
+        .values({ id: topicId, sectionId, courseId, title: topic.title, ...topicContent(topic), estMinutes: topic.estMinutes, position: topicIndex })
         .run();
-
-      // Recorded per topic so the weekly check knows which lesson to flag, not just which course.
-      for (const reference of topic.written.references) {
-        const source = topic.sources.find((candidate) => candidate.url === reference.url);
-        db.insert(schema.courseSources)
-          .values({
-            id: newId(),
-            courseId,
-            topicId,
-            url: reference.url,
-            kind: "article",
-            title: reference.label,
-            httpStatus: source?.httpStatus ?? 200,
-            verifiedAt: timestamp,
-          })
-          .run();
-      }
-      if (topic.written.videoId) {
-        db.insert(schema.courseSources)
-          .values({
-            id: newId(),
-            courseId,
-            topicId,
-            url: `https://www.youtube.com/watch?v=${topic.written.videoId}`,
-            kind: "video",
-            title: topic.videoTitle ?? "",
-            httpStatus: 200,
-            verifiedAt: timestamp,
-          })
-          .run();
-      }
+      writeTopicSources(db, courseId, topicId, topic, timestamp);
     });
   });
 
@@ -482,13 +529,59 @@ export function persistCourse(db: Db, input: PersistInput): { courseId: string; 
       scope: "learner",
       status,
       reviewScore: built.score,
-      reviewDetail: built.review,
+      reviewDetail: input.extraDetail ? { ...built.review, ...input.extraDetail } : built.review,
       promptVersion: built.promptVersion,
+      departmentId: input.departmentId ?? null,
       createdAt: timestamp,
     })
     .run();
 
   return { courseId, status };
+}
+
+/** The stored fields of one written lesson (everything but its place in the course). */
+export function topicContent(topic: BuiltTopic) {
+  return {
+    body: renderBody(topic.written.summary, topic.written.keyConcepts),
+    videoId: topic.written.videoId,
+    videoTitle: topic.videoTitle,
+    links: topic.written.references.map((reference) => ({ label: reference.label, url: reference.url })),
+    practice: topic.written.practice,
+    test: topic.written.test,
+  };
+}
+
+/** Records every link one lesson cites. Per topic, so the weekly check knows which lesson to flag. */
+export function writeTopicSources(db: Db, courseId: string, topicId: string, topic: BuiltTopic, timestamp: number): void {
+  for (const reference of topic.written.references) {
+    const source = topic.sources.find((candidate) => candidate.url === reference.url);
+    db.insert(schema.courseSources)
+      .values({
+        id: newId(),
+        courseId,
+        topicId,
+        url: reference.url,
+        kind: "article",
+        title: reference.label,
+        httpStatus: source?.httpStatus ?? 200,
+        verifiedAt: timestamp,
+      })
+      .run();
+  }
+  if (topic.written.videoId) {
+    db.insert(schema.courseSources)
+      .values({
+        id: newId(),
+        courseId,
+        topicId,
+        url: `https://www.youtube.com/watch?v=${topic.written.videoId}`,
+        kind: "video",
+        title: topic.videoTitle ?? "",
+        httpStatus: 200,
+        verifiedAt: timestamp,
+      })
+      .run();
+  }
 }
 
 /**

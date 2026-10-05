@@ -2,15 +2,18 @@ import { and, desc, eq } from "drizzle-orm";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
-import { learnerPrioritiesSchema } from "../../../../shared/builder";
+import { MAX_FIX_ATTEMPTS, learnerPrioritiesSchema } from "../../../../shared/builder";
+import type { IntentCoverageLine } from "../../../../shared/intents";
 import { targetsRequestSchema } from "../../../../shared/targets";
 import { requireStaff, requireSuperadmin, staffOnly } from "../../auth/guards";
 import { coursesWithDeadLinks } from "../../jobs/handlers/checkLinks";
 import { currentPath, getPriorities, listGaps, setPriorities } from "../../builder/repo";
 import { getResearchSettings, updateResearchSettings } from "../../builder/settings";
+import { autoKeyOf } from "../../builder/repo";
+import { getGlobalAutoPublish, publishToLibrary, requestFix, setGlobalAutoPublish, waitingForSetup, wakeWaitingCourses } from "../../builder/autoCourse";
 import { activeWeek } from "../../plans/weekly/repo";
 import { getFocus, setFocus, setTargets } from "../../targets/repo";
-import { schema } from "../../db";
+import { schema, type Db } from "../../db";
 import { enqueue } from "../../jobs/queue";
 import { writeAudit } from "../../lib/audit";
 import { badRequest, notFound, parseOrThrow } from "../../lib/errors";
@@ -136,7 +139,9 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
 
   app.get("/api/admin/users/:userId/gaps", async (request) => {
     const { userId } = parseOrThrow(userParams, request.params);
-    return { gaps: listGaps(app.db, userId), path: currentPath(app.db, userId, app.content) };
+    const path = currentPath(app.db, userId, app.content);
+    // v4.4 P6: what the description asked for and whether the path has it ("Already strong: scored 5/5").
+    return { gaps: listGaps(app.db, userId), path, intents: path ? pathIntentLines(app.db, path.id) : [] };
   });
 
   /** Runs the builder now, rather than waiting for the next evaluation. */
@@ -191,9 +196,22 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
       .from(schema.generatedCourses)
       .orderBy(desc(schema.generatedCourses.createdAt))
       .all();
-    if (rows.length === 0) return { courses: [] };
+    // v4.4: new courses that wait for the AI or web search, for the page's "Set up" notice.
+    const waiting = waitingForSetup(app.db);
+    const waitingSetup = waiting.count > 0 ? { count: waiting.count, problem: waiting.problem ?? "the web search isn't connected" } : null;
+    if (rows.length === 0) return { courses: [], waitingSetup };
 
     const dead = coursesWithDeadLinks(app.db);
+    const fixing = new Set(
+      app.db
+        .select({ payload: schema.jobs.payload, status: schema.jobs.status })
+        .from(schema.jobs)
+        .where(eq(schema.jobs.type, "course.generate"))
+        .all()
+        .filter((job) => ["queued", "running", "waiting_setup"].includes(job.status))
+        .map((job) => (job.payload as { mode?: string; courseId?: string }).mode === "fix" ? (job.payload as { courseId?: string }).courseId : undefined)
+        .filter((id): id is string => Boolean(id)),
+    );
 
     return {
       courses: rows.map((row) => {
@@ -226,8 +244,14 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
           deadLinks: dead.get(row.courseId) ?? 0,
           published: course?.published ?? false,
           createdAt: row.createdAt,
+          library: row.library,
+          reviewReason: row.reviewReason,
+          fixAttempts: row.fixAttempts,
+          /** True while "Fix automatically" is working on it (or waiting for setup to do so). */
+          fixing: fixing.has(row.courseId),
         };
       }),
+      waitingSetup,
     };
   });
 
@@ -263,6 +287,13 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
     if (!row) throw notFound("That course was not generated.");
 
     const approved = decision === "approve";
+    /* v4.4: a course made for the library goes to the library on approval, and reaches every learner
+       whose path was waiting for it. */
+    if (approved && autoKeyOf(row.reviewDetail)) {
+      publishToLibrary(app.db, courseId, { approvedBy: actor.id });
+      writeAudit(app.db, { actorId: actor.id, action: "course.approved", targetType: "course", targetId: courseId, details: { skill: row.skill, reviewScore: row.reviewScore, library: true } });
+      return { ok: true };
+    }
     app.db
       .update(schema.generatedCourses)
       .set({
@@ -316,6 +347,42 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
     return { ok: true };
   });
 
+  /**
+   * v4.4 "Fix automatically": rewrites the lessons the quality check flagged, checks the course
+   * again and publishes it if it passes. Queued; at most `MAX_FIX_ATTEMPTS` times per course.
+   */
+  app.post("/api/admin/generated-courses/:courseId/fix", async (request, reply) => {
+    const actor = requireStaff(request);
+    const { courseId } = parseOrThrow(courseParams, request.params);
+    const row = app.db.select().from(schema.generatedCourses).where(eq(schema.generatedCourses.courseId, courseId)).get();
+    if (!row) throw notFound("That course was not generated.");
+    if (row.status !== "needs_review") throw badRequest("Only a course that needs a look can be fixed automatically.");
+    if (row.fixAttempts >= MAX_FIX_ATTEMPTS) {
+      throw badRequest(`We already tried to fix this course ${MAX_FIX_ATTEMPTS} times. Edit it to finish it by hand.`);
+    }
+    const queued = requestFix({ db: app.db, env: app.env, ai: app.ai }, courseId);
+    writeAudit(app.db, { actorId: actor.id, action: "course.fix_requested", targetType: "course", targetId: courseId, details: { attempt: row.fixAttempts + 1 } });
+    reply.status(202);
+    return queued;
+  });
+
+  // -------------------------------------------------------------------------
+  // v4.4: builder settings — superadmin only
+  // -------------------------------------------------------------------------
+
+  app.get("/api/admin/builder/settings", async (request) => {
+    requireSuperadmin(request);
+    return { autoPublish: getGlobalAutoPublish(app.db) };
+  });
+
+  app.put("/api/admin/builder/settings", async (request) => {
+    const actor = requireSuperadmin(request);
+    const { autoPublish } = parseOrThrow(z.object({ autoPublish: z.boolean() }), request.body);
+    setGlobalAutoPublish(app.db, autoPublish);
+    writeAudit(app.db, { actorId: actor.id, action: "builder.settings_updated", targetType: "builder", targetId: "auto_publish", details: { autoPublish } });
+    return { autoPublish };
+  });
+
   // -------------------------------------------------------------------------
   // Research settings — superadmin only
   // -------------------------------------------------------------------------
@@ -339,6 +406,8 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
     );
 
     const settings = updateResearchSettings(app.db, app.env, { ...body, updatedBy: actor.id });
+    // v4.4: new courses that waited for this start now (each one checks setup again as it runs).
+    wakeWaitingCourses(app.db);
     writeAudit(app.db, {
       actorId: actor.id,
       action: "research.settings_updated",
@@ -358,4 +427,16 @@ export async function registerAdminBuilderRoutes(app: FastifyInstance): Promise<
     reply.status(202);
     return { jobId };
   });
+}
+
+/** v4.4 P6: the intent lines of the path's latest "order" audit step (see `planGoalPath`). */
+function pathIntentLines(db: Db, pathId: string): IntentCoverageLine[] {
+  const row = db
+    .select({ detail: schema.aiAuditLog.detail })
+    .from(schema.aiAuditLog)
+    .where(and(eq(schema.aiAuditLog.pathId, pathId), eq(schema.aiAuditLog.step, "order")))
+    .orderBy(desc(schema.aiAuditLog.createdAt))
+    .get();
+  const lines = (row?.detail as { intents?: unknown } | undefined)?.intents;
+  return Array.isArray(lines) ? (lines as IntentCoverageLine[]) : [];
 }

@@ -1,9 +1,10 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useId, useState, type FormEvent } from "react";
 import { AlertTriangle, LinkIcon, Search } from "lucide-react";
 
-import { ApiRequestError } from "@/api/client";
-import { Field, FormAlert, TextField } from "@/components/form/Field";
+import { Field, TextField } from "@/components/form/Field";
+import { PlainError } from "@/components/form/PlainError";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { notify } from "@/lib/toast";
@@ -36,7 +37,7 @@ const PROVIDERS = [
  */
 export function ResearchSettings() {
   const [settings, setSettings] = useState<Settings | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
   const [saving, setSaving] = useState(false);
   const [checking, setChecking] = useState(false);
 
@@ -54,7 +55,7 @@ export function ResearchSettings() {
       })
       .catch((err) => {
         if (err instanceof DOMException && err.name === "AbortError") return;
-        setError(err instanceof ApiRequestError ? err.message : "Could not load the research settings.");
+        setError(err);
       });
     return () => controller.abort();
   }, []);
@@ -77,7 +78,7 @@ export function ResearchSettings() {
       setYoutubeKey("");
       notify.success(result.settings.configured ? "Research is set up. The builder can write courses." : "Saved.");
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "Could not save those settings.");
+      setError(err);
     } finally {
       setSaving(false);
     }
@@ -89,7 +90,7 @@ export function ResearchSettings() {
       await builderApi.checkLinks();
       notify.success("Checking every link in every generated course. It runs in the background.");
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "Could not start the check.");
+      setError(err);
     } finally {
       setChecking(false);
     }
@@ -117,6 +118,8 @@ export function ResearchSettings() {
         that was invented.
       </p>
 
+      <AutoPublishSetting />
+
       {!settings.configured && (
         <div className="mt-4 flex gap-3 rounded-md border border-trailmark/50 bg-trailmark/[0.07] px-4 py-3 text-sm">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
@@ -130,9 +133,9 @@ export function ResearchSettings() {
         </div>
       )}
 
-      {error && (
+      {error != null && (
         <div className="mt-4">
-          <FormAlert>{error}</FormAlert>
+          <PlainError error={error} />
         </div>
       )}
 
@@ -245,6 +248,55 @@ export function ResearchSettings() {
 }
 
 /**
+ * v4.4: whether a new course that passes its quality check goes straight to the library (on by
+ * default). A course that fails is never published; it waits under "Needs a look". A learner's own
+ * setting (Setup → Advanced) can override this.
+ */
+function AutoPublishSetting() {
+  const [on, setOn] = useState<boolean | null>(null);
+  const [saving, setSaving] = useState(false);
+  const id = useId();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    builderApi
+      .builderSettings(controller.signal)
+      .then((result) => setOn(result.autoPublish))
+      .catch(() => setOn(null));
+    return () => controller.abort();
+  }, []);
+
+  if (on === null) return null;
+
+  const change = async (next: boolean) => {
+    setSaving(true);
+    try {
+      const result = await builderApi.saveBuilderSettings({ autoPublish: next });
+      setOn(result.autoPublish);
+      notify.success(result.autoPublish ? "New courses that pass the quality check are published." : "New courses wait for your OK.");
+    } catch {
+      notify.error("Could not save that.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="mt-4 flex max-w-2xl items-start gap-3 rounded-md border px-4 py-3">
+      <Checkbox id={id} checked={on} disabled={saving} onCheckedChange={(value) => void change(value === true)} className="mt-0.5" />
+      <label htmlFor={id} className="cursor-pointer text-sm">
+        <span className="font-medium">Publish new courses that pass the quality check: {on ? "On" : "Off"}</span>
+        <span className="mt-0.5 block text-muted-foreground">
+          {on
+            ? "They go to the library for everyone and to the learner who needed them. Courses that fail wait under Needs a look."
+            : "Every new course waits for your OK on the Generated courses page."}
+        </span>
+      </label>
+    </div>
+  );
+}
+
+/**
  * The per-run ceiling.
  *
  * Per run rather than per month, because a runaway loop announces itself inside one run — and a
@@ -277,7 +329,7 @@ function BudgetFields({ settings, onSaved }: { settings: Settings; onSaved: (set
 
       <div className="mt-3 grid gap-4 sm:grid-cols-2">
         <TextField
-          label="Tokens"
+          label="AI usage limit"
           type="number"
           min={10_000}
           max={5_000_000}

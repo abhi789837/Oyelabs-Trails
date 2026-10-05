@@ -44,6 +44,8 @@ const STATE_VARIANT: Record<CourseState, "success" | "progress" | "outline"> = {
   generated: "success",
   generating: "progress",
   needs_review: "progress",
+  waiting_setup: "outline",
+  not_made: "outline",
 };
 
 const START_LABELS = { beginner: "Beginner", intermediate: "Intermediate", advanced: "Advanced" } as const;

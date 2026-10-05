@@ -17,8 +17,8 @@ export type Personalisation = z.infer<typeof personalisationSchema>;
 
 export const PERSONALISATION_LABELS: Record<Personalisation, string> = {
   high: "High — mostly written for this person",
-  balanced: "Balanced — reuse up to ~40% from the bank",
-  low: "Low — mostly from the bank",
+  balanced: "Balanced — reuse up to ~40% from the library",
+  low: "Low — mostly from the library",
 };
 
 /** The most of the 25 that may come from the bank, per level. */

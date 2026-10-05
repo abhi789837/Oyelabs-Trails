@@ -83,7 +83,7 @@ export function AiCallsTable() {
           /* Exactly `aiPurposeSchema`. Three options here used to be `items`, `critic` and `grade`,
              which the enum has never contained — filtering by one returned nothing, for ever, and
              looked like "no calls of that kind" rather than a dead option. */
-          { value: "blueprint", label: "Blueprint" },
+          { value: "blueprint", label: "Test plan" },
           { value: "item_critic", label: "Item critic" },
           { value: "evaluation", label: "Evaluation" },
           { value: "verify", label: "Verify" },
@@ -101,14 +101,14 @@ export function AiCallsTable() {
         quick: true,
         options: selectableProviderIds.map((id) => ({ value: id, label: PROVIDER_COPY[id]?.name ?? id })),
       },
-      { name: "model", label: "Model", type: "string", searchable: true },
+      { name: "model", label: "AI engine", type: "string", searchable: true },
       { name: "ok", label: "Result", type: "boolean", quick: true, trueLabel: "Succeeded", falseLabel: "Failed" },
       { name: "error", label: "Error", type: "string", searchable: true },
       // Filterable by id, not by name: a display name is not unique and an id is.
       { name: "subjectUserId", label: "Learner id", type: "string" },
       { name: "assessmentId", label: "Assessment id", type: "string" },
-      { name: "inputTokens", label: "Input tokens", type: "number", min: 0, max: 200_000 },
-      { name: "outputTokens", label: "Output tokens", type: "number", min: 0, max: 64_000 },
+      { name: "inputTokens", label: "AI usage in", type: "number", min: 0, max: 200_000 },
+      { name: "outputTokens", label: "AI usage out", type: "number", min: 0, max: 64_000 },
       { name: "latencyMs", label: "Latency", type: "number", min: 0, max: 900_000, unit: "ms" },
       { name: "createdAt", label: "When", type: "date", quick: true },
     ],
@@ -129,7 +129,7 @@ export function AiCallsTable() {
       { id: "purpose", header: "Purpose", cell: ({ row }) => <span className="text-sm">{row.original.purpose}</span> },
       {
         id: "model",
-        header: "Model",
+        header: "AI engine",
         cell: ({ row }) => (
           <div className="font-mono text-xs">
             <span className="block">{row.original.model}</span>
@@ -156,7 +156,7 @@ export function AiCallsTable() {
       },
       {
         id: "inputTokens",
-        header: "Tokens",
+        header: "AI usage",
         meta: { align: "right", exportValue: (c) => c.inputTokens + c.outputTokens },
         cell: ({ row }) => (
           <span className="tabular text-xs">
@@ -196,7 +196,7 @@ export function AiCallsTable() {
         Every call
       </h2>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        One row per provider request: model, tokens, time and any redacted error (never the prompt).
+        One row per AI request: the AI engine, how much it used, the time and any error (never the prompt).
       </p>
 
       <div className="mt-4">
@@ -215,7 +215,7 @@ export function AiCallsTable() {
           onRetry={() => void load(query)}
           noun="call"
           exportName="ai-calls"
-          searchPlaceholder="Search model or error"
+          searchPlaceholder="Search AI engine or error"
           caption="Every AI provider call this deployment has made."
           emptyState={{
             title: "No calls yet",
@@ -235,11 +235,11 @@ function CallDetail({ call }: { call: AiCall }) {
     <div className="space-y-4 text-sm">
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
         <Detail label="Provider">{call.provider}</Detail>
-        <Detail label="Model">
+        <Detail label="AI engine">
           <span className="font-mono text-xs">{call.model}</span>
         </Detail>
-        <Detail label="Input tokens">{call.inputTokens.toLocaleString()}</Detail>
-        <Detail label="Output tokens">{call.outputTokens.toLocaleString()}</Detail>
+        <Detail label="AI usage in">{call.inputTokens.toLocaleString()}</Detail>
+        <Detail label="AI usage out">{call.outputTokens.toLocaleString()}</Detail>
         <Detail label="Latency">{call.latencyMs === null ? "—" : `${(call.latencyMs / 1000).toFixed(2)}s`}</Detail>
         <Detail label="When">{formatTimestamp(call.createdAt)}</Detail>
       </dl>

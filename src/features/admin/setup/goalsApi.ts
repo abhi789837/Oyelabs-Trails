@@ -1,4 +1,5 @@
 import type { CapstoneSummary, GoalInput, GoalInterpretResult, GoalSuggestion, LearnerGoal, OnboardSuggestion, OutcomeOption } from "@shared/goals";
+import type { OnboardPreview, OnboardPreviewRequest } from "@shared/onboardPreview";
 import type { LearnerSetup } from "@shared/setup";
 
 import { api } from "@/api/client";
@@ -9,6 +10,8 @@ export const goalsApi = {
     api.get<{ outcomes: OutcomeOption[] }>(`/api/admin/outcomes?departmentId=${encodeURIComponent(departmentId)}&q=${encodeURIComponent(q)}`, signal),
   suggest: (body: { departmentId: string; description: string; name?: string }, signal?: AbortSignal) =>
     api.post<{ suggestion: OnboardSuggestion; aiAvailable: boolean }>("/api/admin/onboard/suggest", body, signal),
+  /** v4.4 P6: the summary card's plain preview; `step` runs one part at a time for the ticks. */
+  preview: (body: OnboardPreviewRequest, signal?: AbortSignal) => api.post<{ preview: OnboardPreview }>("/api/admin/onboard/preview", body, signal),
   interpret: (body: { departmentId: string; text: string; userId?: string }, signal?: AbortSignal) =>
     api.post<GoalInterpretResult>("/api/admin/goals/interpret", body, signal),
   list: (userId: string, signal?: AbortSignal) =>

@@ -35,18 +35,18 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md`, research i
 - [x] 4.5 Checkpoint + commit `feat(v4.4-p4)`
 
 ## Phase 5: Missing courses are created automatically
-- [ ] 5.1 Gap detection on path build → generate → review → publish to the library + assign (auto-publish ON)
-- [ ] 5.2 Failed review → "Needs a look" with a plain reason, Fix automatically / Edit
-- [ ] 5.3 No duplicates (reuse or extend); queue when AI or research isn't set up, resume automatically
-- [ ] 5.4 Plain admin notification
-- [ ] 5.5 Checkpoint + commit `feat(v4.4-p5)`
+- [x] 5.1 Gap detection on path build → generate → review → publish to the library + assign (auto-publish ON)
+- [x] 5.2 Failed review → "Needs a look" with a plain reason, Fix automatically / Edit
+- [x] 5.3 No duplicates (reuse or extend); queue when AI or research isn't set up, resume automatically
+- [x] 5.4 Plain admin notification
+- [x] 5.5 Checkpoint + commit `feat(v4.4-p5)`
 
 ## Phase 6: Plain-language onboarding
-- [ ] 6.1 `COPY_GUIDE.md` + banned-word test over admin UI strings; fix all admin screens since v4
-- [ ] 6.2 Suggest progress steps with ticks
-- [ ] 6.3 The summary card (plan for <name>, priority drop-down, Change something, Show details)
-- [ ] 6.4 Learner page status line + one main button; plain errors with Show details
-- [ ] 6.5 Checkpoint + commit `feat(v4.4-p6)`
+- [x] 6.1 `COPY_GUIDE.md` + banned-word test over admin UI strings; fix all admin screens since v4
+- [x] 6.2 Suggest progress steps with ticks
+- [x] 6.3 The summary card (plan for <name>, priority drop-down, Change something, Show details)
+- [x] 6.4 Learner page status line + one main button; plain errors with Show details
+- [x] 6.5 Checkpoint + commit `feat(v4.4-p6)`
 
 ## Phase 7: Tests, deploy, report
 - [ ] 7.1 Unit and integration tests (the brief's list)

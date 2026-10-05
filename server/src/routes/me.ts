@@ -13,6 +13,7 @@ import { isWeekComplete } from "../../../shared/weeklyPlan";
 import { requireActiveUser } from "../auth/guards";
 import { filterManifest } from "../content/filter";
 import { currentPath } from "../builder/repo";
+import { libraryResources } from "../builder/autoCourse";
 import { completedTopicIds, coursesFor, getCourse, mayOpenCourse } from "../courses/repo";
 import { schema } from "../db";
 import { badRequest, notFound, parseOrThrow } from "../lib/errors";
@@ -70,6 +71,12 @@ export async function registerMeRoutes(app: FastifyInstance): Promise<void> {
   app.get("/api/me/path", async (request) => {
     const user = requireActiveUser(request);
     return { path: currentPath(app.db, user.id, app.content) };
+  });
+
+  /** v4.4: the shared resources list: every source the library's courses cite, once each. */
+  app.get("/api/me/resources", async (request) => {
+    requireActiveUser(request);
+    return { resources: libraryResources(app.db) };
   });
 
   app.get("/api/me/courses/:courseId", async (request) => {

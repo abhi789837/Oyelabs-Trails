@@ -85,7 +85,14 @@ function goalLabel(goal: LearnerGoal, names: ReadonlyMap<string, string>, outcom
  * one exists, when every skill is unmeasured).
  */
 export function goalPathContext(db: Db, userId: string, result: Pick<V4Result, "skills"> | null): GoalPathContext {
-  const setup = getSetup(db, userId);
+  return goalPathContextFor(db, getSetup(db, userId), result);
+}
+
+/**
+ * The same, for a setup that is not saved yet (v4.4 P6: onboarding's preview of the first steps,
+ * before the account exists and before any test result).
+ */
+export function goalPathContextFor(db: Db, setup: LearnerSetup, result: Pick<V4Result, "skills"> | null): GoalPathContext {
   const catalog = getCatalog(db, { departmentId: setup.departmentId, includeArchived: true, withAreas: true });
   const skillsById = new Map(catalog.skills.map((s) => [s.id, s]));
   const names = new Map(catalog.skills.map((s) => [s.id, s.name]));

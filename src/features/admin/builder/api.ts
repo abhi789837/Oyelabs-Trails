@@ -1,4 +1,5 @@
 import type { LearnerPriorities, LearningPathView, SkillGapView } from "@shared/builder";
+import type { IntentCoverageLine } from "@shared/intents";
 
 import type { LearnerTarget, LearnerTrack, TargetsRequest } from "@shared/targets";
 
@@ -31,6 +32,20 @@ export interface GeneratedCourseRow {
   deadLinks: number;
   published: boolean;
   createdAt: number;
+  /** v4.4: in the shared library (visible to everyone). */
+  library?: boolean;
+  /** v4.4: one plain line saying why it failed its quality check. */
+  reviewReason?: string | null;
+  /** v4.4: how many times "Fix automatically" has run on it (at most `MAX_FIX_ATTEMPTS`). */
+  fixAttempts?: number;
+  /** v4.4: "Fix automatically" is working on it now. */
+  fixing?: boolean;
+}
+
+/** v4.4: new courses waiting for the AI or web search to be connected. */
+export interface WaitingSetup {
+  count: number;
+  problem: string;
 }
 
 export interface ResearchSettings {
@@ -74,13 +89,19 @@ export const builderApi = {
     api.put<{ focus: LearnerFocusView; weekNeedsRegeneration: boolean }>(`/api/admin/users/${userId}/targets`, body),
 
   gaps: (userId: string, signal?: AbortSignal) =>
-    api.get<{ gaps: SkillGapView[]; path: LearningPathView | null }>(`/api/admin/users/${userId}/gaps`, signal),
+    api.get<{ gaps: SkillGapView[]; path: LearningPathView | null; intents?: IntentCoverageLine[] }>(`/api/admin/users/${userId}/gaps`, signal),
 
   /** Runs the builder now rather than waiting for the next evaluation. */
   buildPath: (userId: string) => api.post<{ jobId: string }>(`/api/admin/users/${userId}/path`, {}),
 
   generated: (signal?: AbortSignal) =>
-    api.get<{ courses: GeneratedCourseRow[] }>("/api/admin/generated-courses", signal),
+    api.get<{ courses: GeneratedCourseRow[]; waitingSetup?: WaitingSetup | null }>("/api/admin/generated-courses", signal),
+  /** v4.4: rewrites the parts that failed the quality check, checks again, publishes on a pass. */
+  fix: (courseId: string) =>
+    api.post<{ jobId: string; waitingSetup: string | null }>(`/api/admin/generated-courses/${courseId}/fix`),
+  /** v4.4: the global "publish new courses that pass the quality check" setting. */
+  builderSettings: (signal?: AbortSignal) => api.get<{ autoPublish: boolean }>("/api/admin/builder/settings", signal),
+  saveBuilderSettings: (body: { autoPublish: boolean }) => api.put<{ autoPublish: boolean }>("/api/admin/builder/settings", body),
   decide: (courseId: string, decision: "approve" | "reject") =>
     api.post<{ ok: true }>(`/api/admin/generated-courses/${courseId}/decision`, { decision }),
   promote: (courseId: string) => api.post<{ ok: true }>(`/api/admin/generated-courses/${courseId}/promote`),

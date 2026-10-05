@@ -33,6 +33,14 @@ export interface NextActionFacts {
   week: { weekNumber: number; endDate: string } | null;
   /** `yyyy-mm-dd`, UTC. Passed in so the function stays pure. */
   today: string;
+  /** v4.4 P6: the learner's display name, for the status line ("waiting for Rahul"). */
+  name?: string;
+  /** v4.4 P6: spoken answers on the latest test that no machine could mark (they need a person). */
+  speakToListen?: number;
+  /** v4.4 P6: the learner's "please check this again" requests still open. */
+  openReviews?: number;
+  /** v4.4 P6: new courses being made for this learner, and those waiting for setup (and why). */
+  courses?: { creating: number; waitingSetup: number; problem: string | null };
 }
 
 /** What the primary button does. The page maps each to an existing API call or tab. */
@@ -43,6 +51,8 @@ export type NextActionButton =
   | { action: "build"; label: string }
   | { action: "week"; label: string }
   | { action: "advance-week"; label: string }
+  /** v4.4 P6: go to another admin page (e.g. connect the web search). */
+  | { action: "link"; label: string; to: string }
   | { action: "open"; label: string; tab: "setup" | "assessment" | "path"; anchor?: string };
 
 export type NextActionTone = "todo" | "waiting" | "done" | "blocked";
@@ -69,7 +79,11 @@ export interface NextAction {
     | "rebuild"
     | "publish-week"
     | "next-week"
-    | "on-track";
+    | "on-track"
+    | "listen"
+    | "reviews"
+    | "courses-creating"
+    | "courses-waiting";
   /** One line: the state and what comes next. */
   title: string;
   tone: NextActionTone;
@@ -81,6 +95,11 @@ const BUSY: readonly PathStatus[] = ["analysing", "researching", "writing", "rev
 function plural(n: number, one: string, many = `${one}s`): string {
   return `${n} ${n === 1 ? one : many}`;
 }
+
+/** Where an admin connects the AI and the web search (both are on the AI settings page). */
+export const CONNECT_SETUP_ROUTE = "/admin/ai";
+/** About how long one new course takes to make, for the status line. */
+export const MINUTES_PER_NEW_COURSE = 3;
 
 /** Why the path is out of date, or null when it is not. Exported for the tests. */
 export function staleReason(facts: Pick<NextActionFacts, "path" | "setupChangedAt" | "graphChangedAt" | "evaluationAt">): string | null {
@@ -94,6 +113,7 @@ export function staleReason(facts: Pick<NextActionFacts, "path" | "setupChangedA
 
 export function nextAction(facts: NextActionFacts): NextAction {
   if (facts.role !== "learner") return { kind: "staff", title: "Staff account: nothing to assign.", tone: "done", button: null };
+  const who = facts.name?.trim().split(/\s+/)[0] || "them";
 
   if (facts.status !== "active") {
     return {
@@ -115,50 +135,62 @@ export function nextAction(facts: NextActionFacts): NextAction {
 
   const assessment = facts.assessment;
   if (!assessment) {
-    return { kind: "assign", title: "Assessment ready to send.", tone: "todo", button: { action: "assign", label: "Assign assessment" } };
+    return { kind: "assign", title: "Plan ready · send the test", tone: "todo", button: { action: "assign", label: "Send the test" } };
   }
 
   switch (assessment.status) {
     case "generating":
-      return { kind: "writing", title: "Writing their assessment. About a minute.", tone: "waiting", button: null };
+      return { kind: "writing", title: "Writing the test · about a minute", tone: "waiting", button: null };
     case "awaiting_approval":
       return {
         kind: "approve",
-        title: "Assessment written. Waiting for approval.",
+        title: "Test written · check it before it goes out",
         tone: "todo",
-        button: { action: "open", label: "Review assessment", tab: "assessment" },
+        button: { action: "open", label: "Check the test", tab: "assessment" },
       };
     case "failed":
     case "terminated":
       return {
         kind: "reassign",
-        title: assessment.status === "failed" ? "Their assessment could not be built. Assign a new one." : "Their assessment ended early. Assign a new one.",
+        title: assessment.status === "failed" ? "We couldn't make the test. Send a new one." : "The test ended early. Send a new one.",
         tone: "todo",
-        button: { action: "assign", label: "Assign new assessment" },
+        button: { action: "assign", label: "Send a new test" },
       };
     case "ready":
       return facts.mustChangePassword
-        ? { kind: "invite", title: "Awaiting first sign-in.", tone: "waiting", button: { action: "invite", label: "New invite" } }
-        : { kind: "waiting", title: "Waiting for them to take the assessment.", tone: "waiting", button: null };
+        ? { kind: "invite", title: `Test sent · waiting for ${who} to sign in`, tone: "waiting", button: { action: "invite", label: "New invite" } }
+        : { kind: "waiting", title: `Test sent · waiting for ${who}`, tone: "waiting", button: null };
     case "in_progress":
-      return { kind: "taking", title: "Taking the assessment now.", tone: "waiting", button: null };
+      return { kind: "taking", title: "Taking the test now", tone: "waiting", button: null };
     case "submitted":
     case "evaluating":
-      return { kind: "evaluating", title: "Evaluating their answers.", tone: "waiting", button: null };
+      if (facts.speakToListen) return listen(facts.speakToListen);
+      return { kind: "evaluating", title: "Test done · marking the answers", tone: "waiting", button: null };
     case "completed":
       break;
   }
 
+  // v4.4 P6: answers waiting for a person come before the path, which reads their marks.
+  if (facts.speakToListen) return listen(facts.speakToListen);
+  if (facts.openReviews) {
+    return {
+      kind: "reviews",
+      title: `${who === "them" ? "They" : who} asked us to check ${plural(facts.openReviews, "answer")} again`,
+      tone: "todo",
+      button: { action: "open", label: "Check the answers", tab: "assessment", anchor: "review-requests" },
+    };
+  }
+
   const path = facts.path;
   if (!path) {
-    return { kind: "build", title: "Evaluation ready. Build their path.", tone: "todo", button: { action: "build", label: "Build path" } };
+    return { kind: "build", title: "Test done · plan ready", tone: "todo", button: { action: "build", label: "Build the path" } };
   }
   if (BUSY.includes(path.status)) {
     return {
       kind: "review-evaluation",
-      title: "Evaluation ready. Review it while the path builds.",
+      title: "Test done · building the path",
       tone: "todo",
-      button: { action: "open", label: "Review evaluation", tab: "assessment" },
+      button: { action: "open", label: "See the results", tab: "assessment" },
     };
   }
   if (path.status === "failed" || path.status === "budget_reached") {
@@ -167,6 +199,26 @@ export function nextAction(facts: NextActionFacts): NextAction {
       title: path.status === "failed" ? "The path build failed." : "The path build stopped at its budget.",
       tone: "blocked",
       button: { action: "build", label: "Rebuild path" },
+    };
+  }
+
+  // v4.4 P6: missing courses are being made, or wait for the AI or the web search to be connected.
+  const courses = facts.courses;
+  if (courses && courses.waitingSetup > 0) {
+    const what = courses.problem ?? "the setup isn't finished";
+    return {
+      kind: "courses-waiting",
+      title: `${plural(courses.waitingSetup, "new course")} waiting: ${what}. We'll finish them on our own after.`,
+      tone: "blocked",
+      button: { action: "link", label: "Connect it", to: CONNECT_SETUP_ROUTE },
+    };
+  }
+  if (courses && courses.creating > 0) {
+    return {
+      kind: "courses-creating",
+      title: `${plural(courses.creating, "new course")} being created (about ${courses.creating * MINUTES_PER_NEW_COURSE} min)`,
+      tone: "waiting",
+      button: null,
     };
   }
 
@@ -181,7 +233,7 @@ export function nextAction(facts: NextActionFacts): NextAction {
 
   const stale = staleReason(facts);
   if (stale) {
-    return { kind: "rebuild", title: `Path needs a rebuild: ${stale}.`, tone: "todo", button: { action: "build", label: "Rebuild path" } };
+    return { kind: "rebuild", title: `The path needs a rebuild: ${stale}.`, tone: "todo", button: { action: "build", label: "Rebuild the path" } };
   }
 
   if (path.needsReview > 0) {
@@ -207,4 +259,13 @@ export function nextAction(facts: NextActionFacts): NextAction {
   }
 
   return { kind: "on-track", title: `On track. Week ${facts.week.weekNumber} in progress.`, tone: "done", button: null };
+}
+
+function listen(n: number): NextAction {
+  return {
+    kind: "listen",
+    title: `Needs a listen: ${plural(n, "spoken answer")}`,
+    tone: "todo",
+    button: { action: "open", label: "Listen and mark", tab: "assessment", anchor: "needs-listen" },
+  };
 }

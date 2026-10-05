@@ -7,7 +7,9 @@ import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { listUsableOutcomes, searchOutcomes, toOutcomeOption } from "../../goals/outcomes";
 import { achieveGoal, addSuggestion, capstoneSummaries, dismissSuggestion, listGoals, listSuggestions, restoreSuggestion, saveGoals } from "../../goals/repo";
+import { onboardPreview } from "../../goals/preview";
 import { interpretGoal, suggestOnboarding } from "../../goals/suggest";
+import { onboardPreviewRequestSchema } from "../../../../shared/onboardPreview";
 import { writeAudit } from "../../lib/audit";
 import { forbidden, notFound, parseOrThrow } from "../../lib/errors";
 import { departmentOf, getSetup } from "../../setup/repo";
@@ -43,6 +45,17 @@ export async function registerAdminGoalRoutes(app: FastifyInstance): Promise<voi
     const body = parseOrThrow(onboardSuggestRequestSchema, request.body);
     const suggestion = await suggestOnboarding({ db: app.db, ai: app.ai }, body);
     return { suggestion, aiAvailable: app.ai.isConfigured() };
+  });
+
+  /**
+   * v4.4 P6: the summary card's plain preview of a suggested (unsaved) setup: what the test will
+   * check, what comes first after it, and which skills need a new course. No AI, no writes. `step`
+   * runs one part at a time so the onboarding screen's ticks follow real work.
+   */
+  app.post("/api/admin/onboard/preview", { config: { rateLimit: { max: 120, timeWindow: "1 minute" } } }, async (request) => {
+    requireStaff(request);
+    const { step, ...input } = parseOrThrow(onboardPreviewRequestSchema, request.body);
+    return { preview: onboardPreview(app.db, app.content ?? null, input, step) };
   });
 
   /** A free-text goal read into an outcome, skills and a level, for the admin to accept or edit. */

@@ -198,34 +198,25 @@ export async function buildCourse(gap: ScoredGap, context: { targetRole: string;
 
   // --- 5. review -----------------------------------------------------------
   progress("Reviewing the course");
-  let review: CourseReview;
-  try {
-    const result = await deps.ai.generateJson({
-      purpose: "course_review",
-      system: REVIEW_SYSTEM,
-      user: buildReviewUser({
-        skill: gap.skill,
-        courseTitle: plan.title,
-        topics: sections.flatMap((section) =>
-          section.topics.map((topic) => ({
-            title: topic.title,
-            objective: topic.objective,
-            summary: topic.written.summary,
-            references: topic.written.references.map((reference) => reference.url),
-            questionCount: topic.written.test.questions.length,
-          })),
-        ),
-      }),
-      schema: reviewSchema,
-      schemaName: "course_review",
-      meta: deps.meta,
-    });
-    review = result.data;
-    budget.spendTokens(result.usage.input, result.usage.output);
-    deps.onStep?.("review", { score: reviewScore(review), weak: review.weakTopics.length }, result.usage);
-  } catch (error) {
-    return { ok: false, kind: "model", reason: `Could not review the course: ${messageOf(error)}` };
-  }
+  const reviewed = await reviewCourse(
+    {
+      skill: gap.skill,
+      courseTitle: plan.title,
+      topics: sections.flatMap((section) =>
+        section.topics.map((topic) => ({
+          title: topic.title,
+          objective: topic.objective,
+          summary: topic.written.summary,
+          references: topic.written.references.map((reference) => reference.url),
+          questionCount: topic.written.test.questions.length,
+        })),
+      ),
+    },
+    deps,
+  );
+  if (!reviewed.ok) return { ok: false, kind: "model", reason: reviewed.reason };
+  const review = reviewed.review;
+  budget.spendTokens(reviewed.usage.input, reviewed.usage.output);
 
   return {
     ok: true,
@@ -240,6 +231,53 @@ export async function buildCourse(gap: ScoredGap, context: { targetRole: string;
       searchesUsed: budget.searches,
     },
   };
+}
+
+/** The review step on its own, so "Fix automatically" can re-check a course it partly rewrote. */
+export async function reviewCourse(
+  input: {
+    skill: string;
+    courseTitle: string;
+    topics: { title: string; objective: string; summary: string; references: string[]; questionCount: number }[];
+  },
+  deps: Pick<BuildDeps, "ai" | "meta" | "onStep">,
+): Promise<{ ok: true; review: CourseReview; usage: { input: number; output: number } } | { ok: false; reason: string }> {
+  try {
+    const result = await deps.ai.generateJson({
+      purpose: "course_review",
+      system: REVIEW_SYSTEM,
+      user: buildReviewUser(input),
+      schema: reviewSchema,
+      schemaName: "course_review",
+      meta: deps.meta,
+    });
+    deps.onStep?.("review", { score: reviewScore(result.data), weak: result.data.weakTopics.length }, result.usage);
+    return { ok: true, review: result.data, usage: result.usage };
+  } catch (error) {
+    return { ok: false, reason: `Could not review the course: ${messageOf(error)}` };
+  }
+}
+
+/**
+ * v4.4: researches and rewrites one lesson of an existing course ("Fix automatically" regenerates
+ * only the lessons the review flagged). The same search, link check and citation rules as a new
+ * course; null when no verified source could be found, so the old lesson is kept.
+ */
+export async function rebuildTopic(
+  input: { skill: string; courseTitle: string; sectionTitle: string; topicTitle: string; objective: string; estMinutes: number },
+  deps: BuildDeps,
+): Promise<BuiltTopic | null> {
+  const budget = new Budget(deps.budget);
+  const sources = await gatherSources([`${input.skill} ${input.topicTitle}`, input.topicTitle], deps, budget);
+  if (sources.length === 0) return null;
+  const video = await findVideo(`${input.skill} ${input.topicTitle}`, deps, budget);
+  const written = await writeTopic(
+    { plan: { title: input.courseTitle }, section: { title: input.sectionTitle }, topic: { title: input.topicTitle, objective: input.objective }, sources, video },
+    deps,
+    budget,
+  );
+  if (!written) return null;
+  return { title: input.topicTitle, objective: input.objective, estMinutes: input.estMinutes, written, sources, videoTitle: video?.title ?? null };
 }
 
 /** Runs the lesson's queries and keeps what resolves. Deduplicated by URL across queries. */
@@ -284,9 +322,9 @@ async function findVideo(query: string, deps: BuildDeps, budget: Budget) {
  */
 async function writeTopic(
   input: {
-    plan: CoursePlan;
-    section: CoursePlan["sections"][number];
-    topic: CoursePlan["sections"][number]["topics"][number];
+    plan: Pick<CoursePlan, "title">;
+    section: { title: string };
+    topic: { title: string; objective: string };
     sources: VerifiedSource[];
     video: { videoId: string; title: string } | null;
   },

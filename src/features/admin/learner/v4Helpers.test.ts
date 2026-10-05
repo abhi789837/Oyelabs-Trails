@@ -146,8 +146,8 @@ describe("v4.1 admin lines", () => {
       fallbackReason: null,
       costMicros: 30_000,
     };
-    expect(personalisationCounts(report)).toBe("13 written for them · 10 reused from the bank · 2 from the bank after failed checks");
-    expect(personalisationCounts({ ...report, fromBankAfterFailures: 0 })).toBe("13 written for them · 10 reused from the bank");
+    expect(personalisationCounts(report)).toBe("13 written for them · 10 reused from the library · 2 from the library after failed checks");
+    expect(personalisationCounts({ ...report, fromBankAfterFailures: 0 })).toBe("13 written for them · 10 reused from the library");
   });
 
   it("offers Swap and Regenerate only on open questions of an open sheet", () => {

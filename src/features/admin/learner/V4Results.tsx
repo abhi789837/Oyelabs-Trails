@@ -6,6 +6,7 @@ import type { ItemResponseV4, V4Result } from "@shared/assessmentV4";
 
 import { api, ApiRequestError } from "@/api/client";
 import { SkillReport } from "@/components/assessment/SkillReport";
+import { ListenAndMark } from "./ListenAndMark";
 import { SpeakReview } from "./SpeakReview";
 import { RichText } from "@/components/content/RichText";
 import { useConfirm } from "@/components/overlays";
@@ -153,12 +154,12 @@ export function V4Results({
         <Stat label="Raw score" value={started ? `${result.rawScore}%` : "—"} />
         <Stat label="Answered" value={`${result.answered}/${result.total}`} />
         <Stat label="Written, pending" value={String(result.pendingWritten)} warn={result.pendingWritten > 0} />
-        <Stat label="Bank shortfalls" value={String(shortfalls.length)} warn={shortfalls.length > 0} />
+        <Stat label="Questions missing" value={String(shortfalls.length)} warn={shortfalls.length > 0} />
       </dl>
 
       {shortfalls.length > 0 && (
         <div className="rounded-md border border-trailmark/40 bg-trailmark/[0.06] px-3 py-2 text-sm">
-          <p className="font-medium">The bank could not fill every slot</p>
+          <p className="font-medium">We didn't have enough ready questions for every part of the test</p>
           <ul className="mt-1 space-y-0.5 font-mono text-xs text-muted-foreground">
             {shortfalls.map((line) => (
               <li key={line}>{line}</li>
@@ -166,6 +167,8 @@ export function V4Results({
           </ul>
         </div>
       )}
+
+      <ListenAndMark assessmentId={assessmentId} items={sorted} onChanged={onChanged} />
 
       {sorted.length > 0 && (
         <div className="rounded-md border">
@@ -250,7 +253,7 @@ function QuestionCard({
       title: action === "swap" ? `Swap question ${item.position + 1}?` : `Regenerate question ${item.position + 1}?`,
       body:
         action === "swap"
-          ? "It is replaced with another bank item for the same skill and type. Any draft the learner has on it is cleared."
+          ? "It is replaced with another question from the library for the same skill and type. Any draft the learner has on it is cleared."
           : "The AI writes a new one for the same skill and type (one small call). If it fails its checks, the old one is kept. Any draft the learner has on it is cleared.",
       confirmLabel: action === "swap" ? "Swap it" : "Regenerate it",
     });
@@ -440,7 +443,7 @@ function Response({ item, response }: { item: V4AdminItem; response: ItemRespons
         </div>
         {expected.length > 0 && (
           <div>
-            <Label>{item.task.kind === "write" || item.task.kind === "roleplay" ? "Rubric" : item.task.kind === "form" ? "Exact checks and rubric" : "Expected"}</Label>
+            <Label>{item.task.kind === "write" || item.task.kind === "roleplay" ? "Marking guide" : item.task.kind === "form" ? "Exact checks and marking guide" : "Expected"}</Label>
             <div className="text-summit-strong">
               <Lines lines={expected} />
             </div>

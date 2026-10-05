@@ -1,7 +1,7 @@
 import { and, asc, eq, inArray } from "drizzle-orm";
 
 import type { EvaluationResult } from "../../../../shared/assessment";
-import { GOAL_ITEM_PREFIX, type PartType } from "../../../../shared/builder";
+import { isMarkerModuleId, type PartType } from "../../../../shared/builder";
 import type { ContentStore } from "../../content/store";
 import { schema, type Db } from "../../db";
 import { latestPublishedPlan } from "../repo";
@@ -44,7 +44,7 @@ function currentPathParts(db: Db, userId: string) {
   const rows = currentPathRows(db, userId);
   const byModule = new Map<string, PathPlace>();
   for (const row of rows) {
-    if (!row.moduleId || row.moduleId.startsWith(GOAL_ITEM_PREFIX)) continue;
+    if (!row.moduleId || isMarkerModuleId(row.moduleId)) continue;
     const existing = byModule.get(row.moduleId);
     // A module serving two parts counts as the earlier one.
     if (!existing || (row.partNumber ?? 99) < (existing.partNumber ?? 99)) byModule.set(row.moduleId, placeOf(row));

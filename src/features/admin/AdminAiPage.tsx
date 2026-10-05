@@ -257,8 +257,8 @@ export default function AdminAiPage() {
                 <tr className="border-b bg-surface-sunken/50 text-left">
                   <th scope="col" className="px-3 py-2 text-xs font-semibold text-muted-foreground">Purpose</th>
                   <th scope="col" className="px-3 py-2 text-right text-xs font-semibold text-muted-foreground">Calls</th>
-                  <th scope="col" className="px-3 py-2 text-right text-xs font-semibold text-muted-foreground">Input tokens</th>
-                  <th scope="col" className="px-3 py-2 text-right text-xs font-semibold text-muted-foreground">Output tokens</th>
+                  <th scope="col" className="px-3 py-2 text-right text-xs font-semibold text-muted-foreground">AI usage in</th>
+                  <th scope="col" className="px-3 py-2 text-right text-xs font-semibold text-muted-foreground">AI usage out</th>
                   <th scope="col" className="px-3 py-2 text-right text-xs font-semibold text-muted-foreground">Failures</th>
                 </tr>
               </thead>
@@ -399,6 +399,7 @@ function AddCredentialForm({ onAdded }: { onAdded: () => Promise<void> }) {
                   "w-full rounded-md border border-input bg-surface px-3 py-2 font-mono text-xs",
                   invalid && "border-destructive",
                 )}
+                // copy-ok: a JSON sample of the secrets file, shown as data
                 placeholder='{"OPENAI_API_KEY": null, "tokens": { … }}'
               />
             ) : (
@@ -483,11 +484,11 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
     <details className="mt-12 rounded-md border" aria-labelledby="models-heading">
       <summary className="cursor-pointer rounded-md px-4 py-2.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong">
         <h2 id="models-heading" className="inline text-base font-semibold">
-          Advanced: legacy models and budget note
+          Advanced: older AI engines and budget note
         </h2>
       </summary>
       <div className="border-t px-4 pb-4">
-      <p className="mt-3 max-w-prose text-sm text-muted-foreground">Only v3 assessments read these; empty uses the suggested model.</p>
+      <p className="mt-3 max-w-prose text-sm text-muted-foreground">Only older (v3) tests use these. Leave one empty to use the suggested AI engine.</p>
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div className="grid gap-4 sm:grid-cols-3">
@@ -516,7 +517,7 @@ function ModelSettings({ status, onSaved }: { status: AiStatusResponse; onSaved:
 
         <div className="flex items-center gap-3">
           <Button type="submit" variant="outline" loading={saving}>
-            Save legacy models
+            Save older AI engines
           </Button>
           {saved && <span className="text-sm text-summit-strong">Saved</span>}
         </div>

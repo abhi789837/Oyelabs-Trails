@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import type { V4Result } from "../../../../shared/assessmentV4";
 import { computeResult, getMinFinishMinutes, isV4, itemsOf, keyOf, setMinFinishMinutes, splitItem, toSheetItem } from "../../assessment/v4";
+import { markSpokenAnswer } from "../../assessment/markByHand";
 import { generateOne, swapCandidate } from "../../assessment/personalise/pipeline";
 import { timingConstants } from "../../bank/timing";
 import { estimateSeconds } from "../../../../shared/timing";
@@ -110,16 +111,24 @@ export async function registerAdminAssessmentV4Routes(app: FastifyInstance): Pro
     const onSheet = new Set(itemsOf(app.db, assessmentId).map((i) => i.bankItemId).filter((x): x is string => Boolean(x)));
     const department = (assessment.config as { departmentId?: string }).departmentId ?? "engineering";
     const replacement = swapCandidate(app.db, assessment.userId, department, slot, onSheet);
-    if (!replacement) throw conflict("The bank has no other item for this skill and type.");
+    if (!replacement) throw conflict("The question library has no other question for this skill and type.");
     writeReplacement(assessmentId, item, slot, replacement, "bank", actor.id, "assessment.item_swapped");
     return { ok: true };
+  });
+
+  /** v4.4 P6: an admin listened to a spoken answer and marks it Full marks or Not yet. */
+  app.post("/api/admin/assessments/:assessmentId/items/:itemId/mark", async (request) => {
+    const actor = requireStaff(request);
+    const { assessmentId, itemId } = parseOrThrow(itemParams, request.params);
+    const body = parseOrThrow(z.object({ mark: z.enum(["full", "not_yet"]), note: z.string().max(500).default("") }), request.body);
+    return { ok: true, ...markSpokenAnswer(app.db, actor, assessmentId, itemId, body.mark, body.note) };
   });
 
   app.post("/api/admin/assessments/:assessmentId/items/:itemId/regenerate", async (request) => {
     const actor = requireStaff(request);
     const { assessmentId, itemId } = parseOrThrow(itemParams, request.params);
     const { assessment, item, slot } = replaceTarget(assessmentId, itemId);
-    if (!app.ai.isConfigured()) throw conflict("No AI credential is set up. Use Swap to pick another bank item.");
+    if (!app.ai.isConfigured()) throw conflict("The AI isn't connected yet. Use Swap to pick another question from the library.");
     const result = await generateOne({ db: app.db, ai: app.ai, sandbox: app.sandbox, piston: app.piston }, assessmentId, assessment.userId, slot);
     if (!result.item) throw conflict(`The new item did not pass its checks (${result.problems.join("; ").slice(0, 200)}). The old one is kept.`);
     writeReplacement(assessmentId, item, slot, result.item, "generated", actor.id, "assessment.item_regenerated");

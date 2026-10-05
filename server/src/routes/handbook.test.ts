@@ -450,7 +450,7 @@ describe("re-validating bank items when an entry changes", () => {
 
     const notes = ctx.db.select().from(schema.notifications).where(and(eq(schema.notifications.recipientId, admin.user.id), eq(schema.notifications.kind, "handbook.revalidate"))).all();
     expect(notes).toHaveLength(1);
-    expect(notes[0]!.body).toBe("2 question-bank items cite ZZ Change request, which changed. Review them in the question bank.");
+    expect(notes[0]!.body).toBe("2 questions in the library use ZZ Change request, which changed. Review them in the question library.");
 
     // The queued checks leave the items in draft for a person to review.
     await ctx.drainJobs();

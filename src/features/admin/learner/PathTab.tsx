@@ -3,10 +3,10 @@ import { Eye, Loader2, Wand2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { isPathBusy, type LearningPathView, type SkillGapView } from "@shared/builder";
+import type { IntentCoverageLine } from "@shared/intents";
 import type { LearnerSetup } from "@shared/setup";
 
-import { ApiRequestError } from "@/api/client";
-import { FormAlert } from "@/components/form/Field";
+import { PlainError } from "@/components/form/PlainError";
 import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/toast";
 import { builderApi } from "../builder/api";
@@ -44,7 +44,8 @@ export function PathTab({
   const [setup, setSetup] = useState<LearnerSetup | null>(null);
   const [gaps, setGaps] = useState<SkillGapView[]>([]);
   const [path, setPath] = useState<LearningPathView | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [intents, setIntents] = useState<IntentCoverageLine[]>([]);
+  const [error, setError] = useState<unknown>(null);
   const [loaded, setLoaded] = useState(false);
   const [building, setBuilding] = useState(false);
   const [viewing, setViewing] = useState(false);
@@ -56,10 +57,11 @@ export function PathTab({
         setSetup(s.setup);
         setGaps(g.gaps);
         setPath(g.path);
+        setIntents(g.intents ?? []);
         setError(null);
       } catch (err) {
         if (err instanceof DOMException && err.name === "AbortError") return;
-        setError(err instanceof ApiRequestError ? err.message : "Could not load the path.");
+        setError(err);
       } finally {
         setLoaded(true);
       }
@@ -88,7 +90,7 @@ export function PathTab({
       notify.success("Building. It takes a few minutes and this page follows along.");
       await load();
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "Could not start a build.");
+      setError(err);
     } finally {
       setBuilding(false);
     }
@@ -117,7 +119,7 @@ export function PathTab({
         </div>
       </div>
 
-      {error && <FormAlert>{error}</FormAlert>}
+      {error != null && <PlainError error={error} />}
 
       {loaded && (
         <>
@@ -131,6 +133,7 @@ export function PathTab({
             onPromote={onPromote}
             onOpenSetup={onOpenSetup}
           />
+          <AskedFor lines={intents} />
           <PathInOrder path={path} />
         </>
       )}
@@ -188,10 +191,33 @@ function StatusLine({ path, busy }: { path: LearningPathView | null; busy: boole
         <p className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-2.5 text-sm">
           <span className="min-w-0 flex-1">{path.notice}</span>
           <Link to="/admin/ai" className="shrink-0 font-medium underline decoration-trailmark decoration-2 underline-offset-4">
-            Set up in AI connection
+            Set up
           </Link>
         </p>
       )}
+    </div>
+  );
+}
+
+/**
+ * v4.4 P6: each thing the description asked for, and whether the path covers it. One that needs no
+ * course says why ("Already strong: scored 5/5").
+ */
+function AskedFor({ lines }: { lines: readonly IntentCoverageLine[] }) {
+  const shown = lines.filter((l) => l.type !== "constraint");
+  if (shown.length === 0) return null;
+  return (
+    <div className="rounded-md border px-4 py-3 text-sm">
+      <h3 className="font-medium">What you asked for</h3>
+      <ul className="mt-1.5 space-y-1">
+        {shown.map((line) => (
+          <li key={line.intentId} className="flex flex-wrap gap-x-2">
+            <span className="text-muted-foreground">&ldquo;{line.phrase}&rdquo;</span>
+            <span aria-hidden="true">→</span>
+            <span>{line.inPath ? "On the path" : (line.reason ?? "Not on the path yet")}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

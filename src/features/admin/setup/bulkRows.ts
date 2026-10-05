@@ -2,7 +2,7 @@ import { bulkRowErrors, dedupeUsernames, parseBulkRows, toCsv, type BulkOnboardR
 import type { OnboardSuggestion } from "@shared/goals";
 
 import { signInUrl } from "../invite";
-import { toSaveRequest, type SetupState } from "./helpers";
+import { openUnsure, toSaveRequest, type SetupState } from "./helpers";
 import { stateFromSuggestion } from "./suggestion";
 
 /**
@@ -55,6 +55,8 @@ export function rowErrors(rows: readonly BulkRow[], taken: ReadonlySet<string>):
     if (r.status === "created") return {};
     const e = { ...errs[i++]! };
     if (r.status === "failed" && r.message && r.errorField && !e[r.errorField]) e[r.errorField] = r.message;
+    // v4.4 P6: a phrase we weren't sure about blocks the row until it is answered in its plan.
+    if (r.state && openUnsure(r.state) > 0) e.unsure = "Answer the question in this row's plan first.";
     return e;
   });
 }

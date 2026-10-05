@@ -457,7 +457,7 @@ export async function personalise(deps: PersonaliseDeps, assessmentId: string, u
   // 2–4. Generate the rest, validate, retry twice.
   let open = slots.filter((s) => !chosen.has(s.index));
   const canGenerate = deps.ai.isConfigured();
-  if (!canGenerate) report.fallbackReason = "No AI credential is set up, so this assessment was built from the question bank only.";
+  if (!canGenerate) report.fallbackReason = "No AI credential is set up, so this test was built from the question library only.";
   const newItems: BankItem[] = [];
 
   for (let round = 0; canGenerate && open.length > 0 && round < 3; round += 1) {

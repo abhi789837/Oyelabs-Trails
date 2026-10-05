@@ -99,7 +99,7 @@ function notifyLearnerAndAdmins(
     recipientId: assessment.userId,
     kind: "assessment.ready",
     title: "Your placement assessment is ready",
-    body: "It takes about an hour and it is monitored, so find a quiet slot before you start.",
+    body: "It takes about an hour and it is monitored, so find a quiet time before you start.",
     link: "/assessment",
   });
 

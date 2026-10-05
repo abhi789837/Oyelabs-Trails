@@ -21,6 +21,7 @@ import { usageByPurpose } from "../../ai/service";
 import { requireSuperadmin, superadminOnly } from "../../auth/guards";
 import { schema } from "../../db";
 import { enqueue } from "../../jobs/queue";
+import { wakeWaitingCourses } from "../../builder/autoCourse";
 import { writeAudit } from "../../lib/audit";
 import { badRequest, notFound, parseOrThrow } from "../../lib/errors";
 import { pagedQuery } from "../../lib/pagedRoute";
@@ -102,6 +103,8 @@ export async function registerAdminAiRoutes(app: FastifyInstance): Promise<void>
 
     // Verify asynchronously: a CLI adapter can take a while, and the admin should not wait on it.
     enqueue(app.db, { type: "credential.verify", payload: { credentialId: credential.id } });
+    // v4.4: new courses that waited for the AI start now (each one checks setup again as it runs).
+    wakeWaitingCourses(app.db);
 
     writeAudit(app.db, {
       actorId: actor.id,
@@ -156,6 +159,7 @@ export async function registerAdminAiRoutes(app: FastifyInstance): Promise<void>
     }
 
     const settings = updateSettings(app.db, body);
+    wakeWaitingCourses(app.db);
     writeAudit(app.db, {
       actorId: actor.id,
       action: "ai.settings_updated",

@@ -214,8 +214,8 @@ export function AssessmentTab({
       )}
 
       {assessments.length > 0 && (
-        <details className="mt-6 rounded-md border px-4 py-3">
-          <summary className="cursor-pointer text-sm font-medium">Review requests</summary>
+        <details id="review-requests" className="mt-6 rounded-md border px-4 py-3">
+          <summary className="cursor-pointer text-sm font-medium">Requests to check an answer again</summary>
           <ReviewRequestsList userId={userId} className="mt-3" />
         </details>
       )}
@@ -670,7 +670,7 @@ function ServedItemCard({ item, index }: { item: AnsweredItem; index: number }) 
 
       {item.aiFeedback && (
         <p className="mt-3 rounded-md border border-ridge/40 bg-ridge/6 px-3 py-2 text-sm">
-          <span className="font-medium">Rubric grader: </span>
+          <span className="font-medium">AI marking: </span>
           <span className="text-muted-foreground">{item.aiFeedback}</span>
         </p>
       )}

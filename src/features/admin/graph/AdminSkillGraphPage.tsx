@@ -19,7 +19,7 @@ import { GraphView } from "./GraphView";
 import { SkillSelect } from "./SkillSelect";
 
 const selectClass = "h-10 rounded-md border border-input bg-surface px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong";
-const TYPE_LABEL: Record<SkillEdgeType, string> = { prerequisite: "prerequisite", recommended: "recommended" };
+const TYPE_LABEL: Record<SkillEdgeType, string> = { prerequisite: "learn first", recommended: "recommended" };
 /** Rows rendered before "Show all": Engineering has a few hundred edges. */
 const PAGE = 150;
 
@@ -157,7 +157,7 @@ export default function AdminSkillGraphPage() {
     <div className="px-4 py-8 sm:px-6">
       <h1 className="font-display text-2xl font-bold">Skill graph</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
-        Prerequisites order every learner's path; recommended links only suggest what's next.
+        "Learn first" links set the order of every learner's path. Recommended links only suggest what's next.
         {!canEdit && " Only the superadmin can change them."}
       </p>
 
@@ -198,7 +198,7 @@ export default function AdminSkillGraphPage() {
           className={selectClass}
         >
           <option value="all">All link types</option>
-          <option value="prerequisite">Prerequisites</option>
+          <option value="prerequisite">Learn first</option>
           <option value="recommended">Recommended</option>
         </select>
       </div>
@@ -238,7 +238,7 @@ export default function AdminSkillGraphPage() {
                     onChange={(event) => setDraft((d) => ({ ...d, type: event.target.value as SkillEdgeType }))}
                     className={selectClass}
                   >
-                    <option value="prerequisite">Prerequisite</option>
+                    <option value="prerequisite">Learn first</option>
                     <option value="recommended">Recommended</option>
                   </select>
                   <Button type="submit" loading={busy}>
@@ -277,7 +277,7 @@ export default function AdminSkillGraphPage() {
                           onChange={(event) => void setType(edge, event.target.value as SkillEdgeType)}
                           className="h-8 rounded-md border border-input bg-surface px-2 font-mono text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
                         >
-                          <option value="prerequisite">prerequisite</option>
+                          <option value="prerequisite">learn first</option>
                           <option value="recommended">recommended</option>
                         </select>
                         <Button

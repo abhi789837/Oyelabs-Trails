@@ -5,7 +5,8 @@ import type { LearnerProfile } from "@shared/profile";
 import type { LearnerSetup, SaveSetupRequest } from "@shared/setup";
 
 import { ApiRequestError } from "@/api/client";
-import { FormAlert, TextField } from "@/components/form/Field";
+import { TextField } from "@/components/form/Field";
+import { PlainError } from "@/components/form/PlainError";
 import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/toast";
 import { adminApi } from "../api";
@@ -41,7 +42,7 @@ export function SetupTab({
 }) {
   const [setup, setSetup] = useState<LearnerSetup | null>(null);
   const [version, setVersion] = useState(0);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
   const profileRef = useRef(profile);
   profileRef.current = profile;
 
@@ -58,7 +59,7 @@ export function SetupTab({
       })
       .catch((err: unknown) => {
         if (controller.signal.aborted) return;
-        setError(err instanceof ApiRequestError ? err.message : "Could not load their setup.");
+        setError(err);
       });
     return () => controller.abort();
   }, [userId, reload]);
@@ -79,7 +80,7 @@ export function SetupTab({
     [userId, onSaved, onAssigned, onProfileSaved],
   );
 
-  if (error) return <FormAlert>{error}</FormAlert>;
+  if (error != null) return <PlainError error={error} />;
   if (!setup) {
     return (
       <p className="flex items-center gap-2 text-sm text-muted-foreground" role="status">

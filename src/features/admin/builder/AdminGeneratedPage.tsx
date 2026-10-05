@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Check, Globe, LinkIcon, RefreshCw, Sparkles, X } from "lucide-react";
+import { AlertTriangle, Check, Globe, LinkIcon, Pencil, RefreshCw, Sparkles, Wand2, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { REVIEW_PASS_SCORE } from "@shared/builder";
+import { MAX_FIX_ATTEMPTS, REVIEW_PASS_SCORE } from "@shared/builder";
 
-import { ApiRequestError } from "@/api/client";
 import { DataTable, useTableQueryState, type TableFieldDef } from "@/components/data-table";
-import { FormAlert } from "@/components/form/Field";
+import { PlainError } from "@/components/form/PlainError";
 import { useConfirm } from "@/components/overlays";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,7 @@ import { notify } from "@/lib/toast";
 import { cn, formatTimestamp } from "@/lib/utils";
 import { ALL_DEPARTMENTS } from "../catalog/helpers";
 import { useCatalog } from "../catalog/useCatalog";
-import { builderApi, type GeneratedCourseRow } from "./api";
+import { builderApi, type GeneratedCourseRow, type WaitingSetup } from "./api";
 
 /**
  * Everything the AI wrote, and what happened to it.
@@ -36,17 +35,19 @@ export default function AdminGeneratedPage() {
   const { query, setQuery } = useTableQueryState();
 
   const [rows, setRows] = useState<GeneratedCourseRow[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [waitingSetup, setWaitingSetup] = useState<WaitingSetup | null>(null);
+  const [error, setError] = useState<unknown>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
       const result = await builderApi.generated(signal);
       setRows(result.courses);
+      setWaitingSetup(result.waitingSetup ?? null);
       setError(null);
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
-      setError(err instanceof ApiRequestError ? err.message : "Could not load the generated courses.");
+      setError(err);
     }
   }, []);
 
@@ -73,7 +74,7 @@ export default function AdminGeneratedPage() {
         notify.success(decision === "approve" ? `Published "${row.title}".` : `Rejected "${row.title}".`);
         await load();
       } catch (err) {
-        setError(err instanceof ApiRequestError ? err.message : "That didn't work.");
+        setError(err);
       } finally {
         setBusyId(null);
       }
@@ -95,12 +96,30 @@ export default function AdminGeneratedPage() {
         notify.success(`"${row.title}" is in the catalogue.`);
         await load();
       } catch (err) {
-        setError(err instanceof ApiRequestError ? err.message : "That didn't work.");
+        setError(err);
       } finally {
         setBusyId(null);
       }
     },
     [confirm, load],
+  );
+
+  /** v4.4: rewrite the parts that failed the quality check, check again, and publish on a pass. */
+  const fix = useCallback(
+    async (row: GeneratedCourseRow) => {
+      setBusyId(row.courseId);
+      try {
+        const result = await builderApi.fix(row.courseId);
+        if (result.waitingSetup) notify.info(`We can't fix "${row.title}" yet because ${result.waitingSetup}. We'll do it automatically after it's set up.`);
+        else notify.success(`Fixing "${row.title}". It's published by itself if it passes.`);
+        await load();
+      } catch (err) {
+        setError(err);
+      } finally {
+        setBusyId(null);
+      }
+    },
+    [load],
   );
 
   const fields = useMemo<TableFieldDef<GeneratedCourseRow>[]>(
@@ -115,7 +134,7 @@ export default function AdminGeneratedPage() {
         quick: true,
         options: [
           { value: "pending_review", label: "Waiting for review" },
-          { value: "needs_review", label: "Failed its review" },
+          { value: "needs_review", label: "Needs a look" },
           { value: "published", label: "Published" },
           { value: "rejected", label: "Rejected" },
           { value: "draft", label: "Draft" },
@@ -245,7 +264,8 @@ export default function AdminGeneratedPage() {
     [busyId, decide, promote],
   );
 
-  const waiting = (rows ?? []).filter((row) => row.status === "pending_review" || row.status === "needs_review").length;
+  const waiting = (rows ?? []).filter((row) => row.status === "pending_review").length;
+  const needsLook = (rows ?? []).filter((row) => row.status === "needs_review");
 
   return (
     <div className="px-4 py-8 sm:px-6">
@@ -262,20 +282,78 @@ export default function AdminGeneratedPage() {
         </Button>
       </div>
 
+      {waitingSetup && (
+        <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3 text-sm">
+          <AlertTriangle className="size-4 shrink-0 text-trailmark-strong" aria-hidden="true" />
+          <span className="min-w-0 flex-1">
+            We couldn't create {waitingSetup.count === 1 ? "a course" : `${waitingSetup.count} courses`} because {waitingSetup.problem}.
+            We'll finish automatically after it's set up.
+          </span>
+          <Button asChild size="sm" variant="outline">
+            <Link to="/admin/ai">Set up</Link>
+          </Button>
+        </p>
+      )}
+
       {waiting > 0 && (
         <p className="mt-6 rounded-md border border-trailmark/50 bg-trailmark/[0.06] px-4 py-3 text-sm">
           <span className="font-medium">
-            {waiting} course{waiting === 1 ? "" : "s"} waiting for you.
+            {waiting} course{waiting === 1 ? "" : "s"} waiting for your OK.
           </span>{" "}
           <span className="text-muted-foreground">
-            Nothing reaches a learner until it is approved, unless auto-publish was set for them.
+            They passed the quality check, but new courses aren't published on their own for these learners.
           </span>
         </p>
       )}
 
-      {error && (
+      {needsLook.length > 0 && (
+        <section className="mt-6" aria-labelledby="needs-look-heading">
+          <h2 id="needs-look-heading" className="font-display text-lg font-semibold">
+            Needs a look
+          </h2>
+          <p className="mt-1 max-w-prose text-sm text-muted-foreground">
+            These didn't pass the quality check, so learners can't see them. Fix automatically rewrites the weak parts
+            and publishes the course if it passes.
+          </p>
+          <ul className="mt-3 divide-y rounded-md border">
+            {needsLook.map((row) => {
+              const tries = row.fixAttempts ?? 0;
+              const triedOut = tries >= MAX_FIX_ATTEMPTS;
+              return (
+                <li key={row.courseId} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{row.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {row.fixing
+                        ? "Fixing it now."
+                        : (row.reviewReason ?? "It didn't pass the quality check.")}
+                      {triedOut && !row.fixing ? " We tried to fix it twice, so it needs your edit." : ""}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    {!triedOut && (
+                      <Button size="sm" loading={busyId === row.courseId} disabled={row.fixing} onClick={() => void fix(row)}>
+                        <Wand2 aria-hidden="true" />
+                        Fix automatically
+                      </Button>
+                    )}
+                    <Button asChild size="sm" variant="outline">
+                      <Link to={`/admin/courses/${row.courseId}`}>
+                        <Pencil aria-hidden="true" />
+                        Edit
+                      </Link>
+                    </Button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      {error != null && (
         <div className="mt-6">
-          <FormAlert>{error}</FormAlert>
+          <PlainError error={error} />
         </div>
       )}
 
@@ -322,7 +400,7 @@ function StatusPill({ status }: { status: GeneratedCourseRow["status"] }) {
     pending_review: { label: "Waiting for review", variant: "progress" },
     // Distinct from "waiting": this one failed its own review, and an admin should read it before
     // approving rather than clicking through a queue.
-    needs_review: { label: "Failed its review", variant: "danger" },
+    needs_review: { label: "Needs a look", variant: "danger" },
     rejected: { label: "Rejected", variant: "outline" },
     draft: { label: "Draft", variant: "outline" },
   };

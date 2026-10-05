@@ -98,7 +98,7 @@ export function issueAssessment(app: FastifyInstance, input: IssueInput): IssueR
     }
     let config;
     try {
-      config = { ...assembleInto(app.db, assessmentId, input.userId), personalisation: emptyReport("No AI credential is set up, so this assessment came from the question bank only.") };
+      config = { ...assembleInto(app.db, assessmentId, input.userId), personalisation: emptyReport("No AI credential is set up, so this test came from the question library only.") };
     } catch (error) {
       app.db.delete(schema.assessments).where(eq(schema.assessments.id, assessmentId)).run();
       throw error;

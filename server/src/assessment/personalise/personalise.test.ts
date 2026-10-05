@@ -280,7 +280,7 @@ describe("personalised assessments", () => {
       payload: { departmentId: "engineering", trackId: "frontend", stackIds: [], experienceBand: "0", level: 1, priorities: [{ skillId: "eng-javascript", slider: 5 }], skip: [], hoursPerWeek: 15, advanced: { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false }, assign: true },
     });
     expect(res.json().issued).toMatchObject({ status: "ready" });
-    expect(res.json().issued.notice).toMatch(/question bank/);
+    expect(res.json().issued.notice).toMatch(/question library/);
     expect(itemsOf(ctx, res.json().issued.assessmentId)).toHaveLength(25);
     await ctx.close();
   }, 120_000);

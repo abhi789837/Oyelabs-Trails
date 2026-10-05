@@ -59,7 +59,7 @@ export interface SetupState {
   intentsFor?: string;
 }
 
-export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced", autoAddSuggestions: false };
+export const DEFAULT_ADVANCED: SetupAdvanced = { weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, autoPublishOverride: null, personalisation: "balanced", autoAddSuggestions: false };
 
 export function initialSetupState(setup: LearnerSetup | null, fallbackDepartment: string): SetupState {
   if (!setup) {

@@ -24,6 +24,7 @@ import { bankFillHandler } from "../bank/fillJob";
 import { bankRevalidateHandler } from "../handbook/revalidate";
 import { personaliseHandler } from "../assessment/personalise/job";
 import { buildPathHandler } from "../jobs/handlers/buildPath";
+import { courseGenerateHandler } from "../builder/autoCourse";
 import { fillHandler as topicTestFillHandler, recheckHandler as topicTestRecheckHandler } from "../topicTests/engine";
 import { publishGenerationLine } from "../routes/admin/live";
 import { WorkerSandbox } from "../sandbox/workerSandbox";
@@ -111,6 +112,7 @@ export async function createTestApp(overrides: Partial<NodeJS.ProcessEnv> = {}, 
       "bank.revalidate": bankRevalidateHandler({ db, ai }),
       "assessment.personalise": personaliseHandler({ db, ai, sandbox, piston: app.piston }),
       "path.build": buildPathHandler({ db, env, ai, content }),
+      "course.generate": courseGenerateHandler({ db, env, ai }),
       "topic_tests.recheck": topicTestRecheckHandler({ db, ai, content, sandbox, batchDelayMs: 0 }),
       "topic_tests.fill": topicTestFillHandler({ db, ai, content, sandbox }),
       "speech.transcribe": transcribeHandler({ db, env, stt: options.stt }),

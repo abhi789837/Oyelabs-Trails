@@ -1,12 +1,14 @@
-import { useId, useMemo, useState, type FormEvent } from "react";
-import { LoaderCircle, Sparkles, X } from "lucide-react";
+import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from "react";
+import { Sparkles, X } from "lucide-react";
 
 import type { Catalog } from "@shared/catalog";
 import type { OnboardSuggestion, SuggestedGoal } from "@shared/goals";
 import { EXPERIENCE_BANDS, EXPERIENCE_LABELS, levelFromExperience, type ExperienceBand, type SaveSetupRequest, type Slider } from "@shared/setup";
 
-import { ApiRequestError } from "@/api/client";
-import { FormAlert, TextField } from "@/components/form/Field";
+import { SUGGEST_STEP_LABELS, type OnboardPreview } from "@shared/onboardPreview";
+
+import { TextField } from "@/components/form/Field";
+import { PlainError } from "@/components/form/PlainError";
 import { Button } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
 import { cn } from "@/lib/utils";
@@ -14,15 +16,19 @@ import { unsureMessage } from "@shared/intents";
 
 import { GoalBox } from "./GoalBox";
 import { goalsApi } from "./goalsApi";
-import { IntentList } from "./IntentList";
+import { PlanCard } from "./PlanCard";
+import { previewKey, previewRequest, setWantedPriority } from "./planSummary";
+import { SuggestProgress } from "./SuggestProgress";
+import { stepStates } from "./suggestSteps";
 import { stateFromSuggestion, usernameFrom } from "./suggestion";
 import { answerUnsure, initialSetupState, levelTarget, openUnsure, pickableSkills, toSaveRequest, withDepartmentDefaults, withGoals, type SetupState } from "./helpers";
 
 /**
  * Quick onboarding (v4.3), the default on /admin/onboard: name, username, department and one line
- * about the person. **Suggest** fills in everything else in one cheap AI call (rules without AI);
- * **Save & assign assessment** creates the account and issues the assessment. "Edit details" opens
- * the full Setup form with whatever is here.
+ * about the person. **Suggest** fills in everything else in one cheap AI call (rules without AI),
+ * then (v4.4 P6) the preview works out the test and the first steps, ticking each real step, and
+ * one plain card shows the plan. **Looks good — send the test** creates the account and issues the
+ * test. "Change something" opens the editor below the card; "Edit details" the full Setup form.
  */
 
 export interface QuickOnboardProps {
@@ -52,8 +58,16 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
   const [source, setSource] = useState<OnboardSuggestion["source"] | null>(null);
   const [suggesting, setSuggesting] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
+  /** v4.4 P6: the ticked steps while Suggest and the preview run (step index, start time). */
+  const [progress, setProgress] = useState<{ current: number; startedAt: number } | null>(null);
+  const [preview, setPreview] = useState<OnboardPreview | null>(null);
+  const [previewError, setPreviewError] = useState<unknown>(null);
+  const [previewing, setPreviewing] = useState(false);
+  const [changing, setChanging] = useState(false);
+  /** The setup the shown preview was worked out for; a different one re-runs it. */
+  const previewFor = useRef<string | null>(null);
 
   const department = catalog.departments.find((d) => d.id === departmentId);
   const tracks = catalog.tracks.filter((t) => t.departmentId === departmentId && !t.archived);
@@ -64,24 +78,73 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
   const update = (patch: Partial<SetupState>) => setState((s) => (s ? { ...s, ...patch } : s));
   const ids = { department: `${uid}-department`, goals: `${uid}-goals`, line: `${uid}-line` };
 
-  /** Reads the line; returns the suggested setup (also shown), or null when Suggest failed. */
+  /**
+   * Reads the line, then works out the plan one real step at a time: the description (Suggest),
+   * what the test checks, the test itself (question kinds and time), the first weeks. Returns the
+   * suggested setup, or null when Suggest failed. A failed preview still shows the plan.
+   */
   const fetchSuggestion = async (): Promise<SetupState | null> => {
     setSuggesting(true);
     setError(null);
+    setPreview(null);
+    setPreviewError(null);
+    setChanging(false);
+    setProgress({ current: 0, startedAt: Date.now() });
     try {
       const { suggestion } = await goalsApi.suggest({ departmentId, description: line.trim(), ...(displayName.trim() ? { name: displayName.trim() } : {}) });
       const next = stateFromSuggestion(suggestion, line.trim(), departmentId);
-      setState(next);
       setExtras(suggestion.extras);
       setSource(suggestion.source);
+      const body = previewRequest(next);
+      try {
+        setProgress((p) => (p ? { ...p, current: 1 } : p));
+        await goalsApi.preview({ ...body, step: "checks" });
+        setProgress((p) => (p ? { ...p, current: 2 } : p));
+        const test = (await goalsApi.preview({ ...body, step: "test" })).preview;
+        setProgress((p) => (p ? { ...p, current: 3 } : p));
+        const path = (await goalsApi.preview({ ...body, step: "path" })).preview;
+        setPreview({ ...test, firstSteps: path.firstSteps, newCourses: path.newCourses });
+        previewFor.current = previewKey(next);
+      } catch (err) {
+        setPreviewError(err);
+      }
+      setState(next);
       return next;
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "Suggest did not answer. Use Edit details to fill it in by hand.");
+      setError(err ?? "Suggest didn't answer. Use Edit details to fill it in by hand.");
       return null;
     } finally {
       setSuggesting(false);
+      setProgress(null);
     }
   };
+
+  /** The whole preview again, for a changed plan (the priority drop-down, an edit). */
+  const refreshPreview = async (next: SetupState) => {
+    const key = previewKey(next);
+    if (previewFor.current === key) return;
+    previewFor.current = key;
+    setPreviewing(true);
+    try {
+      const { preview: fresh } = await goalsApi.preview(previewRequest(next));
+      if (previewFor.current === key) {
+        setPreview(fresh);
+        setPreviewError(null);
+      }
+    } catch (err) {
+      if (previewFor.current === key) setPreviewError(err);
+    } finally {
+      if (previewFor.current === key) setPreviewing(false);
+    }
+  };
+
+  // Edits made under "Change something" re-run the preview once the admin pauses.
+  const currentKey = state ? previewKey(state) : null;
+  useEffect(() => {
+    if (!state || suggesting || currentKey === previewFor.current) return;
+    const timer = window.setTimeout(() => void refreshPreview(state), 600);
+    return () => window.clearTimeout(timer);
+  }, [currentKey, suggesting]);
 
   const suggest = async (event?: FormEvent) => {
     event?.preventDefault();
@@ -110,7 +173,7 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
     try {
       await onSave(toSaveRequest(current, true));
     } catch (err) {
-      setError(err instanceof Error && err.message ? err.message : "That didn't save. Try again.");
+      setError(err ?? "That didn't save. Try again.");
       const errFields = (err as { fields?: Record<string, string> }).fields;
       if (errFields) setFields(errFields);
     } finally {
@@ -124,7 +187,6 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
   };
 
   const busy = suggesting || saving;
-  const unanswered = state ? openUnsure(state) : 0;
   const changeDepartment = (id: string) => {
     if (id === departmentId) return;
     setDepartmentId(id);
@@ -132,11 +194,14 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
     setState(null);
     setExtras([]);
     setSource(null);
+    setPreview(null);
+    setPreviewError(null);
+    previewFor.current = null;
   };
 
   return (
     <div className="max-w-3xl space-y-8">
-      {error && <FormAlert>{error}</FormAlert>}
+      {error != null && <PlainError error={error} />}
 
       <form onSubmit={(e) => void suggest(e)} noValidate className="space-y-5" aria-label="Who they are">
         <div className="grid gap-4 sm:grid-cols-2">
@@ -198,18 +263,39 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
         </div>
       </form>
 
-      {suggesting && !state && (
-        <p className="flex items-center gap-2 text-sm text-muted-foreground" role="status">
-          <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
-          Reading the description…
-        </p>
+      {progress && <SuggestProgress labels={SUGGEST_STEP_LABELS} states={stepStates(SUGGEST_STEP_LABELS.length, progress.current)} startedAt={progress.startedAt} />}
+
+      {state && !suggesting && (
+        <PlanCard
+          displayName={displayName}
+          state={state}
+          catalog={catalog}
+          preview={preview}
+          previewError={previewError}
+          previewLoading={previewing}
+          disabled={busy}
+          onPriority={(item, choice) => {
+            const next = setWantedPriority(state, item, choice);
+            setState(next);
+            void refreshPreview(next);
+          }}
+          onAnswer={(index, option) => {
+            setError(null);
+            setState((s) => (s ? answerUnsure(s, index, option) : s));
+          }}
+          onSend={() => void save()}
+          sending={saving}
+          sendDisabled={!canSubmit}
+          changing={changing}
+          onChange={() => setChanging((c) => !c)}
+        />
       )}
 
-      {state && (
-        <section aria-label="Suggested setup" className="space-y-6 rounded-lg border bg-surface px-4 py-5 sm:px-5">
+      {state && changing && (
+        <section aria-label="Change the plan" className="space-y-6 rounded-lg border bg-surface px-4 py-5 sm:px-5">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="font-display text-base font-semibold">Suggested setup</h2>
-            <span className="font-mono text-[11px] text-muted-foreground">{source === "ai" ? "read by AI" : "from the catalog rules"}</span>
+            <h2 className="font-display text-base font-semibold">Change the plan</h2>
+            <span className="text-xs text-muted-foreground">{source === "ai" ? "Read by AI" : "Read by our matching rules"}</span>
           </div>
 
           <div className="grid gap-x-4 gap-y-3 sm:grid-cols-4">
@@ -294,23 +380,11 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
             </ul>
           </div>
 
-          {state.intents && state.intentsFor === line.trim() && (
-            <IntentList
-              intents={state.intents}
-              unsure={state.unsure ?? []}
-              disabled={busy}
-              onAnswer={(index, option) => {
-                setError(null);
-                setState((s) => (s ? answerUnsure(s, index, option) : s));
-              }}
-            />
-          )}
-
           <div>
             <p id={ids.goals} className="font-display text-base font-semibold">
               What should they be able to do?
             </p>
-            <p className="mt-0.5 text-sm text-muted-foreground">Ranked from the description. Move a slider or add more.</p>
+            <p className="mt-0.5 text-sm text-muted-foreground">Ranked from your description. Change how important each one is, or add more.</p>
             <div className="mt-3">
               <GoalBox
                 departmentId={departmentId}
@@ -332,10 +406,6 @@ export function QuickOnboard({ catalog, username, displayName, onUsername, onDis
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="button" loading={saving} disabled={(!state && line.trim().length < 3) || !canSubmit || busy || unanswered > 0} onClick={() => void save()}>
-          Save &amp; assign assessment
-        </Button>
-        {unanswered > 0 && <span className="text-sm text-muted-foreground">Answer the question{unanswered > 1 ? "s" : ""} above first.</span>}
         <Button type="button" variant="outline" disabled={busy} onClick={editDetails}>
           Edit details
         </Button>

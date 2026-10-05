@@ -7,6 +7,7 @@ import { requireStaff, staffOnly } from "../../auth/guards";
 import { schema, type Db } from "../../db";
 import { notFound, parseOrThrow } from "../../lib/errors";
 import { activeWeek } from "../../plans/weekly/repo";
+import { speakToListen } from "../../assessment/markByHand";
 
 const userParams = z.object({ userId: z.string().min(1).max(64) });
 
@@ -76,6 +77,20 @@ export function nextActionFacts(db: Db, userId: string, nowMs = Date.now()): Nex
     .get();
   const week = activeWeek(db, userId);
 
+  // v4.4 P6: what waits for a person, and the new courses being made for this learner.
+  const reviews = db
+    .select({ n: count() })
+    .from(schema.reviewRequests)
+    .where(and(eq(schema.reviewRequests.userId, userId), eq(schema.reviewRequests.status, "open")))
+    .get();
+  const courseJobs = db
+    .select({ status: schema.jobs.status, payload: schema.jobs.payload, lastError: schema.jobs.lastError })
+    .from(schema.jobs)
+    .where(and(eq(schema.jobs.type, "course.generate"), inArray(schema.jobs.status, ["queued", "running", "waiting_setup"])))
+    .all()
+    .filter((j) => (j.payload as { userId?: string } | null)?.userId === userId);
+  const waiting = courseJobs.filter((j) => j.status === "waiting_setup");
+
   const changed = [goals?.at ?? null, settings?.at ?? null].filter((v): v is number => typeof v === "number");
 
   return {
@@ -91,6 +106,10 @@ export function nextActionFacts(db: Db, userId: string, nowMs = Date.now()): Nex
     openSuggestions: suggestions?.n ?? 0,
     week: week ? { weekNumber: week.weekNumber, endDate: week.endDate } : null,
     today: new Date(nowMs).toISOString().slice(0, 10),
+    name: user.displayName,
+    speakToListen: assessment ? speakToListen(db, assessment.id) : 0,
+    openReviews: reviews?.n ?? 0,
+    courses: { creating: courseJobs.length - waiting.length, waitingSetup: waiting.length, problem: waiting[0]?.lastError ?? null },
   };
 }
 

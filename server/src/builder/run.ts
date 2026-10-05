@@ -1,5 +1,4 @@
 import { and, eq, inArray } from "drizzle-orm";
-import { newId } from "../lib/ids";
 
 import {
   GOAL_ITEM_PREFIX,
@@ -20,14 +19,13 @@ import {
 import type { AiService } from "../ai/service";
 import { schema, type Db } from "../db";
 import type { Env } from "../env";
-import { staffIds, notify } from "../lib/notify";
-import { buildCourse, type BuildDeps } from "./pipeline";
+import type { BuildDeps } from "./pipeline";
+import { libraryCourseFor, courseKey, markerFor, requestCourse, type ResearchClientsResult } from "./autoCourse";
 import {
   addPathItem,
   auditStep,
   getPriorities,
   makeCurrent,
-  persistCourse,
   replaceGaps,
   setPathStatus,
   startPath,
@@ -44,7 +42,6 @@ import { assertSpine, buildSpine, campsFor, type PriorityPath } from "./priority
 import { normaliseSkill, scoreGaps } from "./scoring";
 import { getFocus } from "../targets/repo";
 import { LEARNER_TRACK_LABELS } from "../../../shared/targets";
-import { researchClients } from "./settings";
 
 /**
  * One run of the builder: read the assessment, decide what is missing, and fill the gaps.
@@ -68,6 +65,8 @@ export interface RunDeps {
   content?: ContentStore;
   /** Overridable so the tests can drive a run without a network. */
   research?: BuildDeps["research"];
+  /** v4.4: overridable research clients, so tests can decide whether web search is "connected". */
+  clients?: () => ResearchClientsResult;
   onProgress?: (note: string) => void;
 }
 
@@ -87,20 +86,11 @@ export interface RunOutcome {
    * needs to know, which is a different statement and now has a different field.
    */
   researchReason?: string;
-  /** Targets left without a course because generation was unavailable. */
+  /** Targets whose new course waits for the AI or web search to be connected. */
   waitingForResearch?: number;
+  /** v4.4: targets whose course is being made by a `course.generate` job (new or shared). */
+  creating?: number;
 }
-
-const DEFAULT_FETCH: BuildDeps["research"] = {
-  fetchUrl: async (url) => {
-    const response = await fetch(url, {
-      redirect: "follow",
-      signal: AbortSignal.timeout(12_000),
-      headers: { "user-agent": "Oyelearn course builder (link check)" },
-    });
-    return { status: response.status, headers: response.headers, text: () => response.text() };
-  },
-};
 
 
 /**
@@ -403,10 +393,10 @@ export async function runBuilder(
   }
 
   // --- fill each gap -------------------------------------------------------
-  const clients = researchClients(db, deps.env);
-  const settings = db.select().from(schema.researchSettings).get();
   const outcome: RunOutcome = { pathId, unlocked: 0, reused: 0, generated: 0, failed: 0, status: "ready" };
   let position = 0;
+  /** New courses this run asked for (new jobs or joined ones). `courseCap` still guards the bill. */
+  let requested = 0;
 
   for (const part of todo) {
     const gap = part.gap;
@@ -465,15 +455,18 @@ export async function runBuilder(
       outcome.unlocked += 1;
       continue;
     }
-    const saved = savedCourseFor(db, gap.skill);
-    if (saved) {
-      addPathItem(db, { pathId, courseId: saved, skillId: part.skillId, gapId, position: position++, source: "reuse", reason, partNumber: part.partNumber, partType: part.partType, targetSkill: part.targetSkill, startLevel: part.startLevel });
+    // v4.4: an equivalent course already in the shared library (same skill, same key, or nearly the
+    // same name), or one made for this skill and held for a look, before any AI call.
+    const key = courseKey({ skillId: part.skillId, skill: gap.skill });
+    const saved = libraryCourseFor(db, key, gap.skill);
+    if (saved?.state === "published") {
+      addPathItem(db, { pathId, courseId: saved.courseId, skillId: part.skillId, gapId, position: position++, source: "reuse", reason, partNumber: part.partNumber, partType: part.partType, targetSkill: part.targetSkill, startLevel: part.startLevel });
       outcome.reused += 1;
-      assign(db, saved, input.userId);
+      assign(db, saved.courseId, input.userId);
       continue;
     }
 
-    const existing = await matchExisting(db, deps.ai, gap, input.userId, pathId);
+    const existing = saved ? null : await matchExisting(db, deps.ai, gap, input.userId, pathId);
     if (existing) {
       addPathItem(db, {
         pathId,
@@ -494,70 +487,36 @@ export async function runBuilder(
       continue;
     }
 
-    if (!clients.ok) {
-      /* Not a failure of this target — a fact about the deployment. Counted separately so the run
-         can finish `ready` with every catalog match assigned and one honest line about what is
-         still waiting, rather than reporting a broken path when most of it works. */
-      auditStep(db, { pathId, step: "generate", detail: { skill: gap.skill, skipped: clients.reason } });
-      outcome.waitingForResearch = (outcome.waitingForResearch ?? 0) + 1;
-      outcome.researchReason = clients.reason;
+    if (requested >= priorities.courseCap) {
+      auditStep(db, { pathId, step: "generate", detail: { skill: gap.skill, skipped: "course cap reached" } });
       continue;
     }
 
-    setPathStatus(db, pathId, { status: "writing" });
-    // v4: allocated before writing so every model call is attributed to the course it built.
-    const plannedCourseId = newId();
-    const built = await buildCourse(
-      gap,
-      { targetRole: priorities.targetRole, level: legacyEvaluation?.overallLevel ?? (part.startLevel === "advanced" ? 4 : part.startLevel === "intermediate" ? 3 : 2) },
+    /* v4.4: no course covers it, so one is made in the background (`course.generate`). The item is
+       on the path now, shown as "being created", and becomes the course when the job finishes. */
+    const asked = requestCourse(
+      { db, env: deps.env, ai: deps.ai, clients: deps.clients },
       {
-        ai: deps.ai,
-        meta: { subjectUserId: input.userId, assessmentId: input.assessmentId ?? undefined, courseId: plannedCourseId },
-        search: clients.search,
-        video: clients.video,
-        research: deps.research ?? DEFAULT_FETCH,
-        budget: { tokens: settings?.budgetTokens ?? 400_000, searches: settings?.budgetSearches ?? 60 },
-        onProgress: progress,
-        onStep: (step, detail, usage) =>
-          auditStep(db, {
-            pathId,
-            step,
-            promptVersion: PROMPT_VERSION,
-            detail,
-            inputTokens: usage.input,
-            outputTokens: usage.output,
-          }),
+        userId: input.userId,
+        skill: gap.skill,
+        skillId: part.skillId,
+        departmentId: skill?.departmentId ?? setup.departmentId,
+        reason,
+        targetRole: priorities.targetRole,
+        level: legacyEvaluation?.overallLevel ?? (part.startLevel === "advanced" ? 4 : part.startLevel === "intermediate" ? 3 : 2),
       },
     );
-
-    if (!built.ok) {
-      outcome.failed += 1;
-      auditStep(db, { pathId, step: "generate", detail: { skill: gap.skill, failed: built.kind, reason: built.reason } });
-      if (built.kind === "budget") {
-        setPathStatus(db, pathId, { status: "budget_reached", failureReason: built.reason });
-        outcome.status = "budget_reached";
-        outcome.reason = built.reason;
-        break;
-      }
+    if (asked.kind === "reuse") {
+      addPathItem(db, { pathId, courseId: asked.courseId, skillId: part.skillId, gapId, position: position++, source: "reuse", reason, partNumber: part.partNumber, partType: part.partType, targetSkill: part.targetSkill, startLevel: part.startLevel });
+      outcome.reused += 1;
       continue;
     }
-
-    setPathStatus(db, pathId, {
-      status: "reviewing",
-      tokensUsed: built.course.tokensUsed,
-      searchCalls: built.course.searchesUsed,
-    });
-
-    const stored = persistCourse(db, {
-      built: built.course,
-      skill: gap.skill,
-      userId: input.userId,
-      autoPublish: priorities.autoPublish,
-      courseId: plannedCourseId,
-    });
+    requested += 1;
     addPathItem(db, {
       pathId,
-      courseId: stored.courseId,
+      courseId: null,
+      moduleId: markerFor(key),
+      skillId: part.skillId,
       gapId,
       position: position++,
       source: "generated",
@@ -567,24 +526,16 @@ export async function runBuilder(
       targetSkill: part.targetSkill,
       startLevel: part.startLevel,
     });
-    outcome.generated += 1;
-
-    auditStep(db, {
-      pathId,
-      courseId: stored.courseId,
-      step: "generate",
-      promptVersion: built.course.promptVersion,
-      detail: { skill: gap.skill, score: built.course.score, status: stored.status },
-    });
-
-    if (stored.status !== "published") notifyStaff(db, input.userId, built.course.plan.title, stored.status);
+    outcome.creating = (outcome.creating ?? 0) + 1;
+    auditStep(db, { pathId, step: "generate", detail: { skill: gap.skill, queued: !asked.joined, joined: asked.joined, waitingSetup: asked.waitingSetup } });
+    if (asked.waitingSetup) {
+      outcome.waitingForResearch = (outcome.waitingForResearch ?? 0) + 1;
+      outcome.researchReason = asked.waitingSetup;
+    }
   }
 
-  if (outcome.waitingForResearch) {
-    setPathStatus(db, pathId, {
-      notice: `${outcome.waitingForResearch} target${outcome.waitingForResearch === 1 ? "" : "s"} still need a generated course. ${outcome.researchReason}`,
-    });
-  }
+  /* v4.4: no stored notice for courses waiting for setup: `currentPath` works it out from the jobs,
+     so it disappears by itself once the settings are saved and the courses are made. */
 
   if (outcome.status === "ready") makeCurrent(db, input.userId, pathId);
   return outcome;
@@ -676,26 +627,6 @@ function assign(db: Db, courseId: string, userId: string): void {
     .run();
 }
 
-function notifyStaff(db: Db, userId: string, title: string, status: string): void {
-  const learner = db
-    .select({ displayName: schema.users.displayName })
-    .from(schema.users)
-    .where(eq(schema.users.id, userId))
-    .get();
-  for (const recipientId of staffIds(db)) {
-    notify(db, {
-      recipientId,
-      kind: `course.${status}`,
-      title: status === "needs_review" ? `"${title}" needs a look` : `"${title}" is waiting for review`,
-      body:
-        status === "needs_review"
-          ? `A generated course for ${learner?.displayName ?? "a learner"} did not pass its own review. It is not published.`
-          : `A course was generated for ${learner?.displayName ?? "a learner"} and is waiting to be published.`,
-      link: "/admin/courses",
-    });
-  }
-}
-
 /** The per-item facts the gap prompt reads: area, difficulty, right or wrong, and how long it took. */
 function itemsFor(db: Db, assessmentId: string | null) {
   if (!assessmentId) return [];
@@ -726,21 +657,6 @@ function messageOf(error: unknown): string {
 /** The catalog's module ids that actually exist in this deployment's curriculum. */
 function availableModules(content: ContentStore, moduleIds: readonly string[]): string[] {
   return moduleIds.filter((id) => content.manifest.some((track) => track.modules.some((m) => m.id === id && m.available)));
-}
-
-/** A published course already saved to the library for this skill. No model call. */
-function savedCourseFor(db: Db, skill: string): string | null {
-  const row = db
-    .select({ courseId: schema.generatedCourses.courseId })
-    .from(schema.generatedCourses)
-    .innerJoin(schema.courses, eq(schema.courses.id, schema.generatedCourses.courseId))
-    .where(and(eq(schema.generatedCourses.scope, "global"), eq(schema.courses.published, true)))
-    .all()
-    .find((r) => {
-      const g = db.select({ skill: schema.generatedCourses.skill }).from(schema.generatedCourses).where(eq(schema.generatedCourses.courseId, r.courseId)).get();
-      return g ? normaliseSkill(g.skill) === normaliseSkill(skill) : false;
-    });
-  return row?.courseId ?? null;
 }
 
 /** One module's manifest entry (its topics carry their levels). */

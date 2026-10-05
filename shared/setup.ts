@@ -103,7 +103,13 @@ export const setupAdvancedSchema = z.object({
   deadlineWeeks: z.number().int().min(1).max(104).nullable().default(null),
   /** How many courses one path build may generate with AI. */
   courseCap: z.number().int().min(0).max(20).default(5),
+  /** Legacy (pre-v4.4) per-learner switch. Kept and saved, but no longer decides anything. */
   autoPublish: z.boolean().default(false),
+  /**
+   * v4.4: publish this learner's new courses that pass the quality check. Null = follow the global
+   * setting (`builder.auto_publish`, on by default). Omitted = keep what is stored.
+   */
+  autoPublishOverride: z.enum(["on", "off"]).nullable().optional(),
   /** v4.1: how much of the assessment the AI writes fresh (see shared/personalise.ts). */
   personalisation: z.enum(["high", "balanced", "low"]).default("balanced"),
   /** v4.3: add "Suggested next" goals without the admin's click. Off by default. */
@@ -124,7 +130,7 @@ export const setupSchema = z.object({
     .default([]),
   skip: z.array(z.string().min(1).max(80)).max(MAX_PRIORITIES).default([]),
   hoursPerWeek: z.number().int().min(1).max(60).default(DEFAULT_HOURS_PER_WEEK),
-  advanced: setupAdvancedSchema.default({ weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, personalisation: "balanced", autoAddSuggestions: false }),
+  advanced: setupAdvancedSchema.default({ weekStartsMonday: false, deadlineWeeks: null, courseCap: 5, autoPublish: false, autoPublishOverride: null, personalisation: "balanced", autoAddSuggestions: false }),
   /**
    * v4.1: "About this person and what you want" — the admin's own words, which the AI reads to plan
    * the assessment. Stored as the profile's notes. Omitted = leave the notes as they are.

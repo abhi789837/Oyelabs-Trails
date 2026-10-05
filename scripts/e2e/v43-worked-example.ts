@@ -298,7 +298,10 @@ async function onboard(admin: Page, c: Checks): Promise<{ userId: string; userna
   await admin.getByLabel("Full name").fill("Arjun Mehta");
   await admin.getByLabel("Describe them in one line").fill(LINE);
   await defaults.click(admin.getByRole("button", { name: "Suggest", exact: true }), "Suggest");
-  await admin.getByRole("region", { name: "Suggested setup" }).waitFor({ timeout: 30_000 });
+  await admin.getByRole("region", { name: /^Here's the plan/ }).waitFor({ timeout: 30_000 });
+  // v4.4 P6: the editor sits behind "Change something"; this script inspects it (not a default-path click).
+  await admin.getByRole("button", { name: "Change something" }).click();
+  await admin.getByRole("region", { name: "Change the plan" }).waitFor({ timeout: 10_000 });
   await goalSlider(admin, NAMES["eng-git"]).waitFor({ timeout: 15_000 });
   const suggested: string[] = [];
   for (const [id, name] of Object.entries(NAMES)) {
@@ -358,7 +361,7 @@ async function onboard(admin: Page, c: Checks): Promise<{ userId: string; userna
   c.ok(/Laravel/i.test((await textRow.textContent()) ?? ""), "the added goal row shows its interpretation (Laravel)");
 
   // ---- Save & assign: the default path's last click. ----
-  await defaults.click(admin.getByRole("button", { name: "Save & assign assessment" }), "Save & assign assessment");
+  await defaults.click(admin.getByRole("button", { name: "Looks good — send the test" }), "Looks good — send the test");
   const notice = admin.getByRole("status").filter({ hasText: "Account created for Arjun Mehta" });
   await notice.waitFor({ timeout: 30_000 });
   const message = (await notice.locator("pre").textContent()) ?? "";

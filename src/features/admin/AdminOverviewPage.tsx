@@ -410,7 +410,7 @@ function UsageSection({ data }: { data: Overview }) {
               <div className="flex items-baseline justify-between gap-3 text-sm">
                 <span className="font-medium">{row.purpose.replace(/_/g, " ")}</span>
                 <span className="tabular text-xs text-muted-foreground">
-                  {row.calls} call{row.calls === 1 ? "" : "s"} · {(row.inputTokens + row.outputTokens).toLocaleString()} tokens
+                  {row.calls} call{row.calls === 1 ? "" : "s"} · {(row.inputTokens + row.outputTokens).toLocaleString()} AI usage units
                   {row.failures > 0 && <span className="text-destructive"> · {row.failures} failed</span>}
                 </span>
               </div>

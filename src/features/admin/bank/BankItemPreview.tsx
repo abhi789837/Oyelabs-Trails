@@ -192,7 +192,7 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
             </Block>
           )}
           <p className="text-muted-foreground">Word limit: {task.wordLimit}</p>
-          <Block title="Rubric">
+          <Block title="Marking guide">
             <ul className="space-y-1.5">
               {task.rubric.map((c) => (
                 <li key={c.id} className="rounded-md border px-3 py-2">
@@ -356,7 +356,7 @@ function TaskBody({ task, showAnswer }: { task: Task; showAnswer: boolean }) {
           <p className="font-mono text-xs text-muted-foreground">
             Scenario {task.scenarioId}, persona {task.personaId}, up to {task.maxTurns} turns{task.followUp ? ", then a follow-up email" : ""}
           </p>
-          <Block title="Rubric">
+          <Block title="Marking guide">
             <ul className="space-y-1.5">
               {task.rubric.map((r) => (
                 <li key={r.label} className="rounded-md border px-3 py-2">

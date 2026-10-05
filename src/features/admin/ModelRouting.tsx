@@ -42,7 +42,7 @@ export function ModelRouting() {
       setData(await api.get<RoutesResponse>("/api/admin/ai/routes"));
       setError(null);
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "Could not load model routing.");
+      setError(err instanceof ApiRequestError ? err.message : "Could not load which AI engine does what.");
     }
   };
 
@@ -54,11 +54,11 @@ export function ModelRouting() {
     setRefreshing(true);
     try {
       const result = await api.post<{ availableModels: string[]; refreshed: boolean }>("/api/admin/ai/models/refresh");
-      if (result.refreshed) notify.success(`${result.availableModels.length} models available on this key.`);
-      else notify.info("The provider did not return a model list; the defaults are still offered.");
+      if (result.refreshed) notify.success(`${result.availableModels.length} AI engines available with this key.`);
+      else notify.info("The provider did not send a list of AI engines. The defaults are still offered.");
       await load();
     } catch (err) {
-      notify.error(err instanceof ApiRequestError ? err.message : "Could not refresh the model list.");
+      notify.error(err instanceof ApiRequestError ? err.message : "Could not refresh the list of AI engines.");
     } finally {
       setRefreshing(false);
     }
@@ -69,14 +69,14 @@ export function ModelRouting() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 id="routing-heading" className="text-lg font-semibold">
-            Model routing
+            Which AI engine does what
           </h2>
-          <p className="mt-1 max-w-prose text-sm text-muted-foreground">Which model each kind of AI work runs on.</p>
+          <p className="mt-1 max-w-prose text-sm text-muted-foreground">Which AI engine each kind of AI work runs on.</p>
         </div>
         <div className="flex flex-col items-end gap-1">
           <Button variant="outline" size="sm" loading={refreshing} onClick={() => void refresh()}>
             <RefreshCw aria-hidden="true" />
-            Refresh model list
+            Refresh AI engine list
           </Button>
           <span className="font-mono text-[11px] text-muted-foreground">
             {data?.modelsFetchedAt ? `Fetched ${formatTimestamp(data.modelsFetchedAt)}` : "Not fetched yet"}
@@ -176,7 +176,7 @@ function RouteRow({
       <div className="mt-2 flex flex-wrap items-end gap-3">
         <div className="min-w-0 flex-1 basis-56">
           <label htmlFor={`${id}-model`} className="mb-1 block text-xs text-muted-foreground">
-            Model
+            AI engine
           </label>
           <select
             id={`${id}-model`}
@@ -195,7 +195,7 @@ function RouteRow({
         {choice === OTHER && (
           <div className="min-w-0 flex-1 basis-48">
             <label htmlFor={`${id}-other`} className="mb-1 block text-xs text-muted-foreground">
-              Model id
+              AI engine id
             </label>
             <Input
               id={`${id}-other`}
@@ -209,7 +209,7 @@ function RouteRow({
         )}
         <div className="w-32">
           <label htmlFor={`${id}-tokens`} className="mb-1 block text-xs text-muted-foreground">
-            Max tokens
+            Max AI usage per call
           </label>
           <NumberInput id={`${id}-tokens`} value={maxTokens} onChange={setMaxTokens} min={16} max={64_000} step={100} className="h-9" />
         </div>

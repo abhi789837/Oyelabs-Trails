@@ -399,7 +399,7 @@ export default function AdminPeoplePage() {
           }
           const ok = await confirm({
             title: `Issue an assessment to ${learners.length} ${learners.length === 1 ? "person" : "people"}?`,
-            body: "Each one is assembled from the question bank for their department. Anyone who already has a live assessment is skipped.",
+            body: "Each test is built from the question library for their department. Anyone who already has a live assessment is skipped.",
             confirmLabel: "Issue",
           });
           if (!ok) throw new Error("cancelled");

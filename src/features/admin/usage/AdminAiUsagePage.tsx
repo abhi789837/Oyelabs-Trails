@@ -106,7 +106,7 @@ export default function AdminAiUsagePage() {
               <Empty />
             ) : (
               <Table
-                head={["Task", "Calls", "Tokens in", "Tokens out", "Cache reads", "Cost"]}
+                head={["Task", "Calls", "AI usage in", "AI usage out", "Cache reads", "Cost"]}
                 rows={report.byTask.map((t) => ({
                   key: t.task,
                   cells: [

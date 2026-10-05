@@ -328,18 +328,23 @@ export function assessmentHeadline(input: { status: string; items: number; estSe
   return parts.join(" · ");
 }
 
-/** "13 written for them · 12 reused from the bank · 2 from the bank after failed checks". */
+/** "13 written for them · 12 reused from the library · 2 from the library after failed checks". */
 export function personalisationCounts(report: PersonaliseReport): string {
   const parts: string[] = [];
   parts.push(`${report.generated} written for them`);
-  parts.push(`${report.reused} reused from the bank`);
-  if (report.fromBankAfterFailures > 0) parts.push(`${report.fromBankAfterFailures} from the bank after failed checks`);
+  parts.push(`${report.reused} reused from the library`);
+  if (report.fromBankAfterFailures > 0) parts.push(`${report.fromBankAfterFailures} from the library after failed checks`);
   return parts.join(" · ");
 }
 
-export const ORIGIN_LABELS: Record<ItemOrigin, string> = { bank: "bank", generated: "generated", fallback: "fallback" };
+export const ORIGIN_LABELS: Record<ItemOrigin, string> = { bank: "library", generated: "generated", fallback: "fallback" };
 
 /** Swap and Regenerate are for questions the learner has not submitted, on a sheet still open. */
 export function canReplace(status: string, item: Pick<V4AdminItem, "state">): boolean {
   return (status === "ready" || status === "in_progress") && item.state !== "submitted";
+}
+
+/** v4.4 P6: spoken answers still waiting for a person to listen (no score, flagged "needs a listen"). */
+export function needsListenItems<T extends Pick<V4AdminItem, "score" | "feedback">>(items: readonly T[]): T[] {
+  return items.filter((item) => item.score == null && parseSpeakFeedback(item.feedback)?.needsListen === true);
 }

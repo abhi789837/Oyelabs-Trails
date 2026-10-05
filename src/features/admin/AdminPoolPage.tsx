@@ -255,7 +255,7 @@ export default function AdminPoolPage() {
       {data.assessment.blueprint && (
         <section className="mt-8" aria-labelledby="blueprint-heading">
           <h2 id="blueprint-heading" className="text-lg font-semibold">
-            Blueprint
+            Test plan
           </h2>
           <p className="mt-2 max-w-prose text-sm text-muted-foreground">{data.assessment.blueprint.summary}</p>
           <ul className="mt-4 space-y-2">

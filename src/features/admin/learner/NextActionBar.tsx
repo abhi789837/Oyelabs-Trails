@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
 
 import type { UserSummary } from "@shared/admin";
 
-import { ApiRequestError } from "@/api/client";
+import { plainError } from "@/components/form/plainErrorInfo";
 import { useConfirm } from "@/components/overlays";
 import { Button } from "@/components/ui/button";
 import { notify } from "@/lib/toast";
@@ -35,6 +36,7 @@ export function NextActionBar({
   onChanged: (what: "account" | "assessments" | "path" | "week") => void;
 }) {
   const confirm = useConfirm();
+  const navigate = useNavigate();
   const [action, setAction] = useState<NextAction | null>(null);
   const [busy, setBusy] = useState(false);
   const [invite, setInvite] = useState<string | null>(null);
@@ -72,6 +74,10 @@ export function NextActionBar({
       onOpenTab(button.tab, button.anchor);
       return;
     }
+    if (button.action === "link") {
+      navigate(button.to);
+      return;
+    }
     if (button.action === "invite") {
       const ok = await confirm({
         title: `Make a new invite for ${user.displayName}?`,
@@ -107,7 +113,7 @@ export function NextActionBar({
       }
       await load();
     } catch (err) {
-      notify.error(err instanceof ApiRequestError ? err.message : "That didn't work. Try again.");
+      notify.error(plainError(err).message);
     } finally {
       setBusy(false);
     }

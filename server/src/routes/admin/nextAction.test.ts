@@ -62,7 +62,7 @@ describe("GET /api/admin/users/:userId/next-action", () => {
     expect((await next(id)).kind).toBe("publish-week");
     // The goals change after the build: the path is out of date.
     ctx.db.update(schema.learnerPriorities).set({ updatedAt: t0 + 100 }).where(eq(schema.learnerPriorities.userId, id)).run();
-    expect(await next(id)).toMatchObject({ kind: "rebuild", title: "Path needs a rebuild: their goals changed." });
+    expect(await next(id)).toMatchObject({ kind: "rebuild", title: "The path needs a rebuild: their goals changed." });
     // So does an admin edit to the skill graph.
     ctx.db.update(schema.learnerPriorities).set({ updatedAt: t0 }).where(eq(schema.learnerPriorities.userId, id)).run();
     ctx.db.update(schema.learnerGoals).set({ updatedAt: t0 }).where(eq(schema.learnerGoals.userId, id)).run();

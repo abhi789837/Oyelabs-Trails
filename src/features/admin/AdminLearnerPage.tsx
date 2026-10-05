@@ -196,7 +196,12 @@ export default function AdminLearnerPage() {
       selectTab(tab);
       if (!anchor) return;
       const behavior: ScrollBehavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-      window.setTimeout(() => document.getElementById(anchor)?.scrollIntoView({ behavior, block: "start" }), 120);
+      window.setTimeout(() => {
+        const target = document.getElementById(anchor);
+        // v4.4 P6: a collapsed section the bar points at opens (the review requests list).
+        if (target instanceof HTMLDetailsElement) target.open = true;
+        target?.scrollIntoView({ behavior, block: "start" });
+      }, 120);
     },
     [selectTab],
   );

@@ -1,7 +1,7 @@
 import type { JobType } from "../../../shared/enums";
 import { AiBudgetPausedError } from "../ai/router";
 import type { Db } from "../db";
-import { claimNext, completeJob, deferJob, failJob, JobDeferredError, requeueAllRunning, type Job } from "./queue";
+import { claimNext, completeJob, deferJob, failJob, JobDeferredError, JobWaitingSetupError, parkJob, requeueAllRunning, type Job } from "./queue";
 
 /** How long a job paused by the AI budget waits before trying again. */
 const BUDGET_RETRY_MS = 6 * 60 * 60 * 1000;
@@ -83,6 +83,13 @@ export class JobWorker {
           if (error instanceof JobDeferredError) {
             deferJob(this.options.db, job.id, error.delayMs);
             this.options.log?.(`job ${job.type} deferred: ${message}`, { id: job.id });
+            processed += 1;
+            continue;
+          }
+          // v4.4: waits for the AI or web search to be set up; woken when the settings are saved.
+          if (error instanceof JobWaitingSetupError) {
+            parkJob(this.options.db, job.id, message);
+            this.options.log?.(`job ${job.type} waiting for setup: ${message}`, { id: job.id });
             processed += 1;
             continue;
           }

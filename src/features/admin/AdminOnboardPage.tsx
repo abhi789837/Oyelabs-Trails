@@ -8,6 +8,7 @@ import { yearsFromBand, type SaveSetupRequest } from "@shared/setup";
 
 import { ApiRequestError } from "@/api/client";
 import { FormAlert, PasswordField, TextField } from "@/components/form/Field";
+import { PlainError } from "@/components/form/PlainError";
 import { Button } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
 import { useCurrentUser } from "@/features/auth/AuthProvider";
@@ -138,9 +139,9 @@ export default function AdminOnboardPage() {
       saved = await setupApi.save(user.id, request);
     } catch (err) {
       setPendingUser(user);
-      const reason = err instanceof ApiRequestError ? err.message : "the server did not answer";
+      const reason = err instanceof ApiRequestError ? err.message : "Oyelearn didn't answer.";
       throw Object.assign(
-        new Error(`The account was created, but the setup did not save (${reason}). Fix it and press the button again.`),
+        new Error(`We made the account, but couldn't save the plan. ${reason} Fix it and press the button again.`),
         { fields: err instanceof ApiRequestError ? err.fields : undefined },
       );
     }
@@ -255,10 +256,10 @@ export default function AdminOnboardPage() {
       <h1 className="text-2xl font-bold">{mode === "bulk" ? "Onboard several learners" : "Onboard a learner"}</h1>
       <p className="mt-1 max-w-prose text-sm text-muted-foreground">
         {mode === "quick"
-          ? "One line about them, then Save & assign. Suggest first to review."
+          ? "Describe them in one line and press Suggest. Check the plan, then send the test."
           : mode === "bulk"
-            ? "Paste a list, Suggest all, review the table, then Create & assign all."
-            : "Creates the account and the setup their placement assessment is built from."}
+            ? "Paste a list and press Suggest all. Check each plan, then send the tests."
+            : "Creates the account and the plan their first test is built from."}
       </p>
       {mode !== "full" && role === "learner" && pendingUser === null && (
         <Segmented
@@ -393,7 +394,7 @@ function StaffForm({
   children: (context: SetupFormContext) => ReactNode;
 }) {
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
 
   const handleSubmit = async (event: FormEvent) => {
@@ -405,7 +406,7 @@ function StaffForm({
     try {
       await onCreate();
     } catch (err) {
-      setError(err instanceof ApiRequestError ? err.message : "Something went wrong. Try again.");
+      setError(err ?? "Something went wrong. Try again.");
       if (err instanceof ApiRequestError) setFields(err.fields ?? {});
     } finally {
       setPending(false);
@@ -414,7 +415,7 @@ function StaffForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate className="max-w-3xl space-y-8">
-      {error && <FormAlert>{error}</FormAlert>}
+      {error != null && <PlainError error={error} />}
       {children({ fields, pending })}
       <Button type="submit" loading={pending} disabled={!canSubmit}>
         Create admin

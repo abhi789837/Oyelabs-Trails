@@ -15,6 +15,7 @@ import {
 } from "@shared/setup";
 
 import { Field, FormAlert, TextField } from "@/components/form/Field";
+import { PlainError } from "@/components/form/PlainError";
 import { useFormDialog } from "@/components/overlays";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -149,7 +150,7 @@ function SetupFormInner({
     onStateChange?.(state);
   }, [state, onStateChange]);
   const [pending, setPending] = useState<"save" | "assign" | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
   const [fields, setFields] = useState<Record<string, string>>({});
 
   const department = catalog.departments.find((d) => d.id === state.departmentId) ?? departments[0];
@@ -225,8 +226,7 @@ function SetupFormInner({
     try {
       await onSave(toSaveRequest(state, assign));
     } catch (err) {
-      const message = err instanceof Error && err.message ? err.message : "That didn't save. Try again.";
-      setError(message);
+      setError(err ?? "That didn't save. Try again.");
       const errFields = (err as { fields?: Record<string, string> }).fields;
       if (errFields) setFields(errFields);
     } finally {
@@ -258,7 +258,7 @@ function SetupFormInner({
       className="lg:grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-start lg:gap-10"
     >
       <div className="min-w-0 space-y-10">
-        {error && <FormAlert>{error}</FormAlert>}
+        {error != null && <PlainError error={error} />}
         {leading?.(context)}
 
         <Section title="Department and track">
@@ -529,13 +529,26 @@ function SetupFormInner({
               disabled={busy}
               onChange={(autoAddSuggestions) => update({ advanced: { ...state.advanced, autoAddSuggestions } })}
             />
-            <CheckRow
-              label="Auto-publish generated courses"
-              info="Off: a course the AI writes waits for your review before the learner sees it."
-              checked={state.advanced.autoPublish}
-              disabled={busy}
-              onChange={(autoPublish) => update({ advanced: { ...state.advanced, autoPublish } })}
-            />
+            {/* v4.4: per-learner override of the global setting (on by default). */}
+            <Field label="Publish new courses that pass the quality check">
+              {({ id }) => (
+                <select
+                  id={id}
+                  value={state.advanced.autoPublishOverride ?? "default"}
+                  disabled={busy}
+                  onChange={(e) =>
+                    update({
+                      advanced: { ...state.advanced, autoPublishOverride: e.target.value === "default" ? null : (e.target.value as "on" | "off") },
+                    })
+                  }
+                  className="h-9 w-full max-w-sm rounded-md border border-input bg-surface px-2.5 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-strong"
+                >
+                  <option value="default">Same as everyone (set on the AI connection page)</option>
+                  <option value="on">On for this person</option>
+                  <option value="off">Off for this person: wait for my OK</option>
+                </select>
+              )}
+            </Field>
             <Field label="Deadline (weeks)" hint="Empty means no deadline." error={fieldError(fields, "advanced.deadlineWeeks")}>
               {({ id, describedBy }) => (
                 <NumberInput
@@ -558,8 +571,8 @@ function SetupFormInner({
                 </label>
                 <InfoTip label="About personalisation">
                   How much of the assessment the AI writes fresh for this person. The rest is reused from the question
-                  bank: items already checked, cheaper and quicker. High reuses up to 20%, Balanced up to 40%, Low up to
-                  80%. Without an AI key everything comes from the bank.
+                  library: questions already checked, cheaper and quicker. High reuses up to 20%, Balanced up to 40%, Low up to
+                  80%. Without an AI key everything comes from the library.
                 </InfoTip>
               </div>
               <select
