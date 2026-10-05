@@ -51,9 +51,9 @@ Resume from the first unticked item. Decisions are in `DECISIONS.md`, research i
 ## Phase 7: Tests, deploy, report
 - [x] 7.1 Unit and integration tests (the brief's list)
 - [x] 7.2 Reference-case e2e `scripts/e2e/v44-reference-case.ts`
-- [ ] 7.3 Deploy (Whisper container, backup) + smoke — Abhishek runs it
-- [ ] 7.4 RESULTS.md + chat summary
-- [ ] 7.5 Tag v4.4.0
+- [x] 7.3 Deploy prepared (RESULTS.md → Deploy); running it is Needs Abhishek
+- [x] 7.4 RESULTS.md + chat summary
+- [x] 7.5 Tag v4.4.0
 
 ## Needs Abhishek
 - Run `scripts/deploy/whisper-model.sh` once on the server (deploy-v4.sh also does it); first build compiles whisper (~4 min).
